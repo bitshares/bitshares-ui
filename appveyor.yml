@@ -1,11 +1,11 @@
 version: 1.0.{build}
 environment:
-  nodejs_version: "7"
+  nodejs_version: "9.7.1"
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
-  - npm install
+  - npm ci
 build: off
 platform:
   - x64

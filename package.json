@@ -1,8 +1,7 @@
 {
     "name": "BitShares2-light",
     "version": "2.0.180306",
-    "description":
-        "Advanced wallet interface for the BitShares financial blockchain.",
+    "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
@@ -12,8 +11,8 @@
     ],
     "license": "MIT",
     "engines": {
-        "node": ">=7.x",
-        "npm": ">=4.x",
+        "node": ">=9.x",
+        "npm": ">=5.x",
         "yarn": ">=0.21.3"
     },
     "repository": {
@@ -22,34 +21,23 @@
     },
     "main": "build/electron/index.js",
     "scripts": {
-        "test:market":
-            "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./app/test/marketTests --watch",
-        "bench:market":
-            "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
-        "profile-dev":
-            "webpack --env.dev --env.profile --profile --json > stats-dev.json",
-        "profile-build":
-            "cross-env NODE_ENV=production webpack --env.prod --env.profile --profile --json > stats-prod.json",
-        "profile-nougly":
-            "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.noUgly --profile --json > stats-prod-nougly.json",
+        "test:market": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register ./app/test/marketTests --watch",
+        "bench:market": "cross-env NODE_ENV=test babel ./lib/common/MarketClasses.js -o ./app/test/MarketClasses.js && cross-env NODE_ENV=test node --harmony ./test/marketBenchmark",
+        "profile-dev": "webpack --env.dev --env.profile --profile --json > stats-dev.json",
+        "profile-build": "cross-env NODE_ENV=production webpack --env.prod --env.profile --profile --json > stats-prod.json",
+        "profile-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.noUgly --profile --json > stats-prod-nougly.json",
         "start": "cross-env NODE_ENV=development node server.js",
         "start-electron": "electron build/electron/index.js",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
-        "build-hash":
-            "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
-        "build-hash-nougly":
-            "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.noUgly --env.baseUrl=''",
-        "build-github":
-            "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.deprecated --env.baseUrl='/wallet/'",
-        "build-electron":
-            "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
-        "build-electron-nougly":
-            "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
+        "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
+        "build-hash-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.noUgly --env.baseUrl=''",
+        "build-github": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.deprecated --env.baseUrl='/wallet/'",
+        "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
+        "build-electron-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
         "prepare-electron": "copyfiles -f resources/*.js build/electron/",
         "postbuild-electron": "npm run prepare-electron",
         "postbuild-electron-nougly": "npm run prepare-electron",
-        "build-win32":
-            "cross-env NODE_ENV=production && webpack --env.prod --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'",
+        "build-win32": "cross-env NODE_ENV=production && webpack --env.prod --progress --colors &&  echo 'copying to electron/build..' &&  xcopy dist ..\\electron\\build /s /e /y && echo 'done.'",
         "precommit": "pretty-quick --staged",
         "prepackage": "npm run build-electron",
         "prepackage-no-ugly": "npm run build-electron-nougly",
@@ -61,14 +49,24 @@
     },
     "jest": {
         "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",
-        "testPathDirs": ["<rootDir>/__tests__"],
+        "testPathDirs": [
+            "<rootDir>/__tests__"
+        ],
         "unmockedModulePathPatterns": [
             "<rootDir>/node_modules/react",
             "<rootDir>/node_modules/tcomb",
             "<rootDir>/node_modules/immutable"
         ],
-        "moduleFileExtensions": ["js", "jsx", "json", "coffee"],
-        "testFileExtensions": ["js", "jsx"],
+        "moduleFileExtensions": [
+            "js",
+            "jsx",
+            "json",
+            "coffee"
+        ],
+        "testFileExtensions": [
+            "js",
+            "jsx"
+        ],
         "testPathIgnorePatterns": [
             "/jest-preprocessor.js",
             "/node_modules/",
@@ -79,7 +77,10 @@
     "build": {
         "productName": "BitShares",
         "appId": "org.bitshares.graphene",
-        "files": ["build/electron", "!node_modules"],
+        "files": [
+            "build/electron",
+            "!node_modules"
+        ],
         "mac": {
             "category": "public.app-category.finance"
         },
@@ -101,13 +102,19 @@
             "target": [
                 {
                     "target": "nsis",
-                    "arch": ["x64", "ia32"]
+                    "arch": [
+                        "x64",
+                        "ia32"
+                    ]
                 }
             ]
         },
         "linux": {
             "category": "Finance",
-            "target": ["deb", "AppImage"],
+            "target": [
+                "deb",
+                "AppImage"
+            ],
             "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
         },
         "directories": {
@@ -142,15 +149,13 @@
         "notifyjs": "^3.0.0",
         "numeral": "2.0.4",
         "object-assign": "^4.0.1",
-        "perfect-scrollbar":
-            "git+https://github.com/bitshares/perfect-scrollbar.git",
+        "perfect-scrollbar": "git+https://github.com/bitshares/perfect-scrollbar.git",
         "qrcode.react": "^0.7.1",
         "react": "^15.6.1",
         "react-autocomplete": "^1.7.2",
         "react-clipboard.js": "^1.0.1",
         "react-dom": "^15.6.1",
-        "react-foundation-apps":
-            "git+https://github.com/valzav/react-foundation-apps.git",
+        "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
         "react-highcharts": "^16.0",
         "react-hot-loader": "^3.0.0",
         "react-interpolate-component": "^0.11.0",

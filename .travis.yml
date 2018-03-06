@@ -25,7 +25,8 @@ addons:
     - icnsutils
     - graphicsmagick
     - xz-utils
-before_install: "./install.sh"
+install:
+  - npm ci
 script: "./build.sh"
 after_success: "./deploy.sh"
 deploy:
