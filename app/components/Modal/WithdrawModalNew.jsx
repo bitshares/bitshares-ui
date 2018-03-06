@@ -678,7 +678,12 @@ class WithdrawModalNew extends React.Component {
             quantity,
             selectedAsset,
             address,
-            isBTS
+            isBTS,
+            gateFee,
+            memo,
+            btsAccount,
+            issuer,
+            feeAmount
         } = this.state;
         let assetName = selectedAsset.toLowerCase();
 
@@ -717,7 +722,7 @@ class WithdrawModalNew extends React.Component {
         const gateFeeAmount = new Asset({
             asset_id: withdrawalCurrencyId,
             precision: withdrawalCurrencyPrecision,
-            real: state.gateFee
+            real: gateFee
         });
 
         sendAmount.plus(gateFeeAmount);
@@ -731,17 +736,17 @@ class WithdrawModalNew extends React.Component {
         let to = "";
 
         if (isBTS) {
-            descriptor = state.memo ? new Buffer(state.memo, "utf-8") : "";
-            to = state.btsAccount.get("id");
+            descriptor = memo ? new Buffer(memo, "utf-8") : "";
+            to = btsAccount.get("id");
         } else {
             descriptor =
                 assetName +
                 ":" +
                 address +
-                (this.state.memo
-                    ? ":" + new Buffer(this.state.memo, "utf-8")
+                (memo
+                    ? ":" + new Buffer(memo, "utf-8")
                     : "");
-            to = state.issuer;
+            to = issuer;
         }
 
         let args = [
@@ -751,7 +756,7 @@ class WithdrawModalNew extends React.Component {
             withdrawalCurrencyId,
             descriptor,
             null,
-            state.feeAmount ? state.feeAmount.asset_id : "1.3.0"
+            feeAmount ? feeAmount.asset_id : "1.3.0"
         ];
 
         AccountActions.transfer(...args).then(() => {
