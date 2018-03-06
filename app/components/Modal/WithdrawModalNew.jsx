@@ -548,18 +548,40 @@ class WithdrawModalNew extends React.Component {
         );
     }
 
+    getIssuerFromAssetAndGateway(assetSymbol, gateway){
+        let backedCoins = this.props.backedCoins.get(gateway);
+        let issuer = null;
+        backedCoins.forEach((item)=>{
+          if(item.symbol == assetSymbol || item.backingCoin == assetSymbol || item.name == assetSymbol || item.backingCoinType == assetSymbol){
+            try {
+              if(item.issuerId){
+                issuer = item.issuerId;
+              } else if(item.issuer){
+                issuer = ChainStore.getAccount(item.issuer).get("id");
+              } else if(item.intermediateAccount) {
+                issuer = ChainStore.getAccount(item.intermediateAccount).get("id");
+              }
+            }catch(e){}
+          }
+        })
+
+        return issuer;
+    }
+
     onAssetSelected(value, asset) {
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
             value,
             gatewayBoolCheck
         );
+
         let address = WithdrawAddresses.getLast(value.toLowerCase());
+        let issuer = this.getIssuerFromAssetAndGateway.call(this, selectedAsset, selectedGateway);
         this.setState({
             selectedAsset,
             selectedGateway,
             gateFee: asset.gateFee,
-            issuer: asset.issuer,
+            issuer,
             address,
             isBTS: false
         });
@@ -593,7 +615,8 @@ class WithdrawModalNew extends React.Component {
 
     onGatewayChanged(e) {
         let selectedGateway = e.target.value;
-        this.setState({selectedGateway});
+        let issuer = this.getIssuerFromAssetAndGateway.call(this, this.state.selectedAsset, selectedGateway);
+        this.setState({selectedGateway, issuer});
         this._updateFee();
     }
 
