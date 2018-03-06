@@ -7,6 +7,7 @@ import GatewayStore from "stores/GatewayStore";
 import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 import counterpart from "counterpart";
+import {ChainStore} from "bitsharesjs/es";
 
 class DepositWithdrawAssetSelector extends React.Component {
     constructor(props) {
@@ -45,13 +46,17 @@ class DepositWithdrawAssetSelector extends React.Component {
             // Return null if backedCoin is already stored
             if (!idMap[backedCoin]) {
                 idMap[backedCoin] = true;
+                let account = null;
+                if(!item.issuerId){ 
+                  account = ChainStore.getAccount(item.intermediateAccount);
+                }
 
                 return {
                     id: backedCoin,
                     label: backedCoin,
                     gateway: gateway,
                     gateFee: item.gateFee,
-                    issuer: item.issuerId || "1.2.96397" //Fall back to open ledger
+                    issuer: item.issuerId || (account ? account.get("id") : "1.2.96397") //Fall back to openledger-wallet
                 };
             } else {
                 return null;
