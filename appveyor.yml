@@ -15,7 +15,8 @@ before_package:
   echo Before package
 after_test:
   - 7z a build\html5_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_'' -r
+  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
+  - node ./write_digest.js
 test_script:
   - npm run package
   - npm run build
@@ -27,6 +28,8 @@ artifacts:
     name: html5_history_dist
   - path: build\hash_history_dist_*.zip
     name: hash_history_dist
+  - path: build\release-checksums-*
+    name: release-checksums-windows    
 deploy:
   provider: GitHub
   release: $(APPVEYOR_REPO_TAG_NAME)

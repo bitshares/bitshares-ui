@@ -45,7 +45,8 @@
         "package-no-ugly": "build -p never",
         "package-deb": "npm run prepackage && build  -p never --linux deb",
         "package-win": "npm run prepackage && build  -p never --windows",
-        "package-mac": "npm run prepackage && build  -p never --mac dmg"
+        "package-mac": "npm run prepackage && build  -p never --mac dmg",
+        "postpackage": "node write_digest.js"
     },
     "jest": {
         "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",
@@ -201,6 +202,7 @@
         "express-history-api-fallback": "^2.1.0",
         "extract-text-webpack-plugin": "^3.0.0",
         "file-loader": "^0.8.4",
+        "fs-jetpack": "^1.3.0",
         "git-rev-sync": "^1.9.1",
         "html-loader": "^0.4.4",
         "husky": "^0.14.3",
