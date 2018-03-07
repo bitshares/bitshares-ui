@@ -167,6 +167,9 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
+        "optional_options": "Optionally",
+        "optional_advanced_form" : "Create an account with the advanced form",
+        "optional_restore_account" : "Restore your account",
         "search": "Search for an account",
         "new_user": "New user?",
         "existing_user": "Existing user",
@@ -1187,6 +1190,8 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
+        "deposit": "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow": "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
         "buy_min": "Buy at least",
         "sell": "Sell",
         "receive": "Receive",
@@ -1225,7 +1230,6 @@
         "no_data": "No data",
         "time": "Candlesticks",
         "zoom": "Zoom",
-        "borrow": "Borrow",
         "no_balance": "Insufficient balance",
         "invalid_amount": "Invalid amount",
         "invalid_price": "Invalid price",
@@ -1499,6 +1503,11 @@
         }
     },
     "modal": {
+        "buy": {
+            "title": "Buy",
+            "asset": "Asset",
+            "bridge": "Brdige"
+        },
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose":
@@ -1620,7 +1629,6 @@
             "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "copy_memo": "Copy memo",
         "please_generate_address": "Please, get new address ",
-        "generate_new": "Get new address",
         "copy_address": "Copy address",
         "use_copy_button":
             "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",

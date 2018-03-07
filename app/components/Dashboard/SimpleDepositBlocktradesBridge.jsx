@@ -271,14 +271,14 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         return (
             <div className={!addressValue ? "no-overflow" : ""}>
                 <div className="SimpleTrade__withdraw-row">
-                    <label className="left-label">ASSET</label>
+                    <label className="left-label"><Translate content="modal.buy.asset" /></label>
                     <div className="inline-label input-wrapper">
                         <input disabled type="text" defaultValue={receiveName} />
                     </div>
                 </div>
                 <div className="SimpleTrade__withdraw-row">
                     <div className="grid-block">
-                        <label className="left-label">BRIDGE</label>
+                        <label className="left-label"><Translate content="modal.buy.bridge" /></label>
                         <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip" onClick={this.onBlockTradesContact.bind(this)}>
                             &nbsp;<Icon style={{position: "relative", top: 0}} name="question-circle" />
                         </span>
@@ -453,7 +453,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
                     <div style={{textAlign: "center"}}>
                         <img style={{margin: 0, height: 80}} src={logo} /><br />
-                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
+                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}><Translate content="modal.buy.title" /></p>
                     </div>
 
                     {this.props.isDown ?
