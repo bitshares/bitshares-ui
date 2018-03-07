@@ -3,13 +3,14 @@ import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
 import assetUtils from "common/asset_utils";
 import {PropTypes} from "react";
-import ChainTypes from "./ChainTypes";
-import BindToChainState from "./BindToChainState";
 import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
 import {ChainStore} from "bitsharesjs/es";
+import AssetWrapper from "./AssetWrapper";
+import BindToChainState from "./BindToChainState";
+import ChainTypes from "./ChainTypes";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -20,10 +21,22 @@ import {ChainStore} from "bitsharesjs/es";
  *
  */
 
+class SupplyPercentage extends React.Component {
+    static propTypes = {
+        do: ChainTypes.ChainObject.isRequired
+    };
+
+    render() {
+        let supply = parseInt(this.props.do.get("current_supply"), 10);
+        let percent = utils.format_number(this.props.amount / supply * 100, 4);
+        return <span className={this.props.colorClass}>{percent}%</span>;
+    }
+}
+SupplyPercentage = BindToChainState(SupplyPercentage);
+
 class FormattedAsset extends React.Component {
     static propTypes = {
         amount: PropTypes.any.isRequired,
-        asset: ChainTypes.ChainAsset.isRequired,
         exact_amount: PropTypes.bool,
         decimalOffset: PropTypes.number,
         color: PropTypes.string,
@@ -83,9 +96,13 @@ class FormattedAsset extends React.Component {
         }
 
         if (asPercentage) {
-            let supply = parseInt(asset.dynamic.current_supply, 10);
-            let percent = utils.format_number(amount / supply * 100, 4);
-            return <span className={colorClass}>{percent}%</span>;
+            return (
+                <SupplyPercentage
+                    amount={amount}
+                    colorClass={colorClass}
+                    do={asset.dynamic_asset_data_id}
+                />
+            );
         }
 
         let issuer = ChainStore.getObject(asset.issuer, false, false);
@@ -168,6 +185,6 @@ class FormattedAsset extends React.Component {
         );
     }
 }
-FormattedAsset = BindToChainState(FormattedAsset);
+FormattedAsset = AssetWrapper(FormattedAsset);
 
 export default FormattedAsset;

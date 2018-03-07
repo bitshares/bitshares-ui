@@ -1,7 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import AssetWrapper from "../Utility/AssetWrapper";
 import AccountName from "../Utility/AccountName";
 import utils from "common/utils";
 import Icon from "../Icon/Icon";
@@ -9,14 +8,8 @@ import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
 
 class MarketRow extends React.Component {
-    static propTypes = {
-        quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired
-    };
-
     static defaultProps = {
-        noSymbols: false,
-        tempComponent: "tr"
+        noSymbols: false
     };
 
     static contextTypes = {
@@ -75,8 +68,12 @@ class MarketRow extends React.Component {
 
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
         let marketName = quote.get("symbol") + ":" + base.get("symbol");
-        let dynamic_data = quote.get("dynamic");
-        let base_dynamic_data = base.get("dynamic");
+        let dynamic_data = this.props.getDynamicObject(
+            quote.get("dynamic_asset_data_id")
+        );
+        let base_dynamic_data = this.props.getDynamicObject(
+            base.get("dynamic_asset_data_id")
+        );
 
         let price = utils.convertPrice(quote, base);
 
@@ -343,4 +340,10 @@ class MarketRow extends React.Component {
     }
 }
 
-export default BindToChainState(MarketRow);
+export default AssetWrapper(MarketRow, {
+    propNames: ["quote", "base"],
+    defaultProps: {
+        tempComponent: "tr"
+    },
+    withDynamic: true
+});

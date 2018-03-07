@@ -37,7 +37,7 @@ function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
 
     this.props.backedCoins.forEach((gateway, gatewayName) => {
         gateway.forEach(coin => {
-            let symbol = coin.backingCoinType || coin.symbol;
+            // let symbol = coin.backingCoinType || coin.symbol;
             let symbolOnly = coin.symbol.split(".").pop();
 
             if (!coinToGatewayMapping[symbolOnly])
@@ -141,7 +141,8 @@ function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
                 }
 
                 selectedGateway =
-                    gateways[gateways.indexOf(greatestBalanceGateway)];
+                    gateways[gateways.indexOf(greatestBalanceGateway)] ||
+                    gateways[0];
             } else {
                 selectedGateway = gateways[0];
             }

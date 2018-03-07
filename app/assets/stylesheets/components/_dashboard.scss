@@ -1,92 +1,3 @@
-.SimpleTrade__modal {
-    // overflow: auto;
-    .Modal__header {
-        padding: 1rem;
-    }
-    .Modal__divider {
-        margin: 0px;
-    }
-    .SimpleTrade__hide-zero {
-        position: relative;
-        top: -3px;
-        cursor: pointer;
-    }
-    .SimpleTrade__withdraw-row {
-        padding: 10px 0;
-        > div > div.small-6 {
-            display: inline-block;
-            padding-bottom: 10px;
-        }
-    }
-    .SimpleTrade__QR {
-        > canvas {
-            background: white;
-            padding: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-    }
-    /* Buttons */
-    .ActionButton_Close {
-        padding: 10px 40px 10px 40px;
-        border-radius: 5px 5px 5px 5px;
-        color: rgb(242, 242, 242);
-        background-color: rgb(245, 27, 27);
-    }
-
-    .SimpleTrade__copyIcon {
-        padding: 0.5rem;
-        margin-right: 15px;
-        background-color: rgb(65, 116, 184);
-    }
-
-    .SimpleTrade__msg {
-        text-align: right;
-        font-size: 0.8rem;
-    }
-    .SimpleTrade__msg-error {
-        > Icon {
-            position: "relative";
-            top: 0;
-        }
-    }
-    .error-msg {
-        font-style: normal;
-        text-transform: uppercase;
-        text-align: right;
-        font-size: 90%;
-        width: 100%;
-        color: #ff3633;
-        @include RobotoMedium;
-        > span {
-            vertical-align: top;
-            top: 0px;
-        }
-        > svg {
-            position: "relative";
-            top: 0px;
-        }
-    }
-
-    .SimpleTrade__deposit-info {
-        margin-left: 0.2rem;
-        overflow: "hidden";
-        > .copyIcon {
-            vertical-align: middle;
-        }
-        > .deposit-details {
-            text-align: left;
-            > div:nth-of-type(1) {
-                font-size: 0.75rem;
-                margin-bottom: 0.25rem;
-            }
-            > div:nth-of-type(2) {
-                font-size: 1rem;
-                color: lightblue;
-            }
-        }
-    }
-}
-
 .balance-row.active {
     background-color: #3c3c3c;
 }
@@ -109,48 +20,6 @@
     font-style: italic;
     padding-top: 5px;
     font-size: 95%;
-}
-
-#simple_transfer_modal {
-    max-width: 650px;
-}
-
-#simple_transfer_modal,
-#simple_deposit_modal,
-#simple_deposit_modal_ask,
-#simple_withdraw_modal,
-#simple_bridge_modal,
-#simple_bridge_modal_ask,
-#deposit_modal_new {
-    padding: 0;
-}
-
-#simple_deposit_modal,
-#simple_deposit_modal_ask,
-#simple_withdraw_modal,
-#simple_bridge_modal,
-#simple_bridge_modal_ask,
-#send_modal,
-#send_modal_header,
-#send_modal_portfolio,
-#deposit_modal_new,
-#withdraw_modal_new {
-    overflow: auto !important;
-    max-width: 500px;
-}
-
-#simple_deposit_modal label,
-#simple_deposit_modal_ask label,
-#simple_withdraw_modal label,
-#simple_bridge_modal label,
-#simple_bridge_modal_ask label {
-    text-transform: none !important;
-}
-
-#simple_buy_modal,
-#simple_sell_modal {
-    overflow: auto !important;
-    padding: 0;
 }
 
 div.button.create-account {
@@ -177,114 +46,20 @@ div.input-wrapper {
     }
 }
 
-// deposit Modal
-#deposit_modal_new {
-    .selectWrapper {
-        border-radius: 5px;
-    }
-    .copyIcon {
-        padding: 0.3rem;
-        vertical-align: middle;
-        background-color: rgb(65, 116, 184);
-    }
-
-    .DepositModal {
-        .canvas {
-            padding-top: 1rem;
-            padding-left: 2rem;
-            padding-right: 2rem;
-            height: auto;
-            min-height: 650px;
-
-            .Modal__body {
-                flex: 1;
-                height: 90%;
-                padding-top: 16px;
-            }
-
-            .container-row {
-                padding-bottom: 1rem;
-            }
-            .floatRight {
-                position: relative;
-                float: right;
-            }
-            .error-msg {
-                color: $alert-color;
-                text-transform: uppercase;
-            }
-
-            .QR > canvas {
-                background: white;
-                padding: 0.5rem;
-            }
-            .ActionButton_Close {
-                padding: 10px 40px 10px 40px;
-                border-radius: 5px 5px 5px 5px;
-                color: rgb(242, 242, 242);
-                background-color: rgb(245, 27, 27);
-            }
-
-            .deposit-directly {
-                text-align: center;
-                > p:nth-of-type(1) {
-                    font-size: 2rem;
-                }
-                > p:nth-of-type(2) {
-                    font-size: 0.8rem;
-                    width: 70%;
-                    margin-right: auto;
-                    margin-left: auto;
-                }
-            }
-            .deposit-info {
-                margin-left: 0.2rem;
-                overflow: "hidden";
-
-                > .maxDeposit {
-                    @include RobotoMedium;
-                    font-size: 0.9rem;
-                }
-
-                .deposit-details {
-                    text-align: left;
-                    > .copyIcon {
-                        margin-right: 15px;
-                    }
-                    div:nth-of-type(2) > div:nth-of-type(1) {
-                        font-size: 0.8rem;
-                        margin-bottom: 0.25rem;
-                    }
-                    div:nth-of-type(2) > div:nth-of-type(2) {
-                        font-size: 0.95rem;
-                        color: #337ab7;
-                    }
-                }
-            }
-        }
-    }
-    .close-button {
-        display: none;
+// QR canvas
+.QR {
+    padding: 1rem;
+    > canvas {
+        background: white;
+        padding: 0.5rem;
     }
 }
 
-#deposit_modal_new,
-#withdraw_modal_new {
-    .Modal__header {
-        text-align: center;
-        > img {
-            margin: 0px;
-            height: 80px;
-        }
-        > p {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0px;
-        }
+.copyIcon {
+    padding: 0.4rem;
+    margin-right: 1rem;
+    vertical-align: middle;
+    > button.copyIcon {
+        height: inherit;
     }
-}
-
-#withdraw_modal_new {
-    height: 800px;
-    padding: 1rem 2rem 110px 2rem;
 }
