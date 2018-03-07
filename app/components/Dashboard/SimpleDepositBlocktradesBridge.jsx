@@ -255,7 +255,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const {receive_address, apiError} = this.state;
         const hasMemo = receive_address && "memo" in receive_address && receive_address.memo;
         const addressValue = receive_address && receive_address.address || "";
-        const QR = <div className="SimpleTrade__QR"><QRCode size={140} value={addressValue}/></div>;
+        const QR = <div className="QR" style={{textAlign: "center"}}><QRCode size={140} value={addressValue}/></div>;
 
         let bridgeAssets = Object.keys(this.props.bridges.toJS());
 
@@ -269,14 +269,14 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const aboveLimitStyle = aboveLimit ? {border: "1px solid #a94442"} : null;
 
         return (
-            <div className={!addressValue ? "no-overflow" : ""}>
-                <div className="SimpleTrade__withdraw-row">
+            <div className="modal__body">
+                <div className="container-row">
                     <label className="left-label">ASSET</label>
                     <div className="inline-label input-wrapper">
                         <input disabled type="text" defaultValue={receiveName} />
                     </div>
                 </div>
-                <div className="SimpleTrade__withdraw-row">
+                <div className="container-row">
                     <div className="grid-block">
                         <label className="left-label">BRIDGE</label>
                         <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip" onClick={this.onBlockTradesContact.bind(this)}>
@@ -288,15 +288,19 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                     </div>
                 </div>
                 <span style={!apiError ? {display: ""} : {display: "none"}}>
-                    <div className="SimpleTrade__withdraw-row">
+                    <div className="container-row double-row">
                         <div className="no-margin no-padding">
                             <div className="small-6" style={{paddingRight: 10}}>
                                 <div className="grid-block">
-                                    <label className="left-label"><Translate content="transfer.send" /></label>
+                                    <label className="left-label">
+                                        <Translate content="transfer.send" />
+                                        
+                                    </label>
                                     {aboveLimit ? 
                                         <div className="error-msg inline-block tooltip" data-tip={counterpart.translate("tooltip.over_limit")}>
                                             <Translate content="gateway.over_limit" />&nbsp;<Icon name="question-circle" />
-                                        </div> : null}
+                                        </div> 
+                                    : null}
                                 </div>
                                 <div className="inline-label input-wrapper">
                                     <input style={aboveLimitStyle} type="text" value={this.state.sendAmount} onInput={this._onAmountChange.bind(this, "input")}/>
@@ -322,7 +326,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="SimpleTrade__withdraw-row">
+                    <div className="container-row double-row">
                         <div className="no-margin no-padding">
                             <div className="small-6" style={{paddingRight: 10}}>
                                 <label className="left-label"><Translate content="exchange.receive" /></label>
@@ -344,40 +348,52 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         </div>
                     </div>
                     {!addressValue ? <div style={{textAlign: "center"}}><LoadingIndicator type="three-bounce"/></div> :
-                        <div className="SimpleTrade__withdraw-row" style={{textAlign: "center"}}>
+                        <div className="container-row">
                             {hasMemo ? null : QR}
-                            <div className="grid-block SimpleTrade__deposit-info">
+                            <div className="grid-block">
                                 <div className="copyIcon">
-                                    <CopyButton text={addressValue} className={"SimpleTrade__copyIcon"} />
+                                    <CopyButton text={addressValue} className="copyIcon" />
                                 </div>
-                                <div className="deposit-details">
-                                    <div><Translate content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
-                                    <div>{addressValue}</div>
+                                <div>
+                                    <Translate 
+                                        component="div" 
+                                        style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }} 
+                                        content="gateway.purchase_notice"
+                                        inputAsset={inputName}
+                                        outputAsset={receiveName} 
+                                    />
+
+                                    <div className="modal__highlight">{addressValue}</div>
                                 </div>
                             </div>
                             {hasMemo ?
-                                <div className="grid-block SimpleTrade__deposit-info" style={{marginTop: "10px"}}>
+                                <div className="grid-block" style={{marginTop: "10px"}}>
                                     <div className="copyIcon">
-                                        <CopyButton text={receive_address.memo} className={"SimpleTrade__copyIcon"} />
+                                        <CopyButton text={receive_address.memo} className="copyIcon" />
                                     </div>
-                                    <div className="deposit-details">
-                                        <div><Translate unsafe content="gateway.purchase_notice_memo" /></div>
-                                        <div>{receive_address.memo}</div>
+                                    <div>
+                                        <Translate 
+                                            unsafe 
+                                            content="gateway.purchase_notice_memo" 
+                                            component="div" 
+                                            style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }} 
+                                        />
+                                        <div className="modal__highlight">{receive_address.memo}</div>
                                     </div>
                                 </div> : null}
                         </div>}
-                    <div className="SimpleTrade__withdraw-row" style={{textAlign: "center", paddingBottom: "2rem"}}>
+                    <div>
                         <div className="no-margin no-padding">
-                            <button className="ActionButton_Close" onClick={this.onClose.bind(this)}>
+                            <button className="button primary hollow" onClick={this.onClose.bind(this)}>
                                 <Translate content="transfer.close" />
                             </button>
                         </div>
                     </div>
                 </span>
                 <span style={apiError ? {display: ""} : {display: "none"}}>
-                    <div className="SimpleTrade__withdraw-row" style={{textAlign: "center", paddingBottom: "2rem", color: "#bb2926"}}>
-                        <Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" />
-                        <button className="ActionButton_Close" onClick={this.onClose.bind(this)}>
+                    <div className="container-row double-row">
+                        <Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="h3" />
+                        <button className="button primary hollow" onClick={this.onClose.bind(this)}>
                             <Translate content="transfer.close" />
                         </button>
                     </div>
@@ -437,30 +453,16 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             return null;
         }
         
-        let logo = require("assets/logo-ico-blue.png");
-
         return (
-            <div className="SimpleTrade__modal">
-                <div className="Modal__header" style={{background: "none"}}></div>
-                
-                <div
-                    className="grid-block vertical no-overflow"
-                    style={{
-                        zIndex: 1002,
-                        paddingLeft: "2rem",
-                        paddingRight: "2rem",
-                    }}>
-
-                    <div style={{textAlign: "center"}}>
-                        <img style={{margin: 0, height: 80}} src={logo} /><br />
-                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
-                    </div>
-
-                    {this.props.isDown ?
-                        <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" /></div> :
-                        !this.props.isAvailable ? <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
-                        this._renderDeposit()}
+            <div className="grid-block vertical no-overflow">
+                <div className="modal__header">
+                    <Translate component="p" content="modal.buy.title" />
                 </div>
+
+                {this.props.isDown ?
+                    <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" /></div> :
+                    !this.props.isAvailable ? <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
+                    this._renderDeposit()}
             </div>
         );
     }
@@ -512,8 +514,8 @@ export default class SimpleDepositBlocktradesBridgeModal extends React.Component
     render() {
         if (!this.props.bridges) return null;
 
-        return (
-            <BaseModal className="test" onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
+        return !this.state.open ? null : (
+            <BaseModal id={this.props.modalId} onClose={this.onClose.bind(this)} overlayClass="small" noCloseBtn  overlay={true}>
                 {this.state.open ? <StoreWrapper {...this.props} open={this.state.open} /> : null}
             </BaseModal>
         );

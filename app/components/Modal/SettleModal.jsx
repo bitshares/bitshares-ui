@@ -84,23 +84,24 @@ class ModalContent extends React.Component {
                 currentBalance = balance;
                 balanceAmount = balanceObject.get("balance");
             }
-        })
+        });
 
         let precision = utils.get_asset_precision(asset.get("precision"));
         let parsedAmount = amount ? amount.replace(/,/g, "") : 0;
         let submit_btn_class = parseFloat(parsedAmount) > 0 && parseFloat(parsedAmount) * precision <= parseFloat(balanceAmount) ? "button success" : "button disabled";
 
-        let balanceText = currentBalance ? (
+        let balanceText = (
             <span>
                 <Translate content="exchange.balance"/>:&nbsp;
-                <BalanceComponent balance={currentBalance}/>
-            </span>) : null;
+                {currentBalance ? <BalanceComponent balance={currentBalance}/> : "0 " + asset.get("symbol")}
+            </span>
+        );
 
         return (
             <form className="grid-block vertical full-width-content">
-                <Translate component="h3" content="modal.settle.title" asset={asset.get("symbol")} />
+                <Translate component="h3" style={{textAlign: "center"}} content="modal.settle.title" asset={asset.get("symbol")} />
                 <div className="grid-container " style={{paddingTop: "2rem"}}>
-                    <div className="content-block" style={{maxWidth: "25rem"}}>
+                    <div className="content-block">
                         <AmountSelector label="modal.settle.amount"
                                         amount={amount}
                                         onChange={this.onAmountChanged.bind(this)}
@@ -122,14 +123,25 @@ class ModalContent extends React.Component {
 ModalContent = BindToChainState(ModalContent, {keep_updating: true});
 
 class SettleModal extends React.Component {
+    constructor() {
+        super();
+
+        this.state = { open: false };
+    }
 
     show() {
-        ZfApi.publish("settlement_modal", "open");
+        this.setState({ open: true }, () => {
+            ZfApi.publish(this.props.modalId, "open");
+        });
+    }
+
+    onClose() {
+        this.setState({open: false});
     }
 
     render() {
-        return (
-            <BaseModal id="settlement_modal" overlay={true} ref="settlement_modal">
+        return !this.state.open ? null : (
+            <BaseModal id={this.props.modalId} overlayClass="small" onClose={this.onClose.bind(this)} overlay={true} ref="settlement_modal">
                 <div className="grid-block vertical">
                     <ModalContent {...this.props} />
                 </div>

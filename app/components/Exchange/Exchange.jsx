@@ -1845,6 +1845,7 @@ class Exchange extends React.Component {
                     {!notMyAccount && quoteIsBitAsset ? (
                         <BorrowModal
                             ref="borrowQuote"
+                            modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn([
                                 "bitasset",
@@ -1857,6 +1858,7 @@ class Exchange extends React.Component {
                     {!notMyAccount && baseIsBitAsset ? (
                         <BorrowModal
                             ref="borrowBase"
+                            modalId={"borrow_modal_base_" + baseAsset.get("id")}
                             quote_asset={baseAsset.get("id")}
                             backing_asset={baseAsset.getIn([
                                 "bitasset",

@@ -297,7 +297,10 @@ class Asset extends React.Component {
                     hide_issuer="true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
-                <Link className="button market-button" to={`/market/${asset.symbol}_${preferredMarket}`}>
+                <Link
+                    className="button market-button"
+                    to={`/market/${asset.symbol}_${preferredMarket}`}
+                >
                     <Translate content="exchange.market" />
                 </Link>
             </div>
@@ -436,7 +439,7 @@ class Asset extends React.Component {
                 bitAsset.options.force_settlement_offset_percent
         );
         */
-       
+
         let settlementDelay = bitAsset.options.force_settlement_delay_sec;
         let settlementOffset = bitAsset.options.force_settlement_offset_percent;
 

@@ -292,6 +292,7 @@ class AccountOverview extends React.Component {
                 borrowModal: !isBitAsset ? null : (
                     <BorrowModal
                         ref={modalRef}
+                        modalId={"borrow_modal_" + asset.get("id")}
                         quote_asset={asset.get("id")}
                         backing_asset={asset.getIn([
                             "bitasset",
@@ -1304,28 +1305,16 @@ class AccountOverview extends React.Component {
                                 </Tab>
                             ) : null}
                         </Tabs>
-
-                        <SettleModal
-                            ref="settlement_modal"
-                            asset={this.state.settleAsset}
-                            account={account.get("name")}
-                        />
                     </div>
                 </div>
 
-                {/* Deposit Modal */}
-                {/* <SimpleDepositWithdraw
-                    ref="deposit_modal"
-                    action="deposit"
-                    fiatModal={this.state.fiatModal}
-                    account={this.props.account.get("name")}
-                    sender={this.props.account.get("id")}
-                    asset={this.state.depositAsset}
-                    modalId="simple_deposit_modal"
-                    balances={this.props.balances}
-                    {...currentDepositAsset}
-                    isDown={this.props.gatewayDown.get("OPEN")}
-                /> */}
+                {/* Settle Modal */}
+                <SettleModal
+                    ref="settlement_modal"
+                    modalId="settlement_modal"
+                    asset={this.state.settleAsset}
+                    account={account.get("name")}
+                />
 
                 {/* Withdraw Modal*/}
                 <SimpleDepositWithdraw
