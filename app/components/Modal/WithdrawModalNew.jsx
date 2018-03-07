@@ -20,6 +20,7 @@ import BalanceWrapper from "../Account/BalanceWrapper";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
+import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 import {
     _getAvailableGateways,
@@ -39,6 +40,8 @@ import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs/es";
 const gatewayBoolCheck = "withdrawalAllowed";
 
+import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
+
 class WithdrawModalNew extends React.Component {
     constructor(props) {
         super(props);
@@ -55,7 +58,6 @@ class WithdrawModalNew extends React.Component {
             feeError: null,
             fee_asset_id: "1.3.0",
             gateFee: 0,
-            issuer: "",
             quantity: 0,
             address: "",
             memo: "",
@@ -128,9 +130,9 @@ class WithdrawModalNew extends React.Component {
     }
 
     _getAssetAndGatewayFromInitialSymbol(initialSymbol) {
-        let pieces = initialSymbol.split(".");
-        let selectedAsset = pieces[1];
-        let selectedGateway = pieces[0];
+        let {selectedAsset, selectedGateway} = getAssetAndGateway(
+            initialSymbol
+        );
         let gateFee = 0;
 
         if (selectedGateway) {
@@ -150,12 +152,12 @@ class WithdrawModalNew extends React.Component {
     componentWillReceiveProps(np) {
         this.setState(this._getAssetPairVariables(np));
 
-        if (np.account != this.props.account) {
+        if (np.account !== this.props.account) {
             this._checkFeeStatus();
             this._updateFee();
         }
 
-        if (np.initialSymbol != this.props.initialSymbol) {
+        if (np.initialSymbol !== this.props.initialSymbol) {
             let newState = this._getAssetAndGatewayFromInitialSymbol(
                 np.initialSymbol
             );
@@ -174,9 +176,9 @@ class WithdrawModalNew extends React.Component {
 
         if (preferredCurrency && selectedAsset && quantity) {
             if (
-                preferredCurrency == this.props.preferredCurrency &&
-                selectedAsset == this.state.selectedAsset &&
-                quantity == this.state.quantity
+                preferredCurrency === this.props.preferredCurrency &&
+                selectedAsset === this.state.selectedAsset &&
+                quantity === this.state.quantity
             )
                 return;
             let toAsset = null;
@@ -185,12 +187,13 @@ class WithdrawModalNew extends React.Component {
 
             assets.forEach(item => {
                 item = item.get ? item : Immutable.fromJS(item);
-                if (item.get("symbol") == preferredCurrency) toAsset = item;
-                if (item.get("symbol") == fullFromAssetSymbol) fromAsset = item;
+                if (item.get("symbol") === preferredCurrency) toAsset = item;
+                if (item.get("symbol") === fullFromAssetSymbol)
+                    fromAsset = item;
             });
 
             if (fromAsset && toAsset) {
-                if (toAsset.get("precision") != fromAsset.get("precision"))
+                if (toAsset.get("precision") !== fromAsset.get("precision"))
                     toAsset = toAsset.set(
                         "precision",
                         fromAsset.get("precision")
@@ -212,7 +215,9 @@ class WithdrawModalNew extends React.Component {
             ? selectedGateway + "." + selectedAsset
             : selectedAsset;
 
-        let withdrawalCurrencyId = null;
+        if (selectedGateway === "RUDEX" && selectedAsset === "PPY")
+            fullSymbol = "PPY";
+
         let withdrawalCurrencyBalance = 0;
         let withdrawalCurrencyBalanceId = null;
         let withdrawalCurrencyPrecision = null;
@@ -222,8 +227,8 @@ class WithdrawModalNew extends React.Component {
         let convertedBalance = null;
         let estimatedValue = 0;
 
-        assets.forEach(item => {
-            if (item.symbol == fullSymbol) withdrawalCurrencyId = item.id;
+        let withdrawalCurrency = assets.find(item => {
+            return item.symbol === fullSymbol;
         });
 
         let withdrawBalance, fromAsset;
@@ -232,8 +237,8 @@ class WithdrawModalNew extends React.Component {
             balances.forEach(balance => {
                 if (balance && balance.toJS) {
                     if (
-                        withdrawalCurrencyId &&
-                        balance.get("asset_type") == withdrawalCurrencyId
+                        withdrawalCurrency &&
+                        balance.get("asset_type") == withdrawalCurrency.id
                     ) {
                         withdrawBalance = balance;
                         withdrawalCurrencyBalanceId = balance.get("id");
@@ -348,7 +353,10 @@ class WithdrawModalNew extends React.Component {
 
         let {fee_asset_types} = this._getAvailableAssets();
         return {
-            withdrawalCurrencyId,
+            withdrawalCurrency,
+            withdrawalCurrencyId: withdrawalCurrency
+                ? withdrawalCurrency.id
+                : null,
             withdrawalCurrencyBalance,
             withdrawalCurrencyBalanceId,
             withdrawalCurrencyPrecision,
@@ -554,14 +562,18 @@ class WithdrawModalNew extends React.Component {
             gatewayBoolCheck
         );
         let address = WithdrawAddresses.getLast(value.toLowerCase());
-        this.setState({
-            selectedAsset,
-            selectedGateway,
-            gateFee: asset.gateFee,
-            issuer: asset.issuer,
-            address,
-            isBTS: false
-        });
+        this.setState(
+            {
+                selectedAsset,
+                selectedGateway,
+                gateFee: asset.gateFee,
+                address,
+                isBTS: false
+            },
+            () => {
+                this.setState(this._getAssetPairVariables(), this.updateFee);
+            }
+        );
     }
 
     onAssetChanged(value) {
@@ -592,8 +604,9 @@ class WithdrawModalNew extends React.Component {
 
     onGatewayChanged(e) {
         let selectedGateway = e.target.value;
-        this.setState({selectedGateway});
-        this._updateFee();
+        this.setState({selectedGateway}, () => {
+            this.setState(this._getAssetPairVariables(), this.updateFee);
+        });
     }
 
     onQuantityChanged(e) {
@@ -675,12 +688,30 @@ class WithdrawModalNew extends React.Component {
             withdrawalCurrencyBalance,
             withdrawalCurrencyPrecision,
             quantity,
+            withdrawalCurrency,
             selectedAsset,
             address,
-            isBTS
+            isBTS,
+            gateFee,
+            memo,
+            btsAccount,
+            feeAmount
         } = this.state;
-        let assetName = selectedAsset.toLowerCase();
 
+        let assetName = selectedAsset.toLowerCase();
+        const intermediateAccountNameOrId = getIntermediateAccount(
+            withdrawalCurrency.symbol,
+            this.props.backedCoins
+        );
+        const intermediateAccount = this.props.intermediateAccounts.find(a => {
+            return (
+                a &&
+                (a.get("id") === intermediateAccountNameOrId ||
+                    a.get("name") === intermediateAccountNameOrId)
+            );
+        });
+        if (!intermediateAccount)
+            throw new Error("Unable to find intermediateAccount");
         if (!WithdrawAddresses.has(assetName)) {
             let withdrawals = [];
             withdrawals.push(address);
@@ -716,7 +747,7 @@ class WithdrawModalNew extends React.Component {
         const gateFeeAmount = new Asset({
             asset_id: withdrawalCurrencyId,
             precision: withdrawalCurrencyPrecision,
-            real: state.gateFee
+            real: gateFee
         });
 
         sendAmount.plus(gateFeeAmount);
@@ -730,17 +761,15 @@ class WithdrawModalNew extends React.Component {
         let to = "";
 
         if (isBTS) {
-            descriptor = state.memo ? new Buffer(state.memo, "utf-8") : "";
-            to = state.btsAccount.get("id");
+            descriptor = memo ? new Buffer(memo, "utf-8") : "";
+            to = btsAccount.get("id");
         } else {
             descriptor =
                 assetName +
                 ":" +
                 address +
-                (this.state.memo
-                    ? ":" + new Buffer(this.state.memo, "utf-8")
-                    : "");
-            to = state.issuer;
+                (memo ? ":" + new Buffer(memo, "utf-8") : "");
+            to = intermediateAccount.get("id");
         }
 
         let args = [
@@ -750,7 +779,7 @@ class WithdrawModalNew extends React.Component {
             withdrawalCurrencyId,
             descriptor,
             null,
-            state.feeAmount ? state.feeAmount.asset_id : "1.3.0"
+            feeAmount ? feeAmount.asset_id : "1.3.0"
         ];
 
         AccountActions.transfer(...args).then(() => {
@@ -852,18 +881,18 @@ class WithdrawModalNew extends React.Component {
         );
 
         let maxAvailable =
-            convertedBalance &&
-            this.state.withdrawalCurrencyPrecision &&
-            this.state.withdrawalCurrencyId
+            convertedBalance && this.state.withdrawalCurrency
                 ? new Asset({
-                    real: convertedBalance,
-                    asset_id: this.state.withdrawalCurrencyId,
-                    precision: this.state.withdrawalCurrencyPrecision
-                })
+                      real: convertedBalance,
+                      asset_id: this.state.withdrawalCurrency.id,
+                      precision: this.state.withdrawalCurrency.precision
+                  })
                 : new Asset({
-                    amount: 0
-                });
-
+                      amount: 0,
+                      asset_id: this.state.withdrawalCurrency
+                          ? this.state.withdrawalCurrency.id
+                          : undefined
+                  });
         if (this.state.feeAmount.asset_id === maxAvailable.asset_id) {
             maxAvailable.minus(this.state.feeAmount);
         }
@@ -894,14 +923,16 @@ class WithdrawModalNew extends React.Component {
                     <div style={{marginBottom: "1em"}}>
                         {selectedGateway
                             ? gatewaySelector.call(this, {
-                                selectedGateway,
-                                gatewayStatus,
-                                nAvailableGateways,
-                                availableGateways:
-                                    coinToGatewayMapping[selectedAsset],
-                                error: false,
-                                onGatewayChanged: this.onGatewayChanged.bind(this)
-                            })
+                                  selectedGateway,
+                                  gatewayStatus,
+                                  nAvailableGateways,
+                                  availableGateways:
+                                      coinToGatewayMapping[selectedAsset],
+                                  error: false,
+                                  onGatewayChanged: this.onGatewayChanged.bind(
+                                      this
+                                  )
+                              })
                             : null}
                     </div>
 
@@ -938,7 +969,16 @@ class WithdrawModalNew extends React.Component {
                                                 }
                                             />
                                         ) : (
-                                            "0.00"
+                                            <span>
+                                                0.00{" "}
+                                                <FormattedAsset
+                                                    hide_amount
+                                                    amount={0}
+                                                    asset={
+                                                        maxAvailable.asset_id
+                                                    }
+                                                />
+                                            </span>
                                         )}
                                     </span>
                                 </div>
@@ -956,7 +996,10 @@ class WithdrawModalNew extends React.Component {
                     ) : null}
 
                     {(assetAndGateway || isBTS) && !canCoverWithdrawal ? (
-                        <div className="has-error" style={{marginBottom: "1em"}}>
+                        <div
+                            className="has-error"
+                            style={{marginBottom: "1em"}}
+                        >
                             <Translate content="modal.withdraw.cannot_cover" />
                         </div>
                     ) : null}
@@ -997,12 +1040,16 @@ class WithdrawModalNew extends React.Component {
                                     <input
                                         type="text"
                                         value={address}
-                                        onChange={this.onAddressChanged.bind(this)}
+                                        onChange={this.onAddressChanged.bind(
+                                            this
+                                        )}
                                         autoComplete="off"
                                     />
                                     {storedAddresses.length > 1 ? (
                                         <span
-                                            onClick={this.onDropDownList.bind(this)}
+                                            onClick={this.onDropDownList.bind(
+                                                this
+                                            )}
                                         >
                                             &#9660;
                                         </span>
@@ -1020,7 +1067,9 @@ class WithdrawModalNew extends React.Component {
                             <AccountSelector
                                 label="transfer.to"
                                 accountName={state.btsAccountName}
-                                onChange={this.onBTSAccountNameChanged.bind(this)}
+                                onChange={this.onBTSAccountNameChanged.bind(
+                                    this
+                                )}
                                 onAccountChanged={this.onBTSAccountChanged.bind(
                                     this
                                 )}
@@ -1032,7 +1081,7 @@ class WithdrawModalNew extends React.Component {
                     ) : null}
 
                     {/*MEMO*/}
-                    {(assetAndGateway || isBTS) && selectedGateway != "OPEN" ? (
+                    {isBTS ? (
                         <div>
                             <label className="left-label">
                                 <Translate content="modal.withdraw.memo" />
@@ -1049,7 +1098,10 @@ class WithdrawModalNew extends React.Component {
                     {assetAndGateway || isBTS ? (
                         <div className="double-row">
                             <div className="no-margin no-padding">
-                                <div className="small-6" style={{paddingRight: 10}}>
+                                <div
+                                    className="small-6"
+                                    style={{paddingRight: 10}}
+                                >
                                     {/* Withdraw amount */}
                                     <AmountSelector
                                         label="transfer.fee"
@@ -1065,7 +1117,10 @@ class WithdrawModalNew extends React.Component {
                                     {/*!this.state.hasBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noFeeBalance" /></p> : null*/}
                                     {/*!this.state.hasPoolBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noPoolBalance" /></p> : null*/}
                                 </div>
-                                <div className="small-6" style={{paddingLeft: 10}}>
+                                <div
+                                    className="small-6"
+                                    style={{paddingLeft: 10}}
+                                >
                                     {/* Gate fee */}
                                     {gateFee ? (
                                         <div
@@ -1084,7 +1139,9 @@ class WithdrawModalNew extends React.Component {
 
                                                 <div className="form-label select floating-dropdown">
                                                     <div className="dropdown-wrapper inactive">
-                                                        <div>{selectedAsset}</div>
+                                                        <div>
+                                                            {selectedAsset}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1094,8 +1151,6 @@ class WithdrawModalNew extends React.Component {
                             </div>
                         </div>
                     ) : null}
-
-                    
                 </div>
                 {/*Submit Buttons*/}
                 <div
@@ -1109,20 +1164,20 @@ class WithdrawModalNew extends React.Component {
                     <div style={leftColumn} className="button-group">
                         <button
                             style={buttonStyle}
-                            className="button danger"
-                            onClick={this.props.close}
-                        >
-                            <Translate content="modal.withdraw.cancel" />
-                        </button>
-                    </div>
-                    <div style={rightColumn} className="button-group">
-                        <button
-                            style={buttonStyle}
                             className="button success"
                             disabled={shouldDisable}
                             onClick={this.onSubmit.bind(this)}
                         >
                             <Translate content="modal.withdraw.withdraw" />
+                        </button>
+                    </div>
+                    <div style={rightColumn} className="button-group">
+                        <button
+                            style={buttonStyle}
+                            className="button danger"
+                            onClick={this.props.close}
+                        >
+                            <Translate content="modal.withdraw.cancel" />
                         </button>
                     </div>
                 </div>
@@ -1138,18 +1193,6 @@ const ConnectedWithdrawModal = connect(WithdrawModalNew, {
     getProps() {
         return {
             backedCoins: GatewayStore.getState().backedCoins,
-            openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
-                "OPEN",
-                []
-            ),
-            rudexBackedCoins: GatewayStore.getState().backedCoins.get(
-                "RUDEX",
-                []
-            ),
-            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
-                "TRADE",
-                []
-            ),
             preferredCurrency: SettingsStore.getSetting("unit"),
             marketStats: MarketsStore.getState().allMarketStats
         };
@@ -1158,11 +1201,15 @@ const ConnectedWithdrawModal = connect(WithdrawModalNew, {
 
 class WithdrawModalWrapper extends React.Component {
     static propTypes = {
-        account: ChainTypes.ChainAccount.isRequired
+        account: ChainTypes.ChainAccount.isRequired,
+        withdrawAssets: ChainTypes.ChainAssetsList,
+        intermediateAccounts: ChainTypes.ChainAccountsList
     };
 
     static defaultProps = {
-        account: ""
+        account: "",
+        withdrawAssets: Immutable.List(),
+        intermediateAccounts: Immutable.List()
     };
 
     render() {
@@ -1172,9 +1219,21 @@ class WithdrawModalWrapper extends React.Component {
         let assets = Immutable.fromJS({});
         balances.forEach((item, id) => {
             try {
-                let asset = ChainStore.getObject(id).toJS();
+                let asset = ChainStore.getAsset(id).toJS();
                 assets = assets.set(id, asset);
             } catch (e) {}
+        });
+
+        props.backedCoins.forEach(gateway => {
+            gateway.forEach(coin => {
+                if (coin.withdrawalAllowed) {
+                    try {
+                        let asset = ChainStore.getAsset(coin.symbol).toJS();
+                        if (!assets.has(asset.id))
+                            assets = assets.set(asset.id, asset);
+                    } catch (e) {}
+                }
+            });
         });
 
         return (
@@ -1227,6 +1286,27 @@ export default class WithdrawModal extends React.Component {
     }
 
     render() {
+        let withdrawAssets = Immutable.List();
+        let intermediateAccounts = Immutable.List();
+        this.props.backedCoins.forEach(gateway => {
+            gateway.forEach(coin => {
+                if (coin.withdrawalAllowed) {
+                    withdrawAssets.push(coin.symbol);
+                    let withdrawAccount = getIntermediateAccount(
+                        coin.symbol,
+                        this.props.backedCoins
+                    );
+                    if (
+                        withdrawAccount &&
+                        !intermediateAccounts.includes(withdrawAccount)
+                    )
+                        intermediateAccounts = intermediateAccounts.push(
+                            withdrawAccount
+                        );
+                }
+            });
+        });
+
         return !this.state.open ? null : (
             <BaseModal
                 overlayClass="small"
@@ -1241,6 +1321,8 @@ export default class WithdrawModal extends React.Component {
                     open={this.state.open}
                     id={this.props.modalId}
                     close={this.close.bind(this)}
+                    withdrawAssets={withdrawAssets}
+                    intermediateAccounts={intermediateAccounts}
                 />
             </BaseModal>
         );

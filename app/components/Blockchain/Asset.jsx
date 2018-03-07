@@ -297,15 +297,12 @@ class Asset extends React.Component {
                     hide_issuer="true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
-                <a
-                    style={{textTransform: "uppercase"}}
+                <Link
                     className="button market-button"
-                    href={`${__HASH_HISTORY__ ? "#" : ""}/market/${
-                        asset.symbol
-                    }_${preferredMarket}`}
+                    to={`/market/${asset.symbol}_${preferredMarket}`}
                 >
                     <Translate content="exchange.market" />
-                </a>
+                </Link>
             </div>
         );
     }
@@ -432,6 +429,7 @@ class Asset extends React.Component {
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
 
+        /*
         console.log(
             "force settlement delay: " +
                 bitAsset.options.force_settlement_delay_sec
@@ -440,6 +438,7 @@ class Asset extends React.Component {
             "force settlement offset: " +
                 bitAsset.options.force_settlement_offset_percent
         );
+        */
 
         let settlementDelay = bitAsset.options.force_settlement_delay_sec;
         let settlementOffset = bitAsset.options.force_settlement_offset_percent;

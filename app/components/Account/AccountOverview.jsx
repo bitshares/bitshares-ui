@@ -36,6 +36,7 @@ import SendModal from "../Modal/SendModal";
 import PulseIcon from "../Icon/PulseIcon";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import AccountTreemap from "./AccountTreemap";
+import {getBackedCoin} from "common/gatewayUtils";
 
 class AccountOverview extends React.Component {
     static propTypes = {
@@ -376,26 +377,19 @@ class AccountOverview extends React.Component {
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
 
-            const thisAssetName = asset.get("symbol").split(".");
+            const backedCoin = getBackedCoin(
+                asset.get("symbol"),
+                this.props.backedCoins
+            );
             const canDeposit =
-                ((thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
-                    !!this.props.backedCoins
-                        .get("OPEN", [])
-                        .find(a => a.backingCoinType === thisAssetName[1])) ||
-                !!this.props.backedCoins
-                    .get("RUDEX", [])
-                    .find(a => a.backingCoin === thisAssetName[1]) ||
+                (backedCoin && backedCoin.depositAllowed) ||
                 asset.get("symbol") == "BTS";
 
-            const canDepositWithdraw = !!this.props.backedCoins
-                .get("OPEN", [])
-                .find(a => a.symbol === asset.get("symbol"));
             const canWithdraw =
-                canDepositWithdraw &&
+                backedCoin &&
+                backedCoin.withdrawalAllowed &&
                 (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
-
-            // console.log(balance.getIn(["balance", "amount"]));
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
@@ -1311,8 +1305,6 @@ class AccountOverview extends React.Component {
                                 </Tab>
                             ) : null}
                         </Tabs>
-
-
                     </div>
                 </div>
 
