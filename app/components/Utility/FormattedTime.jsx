@@ -15,7 +15,7 @@ class FormattedTime extends React.Component {
     // given an integer seconds as an argument, 
     // return the number of hours
     getHours(secs) {
-        console.log("get hours called with: " + secs);
+        //console.log("get hours called with: " + secs);
         return secs / 3600;
     }
 
