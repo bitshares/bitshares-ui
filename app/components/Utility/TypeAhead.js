@@ -160,7 +160,7 @@ export default class TypeAhead extends React.Component {
         return (
             <div
                 className="typeahead"
-                style={{paddingBottom: isMenuShowing ? "15px" : ""}} // Something is making the typeahead take less space when dropdown is open. Add extra padding for now...
+                style={{paddingBottom: isMenuShowing ? "1rem" : ""}} // Something is making the typeahead take less space when dropdown is open. Add extra padding for now...
             >
                 {!!this.props.label ? (
                     <label className="left-label">
@@ -178,7 +178,6 @@ export default class TypeAhead extends React.Component {
                         top: !!this.props.label ? 35 : 7,
                         transform: isMenuShowing ? "rotate(180deg)" : null
                     }}
-                    onClick={this.onClick}
                 />
             </div>
         );

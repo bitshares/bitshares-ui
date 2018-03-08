@@ -236,8 +236,19 @@
         color: $primary-text-color;
     }
 
+    // copyicons
+    .copyIcon {
+        background-color: $button-bg-color;
+        > button.copyIcon {
+            background-color: $button-bg-color;
+        }
+    }
+
     .modal {
         @include color($light-text-color, $account-cells);
+        .modal__highlight {
+            color: $info-color;
+        }
         .close-button {
             color: $secondary-text-color;
             &:hover {
@@ -2071,45 +2082,6 @@
             }
         }
     }
-
-    .modal {
-        border-radius: 6px;
-    }
-
-    @media screen and (max-width: 640px) {
-        .modal {
-            background-color: $modal-bg-color;
-            border-radius: 0;
-
-            input[type="text"],
-            input[type="text"]:focus,
-            input[type="text"]:active,
-            input[type="password"],
-            input[type="password"]:focus,
-            input[type="password"]:active,
-            input[type="email"],
-            input[type="email"]:focus,
-            input[type="email"]:active,
-            input[type="number"],
-            input[type="number"]:focus,
-            input[type="number"]:active,
-            input[type="search"],
-            input[type="search"]:focus,
-            input[type="search"]:active,
-            textarea,
-            textarea:focus,
-            textarea:active,
-            input[role="combobox"],
-            input[role="combobox"]:focus,
-            input[role="combobox"]:active,
-            select[role="combobox"],
-            select[role="combobox"]:focus,
-            select[role="combobox"]:active,
-            .typeahead > div {
-                background-color: $mobile-input-bg;
-            }
-        }
-    }
 }
 
 .midnightTheme .gate_fee .amount-selector {
@@ -2248,10 +2220,6 @@
         text-overflow: ellipsis;
         text-align: right;
     }
-}
-
-#unlock_wallet_modal2 .close-button {
-    color: $bs-blue;
 }
 
 @media screen and (max-width: 640px) {

@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router/es";
 import ChainTypes from "./ChainTypes";
-import BindToChainState from "./BindToChainState";
+import AssetWrapper from "./AssetWrapper";
 import AssetName from "./AssetName";
 
 /**
@@ -14,40 +14,37 @@ import AssetName from "./AssetName";
  */
 
 class MarketLink extends React.Component {
-
-    static propTypes = {
-        quote: ChainTypes.ChainObject.isRequired,
-        base: ChainTypes.ChainObject.isRequired
-    };
-
-    static defaultProps = {
-        base: "1.3.0"
-    };
-
     render() {
         let {base, quote} = this.props;
         if (base.get("id") === quote.get("id")) {
             return null;
         }
         let marketID = quote.get("symbol") + "_" + base.get("symbol");
-        let marketName = <span><AssetName name={quote.get("symbol")} /> : <AssetName name={base.get("symbol")} /></span>;
-        return (
-            <Link to={`/market/${marketID}`}>{marketName}</Link>
+        let marketName = (
+            <span>
+                <AssetName name={quote.get("symbol")} /> :{" "}
+                <AssetName name={base.get("symbol")} />
+            </span>
         );
+        return <Link to={`/market/${marketID}`}>{marketName}</Link>;
     }
 }
 
-MarketLink = BindToChainState(MarketLink);
+MarketLink = AssetWrapper(MarketLink, {
+    propNames: ["quote", "base"],
+    defaultProps: {base: "1.3.0"}
+});
 
 class ObjectWrapper extends React.Component {
-
     static propTypes = {
         object: ChainTypes.ChainObject.isRequired
     };
 
-    render () {
+    render() {
         let {object} = this.props;
-        let quoteAsset = object.has("asset_type") ? object.get("asset_type") : object.get("id");
+        let quoteAsset = object.has("asset_type")
+            ? object.get("asset_type")
+            : object.get("id");
 
         return <MarketLink quote={quoteAsset} />;
     }
