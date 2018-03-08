@@ -1,8 +1,7 @@
 import React from "react";
 import {FormattedNumber} from "react-intl";
 import utils from "common/utils";
-import ChainTypes from "./ChainTypes";
-import BindToChainState from "./BindToChainState";
+import AssetWrapper from "./AssetWrapper";
 import AltContainer from "alt-container";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -26,8 +25,6 @@ import {Asset, Price} from "common/MarketClasses";
 
 class FormattedPrice extends React.Component {
     static propTypes = {
-        base_asset: ChainTypes.ChainAsset.isRequired,
-        quote_asset: ChainTypes.ChainAsset.isRequired,
         base_amount: React.PropTypes.any,
         quote_amount: React.PropTypes.any,
         decimals: React.PropTypes.number
@@ -239,7 +236,9 @@ class FormattedPrice extends React.Component {
     }
 }
 
-FormattedPrice = BindToChainState(FormattedPrice);
+FormattedPrice = AssetWrapper(FormattedPrice, {
+    propNames: ["base_asset", "quote_asset"]
+});
 
 export default class FormattedPriceWrapper extends React.Component {
     render() {

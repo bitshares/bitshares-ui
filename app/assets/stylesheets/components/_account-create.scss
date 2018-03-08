@@ -123,17 +123,7 @@ div.account-creation {
     }
 }
 
-.modal-logo {
-    display: inline;
-}
-
-.modal-title {
-    display: block;
-}
-
 @include breakpoint(medium) {
-
-
     div.account-creation {
         width: 450px;
         margin-top: 2rem;
@@ -141,9 +131,5 @@ div.account-creation {
         p {
             max-width: 35rem;
         }
-    }
-
-    .modal-logo, .modal-title {
-        display: none;
     }
 }

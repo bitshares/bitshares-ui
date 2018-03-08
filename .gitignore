@@ -12,7 +12,6 @@ hash-history
 docs/_build/
 *.swp
 *.python-version
-package-lock.json
 app/.sass-cache
 node_modules
 app/bower_components

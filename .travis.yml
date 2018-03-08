@@ -1,5 +1,5 @@
 language: node_js
-node_js: 7
+node_js: 9
 matrix:
   include:
     - os: linux
@@ -25,7 +25,8 @@ addons:
     - icnsutils
     - graphicsmagick
     - xz-utils
-before_install: "./install.sh"
+install:
+  - npm i
 script: "./build.sh"
 after_success: "./deploy.sh"
 deploy:
@@ -38,7 +39,7 @@ deploy:
   file_glob: true
   file:
     - build/binaries/BitShares*
-    - build/shasums_$TRAVIS_JOB_NUMBER.txt
+    - build/release-checksums-*
   skip_cleanup: true
   draft: true
   on:

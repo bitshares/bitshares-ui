@@ -7,6 +7,7 @@ import Operation from "../Blockchain/Operation";
 import LinkToWitnessById from "../Utility/LinkToWitnessById";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
+import AssetWrapper from "../Utility/AssetWrapper";
 import TransactionChart from "./TransactionChart";
 import BlocktimeChart from "./BlocktimeChart";
 import classNames from "classnames";
@@ -49,14 +50,12 @@ class BlockTimeAgo extends React.Component {
 class Blocks extends React.Component {
     static propTypes = {
         globalObject: ChainTypes.ChainObject.isRequired,
-        dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        coreAsset: ChainTypes.ChainAsset.isRequired
+        dynGlobalObject: ChainTypes.ChainObject.isRequired
     };
 
     static defaultProps = {
         globalObject: "2.0.0",
         dynGlobalObject: "2.1.0",
-        coreAsset: "1.3.0",
         latestBlocks: {},
         assets: {},
         accounts: {},
@@ -188,7 +187,9 @@ class Blocks extends React.Component {
             coreAsset
         } = this.props;
         let {blocksHeight, operationsHeight} = this.state;
-
+        const dynamicObject = this.props.getDynamicObject(
+            coreAsset.get("dynamic_asset_data_id")
+        );
         let blocks = null,
             transactions = null;
         let headBlock = null;
@@ -434,14 +435,15 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h3 className="txtlabel">
-                                <FormattedAsset
-                                    amount={coreAsset.getIn([
-                                        "dynamic",
-                                        "current_supply"
-                                    ])}
-                                    asset={coreAsset.get("id")}
-                                    decimalOffset={5}
-                                />
+                                {dynamicObject ? (
+                                    <FormattedAsset
+                                        amount={dynamicObject.get(
+                                            "current_supply"
+                                        )}
+                                        asset={coreAsset.get("id")}
+                                        decimalOffset={5}
+                                    />
+                                ) : null}
                             </h3>
                         </div>
                     </div>
@@ -486,14 +488,15 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h3 className="txtlabel">
-                                <FormattedAsset
-                                    amount={coreAsset.getIn([
-                                        "dynamic",
-                                        "confidential_supply"
-                                    ])}
-                                    asset={coreAsset.get("id")}
-                                    decimalOffset={5}
-                                />
+                                {dynamicObject ? (
+                                    <FormattedAsset
+                                        amount={dynamicObject.get(
+                                            "confidential_supply"
+                                        )}
+                                        asset={coreAsset.get("id")}
+                                        decimalOffset={5}
+                                    />
+                                ) : null}
                             </h3>
                         </div>
                     </div>
@@ -601,7 +604,9 @@ class Blocks extends React.Component {
     }
 }
 
-export default BindToChainState(Blocks, {
-    keep_updating: true,
-    show_loader: true
+Blocks = BindToChainState(Blocks, {show_loader: true});
+Blocks = AssetWrapper(Blocks, {
+    propNames: ["coreAsset"],
+    withDynamic: true
 });
+export default Blocks;
