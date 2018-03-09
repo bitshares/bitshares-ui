@@ -226,7 +226,14 @@ class SettingsStore {
                     "GDEX.BTO",
                     "WIN.ETH",
                     "WIN.ETC",
-                    "WIN.HSR"
+                    "WIN.HSR",
+                    "RUDEX.STEEM",
+                    "RUDEX.SBD",
+                    "RUDEX.KRM",
+                    "RUDEX.GBG",
+                    "RUDEX.GOLOS",
+                    "RUDEX.MUSE",
+                    "RUDEX.DCT"
                 ],
                 markets_39f5e2ed: [
                     // TESTNET
