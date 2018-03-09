@@ -53,19 +53,9 @@ class Tab extends React.Component {
             return (
                 <option value={index} data-is-link-to={this.props.isLinkTo}>
                     {typeof title === "string" && title.indexOf(".") > 0 ? (
-                        <text>
-                            <Translate className="tab-title" content={title} />
-                            {this.props.subText
-                                ? " (" + this.props.subText + ")"
-                                : null}
-                        </text>
+                        <Translate className="tab-title" content={title} />
                     ) : (
-                        <span className="tab-title">
-                            {title}
-                            {this.props.subText
-                                ? " (" + this.props.subText + ")"
-                                : null}
-                        </span>
+                        <span className="tab-title">{title}</span>
                     )}
                 </option>
             );
