@@ -355,10 +355,7 @@ class AccountOverview extends React.Component {
 
             /* Popover content */
             settleLink = (
-                <a
-                    href
-                    onClick={this._onSettleAsset.bind(this, asset.get("id"))}
-                >
+                <a onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
                     <Icon name="settle" className="icon-14px" />
                 </a>
             );

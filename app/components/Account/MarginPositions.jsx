@@ -18,6 +18,7 @@ import {List} from "immutable";
 import {Link} from "react-router/es";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
+import PropTypes from "prop-types";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -41,7 +42,7 @@ class MarginPosition extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     _onUpdatePosition(e) {
@@ -416,7 +417,7 @@ class MarginPositionPlaceHolder extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     _onUpdatePosition(e) {

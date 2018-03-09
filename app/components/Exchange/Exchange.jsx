@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
@@ -1845,7 +1845,9 @@ class Exchange extends React.Component {
                     {!notMyAccount && quoteIsBitAsset ? (
                         <BorrowModal
                             ref="borrowQuote"
-                            modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                            modalId={
+                                "borrow_modal_quote_" + quoteAsset.get("id")
+                            }
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn([
                                 "bitasset",

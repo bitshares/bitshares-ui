@@ -2,12 +2,12 @@ import React from "react";
 import {Link} from "react-router/es";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import PropTypes from "prop-types";
 
 class LinkToAccountById extends React.Component {
-
     static propTypes = {
         account: ChainTypes.ChainObject.isRequired,
-        subpage: React.PropTypes.string.isRequired
+        subpage: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -16,7 +16,11 @@ class LinkToAccountById extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.account.get("name") && this.props.account.get("name") && nextProps.account.get("name") === this.props.account.get("name")) {
+        if (
+            nextProps.account.get("name") &&
+            this.props.account.get("name") &&
+            nextProps.account.get("name") === this.props.account.get("name")
+        ) {
             return false;
         }
         return true;
@@ -28,8 +32,16 @@ class LinkToAccountById extends React.Component {
             return <span>{this.props.account.get("id")}</span>;
         }
 
-        return this.props.noLink ? <span>{account_name}</span> :
-            <Link onClick={this.props.onClick ? this.props.onClick : () => {}} to={`/account/${account_name}/${this.props.subpage}/`}>{account_name}</Link>;
+        return this.props.noLink ? (
+            <span>{account_name}</span>
+        ) : (
+            <Link
+                onClick={this.props.onClick ? this.props.onClick : () => {}}
+                to={`/account/${account_name}/${this.props.subpage}/`}
+            >
+                {account_name}
+            </Link>
+        );
     }
 }
 

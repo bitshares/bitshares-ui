@@ -22,10 +22,11 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
+import PropTypes from "prop-types";
 
 export default class SendModal extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {
@@ -388,12 +389,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                            feeAmount: fee,
-                            fee_asset_id: fee.asset_id,
-                            hasBalance,
-                            hasPoolBalance,
-                            error: !hasBalance || !hasPoolBalance
-                        })
+                              feeAmount: fee,
+                              fee_asset_id: fee.asset_id,
+                              hasBalance,
+                              hasPoolBalance,
+                              error: !hasBalance || !hasPoolBalance
+                          })
             )
         );
     }
@@ -649,7 +650,8 @@ export default class SendModal extends React.Component {
                                 <div
                                     style={{
                                         fontSize: "1.8rem",
-                                        fontFamily: "Roboto-Medium, arial, sans-serif"
+                                        fontFamily:
+                                            "Roboto-Medium, arial, sans-serif"
                                     }}
                                 >
                                     <Translate

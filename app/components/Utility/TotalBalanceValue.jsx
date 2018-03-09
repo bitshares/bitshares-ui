@@ -12,6 +12,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import MarketStatsCheck from "./MarketStatsCheck";
 import AssetWrapper from "./AssetWrapper";
+import PropTypes from "prop-types";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -27,8 +28,8 @@ class TotalValue extends MarketStatsCheck {
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
-        inHeader: React.PropTypes.bool,
-        label: React.PropTypes.string
+        inHeader: PropTypes.bool,
+        label: PropTypes.string
     };
 
     static defaultProps = {

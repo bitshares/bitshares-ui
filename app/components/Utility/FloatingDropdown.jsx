@@ -1,15 +1,15 @@
 import React from "react";
 import utils from "common/utils";
+import PropTypes from "prop-types";
 
 class Dropdown extends React.Component {
-
     static propTypes = {
-        scroll_length: React.PropTypes.number
-    }
+        scroll_length: PropTypes.number
+    };
 
     static defaultProps = {
         scroll_length: 9
-    }
+    };
 
     constructor(props) {
         const scroll_length = props.scroll_length;
@@ -35,9 +35,12 @@ class Dropdown extends React.Component {
     }
 
     _setListener(props = this.props) {
-        if(props.entries.length > 1 && !this.listener) {
+        if (props.entries.length > 1 && !this.listener) {
             this.listener = true;
-            document.body.addEventListener("click", this.onBodyClick, {capture: false, passive: true});
+            document.body.addEventListener("click", this.onBodyClick, {
+                capture: false,
+                passive: true
+            });
         }
     }
 
@@ -63,13 +66,17 @@ class Dropdown extends React.Component {
         let insideActionSheet = false;
 
         do {
-            if(el.classList && el.classList.contains("dropdown") && el.id === this.props.id) {
+            if (
+                el.classList &&
+                el.classList.contains("dropdown") &&
+                el.id === this.props.id
+            ) {
                 insideActionSheet = true;
                 break;
             }
         } while ((el = el.parentNode));
 
-        if(!insideActionSheet) {
+        if (!insideActionSheet) {
             this.setState({active: false});
         } else {
             e.stopPropagation();
@@ -94,23 +101,58 @@ class Dropdown extends React.Component {
     render() {
         const {entries, value} = this.props;
         let {active} = this.state;
-        if(entries.length === 0) return null;
-        if(entries.length == 1) {
+        if (entries.length === 0) return null;
+        if (entries.length == 1) {
             return (
-                <div className={"dropdown-wrapper inactive" + (this.props.upperCase ? " upper-case" : "")}>
+                <div
+                    className={
+                        "dropdown-wrapper inactive" +
+                        (this.props.upperCase ? " upper-case" : "")
+                    }
+                >
                     <div>
-                        {this.props.singleEntry ? this.props.singleEntry : entries[0]}
+                        {this.props.singleEntry
+                            ? this.props.singleEntry
+                            : entries[0]}
                     </div>
                 </div>
             );
         } else {
             let options = entries.map(value => {
-                return <li className={this.props.upperCase ? "upper-case" : ""} key={value} onClick={this.onChange.bind(this, this.props.values[value])}><span>{value}</span></li>;
+                return (
+                    <li
+                        className={this.props.upperCase ? "upper-case" : ""}
+                        key={value}
+                        onClick={this.onChange.bind(
+                            this,
+                            this.props.values[value]
+                        )}
+                    >
+                        <span>{value}</span>
+                    </li>
+                );
             });
             return (
-                <div onClick={this._toggleDropdown.bind(this)} className={"dropdown-wrapper" + (active ? " active" : "")  + (this.props.upperCase ? " upper-case" : "")}>
-                    <div style={{paddingRight: 15}}>{value ? value : <span className="hidden">A</span>}</div>
-                    <ul className="dropdown" style={{overflow: entries.length > this.props.scroll_length ? "auto": "hidden"}}>
+                <div
+                    onClick={this._toggleDropdown.bind(this)}
+                    className={
+                        "dropdown-wrapper" +
+                        (active ? " active" : "") +
+                        (this.props.upperCase ? " upper-case" : "")
+                    }
+                >
+                    <div style={{paddingRight: 15}}>
+                        {value ? value : <span className="hidden">A</span>}
+                    </div>
+                    <ul
+                        className="dropdown"
+                        style={{
+                            overflow:
+                                entries.length > this.props.scroll_length
+                                    ? "auto"
+                                    : "hidden"
+                        }}
+                    >
                         {options}
                     </ul>
                 </div>

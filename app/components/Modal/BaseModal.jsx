@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -11,9 +11,9 @@ class BaseModal extends React.Component {
         super();
     }
 
-    componentDidMount(){
-        this.modalEscapeListener = function(e){
-            if(e.keyCode === 27){
+    componentDidMount() {
+        this.modalEscapeListener = function(e) {
+            if (e.keyCode === 27) {
                 ZfApi.publish(this.props.id, "close");
             }
         }.bind(this);
@@ -21,25 +21,58 @@ class BaseModal extends React.Component {
         document.addEventListener("keydown", this.modalEscapeListener);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         document.removeEventListener("keydown", this.modalEscapeListener);
     }
 
     render() {
-        const { props } = this;
-        const { id, overlay, onClose, modalClass, overlayClass, overlayClose, modalHeader, noCloseBtn, noLoggo, noHeader, children } = props;
+        const {props} = this;
+        const {
+            id,
+            overlay,
+            onClose,
+            modalClass,
+            overlayClass,
+            overlayClose,
+            modalHeader,
+            noCloseBtn,
+            noLoggo,
+            noHeader,
+            children
+        } = props;
 
         return (
-            <Modal id={id} overlay={overlay} onClose={onClose} modalClass={modalClass} overlayClass={overlayClass} overlayClose={overlayClose}>
-                {!noCloseBtn && <Trigger close={id}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>}
-                {!noLoggo && <div className="modal__logo"><img src={logo} /></div>}
-                {!noHeader && modalHeader && <div className="text-center">
-                    <div className="modal__title">
-                        <Translate component="h3" content={modalHeader} />
+            <Modal
+                id={id}
+                overlay={overlay}
+                onClose={onClose}
+                modalClass={modalClass}
+                overlayClass={overlayClass}
+                overlayClose={overlayClose}
+            >
+                {!noCloseBtn && (
+                    <Trigger close={id}>
+                        <a href="#" className="close-button">
+                            &times;
+                        </a>
+                    </Trigger>
+                )}
+                {!noLoggo && (
+                    <div className="modal__logo">
+                        <img src={logo} />
                     </div>
-                </div>}
+                )}
+                {!noHeader &&
+                    modalHeader && (
+                        <div className="text-center">
+                            <div className="modal__title">
+                                <Translate
+                                    component="h3"
+                                    content={modalHeader}
+                                />
+                            </div>
+                        </div>
+                    )}
                 {children}
             </Modal>
         );
@@ -47,7 +80,7 @@ class BaseModal extends React.Component {
 }
 
 BaseModal.defaultProps = {
-    overlay: false,
+    overlay: false
 };
 
 BaseModal.propTypes = {

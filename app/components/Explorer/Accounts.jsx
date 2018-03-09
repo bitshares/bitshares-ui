@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";

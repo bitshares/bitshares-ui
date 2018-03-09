@@ -6,13 +6,14 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import Notify from "notifyjs";
 let {operations} = GraphChainTypes;
+import PropTypes from "prop-types";
 
 let OPERATIONS = Object.keys(operations);
 
 class BrowserNotifications extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        settings: React.PropTypes.object
+        settings: PropTypes.object
     };
 
     componentWillMount() {
