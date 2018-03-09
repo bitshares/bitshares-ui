@@ -6,7 +6,10 @@ function limitByPrecision(value, p = 8) {
     if (typeof p !== "number") throw new Error("Input must be a number");
     let valueString = value.toString();
     let splitString = valueString.split(".");
-    if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= p) {
+    if (
+        splitString.length === 1 ||
+        (splitString.length === 2 && splitString[1].length <= p)
+    ) {
         return parseFloat(valueString);
     } else {
         return parseFloat(splitString[0] + "." + splitString[1].substr(0, p));
@@ -19,7 +22,7 @@ function precisionToRatio(p) {
 }
 
 function didOrdersChange(newOrders, oldOrders) {
-    let changed = oldOrders && (oldOrders.size !== newOrders.size);
+    let changed = oldOrders && oldOrders.size !== newOrders.size;
     if (changed) return changed;
 
     newOrders.forEach((a, key) => {
@@ -36,7 +39,12 @@ function didOrdersChange(newOrders, oldOrders) {
 }
 
 class Asset {
-    constructor({asset_id = "1.3.0", amount = 0, precision = 5, real = null} = {}) {
+    constructor({
+        asset_id = "1.3.0",
+        amount = 0,
+        precision = 5,
+        real = null
+    } = {}) {
         this.satoshi = precisionToRatio(precision);
         this.asset_id = asset_id;
         this.setAmount({sats: amount, real});
@@ -47,7 +55,8 @@ class Asset {
         return this.amount > 0;
     }
 
-    toSats(amount = 1) { // Return the full integer amount in 'satoshis'
+    toSats(amount = 1) {
+        // Return the full integer amount in 'satoshis'
         // Round to prevent floating point math errors
         return Math.round(amount * this.satoshi);
     }
@@ -62,7 +71,7 @@ class Asset {
         if (typeof real === "number") {
             this.amount = this.toSats(real);
             this._clearCache();
-        } else if(typeof sats === "number") {
+        } else if (typeof sats === "number") {
             this.amount = Math.floor(sats);
             this._clearCache();
         } else {
@@ -77,27 +86,35 @@ class Asset {
     getAmount({real = false} = {}) {
         if (real) {
             if (this._real_amount) return this._real_amount;
-            return this._real_amount = limitByPrecision(this.amount / this.toSats(), this.precision);
+            return (this._real_amount = limitByPrecision(
+                this.amount / this.toSats(),
+                this.precision
+            ));
         } else {
             return Math.floor(this.amount);
         }
     }
 
     plus(asset) {
-        if (asset.asset_id !== this.asset_id) throw new Error("Assets are not the same type");
+        if (asset.asset_id !== this.asset_id)
+            throw new Error("Assets are not the same type");
         this.amount += asset.amount;
         this._clearCache();
     }
 
     minus(asset) {
-        if (asset.asset_id !== this.asset_id) throw new Error("Assets are not the same type");
+        if (asset.asset_id !== this.asset_id)
+            throw new Error("Assets are not the same type");
         this.amount -= asset.amount;
         this.amount = Math.max(0, this.amount);
         this._clearCache();
     }
 
     equals(asset) {
-        return (this.asset_id === asset.asset_id && this.getAmount() === asset.getAmount());
+        return (
+            this.asset_id === asset.asset_id &&
+            this.getAmount() === asset.getAmount()
+        );
     }
 
     ne(asset) {
@@ -112,10 +129,11 @@ class Asset {
         return this.getAmount() < asset.getAmount();
     }
 
-    times(p, isBid = false) { // asset amount times a price p
+    times(p, isBid = false) {
+        // asset amount times a price p
         let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            temp = (this.amount * p.quote.amount) / p.base.amount;
+            temp = this.amount * p.quote.amount / p.base.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -126,9 +144,13 @@ class Asset {
                 amount += 1;
             }
             if (amount === 0) amount = 1;
-            return new Asset({asset_id: p.quote.asset_id, amount, precision: p.quote.precision});
+            return new Asset({
+                asset_id: p.quote.asset_id,
+                amount,
+                precision: p.quote.precision
+            });
         } else if (this.asset_id === p.quote.asset_id) {
-            temp = (this.amount * p.base.amount) / p.quote.amount;
+            temp = this.amount * p.base.amount / p.quote.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -139,7 +161,11 @@ class Asset {
                 amount += 1;
             }
             if (amount === 0) amount = 1;
-            return new Asset({asset_id: p.base.asset_id, amount, precision: p.base.precision});
+            return new Asset({
+                asset_id: p.base.asset_id,
+                amount,
+                precision: p.base.precision
+            });
         }
         throw new Error("Invalid asset types for price multiplication");
     }
@@ -165,17 +191,17 @@ class Asset {
 }
 
 /**
-    * @brief The price struct stores asset prices in the Graphene system.
-    *
-    * A price is defined as a ratio between two assets, and represents a possible exchange rate between those two
-    * assets. prices are generally not stored in any simplified form, i.e. a price of (1000 CORE)/(20 USD) is perfectly
-    * normal.
-    *
-    * The assets within a price are labeled base and quote. Throughout the Graphene code base, the convention used is
-    * that the base asset is the asset being sold, and the quote asset is the asset being purchased, where the price is
-    * represented as base/quote, so in the example price above the seller is looking to sell CORE asset and get USD in
-    * return.
-*/
+ * @brief The price struct stores asset prices in the Graphene system.
+ *
+ * A price is defined as a ratio between two assets, and represents a possible exchange rate between those two
+ * assets. prices are generally not stored in any simplified form, i.e. a price of (1000 CORE)/(20 USD) is perfectly
+ * normal.
+ *
+ * The assets within a price are labeled base and quote. Throughout the Graphene code base, the convention used is
+ * that the base asset is the asset being sold, and the quote asset is the asset being purchased, where the price is
+ * represented as base/quote, so in the example price above the seller is looking to sell CORE asset and get USD in
+ * return.
+ */
 
 class Price {
     constructor({base, quote, real = false} = {}) {
@@ -198,8 +224,10 @@ class Price {
                 real = limitByPrecision(real, 5);
             }
             let frac = new Fraction(real);
-            let baseSats = base.toSats(), quoteSats = quote.toSats();
-            let numRatio = (baseSats / quoteSats), denRatio = quoteSats / baseSats;
+            let baseSats = base.toSats(),
+                quoteSats = quote.toSats();
+            let numRatio = baseSats / quoteSats,
+                denRatio = quoteSats / baseSats;
 
             if (baseSats >= quoteSats) {
                 denRatio = 1;
@@ -214,7 +242,13 @@ class Price {
             quote.amount = 0;
         }
 
-        if (!base.asset_id || !("amount" in base) || !quote.asset_id || !("amount" in quote)) throw new Error("Invalid Price inputs");
+        if (
+            !base.asset_id ||
+            !("amount" in base) ||
+            !quote.asset_id ||
+            !("amount" in quote)
+        )
+            throw new Error("Invalid Price inputs");
         this.base = base;
         this.quote = quote;
     }
@@ -225,9 +259,11 @@ class Price {
 
     isValid() {
         return (
-            this.base.amount !== 0 && this.quote.amount !== 0) &&
+            this.base.amount !== 0 &&
+            this.quote.amount !== 0 &&
             !isNaN(this.toReal()) &&
-            isFinite(this.toReal());
+            isFinite(this.toReal())
+        );
     }
 
     toReal(sameBase = false) {
@@ -235,10 +271,14 @@ class Price {
         if (this[key]) {
             return this[key];
         }
-        let real = sameBase ?
-            (this.quote.amount * this.base.toSats()) / (this.base.amount * this.quote.toSats()) :
-            (this.base.amount * this.quote.toSats()) / (this.quote.amount * this.base.toSats());
-        return this[key] = parseFloat(real.toFixed(8)); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
+        let real = sameBase
+            ? this.quote.amount *
+              this.base.toSats() /
+              (this.base.amount * this.quote.toSats())
+            : this.base.amount *
+              this.quote.toSats() /
+              (this.quote.amount * this.base.toSats());
+        return (this[key] = parseFloat(real.toFixed(8))); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
 
     invert() {
@@ -257,7 +297,10 @@ class Price {
     }
 
     equals(b) {
-        if (this.base.asset_id !== b.base.asset_id || this.quote.asset_id !== b.quote.asset_id) {
+        if (
+            this.base.asset_id !== b.base.asset_id ||
+            this.quote.asset_id !== b.quote.asset_id
+        ) {
             // console.error("Cannot compare prices for different assets");
             return false;
         }
@@ -268,7 +311,10 @@ class Price {
     }
 
     lt(b) {
-        if (this.base.asset_id !== b.base.asset_id || this.quote.asset_id !== b.quote.asset_id) {
+        if (
+            this.base.asset_id !== b.base.asset_id ||
+            this.quote.asset_id !== b.quote.asset_id
+        ) {
             throw new Error("Cannot compare prices for different assets");
         }
         const amult = b.quote.amount * this.base.amount;
@@ -278,19 +324,19 @@ class Price {
     }
 
     lte(b) {
-        return (this.equals(b)) || (this.lt(b));
+        return this.equals(b) || this.lt(b);
     }
 
     ne(b) {
-        return !(this.equals(b));
+        return !this.equals(b);
     }
 
     gt(b) {
-        return !(this.lte(b));
+        return !this.lte(b);
     }
 
     gte(b) {
-        return !(this.lt(b));
+        return !this.lt(b);
     }
 
     toObject() {
@@ -301,12 +347,11 @@ class Price {
     }
 
     times(p, common = "1.3.0") {
-        const p2 = (
-            (p.base.asset_id === common &&
-            this.quote.asset_id === common) ||
-            (p.quote.asset_id === common &&
-            this.base.asset_id === common)
-        ) ? p.clone() : p.invert();
+        const p2 =
+            (p.base.asset_id === common && this.quote.asset_id === common) ||
+            (p.quote.asset_id === common && this.base.asset_id === common)
+                ? p.clone()
+                : p.invert();
 
         const np = p2.toReal() * this.toReal();
         return new Price({
@@ -319,7 +364,13 @@ class Price {
 
 class FeedPrice extends Price {
     constructor({priceObject, assets, market_base, sqr, real = false}) {
-        if (!priceObject || typeof priceObject !== "object" || !market_base || !assets || !sqr) {
+        if (
+            !priceObject ||
+            typeof priceObject !== "object" ||
+            !market_base ||
+            !assets ||
+            !sqr
+        ) {
             throw new Error("Invalid FeedPrice inputs");
         }
 
@@ -354,8 +405,14 @@ class FeedPrice extends Price {
     getSqueezePrice({real = false} = {}) {
         if (!this._squeeze_price) {
             this._squeeze_price = this.clone();
-            if (this.inverted) this._squeeze_price.base.amount = Math.floor(this._squeeze_price.base.amount * this.sqr);
-            if (!this.inverted) this._squeeze_price.quote.amount = Math.floor(this._squeeze_price.quote.amount * this.sqr);
+            if (this.inverted)
+                this._squeeze_price.base.amount = Math.floor(
+                    this._squeeze_price.base.amount * this.sqr
+                );
+            if (!this.inverted)
+                this._squeeze_price.quote.amount = Math.floor(
+                    this._squeeze_price.quote.amount * this.sqr
+                );
         }
 
         if (real) {
@@ -366,7 +423,14 @@ class FeedPrice extends Price {
 }
 
 class LimitOrderCreate {
-    constructor({for_sale, to_receive, seller = "", expiration = new Date(), fill_or_kill = false, fee = {amount: 0, asset_id: "1.3.0"}} = {}) {
+    constructor({
+        for_sale,
+        to_receive,
+        seller = "",
+        expiration = new Date(),
+        fill_or_kill = false,
+        fee = {amount: 0, asset_id: "1.3.0"}
+    } = {}) {
         if (!for_sale || !to_receive) {
             throw new Error("Missing order amounts");
         }
@@ -433,7 +497,8 @@ class LimitOrder {
         });
 
         this.sell_price = new Price({
-            base, quote
+            base,
+            quote
         });
 
         this.fee = order.deferred_fee;
@@ -443,7 +508,9 @@ class LimitOrder {
         if (this._real_price) {
             return this._real_price;
         }
-        return this._real_price = p.toReal(p.base.asset_id === this.market_base);
+        return (this._real_price = p.toReal(
+            p.base.asset_id === this.market_base
+        ));
     }
 
     isBid() {
@@ -460,11 +527,11 @@ class LimitOrder {
 
     amountForSale() {
         if (this._for_sale) return this._for_sale;
-        return this._for_sale = new Asset({
+        return (this._for_sale = new Asset({
             asset_id: this.sell_price.base.asset_id,
             amount: this.for_sale,
             precision: this.assets[this.sell_price.base.asset_id].precision
-        });
+        }));
     }
 
     amountToReceive(isBid = this.isBid()) {
@@ -513,19 +580,29 @@ class LimitOrder {
 
     totalToReceive({noCache = false} = {}) {
         if (!noCache && this._total_to_receive) return this._total_to_receive;
-        this._total_to_receive = (this.total_to_receive || this.amountToReceive()).clone();
+        this._total_to_receive = (
+            this.total_to_receive || this.amountToReceive()
+        ).clone();
         return this._total_to_receive;
     }
 
     totalForSale({noCache = false} = {}) {
         if (!noCache && this._total_for_sale) return this._total_for_sale;
-        return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
+        return (this._total_for_sale = (
+            this.total_for_sale || this.amountForSale()
+        ).clone());
     }
 }
 
 class CallOrder {
-    constructor(order, assets, market_base, feed, is_prediction_market = false) {
-        if (!order || !assets ||!market_base || !feed) {
+    constructor(
+        order,
+        assets,
+        market_base,
+        feed,
+        is_prediction_market = false
+    ) {
+        if (!order || !assets || !market_base || !feed) {
             throw new Error("CallOrder missing inputs");
         }
 
@@ -561,11 +638,14 @@ class CallOrder {
         * to deal with the MCR (maintenance collateral ratio) here.
         */
         this.call_price = new Price({
-            base: this.inverted ? quote : base, quote: this.inverted ? base : quote
+            base: this.inverted ? quote : base,
+            quote: this.inverted ? base : quote
         });
 
         if (feed.base.asset_id !== this.call_price.base.asset_id) {
-            throw new Error("Feed price assets and call price assets must be the same");
+            throw new Error(
+                "Feed price assets and call price assets must be the same"
+            );
         }
 
         this.feed_price = feed;
@@ -587,26 +667,32 @@ class CallOrder {
         if (this._real_price) {
             return this._real_price;
         }
-        return this._real_price = p.toReal(p.base.asset_id === this.market_base);
+        return (this._real_price = p.toReal(
+            p.base.asset_id === this.market_base
+        ));
     }
 
     getFeedPrice(f = this.feed_price) {
         if (this._feed_price) {
             return this._feed_price;
         }
-        return this._feed_price = f.toReal(f.base.asset_id === this.market_base);
+        return (this._feed_price = f.toReal(
+            f.base.asset_id === this.market_base
+        ));
     }
 
     getSqueezePrice(f = this.feed_price) {
         if (this._squeeze_price) {
             return this._squeeze_price;
         }
-        return this._squeeze_price = f.getSqueezePrice().toReal();
+        return (this._squeeze_price = f.getSqueezePrice().toReal());
     }
 
     isMarginCalled() {
         if (this.is_prediction_market) return false;
-        return this.isBid() ? this.call_price.lt(this.feed_price) : this.call_price.gt(this.feed_price);
+        return this.isBid()
+            ? this.call_price.lt(this.feed_price)
+            : this.call_price.gt(this.feed_price);
     }
 
     isBid() {
@@ -619,19 +705,20 @@ class CallOrder {
 
     sellPrice(squeeze = true) {
         if (squeeze) {
-            return this.isBid() ? this.feed_price.getSqueezePrice() :
-                this.feed_price.getSqueezePrice().invert();
+            return this.isBid()
+                ? this.feed_price.getSqueezePrice()
+                : this.feed_price.getSqueezePrice().invert();
         }
         return this.call_price;
     }
 
     getCollateral() {
         if (this._collateral) return this._collateral;
-        return this._collateral = new Asset({
+        return (this._collateral = new Asset({
             amount: this.for_sale,
             asset_id: this.for_sale_id,
             precision: this.assets[this.for_sale_id].precision
-        });
+        }));
     }
 
     /*
@@ -648,17 +735,20 @@ class CallOrder {
         //     amount: this.for_sale,
         //     precision: this.assets[this.for_sale_id].precision
         // });
-        return this._for_sale = this.amountToReceive().times(this.feed_price.getSqueezePrice(), isBid);
+        return (this._for_sale = this.amountToReceive().times(
+            this.feed_price.getSqueezePrice(),
+            isBid
+        ));
     }
 
     amountToReceive() {
         if (this._to_receive) return this._to_receive;
         // return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice(), isBid);
-        return this._to_receive = new Asset({
+        return (this._to_receive = new Asset({
             asset_id: this.to_receive_id,
             amount: this.to_receive,
             precision: this.assets[this.to_receive_id].precision
-        });
+        }));
     }
 
     sum(order) {
@@ -704,27 +794,37 @@ class CallOrder {
 
     totalToReceive({noCache = false} = {}) {
         if (!noCache && this._total_to_receive) return this._total_to_receive;
-        this._total_to_receive = (this.total_to_receive || this.amountToReceive()).clone();
+        this._total_to_receive = (
+            this.total_to_receive || this.amountToReceive()
+        ).clone();
         return this._total_to_receive;
     }
 
     totalForSale({noCache = false} = {}) {
         if (!noCache && this._total_for_sale) return this._total_for_sale;
-        return this._total_for_sale = (this.total_for_sale || this.amountForSale()).clone();
+        return (this._total_for_sale = (
+            this.total_for_sale || this.amountForSale()
+        ).clone());
     }
 
     getRatio() {
-        return this.getCollateral().getAmount({real: true}) / this.amountToReceive().getAmount({real: true}) / this.getFeedPrice();
+        return (
+            this.getCollateral().getAmount({real: true}) /
+            this.amountToReceive().getAmount({real: true}) /
+            this.getFeedPrice()
+        );
     }
 
     getStatus() {
-        const mr = this.assets[this.to_receive_id].bitasset.current_feed.maintenance_collateral_ratio / 1000;
+        const mr =
+            this.assets[this.to_receive_id].bitasset.current_feed
+                .maintenance_collateral_ratio / 1000;
         const cr = this.getRatio();
 
         if (isNaN(cr)) return null;
         if (cr < mr) {
             return "danger";
-        } else if (cr < (mr + 0.5)) {
+        } else if (cr < mr + 0.5) {
             return "warning";
         } else {
             return "";
@@ -739,7 +839,9 @@ class CallOrder {
 class SettleOrder extends LimitOrder {
     constructor(order, assets, market_base, feed_price, bitasset_options) {
         if (!feed_price || !bitasset_options) {
-            throw new Error("SettleOrder needs feed_price and bitasset_options inputs");
+            throw new Error(
+                "SettleOrder needs feed_price and bitasset_options inputs"
+            );
         }
 
         order.sell_price = feed_price.toObject();
@@ -769,8 +871,13 @@ class SettleOrder extends LimitOrder {
 
     amountToReceive() {
         let to_receive = this.for_sale.times(this.feed_price, this.isBid());
-        to_receive.setAmount({sats: to_receive.getAmount() * ((GRAPHENE_100_PERCENT - this.offset_percent) / GRAPHENE_100_PERCENT) });
-        return this._to_receive = to_receive;
+        to_receive.setAmount({
+            sats:
+                to_receive.getAmount() *
+                ((GRAPHENE_100_PERCENT - this.offset_percent) /
+                    GRAPHENE_100_PERCENT)
+        });
+        return (this._to_receive = to_receive);
     }
 
     isBid() {
