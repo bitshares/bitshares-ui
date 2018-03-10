@@ -1591,6 +1591,9 @@
             "key_approval_add": "Key approval to add",
             "key_approval_remove": "Key approval to remove"
         },
+        "buy": {
+            "title": "Buy"
+        },
         "ok": "OK",
         "qrcode": {
             "label": "qrcode",

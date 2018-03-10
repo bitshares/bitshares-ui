@@ -1,0 +1,125 @@
+// Default wdth is 700px
+// To set a different width, use overlayClass and set either of the following to it
+//   tiny: 300px
+//   small: 500px
+//   medium: 600px
+//   large: 800px
+//
+// Modal will cover screen when screen is medium or less
+
+.modal {
+    max-width: 700px;
+    border-radius: 8px;
+    overflow: auto !important;
+    padding: 1rem 2rem 1rem 2rem;
+
+    .modal__header {
+        text-align: center;
+        padding-top: 1rem;
+        > p {
+            padding: 0px;
+            margin: 0px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+    }
+
+    .modal__logo {
+        text-align: center;
+        img {
+            height: 70px;
+        }
+    }
+
+    .modal__title {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    .modal__body {
+        padding-top: 1rem;
+        height: auto;
+        min-height: 350px;
+        .container-row {
+            padding-bottom: 1rem;
+        }
+        .double-row {
+            .small-6 {
+                display: inline-block;
+            }
+        }
+    }
+
+    form {
+        padding-top: 20px;
+    }
+
+    .has-error, .facolor-error, .facolor-warning {
+        max-width: 100%;
+    }
+
+    .error-msg {
+        width: 100%;
+        text-align: right;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .modal {
+        width: 100%;
+        border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .modal {
+        .modal__body {
+            .double-row {
+                .small-6 {
+                    display: initial;
+                }
+            }
+        }
+    }
+}
+
+#withdraw_modal_new {
+    .modal__body {
+        min-height: 450px;
+    }
+}
+
+#simple_transfer_modal {
+    max-width: 650px;
+}
+
+#simple_transfer_modal,
+#simple_deposit_modal,
+#simple_deposit_modal_ask,
+#simple_withdraw_modal,
+#simple_bridge_modal_ask {
+    padding: 0;
+}
+
+#simple_deposit_modal,
+#simple_deposit_modal_ask,
+#simple_withdraw_modal,
+#simple_bridge_modal_ask {
+    overflow: auto !important;
+    max-width: 500px;
+}
+
+#simple_deposit_modal label,
+#simple_deposit_modal_ask label,
+#simple_withdraw_modal label,
+#simple_bridge_modal_ask label {
+    text-transform: none !important;
+}
+
+#simple_buy_modal,
+#simple_sell_modal {
+    overflow: auto !important;
+    padding: 0;
+}

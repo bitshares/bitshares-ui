@@ -16,9 +16,7 @@ import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import {Link} from "react-router/es";
-import ChainTypes from "../Utility/ChainTypes";
 import EquivalentPrice from "../Utility/EquivalentPrice";
-import BindToChainState from "../Utility/BindToChainState";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
 import BorrowModal from "../Modal/BorrowModal";
@@ -36,17 +34,10 @@ import SendModal from "../Modal/SendModal";
 import PulseIcon from "../Icon/PulseIcon";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import AccountTreemap from "./AccountTreemap";
+import {getBackedCoin} from "common/gatewayUtils";
+import AssetWrapper from "../Utility/AssetWrapper";
 
 class AccountOverview extends React.Component {
-    static propTypes = {
-        balanceAssets: ChainTypes.ChainAssetsList,
-        core_asset: ChainTypes.ChainAsset.isRequired
-    };
-
-    static defaultProps = {
-        core_asset: "1.3.0"
-    };
-
     constructor(props) {
         super();
         this.state = {
@@ -291,6 +282,7 @@ class AccountOverview extends React.Component {
                 borrowModal: !isBitAsset ? null : (
                     <BorrowModal
                         ref={modalRef}
+                        modalId={"borrow_modal_" + asset.get("id")}
                         quote_asset={asset.get("id")}
                         backing_asset={asset.getIn([
                             "bitasset",
@@ -375,26 +367,19 @@ class AccountOverview extends React.Component {
             const hasBalance = !!balanceObject.get("balance");
             const hasOnOrder = !!orders[asset_type];
 
-            const thisAssetName = asset.get("symbol").split(".");
+            const backedCoin = getBackedCoin(
+                asset.get("symbol"),
+                this.props.backedCoins
+            );
             const canDeposit =
-                ((thisAssetName[0] == "OPEN" || thisAssetName[0] == "RUDEX") &&
-                    !!this.props.backedCoins
-                        .get("OPEN", [])
-                        .find(a => a.backingCoinType === thisAssetName[1])) ||
-                !!this.props.backedCoins
-                    .get("RUDEX", [])
-                    .find(a => a.backingCoin === thisAssetName[1]) ||
+                (backedCoin && backedCoin.depositAllowed) ||
                 asset.get("symbol") == "BTS";
 
-            const canDepositWithdraw = !!this.props.backedCoins
-                .get("OPEN", [])
-                .find(a => a.symbol === asset.get("symbol"));
             const canWithdraw =
-                canDepositWithdraw &&
+                backedCoin &&
+                backedCoin.withdrawalAllowed &&
                 (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
-
-            // console.log(balance.getIn(["balance", "amount"]));
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
@@ -1310,28 +1295,16 @@ class AccountOverview extends React.Component {
                                 </Tab>
                             ) : null}
                         </Tabs>
-
-                        <SettleModal
-                            ref="settlement_modal"
-                            asset={this.state.settleAsset}
-                            account={account.get("name")}
-                        />
                     </div>
                 </div>
 
-                {/* Deposit Modal */}
-                {/* <SimpleDepositWithdraw
-                    ref="deposit_modal"
-                    action="deposit"
-                    fiatModal={this.state.fiatModal}
-                    account={this.props.account.get("name")}
-                    sender={this.props.account.get("id")}
-                    asset={this.state.depositAsset}
-                    modalId="simple_deposit_modal"
-                    balances={this.props.balances}
-                    {...currentDepositAsset}
-                    isDown={this.props.gatewayDown.get("OPEN")}
-                /> */}
+                {/* Settle Modal */}
+                <SettleModal
+                    ref="settlement_modal"
+                    modalId="settlement_modal"
+                    asset={this.state.settleAsset}
+                    account={account.get("name")}
+                />
 
                 {/* Withdraw Modal*/}
                 <SimpleDepositWithdraw
@@ -1380,7 +1353,11 @@ class AccountOverview extends React.Component {
     }
 }
 
-AccountOverview = BindToChainState(AccountOverview);
+AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
+AccountOverview = AssetWrapper(AccountOverview, {
+    propNames: ["balanceAssets"],
+    asList: true
+});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {

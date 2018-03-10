@@ -2,6 +2,7 @@ import React from "react";
 import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import AssetWrapper from "./AssetWrapper";
 import utils from "common/utils";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
@@ -22,19 +23,11 @@ import MarketUtils from "common/market_utils";
  */
 
 class ValueComponent extends MarketStatsCheck {
-    static propTypes = {
-        toAsset: ChainTypes.ChainAsset.isRequired,
-        fromAsset: ChainTypes.ChainAsset.isRequired,
-        coreAsset: ChainTypes.ChainAsset.isRequired
-    };
-
     static defaultProps = {
-        toAsset: "1.3.0",
         fullPrecision: true,
         noDecimals: false,
         fullDecimals: false,
-        hide_asset: false,
-        coreAsset: "1.3.0"
+        hide_asset: false
     };
 
     constructor(props) {
@@ -118,7 +111,13 @@ class ValueComponent extends MarketStatsCheck {
         );
     }
 }
-ValueComponent = BindToChainState(ValueComponent, {keep_updating: true});
+ValueComponent = AssetWrapper(ValueComponent, {
+    propNames: ["toAsset", "fromAsset", "coreAsset"],
+    defaultProps: {
+        toAsset: "1.3.0",
+        coreAsset: "1.3.0"
+    }
+});
 
 class EquivalentValueComponent extends React.Component {
     render() {

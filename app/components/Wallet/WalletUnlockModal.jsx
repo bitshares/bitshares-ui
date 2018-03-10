@@ -16,7 +16,6 @@ import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
-var logo = require("assets/logo-ico-blue.png");
 
 class WalletUnlockModal extends React.Component {
 
@@ -93,9 +92,9 @@ class WalletUnlockModal extends React.Component {
         //DEBUG console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
         if(this.props.resolve) {
             if (WalletDb.isLocked())
-                ZfApi.publish(this.props.modalId, "open")
+                ZfApi.publish(this.props.modalId, "open");
             else
-                this.props.resolve()
+                this.props.resolve();
         }
     }
 
@@ -154,7 +153,7 @@ class WalletUnlockModal extends React.Component {
             );
         }
         return (
-            <form className="full-width" onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, margin: "0 3.5rem "}}>
+            <form className="full-width" onSubmit={this.onPasswordEnter} noValidate>
                 <PasswordInput
                     ref="password_input"
                     onEnter={this.onPasswordEnter}
@@ -167,7 +166,7 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
-                            <div className=" button"><Translate content="account.perm.cancel" /></div>
+                            <div className="button primary hollow"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                     {/* <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_password" /></div> */}
@@ -232,7 +231,7 @@ class WalletUnlockModal extends React.Component {
                     <div className="button-group">
                         <button tabIndex={tabIndex++} className="button" type="submit" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
                         <Trigger close={this.props.modalId}>
-                            <div tabIndex={tabIndex++} className=" button hollow primary"><Translate content="account.perm.cancel" /></div>
+                            <div tabIndex={tabIndex++} className="button hollow primary"><Translate content="account.perm.cancel" /></div>
                         </Trigger>
                     </div>
                     {/* <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_wallet" /></div> */}
@@ -250,14 +249,13 @@ class WalletUnlockModal extends React.Component {
         // https://github.com/akiran/react-foundation-apps/issues/34
         return (
             // U N L O C K
-            <BaseModal id={this.props.modalId} ref="modal" overlay={true} overlayClose={false}>
-                <div className="text-center">
-                    <img src={logo} className="modal-logo" />
-                    <div style={{marginTop: "1rem"}} className="modal-title">
-                        {/*<Translate component="h4" content={"header.unlock" + (passwordLogin ? "_password" : "")} />*/}
-                        <h4>Login</h4>
-                    </div>
-                </div>
+            <BaseModal 
+                id={this.props.modalId}
+                ref="modal"
+                overlay={true}
+                overlayClose={false}
+                modalHeader={"header.unlock" + (passwordLogin ? "_password" : "")}
+            >
                 {passwordLogin ? this.renderPasswordLogin() : this.renderWalletLogin()}
             </BaseModal>
         );
@@ -297,4 +295,4 @@ class WalletUnlockModalContainer extends React.Component {
         );
     }
 }
-export default WalletUnlockModalContainer
+export default WalletUnlockModalContainer;
