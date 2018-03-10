@@ -597,8 +597,8 @@ class PlaceHolderWrapper extends React.Component {
     };
 
     static defaultProps = {
-        optionals: Immutable.List()
-    };
+        optionals: Immutable.List(["1.3.113", "1.3.103", "1.3.120", "1.3.121", "1.3.958", "1.3.1325", "1.3.1362", "1.3.105","1.3.106",])
+    }
 
     render() {
         let {account, objects, optionals} = this.props;
@@ -641,31 +641,9 @@ class PlaceHolderWrapper extends React.Component {
     }
 }
 
-PlaceHolderWrapper = AssetWrapper(PlaceHolderWrapper, {
-    propNames: ["optionals"],
-    defaultProps: {
-        optionals: [
-            "1.3.103",
-            "1.3.113",
-            "1.3.120",
-            "1.3.121",
-            "1.3.958",
-            "1.3.1325",
-            "1.3.1362",
-            "1.3.105",
-            "1.3.106"
-        ]
-    },
-    asList: true
-});
+PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper, {keep_updating: true});
 
-const CollateralTable = ({
-    callOrders,
-    account,
-    className,
-    children,
-    preferredUnit
-}) => {
+const CollateralTable = ({callOrders, account, className, children, preferredUnit}) => {
     return (
         <table className={"table table-hover " + className}>
             <thead>
