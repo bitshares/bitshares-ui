@@ -124,7 +124,7 @@ class TransactionConfirm extends React.Component {
             header = this.props.error ? (
                 <div
                     style={{minHeight: 100}}
-                    className="grid-content modal-header has-error"
+                    className="grid-content modal__header has-error"
                 >
                     <Translate
                         component="h3"
@@ -135,7 +135,7 @@ class TransactionConfirm extends React.Component {
             ) : (
                 <div
                     style={{minHeight: 100}}
-                    className="grid-content modal-header"
+                    className="grid-content modal__header"
                 >
                     <div className="float-left">
                         <Icon
@@ -167,7 +167,7 @@ class TransactionConfirm extends React.Component {
             header = (
                 <div
                     style={{minHeight: 100}}
-                    className="grid-content modal-header"
+                    className="grid-content modal__header"
                 >
                     <Translate
                         component="h3"
@@ -190,7 +190,7 @@ class TransactionConfirm extends React.Component {
             header = (
                 <div
                     style={{minHeight: 100}}
-                    className="grid-content modal-header"
+                    className="grid-content modal__header"
                 >
                     <Translate
                         component="h3"
@@ -206,7 +206,7 @@ class TransactionConfirm extends React.Component {
             header = (
                 <div
                     style={{minHeight: 100}}
-                    className="grid-content modal-header"
+                    className="grid-content modal__header"
                 >
                     <Translate component="h3" content="transaction.confirm" />
                 </div>

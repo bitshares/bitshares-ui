@@ -2,8 +2,7 @@ import React from "react";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Utility/LinkToAccountById";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import AssetWrapper from "../Utility/AssetWrapper";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
@@ -55,10 +54,6 @@ class AssetPermission extends React.Component {
 }
 
 class Asset extends React.Component {
-    static propTypes = {
-        backingAsset: ChainTypes.ChainAsset.isRequired
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -297,22 +292,20 @@ class Asset extends React.Component {
                     hide_issuer="true"
                 />
                 {short_name ? <p>{short_name}</p> : null}
-                <a
-                    style={{textTransform: "uppercase"}}
+                <Link
                     className="button market-button"
-                    href={`${__HASH_HISTORY__ ? "#" : ""}/market/${
-                        asset.symbol
-                    }_${preferredMarket}`}
+                    to={`/market/${asset.symbol}_${preferredMarket}`}
                 >
                     <Translate content="exchange.market" />
-                </a>
+                </Link>
             </div>
         );
     }
 
     renderSummary(asset) {
         // TODO: confidential_supply: 0 USD   [IF NOT ZERO OR NOT DISABLE CONFIDENTIAL]
-        var dynamic = asset.dynamic;
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
+        if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
 
         let flagBooleans = assetUtils.getFlagBooleans(
@@ -432,6 +425,7 @@ class Asset extends React.Component {
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
 
+        /*
         console.log(
             "force settlement delay: " +
                 bitAsset.options.force_settlement_delay_sec
@@ -440,6 +434,7 @@ class Asset extends React.Component {
             "force settlement offset: " +
                 bitAsset.options.force_settlement_offset_percent
         );
+        */
 
         let settlementDelay = bitAsset.options.force_settlement_delay_sec;
         let settlementOffset = bitAsset.options.force_settlement_offset_percent;
@@ -537,7 +532,8 @@ class Asset extends React.Component {
     }
 
     renderFeePool(asset) {
-        var dynamic = asset.dynamic;
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
+        if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
         return (
             <div className="asset-card no-padding">
@@ -1155,12 +1151,11 @@ class Asset extends React.Component {
     }
 }
 
-Asset = BindToChainState(Asset, {keep_updating: true});
-class AssetContainer extends React.Component {
-    static propTypes = {
-        asset: ChainTypes.ChainAsset.isRequired
-    };
+Asset = AssetWrapper(Asset, {
+    propNames: ["backingAsset"]
+});
 
+class AssetContainer extends React.Component {
     render() {
         let backingAsset = this.props.asset.has("bitasset")
             ? this.props.asset.getIn([
@@ -1172,7 +1167,9 @@ class AssetContainer extends React.Component {
         return <Asset {...this.props} backingAsset={backingAsset} />;
     }
 }
-AssetContainer = BindToChainState(AssetContainer, {keep_updating: true});
+AssetContainer = AssetWrapper(AssetContainer, {
+    withDynamic: true
+});
 
 export default class AssetSymbolSplitter extends React.Component {
     render() {

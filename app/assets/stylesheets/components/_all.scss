@@ -1,24 +1,25 @@
 @import "account";
+@import "account-create";
+@import "bitkapital";
 @import "blocktrades";
 @import "cards";
 @import "console";
+@import "dashboard";
+@import "exchange";
 @import "existing_accounts";
 @import "footer";
 @import "forms";
 @import "header";
-@import "loading-indicator";
-@import "pagination";
-@import "tables";
-@import "wallet";
-@import "dashboard";
-@import "settings";
-@import "exchange";
-@import "bitkapital";
-@import "account-create";
 @import "help";
+@import "loading-indicator";
+@import "modal";
+@import "pagination";
 @import "rudex";
+@import "settings";
+@import "tables";
 @import "tabs";
 @import "typeahead";
+@import "wallet";
 
 .lifetime {
     background: url("../fresh-bolt2.png") no-repeat 100% 50%;

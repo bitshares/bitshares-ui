@@ -1,22 +1,21 @@
 // Localstorage
 import ls, {ls_key_exists} from "./localStorageImpl";
 
-if (null===ls) throw "localStorage is required but isn't available on this platform";
+if (null === ls)
+    throw "localStorage is required but isn't available on this platform";
 
-const localStorage = (key) => {
-
+const localStorage = key => {
     var STORAGE_KEY = key;
 
     return {
         get(key, dv = {}) {
-
             let rv;
             try {
-                if ( ls_key_exists(STORAGE_KEY + key, ls) ) {
+                if (ls_key_exists(STORAGE_KEY + key, ls)) {
                     rv = JSON.parse(ls.getItem(STORAGE_KEY + key));
                 }
                 return rv ? rv : dv;
-            } catch(err) {
+            } catch (err) {
                 return dv;
             }
         },

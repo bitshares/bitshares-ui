@@ -85,6 +85,8 @@ class DepositModalContent extends DecimalChecker {
     }
 
     onAssetSelected(asset, assetDetails) {
+        if(assetDetails.gateway == "") return this.setState({selectedAsset: asset, selectedGateway: null});
+
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
             asset
@@ -228,190 +230,176 @@ class DepositModalContent extends DecimalChecker {
                 </div>
             );
 
-        const logo = require("assets/logo-ico-blue.png");
-
         return (
-            <div className="DepositModal">
-                <div className="canvas grid-block vertical no-overflow">
-                    <div className="Modal__header">
-                        <img src={logo} />
-                        <br />
-                        <p>
-                            {usingGateway && account ? (
-                                <Translate
-                                    content="modal.deposit.header"
-                                    account_name={
-                                        <span className="send-name">
-                                            {account}
-                                        </span>
-                                    }
+            <div className="grid-block vertical no-overflow">
+                <div className="modal__header">
+                    {usingGateway && account ? (
+                        <Translate
+                            component="p"
+                            content="modal.deposit.header"
+                            account_name={<span className="modal__highlight">{account}</span>}
+                        />
+                    ) : (
+                        <Translate
+                            component="p"
+                            content="modal.deposit.header_short" 
+                        />
+                    )}
+                </div>
+                <div className="modal__body">
+                    <div className="container-row">
+                        <div className="no-margin no-padding">
+                            <div className="inline-label input-wrapper">
+                                <DepositWithdrawAssetSelector
+                                    defaultValue={selectedAsset}
+                                    onSelect={this.onAssetSelected.bind(this)}
+                                    selectOnBlur
                                 />
-                            ) : (
-                                <Translate content="modal.deposit.header_short" />
-                            )}
-                        </p>
-                    </div>
-                    <div className="Modal__body">
-                        <div className="container-row">
-                            <div className="no-margin no-padding">
-                                <div className="inline-label input-wrapper">
-                                    <DepositWithdrawAssetSelector
-                                        defaultValue={selectedAsset}
-                                        onSelect={this.onAssetSelected.bind(
-                                            this
-                                        )}
-                                        selectOnBlur
-                                    />
-                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        {usingGateway && selectedAsset
-                            ? gatewaySelector.call(this, {
-                                  selectedGateway,
-                                  gatewayStatus,
-                                  nAvailableGateways,
-                                  error: depositAddress && depositAddress.error,
-                                  onGatewayChanged: this.onGatewayChanged.bind(
-                                      this
-                                  )
-                              })
-                            : null}
+                    {usingGateway && selectedAsset
+                        ? gatewaySelector.call(this, {
+                            selectedGateway,
+                            gatewayStatus,
+                            nAvailableGateways,
+                            error: depositAddress && depositAddress.error,
+                            onGatewayChanged: this.onGatewayChanged.bind(this)
+                        })
+                        : 
+                        null
+                    }
 
-                        {!fetchingAddress ? (
-                            (!usingGateway ||
-                                (usingGateway &&
-                                    selectedGateway &&
-                                    gatewayStatus[selectedGateway].enabled)) &&
-                            depositAddress &&
-                            !depositAddress.memo ? (
-                                <div
-                                    className="container-row"
-                                    style={{textAlign: "center"}}
-                                >
-                                    {QR}
-                                </div>
-                            ) : null
-                        ) : (
+                    {!fetchingAddress ? (
+                        (!usingGateway ||
+                            (usingGateway &&
+                                selectedGateway &&
+                                gatewayStatus[selectedGateway].enabled)) &&
+                        depositAddress &&
+                        !depositAddress.memo ? (
                             <div
                                 className="container-row"
                                 style={{textAlign: "center"}}
                             >
-                                <LoadingIndicator type="three-bounce" />
+                                {QR}
                             </div>
-                        )}
-                        {selectedGateway &&
-                        gatewayStatus[selectedGateway].enabled &&
-                        depositAddress &&
-                        !depositAddress.error ? (
-                            <div
-                                className="container-row deposit-info"
-                                style={{textAlign: "center"}}
-                            >
-                                {backingAsset.minAmount ? (
-                                    <div className="grid-block container-row maxDeposit">
-                                        <Translate
-                                            content="gateway.rudex.min_amount"
-                                            minAmount={utils.format_number(
-                                                backingAsset.minAmount /
-                                                    utils.get_asset_precision(
-                                                        backingAsset.precision
-                                                    ),
-                                                backingAsset.precision,
-                                                false
-                                            )}
-                                            symbol={selectedAsset}
-                                        />
-                                    </div>
-                                ) : null}
-                                {this.state.isOpenledger && (
+                        ) : null
+                    ) : (
+                        <div
+                            className="container-row"
+                            style={{textAlign: "center"}}
+                        >
+                            <LoadingIndicator type="three-bounce" />
+                        </div>
+                    )}
+                    {selectedGateway &&
+                    gatewayStatus[selectedGateway].enabled &&
+                    depositAddress &&
+                    !depositAddress.error ? (
+                        <div className="container-row">
+                            {backingAsset.minAmount ? (
+                                <div className="grid-block container-row maxDeposit">
                                     <Translate
-                                        className="grid-block container-row maxDeposit"
-                                        component="div"
-                                        content="gateway.min_deposit_warning_amount"
-                                        minDeposit={
-                                            backingAsset.gateFee * 2 || 0
-                                        }
-                                        coin={selectedAsset}
+                                        content="gateway.rudex.min_amount"
+                                        minAmount={utils.format_number(
+                                            backingAsset.minAmount /
+                                                utils.get_asset_precision(
+                                                    backingAsset.precision
+                                                ),
+                                            backingAsset.precision,
+                                            false
+                                        )}
+                                        symbol={selectedAsset}
                                     />
-                                )}
+                                </div>
+                            ) : null}
+                            {this.state.isOpenledger && (
+                                <Translate
+                                    className="grid-block container-row maxDeposit"
+                                    component="h6"
+                                    content="gateway.min_deposit_warning_amount"
+                                    minDeposit={
+                                        backingAsset.gateFee * 2 || 0
+                                    }
+                                    coin={selectedAsset}
+                                />
+                            )}
 
-                                <div className="grid-block container-row deposit-details">
+                            <div className="grid-block container-row">
+                                <div className="copyIcon">
+                                    <CopyButton
+                                        text={depositAddress.address}
+                                        className={"copyIcon"}
+                                    />
+                                </div>
+                                <div>
+                                    <Translate
+                                        component="div"
+                                        style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }}
+                                        content="gateway.purchase_notice"
+                                        inputAsset={selectedAsset}
+                                        outputAsset={
+                                            selectedGateway +
+                                            "." +
+                                            selectedAsset
+                                        }
+                                        />
+                                    <div className="modal__highlight">{depositAddress.address}</div>
+                                </div>
+                            </div>
+                            {depositAddress.memo ? (
+                                <div className="grid-block container-row">
                                     <div className="copyIcon">
                                         <CopyButton
-                                            text={depositAddress.address}
+                                            text={depositAddress.memo}
                                             className={"copyIcon"}
                                         />
                                     </div>
                                     <div>
-                                        <div>
-                                            <Translate
-                                                content="gateway.purchase_notice"
-                                                inputAsset={selectedAsset}
-                                                outputAsset={
-                                                    selectedGateway +
-                                                    "." +
-                                                    selectedAsset
-                                                }
-                                            />
-                                        </div>
-                                        <div>{depositAddress.address}</div>
+                                        <Translate
+                                            component="div"
+                                            style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }}
+                                            unsafe
+                                            content="gateway.purchase_notice_memo"
+                                        />
+                                        <div className="modal__highlight">{depositAddress.memo}</div>
                                     </div>
                                 </div>
-                                {depositAddress.memo ? (
-                                    <div className="grid-block container-row deposit-details">
-                                        <div className="copyIcon">
-                                            <CopyButton
-                                                text={depositAddress.memo}
-                                                className={"copyIcon"}
-                                            />
-                                        </div>
-                                        <div>
-                                            <div>
-                                                <Translate
-                                                    unsafe
-                                                    content="gateway.purchase_notice_memo"
-                                                />
-                                            </div>
-                                            <div>{depositAddress.memo}</div>
-                                        </div>
-                                    </div>
-                                ) : null}
-                            </div>
-                        ) : null}
-                        {!usingGateway ? (
-                            <div className="container-row deposit-directly">
-                                <p>
-                                    <span className="send-name">{account}</span>
-                                </p>
-                                <p>
-                                    <Translate content="modal.deposit.bts_transfer_description" />
-                                </p>
-                            </div>
-                        ) : null}
-                    </div>
-                    {this.state.isOpenledger && (
-                        <Translate
-                            className="fz_12"
-                            component="p"
-                            content="gateway.min_deposit_warning_asset"
-                            minDeposit={backingAsset.gateFee * 2 || 0}
-                            coin={selectedAsset}
-                        />
-                    )}
-
-                    <div className="Modal__footer">
-                        <div
-                            className="container-row"
-                            style={{paddingBottom: 35}}
-                        >
-                            <button
-                                className="button primary hollow"
-                                onClick={this.onClose.bind(this)}
-                            >
-                                <Translate content="modal.deposit.close" />
-                            </button>
+                            ) : null}
+                            {this.state.isOpenledger && (
+                                <Translate
+                                    component="span"
+                                    style={{ fontSize: "0.8rem" }}
+                                    content="gateway.min_deposit_warning_asset"
+                                    minDeposit={backingAsset.gateFee * 2 || 0}
+                                    coin={selectedAsset}
+                                />
+                            )}
                         </div>
+                    ) : null}
+                    {!usingGateway ? (
+                        <div className="container-row deposit-directly">
+                            <p>
+                                <span className="send-name">{account}</span>
+                            </p>
+                            <p>
+                                <Translate content="modal.deposit.bts_transfer_description" />
+                            </p>
+                        </div>
+                    ) : null}
+                    
+                </div>
+
+
+                <div className="Modal__footer">
+                    <div className="container-row">
+                        <button
+                            className="button primary hollow"
+                            onClick={this.onClose.bind(this)}
+                        >
+                            <Translate content="modal.deposit.close" />
+                        </button>
                     </div>
                 </div>
             </div>
@@ -437,16 +425,17 @@ export default class DepositModal extends React.Component {
     }
 
     render() {
-        return this.state.open ? (
+        return !this.state.open ? null : (
             <BaseModal
-                style={{maxWidth: 500}}
+                id={this.props.modalId}
                 className={this.props.modalId}
                 onClose={this.onClose.bind(this)}
                 overlay={true}
-                id={this.props.modalId}
+                overlayClass="small"
+                noCloseBtn
             >
                 <DepositModalContent {...this.props} open={this.state.open} />
             </BaseModal>
-        ) : null;
+        );
     }
 }

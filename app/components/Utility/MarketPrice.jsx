@@ -1,6 +1,5 @@
 import React from "react";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import AssetWrapper from "../Utility/AssetWrapper";
 import cnames from "classnames";
 import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
@@ -64,11 +63,6 @@ class MarketStats extends React.Component {
 }
 
 class MarketPriceInner extends MarketStats {
-    static propTypes = {
-        quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired
-    };
-
     constructor(props) {
         super(props);
     }
@@ -105,7 +99,9 @@ class MarketPriceInner extends MarketStats {
     }
 }
 
-MarketPriceInner = BindToChainState(MarketPriceInner);
+MarketPriceInner = AssetWrapper(MarketPriceInner, {
+    propNames: ["quote", "base"]
+});
 
 class MarketPrice extends React.Component {
     render() {
