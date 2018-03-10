@@ -36,12 +36,6 @@ input[type="file"] {
 hr {
     border: none;
     height: 1px;
-    background-color: #333;
-}
-
-.error {
-    color: #ff0000;
-    //padding: 16px;
 }
 
 .reactTooltip {
@@ -460,10 +454,6 @@ section progress {
 
 .help-tooltip {
     cursor: help;
-}
-
-h4 {
-    @include RobotoMedium;
 }
 
 ul > li {

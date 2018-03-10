@@ -1620,7 +1620,7 @@
         "deposit_notice_delay":
             "(new address can be generated once per 5 minutes)",
         "min_deposit_warning_amount":
-            "Minimum value to deposit should be %(minDeposit)s %(coin)s.",
+            "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset":
             "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "copy_memo": "Copy memo",
