@@ -3,6 +3,7 @@ import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import { connect } from "alt-react";
 import MarketRow from "./MarketRow";
 import SettingsStore from "stores/SettingsStore";
@@ -16,7 +17,6 @@ import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import {debounce} from "lodash";
-import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -687,11 +687,23 @@ class MyMarkets extends React.Component {
                     <div className="grid-block shrink" style={{width: "100%", textAlign: "left", padding: "0.75rem 0.5rem"}}>
                         <label style={{margin: "3px 0 0"}}>
                             <input style={{position: "relative", top: 3}} className="no-margin" type="checkbox" checked={this.props.onlyStars} onChange={() => {MarketsActions.toggleStars();}}/>
-                            <span>&nbsp;<Translate content="exchange.show_star_1" /><Icon className="gold-star" name="fi-star"/> <Translate content="exchange.show_star_2" /></span>
+                            <span style={{paddingLeft: "0.4rem"}}>
+                                <TranslateWithLinks 
+                                    string="exchange.show_only_star_formatter"
+                                    keys={[
+                                        {
+                                            type: "icon",
+                                            value: "fi-star",
+                                            className: "gold-star",
+                                            arg: "star_icon",
+                                        }
+                                    ]}
+                                />
+                            </span>
                         </label>
                         <div className="float-right search-wrapper" style={{paddingLeft: 20}}>
                              <form>
-                                <input autoComplete="off" style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}} type="text" className="no-margin market-filter-input" placeholder="Filter" maxLength="16" name="focus" required="required" value={this.state.myMarketFilter} onChange={this.handleSearchUpdate} />
+                                <input autoComplete="off" style={{fontSize: "0.9rem", height: "inherit", position: "relative", top: 1, padding: 2}} type="text" className="no-margin market-filter-input" placeholder={counterpart.translate("exchange.filter")} maxLength="16" name="focus" required="required" value={this.state.myMarketFilter} onChange={this.handleSearchUpdate} />
                                 <button className="clear-text" type="reset" onClick={this.clearInput}></button>
                             </form>
                         </div>

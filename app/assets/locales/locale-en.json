@@ -167,9 +167,11 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
-        "optional_options": "Optionally",
-        "optional_advanced_form" : "Create an account with the advanced form",
-        "optional_restore_account" : "Restore your account",
+        "optional": {
+            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_link": "restore your account",
+            "restore_form": "advanced form"
+        },
         "search": "Search for an account",
         "new_user": "New user?",
         "existing_user": "Existing user",
@@ -1147,6 +1149,7 @@
         "latency": "Latency"
     },
     "exchange": {
+        "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
         "chart_options": {
             "tools": "Tools",
@@ -1246,8 +1249,8 @@
         "new": "New",
         "market_frozen":
             "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "filter": "Filter...",
         "quote": "Quote currency:",
         "search": "Search for more markets here",
         "price_market": "Market Price",
