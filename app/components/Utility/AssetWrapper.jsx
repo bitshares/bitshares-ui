@@ -55,7 +55,6 @@ function AssetWrapper(Component, options = {}) {
         return res;
     }, {});
 
-    if (options.propNames[0] === "optionals") debugger;
     let defaultProps = Object.keys(finalPropTypes).reduce((res, key) => {
         let current = options.defaultProps && options.defaultProps[key];
         res[key] = !!options.asList ? List(current || []) : current || "1.3.0";
