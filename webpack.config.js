@@ -178,7 +178,8 @@ module.exports = function(env) {
                         path.join(
                             root_dir,
                             "node_modules/react-foundation-apps"
-                        )
+                        ),
+                        path.join(root_dir, "node_modules/react-stockcharts")
                     ],
                     use: [
                         {
@@ -191,7 +192,10 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.js$/,
-                    exclude: [/node_modules/],
+                    include: [
+                        path.join(root_dir, "app"),
+                        path.join(root_dir, "node_modules/react-stockcharts")
+                    ],
                     loader: "babel-loader",
                     options: {compact: false, cacheDirectory: true}
                 },
