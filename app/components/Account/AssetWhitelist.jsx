@@ -146,13 +146,15 @@ class AssetWhitelist extends React.Component {
             <div className="small-12 large-8 large-offset-2 grid-content">
                 <div>
                     <div className="header-selector" style={{paddingBottom: "2rem"}}>
-                        {this.state.listTypes.map((type, index) => {
-                            return (
-                                <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                    <Translate content={`explorer.asset.whitelist.${type}`} />
-                                </div>
-                            );
-                        })}
+                        <div className="selector">
+                            {this.state.listTypes.map((type, index) => {
+                                return (
+                                    <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
+                                        <Translate content={`explorer.asset.whitelist.${type}`} />
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                     {accountTable ? this.renderAccountTables() : this.renderMarketTable()}
                     {this.props.children}

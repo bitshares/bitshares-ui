@@ -45,6 +45,7 @@ class Tab extends React.Component {
             changeTab,
             title,
             className,
+            updatedTab,
             disabled
         } = this.props;
         let c = cnames({"is-active": isActive}, className);
@@ -53,9 +54,12 @@ class Tab extends React.Component {
             return (
                 <option value={index} data-is-link-to={this.props.isLinkTo}>
                     {typeof title === "string" && title.indexOf(".") > 0 ? (
-                        <Translate className="tab-title" content={title} />
+                        !updatedTab ? 
+                            <Translate className="tab-title" content={title} />
+                            :
+                            <span><Translate className="tab-title" content={title} />*</span>
                     ) : (
-                        <span className="tab-title">{title}</span>
+                        <span className="tab-title">{title}{updatedTab ? "*" : ""}</span>
                     )}
                 </option>
             );
@@ -71,9 +75,12 @@ class Tab extends React.Component {
             >
                 <a>
                     {typeof title === "string" && title.indexOf(".") > 0 ? (
+                        !updatedTab ? 
                         <Translate className="tab-title" content={title} />
+                        :
+                        <span><Translate className="tab-title" content={title} />*</span>
                     ) : (
-                        <span className="tab-title">{title}</span>
+                        <span className="tab-title">{title}{updatedTab ? "*" : ""}</span>
                     )}
                     {this.props.subText ? (
                         <div className="tab-subtext">{this.props.subText}</div>
