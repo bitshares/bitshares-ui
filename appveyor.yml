@@ -10,7 +10,8 @@ build: off
 platform:
   - x64
 cache:
-  - node_modules
+  - node_modules -> appveyor.yml
+  - '%APPDATA%\npm-cache' -> appveyor.yml
 before_package:
   echo Before package
 after_test:
@@ -29,7 +30,7 @@ artifacts:
   - path: build\hash_history_dist_*.zip
     name: hash_history_dist
   - path: build\release-checksums-*
-    name: release-checksums-windows    
+    name: release-checksums-windows
 deploy:
   provider: GitHub
   release: $(APPVEYOR_REPO_TAG_NAME)

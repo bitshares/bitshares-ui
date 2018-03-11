@@ -2,7 +2,6 @@ import alt from "alt-instance";
 import NotificationActions from "actions/NotificationActions";
 
 class NotificationStore {
-
     constructor() {
         this.bindListeners({
             addNotification: [
@@ -12,16 +11,16 @@ class NotificationStore {
                 NotificationActions.error,
                 NotificationActions.info
             ]
-        })
+        });
 
         this.state = {
             notification: null
-        }
+        };
     }
-    
+
     addNotification(notification) {
-        this.setState({ notification: notification })
+        this.setState({notification: notification});
     }
 }
 
-export default alt.createStore(NotificationStore, 'NotificationStore')
+export default alt.createStore(NotificationStore, "NotificationStore");

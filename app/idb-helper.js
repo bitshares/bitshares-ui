@@ -1,35 +1,42 @@
 let db;
 let idb_helper;
 
-export default idb_helper = {
-
+export default (idb_helper = {
     set_graphene_db: database => {
         db = database;
     },
 
     trx_readwrite: object_stores => {
-        return db.transaction(
-            [object_stores], "readwrite"
-        );
+        return db.transaction([object_stores], "readwrite");
     },
 
-    on_request_end: (request) => {
+    on_request_end: request => {
         //return request => {
         return new Promise((resolve, reject) => {
             request.onsuccess = new ChainEvent(
-                request.onsuccess, resolve, request).event;
+                request.onsuccess,
+                resolve,
+                request
+            ).event;
             request.onerror = new ChainEvent(
-                request.onerror, reject, request).event;
+                request.onerror,
+                reject,
+                request
+            ).event;
         });
         //}(request)
     },
 
-    on_transaction_end: (transaction) => {
+    on_transaction_end: transaction => {
         return new Promise((resolve, reject) => {
             transaction.oncomplete = new ChainEvent(
-                transaction.oncomplete, resolve).event;
+                transaction.oncomplete,
+                resolve
+            ).event;
             transaction.onabort = new ChainEvent(
-                transaction.onabort, reject).event;
+                transaction.onabort,
+                reject
+            ).event;
         });
     },
 
@@ -40,38 +47,36 @@ export default idb_helper = {
         @return Promise (resolves or rejects outside of the transaction)
     */
     add: (store, object, event_callback) => {
-        return function(object, event_callback) {
+        return (function(object, event_callback) {
             let request = store.add(object);
             let event_promise = null;
-            if(event_callback)
-                request.onsuccess = new ChainEvent(
-                    request.onsuccess, event => {
-                        event_promise = event_callback(event);
-                    }).event;
+            if (event_callback)
+                request.onsuccess = new ChainEvent(request.onsuccess, event => {
+                    event_promise = event_callback(event);
+                }).event;
 
-            let request_promise = idb_helper.on_request_end(request).then( event => {
-                //DEBUG console.log('... object',object,'result',event.target.result,'event',event)
-                if ( event.target.result != void 0) {
-                    //todo does event provide the keyPath name? (instead of id)
-                    object.id = event.target.result;
-                }
-                return [ object, event ];
-            });
+            let request_promise = idb_helper
+                .on_request_end(request)
+                .then(event => {
+                    //DEBUG console.log('... object',object,'result',event.target.result,'event',event)
+                    if (event.target.result != void 0) {
+                        //todo does event provide the keyPath name? (instead of id)
+                        object.id = event.target.result;
+                    }
+                    return [object, event];
+                });
 
-            if(event_promise)
+            if (event_promise)
                 return Promise.all([event_promise, request_promise]);
             return request_promise;
-
-        }(object, event_callback); //copy let references for callbacks
+        })(object, event_callback); //copy let references for callbacks
     },
 
     /** callback may return <b>false</b> to indicate that iteration should stop */
     cursor: (store_name, callback, transaction) => {
-        return new Promise((resolve, reject)=>{
-            if( ! transaction) {
-                transaction = db.transaction(
-                    [store_name], "readonly"
-                );
+        return new Promise((resolve, reject) => {
+            if (!transaction) {
+                transaction = db.transaction([store_name], "readonly");
                 transaction.onerror = error => {
                     console.error("ERROR idb_helper.cursor transaction", error);
                     reject(error);
@@ -83,10 +88,10 @@ export default idb_helper = {
             request.onsuccess = e => {
                 let cursor = e.target.result;
                 let ret = callback(cursor, e);
-                if(ret === false) resolve();
-                if(!cursor) resolve(ret);
+                if (ret === false) resolve();
+                if (!cursor) resolve(ret);
             };
-            request.onerror = (e) => {
+            request.onerror = e => {
                 let error = {
                     error: e.target.error.message,
                     data: e
@@ -94,31 +99,31 @@ export default idb_helper = {
                 console.log("ERROR idb_helper.cursor request", error);
                 reject(error);
             };
-
         }).then();
     },
 
     autoIncrement_unique: (db, table_name, unique_index) => {
-        return db.createObjectStore(
-            table_name, { keyPath: "id", autoIncrement: true }
-        ).createIndex(
-            "by_"+unique_index, unique_index, { unique: true }
-        );
+        return db
+            .createObjectStore(table_name, {keyPath: "id", autoIncrement: true})
+            .createIndex("by_" + unique_index, unique_index, {unique: true});
     }
-};
+});
 
 class ChainEvent {
     constructor(existing_on_event, callback, request) {
         // Assigning the constructor arguments to work around hot-reload
         // rewriting breaking the scope of this.event
-        this.existing_on_event = existing_on_event
-        this.callback = callback
-        this.event = (event)=> {
-            if(event.target.error)
-                console.error("---- transaction error ---->", event.target.error);
+        this.existing_on_event = existing_on_event;
+        this.callback = callback;
+        this.event = event => {
+            if (event.target.error)
+                console.error(
+                    "---- transaction error ---->",
+                    event.target.error
+                );
             //event.request = request
             this.callback(event);
-            if(this.existing_on_event) this.existing_on_event(event);
+            if (this.existing_on_event) this.existing_on_event(event);
         };
     }
 }

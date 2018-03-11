@@ -591,6 +591,8 @@
             "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
             "memo_error":
                 "The transfer memo parsing error, please try again later.",
+            "memo_length_error":
+                "The transfer memo length exceed, please check",
             "precision": "Minimum withdraw precision value: %(precision)s"
         },
         "back": "BACK",
@@ -1615,9 +1617,12 @@
         "id": "Proposal object id"
     },
     "gateway": {
-        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
-        "min_deposit_warning_amount": "Minimum value to deposit should be %(minDeposit)s %(coin)s.",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "deposit_notice_delay":
+            "(new address can be generated once per 5 minutes)",
+        "min_deposit_warning_amount":
+            "Minimum Deposit: %(minDeposit)s %(coin)s",
+        "min_deposit_warning_asset":
+            "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "min_withdraw_asset": "Minimum Withdraw: %(minWithdraw)s %(coin)s.",
         "copy_memo": "Copy memo",
         "please_generate_address": "Please, get new address ",
@@ -1728,8 +1733,12 @@
             "register": "Agree",
             "notice": "Please check the agreement to continue"
         },
+        "address": "Address",
+        "memo": "Memo",
         "deposit_warning":
             "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+        "deposit_warning_memo":
+            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "time": "Time",
         "info": "Info",
         "status": "Status",
