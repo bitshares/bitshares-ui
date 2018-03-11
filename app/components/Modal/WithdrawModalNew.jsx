@@ -857,6 +857,23 @@ class WithdrawModalNew extends React.Component {
         } = this.state;
         let symbolsToInclude = [];
 
+        // Get Backing Asset for Gateway
+        let backingAsset = this.props.backedCoins
+            .get(selectedGateway.toUpperCase(), [])
+            .find(c => {
+                return (
+                    c.backingCoinType === selectedAsset ||
+                    c.backingCoin === selectedAsset
+                );
+            });
+
+        let minWithdraw = 1;
+        if(selectedGateway.toUpperCase() == "OPEN") {
+            minWithdraw = backingAsset.gateFee * 2 || 0 + backingAsset.transactionFee || 0;
+        } else if(selectedGateway.toUpperCase() == "RUDEX") {
+            minWithdraw = utils.format_number(backingAsset.minAmount / utils.get_asset_precision(backingAsset.precision), backingAsset.precision, false);
+        }
+
         balances.forEach(item => {
             let id = item.get("asset_type");
             let asset = assets.get(id);
@@ -875,7 +892,9 @@ class WithdrawModalNew extends React.Component {
               !quantity ||
               !address ||
               !canCoverWithdrawal ||
-              addressError;
+              addressError ||
+              quantity < minWithdraw;
+              
         let storedAddresses = WithdrawAddresses.get(
             selectedAsset.toLowerCase()
         );
@@ -883,16 +902,16 @@ class WithdrawModalNew extends React.Component {
         let maxAvailable =
             convertedBalance && this.state.withdrawalCurrency
                 ? new Asset({
-                      real: convertedBalance,
-                      asset_id: this.state.withdrawalCurrency.id,
-                      precision: this.state.withdrawalCurrency.precision
-                  })
+                    real: convertedBalance,
+                    asset_id: this.state.withdrawalCurrency.id,
+                    precision: this.state.withdrawalCurrency.precision
+                })
                 : new Asset({
-                      amount: 0,
-                      asset_id: this.state.withdrawalCurrency
-                          ? this.state.withdrawalCurrency.id
-                          : undefined
-                  });
+                    amount: 0,
+                    asset_id: this.state.withdrawalCurrency
+                        ? this.state.withdrawalCurrency.id
+                        : undefined
+                });
         if (this.state.feeAmount.asset_id === maxAvailable.asset_id) {
             maxAvailable.minus(this.state.feeAmount);
         }
@@ -923,17 +942,17 @@ class WithdrawModalNew extends React.Component {
                     <div style={{marginBottom: "1em"}}>
                         {selectedGateway
                             ? gatewaySelector.call(this, {
-                                  selectedGateway,
-                                  gatewayStatus,
-                                  nAvailableGateways,
-                                  availableGateways:
-                                      coinToGatewayMapping[selectedAsset],
-                                  error: false,
-                                  onGatewayChanged: this.onGatewayChanged.bind(
-                                      this
-                                  )
-                              })
-                            : null}
+                                selectedGateway,
+                                gatewayStatus,
+                                nAvailableGateways,
+                                availableGateways:
+                                    coinToGatewayMapping[selectedAsset],
+                                error: false,
+                                onGatewayChanged: this.onGatewayChanged.bind(
+                                    this
+                                )
+                            })
+                        : null}
                     </div>
 
                     {/*QUANTITY*/}
@@ -943,8 +962,7 @@ class WithdrawModalNew extends React.Component {
                                 <div
                                     style={{
                                         fontSize: "0.8em",
-                                        position: "absolute",
-                                        right: "2.5em"
+                                        float: "right"
                                     }}
                                 >
                                     <Translate content="modal.withdraw.available" />
@@ -991,6 +1009,14 @@ class WithdrawModalNew extends React.Component {
                                 onChange={this.onQuantityChanged.bind(this)}
                                 onFocus={onFocus}
                                 onBlur={onBlur}
+                            />
+                            <Translate
+                                component="div"
+                                className="error-msg"
+                                style={{ marginTop: "-12px", marginBottom: "12px" }}
+                                content="gateway.min_withdraw_asset"
+                                minWithdraw={minWithdraw}
+                                coin={selectedAsset}
                             />
                         </div>
                     ) : null}
