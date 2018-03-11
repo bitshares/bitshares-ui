@@ -552,7 +552,7 @@ class DepositQrCodeModal extends React.Component {
     render() {
         let text = this.props.text;
         return (
-            <div className="small-12" style={{"text-align": "center"}}>
+            <div className="small-12" style={{textAlign: "center"}}>
                 <QRCode size={200} value={text} />
                 <br />
                 <br />
