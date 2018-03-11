@@ -25,6 +25,7 @@ export function userAgreement(reqBody, timeout = -1) {
 export function fetchAssets(reqBody, timeout = -1) {
     if (!reqBody.requestType) reqBody.requestType = 0;
     if (!reqBody.assetType) reqBody.assetType = 0;
+    if (!reqBody.version) reqBody.version = "1.1";
     return requestSimple(reqBody, gdexAPIs.BASE + gdexAPIs.ASSET_LIST, timeout);
 }
 
