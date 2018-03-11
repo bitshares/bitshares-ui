@@ -22,6 +22,7 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
+import accountUtils from "common/account_utils";
 
 export default class SendModal extends React.Component {
     static contextTypes = {
@@ -57,6 +58,7 @@ export default class SendModal extends React.Component {
             asset: null,
             memo: "",
             error: null,
+            knownScammer: null,
             propose: false,
             propose_account: "",
             feeAsset: null,
@@ -90,6 +92,7 @@ export default class SendModal extends React.Component {
                 asset: null,
                 memo: "",
                 error: null,
+                knownScammer: null,
                 propose: false,
                 propose_account: "",
                 feeAsset: null,
@@ -629,6 +632,8 @@ export default class SendModal extends React.Component {
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
+        let scamMessage = accountUtils.isKnownScammer(to_name);
+
         return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
@@ -686,6 +691,7 @@ export default class SendModal extends React.Component {
                                 </p>
                             </div>
                         </div>
+                        {!scamMessage ? null : <h4 className="error-msg" style={{textAlign: "left"}}>{scamMessage}</h4>}
                         {this.state.open ? (
                             <form noValidate>
                                 <div>
@@ -696,9 +702,7 @@ export default class SendModal extends React.Component {
                                             accountName={to_name}
                                             account={to_name}
                                             onChange={this.toChanged.bind(this)}
-                                            onAccountChanged={this.onToAccountChanged.bind(
-                                                this
-                                            )}
+                                            onAccountChanged={this.onToAccountChanged.bind(this)}
                                             size={60}
                                             typeahead={greenAccounts}
                                             tabIndex={tabIndex++}
