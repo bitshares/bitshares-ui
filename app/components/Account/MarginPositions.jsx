@@ -592,12 +592,7 @@ MarginPositionPlaceHolder = BindToChainState(MarginPositionPlaceHolder);
 
 class PlaceHolderWrapper extends React.Component {
     static propTypes = {
-        objects: ChainTypes.ChainObjectsList,
-        optionals: ChainTypes.ChainAssetsList
-    };
-
-    static defaultProps = {
-        optionals: Immutable.List()
+        objects: ChainTypes.ChainObjectsList
     };
 
     render() {
@@ -641,6 +636,7 @@ class PlaceHolderWrapper extends React.Component {
     }
 }
 
+PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper);
 PlaceHolderWrapper = AssetWrapper(PlaceHolderWrapper, {
     propNames: ["optionals"],
     defaultProps: {
