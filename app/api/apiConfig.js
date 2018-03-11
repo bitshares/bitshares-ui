@@ -53,6 +53,7 @@ export const settingsAPIs = {
         {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
+        {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
         {
             url: "wss://eu.nodes.bitshares.ws",
             location: "Central Europe - BitShares Infrastructure Program"
