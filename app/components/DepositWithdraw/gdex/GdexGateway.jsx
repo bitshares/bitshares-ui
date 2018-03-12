@@ -260,12 +260,12 @@ class GdexGateway extends React.Component {
         let {account} = this.props;
         let {coins, activeCoinInfo, action , isAvailable, user_info, isAgree, agreeChecked,
             agreeNotice, intermediate, memo_rule} = this.state;
-	    let issuer = {mail: "support@gdex.io", qq:"602573197", telgram:"https://t.me/GDEXer"};
+        let issuer = {"ticket": "https://support.gdex.io/", "qq": "602573197", "telgram": "https://t.me/GDEXer"};
         let supportContent=<div>
             {/*<label className="left-label">Support</label>*/}
             <br/><br/>
             <Translate content="gateway.support_gdex" /><br /><br />
-            <p>Mail: <a href={(issuer.mail.indexOf("@") === -1 ? "" : "mailto:") + issuer.mail}>{issuer.mail}</a></p>
+            <p>Help: <a href={issuer.ticket} target="_blank">{issuer.ticket}</a></p>
             <p>QQ: <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=5d192c325146762cf5a9256038fed9faef4fcace21a36882854354dd1d599f11">{issuer.qq}</a></p>
             <p>Telegram: <a href={issuer.telgram} target="_blank">{issuer.telgram}</a></p>
         </div>
