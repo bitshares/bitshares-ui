@@ -97,7 +97,7 @@ export default class TranslateWithLinks extends React.Component {
                         break;
 
                     case "link":
-                        value = <Link to={key.value} data-intor={key.dataintro ? key.dataintro : null}>
+                        value = <Link to={key.value} data-intro={key.dataIntro ? key.dataIntro : null}>
                                     <Translate content={key.translation} />
                                 </Link>;
                         break;

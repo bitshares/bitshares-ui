@@ -127,14 +127,14 @@ class LoginSelector extends React.Component {
                                             type: "link",
                                             value: "/wallet/backup/restore",
                                             translation: "account.optional.restore_link",
-                                            dataintro: translator.translate("walkthrough.restore_account"),
+                                            dataIntro: translator.translate("walkthrough.restore_account"),
                                             arg: "restore_link"
                                         },
                                         {
                                             type: "link",
                                             value: "/create-account/wallet",
                                             translation: "account.optional.restore_form",
-                                            dataintro: translator.translate("walkthrough.create_local_wallet"),
+                                            dataIntro: translator.translate("walkthrough.create_local_wallet"),
                                             arg: "restore_form"
                                         }
                                     ]} 
