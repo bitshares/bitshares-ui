@@ -689,9 +689,9 @@ export default class SendModal extends React.Component {
                                 <p>
                                     <Translate content="transfer.header_subheader" />
                                 </p>
+                                {!scamMessage ? null : <h6 className="error-msg" style={{textAlign: "left"}}>{scamMessage}</h6>}
                             </div>
                         </div>
-                        {!scamMessage ? null : <h4 className="error-msg" style={{textAlign: "left"}}>{scamMessage}</h4>}
                         {this.state.open ? (
                             <form noValidate>
                                 <div>

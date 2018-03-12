@@ -97,14 +97,6 @@
     max-width: 650px;
 }
 
-#simple_transfer_modal,
-#simple_deposit_modal,
-#simple_deposit_modal_ask,
-#simple_withdraw_modal,
-#simple_bridge_modal_ask {
-    padding: 0;
-}
-
 #simple_deposit_modal,
 #simple_deposit_modal_ask,
 #simple_withdraw_modal,
@@ -118,10 +110,4 @@
 #simple_withdraw_modal label,
 #simple_bridge_modal_ask label {
     text-transform: none !important;
-}
-
-#simple_buy_modal,
-#simple_sell_modal {
-    overflow: auto !important;
-    padding: 0;
 }
