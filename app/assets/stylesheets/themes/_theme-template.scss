@@ -2082,6 +2082,96 @@
             }
         }
     }
+
+    .calendarContainer {
+        // restyle of react-datepicker2
+        box-shadow: none;
+        background-color: $panel-bg-color;
+        border: 0;
+        color: $light-text-color;
+
+        button svg {
+            fill: $light-text-color;
+        }
+
+        .dayWrapper button:hover {
+            color: $light-text-color;
+            background-color: $button-bg-color;
+        }
+
+        .dayWrapper button[disabled] {
+            background-color: darken($panel-bg-color, 5%);
+            color: darken(#aaa, 20%);
+        }
+
+        .monthsList {
+            button {
+                border: 0;
+                background-color: $panel-bg-color;
+                &:hover {
+                    background-color: $input-background;
+                }
+            }
+        }
+
+        .time-table {
+            line-height: 38px;
+        }
+
+        input.rc-time-picker-input {
+            background: $input-background;
+            color: $light-text-color;
+            &:hover {
+                border-color: $input-background;
+                background-color: $input-background;
+                color: $light-text-color;
+            }
+            cursor: pointer;
+        }
+
+        .heading {
+            .title {
+                line-height: 28px;
+                border-color: $panel-bg-color;
+            }
+            > button {
+                line-height: 30px;
+                border-color: $panel-bg-color;
+                &:hover {
+                    border-color: $panel-bg-color;
+                    background-color: $input-background;
+                }
+                &.prev,
+                &.next {
+                    line-height: 28px;
+                }
+                &.prev {
+                    float: left;
+                    transform: rotate(-180deg);
+                }
+                &.next {
+                    float: right;
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+    }
+
+    .expiration-datetime-picker {
+        > div {
+            width: 100%;
+        }
+        input {
+            text-align: right;
+            height: 28px;
+            font-size: 12px;
+            border-radius: 5px 0 0 5px !important;
+        }
+    }
+}
+
+.rc-time-picker-panel {
+    z-index: 9999 !important;
 }
 
 .midnightTheme .gate_fee .amount-selector {
