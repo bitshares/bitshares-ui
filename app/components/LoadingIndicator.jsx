@@ -1,6 +1,16 @@
 import React from "react";
 
 class LoadingIndicator extends React.Component {
+    static propTypes = {
+        type: React.PropTypes.string,
+        loadingText: React.PropTypes.string
+    };
+
+    static defaultProps = {
+        type: null,
+        loadingText: null
+    };
+
     constructor(props) {
         super(props);
         this.state = {progress: 0};
@@ -38,8 +48,8 @@ class LoadingIndicator extends React.Component {
             case "circle-small":
                 return (
                     <div
-                        style={{height: "100%", minHeight: "15px"}}
                         className="circle-wrapper"
+                        style={{height: "15px", minHeight: "15px"}}
                     >
                         <div className="circle1 circle" />
                         <div className="circle2 circle" />
@@ -64,9 +74,14 @@ class LoadingIndicator extends React.Component {
                 return (
                     <div className={classes}>
                         <div className="loading-panel">
-                            <div className="text-center">
-                                {this.props.loadingText}
-                            </div>
+                            {this.props.loadingText && (
+                                <div
+                                    className="text-center"
+                                    style={{paddingTop: "10px"}}
+                                >
+                                    {this.props.loadingText}
+                                </div>
+                            )}
                             <div className="spinner">
                                 <div className="bounce1" />
                                 <div className="bounce2" />

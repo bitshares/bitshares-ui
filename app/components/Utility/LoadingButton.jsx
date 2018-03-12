@@ -163,13 +163,34 @@ class LoadingButton extends React.Component {
         }
         let leftElement = null;
         let rightElement = null;
+        let fixButtonWidth = false;
         let buttonInner = <span>{caption}</span>;
 
         switch (this.props.loadingType) {
             case "inside":
                 if (this.state.loading) {
+                    fixButtonWidth = true;
                     buttonInner = (
-                        <span>
+                        <span style={{margin: "auto", display: "inline-block"}}>
+                            <LoadingIndicator type={"circle-small"} />
+                        </span>
+                    );
+                }
+                break;
+            case "inside-feedback":
+                if (this.state.loading) {
+                    fixButtonWidth = true;
+                    buttonInner = (
+                        <span style={{float: "left"}}>
+                            <span
+                                style={{
+                                    position: "absolute",
+                                    whiteSpace: "nowrap",
+                                    marginLeft: "12px"
+                                }}
+                            >
+                                {loadingMessage}
+                            </span>
                             <span>
                                 <LoadingIndicator type={"circle-small"} />
                             </span>
@@ -177,20 +198,29 @@ class LoadingButton extends React.Component {
                     );
                 }
                 break;
-            case "inside-feedback":
+            case "overlay":
+                if (this.state.loading) {
+                    fixButtonWidth = true;
+                    rightElement = <LoadingIndicator type="loading-overlay" />;
+                }
+                break;
+            case "overlay-feedback":
+                if (this.state.loading) {
+                    fixButtonWidth = true;
+                    rightElement = (
+                        <LoadingIndicator
+                            loadingText={loadingMessage}
+                            type="loading-overlay"
+                        />
+                    );
+                }
+                break;
+            case "inside-feedback-resize":
                 if (this.state.loading) {
                     buttonInner = (
                         <span>
-                            <span
-                                style={{
-                                    position: "absolute",
-                                    whiteSpace: "nowrap",
-                                    marginLeft: "-0%"
-                                }}
-                            >
-                                {loadingMessage}
-                            </span>
-                            <span>
+                            <span>{loadingMessage}</span>
+                            <span style={{float: "left"}}>
                                 <LoadingIndicator type={"circle-small"} />
                             </span>
                         </span>
@@ -203,9 +233,10 @@ class LoadingButton extends React.Component {
                         <div
                             style={{
                                 float: "left",
-                                marginLeft: "0px",
+                                marginLeft: "-9px",
                                 position: "relative"
                             }}
+                            className="disabled"
                         >
                             <span>
                                 <span
@@ -219,7 +250,41 @@ class LoadingButton extends React.Component {
                                 <span
                                     style={{
                                         float: "left",
-                                        marginLeft: "1px",
+                                        marginLeft: "6px",
+                                        marginTop: "11px"
+                                    }}
+                                >
+                                    {loadingMessage}
+                                </span>
+                            </span>
+                        </div>
+                    );
+                }
+                break;
+            case "left-feedback":
+                if (this.state.loading) {
+                    leftElement = (
+                        <div
+                            style={{
+                                float: "left",
+                                marginRight: "6px",
+                                position: "relative"
+                            }}
+                            className="disabled"
+                        >
+                            <span>
+                                <span
+                                    style={{
+                                        float: "right",
+                                        marginTop: "7px"
+                                    }}
+                                >
+                                    <LoadingIndicator type={"circle"} />
+                                </span>
+                                <span
+                                    style={{
+                                        float: "right",
+                                        marginRight: "6px",
                                         marginTop: "11px"
                                     }}
                                 >
@@ -236,7 +301,7 @@ class LoadingButton extends React.Component {
             overflow: "hidden",
             position: "relative"
         };
-        if (this.state.loadingButtonWidth != null) {
+        if (fixButtonWidth && this.state.loadingButtonWidth != null) {
             buttonStyle.width = this.state.loadingButtonWidth;
         }
         return (
