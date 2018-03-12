@@ -228,17 +228,22 @@ class BorrowModalContent extends React.Component {
     }
 
     _maximizeDebt() {
-        let backing_balance = !this.props.backing_balance
-            ? {balance: 0, id: null}
-            : this.props.backing_balance.toJS();
-        let backingBalance = backing_balance.id
-            ? ChainStore.getObject(backing_balance.id)
-            : null;
-        window.s = backingBalance;
-        let backingAmount = backingBalance ? backingBalance.get("balance") : 0;
-        const maximumCollateral =
-            backingAmount /
-                utils.get_asset_precision(this.props.backing_asset) -
+        let currentPosition = this.props
+            ? this._getCurrentPosition(this.props)
+            : {};
+        let initialCollateral = 0;
+
+        if (currentPosition.collateral) {
+            initialCollateral = utils.get_asset_amount(
+                currentPosition.collateral,
+                this.props.backing_asset
+            );
+        }
+
+        let maximumCollateral =
+            this.props.backing_balance.get("balance") /
+                utils.get_asset_precision(this.props.backing_asset) +
+            initialCollateral -
             10;
         const short_amount =
             maximumCollateral /
@@ -254,6 +259,29 @@ class BorrowModalContent extends React.Component {
         this.setState(newState);
         this._validateFields(newState);
         this._setUpdatedPosition(newState);
+    }
+
+    _payDebt() {
+        let currentPosition = this.props
+            ? this._getCurrentPosition(this.props)
+            : {debt: 0};
+
+        if (currentPosition.debt <= 0) {
+            return;
+        }
+
+        const short_amount = utils.get_asset_amount(
+            Math.max(
+                currentPosition.debt -
+                    this.props.bitasset_balance.get("balance"),
+                0
+            ),
+            this.props.quote_asset
+        );
+
+        this._onBorrowChange({
+            amount: short_amount.toString()
+        });
     }
 
     _setUpdatedPosition(newState) {
@@ -764,6 +792,13 @@ class BorrowModalContent extends React.Component {
                             </Trigger>*/}
 
                             <div className="no-padding grid-content button-group no-overflow float-right">
+                                <div
+                                    href
+                                    className="button info"
+                                    onClick={this._payDebt.bind(this)}
+                                >
+                                    <Translate content="borrow.pay_debt" />
+                                </div>
                                 <div
                                     href
                                     className={classNames("button info", {
