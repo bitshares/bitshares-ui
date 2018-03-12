@@ -13,6 +13,7 @@ import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
 import FloatingDropdown from "../Utility/FloatingDropdown";
 import TypeAhead from "../Utility/TypeAhead";
+import cnames from "classnames";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -133,8 +134,12 @@ class AccountSelector extends React.Component {
         } else if (!error && this.props.accountName) error = counterpart.translate("account.errors.unknown");
 
         let member_status = null;
-        if (this.props.account)
+        let isKnownScammer = accountUtils.isKnownScammer(this.props.accountName);
+        if (this.props.account && !isKnownScammer)
             member_status = counterpart.translate("account.member." + ChainStore.getAccountMemberStatus(this.props.account));
+        else if(this.props.account && isKnownScammer) {
+            member_status = counterpart.translate("account.member.suspected_scammer");
+        }
 
         let action_class = classnames("button", {"disabled" : !(this.props.account || type === "pubkey") || error || this.props.disableActionButton});
 
@@ -168,8 +173,14 @@ class AccountSelector extends React.Component {
                     {this.props.label ? (
                     <div className={"header-area" + (this.props.hideImage ? " no-margin" : "")}>
                         {error && !lookup_display ?
-                            <label className="right-label"><span style={{color: "#ff3950"}}>Unknown Account</span></label> :
-                            <label className={"right-label"+(isGreenAccount? " green":"")}><span>{member_status}</span>&nbsp;<span style={{marginRight:"1.5em"}}> {lookup_display}</span> &nbsp; {linked_status}</label>
+                            <label className="right-label negative"><span>Unknown Account</span></label> :
+                            <label className={cnames("right-label", isGreenAccount ? "positive" : null, isKnownScammer ? "negative" : null)}>
+                                <span>{member_status}</span>&nbsp;
+                                <span style={{marginRight:"1.5em"}}>
+                                    {lookup_display}
+                                </span>
+                                &nbsp;{linked_status}
+                            </label>
                         }
                         <Translate className="left-label" component="label" content={this.props.label}/>
                     </div>) : null}
