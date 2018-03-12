@@ -250,6 +250,7 @@
                 "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
         },
         "member": {
+            "suspected_scammer": "Suspected Scammer",
             "stats": "Membership stats",
             "join": "Joined on",
             "registrar": "Registrar",
