@@ -39,6 +39,7 @@ export const settingsAPIs = {
             location: "Nuremberg, Germany"
         },
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
+        {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://bts.ai.la/ws", location: "Hong Kong"},
         {url: "wss://bitshares.apasia.tech/ws", location: "Bangkok, Thailand"},

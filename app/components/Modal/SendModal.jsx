@@ -391,12 +391,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                            feeAmount: fee,
-                            fee_asset_id: fee.asset_id,
-                            hasBalance,
-                            hasPoolBalance,
-                            error: !hasBalance || !hasPoolBalance
-                        })
+                              feeAmount: fee,
+                              fee_asset_id: fee.asset_id,
+                              hasBalance,
+                              hasPoolBalance,
+                              error: !hasBalance || !hasPoolBalance
+                          })
             )
         );
     }
@@ -654,7 +654,8 @@ export default class SendModal extends React.Component {
                                 <div
                                     style={{
                                         fontSize: "1.8rem",
-                                        fontFamily: "Roboto-Medium, arial, sans-serif"
+                                        fontFamily:
+                                            "Roboto-Medium, arial, sans-serif"
                                     }}
                                 >
                                     <Translate
@@ -689,9 +690,16 @@ export default class SendModal extends React.Component {
                                 <p>
                                     <Translate content="transfer.header_subheader" />
                                 </p>
+                                {!scamMessage ? null : (
+                                    <h6
+                                        className="error-msg"
+                                        style={{textAlign: "left"}}
+                                    >
+                                        {scamMessage}
+                                    </h6>
+                                )}
                             </div>
                         </div>
-                        {!scamMessage ? null : <h4 className="error-msg" style={{textAlign: "left"}}>{scamMessage}</h4>}
                         {this.state.open ? (
                             <form noValidate>
                                 <div>
@@ -702,7 +710,9 @@ export default class SendModal extends React.Component {
                                             accountName={to_name}
                                             account={to_name}
                                             onChange={this.toChanged.bind(this)}
-                                            onAccountChanged={this.onToAccountChanged.bind(this)}
+                                            onAccountChanged={this.onToAccountChanged.bind(
+                                                this
+                                            )}
                                             size={60}
                                             typeahead={greenAccounts}
                                             tabIndex={tabIndex++}

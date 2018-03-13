@@ -173,7 +173,14 @@
     "account": {
         "confirm_asset_modal": {
             "header": "Confirm multiple changes",
-            "are_you_sure": "Are you sure you want to save all changes to these tabs?"
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?"
+        },
+        "optional": {
+            "formatter":
+                "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_link": "restore your account",
+            "restore_form": "advanced form"
         },
         "search": "Search for an account",
         "new_user": "New user?",
@@ -1156,6 +1163,7 @@
         "latency": "Latency"
     },
     "exchange": {
+        "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
         "chart_options": {
             "tools": "Tools",
@@ -1199,6 +1207,11 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
+        "deposit":
+            "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow":
+            "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow_short": "Borrow",
         "buy_min": "Buy at least",
         "sell": "Sell",
         "receive": "Receive",
@@ -1237,7 +1250,6 @@
         "no_data": "No data",
         "time": "Candlesticks",
         "zoom": "Zoom",
-        "borrow": "Borrow",
         "no_balance": "Insufficient balance",
         "invalid_amount": "Invalid amount",
         "invalid_price": "Invalid price",
@@ -1254,8 +1266,8 @@
         "new": "New",
         "market_frozen":
             "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "filter": "Filter...",
         "quote": "Quote currency:",
         "search": "Search for more markets here",
         "price_market": "Market Price",
@@ -1508,9 +1520,19 @@
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance"
-        }
+        },
+        "maximize_collateral": "Max Collateral",
+        "maximize_debt": "Max Debt",
+        "maximize_debt_set_ratio_slider":
+            "You must set a collateral ratio before being able to maximize debt",
+        "pay_debt": "Pay Debt"
     },
     "modal": {
+        "buy": {
+            "title": "Buy",
+            "asset": "Asset",
+            "bridge": "Brdige"
+        },
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose":
