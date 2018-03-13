@@ -140,6 +140,9 @@
     "propose": "提议",
     "cancel": "取消",
     "account": {
+        "transactions": {
+            "id": "ID"
+        },
         "search": "Search for an account",
         "new_user": "新用户？",
         "existing_user": "老用户",

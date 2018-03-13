@@ -98,6 +98,11 @@ class Row extends React.Component {
 
         return (
             <tr>
+                {this.props.includeOperationId ? (
+                    <td style={{textAlign: "left"}}>
+                        {this.props.operationId}
+                    </td>
+                ) : null}
                 {hideOpLabel ? null : (
                     <td
                         style={{textAlign: "left"}}
@@ -1302,6 +1307,8 @@ class Operation extends React.Component {
 
         line = column ? (
             <Row
+                operationId={this.props.operationId}
+                includeOperationId={this.props.includeOperationId}
                 block={block}
                 type={op[0]}
                 color={color}
