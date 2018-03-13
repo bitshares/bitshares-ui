@@ -168,7 +168,8 @@
     "cancel": "Cancel",
     "account": {
         "optional": {
-            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "formatter":
+                "Optionally, {restore_link} or create an account using the {restore_form}.",
             "restore_link": "restore your account",
             "restore_form": "advanced form"
         },
@@ -1195,8 +1196,11 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
-        "deposit": "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
-        "borrow": "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "deposit":
+            "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow":
+            "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow_short": "Borrow",
         "buy_min": "Buy at least",
         "sell": "Sell",
         "receive": "Receive",

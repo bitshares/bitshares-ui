@@ -1167,7 +1167,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="account.trade" />
                                                 </th>
                                                 <th>
-                                                    <Translate content="exchange.borrow" />
+                                                    <Translate content="exchange.borrow_short" />
                                                 </th>
                                                 <th>
                                                     <Translate content="account.settle" />
