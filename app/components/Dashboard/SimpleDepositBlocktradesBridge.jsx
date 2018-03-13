@@ -271,14 +271,14 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         return (
             <div className="modal__body">
                 <div className="container-row">
-                    <label className="left-label">ASSET</label>
+                    <label className="left-label"><Translate content="modal.buy.asset" /></label>
                     <div className="inline-label input-wrapper">
                         <input disabled type="text" defaultValue={receiveName} />
                     </div>
                 </div>
                 <div className="container-row">
                     <div className="grid-block">
-                        <label className="left-label">BRIDGE</label>
+                        <label className="left-label"><Translate content="modal.buy.bridge" /></label>
                         <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip" onClick={this.onBlockTradesContact.bind(this)}>
                             &nbsp;<Icon style={{position: "relative", top: 0}} name="question-circle" />
                         </span>

@@ -3,6 +3,7 @@ import {PropTypes} from "react";
 import classNames from "classnames";
 import utils from "common/utils";
 import Translate from "react-translate-component";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
@@ -226,13 +227,32 @@ class BuySell extends React.Component {
             <div className={this.props.className}>
                 <div className="exchange-bordered buy-sell-container">
                     <div className={"exchange-content-header " + type} data-intro={dataIntro}>
-                        <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span>
+                        <span>
+                            <TranslateWithLinks 
+                                string="exchange.buysell_formatter"
+                                noLink
+                                noTip={false}
+                                keys={[
+                                    {
+                                        type: "asset",
+                                        value: quote.get("symbol"),
+                                        arg: "asset",
+                                    },
+                                    {
+                                        type: "translate",
+                                        value: isPredictionMarket ? "exchange.short" : isBid ? "exchange.buy" : "exchange.sell",
+                                        arg: "direction"
+                                    }
+                                ]}
+                            />
+                        </span>
+                        {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}} className="flip-arrow">  &#8646;</span> : "null"}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}} className="flip-arrow">  &#8645;</span> : "null"}
                         {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge" style={{paddingLeft: 10}}>{caret}</div>}
                         {this.props.currentBridges ? <div className="float-right buy-sell-deposit"><a onClick={this._onBuy.bind(this)}><Translate content="exchange.buy" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
-                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
-                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit"><a onClick={this.props.onBorrow}><Translate content="exchange.borrow" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
+                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate unsafe content="exchange.deposit" asset={buyBorrowDepositName} /></a></div> : null}
+                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit"><a onClick={this.props.onBorrow}><Translate unsafe content="exchange.borrow" asset={buyBorrowDepositName} /></a></div> : null}
                     </div>
 
                     <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>

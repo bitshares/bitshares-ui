@@ -7,6 +7,8 @@ import {Link} from "react-router/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
+import Translate from "react-translate-component";
+import Icon from "../Icon/Icon";
 
 /**
  *  Given a string and a list of interpolation parameters, this component
@@ -50,11 +52,11 @@ export default class TranslateWithLinks extends React.Component {
     }
 
     linkToAsset(symbol_or_id) {
-        const {noLink} = this.props;
+        const {noLink, noTip} = this.props;
         if(!symbol_or_id) return <span>-</span>;
         return utils.is_object_id(symbol_or_id) ?
-            <LinkToAssetById asset={symbol_or_id} noLink={noLink} /> : noLink ? <AssetName name={symbol_or_id} noTip /> :
-            <Link to={`/asset/${symbol_or_id}`}><AssetName name={symbol_or_id} noTip /></Link>;
+            <LinkToAssetById asset={symbol_or_id} noLink={noLink} /> : noLink ? <AssetName name={symbol_or_id} dataPlace="top" noTip={noTip} /> :
+            <Link to={`/asset/${symbol_or_id}`}><AssetName name={symbol_or_id} dataPlace="top" noTip={noTip} /></Link>;
     }
 
     render() {
@@ -73,7 +75,7 @@ export default class TranslateWithLinks extends React.Component {
                         break;
 
                     case "amount":
-                        value = <FormattedAsset amount={key.value.amount} asset={key.value.asset_id} decimalOffset={key.decimalOffset}/>
+                        value = <FormattedAsset amount={key.value.amount} asset={key.value.asset_id} decimalOffset={key.decimalOffset}/>;
                         break;
 
                     case "price":
@@ -82,11 +84,26 @@ export default class TranslateWithLinks extends React.Component {
                                     base_amount={key.value.base.amount}
                                     quote_asset={key.value.quote.asset_id}
                                     quote_amount={key.value.quote.amount}
-                                />
+                                />;
                         break;
 
                     case "asset":
+                        
                         value = this.linkToAsset(key.value);
+                        break;
+                    
+                    case "translate":
+                        value = <Translate content={key.value} />;
+                        break;
+
+                    case "link":
+                        value = <Link to={key.value} data-intro={key.dataIntro ? key.dataIntro : null}>
+                                    <Translate content={key.translation} />
+                                </Link>;
+                        break;
+
+                    case "icon":
+                        value = <Icon className={key.className} name={key.value}/>;
                         break;
 
                     default:
@@ -96,13 +113,13 @@ export default class TranslateWithLinks extends React.Component {
 
                 splitText[splitText.indexOf(key.arg)] = value;
             }
-        })
-
-        let finalText = splitText.map((text, index) => {
-            return <span key={index}>{text}</span>
         });
 
-        return <span>{finalText}</span>
+        let finalText = splitText.map((text, index) => {
+            return <span key={index}>{text}</span>;
+        });
+
+        return <span>{finalText}</span>;
     }
 
 }

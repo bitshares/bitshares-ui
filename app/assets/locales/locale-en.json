@@ -167,6 +167,11 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
+        "optional": {
+            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_link": "restore your account",
+            "restore_form": "advanced form"
+        },
         "search": "Search for an account",
         "new_user": "New user?",
         "existing_user": "Existing user",
@@ -1146,6 +1151,7 @@
         "latency": "Latency"
     },
     "exchange": {
+        "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
         "chart_options": {
             "tools": "Tools",
@@ -1189,6 +1195,8 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
+        "deposit": "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow": "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
         "buy_min": "Buy at least",
         "sell": "Sell",
         "receive": "Receive",
@@ -1227,7 +1235,6 @@
         "no_data": "No data",
         "time": "Candlesticks",
         "zoom": "Zoom",
-        "borrow": "Borrow",
         "no_balance": "Insufficient balance",
         "invalid_amount": "Invalid amount",
         "invalid_price": "Invalid price",
@@ -1244,8 +1251,8 @@
         "new": "New",
         "market_frozen":
             "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "filter": "Filter...",
         "quote": "Quote currency:",
         "search": "Search for more markets here",
         "price_market": "Market Price",
@@ -1506,6 +1513,11 @@
         "pay_debt": "Pay Debt"
     },
     "modal": {
+        "buy": {
+            "title": "Buy",
+            "asset": "Asset",
+            "bridge": "Brdige"
+        },
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose":

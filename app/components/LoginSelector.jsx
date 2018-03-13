@@ -3,6 +3,7 @@ import { connect } from "alt-react";
 import AccountStore from "stores/AccountStore";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
+import TranslateWithLinks from "./Utility/TranslateWithLinks";
 import { isIncognito } from "feature_detect";
 var logo = require("assets/logo-ico-blue.png");
 import SettingsActions from "actions/SettingsActions";
@@ -12,7 +13,7 @@ import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 
 const FlagImage = ({flag, width = 50, height = 50}) => {
-     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
+    return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
 };
 
 class LoginSelector extends React.Component {
@@ -118,7 +119,27 @@ class LoginSelector extends React.Component {
 
                         {!!childCount ? null :
                         <div className="additional-account-options">
-                            <p>Optionally, <Link to="/wallet/backup/restore" data-intro={translator.translate("walkthrough.restore_account")}>restore your account</Link> or create an account using the <Link to="/create-account/wallet" data-intro={translator.translate("walkthrough.create_local_wallet")}>advanced form</Link>.</p>
+                            <h5 style={{textAlign: "center"}}>
+                                <TranslateWithLinks
+                                    string="account.optional.formatter" 
+                                    keys={[
+                                        { 
+                                            type: "link",
+                                            value: "/wallet/backup/restore",
+                                            translation: "account.optional.restore_link",
+                                            dataIntro: translator.translate("walkthrough.restore_account"),
+                                            arg: "restore_link"
+                                        },
+                                        {
+                                            type: "link",
+                                            value: "/create-account/wallet",
+                                            translation: "account.optional.restore_form",
+                                            dataIntro: translator.translate("walkthrough.create_local_wallet"),
+                                            arg: "restore_form"
+                                        }
+                                    ]} 
+                                />
+                            </h5>
                         </div>}
 
                         {this.props.children}
