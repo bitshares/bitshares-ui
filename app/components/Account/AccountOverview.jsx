@@ -989,7 +989,9 @@ class AccountOverview extends React.Component {
             );
             assetName = (prefix || "") + name;
         }
-        const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
+        // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
+        // horizontally
+        const hiddenSubText = "\u00a0";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
