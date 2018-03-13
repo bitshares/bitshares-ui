@@ -499,7 +499,6 @@ class MarketsActions {
         //     fee_asset_id = "1.3.0";
         // }
 
-        order.setExpiration();
         order = order.toObject();
 
         tr.add_type_operation("limit_order_create", order);

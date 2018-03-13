@@ -28,6 +28,7 @@ import {Apis} from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
+import moment from "moment";
 
 Highcharts.setOptions({
     global: {
@@ -55,12 +56,94 @@ class Exchange extends React.Component {
     constructor(props) {
         super();
 
-        this.state = this._initialState(props);
+        this.state = {
+            ...this._initialState(props),
+            expirationType: {
+                bid: "MONTH",
+                ask: "MONTH"
+            },
+            expirationCustomTime: {
+                bid: moment().add(1, "day"),
+                ask: moment().add(1, "day")
+            }
+        };
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+
+        this._handleExpirationChange = this._handleExpirationChange.bind(this);
+        this._handleCustomExpirationChange = this._handleCustomExpirationChange.bind(
+            this
+        );
+
         this.psInit = true;
     }
+
+    _handleExpirationChange(type, e) {
+        let expirationType = {
+            ...this.state.expirationType,
+            [type]: e.target.value
+        };
+
+        this.setState({
+            expirationType: expirationType
+        });
+    }
+
+    _handleCustomExpirationChange(type, time) {
+        let expirationCustomTime = {
+            ...this.state.expirationCustomTime,
+            [type]: time
+        };
+
+        this.setState({
+            expirationCustomTime: expirationCustomTime
+        });
+    }
+
+    EXPIRATIONS = {
+        HOUR: {
+            title: "1 hour",
+            get: () =>
+                moment()
+                    .add(1, "hour")
+                    .valueOf()
+        },
+        "12HOURS": {
+            title: "12 hours",
+            get: () =>
+                moment()
+                    .add(12, "hour")
+                    .valueOf()
+        },
+        "24HOURS": {
+            title: "24 hours",
+            get: () =>
+                moment()
+                    .add(1, "day")
+                    .valueOf()
+        },
+        "7DAYS": {
+            title: "7 days",
+            get: () =>
+                moment()
+                    .add(7, "day")
+                    .valueOf()
+        },
+        MONTH: {
+            title: "30 days",
+            get: () =>
+                moment()
+                    .add(30, "day")
+                    .valueOf()
+        },
+        SPECIFIC: {
+            title: "Specific",
+            get: type => {
+                return this.state.expirationCustomTime[type].valueOf();
+            }
+        }
+    };
 
     _initialState(props) {
         let ws = props.viewSettings;
@@ -512,9 +595,24 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(type, feeID) {
-        let current = this.state[type === "sell" ? "ask" : "bid"];
+        let actionType = type === "sell" ? "ask" : "bid";
+
+        let current = this.state[actionType];
+
+        let expirationTime = null;
+        if (this.state.expirationType[actionType] === "SPECIFIC") {
+            expirationTime = this.EXPIRATIONS[
+                this.state.expirationType[actionType]
+            ].get(actionType);
+        } else {
+            expirationTime = this.EXPIRATIONS[
+                this.state.expirationType[actionType]
+            ].get();
+        }
+
         const order = new LimitOrderCreate({
             for_sale: current.for_sale,
+            expiration: new Date(expirationTime || false),
             to_receive: current.to_receive,
             seller: this.props.currentAccount.get("id"),
             fee: {
@@ -1270,6 +1368,9 @@ class Exchange extends React.Component {
             minChartHeight
         );
 
+        let expirationType = this.state.expirationType;
+        let expirationCustomTime = this.state.expirationCustomTime;
+
         let buyForm = isFrozen ? null : (
             <BuySell
                 onBorrow={
@@ -1302,6 +1403,17 @@ class Exchange extends React.Component {
                           } buy-form`
                 )}
                 type="bid"
+                expirationType={expirationType["bid"]}
+                expirations={this.EXPIRATIONS}
+                expirationCustomTime={expirationCustomTime["bid"]}
+                onExpirationTypeChange={this._handleExpirationChange.bind(
+                    this,
+                    "bid"
+                )}
+                onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                    this,
+                    "bid"
+                )}
                 amount={bid.toReceiveText}
                 price={bid.priceText}
                 total={bid.forSaleText}
@@ -1387,6 +1499,17 @@ class Exchange extends React.Component {
                 total={ask.toReceiveText}
                 quote={quote}
                 base={base}
+                expirationType={expirationType["ask"]}
+                expirations={this.EXPIRATIONS}
+                expirationCustomTime={expirationCustomTime["ask"]}
+                onExpirationTypeChange={this._handleExpirationChange.bind(
+                    this,
+                    "ask"
+                )}
+                onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                    this,
+                    "ask"
+                )}
                 amountChange={this._onInputSell.bind(this, "ask", false)}
                 priceChange={this._onInputPrice.bind(this, "ask")}
                 setPrice={this._currentPriceClick.bind(this)}
@@ -1845,7 +1968,9 @@ class Exchange extends React.Component {
                     {!notMyAccount && quoteIsBitAsset ? (
                         <BorrowModal
                             ref="borrowQuote"
-                            modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                            modalId={
+                                "borrow_modal_quote_" + quoteAsset.get("id")
+                            }
                             quote_asset={quoteAsset.get("id")}
                             backing_asset={quoteAsset.getIn([
                                 "bitasset",
