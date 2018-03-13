@@ -55,7 +55,8 @@ class MarketRow extends React.Component {
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
-            ns.imgError !== this.state.imgError
+            ns.imgError !== this.state.imgError ||
+            np.starredMarkets.size !== this.props.starredMarkets
         );
     }
 
@@ -100,6 +101,15 @@ class MarketRow extends React.Component {
         }
     }
 
+    _toggleFavoriteMarket(quote, base) {
+        let marketID = `${quote}_${base}`;
+        if (!this.props.starredMarkets.has(marketID)) {
+            SettingsActions.addStarMarket(quote, base);
+        } else {
+            SettingsActions.removeStarMarket(quote, base);
+        }
+    }
+
     render() {
         let {
             base,
@@ -125,8 +135,29 @@ class MarketRow extends React.Component {
                 ? "change-up"
                 : parseFloat(marketStats.change) < 0 ? "change-down" : "";
 
+        let marketID = `${quote.get("symbol")}_${base.get("symbol")}`;
+
+        const starClass = this.props.starredMarkets.has(marketID)
+            ? "gold-star"
+            : "grey-star";
+
         return (
             <tr style={{display: visible ? "" : "none"}}>
+                <td>
+                    <div
+                        onClick={this._toggleFavoriteMarket.bind(
+                            this,
+                            quote.get("symbol"),
+                            base.get("symbol")
+                        )}
+                    >
+                        <Icon
+                            style={{cursor: "pointer"}}
+                            className={starClass}
+                            name="fi-star"
+                        />
+                    </div>
+                </td>
                 <td style={{textAlign: "left"}}>
                     <Link
                         to={`/market/${this.props.quote.get(
@@ -201,7 +232,8 @@ MarketRow = connect(MarketRow, {
         return {
             marketStats: MarketsStore.getState().allMarketStats.get(
                 props.marketId
-            )
+            ),
+            starredMarkets: SettingsStore.getState().starredMarkets
         };
     }
 });
@@ -371,6 +403,7 @@ class MarketsTable extends React.Component {
                 <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
+                            <th style={{textAlign: "left", width: "75px"}} />
                             <th style={{textAlign: "left"}}>
                                 <Translate
                                     component="span"
