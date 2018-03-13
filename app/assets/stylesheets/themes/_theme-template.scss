@@ -2158,11 +2158,12 @@
     }
 
     .expiration-datetime-picker {
+        width: 225px;
         > div {
             float: right;
         }
         input {
-            width: 135px;
+            width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
             background: transparent;
@@ -2177,13 +2178,13 @@
             float: right;
             width: auto;
             padding: 0;
-            margin: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
             font-size: 0.9rem;
             height: 28px;
+            margin: 0 0 1px;
         }
     }
 }

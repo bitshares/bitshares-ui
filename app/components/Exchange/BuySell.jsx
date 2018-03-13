@@ -676,6 +676,9 @@ class BuySell extends React.Component {
                                                         wrapperClassName={theme}
                                                         timePicker={true}
                                                         min={minExpirationDate}
+                                                        inputFormat={
+                                                            "Do MMM YYYY hh:mm A"
+                                                        }
                                                         value={
                                                             this.props
                                                                 .expirationCustomTime
