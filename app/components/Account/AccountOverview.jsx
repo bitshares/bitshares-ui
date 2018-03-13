@@ -1110,6 +1110,7 @@ class AccountOverview extends React.Component {
                                                         this,
                                                         "qty"
                                                     )}
+                                                    className="clickable"
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.qty" />
