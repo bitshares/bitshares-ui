@@ -75,10 +75,10 @@ class AccountOverview extends React.Component {
 
     sortFunctions = {
         qty: function(a, b, force) {
-            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
+            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
                 return this.state.sortDirection || force ? -1 : 1;
 
-            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
+            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
                 return this.state.sortDirection || force ? 1 : -1;
         },
         alphabetic: function(a, b, force) {
@@ -113,7 +113,7 @@ class AccountOverview extends React.Component {
                 if (aValue && !bValue) return -1;
                 if (!aValue && !bValue)
                     return this.sortFunctions.alphabetic(a, b, true);
-                return !this.state.sortDirection
+                return this.state.sortDirection
                     ? aValue - bValue
                     : bValue - aValue;
             }
@@ -809,6 +809,7 @@ class AccountOverview extends React.Component {
                 portfolioSort: key
             });
             this.setState({
+                sortDirection: false,
                 sortKey: key
             });
         }
