@@ -45,19 +45,25 @@ DynamicObjectResolver = BindToChainState(DynamicObjectResolver);
  */
 
 function AssetWrapper(Component, options = {}) {
-    const {asList} = options;
-    options.propNames = options.propNames || [asList ? "assets" : "asset"];
+    options.propNames = options.propNames || [
+        !!options.asList ? "assets" : "asset"
+    ];
     const finalPropTypes = options.propNames.reduce((res, type) => {
-        res[type] = asList
+        res[type] = options.asList
             ? ChainTypes.ChainAssetsList
             : ChainTypes.ChainAsset.isRequired;
         return res;
     }, {});
 
-    const defaultProps = Object.keys(finalPropTypes).reduce((res, a) => {
-        res[a] = asList ? List() : "1.3.0";
+    let defaultProps = Object.keys(finalPropTypes).reduce((res, key) => {
+        let current = options.defaultProps && options.defaultProps[key];
+        res[key] = !!options.asList ? List(current || []) : current || "1.3.0";
         return res;
     }, {});
+
+    if (options.defaultProps && !!options.defaultProps.tempComponent) {
+        defaultProps.tempComponent = options.defaultProps.tempComponent;
+    }
 
     class AssetsResolver extends React.Component {
         static propTypes = finalPropTypes;

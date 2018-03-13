@@ -85,6 +85,8 @@ class DepositModalContent extends DecimalChecker {
     }
 
     onAssetSelected(asset, assetDetails) {
+        if(assetDetails.gateway == "") return this.setState({selectedAsset: asset, selectedGateway: null});
+
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
             asset
@@ -315,7 +317,7 @@ class DepositModalContent extends DecimalChecker {
                             {this.state.isOpenledger && (
                                 <Translate
                                     className="grid-block container-row maxDeposit"
-                                    component="h6"
+                                    style={{ fontSize: "1rem" }}
                                     content="gateway.min_deposit_warning_amount"
                                     minDeposit={
                                         backingAsset.gateFee * 2 || 0
@@ -325,7 +327,7 @@ class DepositModalContent extends DecimalChecker {
                             )}
 
                             <div className="grid-block container-row">
-                                <div className="copyIcon">
+                                <div style={{paddingRight: "1rem"}}>
                                     <CopyButton
                                         text={depositAddress.address}
                                         className={"copyIcon"}
@@ -348,7 +350,7 @@ class DepositModalContent extends DecimalChecker {
                             </div>
                             {depositAddress.memo ? (
                                 <div className="grid-block container-row">
-                                    <div className="copyIcon">
+                                    <div style={{paddingRight: "1rem"}}>
                                         <CopyButton
                                             text={depositAddress.memo}
                                             className={"copyIcon"}
@@ -378,12 +380,8 @@ class DepositModalContent extends DecimalChecker {
                     ) : null}
                     {!usingGateway ? (
                         <div className="container-row deposit-directly">
-                            <p>
-                                <span className="send-name">{account}</span>
-                            </p>
-                            <p>
-                                <Translate content="modal.deposit.bts_transfer_description" />
-                            </p>
+                            <h2 className="modal__highlight" style={{textAlign: "center"}}>{account}</h2>
+                            <Translate component="h6" content="modal.deposit.bts_transfer_description" />
                         </div>
                     ) : null}
                     

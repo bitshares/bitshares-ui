@@ -592,22 +592,22 @@ MarginPositionPlaceHolder = BindToChainState(MarginPositionPlaceHolder);
 
 class PlaceHolderWrapper extends React.Component {
     static propTypes = {
-        objects: ChainTypes.ChainObjectsList,
-        optionals: ChainTypes.ChainAssetsList
-    };
-
-    static defaultProps = {
-        optionals: Immutable.List()
+        callOrders: ChainTypes.ChainObjectsList
     };
 
     render() {
-        let {account, objects, optionals} = this.props;
-        objects = objects.filter(o => !!o);
-        optionals = optionals.filter(o => !!o);
-        if (!optionals.length) return null;
-        objects.forEach(object => {
+        let {account, callOrders, bitAssets} = this.props;
+        callOrders = callOrders.filter(o => !!o);
+        bitAssets = bitAssets.filter(o => !!o);
+        if (!bitAssets.length) return null;
+        callOrders.forEach(object => {
+            /*
+            * Existing call orders are already rendered elsewhere, so we filter
+            * out assets from the bitAssets list for which the account already
+            * has a position
+            */
             if (object) {
-                let index = optionals.findIndex(o => {
+                let index = bitAssets.findIndex(o => {
                     return (
                         o &&
                         o.get("id") ===
@@ -615,13 +615,13 @@ class PlaceHolderWrapper extends React.Component {
                     );
                 });
                 if (index !== -1) {
-                    optionals.splice(index, 1);
+                    bitAssets.splice(index, 1);
                 }
             }
         });
 
-        if (!optionals.length) return null;
-        let rows = optionals.map(a => {
+        if (!bitAssets.length) return null;
+        let rows = bitAssets.map(a => {
             return (
                 <MarginPositionPlaceHolder
                     key={a.get("id")}
@@ -641,10 +641,11 @@ class PlaceHolderWrapper extends React.Component {
     }
 }
 
+PlaceHolderWrapper = BindToChainState(PlaceHolderWrapper);
 PlaceHolderWrapper = AssetWrapper(PlaceHolderWrapper, {
-    propNames: ["optionals"],
+    propNames: ["bitAssets"],
     defaultProps: {
-        optionals: [
+        bitAssets: [
             "1.3.103",
             "1.3.113",
             "1.3.120",
@@ -744,7 +745,7 @@ const CollateralTable = ({
             </tbody>
             <PlaceHolderWrapper
                 account={account}
-                objects={Immutable.List(callOrders)}
+                callOrders={Immutable.List(callOrders)}
             />
             <tbody>{children}</tbody>
         </table>

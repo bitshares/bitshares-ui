@@ -211,7 +211,7 @@ class BorrowModalContent extends React.Component {
             );
         }
 
-        // Make sure we don't go over the maximum collateral ratio of
+        // Make sure we don't go over the maximum collateral ratio
         let maximizedCollateral = Math.floor(
             Math.min(
                 this.props.backing_balance.get("balance") /
@@ -225,6 +225,63 @@ class BorrowModalContent extends React.Component {
         this._onCollateralChange(
             new Object({amount: maximizedCollateral.toString()})
         );
+    }
+
+    _maximizeDebt() {
+        let currentPosition = this.props
+            ? this._getCurrentPosition(this.props)
+            : {};
+        let initialCollateral = 0;
+
+        if (currentPosition.collateral) {
+            initialCollateral = utils.get_asset_amount(
+                currentPosition.collateral,
+                this.props.backing_asset
+            );
+        }
+
+        let maximumCollateral =
+            this.props.backing_balance.get("balance") /
+                utils.get_asset_precision(this.props.backing_asset) +
+            initialCollateral -
+            10;
+        const short_amount =
+            maximumCollateral /
+            this.state.collateral_ratio *
+            this._getFeedPrice();
+
+        const newState = {
+            short_amount: short_amount,
+            collateral: maximumCollateral,
+            collateral_ratio: this.state.collateral_ratio
+        };
+
+        this.setState(newState);
+        this._validateFields(newState);
+        this._setUpdatedPosition(newState);
+    }
+
+    _payDebt() {
+        let currentPosition = this.props
+            ? this._getCurrentPosition(this.props)
+            : {debt: 0};
+
+        if (currentPosition.debt <= 0) {
+            return;
+        }
+
+        const short_amount = utils.get_asset_amount(
+            Math.max(
+                currentPosition.debt -
+                    this.props.bitasset_balance.get("balance"),
+                0
+            ),
+            this.props.quote_asset
+        );
+
+        this._onBorrowChange({
+            amount: short_amount.toString()
+        });
     }
 
     _setUpdatedPosition(newState) {
@@ -616,8 +673,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                                ? "has-warning"
-                                                : "")
+                                              ? "has-warning"
+                                              : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -688,7 +745,6 @@ class BorrowModalContent extends React.Component {
                                         )}
                                         value={collateral_ratio}
                                         type="range"
-                                        disabled={!short_amount}
                                     />
                                     <div className="inline-block">
                                         {utils.format_number(
@@ -734,12 +790,45 @@ class BorrowModalContent extends React.Component {
                             {/*<Trigger close={this.props.modalId}>
                                 <div className="button"><Translate content="account.perm.cancel" /></div>
                             </Trigger>*/}
-                            <div
-                                href
-                                className="float-right button info"
-                                onClick={this._maximizeCollateral.bind(this)}
-                            >
-                                Maximize Collateral
+
+                            <div className="no-padding grid-content button-group no-overflow float-right">
+                                <div
+                                    href
+                                    className="button info"
+                                    onClick={this._payDebt.bind(this)}
+                                >
+                                    <Translate content="borrow.pay_debt" />
+                                </div>
+                                <div
+                                    href
+                                    className={classNames("button info", {
+                                        disabled: collateral_ratio == 0
+                                    })}
+                                    onClick={
+                                        collateral_ratio == 0
+                                            ? ""
+                                            : this._maximizeDebt.bind(this)
+                                    }
+                                    data-place="left"
+                                    data-tip={
+                                        collateral_ratio == 0
+                                            ? counterpart.translate(
+                                                  "borrow.maximize_debt_set_ratio_slider"
+                                              )
+                                            : null
+                                    }
+                                >
+                                    <Translate content="borrow.maximize_debt" />
+                                </div>
+                                <div
+                                    href
+                                    className="button info"
+                                    onClick={this._maximizeCollateral.bind(
+                                        this
+                                    )}
+                                >
+                                    <Translate content="borrow.maximize_collateral" />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -26,7 +26,6 @@ class AssetStore extends BaseStore {
 
         if (payload.assets) {
             payload.assets.forEach(asset => {
-
                 for (var i = 0; i < payload.dynamic.length; i++) {
                     if (payload.dynamic[i].id === asset.dynamic_asset_data_id) {
                         asset.dynamic = payload.dynamic[i];
@@ -38,7 +37,10 @@ class AssetStore extends BaseStore {
                     asset.market_asset = true;
 
                     for (var i = 0; i < payload.bitasset_data.length; i++) {
-                        if (payload.bitasset_data[i].id === asset.bitasset_data_id) {
+                        if (
+                            payload.bitasset_data[i].id ===
+                            asset.bitasset_data_id
+                        ) {
                             asset.bitasset_data = payload.bitasset_data[i];
                             break;
                         }
@@ -47,10 +49,7 @@ class AssetStore extends BaseStore {
                     asset.market_asset = false;
                 }
 
-                this.assets = this.assets.set(
-                    asset.id,
-                    asset
-                );
+                this.assets = this.assets.set(asset.id, asset);
 
                 this.asset_symbol_to_id[asset.symbol] = asset.id;
             });
