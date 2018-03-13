@@ -27,17 +27,17 @@ class BaseModal extends React.Component {
 
     render() {
         const { props } = this;
-        const { id, overlay, onClose, modalClass, overlayClass, overlayClose, modalHeader, noCloseBtn, noLoggo, noHeader, children } = props;
+        const { id, overlay, onClose, overlayClose, className, modalHeader, noCloseBtn, noLoggo, noHeader, children } = props;
 
         return (
-            <Modal id={id} overlay={overlay} onClose={onClose} modalClass={modalClass} overlayClass={overlayClass} overlayClose={overlayClose}>
+            <Modal id={id} overlay={overlay} onClose={onClose} className={className} overlayClose={overlayClose}>
                 {!noCloseBtn && <Trigger close={id}>
                     <a href="#" className="close-button">&times;</a>
                 </Trigger>}
                 {!noLoggo && <div className="modal__logo"><img src={logo} /></div>}
                 {!noHeader && modalHeader && <div className="text-center">
                     <div className="modal__title">
-                        <Translate component="h3" content={modalHeader} />
+                        <Translate component="h4" content={modalHeader} />
                     </div>
                 </div>}
                 {children}

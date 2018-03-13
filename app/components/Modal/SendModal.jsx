@@ -22,7 +22,6 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
-import accountUtils from "common/account_utils";
 
 export default class SendModal extends React.Component {
     static contextTypes = {
@@ -391,12 +390,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+                            feeAmount: fee,
+                            fee_asset_id: fee.asset_id,
+                            hasBalance,
+                            hasPoolBalance,
+                            error: !hasBalance || !hasPoolBalance
+                        })
             )
         );
     }
@@ -632,8 +631,6 @@ export default class SendModal extends React.Component {
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
-        let scamMessage = accountUtils.isKnownScammer(to_name);
-
         return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
@@ -641,7 +638,6 @@ export default class SendModal extends React.Component {
             >
                 <BaseModal
                     id={this.props.id}
-                    overlayClass="small"
                     overlay={true}
                     onClose={this.onClose.bind(this, false)}
                 >
@@ -690,14 +686,6 @@ export default class SendModal extends React.Component {
                                 <p>
                                     <Translate content="transfer.header_subheader" />
                                 </p>
-                                {!scamMessage ? null : (
-                                    <h6
-                                        className="error-msg"
-                                        style={{textAlign: "left"}}
-                                    >
-                                        {scamMessage}
-                                    </h6>
-                                )}
                             </div>
                         </div>
                         {this.state.open ? (

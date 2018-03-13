@@ -1309,7 +1309,6 @@ export default class WithdrawModal extends React.Component {
 
         return !this.state.open ? null : (
             <BaseModal
-                overlayClass="small"
                 noCloseBtn
                 className={this.props.modalId}
                 onClose={this.onClose.bind(this)}

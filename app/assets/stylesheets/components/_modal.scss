@@ -1,11 +1,12 @@
-// Default wdth is 700px
-// To set a different width, use overlayClass and set either of the following to it
-//   tiny: 300px
-//   small: 500px
-//   medium: 600px
-//   large: 800px
-//
-// Modal will cover screen when screen is medium or less
+// Modals with specific width 
+
+.modal#send_modal_header,
+.modal#send_modal_portfolio,
+.modal#simple_bridge_modal,
+.modal#deposit_modal_new,
+.modal#withdraw_modal_new {
+    max-width: 500px;
+}
 
 .modal {
     max-width: 700px;

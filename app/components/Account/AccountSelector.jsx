@@ -175,10 +175,8 @@ class AccountSelector extends React.Component {
                         {error && !lookup_display ?
                             <label className="right-label negative"><span>Unknown Account</span></label> :
                             <label className={cnames("right-label", isGreenAccount ? "positive" : null, isKnownScammer ? "negative" : null)}>
-                                <span>{member_status}</span>&nbsp;
-                                <span style={{marginRight:"1.5em"}}>
-                                    {lookup_display}
-                                </span>
+                                <span className="tooltip" data-place="top" data-tip={isKnownScammer}>{member_status}</span>&nbsp;
+                                <span style={{marginRight:"1.5em"}}>{lookup_display}</span>
                                 &nbsp;{linked_status}
                             </label>
                         }

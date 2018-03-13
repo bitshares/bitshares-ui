@@ -141,7 +141,7 @@ class SettleModal extends React.Component {
 
     render() {
         return !this.state.open ? null : (
-            <BaseModal id={this.props.modalId} overlayClass="small" onClose={this.onClose.bind(this)} overlay={true} ref="settlement_modal">
+            <BaseModal id={this.props.modalId} onClose={this.onClose.bind(this)} overlay={true} ref="settlement_modal">
                 <div className="grid-block vertical">
                     <ModalContent {...this.props} />
                 </div>
