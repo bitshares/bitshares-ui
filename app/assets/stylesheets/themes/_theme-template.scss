@@ -55,7 +55,7 @@
         background-color: $settings-select-bg;
         color: $settings-select-color;
     }
-
+    
     .settings-input {
         /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
@@ -66,6 +66,14 @@
         background-color: $settings-select-bg !important;
         border-bottom: 0 !important;
         max-width: 100% !important;
+    }
+
+    .positive {
+        color: $positive-color !important;
+    }
+
+    .negative {
+        color: $negative-color !important;
     }
 
     .dark-text-color {
