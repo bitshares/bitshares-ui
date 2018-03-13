@@ -207,9 +207,6 @@ class BuySell extends React.Component {
             balanceToAdd = balanceAmount;
         }
 
-        let {name, prefix} = utils.replaceName(this.props[isBid ? "base" : "quote"].get("symbol"), !!this.props[isBid ? "base" : "quote"].get("bitasset"));
-        let buyBorrowDepositName = (prefix ? prefix : "") + name;
-
         const translator = require("counterpart");
 
         let dataIntro = null;
@@ -222,6 +219,8 @@ class BuySell extends React.Component {
             dataIntro =translator.translate("walkthrough.sell_form");
         }
 
+        const buySellStyle = {"text-decoration": "none"};
+
         return (
             <div className={this.props.className}>
                 <div className="exchange-bordered buy-sell-container">
@@ -230,9 +229,9 @@ class BuySell extends React.Component {
                         {this.props.onFlip ? <span onClick={this.props.onFlip} style={{cursor: "pointer", fontSize: "1rem"}} className="flip-arrow">  &#8646;</span> : "null"}
                         {this.props.onTogglePosition ? <span onClick={this.props.onTogglePosition} style={{cursor: "pointer", fontSize: "1rem"}} className="flip-arrow">  &#8645;</span> : "null"}
                         {<div onClick={this.props.onToggleOpen} className="float-right clickable hide-for-xlarge" style={{paddingLeft: 10}}>{caret}</div>}
-                        {this.props.currentBridges ? <div className="float-right buy-sell-deposit"><a onClick={this._onBuy.bind(this)}><Translate content="exchange.buy" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
-                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit"><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
-                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit"><a onClick={this.props.onBorrow}><Translate content="exchange.borrow" />&nbsp;<span className="asset-name">{buyBorrowDepositName}</span></a></div> : null}
+                        {this.props.currentBridges ? <div className="float-right buy-sell-deposit" style={buySellStyle}><a onClick={this._onBuy.bind(this)}><Translate content="exchange.buy" />&nbsp;<span className="asset-name"><AssetName noTip={true} name={quote.get("symbol")} /></span></a></div> : null}
+                        {this.props.backedCoin ? <div className="float-right buy-sell-deposit" style={buySellStyle}><a onClick={this._onDeposit.bind(this)}><Translate content="modal.deposit.submit" /> <span className="asset-name"><AssetName noTip={true} name={quote.get("symbol")} /></span></a></div> : null}
+                        {this.props.onBorrow ? <div className="float-right buy-sell-deposit" style={buySellStyle}><a onClick={this.props.onBorrow}><Translate content="exchange.borrow" />&nbsp;<span className="asset-name"><AssetName noTip={true} name={quote.get("symbol")} /></span></a></div> : null}
                     </div>
 
                     <form className={(!this.props.isOpen ? "hide-container " : "") + "order-form"} noValidate>
