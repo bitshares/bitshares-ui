@@ -64,6 +64,7 @@ class AccountOverview extends React.Component {
             ]
         };
 
+        this.qtyRefs = {};
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
@@ -73,6 +74,13 @@ class AccountOverview extends React.Component {
     }
 
     sortFunctions = {
+        qty: function(a, b, force) {
+            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? -1 : 1;
+
+            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? 1 : -1;
+        },
         alphabetic: function(a, b, force) {
             if (a.key > b.key)
                 return this.state.sortDirection || force ? 1 : -1;
@@ -380,6 +388,13 @@ class AccountOverview extends React.Component {
                 backedCoin.withdrawalAllowed &&
                 (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
+
+            const assetAmount = balanceObject.get("balance");
+
+            this.qtyRefs[asset.get("symbol")] = utils.get_asset_amount(
+                assetAmount,
+                asset
+            );
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
@@ -1090,6 +1105,10 @@ class AccountOverview extends React.Component {
                                                     />
                                                 </th>
                                                 <th
+                                                    onClick={this._toggleSortOrder.bind(
+                                                        this,
+                                                        "qty"
+                                                    )}
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.qty" />
