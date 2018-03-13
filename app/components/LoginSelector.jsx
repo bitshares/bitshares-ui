@@ -1,10 +1,10 @@
 import React from "react";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "./Utility/TranslateWithLinks";
-import { isIncognito } from "feature_detect";
+import {isIncognito} from "feature_detect";
 var logo = require("assets/logo-ico-blue.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -13,12 +13,17 @@ import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 
 const FlagImage = ({flag, width = 50, height = 50}) => {
-    return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
+    return (
+        <img
+            height={height}
+            width={width}
+            src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`}
+        />
+    );
 };
 
 class LoginSelector extends React.Component {
-
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -36,12 +41,16 @@ class LoginSelector extends React.Component {
         const childCount = React.Children.count(this.props.children);
 
         // do redirect to portfolio if user already logged in
-        if(Array.isArray(myAccounts) && myAccounts.length !== 0 && childCount === 0)
-            this.props.router.push("/account/"+this.props.currentAccount);
+        if (
+            Array.isArray(myAccounts) &&
+            myAccounts.length !== 0 &&
+            childCount === 0
+        )
+            this.props.router.push("/account/" + this.props.currentAccount);
     }
 
-    componentWillMount(){
-        isIncognito((incognito)=>{
+    componentWillMount() {
+        isIncognito(incognito => {
             this.setState({incognito});
         });
     }
@@ -52,95 +61,160 @@ class LoginSelector extends React.Component {
 
     render() {
         const translator = require("counterpart");
-        
+
         const childCount = React.Children.count(this.props.children);
-        
-        const flagDropdown = <ActionSheet>
-            <ActionSheet.Button title="" style={{width:"64px"}}>
-                <a style={{padding: "1rem", border: "none"}} className="button arrow-down">
-                    <FlagImage flag={this.state.currentLocale} />
-                </a>
-            </ActionSheet.Button>
-            <ActionSheet.Content>
-                <ul className="no-first-element-top-border">
-                    {this.state.locales.map(locale => {
-                        return (
-                            <li key={locale}>
-                                <a href onClick={(e) => {e.preventDefault(); IntlActions.switchLocale(locale); this.setState({currentLocale: locale});}}>
-                                    <div className="table-cell"><FlagImage width="20" height="20" flag={locale} /></div>
-                                    <div className="table-cell" style={{paddingLeft: 10}}><Translate content={"languages." + locale} /></div>
-                                </a>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </ActionSheet.Content>
-        </ActionSheet>;
-        
+
+        const flagDropdown = (
+            <ActionSheet>
+                <ActionSheet.Button title="" style={{width: "64px"}}>
+                    <a
+                        style={{padding: "1rem", border: "none"}}
+                        className="button arrow-down"
+                    >
+                        <FlagImage flag={this.state.currentLocale} />
+                    </a>
+                </ActionSheet.Button>
+                <ActionSheet.Content>
+                    <ul className="no-first-element-top-border">
+                        {this.state.locales.map(locale => {
+                            return (
+                                <li key={locale}>
+                                    <a
+                                        href
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            IntlActions.switchLocale(locale);
+                                            this.setState({
+                                                currentLocale: locale
+                                            });
+                                        }}
+                                    >
+                                        <div className="table-cell">
+                                            <FlagImage
+                                                width="20"
+                                                height="20"
+                                                flag={locale}
+                                            />
+                                        </div>
+                                        <div
+                                            className="table-cell"
+                                            style={{paddingLeft: 10}}
+                                        >
+                                            <Translate
+                                                content={"languages." + locale}
+                                            />
+                                        </div>
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </ActionSheet.Content>
+            </ActionSheet>
+        );
+
         return (
             <div className="grid-block align-center">
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
-                        <div><img src={logo}/></div>
-                        {childCount == 0 ? null :
+                        <div>
+                            <img src={logo} />
+                        </div>
+                        {childCount == 0 ? null : (
                             <div>
-                                <Translate content="header.create_account" component="h4"/>
+                                <Translate
+                                    content="header.create_account"
+                                    component="h4"
+                                />
                             </div>
-                        }
+                        )}
 
-                        {childCount == 1 ? null :
+                        {childCount == 1 ? null : (
                             <div>
-                                <Translate content="account.intro_text_title" component="h4"/>
-                                <Translate unsafe content="account.intro_text_1" component="p" />
-                               
+                                <Translate
+                                    content="account.intro_text_title"
+                                    component="h4"
+                                />
+                                <Translate
+                                    unsafe
+                                    content="account.intro_text_1"
+                                    component="p"
+                                />
+
                                 <div className="shrink text-center">
                                     <div className="grp-menu-item overflow-visible account-drop-down">
-                                        <div className="grp-menu-item overflow-visible" style={{margin:"0 auto"}} data-intro={translator.translate("walkthrough.language_flag")}>
-                                        {flagDropdown}
+                                        <div
+                                            className="grp-menu-item overflow-visible"
+                                            style={{margin: "0 auto"}}
+                                            data-intro={translator.translate(
+                                                "walkthrough.language_flag"
+                                            )}
+                                        >
+                                            {flagDropdown}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        }
-                        
-                        {!!childCount ? null :
-                        <div className="grid-block account-login-options">
-                            <Link to="/create-account/password" className="button primary" data-intro={translator.translate("walkthrough.create_cloud_wallet")}>
-                                <Translate content="header.create_account" />
-                            </Link>
+                        )}
 
-                            <span className="button hollow primary" onClick={() => {
-                                SettingsActions.changeSetting({setting: "passwordLogin", value: true});
-                                WalletUnlockActions.unlock.defer();
-                            }}>
-                                <Translate content="header.unlock_short" />
-                            </span>
-                        </div>}
+                        {!!childCount ? null : (
+                            <div className="grid-block account-login-options">
+                                <Link
+                                    to="/create-account/password"
+                                    className="button primary"
+                                    data-intro={translator.translate(
+                                        "walkthrough.create_cloud_wallet"
+                                    )}
+                                >
+                                    <Translate content="header.create_account" />
+                                </Link>
 
-                        {!!childCount ? null :
-                        <div className="additional-account-options">
-                            <h5 style={{textAlign: "center"}}>
-                                <TranslateWithLinks
-                                    string="account.optional.formatter" 
-                                    keys={[
-                                        { 
-                                            type: "link",
-                                            value: "/wallet/backup/restore",
-                                            translation: "account.optional.restore_link",
-                                            dataIntro: translator.translate("walkthrough.restore_account"),
-                                            arg: "restore_link"
-                                        },
-                                        {
-                                            type: "link",
-                                            value: "/create-account/wallet",
-                                            translation: "account.optional.restore_form",
-                                            dataIntro: translator.translate("walkthrough.create_local_wallet"),
-                                            arg: "restore_form"
-                                        }
-                                    ]} 
-                                />
-                            </h5>
-                        </div>}
+                                <span
+                                    className="button hollow primary"
+                                    onClick={() => {
+                                        SettingsActions.changeSetting({
+                                            setting: "passwordLogin",
+                                            value: true
+                                        });
+                                        WalletUnlockActions.unlock.defer();
+                                    }}
+                                >
+                                    <Translate content="header.unlock_short" />
+                                </span>
+                            </div>
+                        )}
+
+                        {!!childCount ? null : (
+                            <div className="additional-account-options">
+                                <h5 style={{textAlign: "center"}}>
+                                    <TranslateWithLinks
+                                        string="account.optional.formatter"
+                                        keys={[
+                                            {
+                                                type: "link",
+                                                value: "/wallet/backup/restore",
+                                                translation:
+                                                    "account.optional.restore_link",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.restore_account"
+                                                ),
+                                                arg: "restore_link"
+                                            },
+                                            {
+                                                type: "link",
+                                                value: "/create-account/wallet",
+                                                translation:
+                                                    "account.optional.restore_form",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.create_local_wallet"
+                                                ),
+                                                arg: "restore_form"
+                                            }
+                                        ]}
+                                    />
+                                </h5>
+                            </div>
+                        )}
 
                         {this.props.children}
                     </div>
@@ -156,7 +230,9 @@ export default connect(LoginSelector, {
     },
     getProps() {
         return {
-            currentAccount: AccountStore.getState().currentAccount || AccountStore.getState().passwordAccount,
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
         };
     }
 });

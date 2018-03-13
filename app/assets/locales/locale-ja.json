@@ -171,7 +171,8 @@
     "cancel": "キャンセル",
     "account": {
         "optional": {
-            "formatter": "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
+            "formatter":
+                "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
             "restore_link": "アカウントのリストア",
             "restore_form": "高度設定フォーム"
         },
@@ -1534,10 +1535,9 @@
             "no_estimate": "No estimate available for this object",
             "header": "出金 (ベータ)",
             "no_gateways":
-            "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
+                "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
             "address_not_valid": "無効なアドレス",
-            "cannot_cover":
-            "この出金をするのに十分な資金がありません"
+            "cannot_cover": "この出金をするのに十分な資金がありません"
         },
         "deposit": {
             "header": "%(account_name)sに入金",

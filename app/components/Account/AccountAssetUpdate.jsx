@@ -23,6 +23,8 @@ import {BitAssetOptions} from "./AccountAssetCreate";
 import assetConstants from "chain/asset_constants";
 import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
+import BaseModal from "components/Modal/BaseModal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -41,6 +43,14 @@ class AccountAssetUpdate extends React.Component {
         super(props);
 
         this.state = this.resetState(props);
+    }
+
+    _openConfirm() {
+        this.refs.confirm_modal.show();
+    }
+
+    _cancelConfirm() {
+        this.refs.confirm_modal.onClose();
     }
 
     resetState(props) {
@@ -151,13 +161,13 @@ class AccountAssetUpdate extends React.Component {
             ]),
             feedProducers: isBitAsset
                 ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
-                      return a.first();
-                  })
+                    return a.first();
+                })
                 : null,
             originalFeedProducers: isBitAsset
                 ? props.asset.getIn(["bitasset", "feeds"], []).map(a => {
-                      return a.first();
-                  })
+                    return a.first();
+                })
                 : null
         };
     }
@@ -168,22 +178,73 @@ class AccountAssetUpdate extends React.Component {
         let p = this.resetState(this.props);
         return (
             JSON.stringify(s.update) !== JSON.stringify(p.update) ||
-            JSON.stringify(s.core_exchange_rate) !==
-                JSON.stringify(p.core_exchange_rate) ||
-            (s.new_issuer_account_id !== null &&
-                s.new_issuer_account_id !== s.issuer) ||
+            JSON.stringify(s.core_exchange_rate) !== JSON.stringify(p.core_exchange_rate) ||
+            (s.new_issuer_account_id !== null && s.new_issuer_account_id !== s.issuer) ||
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
-            JSON.stringify(s.permissionBooleans) !==
-                JSON.stringify(p.permissionBooleans) ||
-            JSON.stringify(s.whitelist_authorities) !==
-                JSON.stringify(p.whitelist_authorities) ||
-            JSON.stringify(s.blacklist_authorities) !==
-                JSON.stringify(p.blacklist_authorities) ||
-            JSON.stringify(s.whitelist_markets) !==
-                JSON.stringify(p.whitelist_markets) ||
-            JSON.stringify(s.blacklist_markets) !==
-                JSON.stringify(p.blacklist_markets)
+            JSON.stringify(s.permissionBooleans) !== JSON.stringify(p.permissionBooleans) ||
+            JSON.stringify(s.whitelist_authorities) !== JSON.stringify(p.whitelist_authorities) ||
+            JSON.stringify(s.blacklist_authorities) !== JSON.stringify(p.blacklist_authorities) ||
+            JSON.stringify(s.whitelist_markets) !== JSON.stringify(p.whitelist_markets) ||
+            JSON.stringify(s.blacklist_markets) !== JSON.stringify(p.blacklist_markets)
         );
+    }
+
+    // Return tab ID on change
+    tabChanged(tabId) {
+        let tabsChanged = this.tabsChanged();
+        return tabsChanged[tabId] ? tabsChanged[tabId] : false;
+    }
+    
+    tabsChanged() {
+        let s = this.state;
+        let p = this.resetState(this.props);
+
+        let tabUpdateIndex = [];
+
+        if(
+            s.update.max_supply !== p.update.max_supply ||
+            s.core_exchange_rate.base.amount !== p.core_exchange_rate.base.amount ||
+            s.core_exchange_rate.quote.amount !== p.core_exchange_rate.quote.amount
+        ) tabUpdateIndex["0"] = true;
+
+        if(
+            JSON.stringify(s.whitelist_authorities) !== JSON.stringify(p.whitelist_authorities) ||
+            JSON.stringify(s.blacklist_authorities) !== JSON.stringify(p.blacklist_authorities) ||
+            JSON.stringify(s.whitelist_markets) !== JSON.stringify(p.whitelist_markets) ||
+            JSON.stringify(s.blacklist_markets) !== JSON.stringify(p.blacklist_markets)
+        ) tabUpdateIndex["1"] = true;
+
+        if(
+            s.update.description.main !== p.update.description.main ||
+            s.update.description.short_name !== p.update.description.short_name ||
+            s.update.description.market !== p.update.description.market
+        ) tabUpdateIndex["2"] = true;
+
+        if(
+            JSON.stringify(s.bitasset_opts) !== JSON.stringify(p.original_bitasset_opts)
+        ) tabUpdateIndex["3"] = true;
+
+        if(
+            s.new_issuer_account_id !== null && s.new_issuer_account_id !== s.issuer
+        ) tabUpdateIndex["4"] = true;
+
+        if(
+            JSON.stringify(s.permissionBooleans) !== JSON.stringify(p.permissionBooleans)
+        ) tabUpdateIndex["5"] = true;
+        
+        if(
+            JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
+            s.update.market_fee_percent !== p.update.market_fee_percent ||
+            s.update.max_market_fee !== p.update.max_market_fee
+        ) tabUpdateIndex["6"] = true;
+
+        // Tab 7 == Fee Pool
+
+        if(
+            JSON.stringify(s.feedProducers) !== JSON.stringify(p.originalFeedProducers)
+        ) tabUpdateIndex["8"] = true;
+
+        return tabUpdateIndex;
     }
 
     pageChanged() {
@@ -208,6 +269,10 @@ class AccountAssetUpdate extends React.Component {
 
     _updateAsset(e) {
         e.preventDefault();
+
+        // Close confirm_modal if it's open
+        this.refs.confirm_modal.onClose();
+        
         let {
             update,
             issuer,
@@ -781,18 +846,27 @@ class AccountAssetUpdate extends React.Component {
             }
         }
 
+        let tabsChangedCount = 0;
+        this.tabsChanged().forEach(function() { tabsChangedCount++; });
+
         let confirmButtons = (
             <div>
                 <button
                     className={classnames("button", {
                         disabled: !isValid || !this.pageChanged()
                     })}
-                    onClick={this._updateAsset.bind(this)}
+                    style={{width: "9rem"}}
+                    onClick={tabsChangedCount > 1 ? this._openConfirm.bind(this) : this._updateAsset.bind(this)}
                 >
-                    <Translate content="header.update_asset" />
+                    {tabsChangedCount > 1 ?
+                        <Translate content="account.perm.save_all" />
+                        :
+                        <Translate content="account.perm.save" />    
+                    }
+                    
                 </button>
                 <button
-                    className={classnames("button", {
+                    className={classnames("button primary hollow", {
                         disabled: !this.pageChanged()
                     })}
                     onClick={this._reset.bind(this)}
@@ -860,7 +934,7 @@ class AccountAssetUpdate extends React.Component {
         ]);
 
         return (
-            <div className="grid-content app-tables" ref="appTables">
+            <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
                     <div className="tabs-container generic-bordered-box">
                         <div className="tabs-header">
@@ -873,14 +947,14 @@ class AccountAssetUpdate extends React.Component {
                             setting="updateAssetTab"
                             className="account-tabs"
                             tabsClass="account-overview bordered-header content-block"
-                            contentClass="grid-block shrink small-vertical medium-horizontal"
+                            contentClass="grid-block padding-top shrink small-vertical medium-horizontal"
                             segmented={false}
                             actionButtons={confirmButtons}
                             onChangeTab={i => {
                                 this.setState({activeTab: i});
                             }}
                         >
-                            <Tab title="account.user_issued_assets.primary">
+                            <Tab title="account.user_issued_assets.primary" updatedTab={this.tabChanged(0)}>
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <label>
                                         <Translate content="account.user_issued_assets.precision" />
@@ -1077,7 +1151,7 @@ class AccountAssetUpdate extends React.Component {
                                 </div>
                             </Tab>
 
-                            <Tab title="account.whitelist.title">
+                            <Tab title="account.whitelist.title" updatedTab={this.tabChanged(1)}>
                                 <AssetWhitelist
                                     whiteListEnabled={
                                         flagBooleans["white_list"]
@@ -1115,7 +1189,7 @@ class AccountAssetUpdate extends React.Component {
                                 </AssetWhitelist>
                             </Tab>
 
-                            <Tab title="account.user_issued_assets.description">
+                            <Tab title="account.user_issued_assets.description" updatedTab={this.tabChanged(2)}>
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <label>
                                         <textarea
@@ -1221,7 +1295,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             {isBitAsset ? (
-                                <Tab title="account.user_issued_assets.bitasset_opts">
+                                <Tab title="account.user_issued_assets.bitasset_opts"  updatedTab={this.tabChanged(3)}>
                                     <div className="small-12 large-8 large-offset-2 grid-content">
                                         <BitAssetOptions
                                             bitasset_opts={bitasset_opts}
@@ -1246,7 +1320,7 @@ class AccountAssetUpdate extends React.Component {
                                 </Tab>
                             ) : null}
 
-                            <Tab title="account.user_issued_assets.update_owner">
+                            <Tab title="account.user_issued_assets.update_owner" updatedTab={this.tabChanged(4)}>
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <div style={{paddingBottom: "1rem"}}>
                                         <AccountSelector
@@ -1283,7 +1357,7 @@ class AccountAssetUpdate extends React.Component {
                                 </div>
                             </Tab>
 
-                            <Tab title="account.permissions">
+                            <Tab title="account.permissions" updatedTab={this.tabChanged(5)}>
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
                                         path={"components/AccountAssetCreate"}
@@ -1302,7 +1376,7 @@ class AccountAssetUpdate extends React.Component {
                                 </div>
                             </Tab>
 
-                            <Tab title="account.user_issued_assets.flags">
+                            <Tab title="account.user_issued_assets.flags" updatedTab={this.tabChanged(6)}>
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
                                         path={"components/AccountAssetCreate"}
@@ -1557,7 +1631,7 @@ class AccountAssetUpdate extends React.Component {
                             </Tab>
 
                             {isBitAsset ? (
-                                <Tab title="account.user_issued_assets.feed_producers">
+                                <Tab title="account.user_issued_assets.feed_producers" updatedTab={this.tabChanged(8)}>
                                     <AssetFeedProducers
                                         asset={this.props.asset}
                                         account={this.props.account}
@@ -1585,8 +1659,19 @@ class AccountAssetUpdate extends React.Component {
                         </Tabs>
                     </div>
                 </div>
+                {/* Confirmation Modal on Multiple Changes */}
+                <ConfirmModal 
+                    modalId="asset_update_modal" 
+                    ref="confirm_modal" 
+                    tabsChanged={this.tabsChanged()} 
+                    _cancelConfirm={this._cancelConfirm.bind(this)}
+                    _updateAsset={this._updateAsset.bind(this)}
+                    {...this.props}
+                    />
             </div>
         );
+
+
     }
 }
 AccountAssetUpdate = BindToChainState(AccountAssetUpdate);
@@ -1597,6 +1682,68 @@ AccountAssetUpdate = AssetWrapper(AccountAssetUpdate, {
     },
     withDynamic: true
 });
+
+class ConfirmModal extends React.Component {
+    constructor() {
+        super();
+        this.state = { open: false };
+    }
+
+    show() {
+        this.setState({open: true}, () => {
+            ZfApi.publish(this.props.modalId, "open");
+        });
+    }
+
+    onClose() {
+        this.setState({ open: false });
+    }
+
+    render() {
+        let {tabsChanged} = this.props;
+
+        return !this.state.open ? null : (
+            <BaseModal 
+                id={this.props.modalId}
+                overlay={true}
+                modalHeader="account.confirm_asset_modal.header"
+                noLoggo
+            >
+                <Translate content="account.confirm_asset_modal.are_you_sure" component="div" style={{paddingBottom: "1rem"}} />
+                <div>
+                    
+                    <ul>
+                        {tabsChanged["0"] ? <li><Translate content="account.user_issued_assets.primary" /></li> : null}
+                        {tabsChanged["1"] ? <li><Translate content="account.whitelist.title" /></li> : null}
+                        {tabsChanged["2"] ? <li><Translate content="account.user_issued_assets.description" /></li> : null}
+                        {tabsChanged["3"] ? <li><Translate content="account.user_issued_assets.bitasset_opts" /></li> : null}
+                        {tabsChanged["4"] ? <li><Translate content="account.user_issued_assets.update_owner" /></li> : null}
+                        {tabsChanged["5"] ? <li><Translate content="account.permissions" /></li> : null}
+                        {tabsChanged["6"] ? <li><Translate content="account.user_issued_assets.flags" /></li> : null}
+
+                        {/* NEEDS CHECKING */}
+                        {tabsChanged["8"] ? <li><Translate content="account.user_issued_assets.feed_producers" /></li> : null} 
+                    </ul>
+                </div>
+                <div>
+                    <button 
+                        className="button primary"
+                        onClick={this.props._updateAsset.bind(this)} >
+                        <Translate content="global.confirm" />
+                    </button>
+                    <button 
+                        className="button primary hollow"
+                        onClick={this.props._cancelConfirm.bind(this)} >
+                        <Translate content="global.cancel" />
+                    </button>
+
+                    
+                </div>
+            </BaseModal>
+
+        );
+    }
+}
 
 class AssetUpdateWrapper extends React.Component {
     render() {

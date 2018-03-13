@@ -20,6 +20,10 @@
         "ru": "Русский",
         "ja": "日本語"
     },
+    "global": {
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+    },
     "incognito": {
         "no_support":
             "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
@@ -167,6 +171,11 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
+        "confirm_asset_modal": {
+            "header": "Confirm multiple changes",
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?"
+        },
         "optional": {
             "formatter":
                 "Optionally, {restore_link} or create an account using the {restore_form}.",
@@ -371,6 +380,8 @@
             "black": "Blacklisted by"
         },
         "perm": {
+            "save": "Save Changes",
+            "save_all": "Save All Changes",
             "active": "Active Permissions",
             "owner": "Owner Permissions",
             "memo_key": "Memo key",

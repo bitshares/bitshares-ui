@@ -33,7 +33,7 @@ div.account-creation {
         max-width: 95vw;
         text-align: left;
 
-        [type=checkbox] {
+        [type="checkbox"] {
             position: relative;
             top: 3px;
         }
@@ -88,7 +88,7 @@ div.account-creation {
     }
 
     .arrow-down:after {
-        content: '';
+        content: "";
         width: 0;
         height: 0;
         border-left: 6px solid transparent;

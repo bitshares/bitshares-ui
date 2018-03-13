@@ -54,10 +54,12 @@
         padding-top: 20px;
     }
 
-    .has-error, .facolor-error, .facolor-warning {
+    .has-error,
+    .facolor-error,
+    .facolor-warning {
         max-width: 100%;
     }
-    .floatRight { 
+    .floatRight {
         width: auto;
         padding-top: 2px;
         .error-msg {

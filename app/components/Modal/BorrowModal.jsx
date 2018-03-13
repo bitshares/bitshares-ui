@@ -163,17 +163,17 @@ class BorrowModalContent extends React.Component {
 
         let newState = this._isPredictionMarket(this.props)
             ? {
-                short_amount: amount,
-                collateral: amount,
-                collateral_ratio: 1
-            }
+                  short_amount: amount,
+                  collateral: amount,
+                  collateral_ratio: 1
+              }
             : {
-                short_amount: this.state.short_amount,
-                collateral: amount,
-                collateral_ratio: isFinite(collateralRatio)
-                    ? collateralRatio
-                    : this._getInitialCollateralRatio(this.props)
-            };
+                  short_amount: this.state.short_amount,
+                  collateral: amount,
+                  collateral_ratio: isFinite(collateralRatio)
+                      ? collateralRatio
+                      : this._getInitialCollateralRatio(this.props)
+              };
 
         this.setState(newState);
         this._validateFields(newState);
@@ -405,9 +405,9 @@ class BorrowModalContent extends React.Component {
             currentPosition = !!currentPosition
                 ? currentPosition.toJS()
                 : {
-                    collateral: null,
-                    debt: null
-                };
+                      collateral: null,
+                      debt: null
+                  };
         }
         return currentPosition;
     }
@@ -673,8 +673,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                              ? "has-warning"
-                                              : "")
+                                                ? "has-warning"
+                                                : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -852,13 +852,13 @@ export default class ModalWrapper extends React.Component {
     }
 
     show() {
-        this.setState({ open: true }, () => {
+        this.setState({open: true}, () => {
             ZfApi.publish(this.props.modalId, "open");
         });
     }
 
     onClose() {
-        this.setState({ open: false });
+        this.setState({open: false});
     }
 
     componentWillMount() {
@@ -885,7 +885,12 @@ export default class ModalWrapper extends React.Component {
         }
 
         return !this.state.open ? null : (
-            <BaseModal id={this.props.modalId} overlay={true} onClose={this.onClose.bind(this)} ref={this.props.modalId}>
+            <BaseModal
+                id={this.props.modalId}
+                overlay={true}
+                onClose={this.onClose.bind(this)}
+                ref={this.props.modalId}
+            >
                 <div className="grid-block vertical">
                     <BorrowModalContent
                         quote_asset={quote_asset}

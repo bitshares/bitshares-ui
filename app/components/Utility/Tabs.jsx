@@ -48,6 +48,7 @@ class Tab extends React.Component {
             changeTab,
             title,
             className,
+            updatedTab,
             disabled,
             subText
         } = this.props;
@@ -69,6 +70,7 @@ class Tab extends React.Component {
                 <option value={index} data-is-link-to={this.props.isLinkTo}>
                     <span className="tab-title">
                         {title}
+                        {updatedTab ? "*" : ""}
                         {subText && " ("}
                         {subText && subText}
                         {subText && ")"}
@@ -86,7 +88,10 @@ class Tab extends React.Component {
                 }
             >
                 <a>
-                    <span className="tab-title">{title}</span>
+                    <span className="tab-title">
+                        {title}
+                        {updatedTab ? "*" : ""}
+                    </span>
                     {subText && <div className="tab-subtext">{subText}</div>}
                 </a>
             </li>
