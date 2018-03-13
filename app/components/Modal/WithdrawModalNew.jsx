@@ -22,6 +22,7 @@ import AccountStore from "stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
+import counterpart from "counterpart";
 import {
     _getAvailableGateways,
     gatewaySelector,
@@ -867,7 +868,8 @@ class WithdrawModalNew extends React.Component {
                 );
             });
 
-        let minWithdraw = 1;
+        let minWithdraw = null;
+        let maxWithdraw = null;
         if(selectedGateway.toUpperCase() == "OPEN") {
             minWithdraw = backingAsset.gateFee * 2 || 0 + backingAsset.transactionFee || 0;
         } else if(selectedGateway.toUpperCase() == "RUDEX") {
@@ -1005,30 +1007,43 @@ class WithdrawModalNew extends React.Component {
                                 <Translate content="modal.withdraw.quantity" />
                             </label>
                             <ExchangeInput
-                                value={quantity}
+                                value={quantity ? quantity : ""}
                                 onChange={this.onQuantityChanged.bind(this)}
                                 onFocus={onFocus}
                                 onBlur={onBlur}
+                                placeholder={counterpart.translate(
+                                    "gateway.limit_withdraw_asset", {min: !minWithdraw ? 0 : minWithdraw, max: !maxWithdraw ? counterpart.translate("gateway.limit_withdraw_asset_none") : maxWithdraw }
+                                )}
                             />
-                            <Translate
-                                component="div"
-                                className="error-msg"
-                                style={{ marginTop: "-12px", marginBottom: "12px" }}
-                                content="gateway.min_withdraw_asset"
-                                minWithdraw={minWithdraw}
-                                coin={selectedAsset}
-                            />
+                            {canCoverWithdrawal && minWithdraw && quantity && quantity < minWithdraw ?
+                                <Translate
+                                    component="div"
+                                    className="error-msg"
+                                    style={{ position: "absolute", marginTop: "-12px", marginBottom: "6px" }}
+                                    content="gateway.limit_withdraw_asset_min"
+                                    min={minWithdraw}
+                                    coin={selectedGateway + "." + selectedAsset}
+                                /> : null}
+                            {canCoverWithdrawal && maxWithdraw && quantity && quantity > maxWithdraw ? 
+                                <Translate
+                                    component="div"
+                                    className="error-msg"
+                                    style={{ position: "absolute", marginTop: "-12px", marginBottom: "6px" }}
+                                    content="gateway.limit_withdraw_asset_max"
+                                    max={maxWithdraw}
+                                    coin={selectedGateway + "." + selectedAsset}
+                                />  : null}
+                            {(assetAndGateway || isBTS) && !canCoverWithdrawal ? 
+                                <Translate 
+                                    content="modal.withdraw.cannot_cover" 
+                                    component="div"
+                                    className="error-msg"
+                                    style={{ position: "absolute", marginTop: "-12px", marginBottom: "6px" }}
+                                /> : null}
                         </div>
                     ) : null}
 
-                    {(assetAndGateway || isBTS) && !canCoverWithdrawal ? (
-                        <div
-                            className="has-error"
-                            style={{marginBottom: "1em"}}
-                        >
-                            <Translate content="modal.withdraw.cannot_cover" />
-                        </div>
-                    ) : null}
+                    
 
                     {/*ESTIMATED VALUE*/}
                     {/*
