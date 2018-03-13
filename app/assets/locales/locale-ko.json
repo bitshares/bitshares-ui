@@ -110,6 +110,9 @@
         "done_label": "완료"
     },
     "account": {
+        "transactions": {
+            "id": "ID"
+        },
         "search": "Search for an account",
         "in_open": "This is the amount of %(asset)s you have in open orders.",
         "in_open_value":

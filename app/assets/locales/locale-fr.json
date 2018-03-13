@@ -112,6 +112,9 @@
         "done_label": "Fait"
     },
     "account": {
+        "transactions": {
+            "id": "ID"
+        },
         "search": "Search for an account",
         "accounts": "Comptes",
         "contacts": "Contacts",

@@ -119,6 +119,9 @@
     "propose": "vorschlagen",
     "cancel": "abbrechen",
     "account": {
+        "transactions": {
+            "id": "ID"
+        },
         "search": "Search for an account",
         "contacts": "Kontakte",
         "in_open": "This is the amount of %(asset)s you have in open orders.",

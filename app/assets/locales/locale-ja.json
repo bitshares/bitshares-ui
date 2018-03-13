@@ -250,6 +250,7 @@
             "blacklist_authorities": "ブラックリスト権限"
         },
         "transactions": {
+            "id": "ID",
             "type": "種類",
             "info": "情報",
             "time": "時間"
