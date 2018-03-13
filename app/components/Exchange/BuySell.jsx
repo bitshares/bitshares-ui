@@ -5,6 +5,7 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import counterpart from "counterpart";
+import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
@@ -14,6 +15,8 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
+import DatePicker from "react-datepicker2";
+import moment from "moment";
 import Icon from "../Icon/Icon";
 
 class BuySell extends React.Component {
@@ -22,7 +25,9 @@ class BuySell extends React.Component {
         type: PropTypes.string,
         amountChange: PropTypes.func.isRequired,
         priceChange: PropTypes.func.isRequired,
-        onSubmit: PropTypes.func.isRequired
+        onSubmit: PropTypes.func.isRequired,
+        onExpirationTypeChange: PropTypes.func.isRequired,
+        onExpirationCustomChange: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -45,7 +50,9 @@ class BuySell extends React.Component {
             nextProps.isPredictionMarket !== this.props.isPredictionMarket ||
             nextProps.feeAsset !== this.props.feeAsset ||
             nextProps.isOpen !== this.props.isOpen ||
-            nextProps.hasFeeBalance !== this.props.hasFeeBalance
+            nextProps.hasFeeBalance !== this.props.hasFeeBalance ||
+            nextProps.expirationType !== this.props.expirationType ||
+            nextProps.expirationCustomTime !== this.props.expirationCustomTime
         );
     }
 
@@ -199,7 +206,7 @@ class BuySell extends React.Component {
                     <input
                         disabled
                         type="text"
-                        id="baseMarketFee"
+                        id="quoteMarketFee"
                         value={quoteFee}
                         autoComplete="off"
                     />
@@ -338,6 +345,20 @@ class BuySell extends React.Component {
         if (type == "ask") {
             dataIntro = translator.translate("walkthrough.sell_form");
         }
+
+        const expirationsOptionsList = Object.keys(this.props.expirations).map(
+            (key, i) => (
+                <option value={key} key={key}>
+                    {this.props.expirations[key].title}
+                </option>
+            )
+        );
+
+        // datepicker puts on the end of body so it's out of theme scope
+        // so theme is used on wrapperClassName
+        const theme = SettingsStore.getState().settings.get("themes");
+
+        const minExpirationDate = moment();
 
         return (
             <div className={this.props.className}>
@@ -651,6 +672,45 @@ class BuySell extends React.Component {
                                                     </span>
                                                 </td>
                                             ) : null}
+                                        </tr>
+
+                                        <tr className="buy-sell-info">
+                                            <td style={{paddingTop: 5}}>
+                                                <Translate content="transaction.expiration" />:
+                                            </td>
+                                            <td className="expiration-datetime-picker">
+                                                <select
+                                                    onChange={
+                                                        this.props
+                                                            .onExpirationTypeChange
+                                                    }
+                                                    value={
+                                                        this.props
+                                                            .expirationType
+                                                    }
+                                                >
+                                                    {expirationsOptionsList}
+                                                </select>
+                                                {this.props.expirationType ===
+                                                "SPECIFIC" ? (
+                                                    <DatePicker
+                                                        wrapperClassName={theme}
+                                                        timePicker={true}
+                                                        min={minExpirationDate}
+                                                        inputFormat={
+                                                            "Do MMM YYYY hh:mm A"
+                                                        }
+                                                        value={
+                                                            this.props
+                                                                .expirationCustomTime
+                                                        }
+                                                        onChange={
+                                                            this.props
+                                                                .onExpirationCustomChange
+                                                        }
+                                                    />
+                                                ) : null}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
