@@ -2173,6 +2173,9 @@
             text-align: right;
             font-size: 0.9rem;
             height: 28px;
+            &:hover {
+                background: transparent;
+            }
         }
         select {
             float: right;
