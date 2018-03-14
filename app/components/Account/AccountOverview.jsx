@@ -902,8 +902,8 @@ class AccountOverview extends React.Component {
                         ? String(this.state.filterValue).toLowerCase()
                         : "";
                     assetName = asset.get("symbol").toLowerCase();
-
-                    if (asset.has("bitasset_data_id")) {
+                    let {isBitAsset} = utils.replaceName(asset);
+                    if (isBitAsset) {
                         assetName = "bit" + assetName;
                     }
                 }
@@ -913,23 +913,20 @@ class AccountOverview extends React.Component {
                     assetName.includes(filter)
                 ) {
                     hiddenBalancesList = hiddenBalancesList.push(a);
-                } else if (
-                    assetName.includes(filter) &&
-                    assetName.includes(filter)
-                ) {
+                } else if (assetName.includes(filter)) {
                     includedBalancesList = includedBalancesList.push(a);
                 }
             });
 
             let included = this._renderBalances(
                 includedBalancesList,
-                this.state.alwaysShowAssets,
+                !this.state.filterValue ? this.state.alwaysShowAssets : null,
                 true
             );
             includedBalances = included;
             let hidden = this._renderBalances(
                 hiddenBalancesList,
-                this.state.alwaysShowAssets
+                !this.state.filterValue ? this.state.alwaysShowAsset : null
             );
             hiddenBalances = hidden;
         }
