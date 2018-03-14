@@ -419,7 +419,7 @@ var Utils = {
         return {
             name,
             prefix,
-            isBitAsset
+            isBitAsset: !!isBitAsset
         };
     }
 };
