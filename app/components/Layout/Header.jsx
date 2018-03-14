@@ -337,7 +337,10 @@ class Header extends React.Component {
 
         let walletBalance =
             myAccounts.length && this.props.currentAccount ? (
-                <div className="total-value">
+                <div
+                    className="total-value"
+                    onClick={this._toggleAccountDropdownMenu}
+                >
                     <TotalBalanceValue.AccountWrapper
                         hiddenAssets={this.props.hiddenAssets}
                         accounts={List([this.props.currentAccount])}
