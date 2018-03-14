@@ -1565,7 +1565,7 @@
                 "Sorry, but there are no gateways available to handle this withdrawal",
             "address_not_valid": "Invalid address",
             "cannot_cover":
-                "You do not have sufficient funds to cover this withdrawal"
+                "Insufficient funds!"
         },
         "deposit": {
             "header": "Deposit to %(account_name)s",
@@ -1648,12 +1648,15 @@
         "id": "Proposal object id"
     },
     "gateway": {
-        "deposit_notice_delay":
-            "(new address can be generated once per 5 minutes)",
+        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
         "min_deposit_warning_amount":
             "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset":
             "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "limit_withdraw_asset": "Min: %(min)s, Max: %(max)s",
+        "limit_withdraw_asset_none": "None",
+        "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
         "copy_memo": "Copy memo",
         "please_generate_address": "Please, get new address ",
         "copy_address": "Copy address",
