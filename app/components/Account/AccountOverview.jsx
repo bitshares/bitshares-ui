@@ -71,6 +71,15 @@ class AccountOverview extends React.Component {
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
+
+        this._handleFilterInput = this._handleFilterInput.bind(this);
+    }
+
+    _handleFilterInput(e) {
+        e.preventDefault();
+        this.setState({
+            filterValue: e.target.value
+        });
     }
 
     sortFunctions = {
@@ -178,7 +187,8 @@ class AccountOverview extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
-            !utils.are_equal_shallow(nextState, this.state)
+            !utils.are_equal_shallow(nextState, this.state) ||
+            this.state.filterValue !== nextState.filterValue
         );
     }
 
@@ -882,9 +892,31 @@ class AccountOverview extends React.Component {
 
             // Separate balances into hidden and included
             account_balances.forEach((a, asset_type) => {
-                if (hiddenAssets.includes(asset_type)) {
+                const asset = ChainStore.getAsset(asset_type);
+
+                let assetName = "";
+                let filter = "";
+
+                if (this.state.filterValue) {
+                    filter = this.state.filterValue
+                        ? String(this.state.filterValue).toLowerCase()
+                        : "";
+                    assetName = asset.get("symbol").toLowerCase();
+
+                    if (asset.has("bitasset_data_id")) {
+                        assetName = "bit" + assetName;
+                    }
+                }
+
+                if (
+                    hiddenAssets.includes(asset_type) &&
+                    assetName.includes(filter)
+                ) {
                     hiddenBalancesList = hiddenBalancesList.push(a);
-                } else {
+                } else if (
+                    assetName.includes(filter) &&
+                    assetName.includes(filter)
+                ) {
                     includedBalancesList = includedBalancesList.push(a);
                 }
             });
@@ -1016,7 +1048,14 @@ class AccountOverview extends React.Component {
                                 subText={portfolioActiveAssetsBalance}
                             >
                                 <div className="header-selector">
-                                    <div className="selector">
+                                    <div className="filter inline-block">
+                                        <input
+                                            type="text"
+                                            placeholder="Filter"
+                                            onChange={this._handleFilterInput}
+                                        />
+                                    </div>
+                                    <div className="selector inline-block">
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
