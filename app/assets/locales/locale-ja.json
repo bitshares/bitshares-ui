@@ -170,6 +170,12 @@
     "propose": "提案",
     "cancel": "キャンセル",
     "account": {
+        "optional": {
+            "formatter":
+                "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
+            "restore_link": "アカウントのリストア",
+            "restore_form": "高度設定フォーム"
+        },
         "search": "アカウントを検索する",
         "new_user": "はじめてですか？",
         "existing_user": "既存ユーザー",
@@ -210,6 +216,7 @@
         "total_value": "合計額",
         "show_hidden": "非表示のアセットを表示する",
         "hide_hidden": "非表示のアセットを隠す",
+        "show_visual": "ビジュアル",
         "ignore": "非表示",
         "unignore": "表示",
         "show_ignored": "非表示のアカウントを表示する",
@@ -243,6 +250,7 @@
             "blacklist_authorities": "ブラックリスト権限"
         },
         "transactions": {
+            "id": "ID",
             "type": "種類",
             "info": "情報",
             "time": "時間"
@@ -567,7 +575,7 @@
     "transfer": {
         "header": "転送の詳細設定",
         "header_subheader":
-            "転送は、他のBitSharesアカウント保有者に資金を送金するために使用されます。",
+            "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
         "from": "From",
         "pay_from": "送信元",
         "amount": "金額",
@@ -1022,7 +1030,7 @@
         }
     },
     "settings": {
-        "passwordLogin": "アカウントモデルでログイン",
+        "passwordLogin": "ログインモード",
         "cloud_login": "アカウントモデルでログイン",
         "local_wallet": "ウォレットモデルでログイン",
         "inverseMarket": "市場志向の選択",
@@ -1066,7 +1074,7 @@
         "access": "アクセス",
         "reset_text": "設定を元のデフォルトに戻します。",
         "reset_text_description":
-            "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
+            "これにより、%(generalName)s、%(accessName)s、%(faucetName)sの設定が全てリセットされます。",
         "general_text": "基本設定を調整する。",
         "wallet_text": "ウォレットの詳細を制御する。",
         "accounts_text": "あなたのアカウントリスト。",
@@ -1140,6 +1148,7 @@
         "latency": "レイテンシ"
     },
     "exchange": {
+        "buysell_formatter": "{asset} {direction}",
         "trading_pair": "トレーディングペア",
         "chart_options": {
             "tools": "ツール",
@@ -1186,6 +1195,7 @@
         "buy_min": "最低購入量",
         "sell": "売る",
         "receive": "取得",
+        "flip": "ひっくり返す",
         "vertical": "垂直",
         "horizontal": "水平",
         "market_name": "マイ・マーケット",
@@ -1237,8 +1247,8 @@
         "new": "新しい",
         "market_frozen":
             "%(asset)s のオーナーがこのマーケットでの取引を無効にしています。",
-        "show_star_1": "表示",
-        "show_star_2": "only",
+        "show_only_star_formatter": "{star_icon}のみ表示",
+        "filter": "フィルター",
         "quote": "クオート通貨:",
         "search": "他のマーケットを検索する",
         "price_market": "マーケット価格",
@@ -1247,6 +1257,12 @@
             "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "sell_description":
             "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
+    },
+    "dashboard": {
+        "starred_markets": "お気に入りのマーケット",
+        "top_markets": "トップマーケット",
+        "featured_markets": "おすすめのマーケット",
+        "table_empty": "表示できるマーケットがありません。"
     },
     "fees": {
         "title": "手数料表"
@@ -1494,9 +1510,9 @@
     },
     "modal": {
         "send": {
-            "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+            "header": "<span class=\"send-name\">%(fromName)s</span>から送信",
             "header_propose":
-                "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+                "<span class=\"send-name\">%(fromName)s</span>から送信を提案"
         },
         "issue": {
             "to": "発行先",
@@ -1506,25 +1522,48 @@
         "withdraw": {
             "amount": "出金数量",
             "address": "出金先アドレス",
-            "submit": "出金"
+            "bitshares_account": "Send to Bitshares Account",
+            "submit": "出金",
+            "quantity": "数量",
+            "estimated_value": "推定価格",
+            "memo": "メモ",
+            "fee": "手数料",
+            "gateway_fee": "ゲートウェイ手数料",
+            "withdraw": "出金",
+            "cancel": "キャンセル",
+            "available": "利用可能: ",
+            "submit_beta": "出金 (ベータ)",
+            "no_estimate": "No estimate available for this object",
+            "header": "出金 (ベータ)",
+            "no_gateways":
+                "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
+            "address_not_valid": "無効なアドレス",
+            "cannot_cover": "この出金をするのに十分な資金がありません"
         },
         "deposit": {
             "header": "%(account_name)sに入金",
             "header_short": "入金",
             "asset": "アセット",
             "gateway": "ゲートウェイ",
-            "disabled": "Gateway service disabled",
+            "disabled": "ゲートウェイサービスが無効",
             "wallet_error": "ゲートウェイウォレットが無効",
             "no_gateway_available": "利用可能なゲートウェイがありません",
             "select_gateway": "ゲートウェイオペレータを選択してください",
             "address_generation_error": "アドレスを生成できません",
             "bts_transfer_description":
-                "BTSを受け取るのは簡単です。BTSがあなたのアカウント名に送られていれば、あなたのウォレットに届きます。このQRコードにも、あなたのアカウント名が含まれています。",
+                "BTSを受け取るのは簡単です。BTSをあなたのアカウント名に対して送れば、あなたのウォレットに届きます。このQRコードにも、あなたのアカウント名が含まれています。",
             "close": "閉じる",
             "cancel": "キャンセル",
             "amount": "入金する数量",
             "submit": "入金",
             "submit_beta": "入金 (ベータ)"
+        },
+        "deposit_withdraw": {
+            "gateway": "ゲートウェイ",
+            "disabled": "ゲートウェイサービスが無効",
+            "wallet_error": "ゲートウェイウォレットが無効",
+            "no_gateway_available": "利用可能なゲートウェイがありません",
+            "select_gateway": "ゲートウェイオペレータを選択してください"
         },
         "convert": {
             "amount": "変換数量",
@@ -1589,7 +1628,7 @@
     "gateway": {
         "deposit_notice_delay": "(新しいアドレスは５分に一度生成できます。)",
         "min_deposit_warning_amount":
-            "最低入金額は%(minDeposit)s %(coin)s.です。",
+            "最低入金額は%(minDeposit)s %(coin)sです。",
         "min_deposit_warning_asset":
             "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
         "copy_memo": "メモをコピー",
@@ -1620,10 +1659,10 @@
         "symbol": "シンボル",
         "asset": "アセット",
         "website": "ウェブサイトに行く",
-        "deposit_to": "<b>%(asset)s</b>を以下のアドレスに送ってください",
+        "deposit_to": "%(asset)sを以下のアドレスに送ってください",
         "deposit_address": "入金アドレス",
         "add_funds":
-            "あなたのBitSharesアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されます。",
+            "あなたのBitSharesアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されています。",
         "withdraw_funds":
             "BitSharesアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
         "balance_asset": "現在の%(asset)s残高",
@@ -1656,7 +1695,7 @@
         "intermediate": "中間アカウント",
         "asset_to_withdraw": "出金するアセット:",
         "support_block":
-            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください:",
+            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください（英語のみ）:",
         "valid_address": "有効な%(coin_type)sのアドレスを入力してください",
         "withdraw_coin": "%(coin)s (%(symbol)s) を出金",
         "convert_coin": "%(coin)s (%(symbol)s) に変換",
@@ -1673,7 +1712,7 @@
         "purchase_1":
             "外部ウォレットの%(inputAsset)sで%(outputAsset)sを素早く簡単に買います。このサービスは<a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>によって提供されます。",
         "purchase_notice":
-            "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+            "このアドレスに送信された%(inputAsset)sは%(outputAsset)sとして表示されます。",
         "purchase_notice_memo":
             "Memo <b>required</b> for proper routing to your account",
         "deposit_limit": "入金制限",
@@ -1732,7 +1771,8 @@
             "success": "成功",
             "fail": "失敗"
         },
-        "asset_search_deposit": "入金するアセットを検索する"
+        "asset_search_deposit": "入金するアセットを検索する",
+        "asset_search_withdraw": "出金するアセットを検索する"
     },
     "trx_error": {
         "expire":

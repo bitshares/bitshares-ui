@@ -337,7 +337,10 @@ class Header extends React.Component {
 
         let walletBalance =
             myAccounts.length && this.props.currentAccount ? (
-                <div className="total-value">
+                <div
+                    className="total-value"
+                    onClick={this._toggleAccountDropdownMenu}
+                >
                     <TotalBalanceValue.AccountWrapper
                         hiddenAssets={this.props.hiddenAssets}
                         accounts={List([this.props.currentAccount])}
@@ -1040,11 +1043,15 @@ class Header extends React.Component {
                 </div>
 
                 <div
-                    onClick={this._toggleAccountDropdownMenu}
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <div className="text account-name">{currentAccount}</div>
+                    <div
+                        className="text account-name"
+                        onClick={this._toggleAccountDropdownMenu}
+                    >
+                        {currentAccount}
+                    </div>
                     {walletBalance}
 
                     {hasLocalWallet && (

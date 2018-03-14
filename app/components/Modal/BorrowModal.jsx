@@ -846,13 +846,19 @@ export default class ModalWrapper extends React.Component {
     constructor() {
         super();
         this.state = {
-            smallScreen: false
+            smallScreen: false,
+            open: false
         };
     }
 
     show() {
-        let modalId = "borrow_modal_" + this.props.quote_asset;
-        ZfApi.publish(modalId, "open");
+        this.setState({open: true}, () => {
+            ZfApi.publish(this.props.modalId, "open");
+        });
+    }
+
+    onClose() {
+        this.setState({open: false});
     }
 
     componentWillMount() {
@@ -863,7 +869,6 @@ export default class ModalWrapper extends React.Component {
 
     render() {
         let {quote_asset, backing_asset, account} = this.props;
-        let modalId = "borrow_modal_" + quote_asset;
         let accountBalance = account.get("balances").toJS();
         let coreBalance, bitAssetBalance;
 
@@ -879,8 +884,13 @@ export default class ModalWrapper extends React.Component {
             }
         }
 
-        return (
-            <BaseModal id={modalId} overlay={true} ref={modalId}>
+        return !this.state.open ? null : (
+            <BaseModal
+                id={this.props.modalId}
+                overlay={true}
+                onClose={this.onClose.bind(this)}
+                ref={this.props.modalId}
+            >
                 <div className="grid-block vertical">
                     <BorrowModalContent
                         quote_asset={quote_asset}
@@ -891,7 +901,7 @@ export default class ModalWrapper extends React.Component {
                             account.get("call_orders") &&
                             account.get("call_orders").size > 0
                         }
-                        modalId={modalId}
+                        modalId={this.props.modalId}
                         bitasset_balance={bitAssetBalance}
                         backing_balance={coreBalance}
                         backing_asset={backing_asset}

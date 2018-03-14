@@ -5,36 +5,44 @@ let KeyAuth = function(auth) {
     this.id = auth.toJS ? auth.get(0) : auth[0];
     this.weight = auth.toJS ? auth.get(1) : auth[1];
 
-    this.isAvailable = (auths) => {
-        return auths.includes ? auths.includes(this.id) : auths.indexOf(this) !== -1;
+    this.isAvailable = auths => {
+        return auths.includes
+            ? auths.includes(this.id)
+            : auths.indexOf(this) !== -1;
     };
 };
 
 let permissionUtils = {
-
     AccountPermission: function(account, weight, type) {
         this.id = account.get("id");
         this.weight = weight;
         this.threshold = account.getIn([type, "weight_threshold"]);
         this.accounts = [];
-        this.keys = account.getIn([type, "key_auths"]).map(auth => {
-            return new KeyAuth(auth);
-        }).toArray();
+        this.keys = account
+            .getIn([type, "key_auths"])
+            .map(auth => {
+                return new KeyAuth(auth);
+            })
+            .toArray();
 
-        this.isAvailable = (auths) => {
-            return auths.includes ? auths.includes(this.id) : auths.indexOf(this) !== -1;
+        this.isAvailable = auths => {
+            return auths.includes
+                ? auths.includes(this.id)
+                : auths.indexOf(this) !== -1;
         };
 
-        this._sumWeights = (auths) => {
-
+        this._sumWeights = auths => {
             if (!this.isNested() && !this.isMultiSig()) {
                 return this.isAvailable(auths) ? this.weight : 0;
             } else {
                 let sum = this.accounts.reduce((status, account) => {
-                    return status + (account._sumWeights(auths) ? account.weight : 0);
+                    return (
+                        status +
+                        (account._sumWeights(auths) ? account.weight : 0)
+                    );
                 }, 0);
 
-                return Math.floor((sum / this.threshold));
+                return Math.floor(sum / this.threshold);
             }
         };
 
@@ -58,7 +66,7 @@ let permissionUtils = {
             }
         };
 
-        this.sumKeys = (keyAuths) => {
+        this.sumKeys = keyAuths => {
             let keySum = this.keys.reduce((s, key) => {
                 return s + (key.isAvailable(keyAuths) ? key.weight : 0);
             }, 0);
@@ -75,8 +83,8 @@ let permissionUtils = {
             }, false);
         };
 
-        this.getMissingSigs = (auths) => {
-            let missing  = [];
+        this.getMissingSigs = auths => {
+            let missing = [];
             let nested = [];
             if (this.isNested()) {
                 nested = this.accounts.reduce((a, account) => {
@@ -89,7 +97,7 @@ let permissionUtils = {
             return missing.concat(nested);
         };
 
-        this.getMissingKeys = (auths) => {
+        this.getMissingKeys = auths => {
             let missing = [];
             let nested = [];
             if (this.keys.length && (this.isNested() || this.isMultiSig())) {
@@ -104,10 +112,10 @@ let permissionUtils = {
                 nested = this.accounts.reduce((a, account) => {
                     return a.concat(account.getMissingKeys(auths));
                 }, []);
-            };
+            }
 
             return missing.concat(nested);
-        }
+        };
     },
 
     listToIDs: function(accountList) {
@@ -129,7 +137,17 @@ let permissionUtils = {
                 account.getIn([type, "account_auths"]).forEach(auth => {
                     let nestedAccount = ChainStore.getAccount(auth.get(0));
                     if (nestedAccount) {
-                        accountPermission.accounts.push(this.unravel(new this.AccountPermission(nestedAccount, auth.get(1), type), type, recursive_count + 1));
+                        accountPermission.accounts.push(
+                            this.unravel(
+                                new this.AccountPermission(
+                                    nestedAccount,
+                                    auth.get(1),
+                                    type
+                                ),
+                                type,
+                                recursive_count + 1
+                            )
+                        );
                     }
                 });
             }
@@ -139,17 +157,18 @@ let permissionUtils = {
     },
 
     unnest: function(accounts, type) {
-
         let map = [];
         accounts.forEach(id => {
             let fullAccount = ChainStore.getAccount(id);
-            let currentPermission = this.unravel(new this.AccountPermission(fullAccount, null, type), type);
+            let currentPermission = this.unravel(
+                new this.AccountPermission(fullAccount, null, type),
+                type
+            );
             map.push(currentPermission);
         });
 
         return map;
     },
-
 
     flatten_auths(auths, existingAuths = Immutable.List()) {
         if (!auths.size) {
@@ -163,6 +182,6 @@ let permissionUtils = {
         });
         return existingAuths;
     }
-}
+};
 
 export default permissionUtils;

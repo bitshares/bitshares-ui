@@ -200,6 +200,8 @@ class RecentTransactions extends React.Component {
             .map(o => {
                 return (
                     <Operation
+                        includeOperationId={true}
+                        operationId={o.id}
                         style={alignLeft}
                         key={o.id}
                         op={o.op}
@@ -268,6 +270,7 @@ class RecentTransactions extends React.Component {
                         <table className={"table table-striped " + (compactView ? "compact" : "") + (this.props.dashboard ? " dashboard-table table-hover" : "")}>
                             <thead>
                                 <tr>
+                                    <th className="column-hide-tiny" style={alignLeft}><Translate content="account.transactions.id" /></th>
                                     <th className="column-hide-tiny" style={alignLeft}><Translate content="account.transactions.type" /></th>
                                     <th style={alignLeft}><Translate content="account.transactions.info" /></th>
                                     <th style={alignLeft}><Translate content="account.transactions.time" /></th>

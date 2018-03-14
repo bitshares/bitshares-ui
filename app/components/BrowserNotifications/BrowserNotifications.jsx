@@ -10,46 +10,54 @@ let {operations} = GraphChainTypes;
 let OPERATIONS = Object.keys(operations);
 
 class BrowserNotifications extends React.Component {
-
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        settings: React.PropTypes.object,
+        settings: React.PropTypes.object
     };
 
     componentWillMount() {
-        if(Notify.needsPermission) {
+        if (Notify.needsPermission) {
             Notify.requestPermission();
         }
     }
 
     componentWillReceiveProps(nextProps) {
-
         // if browser notifications disabled on settings we can skip all checks
-        if(!nextProps.settings.get("browser_notifications").allow) {
+        if (!nextProps.settings.get("browser_notifications").allow) {
             console.log("browser notifications disabled by settings");
             return false;
         }
 
         // if app not permitted to send notifications skip all checks
-        if(Notify.needsPermission) {
-            console.log("browser notifications disabled by Browser Permissions");
+        if (Notify.needsPermission) {
+            console.log(
+                "browser notifications disabled by Browser Permissions"
+            );
             return false;
         }
 
-        if (nextProps.account.size && this.props.account.get("history") && nextProps.account.get("history")) {
-
+        if (
+            nextProps.account.size &&
+            this.props.account.get("history") &&
+            nextProps.account.get("history")
+        ) {
             let lastOperationOld = this.props.account.get("history").first();
             let lastOperationNew = nextProps.account.get("history").first();
+            if (!lastOperationNew || !lastOperationOld) return false;
 
             // if operations not updated do not notify user
-            if(lastOperationNew.get("id") === lastOperationOld.get("id")) {
+            if (lastOperationNew.get("id") === lastOperationOld.get("id")) {
                 return false;
             }
 
-            if(this._isOperationTransfer(lastOperationNew) && this._isTransferToMyAccount(lastOperationNew) && nextProps.settings.get("browser_notifications").additional.transferToMe) {
+            if (
+                this._isOperationTransfer(lastOperationNew) &&
+                this._isTransferToMyAccount(lastOperationNew) &&
+                nextProps.settings.get("browser_notifications").additional
+                    .transferToMe
+            ) {
                 this._notifyUserAboutTransferToHisAccount(lastOperationNew);
             }
-
         }
     }
 
@@ -67,37 +75,43 @@ class BrowserNotifications extends React.Component {
         if (!this._isOperationTransfer(operation))
             throw Error("Operation is not transfer");
 
-        return operation.getIn(["op", 1, "to"]) === this.props.account.get("id");
+        return (
+            operation.getIn(["op", 1, "to"]) === this.props.account.get("id")
+        );
     }
 
     _notifyUserAboutTransferToHisAccount(operation) {
-
         const assetId = operation.getIn(["op", 1, "amount", "asset_id"]);
         const from = operation.getIn(["op", 1, "from"]);
 
         const amount = operation.getIn(["op", 1, "amount", "amount"]);
 
-        if(!assetId || !from || !amount)
+        if (!assetId || !from || !amount)
             throw Error("Operation has wrong format");
 
-        const title = counterpart.translate("browser_notification_messages.money_received_title", {
-            from: this._getAccountNameById(from),
-        });
+        const title = counterpart.translate(
+            "browser_notification_messages.money_received_title",
+            {
+                from: this._getAccountNameById(from)
+            }
+        );
 
-        const body = counterpart.translate("browser_notification_messages.money_received_body", {
-            amount: this._getRealAmountByAssetId(amount, assetId),
-            symbol: this._getAssetSymbolByAssetId(assetId)
-        });
+        const body = counterpart.translate(
+            "browser_notification_messages.money_received_body",
+            {
+                amount: this._getRealAmountByAssetId(amount, assetId),
+                symbol: this._getAssetSymbolByAssetId(assetId)
+            }
+        );
 
         this.notifyUsingBrowserNotification({
             title: title,
             body: body,
-            closeOnClick: true,
+            closeOnClick: true
         });
     }
 
     notifyUsingBrowserNotification(params = {}) {
-
         /*
         * params.title (string) - title of notification
         * params.body (string) - body of notification
@@ -109,23 +123,22 @@ class BrowserNotifications extends React.Component {
         * params.onNotifyError (function) - callback when notification throws an error
         * */
 
-        if(!params.title && !params.body)
-            return null;
+        if (!params.title && !params.body) return null;
 
         const notifyParams = {
             body: params.body
         };
 
-        if(typeof params.onNotifyShow === "function")
+        if (typeof params.onNotifyShow === "function")
             notifyParams.notifyShow = params.onNotifyShow;
 
-        if(typeof params.onNotifyClose === "function")
+        if (typeof params.onNotifyClose === "function")
             notifyParams.notifyClose = params.onNotifyShow;
 
-        if(typeof params.onNotifyClick === "function")
+        if (typeof params.onNotifyClick === "function")
             notifyParams.notifyClick = params.onNotifyShow;
 
-        if(typeof params.onNotifyError === "function")
+        if (typeof params.onNotifyError === "function")
             notifyParams.notifyError = params.onNotifyShow;
 
         const notify = new Notify(params.title, notifyParams);
@@ -152,13 +165,12 @@ class BrowserNotifications extends React.Component {
     }
 
     render() {
-        return (
-            null
-        );
+        return null;
     }
-
 }
 
-BrowserNotifications = BindToChainState(BrowserNotifications, {keep_updating: true});
+BrowserNotifications = BindToChainState(BrowserNotifications, {
+    keep_updating: true
+});
 
 export default BrowserNotifications;

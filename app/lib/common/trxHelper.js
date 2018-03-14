@@ -34,9 +34,12 @@ function checkFeePoolAsync({
                 FetchChain("getAsset", assetID)
             ]).then(result => {
                 const [fee, feeAsset] = result;
-                res(
-                    parseInt(feeAsset.getIn(["dynamic", "fee_pool"]), 10) >= fee
-                );
+                FetchChain(
+                    "getObject",
+                    feeAsset.get("dynamic_asset_data_id")
+                ).then(dynamicObject => {
+                    res(parseInt(dynamicObject.get("fee_pool"), 10) >= fee);
+                });
             });
         }
     });

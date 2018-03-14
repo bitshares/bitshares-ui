@@ -3,6 +3,7 @@ import {curry, flow, reject, clone, pairs, omit, get, pick} from "lodash";
 import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
+import {getDisplayName} from "common/reactUtils";
 import LoadingIndicator from "../LoadingIndicator";
 
 /**
@@ -55,7 +56,7 @@ function checkIfRequired(t) {
 }
 
 function BindToChainState(Component, options = {}) {
-    return class Wrapper extends React.Component {
+    class Wrapper extends React.Component {
         constructor(props) {
             super(props);
             let prop_types_array = pairs(Component.propTypes);
@@ -179,10 +180,10 @@ function BindToChainState(Component, options = {}) {
         }
 
         update(next_props = null) {
-            // console.time(Component.name + " BindToChainState update");
             //let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
             //if(!next_props && !keep_updating && this.state.resolved) return;
             // let updateStart = new Date().getTime();
+
             let props = next_props || this.props;
             let new_state = {};
             let all_objects_counter = 0;
@@ -452,19 +453,13 @@ function BindToChainState(Component, options = {}) {
             // console.timeEnd(Component.name + " setState");
             // console.timeEnd(Component.name + " before state");
             // console.timeEnd(Component.name + " after state");
-            // console.log("slow update", Component.name, updateEnd - updateStart);
+            //     console.log("slow update", Component.name, updateEnd - updateStart, Object.keys(new_state));
             // }
-        }
-
-        componentName() {
-            let cf = Component.toString();
-            return cf.substr(9, cf.indexOf("(") - 9);
         }
 
         render() {
             const props = omit(this.props, this.all_chain_props);
 
-            //console.log("----- Wrapper render ----->", this.componentName(), this.props, this.state);
             for (let prop of this.required_props) {
                 if (!this.state[prop]) {
                     if (typeof options !== "undefined" && options.show_loader) {
@@ -485,7 +480,10 @@ function BindToChainState(Component, options = {}) {
                 <Component ref="bound_component" {...props} {...this.state} />
             );
         }
-    };
+    }
+
+    Wrapper.displayName = `BindToChainState(${getDisplayName(Component)})`;
+    return Wrapper;
 }
 
 class Wrapper extends React.Component {

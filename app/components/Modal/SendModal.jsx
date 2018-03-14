@@ -57,6 +57,7 @@ export default class SendModal extends React.Component {
             asset: null,
             memo: "",
             error: null,
+            knownScammer: null,
             propose: false,
             propose_account: "",
             feeAsset: null,
@@ -90,6 +91,7 @@ export default class SendModal extends React.Component {
                 asset: null,
                 memo: "",
                 error: null,
+                knownScammer: null,
                 propose: false,
                 propose_account: "",
                 feeAsset: null,
@@ -235,7 +237,7 @@ export default class SendModal extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
-        if (!asset) return;
+        if (!asset || !from_account) return;
         this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
@@ -388,12 +390,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+                            feeAmount: fee,
+                            fee_asset_id: fee.asset_id,
+                            hasBalance,
+                            hasPoolBalance,
+                            error: !hasBalance || !hasPoolBalance
+                        })
             )
         );
     }
@@ -625,19 +627,17 @@ export default class SendModal extends React.Component {
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
 
-        const logo = require("assets/logo-ico-blue.png");
-        let tabIndex = 200; // tabindex is applied globally irrespective of overlays, etc.  Make sure we're at the top
+        let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
         let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
-        return (
+        return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
                 className={hidden || !this.state.open ? "hide" : ""}
             >
                 <BaseModal
                     id={this.props.id}
-                    className="send_modal"
                     overlay={true}
                     onClose={this.onClose.bind(this, false)}
                 >
@@ -646,15 +646,6 @@ export default class SendModal extends React.Component {
                             className="content-block"
                             style={{textAlign: "center", textTransform: "none"}}
                         >
-                            <img
-                                style={{
-                                    margin: 0,
-                                    height: 70,
-                                    marginBottom: 10
-                                }}
-                                src={logo}
-                            />
-                            <br />
                             {!propose ? (
                                 <div
                                     style={{

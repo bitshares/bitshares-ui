@@ -4,7 +4,10 @@ import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import {RecentTransactions, TransactionWrapper} from "components/Account/RecentTransactions";
+import {
+    RecentTransactions,
+    TransactionWrapper
+} from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 import cnames from "classnames";
 import LoadingIndicator from "../../LoadingIndicator";
@@ -20,13 +23,16 @@ class RuDexGateway extends React.Component {
     }
 
     _getActiveCoin(props, state) {
-        let cachedCoin = props.viewSettings.get(`activeCoin_rudex_${state.action}`, null);
+        let cachedCoin = props.viewSettings.get(
+            `activeCoin_rudex_${state.action}`,
+            null
+        );
         let firstTimeCoin = null;
-        if (state.action == 'deposit') {
-            firstTimeCoin = 'PPY';
+        if (state.action == "deposit") {
+            firstTimeCoin = "PPY";
         }
-        if (state.action == 'withdraw') {
-            firstTimeCoin = 'PPY';
+        if (state.action == "withdraw") {
+            firstTimeCoin = "PPY";
         }
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
@@ -51,9 +57,7 @@ class RuDexGateway extends React.Component {
     }
 
     changeAction(type) {
-
         let activeCoin = this._getActiveCoin(this.props, {action: type});
-
 
         this.setState({
             action: type,
@@ -75,25 +79,37 @@ class RuDexGateway extends React.Component {
             if (!a || !a.symbol) {
                 return false;
             } else {
-                return action === "deposit" ? a.depositAllowed : a.withdrawalAllowed;
+                return action === "deposit"
+                    ? a.depositAllowed
+                    : a.withdrawalAllowed;
             }
         });
 
-        let coinOptions = filteredCoins.map(coin => {
-            let option = action === "deposit" ? coin.backingCoin.toUpperCase() : coin.symbol;
-            return <option value={option} key={coin.symbol}>{option}</option>;
-        }).filter(a => {
-            return a !== null;
-        });
+        let coinOptions = filteredCoins
+            .map(coin => {
+                let option =
+                    action === "deposit"
+                        ? coin.backingCoin.toUpperCase()
+                        : coin.symbol;
+                return (
+                    <option value={option} key={coin.symbol}>
+                        {option}
+                    </option>
+                );
+            })
+            .filter(a => {
+                return a !== null;
+            });
 
         let coin = filteredCoins.filter(coin => {
-            return (action === "deposit" ? coin.backingCoin.toUpperCase() === activeCoin : coin.symbol === activeCoin);
+            return action === "deposit"
+                ? coin.backingCoin.toUpperCase() === activeCoin
+                : coin.symbol === activeCoin;
         })[0];
 
         if (!coin) coin = filteredCoins[0];
 
         let isDeposit = this.state.action === "deposit";
-
 
         let supportUrl = "https://rudex.freshdesk.com";
 
@@ -102,7 +118,14 @@ class RuDexGateway extends React.Component {
                 <div className="grid-block no-margin vertical medium-horizontal no-padding">
                     <div className="medium-4">
                         <div>
-                            <label style={{minHeight: "2rem"}} className="left-label"><Translate content={"gateway.choose_" + action} />: </label>
+                            <label
+                                style={{minHeight: "2rem"}}
+                                className="left-label"
+                            >
+                                <Translate
+                                    content={"gateway.choose_" + action}
+                                />:{" "}
+                            </label>
                             <select
                                 className="external-coin-types bts-select"
                                 onChange={this.onSelectCoin.bind(this)}
@@ -114,20 +137,49 @@ class RuDexGateway extends React.Component {
                     </div>
 
                     <div className="medium-6 medium-offset-1">
-                        <label style={{minHeight: "2rem"}} className="left-label"><Translate content="gateway.gateway_text" />:</label>
+                        <label
+                            style={{minHeight: "2rem"}}
+                            className="left-label"
+                        >
+                            <Translate content="gateway.gateway_text" />:
+                        </label>
                         <div style={{paddingBottom: 15}}>
                             <ul className="button-group segmented no-margin">
-                                <li className={action === "deposit" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "deposit")}><Translate content="gateway.deposit" /></a></li>
-                                <li className={action === "withdraw" ? "is-active" : ""}><a onClick={this.changeAction.bind(this, "withdraw")}><Translate content="gateway.withdraw" /></a></li>
+                                <li
+                                    className={
+                                        action === "deposit" ? "is-active" : ""
+                                    }
+                                >
+                                    <a
+                                        onClick={this.changeAction.bind(
+                                            this,
+                                            "deposit"
+                                        )}
+                                    >
+                                        <Translate content="gateway.deposit" />
+                                    </a>
+                                </li>
+                                <li
+                                    className={
+                                        action === "withdraw" ? "is-active" : ""
+                                    }
+                                >
+                                    <a
+                                        onClick={this.changeAction.bind(
+                                            this,
+                                            "withdraw"
+                                        )}
+                                    >
+                                        <Translate content="gateway.withdraw" />
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                {!coin ? null :
+                {!coin ? null : (
                     <div>
-
-
                         <div style={{marginBottom: 15}}>
                             <RuDexGatewayDepositRequest
                                 key={`${coin.symbol}`}
@@ -147,50 +199,74 @@ class RuDexGateway extends React.Component {
                                 action={this.state.action}
                             />
                             <label className="left-label">Support</label>
-                            <div><Translate content="gateway.rudex.support_block" /><br /><br /><a href={supportUrl}>{supportUrl}</a></div>
+                            <div>
+                                <Translate content="gateway.rudex.support_block" />
+                                <br />
+                                <br />
+                                <a
+                                    href={supportUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {supportUrl}
+                                </a>
+                            </div>
                         </div>
 
-                        {coin && coin.symbol ?
+                        {coin && coin.symbol ? (
                             <TransactionWrapper
                                 asset={coin.symbol}
                                 fromAccount={
-                                    isDeposit ? (coin.issuerId) :
-                                        this.props.account.get("id")
+                                    isDeposit
+                                        ? coin.issuerId
+                                        : this.props.account.get("id")
                                 }
                                 to={
-                                    isDeposit ? ( this.props.account.get("id") ) :
-                                        (coin.issuerId)
+                                    isDeposit
+                                        ? this.props.account.get("id")
+                                        : coin.issuerId
                                 }
-
                             >
-                                { ({asset, to, fromAccount}) => {
-                                    return <RecentTransactions
-                                        accountsList={Immutable.List([this.props.account.get("id")])}
-                                        limit={10}
-                                        compactView={true}
-                                        fullHeight={true}
-                                        filter="transfer"
-                                        title={<Translate content={"gateway.recent_" + this.state.action} />}
-                                        customFilter={{
-                                            fields: ["to", "from", "asset_id"],
-                                            values: {
-                                                to: to.get("id"),
-                                                from: fromAccount.get("id") ,
-                                                asset_id: asset.get("id")
+                                {({asset, to, fromAccount}) => {
+                                    return (
+                                        <RecentTransactions
+                                            accountsList={Immutable.List([
+                                                this.props.account.get("id")
+                                            ])}
+                                            limit={10}
+                                            compactView={true}
+                                            fullHeight={true}
+                                            filter="transfer"
+                                            title={
+                                                <Translate
+                                                    content={
+                                                        "gateway.recent_" +
+                                                        this.state.action
+                                                    }
+                                                />
                                             }
-                                        }}
-                                    />;
-                                }
-                                }
-                            </TransactionWrapper> : null}
+                                            customFilter={{
+                                                fields: [
+                                                    "to",
+                                                    "from",
+                                                    "asset_id"
+                                                ],
+                                                values: {
+                                                    to: to.get("id"),
+                                                    from: fromAccount.get("id"),
+                                                    asset_id: asset.get("id")
+                                                }
+                                            }}
+                                        />
+                                    );
+                                }}
+                            </TransactionWrapper>
+                        ) : null}
                     </div>
-                }
-
+                )}
             </div>
         );
     }
-
-
 }
 
 export default connect(RuDexGateway, {

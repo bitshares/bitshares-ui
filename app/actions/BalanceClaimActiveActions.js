@@ -1,7 +1,6 @@
 import alt from "alt-instance";
 
 class BalanceClaimActiveActions {
-
     setPubkeys(pubkeys) {
         return pubkeys;
     }
@@ -13,8 +12,9 @@ class BalanceClaimActiveActions {
     claimAccountChange(claim_account_name) {
         return claim_account_name;
     }
-
 }
 
-const BalanceClaimActiveActionsWrapped = alt.createActions(BalanceClaimActiveActions);
+const BalanceClaimActiveActionsWrapped = alt.createActions(
+    BalanceClaimActiveActions
+);
 export default BalanceClaimActiveActionsWrapped;

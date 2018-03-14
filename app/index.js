@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { AppContainer } from "react-hot-loader";
-import { Router, browserHistory, hashHistory } from "react-router/es";
+import {AppContainer} from "react-hot-loader";
+import {Router, browserHistory, hashHistory} from "react-router/es";
 /*
 * Routes-dev is only needed for react hot reload, as this does not work with
 * the async routes defined in Routes.jsx. Any changes to the routes must be kept
