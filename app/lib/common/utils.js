@@ -387,7 +387,7 @@ var Utils = {
     },
 
     replaceName(asset) {
-        if (!asset) return {name: "", prefix: ""};
+        if (!asset) return {name: "", prefix: null, isBitAsset: false};
         let name = asset.get("symbol");
         const isBitAsset =
             asset.get("bitasset") &&
@@ -418,7 +418,8 @@ var Utils = {
 
         return {
             name,
-            prefix
+            prefix,
+            isBitAsset
         };
     }
 };
