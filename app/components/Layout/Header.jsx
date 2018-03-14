@@ -1040,11 +1040,15 @@ class Header extends React.Component {
                 </div>
 
                 <div
-                    onClick={this._toggleAccountDropdownMenu}
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <div className="text account-name">{currentAccount}</div>
+                    <div
+                        className="text account-name"
+                        onClick={this._toggleAccountDropdownMenu}
+                    >
+                        {currentAccount}
+                    </div>
                     {walletBalance}
 
                     {hasLocalWallet && (
