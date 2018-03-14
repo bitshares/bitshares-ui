@@ -980,15 +980,6 @@ class AccountOverview extends React.Component {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
-        const preferredAsset = ChainStore.getAsset(preferredUnit);
-        let assetName = !!preferredAsset ? preferredAsset.get("symbol") : "";
-        if (preferredAsset) {
-            const {prefix, name} = utils.replaceName(
-                assetName,
-                !!preferredAsset.get("bitasset_data_id")
-            );
-            assetName = (prefix || "") + name;
-        }
         // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
         // horizontally
         const hiddenSubText = "\u00a0";

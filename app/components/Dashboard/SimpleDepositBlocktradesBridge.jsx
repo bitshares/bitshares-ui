@@ -291,10 +291,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     _renderDeposit() {
-        const {name: assetName, prefix} = utils.replaceName(
-            this.props.asset.get("symbol"),
-            !!this.props.asset.get("bitasset")
-        );
+        const {name: assetName, prefix} = utils.replaceName(this.props.asset);
         const {receive_address, apiError} = this.state;
         const hasMemo =
             receive_address &&
@@ -578,10 +575,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     _renderCurrentBalance() {
-        const {name: assetName} = utils.replaceName(
-            this.props.asset.get("symbol"),
-            !!this.props.asset.get("bitasset")
-        );
+        const {name: assetName} = utils.replaceName(this.props.asset);
         const isDeposit = this.props.action === "deposit";
 
         let currentBalance = this.props.balances.find(b => {

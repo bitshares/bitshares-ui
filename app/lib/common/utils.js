@@ -386,7 +386,14 @@ var Utils = {
         return Math.round(a / b * 100) + "%";
     },
 
-    replaceName(name, isBitAsset = false) {
+    replaceName(asset) {
+        if (!asset) return {name: "", prefix: ""};
+        let name = asset.get("symbol");
+        const isBitAsset =
+            asset.get("bitasset") &&
+            !asset.getIn(["bitasset", "is_prediction_market"]) &&
+            asset.get("issuer") === "1.2.0";
+
         let toReplace = [
             "TRADE.",
             "OPEN.",

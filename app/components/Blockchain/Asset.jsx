@@ -230,7 +230,7 @@ class Asset extends React.Component {
         );
     }
 
-    renderAboutBox(asset) {
+    renderAboutBox(asset, originalAsset) {
         var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get("name") : "";
 
@@ -273,12 +273,7 @@ class Asset extends React.Component {
             });
         }
 
-        let {name, prefix} = utils.replaceName(
-            asset.symbol,
-            "bitasset" in asset &&
-                !asset.bitasset.is_prediction_market &&
-                asset.issuer === "1.2.0"
-        );
+        let {name, prefix} = utils.replaceName(originalAsset);
 
         return (
             <div style={{overflow: "visible"}}>
@@ -1121,7 +1116,7 @@ class Asset extends React.Component {
                             className="grid-block small-up-1"
                             style={{width: "100%"}}
                         >
-                            {this.renderAboutBox(asset)}
+                            {this.renderAboutBox(asset, this.props.asset)}
                         </div>
                         <div className="grid-block small-up-1 medium-up-2">
                             <div className="grid-content">
