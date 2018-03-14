@@ -739,7 +739,6 @@ export default class SimpleDepositBlocktradesBridgeModal extends React.Component
             <BaseModal
                 id={this.props.modalId}
                 onClose={this.onClose.bind(this)}
-                overlayClass="small"
                 noCloseBtn
                 overlay={true}
             >
