@@ -356,8 +356,49 @@ class MarketsTable extends React.Component {
             if (row.isHidden !== this.state.showHidden) {
                 visible = false;
             } else if (filter) {
-                visible =
-                    row.quote.includes(filter) || row.base.includes(filter);
+                const quoteObject = ChainStore.getAsset(row.quote);
+                const baseObject = ChainStore.getAsset(row.base);
+
+                const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
+                    quoteObject
+                );
+                const {isBitAsset: baseIsBitAsset} = utils.replaceName(
+                    baseObject
+                );
+
+                let quoteSymbol = row.quote;
+                let baseSymbol = row.base;
+
+                if (quoteIsBitAsset) {
+                    quoteSymbol = "bit" + quoteSymbol;
+                }
+
+                if (baseIsBitAsset) {
+                    baseSymbol = "bit" + baseSymbol;
+                }
+
+                const filterPair = filter.includes(":");
+
+                if (filterPair) {
+                    const quoteFilter = filter.split(":")[0].trim();
+                    const baseFilter = filter.split(":")[1].trim();
+
+                    visible =
+                        quoteSymbol
+                            .toLowerCase()
+                            .includes(String(quoteFilter).toLowerCase()) &&
+                        baseSymbol
+                            .toLowerCase()
+                            .includes(String(baseFilter).toLowerCase());
+                } else {
+                    visible =
+                        quoteSymbol
+                            .toLowerCase()
+                            .includes(String(filter).toLowerCase()) ||
+                        baseSymbol
+                            .toLowerCase()
+                            .includes(String(filter).toLowerCase());
+                }
             }
 
             if (visible) ++visibleRow;
