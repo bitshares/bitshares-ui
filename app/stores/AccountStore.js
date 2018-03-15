@@ -34,7 +34,9 @@ class AccountStore extends BaseStore {
             onChangeSetting: SettingsActions.changeSetting,
             onSetWallet: WalletActions.setWallet,
             onAddStarAccount: AccountActions.addStarAccount,
-            onRemoveStarAccount: AccountActions.removeStarAccount
+            onRemoveStarAccount: AccountActions.removeStarAccount,
+            onAddAccountContact: AccountActions.addAccountContact,
+            onRemoveAccountContact: AccountActions.removeAccountContact
             // onNewPrivateKeys: [ PrivateKeyActions.loadDbData, PrivateKeyActions.addKey ]
         });
 
@@ -60,6 +62,7 @@ class AccountStore extends BaseStore {
             passwordAccount: null,
             starredAccounts: Immutable.Map(),
             searchAccounts: Immutable.Map(),
+            accountContacts: Immutable.Set(),
             referralAccount
         };
 
@@ -117,6 +120,12 @@ class AccountStore extends BaseStore {
                     )
                 ),
                 linkedAccounts: Immutable.Set(),
+                accountContacts: Immutable.Set(
+                    accountStorage.get(
+                        this._getStorageKey("accountContacts", {wallet_name}),
+                        []
+                    )
+                ),
                 myIgnoredAccounts: Immutable.Set(),
                 unFollowedAccounts: Immutable.Set()
             });
@@ -134,6 +143,14 @@ class AccountStore extends BaseStore {
                 this._getStorageKey("starredAccounts", {wallet_name})
             )
         );
+
+        let accountContacts = Immutable.Set(
+            accountStorage.get(
+                this._getStorageKey("accountContacts", {wallet_name}),
+                []
+            )
+        );
+
         return {
             update: false,
             subbed: false,
@@ -153,7 +170,8 @@ class AccountStore extends BaseStore {
             searchAccounts: Immutable.Map(),
             searchTerm: "",
             wallet_name,
-            starredAccounts
+            starredAccounts,
+            accountContacts
         };
     }
 
@@ -513,6 +531,40 @@ class AccountStore extends BaseStore {
                     this.setCurrentAccount(account.name);
                 }
             });
+    }
+
+    onAddAccountContact(name) {
+        if (!ChainValidation.is_account_name(name, true))
+            throw new Error("Invalid account name: " + name);
+
+        if (!this.state.accountContacts.has(name)) {
+            const accountContacts = this.state.accountContacts.add(name);
+            accountStorage.set(
+                this._getStorageKey("accountContacts"),
+                accountContacts.toArray()
+            );
+            this.setState({
+                accountContacts: accountContacts
+            });
+        }
+    }
+
+    onRemoveAccountContact(name) {
+        if (!ChainValidation.is_account_name(name, true))
+            throw new Error("Invalid account name: " + name);
+
+        if (this.state.accountContacts.has(name)) {
+            const accountContacts = this.state.accountContacts.remove(name);
+
+            accountStorage.set(
+                this._getStorageKey("accountContacts"),
+                accountContacts
+            );
+
+            this.setState({
+                accountContacts: accountContacts
+            });
+        }
     }
 
     onLinkAccount(name) {

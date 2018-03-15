@@ -179,6 +179,14 @@ class AccountActions {
         return name;
     }
 
+    addAccountContact(name) {
+        return name;
+    }
+
+    removeAccountContact(name) {
+        return name;
+    }
+
     setPasswordAccount(account) {
         return account;
     }

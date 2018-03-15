@@ -1,7 +1,7 @@
 import React from "react";
 import Immutable from "immutable";
 import DashboardList from "./DashboardList";
-import { RecentTransactions } from "../Account/RecentTransactions";
+import {RecentTransactions} from "../Account/RecentTransactions";
 import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import SettingsActions from "actions/SettingsActions";
@@ -17,6 +17,9 @@ class AccountsContainer extends React.Component {
             <AltContainer
                 stores={[AccountStore, SettingsStore, MarketsStore]}
                 inject={{
+                    contacts: () => {
+                        return AccountStore.getState().accountContacts;
+                    },
                     linkedAccounts: () => {
                         return AccountStore.getState().linkedAccounts;
                     },
@@ -24,7 +27,10 @@ class AccountsContainer extends React.Component {
                         return AccountStore.getState().myIgnoredAccounts;
                     },
                     accountsReady: () => {
-                        return AccountStore.getState().accountsLoaded && AccountStore.getState().refsLoaded;
+                        return (
+                            AccountStore.getState().accountsLoaded &&
+                            AccountStore.getState().refsLoaded
+                        );
                     },
                     passwordAccount: () => {
                         return AccountStore.getState().passwordAccount;
@@ -32,8 +38,12 @@ class AccountsContainer extends React.Component {
                     lowVolumeMarkets: () => {
                         return MarketsStore.getState().lowVolumeMarkets;
                     },
-                    currentEntry: SettingsStore.getState().viewSettings.get("dashboardEntry", "accounts")
-                }}>
+                    currentEntry: SettingsStore.getState().viewSettings.get(
+                        "dashboardEntry",
+                        "accounts"
+                    )
+                }}
+            >
                 <Accounts {...this.props} />
             </AltContainer>
         );
@@ -41,7 +51,6 @@ class AccountsContainer extends React.Component {
 }
 
 class Accounts extends React.Component {
-
     constructor(props) {
         super();
 
@@ -57,12 +66,16 @@ class Accounts extends React.Component {
     componentDidMount() {
         this._setDimensions();
 
-        window.addEventListener("resize", this._setDimensions, {capture: false, passive: true});
+        window.addEventListener("resize", this._setDimensions, {
+            capture: false,
+            passive: true
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.contacts !== this.props.contacts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextProps.passwordAccount !== this.props.passwordAccount ||
             nextState.width !== this.state.width ||
@@ -100,17 +113,32 @@ class Accounts extends React.Component {
     }
 
     render() {
-        let { linkedAccounts, myIgnoredAccounts, accountsReady, passwordAccount } = this.props;
-        let {width, showIgnored, featuredMarkets, newAssets, currentEntry} = this.state;
+        let {
+            linkedAccounts,
+            myIgnoredAccounts,
+            accountsReady,
+            passwordAccount
+        } = this.props;
+        let {
+            width,
+            showIgnored,
+            featuredMarkets,
+            newAssets,
+            currentEntry
+        } = this.state;
 
         if (passwordAccount && !linkedAccounts.has(passwordAccount)) {
             linkedAccounts = linkedAccounts.add(passwordAccount);
         }
         let names = linkedAccounts.toArray().sort();
-        if (passwordAccount && names.indexOf(passwordAccount) === -1) names.push(passwordAccount);
+        if (passwordAccount && names.indexOf(passwordAccount) === -1)
+            names.push(passwordAccount);
         let ignored = myIgnoredAccounts.toArray().sort();
 
-        let accountCount = linkedAccounts.size + myIgnoredAccounts.size + (passwordAccount ? 1 : 0);
+        let accountCount =
+            linkedAccounts.size +
+            myIgnoredAccounts.size +
+            (passwordAccount ? 1 : 0);
 
         if (!accountsReady) {
             return <LoadingIndicator />;
@@ -120,9 +148,13 @@ class Accounts extends React.Component {
             return <LoginSelector />;
         }
 
+        const contacts = this.props.contacts.toArray();
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
-                <div ref="container" className="tabs-container generic-bordered-box">
+                <div
+                    ref="container"
+                    className="tabs-container generic-bordered-box"
+                >
                     <Tabs
                         setting="accountTab"
                         className="account-tabs"
@@ -135,9 +167,13 @@ class Accounts extends React.Component {
                                 <div className="box-content">
                                     <DashboardList
                                         accounts={Immutable.List(names)}
-                                        ignoredAccounts={Immutable.List(ignored)}
+                                        ignoredAccounts={Immutable.List(
+                                            ignored
+                                        )}
                                         width={width}
-                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
+                                        onToggleIgnored={this._onToggleIgnored.bind(
+                                            this
+                                        )}
                                         showIgnored={showIgnored}
                                         showMyAccounts={true}
                                     />
@@ -148,11 +184,15 @@ class Accounts extends React.Component {
                             <div className="generic-bordered-box">
                                 <div className="box-content">
                                     <DashboardList
-                                        accounts={Immutable.List(names)}
+                                        accounts={contacts}
                                         passwordAccount={passwordAccount}
-                                        ignoredAccounts={Immutable.List(ignored)}
+                                        ignoredAccounts={Immutable.List(
+                                            ignored
+                                        )}
                                         width={width}
-                                        onToggleIgnored={this._onToggleIgnored.bind(this)}
+                                        onToggleIgnored={this._onToggleIgnored.bind(
+                                            this
+                                        )}
                                         showIgnored={showIgnored}
                                         showMyAccounts={false}
                                     />
@@ -176,7 +216,7 @@ class Accounts extends React.Component {
     }
 }
 
-const DashboardAccountsOnly = (props) => {
+const DashboardAccountsOnly = props => {
     return <AccountsContainer {...props} onlyAccounts />;
 };
 
