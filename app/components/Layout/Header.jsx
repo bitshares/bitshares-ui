@@ -317,7 +317,7 @@ class Header extends React.Component {
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.linkedAccounts.has(currentAccount);
         const enableDepositWithdraw =
-            Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
+            Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -1273,22 +1273,14 @@ class Header extends React.Component {
                                 </li>
 
                                 <li
-                                    className={cnames(
-                                        {
-                                            active:
-                                                active.indexOf("/transfer") !==
-                                                -1
-                                        },
-                                        {disabled: !isMyAccount}
+                                    className={cnames({
+                                        active:
+                                            active.indexOf("/transfer") !== -1
+                                    })}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/transfer"
                                     )}
-                                    onClick={
-                                        !isMyAccount
-                                            ? () => {}
-                                            : this._onNavigate.bind(
-                                                  this,
-                                                  "/transfer"
-                                              )
-                                    }
                                 >
                                     <div className="table-cell">
                                         <Icon size="2x" name="transfer" />
