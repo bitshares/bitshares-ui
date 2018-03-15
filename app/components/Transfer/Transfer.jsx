@@ -502,6 +502,17 @@ class Transfer extends React.Component {
 
         const contactsList = this.props.contactsList.toArray();
 
+        const receiverProps = contactsList.length
+            ? {
+                  typeahead: contactsList,
+                  typeaheadOptions: {
+                      typeaheadVisibleStyle: {
+                          paddingBottom: "1rem"
+                      }
+                  }
+              }
+            : {};
+
         return (
             <div className="grid-block vertical">
                 <div
@@ -540,12 +551,6 @@ class Transfer extends React.Component {
                             <AccountSelector
                                 label="transfer.to"
                                 accountName={to_name}
-                                typeahead={contactsList}
-                                typeaheadOptions={{
-                                    typeaheadVisibleStyle: {
-                                        paddingBottom: "1rem"
-                                    }
-                                }}
                                 onChange={this.toChanged.bind(this)}
                                 onAccountChanged={this.onToAccountChanged.bind(
                                     this
@@ -553,6 +558,7 @@ class Transfer extends React.Component {
                                 account={to_name}
                                 size={60}
                                 tabIndex={tabIndex++}
+                                {...receiverProps}
                             />
                         </div>
                         {/*  A M O U N T   */}
