@@ -2,15 +2,17 @@ import React from "react";
 import {Link} from "react-router/es";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 
 class AccountsSettings extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
-            !utils.are_equal_shallow(nextProps.myAccounts, this.props.myAccounts) ||
-            nextProps.ignoredAccounts !== this.props.ignoredAccounts
+            !utils.are_equal_shallow(
+                nextProps.myAccounts,
+                this.props.myAccounts
+            ) || nextProps.ignoredAccounts !== this.props.ignoredAccounts
         );
     }
 
@@ -27,10 +29,17 @@ class AccountsSettings extends React.Component {
     render() {
         let {myAccounts, ignoredAccounts} = this.props;
 
-        let accounts = ignoredAccounts.toArray().concat(myAccounts).sort();
+        let accounts = ignoredAccounts
+            .toArray()
+            .concat(myAccounts)
+            .sort();
 
         if (!accounts.length) {
-            return <div><Translate content="settings.no_accounts" /></div>;
+            return (
+                <div>
+                    <Translate content="settings.no_accounts" />
+                </div>
+            );
         }
 
         return (
@@ -38,21 +47,37 @@ class AccountsSettings extends React.Component {
                 <tbody>
                     {accounts.map(account => {
                         let isIgnored = ignoredAccounts.has(account);
-                        let hideLink = (<a
-                            href
-                            onClick={isIgnored ?
-                                this.onLinkAccount.bind(this, account) :
-                                this.onUnlinkAccount.bind(this, account)
-                            }
+                        let hideLink = (
+                            <a
+                                href
+                                onClick={
+                                    isIgnored
+                                        ? this.onLinkAccount.bind(this, account)
+                                        : this.onUnlinkAccount.bind(
+                                              this,
+                                              account
+                                          )
+                                }
                             >
-                                <Translate content={"account." + (isIgnored ? "unignore" : "ignore")} />
+                                <Translate
+                                    content={
+                                        "account." +
+                                        (isIgnored ? "unignore" : "ignore")
+                                    }
+                                />
                             </a>
                         );
 
                         return (
                             <tr key={account}>
                                 <td>{account}</td>
-                                <td><Link to={`/account/${account}/permissions`}><Translate content="settings.view_keys" /></Link></td>
+                                <td>
+                                    <Link
+                                        to={`/account/${account}/permissions`}
+                                    >
+                                        <Translate content="settings.view_keys" />
+                                    </Link>
+                                </td>
                                 <td>{hideLink}</td>
                             </tr>
                         );

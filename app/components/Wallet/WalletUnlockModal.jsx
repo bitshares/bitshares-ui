@@ -18,10 +18,9 @@ import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
 
 class WalletUnlockModal extends React.Component {
-
     static contextTypes = {
         router: React.PropTypes.object
-    }
+    };
 
     constructor(props) {
         super();
@@ -57,9 +56,8 @@ class WalletUnlockModal extends React.Component {
 
     componentDidMount() {
         ZfApi.subscribe(this.props.modalId, (name, msg) => {
-            if(name !== this.props.modalId)
-                return;
-            if(msg === "close") {
+            if (name !== this.props.modalId) return;
+            if (msg === "close") {
                 //if(this.props.reject) this.props.reject()
                 WalletUnlockActions.cancel();
             } else if (msg === "open") {
@@ -68,10 +66,21 @@ class WalletUnlockModal extends React.Component {
                         this.refs.password_input.clear();
                         this.refs.password_input.focus();
                     }
-                    if(WalletDb.getWallet() && Apis.instance().chain_id !== WalletDb.getWallet().chain_id) {
-                        notify.error("This wallet was intended for a different block-chain; expecting " +
-                            WalletDb.getWallet().chain_id.substring(0,4).toUpperCase() + ", but got " +
-                            Apis.instance().chain_id.substring(0,4).toUpperCase());
+                    if (
+                        WalletDb.getWallet() &&
+                        Apis.instance().chain_id !==
+                            WalletDb.getWallet().chain_id
+                    ) {
+                        notify.error(
+                            "This wallet was intended for a different block-chain; expecting " +
+                                WalletDb.getWallet()
+                                    .chain_id.substring(0, 4)
+                                    .toUpperCase() +
+                                ", but got " +
+                                Apis.instance()
+                                    .chain_id.substring(0, 4)
+                                    .toUpperCase()
+                        );
                         ZfApi.publish(this.props.modalId, "close");
                         return;
                     }
@@ -82,7 +91,10 @@ class WalletUnlockModal extends React.Component {
         if (this.props.passwordLogin) {
             if (this.state.account_name) {
                 this.refs.password_input.focus();
-            } else if (this.refs.account_input && this.refs.account_input.refs.bound_component) {
+            } else if (
+                this.refs.account_input &&
+                this.refs.account_input.refs.bound_component
+            ) {
                 this.refs.account_input.refs.bound_component.refs.user_input.focus();
             }
         }
@@ -90,19 +102,21 @@ class WalletUnlockModal extends React.Component {
 
     componentDidUpdate() {
         //DEBUG console.log('... componentDidUpdate this.props.resolve', this.props.resolve)
-        if(this.props.resolve) {
-            if (WalletDb.isLocked())
-                ZfApi.publish(this.props.modalId, "open");
-            else
-                this.props.resolve();
+        if (this.props.resolve) {
+            if (WalletDb.isLocked()) ZfApi.publish(this.props.modalId, "open");
+            else this.props.resolve();
         }
     }
 
     onPasswordEnter(e) {
         const {passwordLogin} = this.props;
         e.preventDefault();
-        const password = passwordLogin ? this.refs.password_input.value : this.refs.password_input.value();
-        const account = passwordLogin ? this.state.account && this.state.account.get("name") : null;
+        const password = passwordLogin
+            ? this.refs.password_input.value
+            : this.refs.password_input.value();
+        const account = passwordLogin
+            ? this.state.account && this.state.account.get("name")
+            : null;
         this.setState({password_error: null});
         let {cloudMode} = WalletDb.validatePassword(
             password || "",
@@ -122,7 +136,10 @@ class WalletUnlockModal extends React.Component {
             ZfApi.publish(this.props.modalId, "close");
             this.props.resolve();
             WalletUnlockActions.change();
-            this.setState({password_input_reset: Date.now(), password_error: false});
+            this.setState({
+                password_input_reset: Date.now(),
+                password_error: false
+            });
         }
         return false;
     }
@@ -145,7 +162,12 @@ class WalletUnlockModal extends React.Component {
                 <div>
                     <Translate content="wallet.no_wallet" component="p" />
                     <div className="button-group">
-                        <div className="button" onClick={this._onCreateWallet.bind(this)}><Translate content="wallet.create_wallet" /></div>
+                        <div
+                            className="button"
+                            onClick={this._onCreateWallet.bind(this)}
+                        >
+                            <Translate content="wallet.create_wallet" />
+                        </div>
                     </div>
 
                     {/* <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_password" /></div> */}
@@ -153,7 +175,11 @@ class WalletUnlockModal extends React.Component {
             );
         }
         return (
-            <form className="full-width" onSubmit={this.onPasswordEnter} noValidate>
+            <form
+                className="full-width"
+                onSubmit={this.onPasswordEnter}
+                noValidate
+            >
                 <PasswordInput
                     ref="password_input"
                     onEnter={this.onPasswordEnter}
@@ -164,9 +190,19 @@ class WalletUnlockModal extends React.Component {
 
                 <div>
                     <div className="button-group">
-                        <button className="button" data-place="bottom" data-html data-tip={counterpart.translate("tooltip.login")} onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
+                        <button
+                            className="button"
+                            data-place="bottom"
+                            data-html
+                            data-tip={counterpart.translate("tooltip.login")}
+                            onClick={this.onPasswordEnter}
+                        >
+                            <Translate content="header.unlock_short" />
+                        </button>
                         <Trigger close={this.props.modalId}>
-                            <div className="button primary hollow"><Translate content="account.perm.cancel" /></div>
+                            <div className="button primary hollow">
+                                <Translate content="account.perm.cancel" />
+                            </div>
                         </Trigger>
                     </div>
                     {/* <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_password" /></div> */}
@@ -189,12 +225,22 @@ class WalletUnlockModal extends React.Component {
         let tabIndex = 1;
 
         return (
-            <form onSubmit={this.onPasswordEnter} noValidate style={{paddingTop: 20, marginRight: "3.5rem"}}>
+            <form
+                onSubmit={this.onPasswordEnter}
+                noValidate
+                style={{paddingTop: 20, marginRight: "3.5rem"}}
+            >
                 {/* Dummy input to trick Chrome into disabling auto-complete */}
-                <input type="text" className="no-padding no-margin" style={{visibility: "hidden", height: 0}}/>
+                <input
+                    type="text"
+                    className="no-padding no-margin"
+                    style={{visibility: "hidden", height: 0}}
+                />
 
                 <div className="content-block">
-                    <AccountSelector label="account.name" ref="account_input"
+                    <AccountSelector
+                        label="account.name"
+                        ref="account_input"
                         accountName={account_name}
                         onChange={this.accountChanged.bind(this)}
                         onAccountChanged={this.onAccountChanged.bind(this)}
@@ -205,33 +251,59 @@ class WalletUnlockModal extends React.Component {
                     />
                 </div>
 
-                <div className="content-block" style={{marginBottom:"1.5rem"}}>
+                <div className="content-block" style={{marginBottom: "1.5rem"}}>
                     <div className="account-selector">
                         <div className="content-area">
                             <div className="header-area">
-                                <label className="left-label"><Translate content="settings.password" /></label>
+                                <label className="left-label">
+                                    <Translate content="settings.password" />
+                                </label>
                             </div>
                             <div className="input-area">
                                 <div className="inline-label input-wrapper">
                                     <div className="account-image">
-                                        <canvas style={{height: "2.4rem", width: "2.4rem"}}></canvas>
+                                        <canvas
+                                            style={{
+                                                height: "2.4rem",
+                                                width: "2.4rem"
+                                            }}
+                                        />
                                     </div>
-                                    <input ref="password_input" name="password" id="password" type="password" tabIndex={tabIndex++} />
+                                    <input
+                                        ref="password_input"
+                                        name="password"
+                                        id="password"
+                                        type="password"
+                                        tabIndex={tabIndex++}
+                                    />
                                 </div>
                             </div>
-                            {this.state.password_error ? <div className="error-area">
-                                <Translate content="wallet.pass_incorrect" />
-                            </div> : null}
+                            {this.state.password_error ? (
+                                <div className="error-area">
+                                    <Translate content="wallet.pass_incorrect" />
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                 </div>
 
-
                 <div style={{marginLeft: "3.5rem"}}>
                     <div className="button-group">
-                        <button tabIndex={tabIndex++} className="button" type="submit" onClick={this.onPasswordEnter}><Translate content="header.unlock_short" /></button>
+                        <button
+                            tabIndex={tabIndex++}
+                            className="button"
+                            type="submit"
+                            onClick={this.onPasswordEnter}
+                        >
+                            <Translate content="header.unlock_short" />
+                        </button>
                         <Trigger close={this.props.modalId}>
-                            <div tabIndex={tabIndex++} className="button hollow primary"><Translate content="account.perm.cancel" /></div>
+                            <div
+                                tabIndex={tabIndex++}
+                                className="button hollow primary"
+                            >
+                                <Translate content="account.perm.cancel" />
+                            </div>
                         </Trigger>
                     </div>
                     {/* <div onClick={this._toggleLoginType.bind(this)} className="button small outline float-right"><Translate content="wallet.switch_model_wallet" /></div> */}
@@ -249,18 +321,21 @@ class WalletUnlockModal extends React.Component {
         // https://github.com/akiran/react-foundation-apps/issues/34
         return (
             // U N L O C K
-            <BaseModal 
+            <BaseModal
                 id={this.props.modalId}
                 ref="modal"
                 overlay={true}
                 overlayClose={false}
-                modalHeader={"header.unlock" + (passwordLogin ? "_password" : "")}
+                modalHeader={
+                    "header.unlock" + (passwordLogin ? "_password" : "")
+                }
             >
-                {passwordLogin ? this.renderPasswordLogin() : this.renderWalletLogin()}
+                {passwordLogin
+                    ? this.renderPasswordLogin()
+                    : this.renderWalletLogin()}
             </BaseModal>
         );
     }
-
 }
 
 WalletUnlockModal.defaultProps = {

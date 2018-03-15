@@ -11,7 +11,6 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
  */
 
 class PubKeyInput extends React.Component {
-
     static propTypes = {
         label: React.PropTypes.string.isRequired, // a translation key for the label
         value: React.PropTypes.string, // current value
@@ -21,7 +20,7 @@ class PubKeyInput extends React.Component {
         onAction: React.PropTypes.func, // a method called when Add button is clicked
         tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: React.PropTypes.bool // use it if you need to disable action button
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -42,47 +41,73 @@ class PubKeyInput extends React.Component {
 
     onAction(event) {
         event.preventDefault();
-        if(this.props.onAction && this.state.valid && !this.props.disableActionButton) {
+        if (
+            this.props.onAction &&
+            this.state.valid &&
+            !this.props.disableActionButton
+        ) {
             this.props.onAction(event);
         }
     }
 
     render() {
         let error = this.props.error;
-        if (!error && this.props.value && !this.isValidPubKey(this.props.value)) error = "Not a valid public key";
-        let action_class = classnames("button", {"disabled" : error || this.props.disableActionButton});
+        if (!error && this.props.value && !this.isValidPubKey(this.props.value))
+            error = "Not a valid public key";
+        let action_class = classnames("button", {
+            disabled: error || this.props.disableActionButton
+        });
         const keys = PrivateKeyStore.getState().keys;
-        const has_private = this.isValidPubKey(this.props.value) && keys.has(this.props.value);
+        const has_private =
+            this.isValidPubKey(this.props.value) && keys.has(this.props.value);
 
         return (
             <div className="pubkey-input no-overflow">
                 <div className="content-area">
                     <div className="header-area">
-                        {!error && this.props.value && this.isValidPubKey(this.props.value) ?<label className="right-label"><Translate content="account.perm.valid_pub" /></label> : null}
-                        <Translate className="left-label" component="label" content={this.props.label}/>
+                        {!error &&
+                        this.props.value &&
+                        this.isValidPubKey(this.props.value) ? (
+                            <label className="right-label">
+                                <Translate content="account.perm.valid_pub" />
+                            </label>
+                        ) : null}
+                        <Translate
+                            className="left-label"
+                            component="label"
+                            content={this.props.label}
+                        />
                     </div>
                     <div className="input-area">
                         <span className="inline-label">
-                        <div className="account-image">
-                            <PrivateKeyView pubkey={this.props.value}>
-                                <Icon name="key" size="4x"/>
-                            </PrivateKeyView>
-                        </div>
-                        <input type="text"
-                            className={has_private ? "my-key" : ""}
-                            value={this.props.value}
-                            placeholder={this.props.placeholder || counterpart.translate("account.public_key")}
-                            ref="user_input"
-                            onChange={this.onInputChanged.bind(this)}
-                            onKeyDown={this.onKeyDown.bind(this)}
-                            tabIndex={this.props.tabIndex}
-                        />
-                        { this.props.onAction ? (
-                            <button className={action_class}
-                                onClick={this.onAction.bind(this)}>
-                                <Translate content={this.props.action_label}/>
-                            </button>
-                        ) : null }
+                            <div className="account-image">
+                                <PrivateKeyView pubkey={this.props.value}>
+                                    <Icon name="key" size="4x" />
+                                </PrivateKeyView>
+                            </div>
+                            <input
+                                type="text"
+                                className={has_private ? "my-key" : ""}
+                                value={this.props.value}
+                                placeholder={
+                                    this.props.placeholder ||
+                                    counterpart.translate("account.public_key")
+                                }
+                                ref="user_input"
+                                onChange={this.onInputChanged.bind(this)}
+                                onKeyDown={this.onKeyDown.bind(this)}
+                                tabIndex={this.props.tabIndex}
+                            />
+                            {this.props.onAction ? (
+                                <button
+                                    className={action_class}
+                                    onClick={this.onAction.bind(this)}
+                                >
+                                    <Translate
+                                        content={this.props.action_label}
+                                    />
+                                </button>
+                            ) : null}
                         </span>
                     </div>
                     <div className="error-area has-error">
@@ -92,6 +117,5 @@ class PubKeyInput extends React.Component {
             </div>
         );
     }
-
 }
 export default PubKeyInput;

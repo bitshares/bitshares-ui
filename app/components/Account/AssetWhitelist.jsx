@@ -6,12 +6,11 @@ import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
 import cnames from "classnames";
 import Translate from "react-translate-component";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 
 class AssetWhitelist extends React.Component {
-
     constructor(props) {
         super();
 
@@ -33,24 +32,49 @@ class AssetWhitelist extends React.Component {
         const {listType} = this.state;
 
         if (!this.props.whiteListEnabled)
-            return <div><Translate className="txtlabel cancel" component="p" content="explorer.asset.whitelist.enable_flag" /></div>;
+            return (
+                <div>
+                    <Translate
+                        className="txtlabel cancel"
+                        component="p"
+                        content="explorer.asset.whitelist.enable_flag"
+                    />
+                </div>
+            );
 
         return (
             <div>
                 <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
-                            <th><Translate content="explorer.account.title" /></th>
-                            <th><Translate content="account.perm.remove_text" /></th>
+                            <th>
+                                <Translate content="explorer.account.title" />
+                            </th>
+                            <th>
+                                <Translate content="account.perm.remove_text" />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.props[listType].map(a => {
                             return (
                                 <tr key={a}>
-                                    <td><LinkToAccountById account={a} /></td>
-                                    <td className="clickable" onClick={this.props.onChangeList.bind(this, listType, "remove", a)}>
-                                        <Icon name="cross-circle" className="icon-14px" />
+                                    <td>
+                                        <LinkToAccountById account={a} />
+                                    </td>
+                                    <td
+                                        className="clickable"
+                                        onClick={this.props.onChangeList.bind(
+                                            this,
+                                            listType,
+                                            "remove",
+                                            a
+                                        )}
+                                    >
+                                        <Icon
+                                            name="cross-circle"
+                                            className="icon-14px"
+                                        />
                                     </td>
                                 </tr>
                             );
@@ -62,15 +86,26 @@ class AssetWhitelist extends React.Component {
                         label={`account.whitelist.${listType}`}
                         accountName={this.props.authority_name}
                         account={this.props.authority_name}
-                        onChange={this.props.onAccountNameChanged.bind(this, "authority_name")}
-                        onAccountChanged={this.props.onAccountChanged.bind(this, "new_authority_id")}
+                        onChange={this.props.onAccountNameChanged.bind(
+                            this,
+                            "authority_name"
+                        )}
+                        onAccountChanged={this.props.onAccountChanged.bind(
+                            this,
+                            "new_authority_id"
+                        )}
                         error={null}
                         tabIndex={1}
                         action_label="account.perm.confirm_add"
-                        onAction={this.props.onChangeList.bind(this, listType, "add", this.props.new_authority_id)}
-                     />
-                 </div>
-             </div>
+                        onAction={this.props.onChangeList.bind(
+                            this,
+                            listType,
+                            "add",
+                            this.props.new_authority_id
+                        )}
+                    />
+                </div>
+            </div>
         );
     }
 
@@ -94,17 +129,34 @@ class AssetWhitelist extends React.Component {
                 <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
-                            <th><Translate content="explorer.asset.title" /></th>
-                            <th><Translate content="account.perm.remove_text" /></th>
+                            <th>
+                                <Translate content="explorer.asset.title" />
+                            </th>
+                            <th>
+                                <Translate content="account.perm.remove_text" />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.props[listType].map(a => {
                             return (
                                 <tr key={a}>
-                                    <td><LinkToAssetById asset={a} /></td>
-                                    <td className="clickable" onClick={this.props.onChangeList.bind(this, listType, "remove", a)}>
-                                        <Icon name="cross-circle" className="icon-14px" />
+                                    <td>
+                                        <LinkToAssetById asset={a} />
+                                    </td>
+                                    <td
+                                        className="clickable"
+                                        onClick={this.props.onChangeList.bind(
+                                            this,
+                                            listType,
+                                            "remove",
+                                            a
+                                        )}
+                                    >
+                                        <Icon
+                                            name="cross-circle"
+                                            className="icon-14px"
+                                        />
                                     </td>
                                 </tr>
                             );
@@ -121,7 +173,12 @@ class AssetWhitelist extends React.Component {
                         style={{width: "100%"}}
                         onFound={this._onAssetFound.bind(this)}
                         action_label="account.perm.confirm_add"
-                        onAction={this.props.onChangeList.bind(this, listType, "add", this.state.asset_id)}
+                        onAction={this.props.onChangeList.bind(
+                            this,
+                            listType,
+                            "add",
+                            this.state.asset_id
+                        )}
                     />
                 </div>
             </div>
@@ -145,18 +202,34 @@ class AssetWhitelist extends React.Component {
         return (
             <div className="small-12 large-8 large-offset-2 grid-content">
                 <div>
-                    <div className="header-selector" style={{paddingBottom: "2rem"}}>
+                    <div
+                        className="header-selector"
+                        style={{paddingBottom: "2rem"}}
+                    >
                         <div className="selector">
                             {this.state.listTypes.map((type, index) => {
                                 return (
-                                    <div key={type} className={cnames("inline-block", {inactive: activeIndex !== index})} onClick={this._onSwitchType.bind(this, type)}>
-                                        <Translate content={`explorer.asset.whitelist.${type}`} />
+                                    <div
+                                        key={type}
+                                        className={cnames("inline-block", {
+                                            inactive: activeIndex !== index
+                                        })}
+                                        onClick={this._onSwitchType.bind(
+                                            this,
+                                            type
+                                        )}
+                                    >
+                                        <Translate
+                                            content={`explorer.asset.whitelist.${type}`}
+                                        />
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
-                    {accountTable ? this.renderAccountTables() : this.renderMarketTable()}
+                    {accountTable
+                        ? this.renderAccountTables()
+                        : this.renderMarketTable()}
                     {this.props.children}
                 </div>
             </div>

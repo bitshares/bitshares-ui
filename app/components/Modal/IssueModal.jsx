@@ -9,7 +9,6 @@ import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 
 class IssueModal extends React.Component {
-
     static propTypes = {
         asset_to_issue: ChainTypes.ChainAsset.isRequired
     };
@@ -24,12 +23,14 @@ class IssueModal extends React.Component {
         };
     }
 
-    onAmountChanged({amount,asset}) {
+    onAmountChanged({amount, asset}) {
         this.setState({amount: amount});
     }
 
     onToAccountChanged(to) {
-        let state = to ? {to: to.get('name'), to_id: to.get('id')} : {to_id: null};
+        let state = to
+            ? {to: to.get("name"), to_id: to.get("id")}
+            : {to_id: null};
         this.setState(state);
     }
 
@@ -39,7 +40,9 @@ class IssueModal extends React.Component {
 
     onSubmit() {
         let {asset_to_issue} = this.props;
-        let precision = utils.get_asset_precision(asset_to_issue.get("precision"));
+        let precision = utils.get_asset_precision(
+            asset_to_issue.get("precision")
+        );
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
 
@@ -48,7 +51,9 @@ class IssueModal extends React.Component {
             asset_to_issue.get("issuer"),
             asset_to_issue.get("id"),
             amount,
-            this.state.memo ? new Buffer(this.state.memo, "utf-8") : this.state.memo
+            this.state.memo
+                ? new Buffer(this.state.memo, "utf-8")
+                : this.state.memo
         );
 
         this.setState({
@@ -63,63 +68,79 @@ class IssueModal extends React.Component {
     }
 
     render() {
-        let asset_to_issue = this.props.asset_to_issue.get('id');
+        let asset_to_issue = this.props.asset_to_issue.get("id");
         let tabIndex = 1;
 
-        return ( <form className="grid-block vertical full-width-content">
-            <div className="grid-container " style={{paddingTop: "2rem"}}>
-                {/* T O */}
-                <div className="content-block">
-                    <AccountSelector
-                        label={"modal.issue.to"}
-                        accountName={this.state.to}
-                        onAccountChanged={this.onToAccountChanged.bind(this)}
-                        onChange={this.onToChanged.bind(this)}
-                        account={this.state.to}
-                        tabIndex={tabIndex++}
-                    />
-                </div>
-
-                {/* A M O U N T */}
-                <div className="content-block">
-                    <AmountSelector
-                        label="modal.issue.amount"
-                        amount={this.state.amount}
-                        onChange={this.onAmountChanged.bind(this)}
-                        asset={ asset_to_issue  }
-                        assets={[asset_to_issue]}
-                        tabIndex={tabIndex++}
-                    />
-                </div>
-
-                {/*  M E M O  */}
-                <div className="content-block">
-                    <label><Translate component="span" content="transfer.memo"/> (<Translate content="transfer.optional" />)</label>
-                    <textarea rows="3" value={this.state.memo} tabIndex={tabIndex++} onChange={this.onMemoChanged.bind(this)} />
-
-                </div>
-
-                <div className="content-block button-group">
-                    <input
-                        type="submit"
-                        className="button success"
-                        onClick={this.onSubmit.bind(this, this.state.to, this.state.amount )}
-                        value={counterpart.translate("modal.issue.submit")}
-                        tabIndex={tabIndex++}
-                    />
-
-                    <div
-                        className="button"
-                        onClick={this.props.onClose}
-                        tabIndex={tabIndex++}
-                    >
-                        {counterpart.translate("cancel")}
+        return (
+            <form className="grid-block vertical full-width-content">
+                <div className="grid-container " style={{paddingTop: "2rem"}}>
+                    {/* T O */}
+                    <div className="content-block">
+                        <AccountSelector
+                            label={"modal.issue.to"}
+                            accountName={this.state.to}
+                            onAccountChanged={this.onToAccountChanged.bind(
+                                this
+                            )}
+                            onChange={this.onToChanged.bind(this)}
+                            account={this.state.to}
+                            tabIndex={tabIndex++}
+                        />
                     </div>
 
+                    {/* A M O U N T */}
+                    <div className="content-block">
+                        <AmountSelector
+                            label="modal.issue.amount"
+                            amount={this.state.amount}
+                            onChange={this.onAmountChanged.bind(this)}
+                            asset={asset_to_issue}
+                            assets={[asset_to_issue]}
+                            tabIndex={tabIndex++}
+                        />
+                    </div>
 
+                    {/*  M E M O  */}
+                    <div className="content-block">
+                        <label>
+                            <Translate
+                                component="span"
+                                content="transfer.memo"
+                            />{" "}
+                            (<Translate content="transfer.optional" />)
+                        </label>
+                        <textarea
+                            rows="3"
+                            value={this.state.memo}
+                            tabIndex={tabIndex++}
+                            onChange={this.onMemoChanged.bind(this)}
+                        />
+                    </div>
+
+                    <div className="content-block button-group">
+                        <input
+                            type="submit"
+                            className="button success"
+                            onClick={this.onSubmit.bind(
+                                this,
+                                this.state.to,
+                                this.state.amount
+                            )}
+                            value={counterpart.translate("modal.issue.submit")}
+                            tabIndex={tabIndex++}
+                        />
+
+                        <div
+                            className="button"
+                            onClick={this.props.onClose}
+                            tabIndex={tabIndex++}
+                        >
+                            {counterpart.translate("cancel")}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form> );
+            </form>
+        );
     }
 }
 
