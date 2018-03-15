@@ -174,6 +174,7 @@ class SettingsStore {
             let topMarkets = {
                 markets_4018d784: [
                     // BTS MAIN NET
+                    "XACOIN",
                     "OPEN.MKR",
                     "BTS",
                     "OPEN.ETH",

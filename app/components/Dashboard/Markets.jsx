@@ -67,6 +67,7 @@ class FeaturedMarkets extends React.Component {
                 ["OPEN.BTC", "BLOCKPAY"],
                 ["OPEN.BTC", "OPEN.DGD"],
                 ["OPEN.BTC", "OPEN.STEEM"],
+                ["BTS", "XACOIN"],
                 ["BTS", "OPEN.ETH"],
                 ["BTS", "OPEN.EOS"],
                 ["BTS", "PPY"],
