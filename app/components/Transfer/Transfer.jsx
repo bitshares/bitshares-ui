@@ -541,6 +541,11 @@ class Transfer extends React.Component {
                                 label="transfer.to"
                                 accountName={to_name}
                                 typeahead={contactsList}
+                                typeaheadOptions={{
+                                    typeaheadVisibleStyle: {
+                                        paddingBottom: "1rem"
+                                    }
+                                }}
                                 onChange={this.toChanged.bind(this)}
                                 onAccountChanged={this.onToAccountChanged.bind(
                                     this
