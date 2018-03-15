@@ -194,7 +194,7 @@ class Accounts extends React.Component {
                                             this
                                         )}
                                         showIgnored={showIgnored}
-                                        showMyAccounts={false}
+                                        isContactsList={true}
                                     />
                                 </div>
                             </div>

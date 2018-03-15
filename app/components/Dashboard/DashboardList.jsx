@@ -69,6 +69,7 @@ class DashboardList extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(nextProps.accounts, this.props.accounts) ||
+            nextProps.isContactsList !== this.props.isContactsList ||
             nextProps.showMyAccounts !== this.props.showMyAccounts ||
             nextProps.width !== this.props.width ||
             nextProps.showIgnored !== this.props.showIgnored ||
@@ -138,7 +139,7 @@ class DashboardList extends React.Component {
         const {
             width,
             starredAccounts,
-            showMyAccounts,
+            isContactsList,
             passwordAccount
         } = this.props;
         const {dashboardFilter, sortBy, inverseSort} = this.state;
@@ -151,8 +152,13 @@ class DashboardList extends React.Component {
                 let isMyAccount =
                     AccountStore.isMyAccount(account) ||
                     accountName === passwordAccount;
-
-                return isMyAccount === this.props.showMyAccounts;
+                /*
+                Display all accounts from contacts list
+                Display only my Accounts for Accounts page
+                */
+                return isContactsList
+                    ? true
+                    : isMyAccount === this.props.showMyAccounts;
             })
             .filter(a => {
                 if (!a) return false;
@@ -291,7 +297,7 @@ class DashboardList extends React.Component {
                             >
                                 <Icon className={starClass} name="fi-star" />
                             </td>
-                            {!showMyAccounts
+                            {isContactsList
                                 ? (isHiddenAccountsList && (
                                       <td
                                           onClick={this._onAddContact.bind(
@@ -404,14 +410,14 @@ class DashboardList extends React.Component {
     }
 
     render() {
-        let {width, showIgnored, showMyAccounts} = this.props;
+        let {width, showIgnored, isContactsList} = this.props;
         const {dashboardFilter} = this.state;
 
         let includedAccounts = this._renderList(this.props.accounts);
 
         let hiddenAccounts = this._renderList(this.props.ignoredAccounts, true);
 
-        let filterText = showMyAccounts
+        let filterText = !isContactsList
             ? counterpart.translate("explorer.accounts.filter")
             : counterpart.translate("explorer.accounts.filter_contacts");
         filterText += "...";
@@ -479,7 +485,7 @@ class DashboardList extends React.Component {
                                         name="fi-star"
                                     />
                                 </th>
-                                {!showMyAccounts ? (
+                                {isContactsList ? (
                                     <th>
                                         <Icon name="user" />
                                     </th>
