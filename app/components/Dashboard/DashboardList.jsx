@@ -73,7 +73,6 @@ class DashboardList extends React.Component {
             nextProps.width !== this.props.width ||
             nextProps.showIgnored !== this.props.showIgnored ||
             nextProps.locked !== this.props.locked ||
-            nextProps.linkedAccounts !== this.props.linkedAccounts ||
             nextProps.passwordAccount !== this.props.passwordAccount ||
             !utils.are_equal_shallow(
                 nextProps.starredAccounts,
@@ -125,16 +124,6 @@ class DashboardList extends React.Component {
             dashboardSort: field,
             dashboardSortInverse: inverse
         });
-    }
-
-    _onUnLinkAccount(account, e) {
-        e.preventDefault();
-        AccountActions.unlinkAccount(account);
-    }
-
-    _onLinkAccount(account, e) {
-        e.preventDefault();
-        AccountActions.linkAccount(account);
     }
 
     _onAddContact(account) {
@@ -565,7 +554,6 @@ export default connect(AccountsListWrapper, {
         return {
             locked: WalletUnlockStore.getState().locked,
             starredAccounts: AccountStore.getState().starredAccounts,
-            linkedAccounts: AccountStore.getState().linkedAccounts,
             viewSettings: SettingsStore.getState().viewSettings
         };
     }
