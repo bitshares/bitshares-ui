@@ -1390,7 +1390,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
@@ -1481,7 +1480,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
