@@ -2,7 +2,6 @@ import alt from "alt-instance";
 import TransactionConfirmActions from "actions/TransactionConfirmActions";
 
 class TransactionConfirmStore {
-
     constructor() {
         this.bindActions(TransactionConfirmActions);
         this.state = this.getInitialState();
@@ -28,7 +27,14 @@ class TransactionConfirmStore {
 
     onConfirm({transaction, resolve, reject}) {
         let init_state = this.getInitialState();
-        let state = {...init_state, transaction, closed: false, broadcasted_transaction: null, resolve, reject};
+        let state = {
+            ...init_state,
+            transaction,
+            closed: false,
+            broadcasted_transaction: null,
+            resolve,
+            reject
+        };
         //console.log("-- TransactionConfirmStore.onConfirm -->", state);
         this.setState(state);
     }
@@ -66,23 +72,25 @@ class TransactionConfirmStore {
         });
     }
 
-    onError({ error }) {
+    onError({error}) {
         this.setState({broadcast: false, broadcasting: false, error});
     }
 
     onTogglePropose() {
-        this.setState({ propose: ! this.state.propose });
+        this.setState({propose: !this.state.propose});
     }
 
     onProposeFeePayingAccount(fee_paying_account) {
-        this.setState({ fee_paying_account });
+        this.setState({fee_paying_account});
     }
 
     reset() {
         //console.log("-- TransactionConfirmStore.reset -->");
         this.state = this.getInitialState();
     }
-
 }
 
-export default alt.createStore(TransactionConfirmStore, 'TransactionConfirmStore');
+export default alt.createStore(
+    TransactionConfirmStore,
+    "TransactionConfirmStore"
+);

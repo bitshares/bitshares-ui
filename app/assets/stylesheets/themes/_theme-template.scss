@@ -55,7 +55,7 @@
         background-color: $settings-select-bg;
         color: $settings-select-color;
     }
-
+    
     .settings-input {
         /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
@@ -66,6 +66,14 @@
         background-color: $settings-select-bg !important;
         border-bottom: 0 !important;
         max-width: 100% !important;
+    }
+
+    .positive {
+        color: $positive-color !important;
+    }
+
+    .negative {
+        color: $negative-color !important;
     }
 
     .dark-text-color {
@@ -1507,11 +1515,11 @@
     }
 
     .change-up {
-        color: $positive-color !important;
+        color: $bid-color !important;
     }
 
     .change-down {
-        color: $negative-color !important;
+        color: $ask-color !important;
     }
 
     .header-sub-title {
@@ -2082,6 +2090,122 @@
             }
         }
     }
+
+    .calendarContainer {
+        // restyle of react-datepicker2
+        box-shadow: none;
+        background-color: $panel-bg-color;
+        border: 0;
+        color: $light-text-color;
+
+        button svg {
+            fill: $light-text-color;
+        }
+
+        .dayWrapper button:hover {
+            color: $light-text-color;
+            background-color: $button-bg-color;
+        }
+
+        .dayWrapper button[disabled] {
+            background-color: darken($panel-bg-color, 5%);
+            color: darken(#aaa, 20%);
+        }
+
+        .monthsList {
+            button {
+                border: 0;
+                background-color: $panel-bg-color;
+                &:hover {
+                    background-color: $input-background;
+                }
+            }
+        }
+
+        .time-table {
+            line-height: 38px;
+        }
+
+        input.rc-time-picker-input {
+            background: $input-background;
+            color: $light-text-color;
+            &:hover {
+                border-color: $input-background;
+                background-color: $input-background;
+                color: $light-text-color;
+            }
+            cursor: pointer;
+        }
+
+        .heading {
+            .title {
+                line-height: 28px;
+                border-color: $panel-bg-color;
+            }
+            > button {
+                line-height: 30px;
+                border-color: $panel-bg-color;
+                &:hover {
+                    border-color: $panel-bg-color;
+                    background-color: $input-background;
+                }
+                &.prev,
+                &.next {
+                    line-height: 28px;
+                }
+                &.prev {
+                    float: left;
+                    transform: rotate(-180deg);
+                }
+                &.next {
+                    float: right;
+                    transform: rotate(-180deg);
+                }
+            }
+        }
+    }
+
+    .expiration-datetime-picker {
+        width: 225px;
+        > div {
+            float: right;
+        }
+        input {
+            width: 160px;
+            padding: 0;
+            margin: 0 5px 0 0;
+            background: transparent;
+            border-radius: 0 !important;
+            border-bottom: 1px dotted rgb(160, 159, 159);
+            display: inline-block;
+            text-align: right;
+            font-size: 0.9rem;
+            height: 28px;
+            &:hover {
+                background: transparent;
+            }
+        }
+        select {
+            float: right;
+            width: auto;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            color: $primary-text-color;
+            border-bottom: 1px dotted rgb(160, 159, 159);
+            font-size: 0.9rem;
+            height: 28px;
+            margin: 0 0 1px;
+
+            > option {
+                background-color: $light-panel-bg-color;
+            }
+        }
+    }
+}
+
+.rc-time-picker-panel {
+    z-index: 9999 !important;
 }
 
 .midnightTheme .gate_fee .amount-selector {

@@ -1,16 +1,18 @@
-import { SerializerValidation, types} from "bitsharesjs/es";
+import {SerializerValidation, types} from "bitsharesjs/es";
 var config = require("chain/serializer_config");
 
 class DebugApi {
-
     set_hex_dump(flag = !config.hex_dump) {
-        return config.hex_dump = flag;
+        return (config.hex_dump = flag);
     }
 
     type(operation_name) {
         SerializerValidation.required(operation_name, "operation_name");
         var operation_type = types[operation_name];
-        SerializerValidation.required(operation_type, "unknown operation name " + operation_name);
+        SerializerValidation.required(
+            operation_type,
+            "unknown operation name " + operation_name
+        );
         return operation_type;
     }
 
@@ -31,7 +33,6 @@ class DebugApi {
             config.hex_dump = hex_dump;
         }
     }
-
 }
 
 export default DebugApi;

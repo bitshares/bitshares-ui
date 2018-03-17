@@ -85,7 +85,8 @@ class DepositModalContent extends DecimalChecker {
     }
 
     onAssetSelected(asset, assetDetails) {
-        if(assetDetails.gateway == "") return this.setState({selectedAsset: asset, selectedGateway: null});
+        if (assetDetails.gateway == "")
+            return this.setState({selectedAsset: asset, selectedGateway: null});
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
@@ -237,12 +238,16 @@ class DepositModalContent extends DecimalChecker {
                         <Translate
                             component="p"
                             content="modal.deposit.header"
-                            account_name={<span className="modal__highlight">{account}</span>}
+                            account_name={
+                                <span className="modal__highlight">
+                                    {account}
+                                </span>
+                            }
                         />
                     ) : (
                         <Translate
                             component="p"
-                            content="modal.deposit.header_short" 
+                            content="modal.deposit.header_short"
                         />
                     )}
                 </div>
@@ -261,15 +266,13 @@ class DepositModalContent extends DecimalChecker {
 
                     {usingGateway && selectedAsset
                         ? gatewaySelector.call(this, {
-                            selectedGateway,
-                            gatewayStatus,
-                            nAvailableGateways,
-                            error: depositAddress && depositAddress.error,
-                            onGatewayChanged: this.onGatewayChanged.bind(this)
-                        })
-                        : 
-                        null
-                    }
+                              selectedGateway,
+                              gatewayStatus,
+                              nAvailableGateways,
+                              error: depositAddress && depositAddress.error,
+                              onGatewayChanged: this.onGatewayChanged.bind(this)
+                          })
+                        : null}
 
                     {!fetchingAddress ? (
                         (!usingGateway ||
@@ -317,17 +320,15 @@ class DepositModalContent extends DecimalChecker {
                             {this.state.isOpenledger && (
                                 <Translate
                                     className="grid-block container-row maxDeposit"
-                                    component="h6"
+                                    style={{fontSize: "1rem"}}
                                     content="gateway.min_deposit_warning_amount"
-                                    minDeposit={
-                                        backingAsset.gateFee * 2 || 0
-                                    }
+                                    minDeposit={backingAsset.gateFee * 2 || 0}
                                     coin={selectedAsset}
                                 />
                             )}
 
                             <div className="grid-block container-row">
-                                <div className="copyIcon">
+                                <div style={{paddingRight: "1rem"}}>
                                     <CopyButton
                                         text={depositAddress.address}
                                         className={"copyIcon"}
@@ -336,7 +337,11 @@ class DepositModalContent extends DecimalChecker {
                                 <div>
                                     <Translate
                                         component="div"
-                                        style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }}
+                                        style={{
+                                            fontSize: "0.8rem",
+                                            fontWeight: "bold",
+                                            paddingBottom: "0.3rem"
+                                        }}
                                         content="gateway.purchase_notice"
                                         inputAsset={selectedAsset}
                                         outputAsset={
@@ -344,13 +349,15 @@ class DepositModalContent extends DecimalChecker {
                                             "." +
                                             selectedAsset
                                         }
-                                        />
-                                    <div className="modal__highlight">{depositAddress.address}</div>
+                                    />
+                                    <div className="modal__highlight">
+                                        {depositAddress.address}
+                                    </div>
                                 </div>
                             </div>
                             {depositAddress.memo ? (
                                 <div className="grid-block container-row">
-                                    <div className="copyIcon">
+                                    <div style={{paddingRight: "1rem"}}>
                                         <CopyButton
                                             text={depositAddress.memo}
                                             className={"copyIcon"}
@@ -359,18 +366,24 @@ class DepositModalContent extends DecimalChecker {
                                     <div>
                                         <Translate
                                             component="div"
-                                            style={{ fontSize: "0.8rem", fontWeight: "bold", paddingBottom: "0.3rem" }}
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                fontWeight: "bold",
+                                                paddingBottom: "0.3rem"
+                                            }}
                                             unsafe
                                             content="gateway.purchase_notice_memo"
                                         />
-                                        <div className="modal__highlight">{depositAddress.memo}</div>
+                                        <div className="modal__highlight">
+                                            {depositAddress.memo}
+                                        </div>
                                     </div>
                                 </div>
                             ) : null}
                             {this.state.isOpenledger && (
                                 <Translate
                                     component="span"
-                                    style={{ fontSize: "0.8rem" }}
+                                    style={{fontSize: "0.8rem"}}
                                     content="gateway.min_deposit_warning_asset"
                                     minDeposit={backingAsset.gateFee * 2 || 0}
                                     coin={selectedAsset}
@@ -380,17 +393,19 @@ class DepositModalContent extends DecimalChecker {
                     ) : null}
                     {!usingGateway ? (
                         <div className="container-row deposit-directly">
-                            <p>
-                                <span className="send-name">{account}</span>
-                            </p>
-                            <p>
-                                <Translate content="modal.deposit.bts_transfer_description" />
-                            </p>
+                            <h2
+                                className="modal__highlight"
+                                style={{textAlign: "center"}}
+                            >
+                                {account}
+                            </h2>
+                            <Translate
+                                component="h6"
+                                content="modal.deposit.bts_transfer_description"
+                            />
                         </div>
                     ) : null}
-                    
                 </div>
-
 
                 <div className="Modal__footer">
                     <div className="container-row">
@@ -431,7 +446,6 @@ export default class DepositModal extends React.Component {
                 className={this.props.modalId}
                 onClose={this.onClose.bind(this)}
                 overlay={true}
-                overlayClass="small"
                 noCloseBtn
             >
                 <DepositModalContent {...this.props} open={this.state.open} />

@@ -64,15 +64,32 @@ class AccountOverview extends React.Component {
             ]
         };
 
+        this.qtyRefs = {};
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
+
+        this._handleFilterInput = this._handleFilterInput.bind(this);
+    }
+
+    _handleFilterInput(e) {
+        e.preventDefault();
+        this.setState({
+            filterValue: e.target.value
+        });
     }
 
     sortFunctions = {
+        qty: function(a, b, force) {
+            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? -1 : 1;
+
+            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? 1 : -1;
+        },
         alphabetic: function(a, b, force) {
             if (a.key > b.key)
                 return this.state.sortDirection || force ? 1 : -1;
@@ -105,7 +122,7 @@ class AccountOverview extends React.Component {
                 if (aValue && !bValue) return -1;
                 if (!aValue && !bValue)
                     return this.sortFunctions.alphabetic(a, b, true);
-                return !this.state.sortDirection
+                return this.state.sortDirection
                     ? aValue - bValue
                     : bValue - aValue;
             }
@@ -170,7 +187,8 @@ class AccountOverview extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
-            !utils.are_equal_shallow(nextState, this.state)
+            !utils.are_equal_shallow(nextState, this.state) ||
+            this.state.filterValue !== nextState.filterValue
         );
     }
 
@@ -380,6 +398,13 @@ class AccountOverview extends React.Component {
                 backedCoin.withdrawalAllowed &&
                 (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
+
+            const assetAmount = balanceObject.get("balance");
+
+            this.qtyRefs[asset.get("symbol")] = utils.get_asset_amount(
+                assetAmount,
+                asset
+            );
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
@@ -794,6 +819,7 @@ class AccountOverview extends React.Component {
                 portfolioSort: key
             });
             this.setState({
+                sortDirection: false,
                 sortKey: key
             });
         }
@@ -866,22 +892,41 @@ class AccountOverview extends React.Component {
 
             // Separate balances into hidden and included
             account_balances.forEach((a, asset_type) => {
-                if (hiddenAssets.includes(asset_type)) {
+                const asset = ChainStore.getAsset(asset_type);
+
+                let assetName = "";
+                let filter = "";
+
+                if (this.state.filterValue) {
+                    filter = this.state.filterValue
+                        ? String(this.state.filterValue).toLowerCase()
+                        : "";
+                    assetName = asset.get("symbol").toLowerCase();
+                    let {isBitAsset} = utils.replaceName(asset);
+                    if (isBitAsset) {
+                        assetName = "bit" + assetName;
+                    }
+                }
+
+                if (
+                    hiddenAssets.includes(asset_type) &&
+                    assetName.includes(filter)
+                ) {
                     hiddenBalancesList = hiddenBalancesList.push(a);
-                } else {
+                } else if (assetName.includes(filter)) {
                     includedBalancesList = includedBalancesList.push(a);
                 }
             });
 
             let included = this._renderBalances(
                 includedBalancesList,
-                this.state.alwaysShowAssets,
+                !this.state.filterValue ? this.state.alwaysShowAssets : null,
                 true
             );
             includedBalances = included;
             let hidden = this._renderBalances(
                 hiddenBalancesList,
-                this.state.alwaysShowAssets
+                !this.state.filterValue ? this.state.alwaysShowAsset : null
             );
             hiddenBalances = hidden;
         }
@@ -980,16 +1025,9 @@ class AccountOverview extends React.Component {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
-        const preferredAsset = ChainStore.getAsset(preferredUnit);
-        let assetName = !!preferredAsset ? preferredAsset.get("symbol") : "";
-        if (preferredAsset) {
-            const {prefix, name} = utils.replaceName(
-                assetName,
-                !!preferredAsset.get("bitasset_data_id")
-            );
-            assetName = (prefix || "") + name;
-        }
-        const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
+        // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
+        // horizontally
+        const hiddenSubText = "\u00a0";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -1007,7 +1045,14 @@ class AccountOverview extends React.Component {
                                 subText={portfolioActiveAssetsBalance}
                             >
                                 <div className="header-selector">
-                                    <div className="selector">
+                                    <div className="filter inline-block">
+                                        <input
+                                            type="text"
+                                            placeholder="Filter"
+                                            onChange={this._handleFilterInput}
+                                        />
+                                    </div>
+                                    <div className="selector inline-block">
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
@@ -1090,6 +1135,11 @@ class AccountOverview extends React.Component {
                                                     />
                                                 </th>
                                                 <th
+                                                    onClick={this._toggleSortOrder.bind(
+                                                        this,
+                                                        "qty"
+                                                    )}
+                                                    className="clickable"
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.qty" />
@@ -1165,7 +1215,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="account.trade" />
                                                 </th>
                                                 <th>
-                                                    <Translate content="exchange.borrow" />
+                                                    <Translate content="exchange.borrow_short" />
                                                 </th>
                                                 <th>
                                                     <Translate content="account.settle" />

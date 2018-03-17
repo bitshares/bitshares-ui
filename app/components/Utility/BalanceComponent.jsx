@@ -10,7 +10,6 @@ import BindToChainState from "./BindToChainState";
  */
 
 class BalanceComponent extends React.Component {
-
     static propTypes = {
         balance: ChainTypes.ChainObject.isRequired,
         assetInfo: React.PropTypes.node,

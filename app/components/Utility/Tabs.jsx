@@ -4,6 +4,7 @@ import cnames from "classnames";
 import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
+import counterpart from "counterpart";
 
 /**
  *  Renders a tab layout, handling switching and optionally persists the currently open tab using the SettingsStore
@@ -28,14 +29,16 @@ class Tab extends React.Component {
         isActive: PropTypes.bool.isRequired,
         index: PropTypes.number.isRequired,
         className: PropTypes.string,
-        isLinkTo: PropTypes.string
+        isLinkTo: PropTypes.string,
+        subText: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
     };
 
     static defaultProps = {
         isActive: false,
         index: 0,
         className: "",
-        isLinkTo: ""
+        isLinkTo: "",
+        subText: null
     };
 
     render() {
@@ -45,18 +48,33 @@ class Tab extends React.Component {
             changeTab,
             title,
             className,
-            disabled
+            updatedTab,
+            disabled,
+            subText
         } = this.props;
         let c = cnames({"is-active": isActive}, className);
 
+        if (typeof title === "string" && title.indexOf(".") > 0) {
+            title = counterpart.translate(title);
+        }
+
+        // dont string concetenate subText directly within the rendering, subText can be an object without toString
+        // implementation, but valid DOM (meaning, don't do subText + "someString"
+
         if (this.props.collapsed) {
+            // if subText is empty, dont render it, we dont want empty brackets added
+            if (typeof subText === "string") {
+                subText = subText.trim();
+            }
             return (
                 <option value={index} data-is-link-to={this.props.isLinkTo}>
-                    {typeof title === "string" && title.indexOf(".") > 0 ? (
-                        <Translate className="tab-title" content={title} />
-                    ) : (
-                        <span className="tab-title">{title}</span>
-                    )}
+                    <span className="tab-title">
+                        {title}
+                        {updatedTab ? "*" : ""}
+                        {subText && " ("}
+                        {subText && subText}
+                        {subText && ")"}
+                    </span>
                 </option>
             );
         }
@@ -70,14 +88,11 @@ class Tab extends React.Component {
                 }
             >
                 <a>
-                    {typeof title === "string" && title.indexOf(".") > 0 ? (
-                        <Translate className="tab-title" content={title} />
-                    ) : (
-                        <span className="tab-title">{title}</span>
-                    )}
-                    {this.props.subText ? (
-                        <div className="tab-subtext">{this.props.subText}</div>
-                    ) : null}
+                    <span className="tab-title">
+                        {title}
+                        {updatedTab ? "*" : ""}
+                    </span>
+                    {subText && <div className="tab-subtext">{subText}</div>}
                 </a>
             </li>
         );

@@ -57,6 +57,7 @@ export default class SendModal extends React.Component {
             asset: null,
             memo: "",
             error: null,
+            knownScammer: null,
             propose: false,
             propose_account: "",
             feeAsset: null,
@@ -90,6 +91,7 @@ export default class SendModal extends React.Component {
                 asset: null,
                 memo: "",
                 error: null,
+                knownScammer: null,
                 propose: false,
                 propose_account: "",
                 feeAsset: null,
@@ -388,12 +390,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                            feeAmount: fee,
-                            fee_asset_id: fee.asset_id,
-                            hasBalance,
-                            hasPoolBalance,
-                            error: !hasBalance || !hasPoolBalance
-                        })
+                              feeAmount: fee,
+                              fee_asset_id: fee.asset_id,
+                              hasBalance,
+                              hasPoolBalance,
+                              error: !hasBalance || !hasPoolBalance
+                          })
             )
         );
     }
@@ -636,7 +638,6 @@ export default class SendModal extends React.Component {
             >
                 <BaseModal
                     id={this.props.id}
-                    overlayClass="small"
                     overlay={true}
                     onClose={this.onClose.bind(this, false)}
                 >
@@ -649,7 +650,8 @@ export default class SendModal extends React.Component {
                                 <div
                                     style={{
                                         fontSize: "1.8rem",
-                                        fontFamily: "Roboto-Medium, arial, sans-serif"
+                                        fontFamily:
+                                            "Roboto-Medium, arial, sans-serif"
                                     }}
                                 >
                                     <Translate

@@ -168,6 +168,9 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
+        "transactions": {
+            "id": "ID"
+        },
         "search": "Search for an account",
         "new_user": "Nuevo usuario?",
         "existing_user": "Usuario existente",

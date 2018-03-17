@@ -5,7 +5,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 
 export default class ConfirmModal extends React.Component {
-
     show() {
         let modalId = "modal_confirm_" + this.props.type;
         ZfApi.publish(modalId, "open");
@@ -26,12 +25,29 @@ export default class ConfirmModal extends React.Component {
             <BaseModal id={"modal_confirm_" + type} overlay={true}>
                 <Translate component="h3" content="transaction.confirm" />
                 <div className="grid-block vertical">
-                    {!hasOrders ?
-                        <Translate content={"exchange.confirm_no_orders_" + type} />
-                    : <Translate content={"exchange.confirm_" + type} diff={utils.format_number(diff, 2)} />}
+                    {!hasOrders ? (
+                        <Translate
+                            content={"exchange.confirm_no_orders_" + type}
+                        />
+                    ) : (
+                        <Translate
+                            content={"exchange.confirm_" + type}
+                            diff={utils.format_number(diff, 2)}
+                        />
+                    )}
                     <div className="button-group" style={{paddingTop: "2rem"}}>
-                        <input onClick={this._onForce.bind(this, true)} className="button success" type="submit" value="Yes" />
-                        <input onClick={this._onForce.bind(this, false)} className="button info" type="submit" value="No" />
+                        <input
+                            onClick={this._onForce.bind(this, true)}
+                            className="button success"
+                            type="submit"
+                            value="Yes"
+                        />
+                        <input
+                            onClick={this._onForce.bind(this, false)}
+                            className="button info"
+                            type="submit"
+                            value="No"
+                        />
                     </div>
                 </div>
             </BaseModal>

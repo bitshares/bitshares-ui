@@ -17,49 +17,47 @@ class AssetName extends React.Component {
         dataPlace: "bottom"
     };
 
-    shouldComponentUpdate(nextProps) {
-        return !utils.are_equal_shallow(nextProps, this.props);
+    shouldComponentUpdate(np) {
+        return (
+            this.props.replace !== np.replace ||
+            this.props.asset !== np.asset ||
+            this.props.noPrefix !== np.noPrefix ||
+            this.props.noTip !== np.noTip ||
+            this.props.replace !== np.replace ||
+            this.props.noTip !== np.noTip ||
+            this.props.dataPlace !== np.dataPlace
+        );
     }
 
     render() {
-        let {replace, asset, noPrefix, customClass} = this.props;
+        let {replace, asset, noPrefix, customClass, noTip} = this.props;
         const name = asset.get("symbol");
-        let isBitAsset = asset.has("bitasset");
-        let isPredMarket =
+        const isBitAsset = asset.has("bitasset");
+        const isPredMarket =
             isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
 
-        let {name: replacedName, prefix} = utils.replaceName(
-            name,
-            isBitAsset && !isPredMarket && asset.get("issuer") === "1.2.0"
-        );
-        // let prefix = isBitAsset && !isPredMarket ? <span>bit</span> :
-        // 			 replacedName !== this.props.name ? <span>{replacedPrefix}</span> : null;
+        let {name: replacedName, prefix} = utils.replaceName(asset);
+        const hasBitPrefix = prefix === "bit";
 
-        let excludeList = [
-            "BTWTY",
-            "BANCOR",
-            "BTCSHA",
-            "CROWDFUN",
-            "DRAGON",
-            "TESTME"
-        ];
         let includeBitAssetDescription =
-            isBitAsset && !isPredMarket && excludeList.indexOf(name) === -1;
+            isBitAsset && !isPredMarket && hasBitPrefix;
 
         if ((replace && replacedName !== name) || isBitAsset) {
             let desc = asset_utils.parseDescription(
                 asset.getIn(["options", "description"])
             );
+
             let realPrefix = name.split(".");
             realPrefix = realPrefix.length > 1 ? realPrefix[0] : null;
             if (realPrefix) realPrefix += ".";
             let optional = "";
+
             try {
                 optional =
                     realPrefix || includeBitAssetDescription
                         ? counterpart.translate(
                               "gateway.assets." +
-                                  (isBitAsset
+                                  (hasBitPrefix
                                       ? "bit"
                                       : realPrefix
                                             .replace(".", "")
@@ -77,15 +75,15 @@ class AssetName extends React.Component {
                 optional =
                     optional + counterpart.translate("gateway.assets.bitcny");
             }
-            let tooltip = this.props.noTip
+
+            const upperCasePrefix =
+                prefix && prefix === "bit"
+                    ? prefix
+                    : !!prefix ? prefix.toUpperCase() : prefix;
+            let tooltip = noTip
                 ? null
-                : `<div><strong>${
-                      includeBitAssetDescription
-                          ? "bit"
-                          : (realPrefix
-                                ? realPrefix.toUpperCase()
-                                : realPrefix) || ""
-                  }${replacedName}</strong><br />${
+                : `<div><strong>${upperCasePrefix ||
+                      ""}${replacedName.toUpperCase()}</strong><br />${
                       includeBitAssetDescription
                           ? ""
                           : "<br />" +

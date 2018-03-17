@@ -20,6 +20,10 @@
         "ru": "Русский",
         "ja": "日本語"
     },
+    "global": {
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+    },
     "incognito": {
         "no_support":
             "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
@@ -167,6 +171,17 @@
     "propose": "Propose",
     "cancel": "Cancel",
     "account": {
+        "confirm_asset_modal": {
+            "header": "Confirm multiple changes",
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?"
+        },
+        "optional": {
+            "formatter":
+                "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_link": "restore your account",
+            "restore_form": "advanced form"
+        },
         "search": "Search for an account",
         "new_user": "New user?",
         "existing_user": "Existing user",
@@ -238,6 +253,7 @@
             "blacklist_authorities": "Blacklist authority"
         },
         "transactions": {
+            "id": "ID",
             "type": "Type",
             "info": "Info",
             "time": "Time"
@@ -250,6 +266,7 @@
                 "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available"
         },
         "member": {
+            "suspected_scammer": "Suspected Scammer",
             "stats": "Membership stats",
             "join": "Joined on",
             "registrar": "Registrar",
@@ -365,6 +382,8 @@
             "black": "Blacklisted by"
         },
         "perm": {
+            "save": "Save Changes",
+            "save_all": "Save All Changes",
             "active": "Active Permissions",
             "owner": "Owner Permissions",
             "memo_key": "Memo key",
@@ -591,6 +610,8 @@
             "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
             "memo_error":
                 "The transfer memo parsing error, please try again later.",
+            "memo_length_error":
+                "The transfer memo length exceed, please check",
             "precision": "Minimum withdraw precision value: %(precision)s"
         },
         "back": "BACK",
@@ -1144,6 +1165,7 @@
         "latency": "Latency"
     },
     "exchange": {
+        "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
         "chart_options": {
             "tools": "Tools",
@@ -1187,6 +1209,11 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
+        "deposit":
+            "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow":
+            "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "borrow_short": "Borrow",
         "buy_min": "Buy at least",
         "sell": "Sell",
         "receive": "Receive",
@@ -1225,7 +1252,6 @@
         "no_data": "No data",
         "time": "Candlesticks",
         "zoom": "Zoom",
-        "borrow": "Borrow",
         "no_balance": "Insufficient balance",
         "invalid_amount": "Invalid amount",
         "invalid_price": "Invalid price",
@@ -1242,8 +1268,8 @@
         "new": "New",
         "market_frozen":
             "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "filter": "Filter...",
         "quote": "Quote currency:",
         "search": "Search for more markets here",
         "price_market": "Market Price",
@@ -1496,9 +1522,19 @@
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance"
-        }
+        },
+        "maximize_collateral": "Max Collateral",
+        "maximize_debt": "Max Debt",
+        "maximize_debt_set_ratio_slider":
+            "You must set a collateral ratio before being able to maximize debt",
+        "pay_debt": "Pay Debt"
     },
     "modal": {
+        "buy": {
+            "title": "Buy",
+            "asset": "Asset",
+            "bridge": "Brdige"
+        },
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose":
@@ -1529,7 +1565,7 @@
                 "Sorry, but there are no gateways available to handle this withdrawal",
             "address_not_valid": "Invalid address",
             "cannot_cover":
-                "You do not have sufficient funds to cover this withdrawal"
+                "Insufficient funds!"
         },
         "deposit": {
             "header": "Deposit to %(account_name)s",
@@ -1579,9 +1615,6 @@
             "key_approval_add": "Key approval to add",
             "key_approval_remove": "Key approval to remove"
         },
-        "buy": {
-            "title": "Buy"
-        },
         "ok": "OK",
         "qrcode": {
             "label": "qrcode",
@@ -1615,12 +1648,15 @@
         "id": "Proposal object id"
     },
     "gateway": {
-        "deposit_notice_delay":
-            "(new address can be generated once per 5 minutes)",
+        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
         "min_deposit_warning_amount":
-            "Minimum value to deposit should be %(minDeposit)s %(coin)s.",
+            "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset":
             "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "limit_withdraw_asset": "Min: %(min)s, Max: %(max)s",
+        "limit_withdraw_asset_none": "None",
+        "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
         "copy_memo": "Copy memo",
         "please_generate_address": "Please, get new address ",
         "copy_address": "Copy address",
@@ -1730,8 +1766,12 @@
             "register": "Agree",
             "notice": "Please check the agreement to continue"
         },
+        "address": "Address",
+        "memo": "Memo",
         "deposit_warning":
             "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+        "deposit_warning_memo":
+            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "time": "Time",
         "info": "Info",
         "status": "Status",

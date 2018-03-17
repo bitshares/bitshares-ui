@@ -1,6 +1,6 @@
 module.exports = {
     formats: {
-        "date": {
+        date: {
             full: {
                 second: "numeric",
                 minute: "numeric",

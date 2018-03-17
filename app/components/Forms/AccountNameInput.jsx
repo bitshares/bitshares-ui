@@ -9,7 +9,6 @@ import counterpart from "counterpart";
 import AltContainer from "alt-container";
 
 class AccountNameInput extends React.Component {
-
     static propTypes = {
         id: PropTypes.string,
         placeholder: PropTypes.string,
@@ -39,11 +38,13 @@ class AccountNameInput extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.value !== this.state.value
-            || nextState.error !== this.state.error
-            || nextState.account_name !== this.state.account_name
-            || nextState.existing_account !== this.state.existing_account
-            || nextProps.searchAccounts !== this.props.searchAccounts
+        return (
+            nextState.value !== this.state.value ||
+            nextState.error !== this.state.error ||
+            nextState.account_name !== this.state.account_name ||
+            nextState.existing_account !== this.state.existing_account ||
+            nextProps.searchAccounts !== this.props.searchAccounts
+        );
     }
 
     componentDidUpdate() {
@@ -59,7 +60,7 @@ class AccountNameInput extends React.Component {
     }
 
     clear() {
-        this.setState({ account_name: null, error: null, warning: null })
+        this.setState({account_name: null, error: null, warning: null});
     }
 
     focus() {
@@ -71,14 +72,21 @@ class AccountNameInput extends React.Component {
     }
 
     getError() {
-        if(this.state.value === null) return null;
+        if (this.state.value === null) return null;
         let error = null;
         if (this.state.error) {
             error = this.state.error;
-        } else if (this.props.accountShouldExist || this.props.accountShouldNotExist) {
-            let account = this.props.searchAccounts.find(a => a === this.state.value);
+        } else if (
+            this.props.accountShouldExist ||
+            this.props.accountShouldNotExist
+        ) {
+            let account = this.props.searchAccounts.find(
+                a => a === this.state.value
+            );
             if (this.props.accountShouldNotExist && account) {
-                error = counterpart.translate("account.name_input.name_is_taken");
+                error = counterpart.translate(
+                    "account.name_input.name_is_taken"
+                );
             }
             if (this.props.accountShouldExist && !account) {
                 error = counterpart.translate("account.name_input.not_found");
@@ -88,33 +96,43 @@ class AccountNameInput extends React.Component {
     }
 
     validateAccountName(value) {
-        this.state.error = value === "" ?
-            "Please enter valid account name" :
-            ChainValidation.is_account_name_error(value)
+        this.state.error =
+            value === ""
+                ? "Please enter valid account name"
+                : ChainValidation.is_account_name_error(value);
 
-        this.state.warning = null
-        if(this.props.cheapNameOnly) {
-            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
-                this.state.error = counterpart.translate("account.name_input.premium_name_faucet");
+        this.state.warning = null;
+        if (this.props.cheapNameOnly) {
+            if (!this.state.error && !ChainValidation.is_cheap_name(value))
+                this.state.error = counterpart.translate(
+                    "account.name_input.premium_name_faucet"
+                );
         } else {
-            if( ! this.state.error && ! ChainValidation.is_cheap_name( value ))
-                this.state.warning = counterpart.translate("account.name_input.premium_name_warning");
+            if (!this.state.error && !ChainValidation.is_cheap_name(value))
+                this.state.warning = counterpart.translate(
+                    "account.name_input.premium_name_warning"
+                );
         }
-        this.setState({value: value, error: this.state.error, warning: this.state.warning});
-        if (this.props.onChange) this.props.onChange({value: value, valid: !this.getError()});
-        if (this.props.accountShouldExist || this.props.accountShouldNotExist) AccountActions.accountSearch(value);
+        this.setState({
+            value: value,
+            error: this.state.error,
+            warning: this.state.warning
+        });
+        if (this.props.onChange)
+            this.props.onChange({value: value, valid: !this.getError()});
+        if (this.props.accountShouldExist || this.props.accountShouldNotExist)
+            AccountActions.accountSearch(value);
     }
 
     handleChange(e) {
         e.preventDefault();
         e.stopPropagation();
         // Simplify the rules (prevent typing of invalid characters)
-        var account_name = e.target.value.toLowerCase()
-        account_name = account_name.match(/[a-z0-9\.-]+/)
-        account_name = account_name ? account_name[0] : null
-        this.setState({ account_name })
+        var account_name = e.target.value.toLowerCase();
+        account_name = account_name.match(/[a-z0-9\.-]+/);
+        account_name = account_name ? account_name[0] : null;
+        this.setState({account_name});
         this.validateAccountName(account_name);
-
     }
 
     onKeyDown(e) {
@@ -123,7 +141,9 @@ class AccountNameInput extends React.Component {
 
     render() {
         let error = this.getError() || "";
-        let class_name = classNames("form-group", "account-name", {"has-error": false});
+        let class_name = classNames("form-group", "account-name", {
+            "has-error": false
+        });
         let warning = this.state.warning;
         // let {noLabel} = this.props;
 
@@ -131,7 +151,9 @@ class AccountNameInput extends React.Component {
             <div className={class_name}>
                 {/* {noLabel ? null : <label><Translate content="account.name" /></label>} */}
                 <section>
-                    <label className="left-label">{this.props.placeholder}</label>
+                    <label className="left-label">
+                        {this.props.placeholder}
+                    </label>
                     <input
                         name="username"
                         id="username"
@@ -141,33 +163,35 @@ class AccountNameInput extends React.Component {
                         placeholder={null}
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}
-                        value={this.state.account_name || this.props.initial_value}
+                        value={
+                            this.state.account_name || this.props.initial_value
+                        }
                     />
                 </section>
-                <div style={{textAlign: "left"}} className="facolor-error">{error}</div>
-                <div style={{textAlign: "left"}} className="facolor-warning">{error ? null : warning}</div>
+                <div style={{textAlign: "left"}} className="facolor-error">
+                    {error}
+                </div>
+                <div style={{textAlign: "left"}} className="facolor-warning">
+                    {error ? null : warning}
+                </div>
             </div>
         );
     }
 }
 
 export default class StoreWrapper extends React.Component {
-
     render() {
-
         return (
-            <AltContainer stores={[AccountStore]}
+            <AltContainer
+                stores={[AccountStore]}
                 inject={{
-                        searchAccounts: () => {
-                            return AccountStore.getState().searchAccounts;
-                        }
-                    }}
+                    searchAccounts: () => {
+                        return AccountStore.getState().searchAccounts;
+                    }
+                }}
             >
-                <AccountNameInput
-                    ref="nameInput"
-                    {...this.props}
-                />
+                <AccountNameInput ref="nameInput" {...this.props} />
             </AltContainer>
-        )
+        );
     }
 }
