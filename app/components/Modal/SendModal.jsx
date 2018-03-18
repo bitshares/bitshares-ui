@@ -613,11 +613,8 @@ export default class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isToAccountValid =
-            to_account && to_account.get("name") === to_name;
         const isSendNotValid =
             !from_account ||
-            !isToAccountValid ||
             !isAmountValid ||
             !asset ||
             from_error ||
@@ -625,12 +622,10 @@ export default class SendModal extends React.Component {
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
 
-        let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
+        let accountsList = Immutable.Set();
+        accountsList = accountsList.add(from_account);
 
-        let greenAccounts = AccountStore.getState().myActiveAccounts.toArray();
-        greenAccounts = greenAccounts.concat(
-            AccountStore.getState().accountContacts.toArray()
-        );
+        let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
         return !this.state.open ? null : (
             <div
@@ -697,13 +692,13 @@ export default class SendModal extends React.Component {
                                         <AccountSelector
                                             label="transfer.to"
                                             accountName={to_name}
-                                            account={to_name}
+                                            account={to_account}
                                             onChange={this.toChanged.bind(this)}
                                             onAccountChanged={this.onToAccountChanged.bind(
                                                 this
                                             )}
                                             size={60}
-                                            typeahead={greenAccounts}
+                                            typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
                                         />
@@ -937,7 +932,6 @@ SendModal = connect(SendModal, {
     },
     getProps() {
         return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };
