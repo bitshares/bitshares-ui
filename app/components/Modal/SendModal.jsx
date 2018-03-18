@@ -404,7 +404,7 @@ export default class SendModal extends React.Component {
         this.nestedRef = ref;
     }
 
-    toChanged(to_name) {
+    toChanged(to_name) {    
         this.setState({to_name, error: null});
     }
 
@@ -613,23 +613,19 @@ export default class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isToAccountValid =
-            to_account && to_account.get("name") === to_name;
         const isSendNotValid =
             !from_account ||
-            !isToAccountValid ||
             !isAmountValid ||
             !asset ||
             from_error ||
             propose_incomplete ||
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
+
         let accountsList = Immutable.Set();
         accountsList = accountsList.add(from_account);
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
-
-        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
         return !this.state.open ? null : (
             <div
@@ -696,13 +692,13 @@ export default class SendModal extends React.Component {
                                         <AccountSelector
                                             label="transfer.to"
                                             accountName={to_name}
-                                            account={to_name}
+                                            account={to_account}
                                             onChange={this.toChanged.bind(this)}
                                             onAccountChanged={this.onToAccountChanged.bind(
                                                 this
                                             )}
                                             size={60}
-                                            typeahead={greenAccounts}
+                                            typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
                                         />
@@ -936,7 +932,6 @@ SendModal = connect(SendModal, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };

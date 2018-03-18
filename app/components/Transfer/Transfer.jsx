@@ -124,7 +124,7 @@ class Transfer extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
-        if (!asset) return;
+        if (!asset || !from_account) return;
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
             "balances",
@@ -215,12 +215,12 @@ class Transfer extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                              feeAmount: fee,
-                              fee_asset_id: fee.asset_id,
-                              hasBalance,
-                              hasPoolBalance,
-                              error: !hasBalance || !hasPoolBalance
-                          })
+                            feeAmount: fee,
+                            fee_asset_id: fee.asset_id,
+                            hasBalance,
+                            hasPoolBalance,
+                            error: !hasBalance || !hasPoolBalance
+                        })
             )
         );
     }
@@ -397,16 +397,6 @@ class Transfer extends React.Component {
         return {asset_types, fee_asset_types};
     }
 
-    _onAccountDropdown(account) {
-        let newAccount = ChainStore.getAccount(account);
-        if (newAccount) {
-            this.setState({
-                from_name: account,
-                from_account: ChainStore.getAccount(account)
-            });
-        }
-    }
-
     render() {
         let from_error = null;
         let {
@@ -523,28 +513,27 @@ class Transfer extends React.Component {
                                 onAccountChanged={this.onFromAccountChanged.bind(
                                     this
                                 )}
-                                account={from_name}
+                                account={from_account}
                                 size={60}
                                 error={from_error}
+                                typeahead={true}
                                 tabIndex={tabIndex++}
-                                onDropdownSelect={this._onAccountDropdown.bind(
-                                    this
-                                )}
-                                dropDownContent={AccountStore.getMyAccounts()}
                             />
                         </div>
                         {/*  T O  */}
                         <div className="content-block">
                             <AccountSelector
                                 label="transfer.to"
+                                ref="to"
                                 accountName={to_name}
                                 onChange={this.toChanged.bind(this)}
                                 onAccountChanged={this.onToAccountChanged.bind(
                                     this
                                 )}
-                                account={to_name}
+                                account={to_account}
                                 size={60}
                                 tabIndex={tabIndex++}
+                                typeahead={true}
                             />
                         </div>
                         {/*  A M O U N T   */}
