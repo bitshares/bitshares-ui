@@ -160,7 +160,7 @@ class BrowserNotifications extends React.Component {
 
     _getAccountNameById(accountId) {
         const account = ChainStore.getAccount(accountId);
-
+        if (!account) return "";
         return account.get("name");
     }
 

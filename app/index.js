@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import {render as reactRender} from "react-dom";
 import {AppContainer} from "react-hot-loader";
 import {Router, browserHistory, hashHistory} from "react-router/es";
 /*
@@ -19,7 +19,7 @@ const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
 const rootEl = document.getElementById("content");
 const render = () => {
-    ReactDOM.render(
+    reactRender(
         <AppContainer>
             <Router history={history} routes={routes} />
         </AppContainer>,

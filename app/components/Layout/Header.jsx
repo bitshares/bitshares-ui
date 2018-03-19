@@ -24,7 +24,7 @@ import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
 // import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 
