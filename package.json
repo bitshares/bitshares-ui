@@ -157,7 +157,7 @@
         "react": "^15.6.1",
         "react-autocomplete": "^1.7.2",
         "react-clipboard.js": "^1.0.1",
-        "react-datepicker2": "git+https://github.com/gibbsfromncis/react-datepicker2.git#b26a5efc8c0f585b6628f8ec78f125997268e3dd",
+        "react-datepicker2": "git+https://github.com/bitshares/react-datepicker2.git",
         "react-dom": "^15.6.1",
         "react-foundation-apps": "git+https://github.com/valzav/react-foundation-apps.git",
         "react-highcharts": "^16.0",
