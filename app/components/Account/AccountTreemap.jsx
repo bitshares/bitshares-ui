@@ -15,7 +15,6 @@ Treemap(ReactHighcharts.Highcharts);
 Heatmap(ReactHighcharts.Highcharts);
 
 class AccountTreemap extends React.Component {
-
     static propTypes = {
         assets: ChainTypes.ChainAssetsList,
         preferredAsset: ChainTypes.ChainAsset.isRequired
@@ -24,7 +23,7 @@ class AccountTreemap extends React.Component {
     static defaultProps = {
         assets: [],
         preferredAsset: "1.3.0"
-    }
+    };
 
     // shouldComponentUpdate(nextProps) {
     //     return (
@@ -34,15 +33,23 @@ class AccountTreemap extends React.Component {
     // }
 
     render() {
-        let {balanceObjects, core_asset, marketStats, preferredAsset} = this.props;
+        let {
+            balanceObjects,
+            core_asset,
+            marketStats,
+            preferredAsset
+        } = this.props;
 
         let accountBalances = null;
 
         if (balanceObjects && balanceObjects.length > 0) {
             let totalValue = 0;
-            accountBalances = balanceObjects.forEach((balance) => {
+            accountBalances = balanceObjects.forEach(balance => {
                 if (!balance) return;
-                let balanceObject = typeof(balance) == "string" ? ChainStore.getObject(balance) : balance;
+                let balanceObject =
+                    typeof balance == "string"
+                        ? ChainStore.getObject(balance)
+                        : balance;
                 let asset_type = balanceObject.get("asset_type");
                 let asset = ChainStore.getAsset(asset_type);
                 if (!asset || !preferredAsset) return;
@@ -57,49 +64,68 @@ class AccountTreemap extends React.Component {
                 );
 
                 if (!eqValue) return;
-                const precision = utils.get_asset_precision(preferredAsset.get("precision"));
-                totalValue += (eqValue / precision);
+                const precision = utils.get_asset_precision(
+                    preferredAsset.get("precision")
+                );
+                totalValue += eqValue / precision;
             });
 
-            accountBalances = balanceObjects.map((balance, index) => {
-                if (!balance) return null;
-                let balanceObject = typeof(balance) == "string" ? ChainStore.getObject(balance) : balance;
-                let asset_type = balanceObject.get("asset_type");
-                let asset = ChainStore.getAsset(asset_type);
-                if (!asset) return null;
-                let amount = Number(balanceObject.get("balance"));
+            accountBalances = balanceObjects
+                .map((balance, index) => {
+                    if (!balance) return null;
+                    let balanceObject =
+                        typeof balance == "string"
+                            ? ChainStore.getObject(balance)
+                            : balance;
+                    let asset_type = balanceObject.get("asset_type");
+                    let asset = ChainStore.getAsset(asset_type);
+                    if (!asset) return null;
+                    let amount = Number(balanceObject.get("balance"));
 
-                const eqValue = MarketUtils.convertValue(
-                    amount,
-                    preferredAsset,
-                    asset,
-                    true,
-                    marketStats,
-                    core_asset
-                );
+                    const eqValue = MarketUtils.convertValue(
+                        amount,
+                        preferredAsset,
+                        asset,
+                        true,
+                        marketStats,
+                        core_asset
+                    );
 
-                if (!eqValue) { return null; }
+                    if (!eqValue) {
+                        return null;
+                    }
 
-                const precision = utils.get_asset_precision(preferredAsset.get("precision"));
-                const finalValue = eqValue / precision;
-                const percent = (finalValue / totalValue * 100);
+                    const precision = utils.get_asset_precision(
+                        preferredAsset.get("precision")
+                    );
+                    const finalValue = eqValue / precision;
+                    const percent = finalValue / totalValue * 100;
 
-                /*
+                    /*
                 * Filter out assets that make up a small percentage of
                 * the total value of the account
                 */
-                if (percent < 0.5) return null;
+                    if (percent < 0.5) return null;
 
-                return finalValue >= 1 ? {
-                    name: `${asset.get("symbol")} (${totalValue === 0 ? 0 : percent.toFixed(2)}%)`,
-                    value: finalValue,
-                    color: ReactHighcharts.Highcharts.getOptions().colors[index]
-                } : null;
-
-            }).filter(n => !!n);
+                    return finalValue >= 1
+                        ? {
+                              name: `${asset.get("symbol")} (${
+                                  totalValue === 0 ? 0 : percent.toFixed(2)
+                              }%)`,
+                              value: finalValue,
+                              color: ReactHighcharts.Highcharts.getOptions()
+                                  .colors[index]
+                          }
+                        : null;
+                })
+                .filter(n => !!n);
         }
 
-        if (accountBalances && accountBalances.length === 1 && accountBalances[0].value === 0) {
+        if (
+            accountBalances &&
+            accountBalances.length === 1 &&
+            accountBalances[0].value === 0
+        ) {
             accountBalances = null;
         }
 
@@ -127,31 +153,42 @@ class AccountTreemap extends React.Component {
                     animation: false,
                     tooltip: {
                         pointFormatter: function() {
-                            return `<b>${this.name}</b>: ${ReactHighcharts.Highcharts.numberFormat(this.value, 0)} ${preferredAsset.get("symbol")}`;
+                            return `<b>${
+                                this.name
+                            }</b>: ${ReactHighcharts.Highcharts.numberFormat(
+                                this.value,
+                                0
+                            )} ${preferredAsset.get("symbol")}`;
                         }
                     }
                 }
             },
-            series: [{
-                type: "treemap",
-                levels: [{
-                    level: 1,
-                    layoutAlgorithm: "sliceAndDice",
-                    dataLabels: {
-                        enabled: true,
-                        align: "center",
-                        verticalAlign: "middle",
-                    }
-                }],
-                data: accountBalances
-            }],
+            series: [
+                {
+                    type: "treemap",
+                    levels: [
+                        {
+                            level: 1,
+                            layoutAlgorithm: "sliceAndDice",
+                            dataLabels: {
+                                enabled: true,
+                                align: "center",
+                                verticalAlign: "middle"
+                            }
+                        }
+                    ],
+                    data: accountBalances
+                }
+            ],
             title: {
                 text: null
             }
         };
 
         return (
-            <div className="account-treemap"><ReactHighcharts config={config}/></div>
+            <div className="account-treemap">
+                <ReactHighcharts config={config} />
+            </div>
         );
     }
 }
@@ -167,38 +204,43 @@ class AccountTreemapBalanceWrapper extends React.Component {
     static defaultProps = {
         balanceObjects: [],
         core_asset: "1.3.0"
-    }
+    };
 
     render() {
         let assets = this.props.balanceObjects.filter(a => !!a).map(a => {
             return a.get("asset_type");
         });
-        return <AccountTreemap preferredAsset={this.props.settings.get("unit", "1.3.0")} assets={assets} {...this.props} />;
+        return (
+            <AccountTreemap
+                preferredAsset={this.props.settings.get("unit", "1.3.0")}
+                assets={assets}
+                {...this.props}
+            />
+        );
     }
 }
 
 AccountTreemapBalanceWrapper = BindToChainState(AccountTreemapBalanceWrapper);
 
 export default class AccountTreemapWrapper extends React.Component {
-
     render() {
         return (
-          <AltContainer
-            stores={[SettingsStore, MarketsStore]}
-            inject={{
-                marketStats: () => {
-                    return MarketsStore.getState().allMarketStats;
-                },
-                settings: () => {
-                    return SettingsStore.getState().settings;
-                }
-            }}
-          >
-            <AccountTreemapBalanceWrapper
-                {...this.props}
-                ref={this.props.refCallback}
-            />
-          </AltContainer>
+            <AltContainer
+                stores={[SettingsStore, MarketsStore]}
+                inject={{
+                    marketStats: () => {
+                        return MarketsStore.getState().allMarketStats;
+                    },
+                    settings: () => {
+                        return SettingsStore.getState().settings;
+                    }
+                }}
+            >
+                <AccountTreemapBalanceWrapper
+                    {...this.props}
+                    ref={this.props.refCallback}
+                />
+            </AltContainer>
         );
     }
 }

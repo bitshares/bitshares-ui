@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -68,8 +68,8 @@ class CreateAccount extends React.Component {
 
     onAccountNameChange(e) {
         const state = {};
-        if(e.valid !== undefined) state.validAccountName = e.valid;
-        if(e.value !== undefined) state.accountName = e.value;
+        if (e.valid !== undefined) state.validAccountName = e.valid;
+        if (e.value !== undefined) state.accountName = e.value;
         if (!this.state.show_identicon) state.show_identicon = true;
         this.setState(state);
     }
@@ -79,11 +79,16 @@ class CreateAccount extends React.Component {
     }
 
     onFinishConfirm(confirm_store_state) {
-        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+        if (
+            confirm_store_state.included &&
+            confirm_store_state.broadcasted_transaction
+        ) {
             TransactionConfirmStore.unlisten(this.onFinishConfirm);
             TransactionConfirmStore.reset();
 
-            FetchChain("getAccount", this.state.accountName, undefined, {[this.state.accountName]: true}).then(() => {
+            FetchChain("getAccount", this.state.accountName, undefined, {
+                [this.state.accountName]: true
+            }).then(() => {
                 console.log("onFinishConfirm");
                 this.props.router.push("/wallet/backup/create?newAccount=true");
             });
@@ -96,36 +101,51 @@ class CreateAccount extends React.Component {
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
 
-            AccountActions.createAccount(name, this.state.registrar_account, referralAccount || this.state.registrar_account, 0, refcode).then(() => {
-                // User registering his own account
-                if(this.state.registrar_account) {
-                    FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
-                        this.setState({
-                            step: 2,
-                            loading: false
+            AccountActions.createAccount(
+                name,
+                this.state.registrar_account,
+                referralAccount || this.state.registrar_account,
+                0,
+                refcode
+            )
+                .then(() => {
+                    // User registering his own account
+                    if (this.state.registrar_account) {
+                        FetchChain("getAccount", name, undefined, {
+                            [name]: true
+                        }).then(() => {
+                            this.setState({
+                                step: 2,
+                                loading: false
+                            });
                         });
-                    });
-                    TransactionConfirmStore.listen(this.onFinishConfirm);
-                } else { // Account registered by the faucet
-                    FetchChain("getAccount", name, undefined, {[name]: true}).then(() => {
-                        this.setState({
-                            step: 2,
-                            loading: false
+                        TransactionConfirmStore.listen(this.onFinishConfirm);
+                    } else {
+                        // Account registered by the faucet
+                        FetchChain("getAccount", name, undefined, {
+                            [name]: true
+                        }).then(() => {
+                            this.setState({
+                                step: 2,
+                                loading: false
+                            });
                         });
+                    }
+                })
+                .catch(error => {
+                    console.log("ERROR AccountActions.createAccount", error);
+                    let error_msg =
+                        error.base && error.base.length && error.base.length > 0
+                            ? error.base[0]
+                            : "unknown error";
+                    if (error.remote_ip) error_msg = error.remote_ip[0];
+                    notify.addNotification({
+                        message: `Failed to create account: ${name} - ${error_msg}`,
+                        level: "error",
+                        autoDismiss: 10
                     });
-
-                }
-            }).catch(error => {
-                console.log("ERROR AccountActions.createAccount", error);
-                let error_msg = error.base && error.base.length && error.base.length > 0 ? error.base[0] : "unknown error";
-                if (error.remote_ip) error_msg = error.remote_ip[0];
-                notify.addNotification({
-                    message: `Failed to create account: ${name} - ${error_msg}`,
-                    level: "error",
-                    autoDismiss: 10
+                    this.setState({loading: false});
                 });
-                this.setState({loading: false});
-            });
         });
     }
 
@@ -133,16 +153,20 @@ class CreateAccount extends React.Component {
         return WalletActions.setWallet(
             "default", //wallet name
             password
-        ).then(()=> {
-            console.log("Congratulations, your wallet was successfully created.");
-        }).catch(err => {
-            console.log("CreateWallet failed:", err);
-            notify.addNotification({
-                message: `Failed to create wallet: ${err}`,
-                level: "error",
-                autoDismiss: 10
+        )
+            .then(() => {
+                console.log(
+                    "Congratulations, your wallet was successfully created."
+                );
             })
-        });
+            .catch(err => {
+                console.log("CreateWallet failed:", err);
+                notify.addNotification({
+                    message: `Failed to create wallet: ${err}`,
+                    level: "error",
+                    autoDismiss: 10
+                });
+            });
     }
 
     onSubmit(e) {
@@ -153,7 +177,9 @@ class CreateAccount extends React.Component {
             this.createAccount(account_name);
         } else {
             let password = this.refs.password.value();
-            this.createWallet(password).then(() => this.createAccount(account_name));
+            this.createWallet(password).then(() =>
+                this.createAccount(account_name)
+            );
         }
     }
 
@@ -167,7 +193,6 @@ class CreateAccount extends React.Component {
     // }
 
     _renderAccountCreateForm() {
-
         let {registrar_account} = this.state;
 
         let my_accounts = AccountStore.getMyAccounts();
@@ -175,14 +200,18 @@ class CreateAccount extends React.Component {
         let hasWallet = WalletDb.getWallet();
         let valid = this.isValid();
         let isLTM = false;
-        let registrar = registrar_account ? ChainStore.getAccount(registrar_account) : null;
+        let registrar = registrar_account
+            ? ChainStore.getAccount(registrar_account)
+            : null;
         if (registrar) {
-            if( registrar.get( "lifetime_referrer" ) == registrar.get( "id" ) ) {
+            if (registrar.get("lifetime_referrer") == registrar.get("id")) {
                 isLTM = true;
             }
         }
 
-        let buttonClass = classNames("submit-button button no-margin", {disabled: (!valid || (registrar_account && !isLTM))});
+        let buttonClass = classNames("submit-button button no-margin", {
+            disabled: !valid || (registrar_account && !isLTM)
+        });
 
         return (
             <form
@@ -190,9 +219,25 @@ class CreateAccount extends React.Component {
                 onSubmit={this.onSubmit.bind(this)}
                 noValidate
             >
-                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}>{firstAccount ? <Translate content="wallet.create_w_a" />  : <Translate content="wallet.create_a" />}</p>
+                <p
+                    style={{
+                        fontWeight: "normal",
+                        fontFamily: "Roboto-Medium, arial, sans-serif",
+                        fontStyle: "normal"
+                    }}
+                >
+                    {firstAccount ? (
+                        <Translate content="wallet.create_w_a" />
+                    ) : (
+                        <Translate content="wallet.create_a" />
+                    )}
+                </p>
                 <AccountNameInput
-                    ref={(ref) => {if (ref) {this.accountNameInput = ref.refs.nameInput;}}}
+                    ref={ref => {
+                        if (ref) {
+                            this.accountNameInput = ref.refs.nameInput;
+                        }
+                    }}
                     cheapNameOnly={!!firstAccount}
                     onChange={this.onAccountNameChange.bind(this)}
                     accountShouldNotExist={true}
@@ -201,35 +246,47 @@ class CreateAccount extends React.Component {
                 />
 
                 {/* Only ask for password if a wallet already exists */}
-                {hasWallet ?
-                    null :
-                        <PasswordInput
-                            ref="password"
-                            confirmation={true}
-                            onChange={this.onPasswordChange.bind(this)}
-                            noLabel
-                            checkStrength
-                        />
-                }
+                {hasWallet ? null : (
+                    <PasswordInput
+                        ref="password"
+                        confirmation={true}
+                        onChange={this.onPasswordChange.bind(this)}
+                        noLabel
+                        checkStrength
+                    />
+                )}
 
                 {/* If this is not the first account, show dropdown for fee payment account */}
-                {
-                firstAccount ? null : (
+                {firstAccount ? null : (
                     <div className="full-width-content form-group no-overflow">
-                        <label><Translate content="account.pay_from" /></label>
+                        <label>
+                            <Translate content="account.pay_from" />
+                        </label>
                         <AccountSelect
                             account_names={my_accounts}
                             onChange={this.onRegistrarAccountChange.bind(this)}
-
                         />
-                        {(registrar_account && !isLTM) ? <div style={{textAlign: "left"}} className="facolor-error"><Translate content="wallet.must_be_ltm" /></div> : null}
-                    </div>)
-                }
+                        {registrar_account && !isLTM ? (
+                            <div
+                                style={{textAlign: "left"}}
+                                className="facolor-error"
+                            >
+                                <Translate content="wallet.must_be_ltm" />
+                            </div>
+                        ) : null}
+                    </div>
+                )}
 
                 <div className="divider" />
 
                 {/* Submit button */}
-                {this.state.loading ?  <LoadingIndicator type="three-bounce"/> : <button style={{width: "100%"}} className={buttonClass}><Translate content="account.create_account" /></button>}
+                {this.state.loading ? (
+                    <LoadingIndicator type="three-bounce" />
+                ) : (
+                    <button style={{width: "100%"}} className={buttonClass}>
+                        <Translate content="account.create_account" />
+                    </button>
+                )}
 
                 {/* Backup restore option */}
                 <div style={{paddingTop: 40}}>
@@ -247,11 +304,19 @@ class CreateAccount extends React.Component {
                 </div>
 
                 {/* Skip to step 3 */}
-                {(!hasWallet || firstAccount ) ? null :<div style={{paddingTop: 20}}>
-                    <label>
-                        <a onClick={() => {this.setState({step: 3});}}><Translate content="wallet.go_get_started" /></a>
-                    </label>
-                </div>}
+                {!hasWallet || firstAccount ? null : (
+                    <div style={{paddingTop: 20}}>
+                        <label>
+                            <a
+                                onClick={() => {
+                                    this.setState({step: 3});
+                                }}
+                            >
+                                <Translate content="wallet.go_get_started" />
+                            </a>
+                        </label>
+                    </div>
+                )}
             </form>
         );
     }
@@ -262,16 +327,44 @@ class CreateAccount extends React.Component {
         let firstAccount = my_accounts.length === 0;
 
         return (
-            <div className="confirm-checks" >
-                <h4 style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal", paddingBottom: 15, marginTop: 0}}><Translate content="wallet.wallet_browser" /></h4>
+            <div className="confirm-checks">
+                <h4
+                    style={{
+                        fontWeight: "normal",
+                        fontFamily: "Roboto-Medium, arial, sans-serif",
+                        fontStyle: "normal",
+                        paddingBottom: 15,
+                        marginTop: 0
+                    }}
+                >
+                    <Translate content="wallet.wallet_browser" />
+                </h4>
 
-                <p>{!hasWallet ? <Translate content="wallet.has_wallet" /> : null}</p>
+                <p>
+                    {!hasWallet ? (
+                        <Translate content="wallet.has_wallet" />
+                    ) : null}
+                </p>
 
-                <Translate style={{textAlign: "left"}} component="p" content="wallet.create_account_text" />
+                <Translate
+                    style={{textAlign: "left"}}
+                    component="p"
+                    content="wallet.create_account_text"
+                />
 
-                {firstAccount ?
-                    <Translate style={{textAlign: "left"}} component="p" content="wallet.first_account_paid" /> :
-                    <Translate style={{textAlign: "left"}} component="p" content="wallet.not_first_account" />}
+                {firstAccount ? (
+                    <Translate
+                        style={{textAlign: "left"}}
+                        component="p"
+                        content="wallet.first_account_paid"
+                    />
+                ) : (
+                    <Translate
+                        style={{textAlign: "left"}}
+                        component="p"
+                        content="wallet.not_first_account"
+                    />
+                )}
 
                 {/* {this.state.hide_refcode ? null :
                     <div>
@@ -286,9 +379,11 @@ class CreateAccount extends React.Component {
     _renderBackup() {
         return (
             <div className="backup-submit">
-                <p><Translate unsafe content="wallet.wallet_crucial" /></p>
+                <p>
+                    <Translate unsafe content="wallet.wallet_crucial" />
+                </p>
                 <div className="divider" />
-                <BackupCreate noText downloadCb={this._onBackupDownload}/>
+                <BackupCreate noText downloadCb={this._onBackupDownload} />
             </div>
         );
     }
@@ -297,69 +392,123 @@ class CreateAccount extends React.Component {
         this.setState({
             step: 3
         });
-    }
+    };
 
     _renderBackupText() {
         return (
             <div>
-                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}><Translate content="footer.backup" /></p>
-                <p><Translate content="wallet.wallet_move" unsafe /></p>
-                <p className="txtlabel warning"><Translate unsafe content="wallet.wallet_lose_warning" /></p>
+                <p
+                    style={{
+                        fontWeight: "normal",
+                        fontFamily: "Roboto-Medium, arial, sans-serif",
+                        fontStyle: "normal"
+                    }}
+                >
+                    <Translate content="footer.backup" />
+                </p>
+                <p>
+                    <Translate content="wallet.wallet_move" unsafe />
+                </p>
+                <p className="txtlabel warning">
+                    <Translate unsafe content="wallet.wallet_lose_warning" />
+                </p>
             </div>
         );
     }
 
     _renderGetStarted() {
-
         return (
             <div>
                 <table className="table">
                     <tbody>
-
                         <tr>
-                            <td><Translate content="wallet.tips_dashboard" />:</td>
-                            <td><Link to="/dashboard"><Translate content="header.dashboard" /></Link></td>
+                            <td>
+                                <Translate content="wallet.tips_dashboard" />:
+                            </td>
+                            <td>
+                                <Link to="/dashboard">
+                                    <Translate content="header.dashboard" />
+                                </Link>
+                            </td>
                         </tr>
 
                         <tr>
-                            <td><Translate content="wallet.tips_account" />:</td>
-                            <td><Link to={`/account/${this.state.accountName}/overview`} ><Translate content="wallet.link_account" /></Link></td>
+                            <td>
+                                <Translate content="wallet.tips_account" />:
+                            </td>
+                            <td>
+                                <Link
+                                    to={`/account/${
+                                        this.state.accountName
+                                    }/overview`}
+                                >
+                                    <Translate content="wallet.link_account" />
+                                </Link>
+                            </td>
                         </tr>
 
                         <tr>
-                            <td><Translate content="wallet.tips_deposit" />:</td>
-                            <td><Link to="/deposit-withdraw"><Translate content="wallet.link_deposit" /></Link></td>
+                            <td>
+                                <Translate content="wallet.tips_deposit" />:
+                            </td>
+                            <td>
+                                <Link to="/deposit-withdraw">
+                                    <Translate content="wallet.link_deposit" />
+                                </Link>
+                            </td>
                         </tr>
 
-
-
                         <tr>
-                            <td><Translate content="wallet.tips_transfer" />:</td>
-                            <td><Link to="/transfer"><Translate content="wallet.link_transfer" /></Link></td>
+                            <td>
+                                <Translate content="wallet.tips_transfer" />:
+                            </td>
+                            <td>
+                                <Link to="/transfer">
+                                    <Translate content="wallet.link_transfer" />
+                                </Link>
+                            </td>
                         </tr>
 
                         <tr>
-                            <td><Translate content="wallet.tips_settings" />:</td>
-                            <td><Link to="/settings"><Translate content="header.settings" /></Link></td>
+                            <td>
+                                <Translate content="wallet.tips_settings" />:
+                            </td>
+                            <td>
+                                <Link to="/settings">
+                                    <Translate content="header.settings" />
+                                </Link>
+                            </td>
                         </tr>
                     </tbody>
-
                 </table>
             </div>
         );
     }
 
     _renderGetStartedText() {
-
         return (
             <div>
-                <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}><Translate content="wallet.congrat" /></p>
+                <p
+                    style={{
+                        fontWeight: "normal",
+                        fontFamily: "Roboto-Medium, arial, sans-serif",
+                        fontStyle: "normal"
+                    }}
+                >
+                    <Translate content="wallet.congrat" />
+                </p>
 
-                <p><Translate content="wallet.tips_explore" /></p>
+                <p>
+                    <Translate content="wallet.tips_explore" />
+                </p>
 
-                <p><Translate content="wallet.tips_header" /></p>
+                <p>
+                    <Translate content="wallet.tips_header" />
+                </p>
 
-                <p className="txtlabel warning"><Translate content="wallet.tips_login" /></p>
+                <p className="txtlabel warning">
+                    <Translate content="wallet.tips_login" />
+                </p>
             </div>
         );
     }
@@ -369,23 +518,38 @@ class CreateAccount extends React.Component {
 
         return (
             <div className="sub-content">
-
-                    <div style={{maxWidth: "95vw"}}>
-                        {step !== 1 ? <p style={{fontWeight: "normal", fontFamily: "Roboto-Medium, arial, sans-serif", fontStyle: "normal"}}>
+                <div style={{maxWidth: "95vw"}}>
+                    {step !== 1 ? (
+                        <p
+                            style={{
+                                fontWeight: "normal",
+                                fontFamily: "Roboto-Medium, arial, sans-serif",
+                                fontStyle: "normal"
+                            }}
+                        >
                             <Translate content={"wallet.step_" + step} />
-                        </p> : null}
+                        </p>
+                    ) : null}
 
-                        {step === 1 ? this._renderAccountCreateForm() : step === 2 ? this._renderBackup() :
-                            this._renderGetStarted()
-                        }
-                    </div>
+                    {step === 1
+                        ? this._renderAccountCreateForm()
+                        : step === 2
+                            ? this._renderBackup()
+                            : this._renderGetStarted()}
+                </div>
 
-                    <div style={{maxWidth: "95vw", paddingTop: "2rem"}}>
-                        {step === 1 ? this._renderAccountCreateText() : step === 2 ? this._renderBackupText() :
-                            this._renderGetStartedText()
-                        }
-                    </div>
-                    <Link to="/"><button className="button primary hollow"><Translate content="wallet.back" /></button></Link>
+                <div style={{maxWidth: "95vw", paddingTop: "2rem"}}>
+                    {step === 1
+                        ? this._renderAccountCreateText()
+                        : step === 2
+                            ? this._renderBackupText()
+                            : this._renderGetStartedText()}
+                </div>
+                <Link to="/">
+                    <button className="button primary hollow">
+                        <Translate content="wallet.back" />
+                    </button>
+                </Link>
             </div>
         );
     }

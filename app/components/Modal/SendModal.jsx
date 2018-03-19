@@ -390,12 +390,12 @@ export default class SendModal extends React.Component {
                               this._updateFee
                           )
                         : this.setState({
-                            feeAmount: fee,
-                            fee_asset_id: fee.asset_id,
-                            hasBalance,
-                            hasPoolBalance,
-                            error: !hasBalance || !hasPoolBalance
-                        })
+                              feeAmount: fee,
+                              fee_asset_id: fee.asset_id,
+                              hasBalance,
+                              hasPoolBalance,
+                              error: !hasBalance || !hasPoolBalance
+                          })
             )
         );
     }

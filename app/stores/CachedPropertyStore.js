@@ -35,11 +35,15 @@ class CachedPropertyStore extends BaseStore {
     onGet({name}) {
         var value = this.state.props.get(name);
         if (value !== undefined) return value;
-        iDB.getCachedProperty(name, null).then(value => {
-            var props = this.state.props.set(name, value);
-            this.state.props = props;
-            this.setState({props});
-        });
+        try {
+            iDB.getCachedProperty(name, null).then(value => {
+                var props = this.state.props.set(name, value);
+                this.state.props = props;
+                this.setState({props});
+            });
+        } catch (err) {
+            console.error("getCachedProperty error:", err);
+        }
     }
 
     reset() {

@@ -1,6 +1,6 @@
 import utils from "common/utils";
 import Immutable from "immutable";
-import { ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
 const {object_type} = grapheneChainTypes;
 
 function createChainableTypeChecker(validate) {
@@ -9,8 +9,12 @@ function createChainableTypeChecker(validate) {
         if (props[propName] == null) {
             if (isRequired) {
                 return new Error(
-                    ("Required " + location + " `" + propName + "` was not specified in ") +
-                    ("`" + componentName + "`.")
+                    "Required " +
+                        location +
+                        " `" +
+                        propName +
+                        "` was not specified in " +
+                        ("`" + componentName + "`.")
                 );
             }
             return null;
@@ -30,11 +34,17 @@ function objectIdChecker(props, propName, componentName, location) {
     if (props[propName]) {
         let value = props[propName];
         if (typeof value === "string") {
-            return utils.is_object_id(value) ? null : new Error(`${propName} in ${componentName} should be an object id`);
+            return utils.is_object_id(value)
+                ? null
+                : new Error(
+                      `${propName} in ${componentName} should be an object id`
+                  );
         } else if (typeof value === "object") {
             // TODO: check object type (probably we should require an object to be a tcomb structure)
         } else {
-            return new Error(`${propName} in ${componentName} should be an object id or object`);
+            return new Error(
+                `${propName} in ${componentName} should be an object id or object`
+            );
         }
     }
     // assume all ok
@@ -50,7 +60,9 @@ function keyChecker(props, propName, componentName, location) {
             // PublicKey.fromPublicKeyString(value)
             return null;
         } else {
-            return new Error(`${propName} in ${componentName} should be a key string`);
+            return new Error(
+                `${propName} in ${componentName} should be a key string`
+            );
         }
     }
     // assume all ok
@@ -66,7 +78,9 @@ function assetChecker(props, propName, componentName, location) {
         } else if (typeof value === "object") {
             // TODO: check object type (probably we should require an object to be a tcomb structure)
         } else {
-            return new Error(`${propName} of ${value} in ${componentName} should be an asset symbol or id`);
+            return new Error(
+                `${propName} of ${value} in ${componentName} should be an asset symbol or id`
+            );
         }
     }
     // assume all ok
@@ -78,15 +92,22 @@ function accountChecker(props, propName, componentName, location) {
     if (props[propName]) {
         let value = props[propName];
         if (typeof value === "string") {
-            if (utils.is_object_id(value) && value.split(".")[1] === object_type.account) {
+            if (
+                utils.is_object_id(value) &&
+                value.split(".")[1] === object_type.account
+            ) {
                 return null;
             } else {
-                return new Error(`${propName} of ${value} in ${componentName} should be an account id`);
+                return new Error(
+                    `${propName} of ${value} in ${componentName} should be an account id`
+                );
             }
         } else if (typeof value === "object") {
             // TODO: check object type (probably we should require an object to be a tcomb structure)
         } else {
-            return new Error(`${propName} of ${value} in ${componentName} should be an account id`);
+            return new Error(
+                `${propName} of ${value} in ${componentName} should be an account id`
+            );
         }
     }
     // assume all ok
@@ -97,10 +118,16 @@ function objectsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (Immutable.List.isList(value) || Immutable.Set.isSet(value) || value instanceof Object) {
-            return null
+        if (
+            Immutable.List.isList(value) ||
+            Immutable.Set.isSet(value) ||
+            value instanceof Object
+        ) {
+            return null;
         } else {
-            return new Error(`${propName} in ${componentName} should be Immutable.List`);
+            return new Error(
+                `${propName} in ${componentName} should be Immutable.List`
+            );
         }
     }
     // assume all ok
@@ -111,10 +138,16 @@ function assetsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (Immutable.List.isList(value) || Immutable.Set.isSet(value) || value instanceof Object) {
-            return null
+        if (
+            Immutable.List.isList(value) ||
+            Immutable.Set.isSet(value) ||
+            value instanceof Object
+        ) {
+            return null;
         } else {
-            return new Error(`${propName} in ${componentName} should be Immutable.List`);
+            return new Error(
+                `${propName} in ${componentName} should be Immutable.List`
+            );
         }
     }
     // assume all ok
@@ -125,10 +158,16 @@ function accountsListChecker(props, propName, componentName, location) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
-        if (Immutable.List.isList(value) || Immutable.Set.isSet(value) || value instanceof Object) {
-            return null
+        if (
+            Immutable.List.isList(value) ||
+            Immutable.Set.isSet(value) ||
+            value instanceof Object
+        ) {
+            return null;
         } else {
-            return new Error(`${propName} in ${componentName} should be Immutable.List`);
+            return new Error(
+                `${propName} in ${componentName} should be Immutable.List`
+            );
         }
     }
     // assume all ok
@@ -144,4 +183,13 @@ let ChainObjectsList = createChainableTypeChecker(objectsListChecker);
 let ChainAccountsList = createChainableTypeChecker(accountsListChecker);
 let ChainAssetsList = createChainableTypeChecker(assetsListChecker);
 
-export default {ChainObject, ChainAccount, ChainKeyRefs, ChainAddressBalances, ChainAsset, ChainObjectsList, ChainAccountsList, ChainAssetsList};
+export default {
+    ChainObject,
+    ChainAccount,
+    ChainKeyRefs,
+    ChainAddressBalances,
+    ChainAsset,
+    ChainObjectsList,
+    ChainAccountsList,
+    ChainAssetsList
+};

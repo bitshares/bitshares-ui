@@ -1,4 +1,39 @@
 ---------------------------------------------------------------------
+Release 2.0.180315
+---------------------------------------------------------------------
+New features
+--------
+- #1258 Add ability to sort Portfolio by QTY
+- #1303 Tabs change for asset update
+- #1191 Add 'MaximizeDebt' button to Borrow modal
+- #1271 Add an ability to filter portfolio by asset name
+- #1256 Add an ability to star markets on dashboard
+- #1265 Fix accounts list toggle
+- #450 Add transaction id to account activity
+- #17: Set custom expiration time for orders
+- Add Sweden API node
+- #1277: Min deposit limit message
+- #981: Send modal alert on known scammer accounts
+- #1287: Add new RUDEX tokens and icons
+- #1280: Add Russia API node
+- Support gxs asset and add asset symbols
+
+Bug fixes and improvements
+--------
+- #984: Enable header menu items for all accounts
+- Fix #1272: Workaround for routerTransition being called multiple times
+- Fix #1281 and other references to bit assets
+- Update bitsharesjs for better handling of incoming proposed transactions
+- #1243: Translation fixes
+- Fix broken asset/gateway logic
+- #1278: Tab subtext disappears when collapsed
+- #1260: Reduce renders due to asset dynamic data updates
+- #1250: Modal theme fixes
+- #1251: Modal fixes
+- #1247: Allow wallet to connect to hidden nodes when none other are available
+- Update electron and electron-builder
+
+---------------------------------------------------------------------
 Release 2.0.180302
 ---------------------------------------------------------------------
 New features
