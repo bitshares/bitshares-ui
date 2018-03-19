@@ -4,6 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
@@ -34,10 +35,7 @@ module.exports = function(env) {
             loader: "css-loader"
         },
         {
-            loader: "postcss-loader",
-            options: {
-                plugins: [require("autoprefixer")]
-            }
+            loader: "postcss-loader"
         },
         {
             loader: "sass-loader",
@@ -66,7 +64,6 @@ module.exports = function(env) {
             __DEPRECATED__: !!env.deprecated
         })
     ];
-
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron
@@ -88,10 +85,7 @@ module.exports = function(env) {
             use: [
                 {loader: "css-loader"},
                 {
-                    loader: "postcss-loader",
-                    options: {
-                        plugins: [require("autoprefixer")]
-                    }
+                    loader: "postcss-loader"
                 }
             ]
         });
@@ -100,10 +94,7 @@ module.exports = function(env) {
             use: [
                 {loader: "css-loader"},
                 {
-                    loader: "postcss-loader",
-                    options: {
-                        plugins: [require("autoprefixer")]
-                    }
+                    loader: "postcss-loader"
                 },
                 {loader: "sass-loader", options: {outputStyle: "expanded"}}
             ]
@@ -124,19 +115,19 @@ module.exports = function(env) {
                 debug: false
             })
         );
-        plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
+        // plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
         if (!env.noUgly) {
-            plugins.push(
-                new webpack.optimize.UglifyJsPlugin({
-                    sourceMap: true,
-                    compress: {
-                        warnings: true
-                    },
-                    output: {
-                        screw_ie8: true
-                    }
-                })
-            );
+            // plugins.push(
+            //     new webpack.optimize.UglifyJsPlugin({
+            //         sourceMap: true,
+            //         compress: {
+            //             warnings: true
+            //         },
+            //         output: {
+            //             screw_ie8: true
+            //         }
+            //     })
+            // );
         }
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
@@ -147,16 +138,46 @@ module.exports = function(env) {
             })
         );
         plugins.push(new webpack.HotModuleReplacementPlugin());
-        plugins.push(new webpack.NoEmitOnErrorsPlugin());
+        // plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
 
+    plugins.push(
+        new CopyWebpackPlugin(
+            [
+                {
+                    from: path.join(
+                        root_dir,
+                        "app",
+                        "assets",
+                        "locales",
+                        "*.json"
+                    ),
+                    to: path.join(outputPath, "[name].[ext]"),
+                    toType: "template"
+                },
+                {
+                    from: path.join(
+                        root_dir,
+                        "app",
+                        "lib",
+                        "common",
+                        "dictionary_en.json"
+                    ),
+                    to: path.join(outputPath, "dictionary.json"),
+                    toType: "file"
+                }
+            ],
+            {}
+        )
+    );
+
     var config = {
+        mode: env.prod ? "production" : "development",
         entry: {
             // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
-                      "react-hot-loader/patch",
                       "webpack-hot-middleware/client",
                       path.resolve(root_dir, "app/Main-dev.js")
                   ]
@@ -168,7 +189,7 @@ module.exports = function(env) {
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: env.prod ? "cheap-module-source-map" : "eval",
+        devtool: env.prod ? "none" : "eval",
         module: {
             rules: [
                 {
@@ -195,14 +216,14 @@ module.exports = function(env) {
                     loader: "babel-loader",
                     options: {compact: false, cacheDirectory: true}
                 },
-                {
-                    test: /\.json/,
-                    loader: "json-loader",
-                    exclude: [
-                        path.resolve(root_dir, "app/lib/common"),
-                        path.resolve(root_dir, "app/assets/locales")
-                    ]
-                },
+                // {
+                //     type: "javascript/auto",
+                //     test: /\.json/,
+                //     include: [
+                //         path.resolve(root_dir, "app/lib/common"),
+                //         path.resolve(root_dir, "app/assets/locales")
+                //     ]
+                // },
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
                     test: /\.(coffee\.md|litcoffee)$/,
@@ -261,11 +282,8 @@ module.exports = function(env) {
                             }
                         },
                         {
-                            loader: "remarkable-loader",
-                            options: {
-                                preset: "full",
-                                typographer: true
-                            }
+                            loader: "markdown-loader",
+                            options: {}
                         }
                     ]
                 }

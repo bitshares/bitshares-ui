@@ -28,7 +28,7 @@ let TRACE = false;
 let dictJson, AesWorker;
 if (__ELECTRON__) {
     AesWorker = require("worker-loader?inline!workers/AesWorker");
-    dictJson = require("json-loader!common/dictionary_en.json");
+    dictJson = require("common/dictionary_en.json");
 }
 
 /** Represents a single wallet and related indexedDb database operations. */

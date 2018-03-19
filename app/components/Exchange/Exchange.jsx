@@ -217,6 +217,7 @@ class Exchange extends React.Component {
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
+            feeStatus: {},
             indicatorSettings,
             tools: {
                 fib: false,
@@ -287,10 +288,15 @@ class Exchange extends React.Component {
             );
         });
         Promise.all(p).then(status => {
+            let didChange = false;
             assets.forEach((a, idx) => {
                 feeStatus[a.get("id")] = status[idx];
+                didChange =
+                    didChange ||
+                    JSON.stringify(feeStatus[a.get("id")]) !==
+                        JSON.stringify(this.state.feeStatus[a.get("id")]);
             });
-            if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
+            if (didChange) {
                 this.setState({
                     feeStatus
                 });
@@ -1330,7 +1336,7 @@ class Exchange extends React.Component {
         }
 
         // Fees
-        if (!coreAsset || !this.state.feeStatus) {
+        if (!coreAsset || !Object.keys(this.state.feeStatus).length) {
             return null;
         }
 
