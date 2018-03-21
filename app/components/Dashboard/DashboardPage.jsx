@@ -11,8 +11,8 @@ import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
 class DashboardPage extends React.Component {
     render() {
         let {
-            linkedAccounts,
-            myIgnoredAccounts,
+            myActiveAccounts,
+            myHiddenAccounts,
             accountsReady,
             passwordAccount
         } = this.props;
@@ -21,8 +21,8 @@ class DashboardPage extends React.Component {
         }
 
         let accountCount =
-            linkedAccounts.size +
-            myIgnoredAccounts.size +
+            myActiveAccounts.size +
+            myHiddenAccounts.size +
             (passwordAccount ? 1 : 0);
         if (!accountCount) {
             return <LoginSelector />;
@@ -69,16 +69,16 @@ export default connect(DashboardPage, {
     },
     getProps() {
         let {
-            linkedAccounts,
-            myIgnoredAccounts,
+            myActiveAccounts,
+            myHiddenAccounts,
             passwordAccount,
             accountsLoaded,
             refsLoaded
         } = AccountStore.getState();
 
         return {
-            linkedAccounts,
-            myIgnoredAccounts,
+            myActiveAccounts,
+            myHiddenAccounts,
             passwordAccount,
             accountsReady: accountsLoaded && refsLoaded
         };

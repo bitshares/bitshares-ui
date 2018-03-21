@@ -6,42 +6,44 @@ import BindToChainState from "components/Utility/BindToChainState";
 import AccountStore from "stores/AccountStore";
 import {pairs} from "lodash";
 
-class ResolveLinkedAccountsChainState extends Component {
+class ResolvemyActiveAccountsChainState extends Component {
     static propTypes = {
-        linkedAccounts: ChainTypes.ChainAccountsList.isRequired
+        myActiveAccounts: ChainTypes.ChainAccountsList.isRequired
     };
 
     render() {
-        let linkedAccounts = [];
-        pairs(this.props.linkedAccounts).forEach(account => {
+        let myActiveAccounts = [];
+        pairs(this.props.myActiveAccounts).forEach(account => {
             if (!account[1]) return;
             console.log("... account.toJS()", account[1].toJS());
-            linkedAccounts.push(account[1]);
+            myActiveAccounts.push(account[1]);
         });
         let child = Children.only(this.props.children);
         if (!child)
-            return <span>{linkedAccounts.map(a => <br>{a.toJS()}</br>)}</span>;
-        // Pass the list to a child reactjs component as this.props.resolvedLinkedAccounts
-        child = React.cloneElement(child, {linkedAccounts});
+            return (
+                <span>{myActiveAccounts.map(a => <br>{a.toJS()}</br>)}</span>
+            );
+        // Pass the list to a child reactjs component as this.props.resolvedmyActiveAccounts
+        child = React.cloneElement(child, {myActiveAccounts});
         return <span>{child}</span>;
     }
 }
-ResolveLinkedAccountsChainState = BindToChainState(
-    ResolveLinkedAccountsChainState
+ResolvemyActiveAccountsChainState = BindToChainState(
+    ResolvemyActiveAccountsChainState
 );
 
-class ResolveLinkedAccounts extends Component {
+class ResolvemyActiveAccounts extends Component {
     render() {
         return (
-            <ResolveLinkedAccountsChainState
-                linkedAccounts={this.props.linkedAccounts}
+            <ResolvemyActiveAccountsChainState
+                myActiveAccounts={this.props.myActiveAccounts}
                 children={this.props.children}
             />
         );
     }
 }
 
-ResolveLinkedAccounts = connect(ResolveLinkedAccounts, {
+ResolvemyActiveAccounts = connect(ResolvemyActiveAccounts, {
     listenTo() {
         return [AccountStore];
     },
@@ -50,4 +52,4 @@ ResolveLinkedAccounts = connect(ResolveLinkedAccounts, {
     }
 });
 
-export default ResolveLinkedAccounts;
+export default ResolvemyActiveAccounts;
