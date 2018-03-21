@@ -268,9 +268,6 @@ class ExchangeSubscriber extends React.Component {
                 {...this.props}
                 sub={this.state.sub}
                 subToMarket={this._subToMarket}
-                isMyAccount={AccountStore.isMyAccount(
-                    this.props.currentAccount
-                )}
             />
         );
     }
