@@ -54,6 +54,10 @@ class AccountActions {
         return account;
     }
 
+    toggleHideAccount(account, hide) {
+        return {account, hide};
+    }
+
     /**
      *  TODO:  This is a function of teh WalletApi and has no business being part of AccountActions
      */
@@ -171,11 +175,11 @@ class AccountActions {
         return WalletDb.process_transaction(tr, null, true);
     }
 
-    linkAccount(name) {
+    addAccountContact(name) {
         return name;
     }
 
-    unlinkAccount(name) {
+    removeAccountContact(name) {
         return name;
     }
 

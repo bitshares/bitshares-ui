@@ -157,10 +157,13 @@ export default class TypeAhead extends React.Component {
 
     render() {
         const {isMenuShowing} = this.state || {};
+
+        const style = isMenuShowing ? this.props.typeaheadVisibleStyle : {};
+
         return (
             <div
                 className="typeahead"
-                style={{paddingBottom: isMenuShowing ? "1rem" : ""}} // Something is making the typeahead take less space when dropdown is open. Add extra padding for now...
+                style={style} // Something is making the typeahead take less space when dropdown is open. Add extra padding for now...
             >
                 {!!this.props.label ? (
                     <label className="left-label">

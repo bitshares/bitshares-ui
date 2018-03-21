@@ -111,14 +111,12 @@ class AccountSelector extends React.Component {
             this.props.onAccountChanged(newProps.account);
     }
 
-    onLinkAccount(e) {
-        e.preventDefault();
-        AccountActions.linkAccount(this.props.accountName);
+    _onAddContact() {
+        AccountActions.addAccountContact(this.props.accountName);
     }
 
-    onUnLinkAccount(e) {
-        e.preventDefault();
-        AccountActions.unlinkAccount(this.props.accountName);
+    _onRemoveContact() {
+        AccountActions.removeAccountContact(this.props.accountName);
     }
 
     onAction(e) {
@@ -135,7 +133,8 @@ class AccountSelector extends React.Component {
     }
 
     render() {
-        let linkedAccounts = AccountStore.getState().linkedAccounts;
+        let myActiveAccounts = AccountStore.getState().myActiveAccounts;
+        let contacts = AccountStore.getState().accountContacts;
         let error = this.getError();
         let type = this.getNameType(this.props.accountName);
         let lookup_display;
@@ -199,14 +198,15 @@ class AccountSelector extends React.Component {
             });
         }
 
-        let linked_status = !this.props.accountName ? null : linkedAccounts.has(
+        let linked_status = !this.props
+            .accountName ? null : myActiveAccounts.has(
             this.props.accountName
-        ) ? (
+        ) || contacts.has(this.props.accountName) ? (
             <span
                 className="tooltip"
                 data-place="top"
                 data-tip={counterpart.translate("tooltip.follow_user")}
-                onClick={this.onUnLinkAccount.bind(this)}
+                onClick={this._onRemoveContact.bind(this)}
             >
                 <Icon
                     className={"" + (isGreenAccount ? " green" : "")}
@@ -223,7 +223,7 @@ class AccountSelector extends React.Component {
                 className="tooltip"
                 data-place="top"
                 data-tip={counterpart.translate("tooltip.follow_user_add")}
-                onClick={this.onLinkAccount.bind(this)}
+                onClick={this._onAddContact.bind(this)}
             >
                 <Icon
                     style={{
@@ -320,6 +320,7 @@ class AccountSelector extends React.Component {
                                     inputProps={{
                                         placeholder: "Search for an account"
                                     }}
+                                    {...this.props.typeaheadOptions || {}}
                                 />
                             ) : (
                                 <input

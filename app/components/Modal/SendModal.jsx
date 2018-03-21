@@ -624,12 +624,13 @@ export default class SendModal extends React.Component {
             propose_incomplete ||
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
-        let accountsList = Immutable.Set();
-        accountsList = accountsList.add(from_account);
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
-        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
+        let greenAccounts = AccountStore.getState().myActiveAccounts.toArray();
+        greenAccounts = greenAccounts.concat(
+            AccountStore.getState().accountContacts.toArray()
+        );
 
         return !this.state.open ? null : (
             <div
@@ -936,7 +937,7 @@ SendModal = connect(SendModal, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };

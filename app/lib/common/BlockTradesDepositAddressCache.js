@@ -37,7 +37,6 @@ class BlockTradesDepositAddressCache {
         output_coin_type
     ) {
         let wallet = WalletDb.getWallet();
-        wallet = null;
 
         const index = this.getIndexForDepositKeyInExchange(
             account_name,
@@ -80,7 +79,6 @@ class BlockTradesDepositAddressCache {
     ) {
         if (!address) return;
         let wallet = WalletDb.getWallet();
-        wallet = null;
 
         const index = this.getIndexForDepositKeyInExchange(
             account_name,
@@ -98,6 +96,30 @@ class BlockTradesDepositAddressCache {
             });
             ss.set("deposit_keys", deposit_keys);
         } else {
+            // Clean the wallet stored entries, remove undefined/unknown keys
+            delete wallet.deposit_keys.undefined;
+            Object.keys(wallet.deposit_keys || {}).forEach(key => {
+                for (let k in wallet.deposit_keys[key]) {
+                    if (
+                        wallet.deposit_keys[key][k] &&
+                        wallet.deposit_keys[key][k].length
+                    ) {
+                        for (
+                            let i = wallet.deposit_keys[key][k].length - 1;
+                            i >= 0;
+                            i--
+                        ) {
+                            if (
+                                wallet.deposit_keys[key][k][i] &&
+                                wallet.deposit_keys[key][k][i].address ===
+                                    "unknown"
+                            ) {
+                                wallet.deposit_keys[key][k].splice(i, 1);
+                            }
+                        }
+                    }
+                }
+            });
             wallet.deposit_keys = wallet.deposit_keys || {};
             wallet.deposit_keys[exchange_name] =
                 wallet.deposit_keys[exchange_name] || {};
