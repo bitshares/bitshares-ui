@@ -1523,11 +1523,10 @@
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance"
         },
-        "maximize_collateral": "Max Collateral",
-        "maximize_debt": "Max Debt",
+        "use_max": "Use Max",
+        "pay_max_debt": "Pay Max Debt",
         "maximize_debt_set_ratio_slider":
-            "You must set a collateral ratio before being able to maximize debt",
-        "pay_debt": "Pay Debt"
+            "You must set a collateral ratio before being able to maximize debt"
     },
     "modal": {
         "buy": {
@@ -1564,8 +1563,7 @@
             "no_gateways":
                 "Sorry, but there are no gateways available to handle this withdrawal",
             "address_not_valid": "Invalid address",
-            "cannot_cover":
-                "Insufficient funds!"
+            "cannot_cover": "Insufficient funds!"
         },
         "deposit": {
             "header": "Deposit to %(account_name)s",
@@ -1648,7 +1646,8 @@
         "id": "Proposal object id"
     },
     "gateway": {
-        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+        "deposit_notice_delay":
+            "(new address can be generated once per 5 minutes)",
         "min_deposit_warning_amount":
             "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset":
