@@ -532,8 +532,6 @@ class AccountVoting extends React.Component {
         let now = new Date();
         let workerArray = this._getWorkerArray();
 
-
-
         let voteThreshold = 0;
         let workers = workerArray
             .filter(a => {
