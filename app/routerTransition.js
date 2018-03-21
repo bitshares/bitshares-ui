@@ -11,6 +11,7 @@ import SettingsStore from "stores/SettingsStore";
 import AccountStore from "stores/AccountStore";
 
 import ls from "common/localStorage";
+
 const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
 let latencyChecks;
@@ -23,11 +24,16 @@ import notify from "actions/NotificationActions";
 
 ChainStore.setDispatchFrequency(60);
 
-let connect = true;
-let connectionManager;
-let oldChain = "";
+function RouteTransitioner() {
+    this.connect = true;
+    this.connectionManager;
+    this.oldChain;
 
-const filterAndSortURLs = (count, latencies) => {
+    this._connectInProgress = false;
+    this._connectionCheckPromise = null;
+}
+
+RouteTransitioner.prototype.filterAndSortURLs = function(count, latencies) {
     let urls = SettingsStore.getState()
         .defaults.apiServer.filter(a => {
             // Skip hidden nodes
@@ -59,14 +65,12 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
-let _connectInProgress = false;
-let _connectionCheckPromise = null;
-const willTransitionTo = (
+RouteTransitioner.prototype.willTransitionTo = function(
     nextState,
     replaceState,
     callback,
     appInit = true
-) => {
+) {
     // console.log(new Date().getTime(), nextState.location.pathname, "appInit", appInit);
     //appInit is true when called via router onEnter, and false when node is manually selected in access settings
 
@@ -96,13 +100,13 @@ const willTransitionTo = (
     let apiLatenciesCount = Object.keys(apiLatencies).length;
     let connectionStart;
 
-    if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
+    if (this.connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
     if (latencyChecks >= 5) {
         apiLatenciesCount = 0;
         ss.set("latencyChecks", 0);
     }
 
-    let urls = filterAndSortURLs(apiLatenciesCount, apiLatencies);
+    let urls = this.filterAndSortURLs(apiLatenciesCount, apiLatencies);
 
     /*
     * We use a fake connection url to force a fallback to the best of
@@ -125,8 +129,8 @@ const willTransitionTo = (
 
     var onConnect = () => {
         // console.log(new Date().getTime(), "routerTransition onConnect", caller, "_connectInProgress", _connectInProgress);
-        if (_connectInProgress) return callback();
-        _connectInProgress = true;
+        if (this._connectInProgress) return callback();
+        this._connectInProgress = true;
         if (Apis.instance()) {
             let currentUrl = Apis.instance().url;
             SettingsActions.changeSetting({
@@ -144,8 +148,8 @@ const willTransitionTo = (
             }
         }
         const currentChain = Apis.instance().chain_id;
-        const chainChanged = oldChain !== currentChain;
-        oldChain = currentChain;
+        const chainChanged = this.oldChain !== currentChain;
+        this.oldChain = currentChain;
         var dbPromise = Promise.resolve();
         try {
             if (chainChanged) {
@@ -157,7 +161,7 @@ const willTransitionTo = (
         } catch (err) {
             console.error("db init error:", err);
             replaceState("/init-error");
-            _connectInProgress = false;
+            this._connectInProgress = false;
             return callback();
         }
 
@@ -207,10 +211,10 @@ const willTransitionTo = (
                             }),
                         WalletManagerStore.init()
                     ]).then(() => {
-                        _connectInProgress = false;
+                        this._connectInProgress = false;
                         SettingsActions.changeSetting({
                             setting: "activeNode",
-                            value: connectionManager.url
+                            value: this.connectionManager.url
                         });
                         callback();
                     });
@@ -219,15 +223,15 @@ const willTransitionTo = (
             .catch(err => {
                 console.error(err);
                 replaceState("/init-error");
-                _connectInProgress = false;
+                this._connectInProgress = false;
                 callback();
             });
     };
 
     var onResetError = err => {
         console.error("onResetError:", err);
-        oldChain = "old";
-        connect = true;
+        this.oldChain = "old";
+        this.connect = true;
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
                 url: connectionString
@@ -236,29 +240,34 @@ const willTransitionTo = (
             autoDismiss: 10
         });
         return Apis.close().then(() => {
-            return willTransitionTo(nextState, replaceState, callback, true);
+            return this.willTransitionTo(
+                nextState,
+                replaceState,
+                callback,
+                true
+            );
         });
     };
 
-    connectionManager = new Manager({url: connectionString, urls});
+    this.connectionManager = new Manager({url: connectionString, urls});
     let connectionCheckPromise = !apiLatenciesCount
-        ? _connectionCheckPromise
-            ? _connectionCheckPromise
-            : connectionManager.checkConnections()
+        ? this._connectionCheckPromise
+            ? this._connectionCheckPromise
+            : this.connectionManager.checkConnections()
         : null;
-    _connectionCheckPromise = connectionCheckPromise;
+    this._connectionCheckPromise = connectionCheckPromise;
 
     Promise.all([connectionCheckPromise])
         .then(res => {
-            _connectionCheckPromise = null;
+            this._connectionCheckPromise = null;
             if (connectionCheckPromise && res[0]) {
                 let [latencies] = res;
-                urls = filterAndSortURLs(
+                urls = this.filterAndSortURLs(
                     Object.keys(latencies).length,
                     latencies
                 );
-                connectionManager.url = urls[0];
-                connectionManager.urls = urls;
+                this.connectionManager.url = urls[0];
+                this.connectionManager.urls = urls;
                 /* Update the latencies object */
                 SettingsActions.updateLatencies(latencies);
             }
@@ -267,13 +276,13 @@ const willTransitionTo = (
             connectionStart = new Date().getTime();
 
             if (appInit) {
-                connectionManager
-                    .connectWithFallback(connect)
+                this.connectionManager
+                    .connectWithFallback(this.connect)
                     .then(() => {
                         if (!autoSelection)
                             SettingsActions.changeSetting({
                                 setting: "apiServer",
-                                value: connectionManager.url
+                                value: this.connectionManager.url
                             });
 
                         onConnect();
@@ -298,14 +307,14 @@ const willTransitionTo = (
                         }
                     });
             } else {
-                oldChain = "old";
-                Apis.reset(connectionManager.url, true).then(instance => {
+                this.oldChain = "old";
+                Apis.reset(this.connectionManager.url, true).then(instance => {
                     instance.init_promise.then(onConnect).catch(onResetError);
                 });
             }
 
             /* Only try initialize the API with connect = true on the first onEnter */
-            connect = false;
+            this.connect = false;
         })
         .catch(err => {
             console.error(err);
@@ -314,11 +323,13 @@ const willTransitionTo = (
         });
 
     // Every 15 connections we check the latencies of the full list of nodes
-    if (connect && !apiLatenciesCount && !connectionCheckPromise)
-        connectionManager.checkConnections().then(res => {
+    if (this.connect && !apiLatenciesCount && !connectionCheckPromise)
+        this.connectionManager.checkConnections().then(res => {
             console.log("Connection latencies:", res);
             SettingsActions.updateLatencies(res);
         });
 };
 
-export default willTransitionTo;
+var transitioner = new RouteTransitioner();
+
+export default transitioner.willTransitionTo.bind(transitioner);
