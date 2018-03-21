@@ -1209,10 +1209,8 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
-        "deposit":
-            "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
-        "borrow":
-            "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "deposit": "Deposit",
+        "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy_min": "Buy at least",
         "sell": "Sell",
@@ -1681,6 +1679,7 @@
         "service": "Transfer Service",
         "bridge": "Bridge",
         "gateway": "Gateway",
+        "fiat": "Fiat",
         "symbol": "Symbol",
         "asset": "Asset",
         "website": "Visit the website",
@@ -1821,6 +1820,20 @@
         "errors": {
             "fetch": "Ops... Something went wrong fetching the news"
         }
+    },
+    "openledger": {
+        "header_fiat": "Fiat",
+        "status": "Status",
+        "retry": "Retry",
+        "loading": "Loading...",
+        "refresh_transaction_history": "Refresh",
+        "header_transaction_history": "Transaction history",
+        "show_transaction_history": "Show transaction history",
+        "withdraw_amount": "Withdrawal Amount",
+        "withdraw_none": "No withdrawals",
+        "deposit_amount": "Deposit Amount",
+        "deposit_details": "Details",
+        "deposit_none": "No deposits"
     },
     "winex": {
         "gateway": {

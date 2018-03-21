@@ -159,7 +159,7 @@ class AccountDepositWithdraw extends React.Component {
                                     olService === "fiat" ? "is-active" : ""
                                 }
                             >
-                                <a>Fiat</a>
+                                <Translate component="a" content="gateway.fiat" />
                             </li>
                         </ul>
                     </div>
