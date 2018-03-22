@@ -478,7 +478,7 @@ class AccountVoting extends React.Component {
     _getWorkerArray() {
         let workerArray = [];
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i >= 0; i++) {
             let id = "1.14." + i;
             let worker = ChainStore.getObject(id, false, false);
             if (worker === null) {
