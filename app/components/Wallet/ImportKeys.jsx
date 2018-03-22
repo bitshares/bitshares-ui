@@ -530,11 +530,13 @@ class ImportKeys extends Component {
             if (dups[public_key_string])
                 delete keys_to_account[private_plainhex];
         }
-        WalletUnlockActions.unlock().then(() => {
-            ImportKeysStore.importing(true);
-            // show the loading indicator
-            setTimeout(() => this.saveImport(), 200);
-        });
+        WalletUnlockActions.unlock()
+            .then(() => {
+                ImportKeysStore.importing(true);
+                // show the loading indicator
+                setTimeout(() => this.saveImport(), 200);
+            })
+            .catch(() => {});
     }
 
     saveImport() {
