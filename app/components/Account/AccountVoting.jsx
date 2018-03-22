@@ -55,6 +55,7 @@ class AccountVoting extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
+        ChainStore.fetchAllWorkers();
         this.getBudgetObject();
     }
 
@@ -478,14 +479,10 @@ class AccountVoting extends React.Component {
     _getWorkerArray() {
         let workerArray = [];
 
-        for (let i = 0; i < 100; i++) {
-            let id = "1.14." + i;
-            let worker = ChainStore.getObject(id, false, false);
-            if (worker === null) {
-                break;
-            }
-            workerArray.push(worker);
-        }
+        ChainStore.workers.forEach(workerId => {
+            let worker = ChainStore.getObject(workerId, false, false);
+            if (worker) workerArray.push(worker);
+        });
 
         return workerArray;
     }
