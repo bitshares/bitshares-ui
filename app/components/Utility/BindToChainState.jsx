@@ -46,6 +46,7 @@ const isAssetType = checkChainType(ChainTypes.ChainAsset);
 const isObjectsListType = checkChainType(ChainTypes.ChainObjectsList);
 const isAccountsListType = checkChainType(ChainTypes.ChainAccountsList);
 const isAssetsListType = checkChainType(ChainTypes.ChainAssetsList);
+const isAccountNameType = checkChainType(ChainTypes.ChainAccountName);
 
 function checkIfRequired(t) {
     for (let k in ChainTypes) {
@@ -69,6 +70,7 @@ function BindToChainState(Component, options = {}) {
                         e === "show_loader"
                 );
                 this.chain_accounts = [];
+                this.chain_account_names = [];
                 this.chain_key_refs = [];
                 this.chain_address_balances = [];
                 this.chain_assets = [];
@@ -83,6 +85,9 @@ function BindToChainState(Component, options = {}) {
                     .map(firstEl);
                 this.chain_accounts = prop_types_array
                     .filter(flow(secondEl, isAccountType))
+                    .map(firstEl);
+                this.chain_account_names = prop_types_array
+                    .filter(flow(secondEl, isAccountNameType))
                     .map(firstEl);
                 this.chain_key_refs = prop_types_array
                     .filter(flow(secondEl, isKeyRefsType))
@@ -108,6 +113,7 @@ function BindToChainState(Component, options = {}) {
                 this.all_chain_props = [
                     ...this.chain_objects,
                     ...this.chain_accounts,
+                    ...this.chain_account_names,
                     ...this.chain_key_refs,
                     ...this.chain_address_balances,
                     ...this.chain_assets,
@@ -188,6 +194,8 @@ function BindToChainState(Component, options = {}) {
             let new_state = {};
             let all_objects_counter = 0;
             let resolved_objects_counter = 0;
+
+            /* Resolve pure objects*/
             for (let key of this.chain_objects) {
                 let prop =
                     props[key] ||
@@ -213,6 +221,8 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
+
+            /* Resolve accounts */
             for (let key of this.chain_accounts) {
                 let prop =
                     props[key] ||
@@ -239,6 +249,31 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
+
+            /* Resolve account names */
+            for (let key of this.chain_account_names) {
+                let prop =
+                    props[key] ||
+                    this.dynamic_props[key] ||
+                    this.default_props[key];
+                if (prop) {
+                    let name = ChainStore.getAccountName(prop);
+                    if (
+                        name === undefined &&
+                        this.required_props.indexOf(key) === -1 &&
+                        name !== this.state[key]
+                    )
+                        new_state[key] = name;
+                    else if (name && name !== this.state[key])
+                        new_state[key] = name;
+                    ++all_objects_counter;
+                    if (name !== undefined) ++resolved_objects_counter;
+                } else {
+                    if (this.state[key]) new_state[key] = null;
+                }
+            }
+
+            /* Resolve account key references */
             for (let key of this.chain_key_refs) {
                 let prop =
                     props[key] ||
@@ -260,6 +295,8 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
+
+            /* Resolve balance objects */
             for (let key of this.chain_address_balances) {
                 let prop =
                     props[key] ||
@@ -281,6 +318,8 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
+
+            /* Resolve assets */
             for (let key of this.chain_assets) {
                 let prop =
                     props[key] ||
@@ -302,6 +341,8 @@ function BindToChainState(Component, options = {}) {
                     if (this.state[key]) new_state[key] = null;
                 }
             }
+
+            /* Resolve lists of pure objects */
             for (let key of this.chain_objects_list) {
                 //console.log("-- Wrapper.update -->", this.chain_objects_list);
                 let prop =
@@ -346,6 +387,7 @@ function BindToChainState(Component, options = {}) {
                 }
             }
 
+            /* Resolve lists of accounts */
             for (let key of this.chain_accounts_list) {
                 //console.log("-- Wrapper.update -->", this.chain_accounts_list);
                 let prop =
@@ -389,6 +431,7 @@ function BindToChainState(Component, options = {}) {
                 }
             }
 
+            /* Resolve lists of assets */
             for (let key of this.chain_assets_list) {
                 //console.log("-- Wrapper.update -->", this.chain_assets_list);
                 let prop =
