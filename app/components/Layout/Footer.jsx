@@ -8,9 +8,9 @@ import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
+import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
-// import { launchIntroJS } from "";
 import "intro.js/introjs.css";
 import guide from "intro.js";
 
@@ -31,7 +31,9 @@ class Footer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            showNodesPopup: false
+        };
     }
 
     componentDidMount() {
@@ -231,7 +233,7 @@ class Footer extends React.Component {
                                 <div
                                     className="tooltip"
                                     style={{position: "relative"}}
-                                    onClick={this.onAccess.bind(this)}
+                                    onClick={this.onPopup.bind(this)}
                                     data-tip={
                                         counterpart.translate(
                                             `tooltip.${
@@ -294,6 +296,15 @@ class Footer extends React.Component {
                         )}
                     </div>
                 </div>
+                <div className="node-access-popup" style={{display: this.state.showNodesPopup ? "" : "none"}}>
+                    <AccessSettings
+                        nodes={this.props.defaults.apiServer}
+                        popup={true}
+                    />
+                    <div style={{paddingTop: 15}} >
+                        <a onClick={this.onAccess.bind(this)}>Advanced Settings</a>
+                    </div>
+                </div>
                 <div
                     className="introjs-launcher show-for-small-only"
                     onClick={() => {
@@ -314,6 +325,12 @@ class Footer extends React.Component {
         this.context.router.push("/wallet/backup/brainkey");
     }
 
+    onPopup() {
+        this.setState({
+            showNodesPopup: !this.state.showNodesPopup
+        });
+    }
+
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
         this.context.router.push("/settings/access");
@@ -326,8 +343,11 @@ class AltFooter extends Component {
         var wallet = WalletDb.getWallet();
         return (
             <AltContainer
-                stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
+                stores={[CachedPropertyStore, BlockchainStore, WalletDb, SettingsStore]}
                 inject={{
+                    defaults: () => {
+                        return SettingsStore.getState().defaults;
+                    },
                     backup_recommended: () =>
                         wallet &&
                         (!wallet.backup_date ||

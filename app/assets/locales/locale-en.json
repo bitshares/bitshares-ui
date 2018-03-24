@@ -1090,7 +1090,9 @@
         "password": "Password",
         "backup": "Backup",
         "restore": "Restore/Import",
-        "access": "Access",
+        "access": "Nodes",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "ping": "Ping Nodes",
         "reset_text": "Restore settings to their original defaults.",
         "reset_text_description":
             "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
@@ -1133,6 +1135,7 @@
         "node_down": "Unreachable",
         "available_nodes": "Available Nodes",
         "hidden_nodes": "Hidden Nodes",
+        "my_nodes": "My Nodes",
         "show": "Show",
         "hide": "Hide",
         "add_api": "Add Node",
