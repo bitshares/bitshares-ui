@@ -69,8 +69,8 @@ class ExchangeContainer extends React.Component {
                     currentAccount: () => {
                         return AccountStore.getState().currentAccount;
                     },
-                    linkedAccounts: () => {
-                        return AccountStore.getState().linkedAccounts;
+                    myActiveAccounts: () => {
+                        return AccountStore.getState().myActiveAccounts;
                     },
                     viewSettings: () => {
                         return SettingsStore.getState().viewSettings;
@@ -268,9 +268,6 @@ class ExchangeSubscriber extends React.Component {
                 {...this.props}
                 sub={this.state.sub}
                 subToMarket={this._subToMarket}
-                isMyAccount={AccountStore.isMyAccount(
-                    this.props.currentAccount
-                )}
             />
         );
     }

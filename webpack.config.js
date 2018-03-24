@@ -4,6 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
+var locales = require("./app/assets/locales");
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
@@ -52,6 +53,11 @@ module.exports = function(env) {
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
+    let regexString = "";
+    locales.forEach((l, i) => {
+        regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
+    });
+    const localeRegex = new RegExp(regexString);
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
@@ -64,7 +70,15 @@ module.exports = function(env) {
             ),
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated
-        })
+        }),
+        new webpack.ContextReplacementPlugin(
+            /moment[\/\\]locale$/,
+            localeRegex
+        ),
+        new webpack.ContextReplacementPlugin(
+            /react-intl[\/\\]locale-data$/,
+            localeRegex
+        )
     ];
 
     if (env.prod) {
@@ -113,7 +127,7 @@ module.exports = function(env) {
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(
             new webpack.DefinePlugin({
-                "process.env": {NODE_ENV: JSON.stringify("production")},
+                "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEV__: false
             })
         );
@@ -191,7 +205,11 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.js$/,
-                    exclude: [/node_modules/],
+                    include: [
+                        path.join(root_dir, "app"),
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/lodash-es")
+                    ],
                     loader: "babel-loader",
                     options: {compact: false, cacheDirectory: true}
                 },

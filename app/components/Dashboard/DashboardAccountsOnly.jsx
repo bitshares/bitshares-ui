@@ -17,11 +17,14 @@ class AccountsContainer extends React.Component {
             <AltContainer
                 stores={[AccountStore, SettingsStore, MarketsStore]}
                 inject={{
-                    linkedAccounts: () => {
-                        return AccountStore.getState().linkedAccounts;
+                    contacts: () => {
+                        return AccountStore.getState().accountContacts;
                     },
-                    myIgnoredAccounts: () => {
-                        return AccountStore.getState().myIgnoredAccounts;
+                    myActiveAccounts: () => {
+                        return AccountStore.getState().myActiveAccounts;
+                    },
+                    myHiddenAccounts: () => {
+                        return AccountStore.getState().myHiddenAccounts;
                     },
                     accountsReady: () => {
                         return (
@@ -71,7 +74,8 @@ class Accounts extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.myActiveAccounts !== this.props.myActiveAccounts ||
+            nextProps.contacts !== this.props.contacts ||
             nextProps.ignoredAccounts !== this.props.ignoredAccounts ||
             nextProps.passwordAccount !== this.props.passwordAccount ||
             nextState.width !== this.state.width ||
@@ -110,30 +114,24 @@ class Accounts extends React.Component {
 
     render() {
         let {
-            linkedAccounts,
-            myIgnoredAccounts,
+            myActiveAccounts,
+            myHiddenAccounts,
             accountsReady,
             passwordAccount
         } = this.props;
-        let {
-            width,
-            showIgnored,
-            featuredMarkets,
-            newAssets,
-            currentEntry
-        } = this.state;
+        let {width, showIgnored} = this.state;
 
-        if (passwordAccount && !linkedAccounts.has(passwordAccount)) {
-            linkedAccounts = linkedAccounts.add(passwordAccount);
+        if (passwordAccount && !myActiveAccounts.has(passwordAccount)) {
+            myActiveAccounts = myActiveAccounts.add(passwordAccount);
         }
-        let names = linkedAccounts.toArray().sort();
+        let names = myActiveAccounts.toArray().sort();
         if (passwordAccount && names.indexOf(passwordAccount) === -1)
             names.push(passwordAccount);
-        let ignored = myIgnoredAccounts.toArray().sort();
+        let ignored = myHiddenAccounts.toArray().sort();
 
         let accountCount =
-            linkedAccounts.size +
-            myIgnoredAccounts.size +
+            myActiveAccounts.size +
+            myHiddenAccounts.size +
             (passwordAccount ? 1 : 0);
 
         if (!accountsReady) {
@@ -144,6 +142,7 @@ class Accounts extends React.Component {
             return <LoginSelector />;
         }
 
+        const contacts = this.props.contacts.toArray();
         return (
             <div ref="wrapper" className="grid-block page-layout vertical">
                 <div
@@ -179,7 +178,7 @@ class Accounts extends React.Component {
                             <div className="generic-bordered-box">
                                 <div className="box-content">
                                     <DashboardList
-                                        accounts={Immutable.List(names)}
+                                        accounts={contacts}
                                         passwordAccount={passwordAccount}
                                         ignoredAccounts={Immutable.List(
                                             ignored
@@ -189,14 +188,14 @@ class Accounts extends React.Component {
                                             this
                                         )}
                                         showIgnored={showIgnored}
-                                        showMyAccounts={false}
+                                        isContactsList={true}
                                     />
                                 </div>
                             </div>
                         </Tab>
                         <Tab title="account.recent">
                             <RecentTransactions
-                                accountsList={linkedAccounts}
+                                accountsList={myActiveAccounts}
                                 limit={10}
                                 compactView={false}
                                 fullHeight={true}

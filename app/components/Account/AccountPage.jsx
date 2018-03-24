@@ -39,7 +39,7 @@ class AccountPage extends React.Component {
 
     render() {
         let {
-            linkedAccounts,
+            myActiveAccounts,
             account_name,
             searchAccounts,
             settings,
@@ -52,22 +52,12 @@ class AccountPage extends React.Component {
 
         return (
             <div className="grid-block page-layout">
-                {/* <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
-                    <AccountLeftPanel
-                        account={account}
-                        isMyAccount={isMyAccount}
-                        linkedAccounts={linkedAccounts}
-                        myAccounts={myAccounts}
-                        viewSettings={this.props.viewSettings}
-                        passwordLogin={settings.get("passwordLogin")}
-                    />
-                </div> */}
                 <div className="grid-block no-padding">
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
                             account_name,
-                            linkedAccounts,
+                            myActiveAccounts,
                             searchAccounts,
                             settings,
                             wallet_locked,
@@ -108,7 +98,7 @@ export default connect(AccountPageStoreWrapper, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,

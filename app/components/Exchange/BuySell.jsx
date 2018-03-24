@@ -15,7 +15,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
-import DatePicker from "react-datepicker2";
+import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 
@@ -421,19 +421,43 @@ class BuySell extends React.Component {
                         {this.props.currentBridges ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onBuy.bind(this)}>
-                                    <Translate content="exchange.buy" />&nbsp;<span className="asset-name">
-                                        {buyBorrowDepositName}
-                                    </span>
+                                    <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.buy",
+                                                arg: "direction"
+                                            }
+                                        ]} 
+                                    />
                                 </a>
                             </div>
                         ) : null}
                         {this.props.backedCoin ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onDeposit.bind(this)}>
-                                    <Translate
-                                        unsafe
-                                        content="exchange.deposit"
-                                        asset={buyBorrowDepositName}
+                                <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.deposit",
+                                                arg: "direction"
+                                            }
+                                        ]} 
                                     />
                                 </a>
                             </div>
@@ -441,10 +465,21 @@ class BuySell extends React.Component {
                         {this.props.onBorrow ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this.props.onBorrow}>
-                                    <Translate
-                                        unsafe
-                                        content="exchange.borrow"
-                                        asset={buyBorrowDepositName}
+                                    <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.borrow",
+                                                arg: "direction"
+                                            }
+                                        ]} 
                                     />
                                 </a>
                             </div>

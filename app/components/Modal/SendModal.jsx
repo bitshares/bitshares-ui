@@ -627,6 +627,11 @@ export default class SendModal extends React.Component {
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
+        let greenAccounts = AccountStore.getState().myActiveAccounts.toArray();
+        greenAccounts = greenAccounts.concat(
+            AccountStore.getState().accountContacts.toArray()
+        );
+
         return !this.state.open ? null : (
             <div
                 id="send_modal_wrapper"
@@ -932,6 +937,7 @@ SendModal = connect(SendModal, {
     },
     getProps() {
         return {
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };

@@ -24,7 +24,7 @@ import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
 // import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 
@@ -100,7 +100,7 @@ class Header extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.myActiveAccounts !== this.props.myActiveAccounts ||
             nextProps.currentAccount !== this.props.currentAccount ||
             nextProps.passwordLogin !== this.props.passwordLogin ||
             nextProps.locked !== this.props.locked ||
@@ -145,9 +145,11 @@ class Header extends React.Component {
     _toggleLock(e) {
         e.preventDefault();
         if (WalletDb.isLocked()) {
-            WalletUnlockActions.unlock().then(() => {
-                AccountActions.tryToSetCurrentAccount();
-            });
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    AccountActions.tryToSetCurrentAccount();
+                })
+                .catch(() => {});
         } else {
             WalletUnlockActions.lock();
         }
@@ -289,12 +291,12 @@ class Header extends React.Component {
         }
     }
 
-    _onLinkAccount() {
-        AccountActions.linkAccount(this.props.currentAccount);
+    _onAddContact() {
+        AccountActions.addAccountContact(this.props.currentAccount);
     }
 
-    _onUnLinkAccount() {
-        AccountActions.unlinkAccount(this.props.currentAccount);
+    _onRemoveContact() {
+        AccountActions.removeAccountContact(this.props.currentAccount);
     }
 
     render() {
@@ -315,7 +317,7 @@ class Header extends React.Component {
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
-        const isContact = this.props.linkedAccounts.has(currentAccount);
+        const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
             Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
@@ -1204,8 +1206,8 @@ class Header extends React.Component {
                                         className="divider"
                                         onClick={this[
                                             isContact
-                                                ? "_onUnLinkAccount"
-                                                : "_onLinkAccount"
+                                                ? "_onRemoveContact"
+                                                : "_onAddContact"
                                         ].bind(this)}
                                     >
                                         <div className="table-cell">
@@ -1679,7 +1681,7 @@ export default connect(Header, {
         const chainID = Apis.instance().chain_id;
         return {
             backedCoins: GatewayStore.getState().backedCoins,
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount:
                 AccountStore.getState().currentAccount ||
                 AccountStore.getState().passwordAccount,
@@ -1696,7 +1698,8 @@ export default connect(Header, {
             currentLocale: SettingsStore.getState().settings.get("locale"),
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             settings: SettingsStore.getState().settings,
-            locales: SettingsStore.getState().defaults.locale
+            locales: SettingsStore.getState().defaults.locale,
+            contacts: AccountStore.getState().accountContacts
         };
     }
 });

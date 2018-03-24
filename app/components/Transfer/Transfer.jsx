@@ -490,6 +490,19 @@ class Transfer extends React.Component {
         accountsList = accountsList.add(from_account);
         let tabIndex = 1;
 
+        const contactsList = this.props.contactsList.toArray();
+
+        const receiverProps = contactsList.length
+            ? {
+                  typeahead: contactsList,
+                  typeaheadOptions: {
+                      typeaheadVisibleStyle: {
+                          paddingBottom: "1rem"
+                      }
+                  }
+              }
+            : {};
+
         return (
             <div className="grid-block vertical">
                 <div
@@ -534,6 +547,7 @@ class Transfer extends React.Component {
                                 size={60}
                                 tabIndex={tabIndex++}
                                 typeahead={true}
+                                {...receiverProps}
                             />
                         </div>
                         {/*  A M O U N T   */}
@@ -731,7 +745,8 @@ export default connect(Transfer, {
     getProps() {
         return {
             currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount
+            passwordAccount: AccountStore.getState().passwordAccount,
+            contactsList: AccountStore.getState().accountContacts
         };
     }
 });

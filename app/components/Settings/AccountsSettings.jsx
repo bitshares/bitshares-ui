@@ -12,24 +12,19 @@ class AccountsSettings extends React.Component {
             !utils.are_equal_shallow(
                 nextProps.myAccounts,
                 this.props.myAccounts
-            ) || nextProps.ignoredAccounts !== this.props.ignoredAccounts
+            ) || nextProps.hiddenAccounts !== this.props.hiddenAccounts
         );
     }
 
-    onLinkAccount(account, e) {
+    onToggleHide(account, hide, e) {
         e.preventDefault();
-        AccountActions.linkAccount(account);
-    }
-
-    onUnlinkAccount(account, e) {
-        e.preventDefault();
-        AccountActions.unlinkAccount(account);
+        AccountActions.toggleHideAccount(account, hide);
     }
 
     render() {
-        let {myAccounts, ignoredAccounts} = this.props;
+        let {myAccounts, hiddenAccounts} = this.props;
 
-        let accounts = ignoredAccounts
+        let accounts = hiddenAccounts
             .toArray()
             .concat(myAccounts)
             .sort();
@@ -46,16 +41,21 @@ class AccountsSettings extends React.Component {
             <table className="table">
                 <tbody>
                     {accounts.map(account => {
-                        let isIgnored = ignoredAccounts.has(account);
+                        let isIgnored = hiddenAccounts.has(account);
                         let hideLink = (
                             <a
                                 href
                                 onClick={
                                     isIgnored
-                                        ? this.onLinkAccount.bind(this, account)
-                                        : this.onUnlinkAccount.bind(
+                                        ? this.onToggleHide.bind(
                                               this,
-                                              account
+                                              account,
+                                              false
+                                          )
+                                        : this.onToggleHide.bind(
+                                              this,
+                                              account,
+                                              true
                                           )
                                 }
                             >
@@ -95,7 +95,7 @@ AccountsSettings = connect(AccountsSettings, {
     getProps() {
         return {
             myAccounts: AccountStore.getMyAccounts(),
-            ignoredAccounts: AccountStore.getState().myIgnoredAccounts
+            hiddenAccounts: AccountStore.getState().myHiddenAccounts
         };
     }
 });

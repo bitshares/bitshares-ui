@@ -158,6 +158,14 @@ class AccountSelector extends React.Component {
     onKeyDown(e) {
         if (e.keyCode === 13) this.onAction(e);
     }
+    
+    _onAddContact() {
+        AccountActions.addAccountContact(this.props.accountName);
+    }
+
+    _onRemoveContact() {
+        AccountActions.removeAccountContact(this.props.accountName);
+    }
 
     onAction(e) {
         let {onAction, disableActionButton, account, accountName} = this.props;
@@ -174,6 +182,8 @@ class AccountSelector extends React.Component {
         let {accountName, account, allowPubKey, typeahead, disableActionButton} = this.props;
 
         let typeAheadAccounts = [];
+        let myActiveAccounts = AccountStore.getState().myActiveAccounts;
+        let contacts = AccountStore.getState().accountContacts;
         let error = this.getError();
         let linkedAccounts = AccountStore.getState().linkedAccounts.toArray();
 
@@ -245,14 +255,15 @@ class AccountSelector extends React.Component {
             });
         }
 
-
-
-        let linked_status = !account ? null : account.isFavorite ? (
+        let linked_status = !this.props
+            .accountName ? null : myActiveAccounts.has(
+            this.props.accountName
+        ) || contacts.has(this.props.accountName) ? (
             <span
                 className="tooltip"
                 data-place="top"
                 data-tip={counterpart.translate("tooltip.follow_user")}
-                onClick={this.onUnLinkAccount.bind(this)}
+                onClick={this._onRemoveContact.bind(this)}
             >
                 <Icon
                     className={"" + (account && account.isFavorite ? " green" : "")}
@@ -269,7 +280,7 @@ class AccountSelector extends React.Component {
                 className="tooltip"
                 data-place="top"
                 data-tip={counterpart.translate("tooltip.follow_user_add")}
-                onClick={this.onLinkAccount.bind(this)}
+                onClick={this._onAddContact.bind(this)}
             >
                 <Icon
                     style={{
@@ -361,6 +372,7 @@ class AccountSelector extends React.Component {
                                     inputProps={{
                                         placeholder: "Search for an account"
                                     }}
+                                    {...this.props.typeaheadOptions || {}}
                                 />
                             ) : (
                                 <input
