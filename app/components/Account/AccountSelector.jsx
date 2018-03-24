@@ -185,7 +185,8 @@ class AccountSelector extends React.Component {
         let myActiveAccounts = AccountStore.getState().myActiveAccounts;
         let contacts = AccountStore.getState().accountContacts;
         let error = this.getError();
-        let linkedAccounts = AccountStore.getState().linkedAccounts.toArray();
+        let linkedAccounts = myActiveAccounts;
+        linkedAccounts = linkedAccounts.concat(contacts);
 
         // Selected Account
         if(account) {
@@ -214,7 +215,10 @@ class AccountSelector extends React.Component {
         }
 
         if(account && linkedAccounts)
-            account.isFavorite = linkedAccounts.indexOf(account.get("name")) !== -1;
+            linkedAccounts.forEach(val => {
+                account.isFavorite = account.get("name") === val;
+            });
+                
 
         if(typeahead && linkedAccounts) {
             linkedAccounts.map(function(accountName) {
@@ -256,9 +260,9 @@ class AccountSelector extends React.Component {
         }
 
         let linked_status = !this.props
-            .accountName ? null : myActiveAccounts.has(
-            this.props.accountName
-        ) || contacts.has(this.props.accountName) ? (
+            .account ? null : myActiveAccounts.has(
+            this.props.account.get("name")
+        ) || contacts.has(this.props.account.get("name")) ? (
             <span
                 className="tooltip"
                 data-place="top"
@@ -446,7 +450,8 @@ AccountSelector = connect(AccountSelector, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
+            currentAccount: AccountStore.getState().currentAccount
         };
     }
 });
