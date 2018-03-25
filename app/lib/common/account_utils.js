@@ -127,8 +127,6 @@ export default class AccountUtils {
             "blocktrade",
             "locktrades",
             "yun.bts",
-            "transwiser-walle",
-            "transwiser-wallets",
             "ranswiser-wallet",
             "yun.btc",
             "pay.coinbase.com",
