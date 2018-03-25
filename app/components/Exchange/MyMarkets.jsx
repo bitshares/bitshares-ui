@@ -942,6 +942,7 @@ class MyMarkets extends React.Component {
                                                 "exchange.search"
                                             )}
                                             maxLength="16"
+                                            tabIndex={2}
                                         />
                                         {this.state.assetNameError ? (
                                             <div
