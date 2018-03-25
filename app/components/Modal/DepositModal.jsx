@@ -94,7 +94,13 @@ class DepositModalContent extends DecimalChecker {
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
-            asset
+            asset,
+            "depositAllowed",
+            (availableGateways, balancesByGateway) => {
+                if (availableGateways && availableGateways.length == 1)
+                    return availableGateways[0]; //autoselect gateway if exactly 1 item
+                return null;
+            }
         );
 
         if (selectedGateway) {
