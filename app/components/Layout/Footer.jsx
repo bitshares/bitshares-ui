@@ -42,13 +42,14 @@ class Footer extends React.Component {
         this.downloadLink = "https://bitshares.org/download";
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextState.showNodesPopup, this.state.showNodesPopup);
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
-            nextProps.rpc_connection_status !==
-                this.props.rpc_connection_status ||
-            nextProps.synced !== this.props.synced
+            nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
+            nextProps.synced !== this.props.synced ||
+            nextState.showNodesPopup !== this.state.showNodesPopup
         );
     }
 
@@ -229,26 +230,18 @@ class Footer extends React.Component {
                             </span>
                         ) : null}
                         {block_height ? (
-                            <div className="grid-block shrink">
-                                <div
-                                    className="tooltip"
-                                    style={{position: "relative"}}
-                                    onClick={this.onPopup.bind(this)}
-                                    data-tip={
-                                        counterpart.translate(
-                                            `tooltip.${
-                                                !connected
-                                                    ? "disconnected"
-                                                    : synced
-                                                        ? "sync_yes"
-                                                        : "sync_no"
-                                            }`
-                                        ) +
-                                        " " +
-                                        currentNode
-                                    }
-                                    data-place="top"
-                                >
+                            <div 
+                                onMouseEnter={() => {
+                                    console.log("MOUSE ENTER");
+                                    this.setState({showNodesPopup: true});
+                                }}
+                                onMouseLeave={() => {
+                                    console.log("MOUSE LEAVE");
+                                    this.setState({showNodesPopup: false});
+                                }}
+                                className="grid-block shrink"
+                            >
+                                <div style={{position: "relative"}}>
                                     <div className="footer-status">
                                         {!connected ? (
                                             <span className="warning">
@@ -296,7 +289,18 @@ class Footer extends React.Component {
                         )}
                     </div>
                 </div>
-                <div className="node-access-popup" style={{display: this.state.showNodesPopup ? "" : "none"}}>
+                <div 
+                    onMouseEnter={() => {
+                        console.log("MOUSE ENTER");
+                        this.setState({showNodesPopup: true});
+                    }}
+                    onMouseLeave={() => {
+                        console.log("MOUSE LEAVE");
+                        this.setState({showNodesPopup: false});
+                    }}
+                    className="node-access-popup" 
+                    style={{display: this.state.showNodesPopup ? "" : "none"}}
+                >
                     <AccessSettings
                         nodes={this.props.defaults.apiServer}
                         popup={true}

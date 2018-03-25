@@ -67,12 +67,8 @@ div.api-node {
     }
     > div:nth-child(3) {
         width: auto;
-    }
-    > div:nth-child(4) {
-        width: auto;
-        text-align: left;
-        text-transform: uppercase;
-        padding-right: 1rem;
+        position: absolute;
+        right: 25px;
     }
 }
 
