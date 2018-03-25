@@ -594,60 +594,62 @@ class MyOpenOrders extends React.Component {
                             <Translate content="exchange.settle_orders" />
                         </div>
                     </div>
-                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table order-table text-right fixed-table market-right-padding">
-                            {activeTab == "my_orders" ? (
-                                <TableHeader
-                                    rightAlign
-                                    type="sell"
-                                    baseSymbol={baseSymbol}
-                                    quoteSymbol={quoteSymbol}
-                                />
-                            ) : (
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <Translate
-                                                className="header-sub-title"
-                                                content="exchange.price"
-                                            />
-                                        </th>
-                                        <th>
-                                            <span className="header-sub-title">
-                                                <AssetName
-                                                    dataPlace="top"
-                                                    name={quoteSymbol}
+                    <div className="orderbook-table openorders">
+                        <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                            <table className="table order-table text-right fixed-table market-right-padding">
+                                {activeTab == "my_orders" ? (
+                                    <TableHeader
+                                        rightAlign
+                                        type="sell"
+                                        baseSymbol={baseSymbol}
+                                        quoteSymbol={quoteSymbol}
+                                    />
+                                ) : (
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <Translate
+                                                    className="header-sub-title"
+                                                    content="exchange.price"
                                                 />
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span className="header-sub-title">
-                                                <AssetName
-                                                    dataPlace="top"
-                                                    name={baseSymbol}
+                                            </th>
+                                            <th>
+                                                <span className="header-sub-title">
+                                                    <AssetName
+                                                        dataPlace="top"
+                                                        name={quoteSymbol}
+                                                    />
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <span className="header-sub-title">
+                                                    <AssetName
+                                                        dataPlace="top"
+                                                        name={baseSymbol}
+                                                    />
+                                                </span>
+                                            </th>
+                                            <th>
+                                                <Translate
+                                                    className="header-sub-title"
+                                                    content="explorer.block.date"
                                                 />
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <Translate
-                                                className="header-sub-title"
-                                                content="explorer.block.date"
-                                            />
-                                        </th>
-                                    </tr>
-                                </thead>
-                            )}
-                        </table>
-                    </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                )}
+                            </table>
+                        </div>
 
-                    <div
-                        className="table-container grid-block market-right-padding-only no-overflow"
-                        ref="container"
-                        style={{overflow: "hidden", maxHeight: 200}}
-                    >
-                        <table className="table order-table text-right fixed-table market-right-padding">
-                            {contentContainer}
-                        </table>
+                        <div
+                            className="table-container grid-block market-right-padding-only no-overflow"
+                            ref="container"
+                            style={{overflow: "hidden", maxHeight: 200}}
+                        >
+                            <table className="table order-table text-right fixed-table market-right-padding">
+                                {contentContainer}
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

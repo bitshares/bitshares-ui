@@ -580,35 +580,37 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
-                                <table className="table order-table table-hover fixed-table text-right">
-                                    {!this.state.flip
-                                        ? rightHeader
-                                        : leftHeader}
-                                </table>
-                            </div>
-                            <div
-                                className="grid-block"
-                                ref="hor_asks"
-                                style={{
-                                    paddingRight: "0.6rem",
-                                    overflow: "hidden",
-                                    maxHeight: 210
-                                }}
-                            >
-                                <table
-                                    style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                            <div className="orderbook-table sellorders">
+                                <div style={{paddingRight: "0.6rem"}}>
+                                    <table className="table order-table table-hover fixed-table text-right">
+                                        {!this.state.flip
+                                            ? rightHeader
+                                            : leftHeader}
+                                    </table>
+                                </div>
+                                <div
+                                    className="grid-block"
+                                    ref="hor_asks"
+                                    style={{
+                                        paddingRight: "0.6rem",
+                                        overflow: "hidden",
+                                        maxHeight: 210
+                                    }}
                                 >
-                                    <TransitionWrapper
-                                        ref="askTransition"
-                                        className="orderbook clickable"
-                                        component="tbody"
-                                        transitionName="newrow"
+                                    <table
+                                        style={{paddingBottom: 5}}
+                                        className="table order-table table-hover fixed-table text-right no-overflow"
                                     >
-                                        {askRows}
-                                    </TransitionWrapper>
-                                </table>
+                                        <TransitionWrapper
+                                            ref="askTransition"
+                                            className="orderbook clickable"
+                                            component="tbody"
+                                            transitionName="newrow"
+                                        >
+                                            {askRows}
+                                        </TransitionWrapper>
+                                    </table>
+                                </div>
                             </div>
                             {totalAsksLength > rowCount ? (
                                 <div className="orderbook-showall">
@@ -693,33 +695,37 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
-                                <table className="table order-table table-hover fixed-table text-right">
-                                    {this.state.flip ? rightHeader : leftHeader}
-                                </table>
-                            </div>
-                            <div
-                                className="grid-block"
-                                ref="hor_bids"
-                                style={{
-                                    paddingRight: "0.6rem",
-                                    overflow: "hidden",
-                                    maxHeight: 210
-                                }}
-                            >
-                                <table
-                                    style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                            <div className="orderbook-table buyorders">
+                                <div style={{paddingRight: "0.6rem"}}>
+                                    <table className="table order-table table-hover fixed-table text-right">
+                                        {this.state.flip
+                                            ? rightHeader
+                                            : leftHeader}
+                                    </table>
+                                </div>
+                                <div
+                                    className="grid-block"
+                                    ref="hor_bids"
+                                    style={{
+                                        paddingRight: "0.6rem",
+                                        overflow: "hidden",
+                                        maxHeight: 210
+                                    }}
                                 >
-                                    <TransitionWrapper
-                                        ref="bidTransition"
-                                        className="orderbook clickable"
-                                        component="tbody"
-                                        transitionName="newrow"
+                                    <table
+                                        style={{paddingBottom: 5}}
+                                        className="table order-table table-hover fixed-table text-right no-overflow"
                                     >
-                                        {bidRows}
-                                    </TransitionWrapper>
-                                </table>
+                                        <TransitionWrapper
+                                            ref="bidTransition"
+                                            className="orderbook clickable"
+                                            component="tbody"
+                                            transitionName="newrow"
+                                        >
+                                            {bidRows}
+                                        </TransitionWrapper>
+                                    </table>
+                                </div>
                             </div>
                             {totalBidsLength > rowCount ? (
                                 <div className="orderbook-showall">
