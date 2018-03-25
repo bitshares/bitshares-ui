@@ -59,8 +59,8 @@ class Exchange extends React.Component {
         this.state = {
             ...this._initialState(props),
             expirationType: {
-                bid: "MONTH",
-                ask: "MONTH"
+                bid: "YEAR",
+                ask: "YEAR"
             },
             expirationCustomTime: {
                 bid: moment().add(1, "day"),
@@ -135,6 +135,13 @@ class Exchange extends React.Component {
             get: () =>
                 moment()
                     .add(30, "day")
+                    .valueOf()
+        },
+        YEAR: {
+            title: "1 year",
+            get: () =>
+                moment()
+                    .add(1, "year")
                     .valueOf()
         },
         SPECIFIC: {
