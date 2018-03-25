@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 Sayfa Bulunamadı",
+        "page_not_found_subtitle": "Bu sayfa mevcut değil",
+        "home": "Ev"
+    },
     "languages": {
         "en": "English",
         "zh": "简体中文",

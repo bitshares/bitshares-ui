@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 Страница не найдена",
+        "page_not_found_subtitle": "Эта страница не существует.",
+        "home": "Главная"
+    },
     "counterpart": {
         "formats": {
             "date": {

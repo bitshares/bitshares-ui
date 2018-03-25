@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 page not found",
+        "page_not_found_subtitle": "This page does not exist",
+        "home": "Home"
+    },
     "counterpart": {
         "formats": {
             "date": {

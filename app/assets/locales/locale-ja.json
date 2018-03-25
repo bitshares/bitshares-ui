@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "ページが見つかりません。",
+        "page_not_found_subtitle": "このページは存在しません",
+        "home": "ホーム"
+    },
     "counterpart": {
         "formats": {
             "date": {
