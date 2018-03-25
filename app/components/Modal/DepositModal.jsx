@@ -96,12 +96,7 @@ class DepositModalContent extends DecimalChecker {
             this,
             asset
         );
-        console.log(
-            "selectedAsset",
-            selectedAsset,
-            "selectedGateway",
-            selectedGateway
-        );
+
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
         }
