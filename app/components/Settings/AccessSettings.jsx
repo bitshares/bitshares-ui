@@ -401,19 +401,20 @@ class AccessSettings extends React.Component {
                             <Translate content="settings.my_nodes" />
                         </div>
                     </div>
-                    {this.state.activeTab !== "my-nodes" ? null 
-                    : <div style={{paddingLeft: "1rem", paddingBottom: "1rem"}}>
-                        <div
-                            className="button"
-                            onClick={props.triggerModal.bind(this)}
-                        >
-                            <Translate
-                                id="add"
-                                component="span"
-                                content="settings.add_api"
-                            />
+                    {this.state.activeTab !== "my-nodes" ? null : 
+                        <div style={{paddingLeft: "1rem", paddingBottom: "1rem"}}>
+                            <div
+                                className="button"
+                                onClick={props.triggerModal.bind(this)}
+                            >
+                                <Translate
+                                    id="add"
+                                    component="span"
+                                    content="settings.add_api"
+                                />
+                            </div>
                         </div>
-                    </div>}
+                    }
                     
                     {nodes.map(node => {
                         if(node.url !== autoSelectAPI)
