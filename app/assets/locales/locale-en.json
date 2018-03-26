@@ -22,7 +22,8 @@
     },
     "global": {
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "help": "Help"
     },
     "incognito": {
         "no_support":
@@ -1133,6 +1134,7 @@
         "active_node": "Active Node",
         "node_up": "Available",
         "node_down": "Unreachable",
+        "switch": "Switch Node",
         "available_nodes": "Available",
         "hidden_nodes": "Hidden",
         "my_nodes": "Personal",
@@ -1165,7 +1167,8 @@
         "unsynced": "Out of sync",
         "disconnected": "Disconnected",
         "connected": "Connected",
-        "latency": "Latency"
+        "latency": "Latency",
+        "advanced_settings": "Advanced settings"
     },
     "exchange": {
         "buysell_formatter": "{direction} {asset}",

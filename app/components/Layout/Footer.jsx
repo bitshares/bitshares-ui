@@ -43,7 +43,6 @@ class Footer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        console.log(nextState.showNodesPopup, this.state.showNodesPopup);
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
@@ -113,16 +112,55 @@ class Footer extends React.Component {
         }
     }
 
+    getNodeIndexByURL(url) {
+        let nodes = this.props.defaults.apiServer;
+
+        let index = nodes.findIndex(node => node.url === url);
+        if (index === -1) {
+            return null;
+        }
+        return index;
+    }
+
+    getCurrentNodeIndex() {
+        const {props} = this;
+        let currentNode = this.getNodeIndexByURL.call(this, props.currentNode);
+
+        return currentNode;
+    }
+
+    getNode(node) {
+        const {props} = this;
+
+        return {
+            name: node.location || "Unknown location",
+            url: node.url,
+            up: node.url in props.apiLatencies,
+            ping: props.apiLatencies[node.url],
+            hidden: !!node.hidden
+        };
+    }
+
     render() {
-        const {state} = this;
-        const {synced} = this.props;
+        const autoSelectAPI = "wss://fake.automatic-selection.com";
+        const {state, props} = this;
+        const {synced} = props;
         const connected = !(this.props.rpc_connection_status === "closed");
 
         // Current Node Details
-        let currentNode = SettingsStore.getState().settings.get("activeNode");
-        let currentNodePing = SettingsStore.getState().apiLatencies[
-            currentNode
-        ];
+        let nodes = this.props.defaults.apiServer;
+        let getNode = this.getNode.bind(this);
+        let currentNodeIndex = this.getCurrentNodeIndex.call(this);
+
+        let activeNode = getNode(
+            nodes[currentNodeIndex] || nodes[0]
+        );
+
+        if (activeNode.url == autoSelectAPI) {
+            let nodeUrl = props.activeNode;
+            currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
+            activeNode = getNode(nodes[currentNodeIndex]);
+        }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
@@ -232,11 +270,9 @@ class Footer extends React.Component {
                         {block_height ? (
                             <div 
                                 onMouseEnter={() => {
-                                    console.log("MOUSE ENTER");
                                     this.setState({showNodesPopup: true});
                                 }}
                                 onMouseLeave={() => {
-                                    console.log("MOUSE LEAVE");
                                     this.setState({showNodesPopup: false});
                                 }}
                                 className="grid-block shrink"
@@ -249,7 +285,7 @@ class Footer extends React.Component {
                                             </span>
                                         ) : (
                                             <span className="success">
-                                                <Translate content="footer.connected" />
+                                                {activeNode.name}
                                             </span>
                                         )}
                                     </div>
@@ -260,9 +296,9 @@ class Footer extends React.Component {
                                             </span>
                                             &nbsp;{!connected
                                                 ? "-"
-                                                : !currentNodePing
+                                                : !activeNode.ping
                                                     ? "-"
-                                                    : currentNodePing +
+                                                    : activeNode.ping +
                                                       "ms"}&nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
@@ -278,7 +314,7 @@ class Footer extends React.Component {
                                             this.launchIntroJS();
                                         }}
                                     >
-                                        Help
+                                        <Translate content="global.help" />
                                     </div>
                                 </div>
                             </div>
@@ -291,11 +327,9 @@ class Footer extends React.Component {
                 </div>
                 <div 
                     onMouseEnter={() => {
-                        console.log("MOUSE ENTER");
                         this.setState({showNodesPopup: true});
                     }}
                     onMouseLeave={() => {
-                        console.log("MOUSE LEAVE");
                         this.setState({showNodesPopup: false});
                     }}
                     className="node-access-popup" 
@@ -306,7 +340,7 @@ class Footer extends React.Component {
                         popup={true}
                     />
                     <div style={{paddingTop: 15}} >
-                        <a onClick={this.onAccess.bind(this)}>Advanced Settings</a>
+                        <a onClick={this.onAccess.bind(this)}><Translate content="footer.advanced_settings" /></a>
                     </div>
                 </div>
                 <div
@@ -315,7 +349,7 @@ class Footer extends React.Component {
                         this.launchIntroJS();
                     }}
                 >
-                    Help
+                    <Translate content="global.help" />
                 </div>
             </div>
         );
@@ -351,6 +385,15 @@ class AltFooter extends Component {
                 inject={{
                     defaults: () => {
                         return SettingsStore.getState().defaults;
+                    },
+                    apiLatencies: () => {
+                        return SettingsStore.getState().apiLatencies;
+                    },
+                    currentNode: () => { 
+                        return SettingsStore.getState().settings.get("apiServer");
+                    },
+                    activeNode: () => {
+                        return SettingsStore.getState().settings.get("activeNode");
                     },
                     backup_recommended: () =>
                         wallet &&

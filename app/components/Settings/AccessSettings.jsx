@@ -134,10 +134,10 @@ class ApiNode extends React.Component {
                         <div
                             className="button"
                             style={{position: "absolute", right: 0}}
-                            onClick={props.triggerModal.bind(this)}
+                            onClick={}
                         >
                             <Translate
-                                id="add"
+                                id="ping"
                                 component="span"
                                 content="settings.ping"
                             />
@@ -166,7 +166,7 @@ class ApiNode extends React.Component {
                     <div>
                         {allowRemoval ? // USER NODES CAN'T BE HIDDEN
                             <a onClick={this.remove.bind(this, url, name)}>
-                                <Translate component="p" content="settings.remove"/>
+                                <Translate id="remove" component="p" content="settings.remove"/>
                             </a>
                             : 
                             !automatic && hidden ? 
@@ -314,12 +314,12 @@ class AccessSettings extends React.Component {
         }
 
         let nodes = props.nodes
-        .map(node => {
-            return getNode(node);
-        })
-        .filter(node => {
-            return node.hidden !== showAvailableNodes && node.url !== activeNode.url;
-        });
+            .map(node => {
+                return getNode(node);
+            })
+            .filter(node => {
+                return node.hidden !== showAvailableNodes && node.url !== activeNode.url;
+            });
 
         nodes = nodes
             .sort(function(a, b) {
@@ -356,14 +356,14 @@ class AccessSettings extends React.Component {
         return this.props.popup 
             ? <div>
                 <div style={{fontWeight: "bold", height: 40}}>
-                    SWITCH NODE
+                    <Translate content="settings.switch" />
                     {renderNode(autoNode, activeNode, false)}
                 </div>
                 <div className="nodes-list" style={{display: props.currentNode === autoSelectAPI ? "none" : ""}}>
                     {nodes.map(node => {
-                        if(node.url !== autoSelectAPI && node.ping < 800) {
+                        if(node.url !== autoSelectAPI) {
                             popupCount++;
-                            if(popupCount < 6) { return renderNode(node, activeNode, true); }
+                            if(popupCount <= 5) { return renderNode(node, activeNode, true); }
                         }
                     })}
                 </div>
