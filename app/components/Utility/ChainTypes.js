@@ -185,7 +185,7 @@ function accountNameChecker(props, propName, componentName) {
             return null;
         } else {
             return new Error(
-                `${propName} in ${componentName} is not a valid account name`
+                `${propName} value of ${value} in ${componentName} is not a valid account name`
             );
         }
     }
