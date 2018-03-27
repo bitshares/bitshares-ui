@@ -92,7 +92,7 @@ class AccountVoting extends React.Component {
         let votes = options.get("votes");
         let vote_ids = votes.toArray();
         let vids = Immutable.Set(vote_ids);
-        // ChainStore.getObjectsByVoteIds(vote_ids);
+        ChainStore.getObjectsByVoteIds(vote_ids);
 
         let proxyPromise = null,
             proxy_vids = Immutable.Set([]);
@@ -101,15 +101,17 @@ class AccountVoting extends React.Component {
             let proxy_votes = proxyOptions.get("votes");
             let proxy_vote_ids = proxy_votes.toArray();
             proxy_vids = Immutable.Set(proxy_vote_ids);
+            ChainStore.getObjectsByVoteIds(proxy_vote_ids);
+
             proxyPromise = FetchChainObjects(
                 ChainStore.getObjectByVoteID,
                 proxy_vote_ids,
-                5000
+                10000
             );
         }
 
         Promise.all([
-            FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000),
+            FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 10000),
             proxyPromise
         ]).then(res => {
             const [vote_objs, proxy_vote_objs] = res;
