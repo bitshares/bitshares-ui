@@ -173,9 +173,16 @@ class AccountVoting extends React.Component {
         let lastIdx;
         if (!vote_ids) {
             vote_ids = [];
-            let active = this.props.globalObject.get(
-                isWitness ? "active_witnesses" : "active_committee_members"
-            );
+            let active = this.props.globalObject
+                .get(
+                    isWitness ? "active_witnesses" : "active_committee_members"
+                )
+                .sort((a, b) => {
+                    return (
+                        parseInt(a.split(".")[2], 10) -
+                        parseInt(b.split(".")[2], 10)
+                    );
+                });
             const lastActive = active.last() || `1.${isWitness ? "6" : "5"}.1`;
             lastIdx = parseInt(lastActive.split(".")[2], 10);
             for (var i = 1; i <= lastIdx + 10; i++) {
@@ -200,7 +207,7 @@ class AccountVoting extends React.Component {
                     )
                 );
                 if (!!vote_objs[vote_objs.length - 1]) {
-                    // there are more valid vote objs, fetch more
+                    // there are more valid vote objs, fetch 10 more
                     vote_ids = [];
                     for (var i = lastIdx + 11; i <= lastIdx + 20; i++) {
                         vote_ids.push(`1.${isWitness ? "6" : "5"}.${i}`);
