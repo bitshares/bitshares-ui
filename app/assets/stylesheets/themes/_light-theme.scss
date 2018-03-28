@@ -58,6 +58,8 @@ $modal-bg-color: #dadada;
 
 $mobile-input-bg: $input-background;
 
+$incognito-bg: #ea340b;
+
 .lightTheme {
     @include theme(
         $primary-text-color,
@@ -104,7 +106,8 @@ $mobile-input-bg: $input-background;
         $settings-api-node-border-color,
         $main-content-margin-block-bg-color,
         $modal-bg-color,
-        $mobile-input-bg
+        $mobile-input-bg,
+        $incognito-bg
     );
 
     .change-up {
