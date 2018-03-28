@@ -22,8 +22,6 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import {ChainValidation} from "bitsharesjs/es";
 
-let lastLookup = new Date();
-
 class MarketGroup extends React.Component {
     static defaultProps = {
         maxRows: 20
@@ -343,10 +341,13 @@ class MyMarkets extends React.Component {
             activeMarketTab: props.viewSettings.get("activeMarketTab", 0),
             lookupQuote: null,
             lookupBase: null,
+            hasSearched: false,
+            hasCompletedInitialAssetLoad: false,
             inputValue: "",
             minWidth: "100%",
             findBaseInput: "USD",
-            activeFindBase: "USD"
+            activeFindBase: "USD",
+            baseInputTransition: null
         };
 
         this._setMinWidth = this._setMinWidth.bind(this);
@@ -360,7 +361,47 @@ class MyMarkets extends React.Component {
             nextState.activeTab === "find-market" &&
             !nextProps.searchAssets.size
         ) {
-            this._lookupAssets("OPEN.", true);
+            this._initialAssetLookup();
+        }
+
+        if (nextState.activeTab == "find-market") {
+            /*
+           * This is to keep the UI responsive when going to find markets tab or changing base input (USD, OPEN.BTC, BTS, CNY, etc.)
+           * 
+           * As market data is changing, hundreds of renders are trigerred rapidly, freezing the UI. The following code will
+           * introduce a slight delay in initial updates but will keep the UI from freezing up momentarily.
+           */
+            if (!nextState.hasCompletedInitialAssetLoad) {
+                clearTimeout(this.initialLoadTimeout);
+
+                this.initialLoadTimeout = setTimeout(
+                    function() {
+                        this.setState({hasCompletedInitialAssetLoad: true});
+                    }.bind(this),
+                    1500
+                );
+
+                if (nextProps.searchAssets.equals(this.props.searchAssets))
+                    return false;
+            }
+
+            if (nextState.baseInputTransition) {
+                clearTimeout(this.baseInputTransitionTimeout);
+
+                this.baseInputTransitionTimeout = setTimeout(
+                    function() {
+                        this.setState({baseInputTransition: null});
+                    }.bind(this),
+                    500
+                );
+
+                if (nextProps.searchAssets.equals(this.props.searchAssets))
+                    return false;
+            }
+
+            if (nextState.findBaseInput != this.state.findBaseInput) {
+                this.setState({baseInputTransition: true});
+            }
         }
 
         return (
@@ -415,7 +456,7 @@ class MyMarkets extends React.Component {
         this._setMinWidth();
 
         if (this.state.activeTab === "find-market") {
-            this._lookupAssets("OPEN.", true);
+            this._initialAssetLookup();
         }
     }
 
@@ -484,6 +525,7 @@ class MyMarkets extends React.Component {
     }
 
     _onInputName(e) {
+        if (this.lookupTimer) clearTimeout(this.lookupTimer);
         let inputValue = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(
             inputValue,
@@ -504,10 +546,14 @@ class MyMarkets extends React.Component {
                 assetNameError: false
             });
         }
-        this._lookupAssets(inputValue);
+
+        this.lookupTimer = setTimeout(
+            this._lookupAssets.bind(this, inputValue),
+            300
+        );
     }
 
-    _lookupAssets(value, force = false) {
+    _lookupAssets(value, force = false, lookupQuote = false) {
         // console.log("__lookupAssets", value, force);
         if (!value && value !== "") {
             return;
@@ -519,7 +565,7 @@ class MyMarkets extends React.Component {
         let base = symbols.length === 2 ? symbols[1] : null;
 
         this.setState({
-            lookupQuote: quote,
+            lookupQuote: lookupQuote || quote,
             lookupBase: base
         });
 
@@ -528,18 +574,23 @@ class MyMarkets extends React.Component {
         });
 
         if (this.state.lookupQuote !== quote || force) {
-            if (quote.length < 1 || now - lastLookup <= 250) {
+            if (quote.length < 1) {
                 return false;
             }
             this.getAssetList(quote, 50);
         } else {
             if (base && this.state.lookupBase !== base) {
-                if (base.length < 1 || now - lastLookup <= 250) {
+                if (base.length < 1) {
                     return false;
                 }
                 this.getAssetList(base, 50);
             }
         }
+    }
+
+    _initialAssetLookup() {
+        this._lookupAssets("OPEN.", true, "*");
+        setTimeout(this._lookupAssets.bind(this, "RUDEX.", true, "*"), 250);
     }
 
     toggleActiveMarketTab(index) {
@@ -610,8 +661,8 @@ class MyMarkets extends React.Component {
             // coreSymbol, "BTC", "CNY", "USD"
         ];
 
-        /* By default, show the OPEN.X assets */
-        if (!lookupQuote) lookupQuote = "OPEN.";
+        /* By default, show all assets */
+        if (!lookupQuote) lookupQuote = "*";
 
         /* In the find-market tab, only use market tab 0 */
         if (!myMarketTab) activeMarketTab = 0;
@@ -678,6 +729,9 @@ class MyMarkets extends React.Component {
                             }
                         }
                     } catch (e) {}
+                    // First round of filtering is happening here
+
+                    if (lookupQuote == "*") return true;
 
                     return (
                         a.symbol.indexOf(lookupQuote) !== -1 &&
@@ -718,10 +772,12 @@ class MyMarkets extends React.Component {
             otherMarkets = activeMarkets
                 .filter(a => {
                     if (!myMarketTab) {
+                        if (lookupQuote == "*") return true;
+
                         if (lookupQuote.length < 1) {
                             return false;
                         }
-
+                        // Second round of filtering is happening here
                         return a.quote.indexOf(lookupQuote) !== -1;
                     } else {
                         const ID = a.quote + "_" + a.base;
