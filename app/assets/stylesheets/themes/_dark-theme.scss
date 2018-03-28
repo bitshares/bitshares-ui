@@ -60,6 +60,8 @@ $mobile-input-bg: #2d2d2d;
 
 $slider-thumb-color: #f00;
 
+$incognito-bg: #ff3950;
+
 .darkTheme {
     @include theme(
         $primary-text-color,
@@ -106,6 +108,7 @@ $slider-thumb-color: #f00;
         $settings-api-node-border-color,
         $main-content-margin-block-bg-color,
         $modal-bg-color,
-        $mobile-input-bg
+        $mobile-input-bg,
+        $incognito-bg
     );
 }

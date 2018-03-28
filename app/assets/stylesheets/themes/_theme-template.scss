@@ -45,10 +45,14 @@
     $settings-api-node-border-color,
     $main-content-margin-block-bg-color,
     $modal-bg-color,
-    $mobile-input-bg
+    $mobile-input-bg,
+    $incognito-bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    #incognito {
+        background: $incognito-bg;
+    }
     .settings-select {
         height: 36px;
         padding: 0 12px;
