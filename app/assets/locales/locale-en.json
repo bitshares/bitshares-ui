@@ -32,7 +32,7 @@
     "incognito": {
         "mode": "Private/Incognito:",
         "warning":
-            "If you close your browser without backing up, you will lose this account permanently."
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
     "sync_fail": {
         "title": "Failed to sync with the API server",
