@@ -26,7 +26,7 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 
 class App extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         // Check for mobile device to disable chat
@@ -46,10 +46,6 @@ class App extends React.Component {
             synced: this._syncStatus(),
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
-            isMobile: !!(
-                /android|ipad|ios|iphone|windows phone/i.test(user_agent) ||
-                isSafari
-            ),
             incognito: false,
             incognitoWarningDismissed: false,
             height: window && window.innerHeight
@@ -179,7 +175,7 @@ class App extends React.Component {
     }
 
     _onSettingsChange() {
-        let {settings, viewSettings} = SettingsStore.getState();
+        let {settings} = SettingsStore.getState();
         if (settings.get("themes") !== this.state.theme) {
             this.setState({
                 theme: settings.get("themes")
@@ -198,12 +194,7 @@ class App extends React.Component {
     // }
 
     render() {
-        let {
-            isMobile,
-            theme,
-            incognito,
-            incognitoWarningDismissed
-        } = this.state;
+        let {theme, incognito, incognitoWarningDismissed} = this.state;
         let {walletMode} = this.props;
 
         let content = null;
@@ -301,12 +292,14 @@ class RootIntl extends React.Component {
 
 RootIntl = connect(RootIntl, {
     listenTo() {
-        return [IntlStore, WalletManagerStore];
+        return [IntlStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
         return {
             locale: IntlStore.getState().currentLocale,
-            walletMode: WalletManagerStore.getState().current_wallet
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet
         };
     }
 });
