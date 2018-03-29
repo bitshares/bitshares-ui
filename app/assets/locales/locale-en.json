@@ -25,9 +25,9 @@
         "cancel": "Cancel"
     },
     "incognito": {
-        "no_support":
-            "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
-        "ignore": "I understand, continue."
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
     "sync_fail": {
         "title": "Failed to sync with the API server",
