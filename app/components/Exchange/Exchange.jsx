@@ -59,8 +59,8 @@ class Exchange extends React.Component {
         this.state = {
             ...this._initialState(props),
             expirationType: {
-                bid: "MONTH",
-                ask: "MONTH"
+                bid: props.exchange.getIn(["lastExpiration", "bid"]) || "YEAR",
+                ask: props.exchange.getIn(["lastExpiration", "ask"]) || "YEAR"
             },
             expirationCustomTime: {
                 bid: moment().add(1, "day"),
@@ -84,6 +84,15 @@ class Exchange extends React.Component {
             ...this.state.expirationType,
             [type]: e.target.value
         };
+
+        if (e.target.value !== "SPECIFIC") {
+            SettingsActions.setExchangeLastExpiration({
+                ...((this.props.exchange.has("lastExpiration") &&
+                    this.props.exchange.get("lastExpiration").toJS()) ||
+                    {}),
+                [type]: e.target.value
+            });
+        }
 
         this.setState({
             expirationType: expirationType
@@ -135,6 +144,13 @@ class Exchange extends React.Component {
             get: () =>
                 moment()
                     .add(30, "day")
+                    .valueOf()
+        },
+        YEAR: {
+            title: "1 year",
+            get: () =>
+                moment()
+                    .add(1, "year")
                     .valueOf()
         },
         SPECIFIC: {

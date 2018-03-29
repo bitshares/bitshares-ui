@@ -64,6 +64,10 @@ class SettingsActions {
     updateLatencies(latencies) {
         return latencies;
     }
+
+    setExchangeLastExpiration(value) {
+        return value;
+    }
 }
 
 export default alt.createActions(SettingsActions);
