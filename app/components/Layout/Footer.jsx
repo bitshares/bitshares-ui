@@ -8,9 +8,9 @@ import BlockchainStore from "stores/BlockchainStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
+import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
-// import { launchIntroJS } from "";
 import "intro.js/introjs.css";
 import guide from "intro.js";
 
@@ -31,7 +31,9 @@ class Footer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            showNodesPopup: false
+        };
     }
 
     componentDidMount() {
@@ -40,13 +42,13 @@ class Footer extends React.Component {
         this.downloadLink = "https://bitshares.org/download";
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
-            nextProps.rpc_connection_status !==
-                this.props.rpc_connection_status ||
-            nextProps.synced !== this.props.synced
+            nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
+            nextProps.synced !== this.props.synced ||
+            nextState.showNodesPopup !== this.state.showNodesPopup
         );
     }
 
@@ -110,16 +112,55 @@ class Footer extends React.Component {
         }
     }
 
+    getNodeIndexByURL(url) {
+        let nodes = this.props.defaults.apiServer;
+
+        let index = nodes.findIndex(node => node.url === url);
+        if (index === -1) {
+            return null;
+        }
+        return index;
+    }
+
+    getCurrentNodeIndex() {
+        const {props} = this;
+        let currentNode = this.getNodeIndexByURL.call(this, props.currentNode);
+
+        return currentNode;
+    }
+
+    getNode(node) {
+        const {props} = this;
+
+        return {
+            name: node.location || "Unknown location",
+            url: node.url,
+            up: node.url in props.apiLatencies,
+            ping: props.apiLatencies[node.url],
+            hidden: !!node.hidden
+        };
+    }
+
     render() {
-        const {state} = this;
-        const {synced} = this.props;
+        const autoSelectAPI = "wss://fake.automatic-selection.com";
+        const {state, props} = this;
+        const {synced} = props;
         const connected = !(this.props.rpc_connection_status === "closed");
 
         // Current Node Details
-        let currentNode = SettingsStore.getState().settings.get("activeNode");
-        let currentNodePing = SettingsStore.getState().apiLatencies[
-            currentNode
-        ];
+        let nodes = this.props.defaults.apiServer;
+        let getNode = this.getNode.bind(this);
+        let currentNodeIndex = this.getCurrentNodeIndex.call(this);
+
+        let activeNode = getNode(
+            nodes[currentNodeIndex] || nodes[0]
+        );
+
+        if (activeNode.url == autoSelectAPI) {
+            let nodeUrl = props.activeNode;
+            currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
+            activeNode = getNode(nodes[currentNodeIndex]);
+        }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
@@ -227,26 +268,16 @@ class Footer extends React.Component {
                             </span>
                         ) : null}
                         {block_height ? (
-                            <div className="grid-block shrink">
-                                <div
-                                    className="tooltip"
-                                    style={{position: "relative"}}
-                                    onClick={this.onAccess.bind(this)}
-                                    data-tip={
-                                        counterpart.translate(
-                                            `tooltip.${
-                                                !connected
-                                                    ? "disconnected"
-                                                    : synced
-                                                        ? "sync_yes"
-                                                        : "sync_no"
-                                            }`
-                                        ) +
-                                        " " +
-                                        currentNode
-                                    }
-                                    data-place="top"
-                                >
+                            <div 
+                                onMouseEnter={() => {
+                                    this.setState({showNodesPopup: true});
+                                }}
+                                onMouseLeave={() => {
+                                    this.setState({showNodesPopup: false});
+                                }}
+                                className="grid-block shrink"
+                            >
+                                <div style={{position: "relative"}}>
                                     <div className="footer-status">
                                         {!connected ? (
                                             <span className="warning">
@@ -254,7 +285,7 @@ class Footer extends React.Component {
                                             </span>
                                         ) : (
                                             <span className="success">
-                                                <Translate content="footer.connected" />
+                                                {activeNode.name}
                                             </span>
                                         )}
                                     </div>
@@ -265,9 +296,9 @@ class Footer extends React.Component {
                                             </span>
                                             &nbsp;{!connected
                                                 ? "-"
-                                                : !currentNodePing
+                                                : !activeNode.ping
                                                     ? "-"
-                                                    : currentNodePing +
+                                                    : activeNode.ping +
                                                       "ms"}&nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
@@ -283,7 +314,7 @@ class Footer extends React.Component {
                                             this.launchIntroJS();
                                         }}
                                     >
-                                        Help
+                                        <Translate content="global.help" />
                                     </div>
                                 </div>
                             </div>
@@ -294,13 +325,31 @@ class Footer extends React.Component {
                         )}
                     </div>
                 </div>
+                <div 
+                    onMouseEnter={() => {
+                        this.setState({showNodesPopup: true});
+                    }}
+                    onMouseLeave={() => {
+                        this.setState({showNodesPopup: false});
+                    }}
+                    className="node-access-popup" 
+                    style={{display: this.state.showNodesPopup ? "" : "none"}}
+                >
+                    <AccessSettings
+                        nodes={this.props.defaults.apiServer}
+                        popup={true}
+                    />
+                    <div style={{paddingTop: 15}} >
+                        <a onClick={this.onAccess.bind(this)}><Translate content="footer.advanced_settings" /></a>
+                    </div>
+                </div>
                 <div
                     className="introjs-launcher show-for-small-only"
                     onClick={() => {
                         this.launchIntroJS();
                     }}
                 >
-                    Help
+                    <Translate content="global.help" />
                 </div>
             </div>
         );
@@ -312,6 +361,12 @@ class Footer extends React.Component {
 
     onBackupBrainkey() {
         this.context.router.push("/wallet/backup/brainkey");
+    }
+
+    onPopup() {
+        this.setState({
+            showNodesPopup: !this.state.showNodesPopup
+        });
     }
 
     onAccess() {
@@ -326,8 +381,20 @@ class AltFooter extends Component {
         var wallet = WalletDb.getWallet();
         return (
             <AltContainer
-                stores={[CachedPropertyStore, BlockchainStore, WalletDb]}
+                stores={[CachedPropertyStore, BlockchainStore, WalletDb, SettingsStore]}
                 inject={{
+                    defaults: () => {
+                        return SettingsStore.getState().defaults;
+                    },
+                    apiLatencies: () => {
+                        return SettingsStore.getState().apiLatencies;
+                    },
+                    currentNode: () => { 
+                        return SettingsStore.getState().settings.get("apiServer");
+                    },
+                    activeNode: () => {
+                        return SettingsStore.getState().settings.get("activeNode");
+                    },
                     backup_recommended: () =>
                         wallet &&
                         (!wallet.backup_date ||
