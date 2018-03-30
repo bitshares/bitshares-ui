@@ -240,7 +240,7 @@ class AccountOverview extends React.Component {
 
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
-            this.refs.send_modal.show();
+            if (this.send_modal) this.send_modal.show();
         });
     }
 
@@ -1113,7 +1113,9 @@ class AccountOverview extends React.Component {
                                 {/* Send Modal */}
                                 <SendModal
                                     id="send_modal_portfolio"
-                                    ref="send_modal"
+                                    refCallback={e => {
+                                        if (e) this.send_modal = e;
+                                    }}
                                     from_name={this.props.account.get("name")}
                                     asset_id={this.state.send_asset || "1.3.0"}
                                 />
