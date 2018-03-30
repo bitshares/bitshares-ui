@@ -864,7 +864,7 @@
                 z-index: 1003;
                 background-color: $input-background !important;
                 > div {
-                    color: $primary-text-color !important;
+                    color: $primary-text-color;
                     background-color: transparent !important;
                     &:hover,
                     &:active,
