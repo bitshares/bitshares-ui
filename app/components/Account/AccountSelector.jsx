@@ -47,25 +47,16 @@ class AccountSelector extends React.Component {
     componentDidMount() {
         let {onAccountChanged, account, accountName} = this.props;
 
-        if(typeof account === "undefined")
+        if (typeof account === "undefined")
             account = ChainStore.getAccount(accountName);
 
-        if (onAccountChanged && account)
-            onAccountChanged(account);
+        if (onAccountChanged && account) onAccountChanged(account);
 
-        if(!this.props.typeahead)
-            this.onInputChanged(accountName);
+        if (!this.props.typeahead) this.onInputChanged(accountName);
     }
 
     componentWillReceiveProps(newProps) {
-        if(newProps.accountName != this.props.accountName)
-            console.log(newProps.accountName);
-
-        if (
-            newProps.account &&
-            newProps.account !== this.props.account
-        )
-        {
+        if (newProps.account && newProps.account !== this.props.account) {
             this.props.onAccountChanged(newProps.account);
         }
     }
@@ -84,7 +75,8 @@ class AccountSelector extends React.Component {
         return error;
     }
 
-    getNameType(value) { // OK
+    getNameType(value) {
+        // OK
         if (!value) return null;
         if (value[0] === "#" && utils.is_object_id("1.2." + value.substring(1)))
             return "id";
@@ -94,24 +86,13 @@ class AccountSelector extends React.Component {
         return null;
     }
 
-    onLinkAccount(e) {
-        e.preventDefault();
-        AccountActions.linkAccount(this.props.account.get("name"));
-    }
-
-    onUnLinkAccount(e) {
-        e.preventDefault();
-        AccountActions.unlinkAccount(this.props.account.get("name"));
-    }
-
     onSelected(e) {
         let _accountName = this.getVerifiedAccountName(e);
         let _account = ChainStore.getAccount(_accountName);
-        if(_account) {
+        if (_account) {
             this.props.onChange(_accountName);
             this.props.onAccountChanged(_account);
         }
-            
     }
 
     onInputChanged(e) {
@@ -119,18 +100,14 @@ class AccountSelector extends React.Component {
         let _accountName = this.getVerifiedAccountName(e);
         let _account = ChainStore.getAccount(_accountName);
 
-        if(onChange && _accountName !== accountName)
-            onChange(_accountName);
+        if (onChange && _accountName !== accountName) onChange(_accountName);
 
         // None-Typeahead Component compatibility
         // - Always returns account object
-        if(!typeahead) {
-            if(onChange) 
-                onChange(_accountName);
-            if(onAccountChanged) 
-                onAccountChanged(_account);
+        if (!typeahead) {
+            if (onChange) onChange(_accountName);
+            if (onAccountChanged) onAccountChanged(_account);
         }
-            
     }
 
     getVerifiedAccountName(e) {
@@ -143,10 +120,9 @@ class AccountSelector extends React.Component {
             value = e.target.value.trim();
         }
 
-        if (!allowUppercase)
-            value = value.toLowerCase();
+        if (!allowUppercase) value = value.toLowerCase();
 
-            // If regex matches ^.*#/account/account-name/.*$, parse out account-name
+        // If regex matches ^.*#/account/account-name/.*$, parse out account-name
         let _value = value
             .replace("#", "")
             .match(/(?:\/account\/)(.*)(?:\/overview)/);
@@ -158,7 +134,7 @@ class AccountSelector extends React.Component {
     onKeyDown(e) {
         if (e.keyCode === 13) this.onAction(e);
     }
-    
+
     _onAddContact() {
         AccountActions.addAccountContact(this.props.accountName);
     }
@@ -171,82 +147,96 @@ class AccountSelector extends React.Component {
         let {onAction, disableActionButton, account, accountName} = this.props;
         e.preventDefault();
         if (!this.getError() && onAction && !disableActionButton) {
-            if (account) 
-                onAction(account);
+            if (account) onAction(account);
             else if (this.getNameType(accountName) === "pubkey")
                 onAction(accountName);
         }
     }
 
     render() {
-        let {accountName, account, allowPubKey, typeahead, disableActionButton} = this.props;
+        let {
+            accountName,
+            account,
+            allowPubKey,
+            typeahead,
+            disableActionButton,
+            contacts,
+            myActiveAccounts
+        } = this.props;
 
         let typeAheadAccounts = [];
-        let myActiveAccounts = AccountStore.getState().myActiveAccounts;
-        let contacts = AccountStore.getState().accountContacts;
         let error = this.getError();
         let linkedAccounts = myActiveAccounts;
         linkedAccounts = linkedAccounts.concat(contacts);
 
         // Selected Account
-        if(account) {
-            account.isKnownScammer = accountUtils.isKnownScammer(account.get("name"));
+        if (account) {
+            account.isKnownScammer = accountUtils.isKnownScammer(
+                account.get("name")
+            );
             account.accountType = this.getNameType(account.get("name"));
             account.accountStatus = ChainStore.getAccountMemberStatus(account);
-            account.statusText = !account.isKnownScammer 
-                ? counterpart.translate("account.member." + account.accountStatus)
+            account.statusText = !account.isKnownScammer
+                ? counterpart.translate(
+                      "account.member." + account.accountStatus
+                  )
                 : counterpart.translate("account.member.suspected_scammer");
-            account.displayText = account.accountType === "name"
-                ? "#" + account.get("id").substring(4)
-                : account.accountType === "id"
-                    ? account.get("name") 
-                    : null;
+            account.displayText =
+                account.accountType === "name"
+                    ? "#" + account.get("id").substring(4)
+                    : account.accountType === "id" ? account.get("name") : null;
         }
 
         // Without Typeahead Error Handling
-        if(!typeahead) {
-            if(!account)
+        if (!typeahead) {
+            if (!account)
                 error = counterpart.translate("account.errors.unknown");
         } else {
             if (allowPubKey && account.accountType === "pubkey")
                 account.displayText = "Public Key";
-            else if (!error && accountName && !account) 
+            else if (!error && accountName && !account)
                 error = counterpart.translate("account.errors.unknown");
         }
 
-        if(account && linkedAccounts)
+        if (account && linkedAccounts)
             linkedAccounts.forEach(val => {
                 account.isFavorite = account.get("name") === val;
             });
-                
 
-        if(typeahead && linkedAccounts) {
+        if (typeahead && linkedAccounts) {
             linkedAccounts.map(function(accountName) {
                 let account = ChainStore.getAccount(accountName);
                 let account_status = ChainStore.getAccountMemberStatus(account);
-                let account_status_text = !accountUtils.isKnownScammer(accountName) ?
-                    "account.member." + account_status : "account.member.suspected_scammer";
+                let account_status_text = !accountUtils.isKnownScammer(
+                    accountName
+                )
+                    ? "account.member." + account_status
+                    : "account.member.suspected_scammer";
 
                 typeAheadAccounts.push({
-                    id: accountName, 
-                    label: accountName, 
+                    id: accountName,
+                    label: accountName,
                     status: counterpart.translate(account_status_text),
-                    className: accountUtils.isKnownScammer(accountName) ? "negative" : "positive"
+                    className: accountUtils.isKnownScammer(accountName)
+                        ? "negative"
+                        : "positive"
                 });
             });
         }
 
         let typeaheadHasAccount = !!accountName
             ? typeAheadAccounts.reduce((boolean, a) => {
-                return boolean || a.label === accountName;
-            }, false)
+                  return boolean || a.label === accountName;
+              }, false)
             : false;
         if (!!accountName && !typeaheadHasAccount) {
             let _account = ChainStore.getAccount(accountName);
-            let _account_status = _account ? ChainStore.getAccountMemberStatus(_account) : null;
-            let _account_status_text = _account 
-                ? !accountUtils.isKnownScammer(_account.get("name")) 
-                    ? counterpart.translate("account.member." + _account_status) 
+            let _account_status = _account
+                ? ChainStore.getAccountMemberStatus(_account)
+                : null;
+            let _account_status_text = _account
+                ? !accountUtils.isKnownScammer(_account.get("name"))
+                    ? counterpart.translate("account.member." + _account_status)
                     : counterpart.translate("account.member.suspected_scammer")
                 : counterpart.translate("account.errors.unknown");
 
@@ -254,15 +244,22 @@ class AccountSelector extends React.Component {
                 id: this.props.accountName,
                 label: this.props.accountName,
                 status: _account_status_text,
-                className: accountUtils.isKnownScammer(accountName) || !_account ? "negative" : null,
+                className:
+                    accountUtils.isKnownScammer(accountName) || !_account
+                        ? "negative"
+                        : null,
                 disabled: !_account ? true : false
             });
         }
 
-        let linked_status = !this.props
-            .account ? null : myActiveAccounts.has(
-            this.props.account.get("name")
-        ) || contacts.has(this.props.account.get("name")) ? (
+        typeAheadAccounts.sort((a, b) => {
+            if (a.label > b.label) return 1;
+            else return -1;
+        });
+
+        let linked_status = !this.props.account ? null : myActiveAccounts.has(
+            account.get("name")
+        ) || contacts.has(account.get("name")) ? (
             <span
                 className="tooltip"
                 data-place="top"
@@ -270,7 +267,9 @@ class AccountSelector extends React.Component {
                 onClick={this._onRemoveContact.bind(this)}
             >
                 <Icon
-                    className={"" + (account && account.isFavorite ? " green" : "")}
+                    className={
+                        "" + (account && account.isFavorite ? " green" : "")
+                    }
                     style={{
                         position: "absolute",
                         top: "-0.15em",
@@ -317,16 +316,21 @@ class AccountSelector extends React.Component {
                             <label
                                 className={cnames(
                                     "right-label",
-                                    account && account.isFavorite ? "positive" : null,
-                                    account && account.isKnownScammer ? "negative" : null
+                                    account && account.isFavorite
+                                        ? "positive"
+                                        : null,
+                                    account && account.isKnownScammer
+                                        ? "negative"
+                                        : null
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{account && account.displayText}
+                                    {account && account.statusText}&nbsp;{account &&
+                                        account.displayText}
                                 </span>
                                 {linked_status}
                             </label>
-                            
+
                             <Translate
                                 className="left-label"
                                 component="label"
@@ -347,9 +351,7 @@ class AccountSelector extends React.Component {
                                         width: this.props.size || 80
                                     }}
                                     account={
-                                        account
-                                            ? account.get("name")
-                                            : null
+                                        account ? account.get("name") : null
                                     }
                                     custom_image={null}
                                 />
@@ -442,7 +444,7 @@ class AccountSelector extends React.Component {
     }
 }
 
-export default BindToChainState(AccountSelector, {keep_updating: true});
+AccountSelector = BindToChainState(AccountSelector, {keep_updating: true});
 
 AccountSelector = connect(AccountSelector, {
     listenTo() {
@@ -451,7 +453,9 @@ AccountSelector = connect(AccountSelector, {
     getProps() {
         return {
             myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            currentAccount: AccountStore.getState().currentAccount
+            contacts: AccountStore.getState().accountContacts
         };
     }
 });
+
+export default AccountSelector;
