@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 page not found",
+        "page_not_found_subtitle": "This page does not exist",
+        "home": "Home"
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -22,12 +27,13 @@
     },
     "global": {
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "help": "Help"
     },
     "incognito": {
-        "no_support":
-            "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
-        "ignore": "I understand, continue."
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
     "sync_fail": {
         "title": "Failed to sync with the API server",
@@ -1090,7 +1096,9 @@
         "password": "Password",
         "backup": "Backup",
         "restore": "Restore/Import",
-        "access": "Access",
+        "access": "Nodes",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "ping": "Ping Nodes",
         "reset_text": "Restore settings to their original defaults.",
         "reset_text_description":
             "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
@@ -1131,8 +1139,10 @@
         "active_node": "Active Node",
         "node_up": "Available",
         "node_down": "Unreachable",
-        "available_nodes": "Available Nodes",
-        "hidden_nodes": "Hidden Nodes",
+        "switch": "Switch Node",
+        "available_nodes": "Available",
+        "hidden_nodes": "Hidden",
+        "my_nodes": "Personal",
         "show": "Show",
         "hide": "Hide",
         "add_api": "Add Node",
@@ -1162,7 +1172,8 @@
         "unsynced": "Out of sync",
         "disconnected": "Disconnected",
         "connected": "Connected",
-        "latency": "Latency"
+        "latency": "Latency",
+        "advanced_settings": "Advanced settings"
     },
     "exchange": {
         "buysell_formatter": "{direction} {asset}",

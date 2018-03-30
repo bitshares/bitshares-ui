@@ -435,7 +435,7 @@ class DashboardList extends React.Component {
                             value={dashboardFilter}
                             onChange={this._onFilter.bind(this)}
                         />
-                        {hasLocalWallet ? (
+                        {hasLocalWallet && !isContactsList ? (
                             <div
                                 onClick={this._createAccount.bind(this)}
                                 style={{

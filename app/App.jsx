@@ -7,7 +7,7 @@ import IntlActions from "actions/IntlActions";
 import NotificationStore from "stores/NotificationStore";
 import intlData from "./components/Utility/intlData";
 import alt from "alt-instance";
-import { connect, supplyFluxContext } from "alt-react";
+import {connect, supplyFluxContext} from "alt-react";
 import {IntlProvider} from "react-intl";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
@@ -21,25 +21,31 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
-// import Incognito from "./components/Layout/Incognito";
-// import { isIncognito } from "feature_detect";
+import WalletManagerStore from "stores/WalletManagerStore";
+import Incognito from "./components/Layout/Incognito";
+import {isIncognito} from "feature_detect";
 
 class App extends React.Component {
-
-    constructor() {
+    constructor(props) {
         super();
 
         // Check for mobile device to disable chat
         const user_agent = navigator.userAgent.toLowerCase();
-        let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        let isSafari = /^((?!chrome|android).)*safari/i.test(
+            navigator.userAgent
+        );
 
-        let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+        let syncFail =
+            ChainStore.subError &&
+            ChainStore.subError.message ===
+                "ChainStore sync error, please check your system clock"
+                ? true
+                : false;
         this.state = {
             loading: false,
             synced: this._syncStatus(),
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
-            isMobile: !!(/android|ipad|ios|iphone|windows phone/i.test(user_agent) || isSafari),
             incognito: false,
             incognitoWarningDismissed: false,
             height: window && window.innerHeight
@@ -69,7 +75,10 @@ class App extends React.Component {
                 block_time += "Z";
             }
 
-            let bt = (new Date(block_time).getTime() + ChainStore.getEstimatedChainTimeOffset()) / 1000;
+            let bt =
+                (new Date(block_time).getTime() +
+                    ChainStore.getEstimatedChainTimeOffset()) /
+                1000;
             let now = new Date().getTime() / 1000;
             synced = Math.abs(now - bt) < 5;
         }
@@ -81,12 +90,15 @@ class App extends React.Component {
 
     _setListeners() {
         try {
-            window.addEventListener("resize", this._getWindowHeight, {capture: false, passive: true});
+            window.addEventListener("resize", this._getWindowHeight, {
+                capture: false,
+                passive: true
+            });
             NotificationStore.listen(this._onNotificationChange.bind(this));
             SettingsStore.listen(this._onSettingsChange);
             ChainStore.subscribe(this._chainStoreSub);
             AccountStore.tryToSetCurrentAccount();
-        } catch(e) {
+        } catch (e) {
             console.error("e:", e);
         }
     }
@@ -95,16 +107,29 @@ class App extends React.Component {
         this._setListeners();
         this.syncCheckInterval = setInterval(this._syncStatus, 5000);
         const user_agent = navigator.userAgent.toLowerCase();
-        if (!(window.electron || user_agent.indexOf("firefox") > -1 || user_agent.indexOf("chrome") > -1 || user_agent.indexOf("edge") > -1)) {
+        if (
+            !(
+                window.electron ||
+                user_agent.indexOf("firefox") > -1 ||
+                user_agent.indexOf("chrome") > -1 ||
+                user_agent.indexOf("edge") > -1
+            )
+        ) {
             this.refs.browser_modal.show();
         }
 
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
+
+        isIncognito(
+            function(incognito) {
+                this.setState({incognito});
+            }.bind(this)
+        );
     }
 
-    _onIgnoreIncognitoWarning(){
+    _onIgnoreIncognitoWarning() {
         this.setState({incognitoWarningDismissed: true});
     }
 
@@ -123,8 +148,16 @@ class App extends React.Component {
         if (synced !== this.state.synced) {
             this.setState({synced});
         }
-        if (ChainStore.subscribed !== this.state.synced || ChainStore.subError) {
-            let syncFail = ChainStore.subError && (ChainStore.subError.message === "ChainStore sync error, please check your system clock") ? true : false;
+        if (
+            ChainStore.subscribed !== this.state.synced ||
+            ChainStore.subError
+        ) {
+            let syncFail =
+                ChainStore.subError &&
+                ChainStore.subError.message ===
+                    "ChainStore sync error, please check your system clock"
+                    ? true
+                    : false;
             this.setState({
                 syncFail
             });
@@ -137,18 +170,17 @@ class App extends React.Component {
         if (notification.autoDismiss === void 0) {
             notification.autoDismiss = 10;
         }
-        if (this.refs.notificationSystem) this.refs.notificationSystem.addNotification(notification);
+        if (this.refs.notificationSystem)
+            this.refs.notificationSystem.addNotification(notification);
     }
 
     _onSettingsChange() {
-        let {settings, viewSettings} = SettingsStore.getState();
+        let {settings} = SettingsStore.getState();
         if (settings.get("themes") !== this.state.theme) {
             this.setState({
                 theme: settings.get("themes")
             });
         }
-
-
     }
 
     _getWindowHeight() {
@@ -162,46 +194,61 @@ class App extends React.Component {
     // }
 
     render() {
-        let {isMobile, theme } = this.state;
+        let {theme, incognito, incognitoWarningDismissed} = this.state;
+        let {walletMode} = this.props;
 
         let content = null;
 
         let showFooter = 1;
-        // if(incognito && !incognitoWarningDismissed){
-        //     content = (
-        //         <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
-        //     );
-        // } else
+
         if (this.state.syncFail) {
-            content = (
-                <SyncError />
-            );
+            content = <SyncError />;
         } else if (this.state.loading) {
-            content = <div className="grid-frame vertical">
-                <LoadingIndicator loadingText={"Connecting to APIs and starting app"}/>
-            </div>;
+            content = (
+                <div className="grid-frame vertical">
+                    <LoadingIndicator
+                        loadingText={"Connecting to APIs and starting app"}
+                    />
+                </div>
+            );
         } else if (this.props.location.pathname === "/init-error") {
-            content = <div className="grid-frame vertical">{this.props.children}</div>;
+            content = (
+                <div className="grid-frame vertical">{this.props.children}</div>
+            );
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height}/>
+                    <Header height={this.state.height} />
                     <div className="grid-block">
                         <div className="grid-block vertical">
                             {this.props.children}
                         </div>
-
                     </div>
-                    {showFooter ? <Footer synced={this.state.synced}/> : null}
-                    <ReactTooltip ref="tooltip" place="top" type={theme === "lightTheme" ? "dark" : "light"} effect="solid"/>
+                    {showFooter ? <Footer synced={this.state.synced} /> : null}
+                    <ReactTooltip
+                        ref="tooltip"
+                        place="top"
+                        type={theme === "lightTheme" ? "dark" : "light"}
+                        effect="solid"
+                    />
                 </div>
             );
         }
 
         return (
-            <div style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}} className={this.state.theme}>
+            <div
+                style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}}
+                className={this.state.theme}
+            >
+                {walletMode && incognito && !incognitoWarningDismissed ? (
+                    <Incognito
+                        onClickIgnore={this._onIgnoreIncognitoWarning.bind(
+                            this
+                        )}
+                    />
+                ) : null}
                 <div id="content-wrapper">
                     {content}
                     <NotificationSystem
@@ -215,14 +262,13 @@ class App extends React.Component {
                             }
                         }}
                     />
-                    <TransactionConfirm/>
-                    <BrowserNotifications/>
-                    <WalletUnlockModal/>
-                    <BrowserSupportModal ref="browser_modal"/>
+                    <TransactionConfirm />
+                    <BrowserNotifications />
+                    <WalletUnlockModal />
+                    <BrowserSupportModal ref="browser_modal" />
                 </div>
             </div>
         );
-
     }
 }
 
@@ -238,7 +284,7 @@ class RootIntl extends React.Component {
                 formats={intlData.formats}
                 initialNow={Date.now()}
             >
-                <App {...this.props}/>
+                <App {...this.props} />
             </IntlProvider>
         );
     }
@@ -246,11 +292,14 @@ class RootIntl extends React.Component {
 
 RootIntl = connect(RootIntl, {
     listenTo() {
-        return [IntlStore];
+        return [IntlStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
         return {
-            locale: IntlStore.getState().currentLocale
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet
         };
     }
 });
@@ -259,15 +308,18 @@ class Root extends React.Component {
     static childContextTypes = {
         router: React.PropTypes.object,
         location: React.PropTypes.object
-    }
+    };
 
-    componentDidMount(){
+    componentDidMount() {
         //Detect OS for platform specific fixes
-        if(navigator.platform.indexOf('Win') > -1){
-            var main = document.getElementById('content');
-            var windowsClass = 'windows';
-            if(main.className.indexOf('windows') === -1){
-                main.className = main.className + (main.className.length ? ' ' : '') + windowsClass;
+        if (navigator.platform.indexOf("Win") > -1) {
+            var main = document.getElementById("content");
+            var windowsClass = "windows";
+            if (main.className.indexOf("windows") === -1) {
+                main.className =
+                    main.className +
+                    (main.className.length ? " " : "") +
+                    windowsClass;
             }
         }
     }

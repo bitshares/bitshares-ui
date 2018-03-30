@@ -251,6 +251,7 @@ class AccountWhitelist extends React.Component {
                                             )}
                                             action_label="account.perm.confirm_add"
                                             white={false}
+                                            typeahead={true}
                                         />
                                     </div>
                                 </div>
@@ -293,6 +294,7 @@ class AccountWhitelist extends React.Component {
                                                 "black_listed"
                                             )}
                                             action_label="account.perm.confirm_add"
+                                            typeahead={true}
                                         />
                                     </div>
                                 </div>

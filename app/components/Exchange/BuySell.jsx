@@ -427,7 +427,9 @@ class BuySell extends React.Component {
                                         keys={[
                                             {
                                                 type: "asset",
-                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
                                                 arg: "asset"
                                             },
                                             {
@@ -435,7 +437,7 @@ class BuySell extends React.Component {
                                                 value: "exchange.buy",
                                                 arg: "direction"
                                             }
-                                        ]} 
+                                        ]}
                                     />
                                 </a>
                             </div>
@@ -443,13 +445,15 @@ class BuySell extends React.Component {
                         {this.props.backedCoin ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onDeposit.bind(this)}>
-                                <TranslateWithLinks
+                                    <TranslateWithLinks
                                         string="exchange.buysell_formatter"
                                         noLink
                                         keys={[
                                             {
                                                 type: "asset",
-                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
                                                 arg: "asset"
                                             },
                                             {
@@ -457,7 +461,7 @@ class BuySell extends React.Component {
                                                 value: "exchange.deposit",
                                                 arg: "direction"
                                             }
-                                        ]} 
+                                        ]}
                                     />
                                 </a>
                             </div>
@@ -471,7 +475,9 @@ class BuySell extends React.Component {
                                         keys={[
                                             {
                                                 type: "asset",
-                                                value: this.props[isBid ? "base" : "quote"].get("symbol"),
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
                                                 arg: "asset"
                                             },
                                             {
@@ -479,7 +485,7 @@ class BuySell extends React.Component {
                                                 value: "exchange.borrow",
                                                 arg: "direction"
                                             }
-                                        ]} 
+                                        ]}
                                     />
                                 </a>
                             </div>
@@ -723,6 +729,9 @@ class BuySell extends React.Component {
                                                 {this.props.expirationType ===
                                                 "SPECIFIC" ? (
                                                     <DatePicker
+                                                        pickerPosition={
+                                                            "bottom center"
+                                                        }
                                                         wrapperClassName={theme}
                                                         timePicker={true}
                                                         min={minExpirationDate}

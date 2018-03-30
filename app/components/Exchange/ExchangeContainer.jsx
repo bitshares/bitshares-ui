@@ -78,6 +78,9 @@ class ExchangeContainer extends React.Component {
                     settings: () => {
                         return SettingsStore.getState().settings;
                     },
+                    exchange: () => {
+                        return SettingsStore.getState().exchange;
+                    },
                     starredMarkets: () => {
                         return SettingsStore.getState().starredMarkets;
                     },
