@@ -1,4 +1,39 @@
 ---------------------------------------------------------------------
+Release 2.0.180401
+---------------------------------------------------------------------
+New features
+--------
+- #1223 - Access Node Popup / Access Nodes List
+- #1190: Show incognito warning for wallet users
+- #1331: Add Page 404
+- #1343: Reduce bundle size by ~30%
+
+Bug fixes and improvements
+--------
+- #999 Add QRScanner component
+- #999 Update Content-Security-Policy to support camera capture
+- #999 Add https server for local development
+- #999 Add react-qr-reader package
+- #1371: Show 404 page for non-existing accounts
+- #1342: Add asset_claim_fees in fee schedule
+- #1344- Remove references to transwiser
+- Cleanup Transfer, SendModal and AccountSelector following #1340
+- #1190: Fix incognito warning wallet mode detection, modify warning
+- #1341 and #1364: Fix fetching of vote ids
+- Fix #1364: Sort active committee members array from API
+- Resolve tab index issue in find markets
+- #1331 Store last expiration on localStorage
+- #1331 Display Expiration DatePicker above field
+- #1331 Add 1 year option and make it as default
+- #1338: Set set_subscribe_callback boolean to false
+- Fix #1349: Use new get_all_workers API to fetch workers
+- Added Japanese translation for #1335
+- Added Openledger component and minor context fix
+- #984: Enabled Buy/Sell widgets on Exchange
+- #1283: Fix wallet unlock behavior
+- UI Fixes for Borrow modal (#1327)
+
+---------------------------------------------------------------------
 Release 2.0.180315
 ---------------------------------------------------------------------
 New features
