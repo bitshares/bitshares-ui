@@ -68,6 +68,7 @@ export const settingsAPIs = {
             location: "Singapore - BitShares Infrastructure Program"
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
+        {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
