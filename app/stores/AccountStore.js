@@ -263,7 +263,9 @@ class AccountStore extends BaseStore {
             iDB
                 .load_data("linked_accounts")
                 .then(data => {
-                    this.state.linkedAccounts = Immutable.fromJS(data || []);
+                    this.state.linkedAccounts = Immutable.fromJS(
+                        data || []
+                    ).toSet();
                     let accountPromises = data
                         .filter(a => {
                             if (a.chainId) {
@@ -349,12 +351,32 @@ class AccountStore extends BaseStore {
                         name: account.get("name"),
                         chainId: Apis.instance().chain_id
                     };
-                    var isAlreadyLinked = this.state.linkedAccounts.find(a => {
+                    let isAlreadyLinked = this.state.linkedAccounts.find(a => {
                         return (
                             a.get("name") === linkedEntry.name &&
                             a.get("chainId") === linkedEntry.chainId
                         );
                     });
+
+                    /*
+                    * Some wallets contain deprecated entries with no chain
+                    * ids, remove these then write new entires with chain ids
+                    */
+                    const nameOnlyEntry = this.state.linkedAccounts.findKey(
+                        a => {
+                            return (
+                                a.get("name") === linkedEntry.name &&
+                                !a.has("chainId")
+                            );
+                        }
+                    );
+                    if (!!nameOnlyEntry) {
+                        this.state.linkedAccounts = this.state.linkedAccounts.delete(
+                            nameOnlyEntry
+                        );
+                        this._unlinkAccount(account.get("name"));
+                        isAlreadyLinked = false;
+                    }
                     if (
                         account &&
                         this.isMyAccount(account) &&
