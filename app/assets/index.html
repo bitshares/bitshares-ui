@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width"/>
     <meta name="format-detection" content="telephone=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; worker-src blob:;script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ 'self' 'unsafe-eval' 'unsafe-inline' https://bitshares.openledger.info; style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data:; img-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; worker-src blob:;script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data:; img-src 'self' data:;">
     <title>BitShares</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="app.css">
@@ -22,20 +22,6 @@
             font-size: 44px;
         }
     </style>
-    <script>
-        var ref = encodeURIComponent(document.referrer);
-        if (window.process && window.process.versions && window.process.versions['electron']) {
-            window.electron = window.process.versions['electron'];
-            window.remote = require('electron').remote;
-            window._$guid$_ = window.remote.getGlobal('guid');
-            window.app_version = window.remote.getGlobal('version');
-            ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
-            window.onload = function(e){
-                var content = document.getElementById("content");
-                if (content) content.className = "electron " + window.process.platform;
-            }
-        }
-    </script>
 </head>
 <body>
     <main id="content">
