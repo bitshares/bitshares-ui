@@ -17,7 +17,7 @@ const onGatewayTimeout = (dispatch, gateway) => {
 };
 
 class GatewayActions {
-    fetchCoins({backer = "OPEN", url = undefined} = {}) {
+    fetchCoins({backer = "OPEN", url = undefined, urlBridge = blockTradesAPIs.BASE_OL, urlWallets = undefined} = {}) {
         if (!inProgress["fetchCoins_" + backer]) {
             inProgress["fetchCoins_" + backer] = true;
             return dispatch => {
@@ -28,8 +28,8 @@ class GatewayActions {
 
                 Promise.all([
                     fetchCoins(url),
-                    fetchBridgeCoins(blockTradesAPIs.BASE_OL),
-                    getActiveWallets(url)
+                    fetchBridgeCoins(urlBridge),
+                    getActiveWallets(urlWallets)
                 ]).then(result => {
                     clearTimeout(fetchCoinsTimeout);
                     delete inProgress["fetchCoins_" + backer];

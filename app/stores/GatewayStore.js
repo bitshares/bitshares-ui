@@ -25,7 +25,7 @@ class GatewayStore {
     onFetchCoins({backer, coins, backedCoins, down} = {}) {
         if (backer && coins) {
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
-
+            
             ss.set("backedCoins", this.backedCoins.toJS());
 
             this.down = this.down.set(backer, false);
