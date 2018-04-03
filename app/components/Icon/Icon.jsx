@@ -1,70 +1,76 @@
 // look for more icons here https://linearicons.com/free or here http://hawcons.com/preview/
 
 import React from "react";
+import counterpart from "counterpart";
 
 let icons = [
-    "user",
-    "trash",
-    "chevron-down",
-    "menu",
-    "database",
-    "download",
-    "search",
-    "plus-circle",
-    "question-circle",
-    "cross-circle",
-    "cog",
-    "layers",
-    "users",
-    "wand",
-    "b-logo",
     "accounts",
-    "witnesses",
+    "adjust",
     "assets",
-    "proposals",
+    "b-logo",
     "blocks",
-    "committee_members",
-    "workers",
-    "key",
     "checkmark-circle",
     "checkmark",
-    "piggy",
-    "locked",
-    "unlocked",
-    "markets",
-    "fi-star",
+    "chevron-down",
+    "clippy",
+    "clock",
+    "cog",
+    "cogs",
+    "committee_members",
+    "connected",
+    "cross-circle",
+    "dashboard",
+    "database",
+    "deposit",
+    "dollar-green",
+    "dollar",
+    "download",
+    "excel",
+    "eye",
+    "eye-striked",
     "fees",
+    "fi-star",
+    "folder",
+    "gift",
+    "hamburger-x",
+    "hamburger",
+    "hourglass",
+    "key",
+    "layers",
+    "link",
+    "list",
+    "locked",
+    "markets",
+    "menu",
+    "minus-circle",
+    "news",
+    "piggy",
+    "plus-circle",
+    "power",
+    "proposals",
+    "question-circle",
+    "reconnect",
+    "search",
+    "server",
+    "settle",
+    "share",
+    "shuffle",
+    "text",
     "thumb-tack",
     "thumb-untack",
-    "clock",
-    "clippy",
-    "shuffle",
-    "transfer",
-    "dollar",
-    "dollar-green",
-    "deposit",
-    "withdraw",
-    "settle",
-    "trade",
-    "adjust",
-    "excel",
-    "share",
-    "minus-circle",
-    "cogs",
-    "dashboard",
-    "server",
-    "power",
     "thumbs-up",
-    "folder",
+    "times",
+    "trade",
+    "transfer",
+    "trash",
+    "unlocked",
+    "user",
+    "users",
+    "wand",
     "warning",
-    "gift",
-    "text",
-    "list",
-    "hourglass",
-    "news",
-    "hamburger",
-    "hamburger-x",
-    "link"
+    "withdraw",
+    "witnesses",
+    "workers"
 ];
 
 let icons_map = {};
@@ -81,22 +87,47 @@ class Icon extends React.Component {
         if (this.props.className) {
             classes += " " + this.props.className;
         }
-        return (
-            <span
-                className={classes}
-                style={this.props.style || {}}
-                dangerouslySetInnerHTML={{__html: icons_map[this.props.name]}}
-                onClick={this.props.onClick}
-            />
-        );
+        if (this.props.title != null) {
+            let title = this.props.title;
+            if (typeof title === "string" && title.indexOf(".") > 0) {
+                title = counterpart.translate(title);
+            }
+            return (
+                <span
+                    title={title}
+                    className={classes}
+                    style={this.props.style || {}}
+                    dangerouslySetInnerHTML={{
+                        __html: icons_map[this.props.name]
+                    }}
+                    onClick={this.props.onClick}
+                />
+            );
+        } else {
+            return (
+                <span
+                    className={classes}
+                    style={this.props.style || {}}
+                    dangerouslySetInnerHTML={{
+                        __html: icons_map[this.props.name]
+                    }}
+                    onClick={this.props.onClick}
+                />
+            );
+        }
     }
 }
 
 Icon.propTypes = {
     name: React.PropTypes.string.isRequired,
+    title: React.PropTypes.string,
     size: React.PropTypes.oneOf(["1x", "1_5x", "2x", "3x", "4x", "5x", "10x"]),
     inverse: React.PropTypes.bool,
     className: React.PropTypes.string
+};
+
+Icon.defaultProps = {
+    title: null
 };
 
 export default Icon;
