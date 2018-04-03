@@ -25,25 +25,27 @@ import {Asset} from "common/MarketClasses";
 class Transfer extends React.Component {
     constructor(props) {
         super(props);
-        this.state = Transfer.getInitialState();
+        let state = Transfer.getInitialState();
         let {query} = this.props.location;
 
         if (query.from) {
-            this.state.from_name = query.from;
+            state.from_name = query.from;
             ChainStore.getAccount(query.from);
         }
         if (query.to) {
-            this.state.to_name = query.to;
+            state.to_name = query.to;
             ChainStore.getAccount(query.to);
         }
-        if (query.amount) this.state.amount = query.amount;
+        if (query.amount) state.amount = query.amount;
         if (query.asset) {
-            this.state.asset_id = query.asset;
-            this.state.asset = ChainStore.getAsset(query.asset);
+            state.asset_id = query.asset;
+            state.asset = ChainStore.getAsset(query.asset);
         }
-        if (query.memo) this.state.memo = query.memo;
+        if (query.memo) state.memo = query.memo;
         let currentAccount = AccountStore.getState().currentAccount;
-        if (!this.state.from_name) this.state.from_name = currentAccount;
+        if (!state.from_name) state.from_name = currentAccount;
+
+        this.state = state;
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
         this._updateFee = debounce(this._updateFee.bind(this), 250);
@@ -124,7 +126,7 @@ class Transfer extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
-        if (!asset) return;
+        if (!asset || !from_account) return;
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
         const feeBalanceID = from_account.getIn([
             "balances",
@@ -397,16 +399,6 @@ class Transfer extends React.Component {
         return {asset_types, fee_asset_types};
     }
 
-    _onAccountDropdown(account) {
-        let newAccount = ChainStore.getAccount(account);
-        if (newAccount) {
-            this.setState({
-                from_name: account,
-                from_account: ChainStore.getAccount(account)
-            });
-        }
-    }
-
     render() {
         let from_error = null;
         let {
@@ -500,19 +492,6 @@ class Transfer extends React.Component {
         accountsList = accountsList.add(from_account);
         let tabIndex = 1;
 
-        const contactsList = this.props.contactsList.toArray();
-
-        const receiverProps = contactsList.length
-            ? {
-                  typeahead: contactsList,
-                  typeaheadOptions: {
-                      typeaheadVisibleStyle: {
-                          paddingBottom: "1rem"
-                      }
-                  }
-              }
-            : {};
-
         return (
             <div className="grid-block vertical">
                 <div
@@ -536,29 +515,27 @@ class Transfer extends React.Component {
                                 onAccountChanged={this.onFromAccountChanged.bind(
                                     this
                                 )}
-                                account={from_name}
+                                account={from_account}
                                 size={60}
                                 error={from_error}
+                                typeahead={true}
                                 tabIndex={tabIndex++}
-                                onDropdownSelect={this._onAccountDropdown.bind(
-                                    this
-                                )}
-                                dropDownContent={AccountStore.getMyAccounts()}
                             />
                         </div>
                         {/*  T O  */}
                         <div className="content-block">
                             <AccountSelector
                                 label="transfer.to"
+                                ref="to"
                                 accountName={to_name}
                                 onChange={this.toChanged.bind(this)}
                                 onAccountChanged={this.onToAccountChanged.bind(
                                     this
                                 )}
-                                account={to_name}
+                                account={to_account}
                                 size={60}
                                 tabIndex={tabIndex++}
-                                {...receiverProps}
+                                typeahead={true}
                             />
                         </div>
                         {/*  A M O U N T   */}

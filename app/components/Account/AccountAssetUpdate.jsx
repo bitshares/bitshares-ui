@@ -1375,6 +1375,7 @@ class AccountAssetUpdate extends React.Component {
                                             account={account.get("name")}
                                             error={null}
                                             tabIndex={1}
+                                            disabled={true}
                                         />
                                     </div>
                                     <AccountSelector
@@ -1393,6 +1394,7 @@ class AccountAssetUpdate extends React.Component {
                                         account={this.state.issuer_account_name}
                                         error={null}
                                         tabIndex={1}
+                                        typeahead={true}
                                     />
                                     {
                                         <p>

@@ -45,10 +45,14 @@
     $settings-api-node-border-color,
     $main-content-margin-block-bg-color,
     $modal-bg-color,
-    $mobile-input-bg
+    $mobile-input-bg,
+    $incognito-bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    #incognito {
+        background: $incognito-bg;
+    }
     .settings-select {
         height: 36px;
         padding: 0 12px;
@@ -299,6 +303,14 @@
         }
         .logo .version {
             color: darken($secondary-text-color, 10%);
+        }
+    }
+
+    .node-access-popup {
+        @include color($secondary-text-color, $panel-bg-color);
+        border: 1px solid black;
+        .nodes-list .api-status {
+            border-bottom: 1px solid lighten($bg-color, 4%);
         }
     }
 
@@ -860,7 +872,7 @@
                 z-index: 1003;
                 background-color: $input-background !important;
                 > div {
-                    color: $primary-text-color !important;
+                    color: $primary-text-color;
                     background-color: transparent !important;
                     &:hover,
                     &:active,
@@ -1632,16 +1644,23 @@
     }
 
     .api-node {
-        &:hover {
+        .icon.shuffle svg > path {
+            fill: $button-bg-color !important;
+        }
+        .icon.link svg > path {
+            fill: $positive-color !important;
+        }
+        .icon.minus-circle svg > path {
+            fill: $negative-color !important;
+        }
+        &:nth-child(odd) {
             background-color: lighten($bg-color, 4%);
         }
-        border: 1px solid $settings-api-node-border-color;
-        &:nth-child(n + 1) {
-            border-bottom: 0;
-        }
-        &:last-child {
-            border: 1px solid $settings-api-node-border-color;
-        }
+    }
+
+    .active-node {
+        border-bottom: 1px solid lighten($bg-color, 4%);
+        border-top: 1px solid lighten($bg-color, 4%);
     }
 
     // Settings
@@ -1960,12 +1979,15 @@
     .api-status {
         .low {
             color: $bid-color;
+            > svg > path { fill: $bid-color; }
         }
         .medium {
             color: $call-color;
+            > svg > path { fill: $call-color; }
         }
         .high {
             color: $ask-color;
+            > svg > path { fill: $ask-color; }
         }
     }
 
@@ -2377,6 +2399,16 @@
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: right;
+    }
+}
+
+#qr_scanner_modal {
+    > section {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
 

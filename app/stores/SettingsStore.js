@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
-import Immutable from "immutable";
+import Immutable, {fromJS} from "immutable";
 import {merge} from "lodash";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
@@ -22,6 +22,8 @@ class SettingsStore {
         });
 
         this.bindListeners({
+            onSetExchangeLastExpiration:
+                SettingsActions.setExchangeLastExpiration,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
@@ -163,6 +165,8 @@ class SettingsStore {
             "testnet_faucet",
             settingsAPIs.TESTNET_FAUCET
         );
+
+        this.exchange = fromJS(ss.get("exchange", {}));
     }
 
     init() {
@@ -474,6 +478,24 @@ class SettingsStore {
 
     setLastBudgetObject(value) {
         ss.set(this._getChainKey("lastBudgetObject"), value);
+    }
+
+    setExchangeSettings(key, value) {
+        this.exchange = this.exchange.set(key, value);
+
+        ss.set("exchange", this.exchange.toJS());
+    }
+
+    getExchangeSettings(key) {
+        return this.exchange.get(key);
+    }
+
+    onSetExchangeLastExpiration(value) {
+        this.setExchangeSettings("lastExpiration", fromJS(value));
+    }
+
+    getExhchangeLastExpiration() {
+        return this.getExchangeSettings("lastExpiration");
     }
 }
 

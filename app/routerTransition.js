@@ -497,7 +497,7 @@ class RouterTransitioner {
         return Promise.all([dbPromise, SettingsStore.init()])
             .then(() => {
                 let chainStoreResetPromise = chainChanged
-                    ? ChainStore.resetCache()
+                    ? ChainStore.resetCache(false)
                     : Promise.resolve();
                 return chainStoreResetPromise.then(() => {
                     return Promise.all([

@@ -45,6 +45,42 @@
 }
 
 div.api-node {
-    position: relative;
-    padding: 1em 1em 0.5em 1em;
+    .api-status { 
+        overflow-wrap: break-word; 
+        font-size: 80%; 
+    }
+    
+    p { margin-bottom: 0; }
+    > div {
+        vertical-align: top;
+        display: inline-block;
+        padding-bottom: 1rem;
+        padding-top: 1rem;
+        padding-left: 1rem;
+    }
+    > div:nth-child(1) {
+        width: 50%;
+        > p:nth-child(2) { overflow-wrap: break-word; font-size: 80%; }
+    }
+    > div:nth-child(2) {
+        width: 25%;
+    }
+    > div:nth-child(3) {
+        width: auto;
+        position: absolute;
+        right: 25px;
+    }
+}
+
+.active-node {
+    margin-bottom: 2em;
+}
+
+.auto-node {
+    margin-left: 1rem;
+    margin-bottom: 2rem;
+    > div {
+        display: inline-flex;
+        vertical-align: middle;
+    }
 }

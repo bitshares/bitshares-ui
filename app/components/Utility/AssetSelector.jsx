@@ -18,7 +18,6 @@ class AssetDropdown extends React.Component {
 
     render() {
         if (this.props.assets.length === 0 || !this.props.value) return null;
-        console.log("assets:", this.props.assets);
         return (
             <FloatingDropdown
                 entries={this.props.assets

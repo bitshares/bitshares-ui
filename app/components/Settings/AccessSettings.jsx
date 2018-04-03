@@ -7,6 +7,7 @@ import willTransitionTo from "../../routerTransition";
 import {withRouter} from "react-router/es";
 import {connect} from "alt-react";
 import cnames from "classnames";
+import Icon from "../Icon/Icon";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
 const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
@@ -19,24 +20,12 @@ const testnetAPI2 = settingsAPIs.WS_NODE_LIST.find(
 class ApiNode extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            hovered: false
-        };
     }
 
-    setHovered() {
-        this.setState({hovered: true});
-    }
-
-    clearHovered() {
-        this.setState({hovered: false});
-    }
-
-    activate() {
+    activate(url) {
         SettingsActions.changeSetting({
             setting: "apiServer",
-            value: this.props.url
+            value: url
         });
         setTimeout(
             function() {
@@ -75,7 +64,9 @@ class ApiNode extends React.Component {
             displayUrl,
             ping,
             up,
-            hidden
+            hidden,
+            activeNode,
+            popup
         } = props;
 
         let color;
@@ -93,11 +84,9 @@ class ApiNode extends React.Component {
             latencyKey = "high_latency";
         }
 
-        if (ping >= 1000) {
-            friendlyPing = +(ping / 1000).toFixed(2) + "s";
-        } else {
-            friendlyPing = ping + "ms";
-        }
+        friendlyPing = ping >= 1000 ? +(ping / 1000).toFixed(2) + "s" : ping + "ms";
+
+        //console.log("Active: " + activeNode.url + " Current: " + currentNode);
 
         /*
         * The testnet latency is not checked in the connection manager,
@@ -105,128 +94,99 @@ class ApiNode extends React.Component {
         */
         const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
 
-        var Status =
-            isTestnet && !ping ? null : (
-                <div
-                    className="api-status"
-                    style={{
-                        position: "absolute",
-                        textAlign: "right",
-                        right: "1em",
-                        top: 5
-                    }}
-                >
-                    {up && (
-                        <span className={color}>
-                            <Translate content={`settings.${latencyKey}`} /> ({
-                                friendlyPing
-                            })
-                        </span>
-                    )}
-                    {!up && <span className="high">__</span>}
-                </div>
-            );
+        let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
 
-        let showApiStatus =
-            (allowActivation && !automatic) ||
-            (!allowActivation && !allowRemoval && !automatic);
-
-        return (
-            <div
-                className="api-node"
-                onMouseOver={this.setHovered.bind(this)}
-                onMouseLeave={this.clearHovered.bind(this)}
-            >
-                <h3 style={{marginBottom: 0, marginTop: 0}}>{name}</h3>
-                <div className="api-status">
-                    <span style={{marginBottom: 0}}>{displayUrl}</span>
-                    {showApiStatus && <span> | </span>}
-                    {showApiStatus && (
-                        <Translate
-                            className={up ? "low" : "high"}
-                            style={{marginBottom: 0}}
-                            component="span"
-                            content={
-                                "settings." + (up ? "node_up" : "node_down")
-                            }
-                        />
-                    )}
-                </div>
-                {automatic && autoActive ? (
-                    <div
-                        className="api-status"
-                        style={{
-                            position: "absolute",
-                            textAlign: "right",
-                            right: "1em",
-                            top: "0.5em"
-                        }}
+        if(popup) {
+            return url === autoSelectAPI ? 
+                <div>
+                    <span 
+                        className="switch"
+                        style={{float: "right", position: "relative", top: "-15px"}}
+                        onClick={this.activate.bind(this, autoActive ? activeNode.url : autoSelectAPI)}
                     >
-                        <Translate
-                            content="account.votes.active_short"
-                            component="h3"
-                            className="low"
-                            style={{marginBottom: 0}}
-                        />
-                    </div>
-                ) : null}
-                {!allowActivation && !allowRemoval && !automatic && Status}
-                {allowActivation &&
-                    !automatic &&
-                    (up
-                        ? !state.hovered
-                        : allowRemoval ? !state.hovered : true) &&
-                    Status}
-                {(allowActivation || allowRemoval) &&
-                    state.hovered &&
-                    !(automatic && autoActive) && (
-                        <div
-                            style={{
-                                position: "absolute",
-                                right: "1em",
-                                top: "1em"
-                            }}
+                        <input type="checkbox" checked={autoActive}  />
+                        <label />
+                    </span>
+                    <p style={{fontSize: "80%"}}>Automatic Switching {autoActive ? "on" : "off"}</p>
+                </div>
+                :
+                <div className="api-status">
+                    <a>
+                        <Icon className={color} name={activeNode.url == url ? "link" : "shuffle"} size="1_5x" onClick={this.activate.bind(this, url)} />
+                    </a>
+                    {name}
+                </div>
+            ;
+        } else {
+            return url === autoSelectAPI ?
+                <div className="auto-node">
+                    <div>
+                        <span 
+                            className="switch"
+                            onClick={this.activate.bind(this, autoActive ? activeNode.url : autoSelectAPI)}
                         >
-                            {!automatic &&
-                                (hidden ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.show.bind(this, url)}
-                                    >
-                                        <Translate content="settings.show" />
-                                    </div>
-                                ) : (
-                                    <div
-                                        className="button"
-                                        onClick={this.hide.bind(this, url)}
-                                    >
-                                        <Translate content="settings.hide" />
-                                    </div>
-                                ))}
-                            {allowRemoval && (
-                                <div
-                                    className="button"
-                                    onClick={this.remove.bind(this, url, name)}
-                                >
-                                    <Translate
-                                        id="remove"
-                                        content="settings.remove"
-                                    />
-                                </div>
-                            )}
-                            {(automatic || isTestnet ? true : true) &&
-                                allowActivation && (
-                                    <div
-                                        className="button"
-                                        onClick={this.activate.bind(this)}
-                                    >
-                                        <Translate content="settings.activate" />
-                                    </div>
-                                )}
-                        </div>
-                    )}
-            </div>
-        );
+                            <input type="checkbox" checked={autoActive} />
+                            <label />
+                        </span>
+                        <Translate component="div" style={{paddingLeft: "1rem", paddingTop: "0.5rem"}} content="settings.automatic" totalNodes={totalNodes} />
+                        {/* 
+                        // FOR FUTURE PING NODES FEATURE
+                        <div
+                            className="button"
+                            style={{position: "absolute", right: 0}}
+                            onClick={}
+                        >
+                            <Translate
+                                id="ping"
+                                component="span"
+                                content="settings.ping"
+                            />
+                        </div> */}
+                    </div>
+                </div>
+                :
+                <div className="api-node">
+                    <div>
+                        <p>{name}</p>
+                        <p>{displayUrl}</p>
+                    </div>
+                    <div>
+                        {isTestnet && !ping ? null : 
+                            <div className="api-status">
+                                {!up ? 
+                                    <span className="high"><Translate content="settings.node_down" /></span>
+                                    : 
+                                    <span className={color}>
+                                        <Translate content={`settings.${latencyKey}`} /><p>{friendlyPing}</p>
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        {allowRemoval ? // USER NODES CAN'T BE HIDDEN
+                            <a onClick={this.remove.bind(this, url, name)}>
+                                <Translate id="remove" component="p" content="settings.remove"/>
+                            </a>
+                            : 
+                            !automatic && hidden ? 
+                                <a onClick={this.show.bind(this, url)}>
+                                    <Translate component="p" content="settings.show" />
+                                </a>
+                                : 
+                                <a onClick={this.hide.bind(this, url)}>
+                                    <Translate component="p" content="settings.hide" />
+                                </a>
+                        }
+                        {activeNode.url != url ? 
+                            <a><Icon name={"shuffle"} size="1_5x" onClick={this.activate.bind(this, url)} /></a>
+                            :
+                            <Icon name={"link"} size="2x" />
+                        }
+                    </div>
+                </div>
+            ;
+        }
     }
 }
 
@@ -289,7 +249,7 @@ class AccessSettings extends React.Component {
         };
     }
 
-    renderNode(node, allowActivation) {
+    renderNode(node, activeNode, allowActivation) {
         const {props} = this;
 
         let automatic = node.url === autoSelectAPI;
@@ -319,6 +279,8 @@ class AccessSettings extends React.Component {
                 name={name}
                 displayUrl={displayUrl}
                 triggerModal={props.triggerModal}
+                activeNode={activeNode}
+                popup={props.popup}
             />
         );
     }
@@ -335,16 +297,11 @@ class AccessSettings extends React.Component {
         let renderNode = this.renderNode.bind(this);
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
         let hc = "nodes-header clickable";
-        let showAvailableNodes = this.state.activeTab === "available-nodes";
-        let availableClass = cnames(hc, {inactive: !showAvailableNodes});
-        let hiddenClass = cnames(hc, {inactive: showAvailableNodes});
-        let nodes = props.nodes
-            .map(node => {
-                return getNode(node);
-            })
-            .filter(node => {
-                return node.hidden !== showAvailableNodes;
-            });
+        let showAvailableNodes = this.state.activeTab !== "hidden-nodes";
+        let availableClass = cnames(hc, {inactive: this.state.activeTab !== "available-nodes"});
+        let hiddenClass = cnames(hc, {inactive: this.state.activeTab !== "hidden-nodes"});
+        let myClass = cnames(hc, {inactive: this.state.activeTab !== "my-nodes"});
+
 
         let activeNode = getNode(
             props.nodes[currentNodeIndex] || props.nodes[0]
@@ -356,9 +313,15 @@ class AccessSettings extends React.Component {
             activeNode = getNode(props.nodes[currentNodeIndex]);
         }
 
+        let nodes = props.nodes
+            .map(node => {
+                return getNode(node);
+            })
+            .filter(node => {
+                return node.hidden !== showAvailableNodes && node.url !== activeNode.url;
+            });
+
         nodes = nodes
-            .slice(0, currentNodeIndex)
-            .concat(nodes.slice(currentNodeIndex + 1))
             .sort(function(a, b) {
                 let isTestnet =
                     a.url === testnetAPI.url || a.url === testnetAPI2.url;
@@ -378,20 +341,42 @@ class AccessSettings extends React.Component {
                 return 0;
             });
 
-        nodes = nodes.filter(node => {
-            return node.hidden !== showAvailableNodes;
-        });
+        if(this.state.activeTab === "my-nodes") {
+            nodes = nodes.filter(node => {
+                return !this.isDefaultNode[node.url];
+            });
+        } else {
+            nodes = nodes.filter(node => {
+                return node.hidden !== showAvailableNodes && this.isDefaultNode[node.url];
+            });
+        }
 
-        return (
-            <div style={{paddingTop: "1em"}}>
-                <Translate component="p" content="settings.active_node" />
-                <div className="active-node" style={{marginBottom: "2em"}}>
-                    {renderNode(activeNode, false)}
+        let autoNode = getNode(props.nodes[0]);
+        let popupCount = 0;
+        return this.props.popup 
+            ? <div>
+                <div style={{fontWeight: "bold", height: 40}}>
+                    <Translate content="settings.switch" />
+                    {renderNode(autoNode, activeNode, false)}
                 </div>
-
+                <div className="nodes-list" style={{display: props.currentNode === autoSelectAPI ? "none" : ""}}>
+                    {nodes.map(node => {
+                        if(node.url !== autoSelectAPI) {
+                            popupCount++;
+                            if(popupCount <= 5) { return renderNode(node, activeNode, true); }
+                        }
+                    })}
+                </div>
+            </div>
+            : <div style={{paddingTop: "1em"}}>
+                {renderNode(autoNode, activeNode, false)}
+                <div className="active-node">
+                    <Translate component="h4" style={{marginLeft: "1rem"}} content="settings.active_node" />
+                    {renderNode(activeNode, activeNode, false)}
+                </div>
                 <div
                     className="nodes"
-                    style={{position: "relative", marginBottom: "2em"}}
+                    style={{display: props.currentNode === autoSelectAPI ? "none" : "", position: "relative", marginBottom: "2em"}}
                 >
                     <div className="grid-block shrink" style={{marginLeft: 0}}>
                         <div
@@ -409,29 +394,35 @@ class AccessSettings extends React.Component {
                         >
                             <Translate content="settings.hidden_nodes" />
                         </div>
+                        <div
+                            className={myClass}
+                            onClick={this._changeTab.bind(this, "my-nodes")}
+                        >
+                            <Translate content="settings.my_nodes" />
+                        </div>
                     </div>
-                    <span
-                        onClick={props.triggerModal.bind(this)}
-                        style={{
-                            cursor: "pointer",
-                            position: "absolute",
-                            right: 0,
-                            top: "5px",
-                            color: "#049cce"
-                        }}
-                    >
-                        <Translate
-                            id="add"
-                            component="span"
-                            content="settings.add_api"
-                        />
-                    </span>
+                    {this.state.activeTab !== "my-nodes" ? null : 
+                        <div style={{paddingLeft: "1rem", paddingBottom: "1rem"}}>
+                            <div
+                                className="button"
+                                onClick={props.triggerModal.bind(this)}
+                            >
+                                <Translate
+                                    id="add"
+                                    component="span"
+                                    content="settings.add_api"
+                                />
+                            </div>
+                        </div>
+                    }
+                    
                     {nodes.map(node => {
-                        return renderNode(node, true);
+                        if(node.url !== autoSelectAPI)
+                            return renderNode(node, activeNode, true);
                     })}
                 </div>
             </div>
-        );
+        ;
     }
 }
 

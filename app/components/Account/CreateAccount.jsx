@@ -98,55 +98,64 @@ class CreateAccount extends React.Component {
     createAccount(name) {
         let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         let referralAccount = AccountStore.getState().referralAccount;
-        WalletUnlockActions.unlock().then(() => {
-            this.setState({loading: true});
+        WalletUnlockActions.unlock()
+            .then(() => {
+                this.setState({loading: true});
 
-            AccountActions.createAccount(
-                name,
-                this.state.registrar_account,
-                referralAccount || this.state.registrar_account,
-                0,
-                refcode
-            )
-                .then(() => {
-                    // User registering his own account
-                    if (this.state.registrar_account) {
-                        FetchChain("getAccount", name, undefined, {
-                            [name]: true
-                        }).then(() => {
-                            this.setState({
-                                step: 2,
-                                loading: false
+                AccountActions.createAccount(
+                    name,
+                    this.state.registrar_account,
+                    referralAccount || this.state.registrar_account,
+                    0,
+                    refcode
+                )
+                    .then(() => {
+                        // User registering his own account
+                        if (this.state.registrar_account) {
+                            FetchChain("getAccount", name, undefined, {
+                                [name]: true
+                            }).then(() => {
+                                this.setState({
+                                    step: 2,
+                                    loading: false
+                                });
                             });
-                        });
-                        TransactionConfirmStore.listen(this.onFinishConfirm);
-                    } else {
-                        // Account registered by the faucet
-                        FetchChain("getAccount", name, undefined, {
-                            [name]: true
-                        }).then(() => {
-                            this.setState({
-                                step: 2,
-                                loading: false
+                            TransactionConfirmStore.listen(
+                                this.onFinishConfirm
+                            );
+                        } else {
+                            // Account registered by the faucet
+                            FetchChain("getAccount", name, undefined, {
+                                [name]: true
+                            }).then(() => {
+                                this.setState({
+                                    step: 2,
+                                    loading: false
+                                });
                             });
+                        }
+                    })
+                    .catch(error => {
+                        console.log(
+                            "ERROR AccountActions.createAccount",
+                            error
+                        );
+                        let error_msg =
+                            error.base &&
+                            error.base.length &&
+                            error.base.length > 0
+                                ? error.base[0]
+                                : "unknown error";
+                        if (error.remote_ip) error_msg = error.remote_ip[0];
+                        notify.addNotification({
+                            message: `Failed to create account: ${name} - ${error_msg}`,
+                            level: "error",
+                            autoDismiss: 10
                         });
-                    }
-                })
-                .catch(error => {
-                    console.log("ERROR AccountActions.createAccount", error);
-                    let error_msg =
-                        error.base && error.base.length && error.base.length > 0
-                            ? error.base[0]
-                            : "unknown error";
-                    if (error.remote_ip) error_msg = error.remote_ip[0];
-                    notify.addNotification({
-                        message: `Failed to create account: ${name} - ${error_msg}`,
-                        level: "error",
-                        autoDismiss: 10
+                        this.setState({loading: false});
                     });
-                    this.setState({loading: false});
-                });
-        });
+            })
+            .catch(() => {});
     }
 
     createWallet(password) {

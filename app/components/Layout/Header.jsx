@@ -121,7 +121,7 @@ class Header extends React.Component {
 
     _showSend(e) {
         e.preventDefault();
-        this.refs.send_modal.show();
+        if (this.send_modal) this.send_modal.show();
         this._closeDropdown();
     }
 
@@ -145,9 +145,11 @@ class Header extends React.Component {
     _toggleLock(e) {
         e.preventDefault();
         if (WalletDb.isLocked()) {
-            WalletUnlockActions.unlock().then(() => {
-                AccountActions.tryToSetCurrentAccount();
-            });
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    AccountActions.tryToSetCurrentAccount();
+                })
+                .catch(() => {});
         } else {
             WalletUnlockActions.lock();
         }
@@ -1645,7 +1647,9 @@ class Header extends React.Component {
                 </div>
                 <SendModal
                     id="send_modal_header"
-                    ref="send_modal"
+                    refCallback={e => {
+                        if (e) this.send_modal = e;
+                    }}
                     from_name={currentAccount}
                 />
 

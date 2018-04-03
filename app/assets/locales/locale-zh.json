@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 页面不存在",
+        "page_not_found_subtitle": "本页面不存在",
+        "home": "家"
+    },
     "counterpart": {
         "formats": {
             "date": {

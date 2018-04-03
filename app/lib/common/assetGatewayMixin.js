@@ -87,7 +87,11 @@ function _getNumberAvailableGateways() {
     return nAvailableGateways;
 }
 
-function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
+function _onAssetSelected(
+    selectedAsset,
+    boolCheck = "depositAllowed",
+    selectGatewayFn = null
+) {
     const {balances, assets} = this.props || {}; //Function must be bound on calling component and these props must be passed to calling component
     let gatewayStatus = _getAvailableGateways.call(
         this,
@@ -127,7 +131,8 @@ function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
         coinToGatewayMapping[selectedAsset]
     ) {
         let gateways = coinToGatewayMapping[selectedAsset];
-        if (gateways.length) {
+        if (gateways.length && !selectGatewayFn) {
+            //Default gateway selection logic is to pick the gateway with the highest balance, or default to the first available
             if (balancesByAssetAndGateway[selectedAsset]) {
                 let greatestBalance = null;
                 let greatestBalanceGateway = null;
@@ -146,6 +151,11 @@ function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
             } else {
                 selectedGateway = gateways[0];
             }
+        } else if (gateways.length && selectGatewayFn) {
+            selectedGateway = selectGatewayFn(
+                coinToGatewayMapping[selectedAsset],
+                balancesByAssetAndGateway[selectedAsset]
+            );
         }
     }
 

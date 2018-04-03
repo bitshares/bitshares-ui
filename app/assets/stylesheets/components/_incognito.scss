@@ -1,0 +1,17 @@
+#incognito {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    height: 34px;
+    line-height: 34px;
+    font-size: 0.875rem;
+
+    .dismiss {
+        position: absolute;
+        right: 1em;
+        top: 0;
+        cursor: pointer;
+        font-size: 1.5em;
+    }
+}

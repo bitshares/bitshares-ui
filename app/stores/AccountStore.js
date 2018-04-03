@@ -72,20 +72,27 @@ class AccountStore extends BaseStore {
     }
 
     _migrateUnfollowedAccounts(state) {
-        let unfollowed_accounts = accountStorage.get("unfollowed_accounts", []);
-        let hiddenAccounts = accountStorage.get(
-            this._getStorageKey("hiddenAccounts", state),
-            []
-        );
-        if (unfollowed_accounts.length && !hiddenAccounts.length) {
-            accountStorage.set(
-                this._getStorageKey("hiddenAccounts", state),
-                unfollowed_accounts
+        try {
+            let unfollowed_accounts = accountStorage.get(
+                "unfollowed_accounts",
+                []
             );
-            accountStorage.delete("unfollowed_accounts");
-            this.setState({
-                myHiddenAccounts: Immutable.Set(unfollowed_accounts)
-            });
+            let hiddenAccounts = accountStorage.get(
+                this._getStorageKey("hiddenAccounts", state),
+                []
+            );
+            if (unfollowed_accounts.length && !hiddenAccounts.length) {
+                accountStorage.set(
+                    this._getStorageKey("hiddenAccounts", state),
+                    unfollowed_accounts
+                );
+                accountStorage.delete("unfollowed_accounts");
+                this.setState({
+                    myHiddenAccounts: Immutable.Set(unfollowed_accounts)
+                });
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -256,7 +263,9 @@ class AccountStore extends BaseStore {
             iDB
                 .load_data("linked_accounts")
                 .then(data => {
-                    this.state.linkedAccounts = Immutable.fromJS(data);
+                    this.state.linkedAccounts = Immutable.fromJS(
+                        data || []
+                    ).toSet();
                     let accountPromises = data
                         .filter(a => {
                             if (a.chainId) {
@@ -316,8 +325,6 @@ class AccountStore extends BaseStore {
     }
 
     addAccountRefs() {
-        if (this.addAccountRefsInProgress) return;
-        this.addAccountRefsInProgress = true;
         //  Simply add them to the myActiveAccounts list (no need to persist them)
         let account_refs = AccountRefsStore.getAccountRefs();
         if (
@@ -328,6 +335,9 @@ class AccountStore extends BaseStore {
         }
         this.account_refs = account_refs;
         let pending = false;
+
+        if (this.addAccountRefsInProgress) return;
+        this.addAccountRefsInProgress = true;
         this.state.myActiveAccounts = this.state.myActiveAccounts.withMutations(
             myActiveAccounts => {
                 account_refs.forEach(id => {
@@ -341,12 +351,32 @@ class AccountStore extends BaseStore {
                         name: account.get("name"),
                         chainId: Apis.instance().chain_id
                     };
-                    var isAlreadyLinked = this.state.linkedAccounts.find(a => {
+                    let isAlreadyLinked = this.state.linkedAccounts.find(a => {
                         return (
                             a.get("name") === linkedEntry.name &&
                             a.get("chainId") === linkedEntry.chainId
                         );
                     });
+
+                    /*
+                    * Some wallets contain deprecated entries with no chain
+                    * ids, remove these then write new entires with chain ids
+                    */
+                    const nameOnlyEntry = this.state.linkedAccounts.findKey(
+                        a => {
+                            return (
+                                a.get("name") === linkedEntry.name &&
+                                !a.has("chainId")
+                            );
+                        }
+                    );
+                    if (!!nameOnlyEntry) {
+                        this.state.linkedAccounts = this.state.linkedAccounts.delete(
+                            nameOnlyEntry
+                        );
+                        this._unlinkAccount(account.get("name"));
+                        isAlreadyLinked = false;
+                    }
                     if (
                         account &&
                         this.isMyAccount(account) &&
@@ -470,7 +500,7 @@ class AccountStore extends BaseStore {
         if (!account_auths.size) return "none";
 
         let auths = account_auths.map(auth => {
-            let account = ChainStore.getAccount(auth.get(0));
+            let account = ChainStore.getAccount(auth.get(0), false);
             if (account === undefined) return undefined;
             return this.getMyAuthorityForAccount(account, ++recursion_count);
         });
@@ -634,14 +664,22 @@ class AccountStore extends BaseStore {
             name,
             chainId: Apis.instance().chain_id
         };
-        iDB.add_to_store("linked_accounts", linkedEntry);
-        this.state.linkedAccounts = this.state.linkedAccounts.add(linkedEntry); // Keep the local linkedAccounts in sync with the db
-        if (!this.state.myHiddenAccounts.has(name))
-            this.state.myActiveAccounts = this.state.myActiveAccounts.add(name);
+        try {
+            iDB.add_to_store("linked_accounts", linkedEntry);
+            this.state.linkedAccounts = this.state.linkedAccounts.add(
+                Immutable.fromJS(linkedEntry)
+            ); // Keep the local linkedAccounts in sync with the db
+            if (!this.state.myHiddenAccounts.has(name))
+                this.state.myActiveAccounts = this.state.myActiveAccounts.add(
+                    name
+                );
 
-        // Update current account if only one account is linked
-        if (this.state.myActiveAccounts.size === 1) {
-            this.setCurrentAccount(name);
+            // Update current account if only one account is linked
+            if (this.state.myActiveAccounts.size === 1) {
+                this.setCurrentAccount(name);
+            }
+        } catch (err) {
+            console.error(err);
         }
     }
 

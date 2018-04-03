@@ -15,7 +15,8 @@ import {
     _getAvailableGateways,
     gatewaySelector,
     _getNumberAvailableGateways,
-    _onAssetSelected
+    _onAssetSelected,
+    _getCoinToGatewayMapping
 } from "lib/common/assetGatewayMixin";
 
 class DepositModalContent extends DecimalChecker {
@@ -59,6 +60,9 @@ class DepositModalContent extends DecimalChecker {
     componentWillMount() {
         let {asset} = this.props;
 
+        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
+        this.setState({coinToGatewayMapping});
+
         if (!asset) return;
 
         let backedAsset = asset.split(".");
@@ -90,8 +94,15 @@ class DepositModalContent extends DecimalChecker {
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
-            asset
+            asset,
+            "depositAllowed",
+            (availableGateways, balancesByGateway) => {
+                if (availableGateways && availableGateways.length == 1)
+                    return availableGateways[0]; //autoselect gateway if exactly 1 item
+                return null;
+            }
         );
+
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
         }
