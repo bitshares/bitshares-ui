@@ -6,7 +6,7 @@ import {
     getBackedCoins,
     getActiveWallets
 } from "common/blockTradesMethods";
-import {blockTradesAPIs} from "api/apiConfig";
+import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 
 let inProgress = {};
 
@@ -17,7 +17,7 @@ const onGatewayTimeout = (dispatch, gateway) => {
 };
 
 class GatewayActions {
-    fetchCoins({backer = "OPEN", url = undefined, urlBridge = blockTradesAPIs.BASE_OL, urlWallets = undefined} = {}) {
+    fetchCoins({backer = "OPEN", url = undefined, urlBridge = openledgerAPIs.BASE, urlWallets = undefined} = {}) {
         if (!inProgress["fetchCoins_" + backer]) {
             inProgress["fetchCoins_" + backer] = true;
             return dispatch => {

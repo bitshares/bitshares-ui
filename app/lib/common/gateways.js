@@ -3,7 +3,7 @@
  * General API Settings are stored in api/apiConfig and should be imported here
  */
 
-import {rudexAPIs, widechainAPIs, blockTradesAPIs} from "api/apiConfig";
+import {rudexAPIs, widechainAPIs, openledgerAPIs} from "api/apiConfig";
 
 export function getAvailableGateways() {
     return {
@@ -12,7 +12,7 @@ export function getAvailableGateways() {
             name: "OPENLEDGER",
             enabled: false,
             selected: false,
-            baseAPI: blockTradesAPIs
+            baseAPI: openledgerAPIs
         },
         RUDEX: {
             id: "RUDEX",

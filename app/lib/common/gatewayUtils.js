@@ -70,6 +70,9 @@ export function updateGatewayBackers(chain = "4018d784") {
             url: rudexAPIs.BASE + rudexAPIs.COINS_LIST
         }); 
 
+        // BlockTrades
+        GatewayActions.fetchBridgeCoins.defer();
+
         /* // GDex does not comply with current standards
         GatewayActions.fetchCoins.defer({
             backer: "GDEX",

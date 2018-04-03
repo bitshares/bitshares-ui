@@ -151,7 +151,7 @@ class DepositModalContent extends DecimalChecker {
 
         if (selectedGateway == "OPEN" || selectedGateway == "WIN") {
             if (!depositAddress) {
-                requestDepositAddress(this._getDepositObject(selectedAsset, selectedGateway, this.state.gatewayStatus[selectedGateway].baseAPI.BASE_OL));
+                requestDepositAddress(this._getDepositObject(selectedAsset, selectedGateway, this.state.gatewayStatus[selectedGateway].baseAPI.BASE));
             } else {
                 this.setState({
                     depositAddress,
