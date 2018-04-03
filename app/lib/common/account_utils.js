@@ -135,6 +135,7 @@ export default class AccountUtils {
             "pay.bts.com",
             "btc38.com",
             "yunbi.com",
+            "aex-bts-deposit-walle",
             "coinbase.com",
             "ripple.com",
             "livecoi-net",
