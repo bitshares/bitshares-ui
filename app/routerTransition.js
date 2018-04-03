@@ -102,8 +102,9 @@ class RouterTransitioner {
             if (appInit) ss.set("latencyChecks", latencyChecks + 1);
         }
 
-        let urls = this.getFilteredAndSortedNodes(false, apiLatencies);
-        console.log(urls);
+        console.log("willTransitionTo");
+
+        let urls = this._getNodesToConnectTo(false, apiLatencies);
 
         // set auto selection flag
         this._autoSelection =
@@ -155,9 +156,7 @@ class RouterTransitioner {
             }
             if (refresh) {
                 console.log("doLatencyUpdate refresh");
-                this._connectionManager.urls = this.getFilteredAndSortedNodes(
-                    true
-                );
+                this._connectionManager.urls = this._getNodesToConnectTo(true);
             }
             console.log(SettingsStore.getState().apiLatencies);
             this._connectionManager
@@ -165,7 +164,7 @@ class RouterTransitioner {
                 .then(res => {
                     console.log("doLatencyUpdate ping done");
                     // resort the api nodes with the new pings
-                    this._connectionManager.urls = this.getFilteredAndSortedNodes(
+                    this._connectionManager.urls = this._getNodesToConnectTo(
                         false,
                         res
                     );
@@ -183,7 +182,8 @@ class RouterTransitioner {
 
     _initConnectionManager(urls = null) {
         if (urls == null) {
-            urls = this.getFilteredAndSortedNodes(true);
+            console.log("_initConnectionManager");
+            urls = this._getNodesToConnectTo(true);
         }
         // decide where to connect to first
         let connectionString = this._getFirstToTry(urls);
@@ -207,7 +207,7 @@ class RouterTransitioner {
      *
      * @param apiNodeUrl the url of the target node, e.g. wss://eu.nodes.bitshares.ws
      * @returns {boolean} true the security matches, meaning that we either have:
-     *                              - user connected via http to the wallet and target node is ws:// or wss://
+     *                         - user connected via http to the wallet and target node is ws:// or wss://
      *                         - user connected via https and target node is wss://
      *                    false user tries to connect to ws:// node via a wallet opened in https
      * @private
@@ -220,6 +220,10 @@ class RouterTransitioner {
         }
     }
 
+    _isTestNet(url) {
+        return !__TESTNET__ && url.indexOf("testnet") !== -1;
+    }
+
     /**
      * Returns a list of all configured api nodes
      *
@@ -230,51 +234,105 @@ class RouterTransitioner {
     }
 
     /**
-     * Returns a list of viable api nodes that we consider connecting to
+     * Returns a list of all nodes as given by the flags, always sorted
      *
-     * @param all default false
-     * @param latencies default null. if given
-     * @returns list of viable api nodes (not hidden, not testnet if mainnet, not autoselect and with suitable security)
+     * @param latenciesMap (default null) map of all latencies, if null taken from settings
+     * @param latencies (default true) if true, and latenciesMap has entries, then filter out all without latency
+     * @param hidden (default false) if false, filter out all hidden nodes
+     * @param unsuitableSecurity (default false) if false, filter out all with unsuitable security
+     * @param testNet (default false) if false, filter out all testnet nodes
+     *
+     * @returns list of viable api nodes (with above filters applied)
      *          if latencies is given, the nodes are sorted with descending latency (index 0 fasted one)
-     *          if all is true, all nodes are returned, otherwise only the once that are pinged
      */
-    getFilteredAndSortedNodes(all = false, latencies = null) {
-        if (!all) {
-            // in case user only wants pinged nodes we need to ensure
-            // that we have the latency list
-            latencies = SettingsStore.getState().apiLatencies;
-            if (Object.keys(latencies).length == 0) {
-                // force all
-                all = true;
+    getNodes(
+        latenciesMap = null,
+        latencies = true,
+        hidden = false,
+        unsuitableSecurity = false,
+        testNet = false
+    ) {
+        if (latencies) {
+            if (latenciesMap == null) {
+                latenciesMap = SettingsStore.getState().apiLatencies;
             }
+            // if there are no latencies, return all that are left after filtering
+            latencies = Object.keys(latenciesMap).length > 0;
         }
         let filtered = this.getAllApiServers().filter(a => {
             // Skip hidden nodes
-            if (a.hidden) return false;
+            if (!hidden && a.hidden) return false;
 
             // do not automatically connect to TESTNET
-            if (!__TESTNET__ && a.url.indexOf("testnet") !== -1) return false;
+            if (!testNet && this._isTestNet(a.url)) return false;
 
             // remove the automatic fallback dummy url
             if (a.url.indexOf("fake.automatic-selection") !== -1) return false;
 
             // Remove insecure websocket urls when using secure protocol
-            if (!this._apiUrlSecuritySuitable(a.url)) {
+            if (!unsuitableSecurity && !this._apiUrlSecuritySuitable(a.url)) {
                 return false;
             }
             // we don't know any latencies, return all
-            if (all) return true;
+            if (!latencies) return true;
 
             // only keep the ones we were able to connect to
-            return !!latencies[a.url];
+            return !!latenciesMap[a.url];
         });
-        if (latencies) {
-            filtered = filtered.sort((a, b) => {
-                // sort according to pink
-                return latencies[a.url] - latencies[b.url];
-            });
+        // create more info in the entries
+        filtered = filtered.map(a => {
+            let newEntry = {
+                name: a.location || "Unknown location",
+                url: a.url,
+                hidden: !!a.hidden
+            };
+            if (latenciesMap != null && a.url in latenciesMap) {
+                newEntry.latency = latenciesMap[a.url];
+            } else {
+                newEntry.latency = null;
+            }
+            return newEntry;
+        });
+        if (!latencies) {
+            return filtered;
         }
-        return filtered.map(a => a.url); // drop location, only urls in list
+        // now sort
+        filtered = filtered.sort((a, b) => {
+            if (!latencies) {
+                if (this._isTestNet(a.url)) return -1;
+                return 1;
+            } else {
+                // if both have latency, sort according to that
+                if (a.latency != null && b.latency != null) {
+                    return a.latency - b.latency;
+                    // sort testnet to the bottom
+                } else if (a.latency == null && b.latency == null) {
+                    if (this._isTestNet(a.url)) return -1;
+                    return 1;
+                    // otherwise prefer the pinged one
+                } else if (a.latency != null && b.latency == null) {
+                    return -1;
+                } else if (b.latency != null && a.latency == null) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+        // remove before release
+        console.log("getNodes");
+        console.log(filtered);
+        return filtered;
+    }
+
+    /**
+     * Returns a list of viable api nodes that we consider connecting to
+     *
+     * @param all (default false) if true, all nodes are returned
+     * @param latencies (default null)
+     * @returns see getNodes
+     */
+    _getNodesToConnectTo(all = false, latencies = null) {
+        return this.getNodes(latencies, !all).map(a => a.url); // drop location, only urls in list
     }
 
     /**
