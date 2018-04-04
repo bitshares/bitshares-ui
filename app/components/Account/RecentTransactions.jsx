@@ -287,6 +287,7 @@ class RecentTransactions extends React.Component {
                           hideFee
                           inverted={false}
                           hideOpLabel={compactView}
+                          fullDate={true}
                       />
                   );
               })
