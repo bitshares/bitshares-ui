@@ -69,6 +69,10 @@ export const settingsAPIs = {
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
         {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
+        {
+            url: "wss://api.btsxchng.com", 
+            location: "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))"
+        },
         {url: "wss://api.bts.network", location: "East Coast, USA"},
         // Testnet
         {
