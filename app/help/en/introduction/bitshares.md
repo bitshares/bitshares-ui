@@ -11,7 +11,7 @@ You can chat with other member of the Bitshares community in real time at:
 - [Discord](https://discord.gg/GsjQfAJ)
 
 ### Developers
-If you are a sofware developer, you may contribute via a bounty system at:
+If you are a software developer, you may contribute via a bounty system at:
 
 - [Github UI](https://github.com/bitshares/bitshares-ui)
 - [Github Core](https://github.com/bitshares/bitshares-core) 
@@ -37,6 +37,6 @@ transparent, trustworthy, efficient and most importantly profitable.
 ## Wallet
 This wallet allows access most features of the BitShares network including
 
-- [BitAssets](/help/assets/mpa.md)
-- [User-Issued Assets](/help/assets/uia.md)
-- [The DEX](/help/dex/introduction.md)
+- [BitAssets](/help/assets/mpa)
+- [User-Issued Assets](/help/assets/uia)
+- [The DEX](/help/dex/introduction)

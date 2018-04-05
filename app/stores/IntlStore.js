@@ -11,29 +11,16 @@ counterpart.setFallbackLocale("en");
 
 import {addLocaleData} from "react-intl";
 
-import en from "react-intl/locale-data/en";
-import es from "react-intl/locale-data/es";
-import fr from "react-intl/locale-data/fr";
-import ko from "react-intl/locale-data/ko";
-import it from "react-intl/locale-data/it";
-import zh from "react-intl/locale-data/zh";
-import de from "react-intl/locale-data/de";
-import tr from "react-intl/locale-data/tr";
-import ru from "react-intl/locale-data/ru";
-
-addLocaleData(en);
-addLocaleData(es);
-addLocaleData(fr);
-addLocaleData(ko);
-addLocaleData(it);
-addLocaleData(zh);
-addLocaleData(de);
-addLocaleData(tr);
-addLocaleData(ru);
+import localeCodes from "assets/locales";
+for (let localeCode of localeCodes) {
+    addLocaleData(require(`react-intl/locale-data/${localeCode}`));
+}
 
 class IntlStore {
     constructor() {
-        this.currentLocale = ss.has("settings_v3") ? ss.get("settings_v3").locale : "en";
+        this.currentLocale = ss.has("settings_v3")
+            ? ss.get("settings_v3").locale
+            : "en";
 
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
@@ -55,13 +42,13 @@ class IntlStore {
 
     onSwitchLocale({locale, localeData}) {
         switch (locale) {
-        case "en":
-            counterpart.registerTranslations("en", this.localesObject.en);
-            break;
+            case "en":
+                counterpart.registerTranslations("en", this.localesObject.en);
+                break;
 
-        default:
-            counterpart.registerTranslations(locale, localeData);
-            break;
+            default:
+                counterpart.registerTranslations(locale, localeData);
+                break;
         }
 
         counterpart.setLocale(locale);

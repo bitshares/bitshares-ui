@@ -6,11 +6,11 @@ onmessage = function(event) {
         let {pubkeys, address_prefix} = event.data;
         let results = [];
         for (let pubkey of pubkeys) {
-            results.push( key.addresses(pubkey, address_prefix) );
+            results.push(key.addresses(pubkey, address_prefix));
         }
-        postMessage( results );
+        postMessage(results);
         console.log("AddressIndexWorker done");
-    } catch( e ) {
+    } catch (e) {
         console.error("AddressIndexWorker", e);
     }
 };

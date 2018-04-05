@@ -4,6 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
+var locales = require("./app/assets/locales");
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
@@ -26,7 +27,7 @@ module.exports = function(env) {
         }
     ];
 
-    var scssLoaders =  [
+    var scssLoaders = [
         {
             loader: "style-loader"
         },
@@ -52,6 +53,11 @@ module.exports = function(env) {
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
+    let regexString = "";
+    locales.forEach((l, i) => {
+        regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
+    });
+    const localeRegex = new RegExp(regexString);
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
@@ -59,14 +65,31 @@ module.exports = function(env) {
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
-            __UI_API__: JSON.stringify(env.apiUrl || "https://ui.bitshares.eu/api"),
-            __TESTNET__: !!env.testnet
-        })
+            __UI_API__: JSON.stringify(
+                env.apiUrl || "https://ui.bitshares.eu/api"
+            ),
+            __TESTNET__: !!env.testnet,
+            __DEPRECATED__: !!env.deprecated
+        }),
+        new webpack.ContextReplacementPlugin(
+            /moment[\/\\]locale$/,
+            localeRegex
+        ),
+        new webpack.ContextReplacementPlugin(
+            /react-intl[\/\\]locale-data$/,
+            localeRegex
+        )
     ];
 
     if (env.prod) {
         // PROD OUTPUT PATH
-        let outputDir = env.electron ? "electron" : env.hash ? `hash-history_${baseUrl.replace("/", "")}` : "dist";
+        let outputDir = env.electron
+            ? "electron"
+            : env.hash
+                ? !baseUrl
+                    ? "hash-history"
+                    : `hash-history_${baseUrl.replace("/", "")}`
+                : "dist";
         outputPath = path.join(root_dir, "build", outputDir);
 
         // DIRECTORY CLEANER
@@ -76,46 +99,67 @@ module.exports = function(env) {
         const extractCSS = new ExtractTextPlugin("app.css");
         cssLoaders = ExtractTextPlugin.extract({
             fallback: "style-loader",
-            use: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
-                plugins: [require("autoprefixer")]
-            }}]}
-        );
-        scssLoaders = ExtractTextPlugin.extract({fallback: "style-loader",
-            use: [{loader: "css-loader"}, {loader: "postcss-loader", options: {
-                plugins: [require("autoprefixer")]
-            }}, {loader: "sass-loader", options: {outputStyle: "expanded"}}]}
-        );
+            use: [
+                {loader: "css-loader"},
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        plugins: [require("autoprefixer")]
+                    }
+                }
+            ]
+        });
+        scssLoaders = ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: [
+                {loader: "css-loader"},
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        plugins: [require("autoprefixer")]
+                    }
+                },
+                {loader: "sass-loader", options: {outputStyle: "expanded"}}
+            ]
+        });
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
-        plugins.push(new webpack.DefinePlugin({
-            "process.env": {NODE_ENV: JSON.stringify("production")},
-            __DEV__: false
-        }));
+        plugins.push(
+            new webpack.DefinePlugin({
+                "process.env.NODE_ENV": JSON.stringify("production"),
+                __DEV__: false
+            })
+        );
         plugins.push(extractCSS);
-        plugins.push(new webpack.LoaderOptionsPlugin({
-            minimize: true,
-            debug: false
-        }));
+        plugins.push(
+            new webpack.LoaderOptionsPlugin({
+                minimize: true,
+                debug: false
+            })
+        );
         plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
         if (!env.noUgly) {
-
-            plugins.push(new webpack.optimize.UglifyJsPlugin({
-                sourceMap: true,
-                compress: {
-                    warnings: true
-                },
-                output: {
-                    screw_ie8: true
-                }
-            }));
+            plugins.push(
+                new webpack.optimize.UglifyJsPlugin({
+                    sourceMap: true,
+                    compress: {
+                        warnings: true
+                    },
+                    output: {
+                        screw_ie8: true
+                    }
+                })
+            );
         }
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
-        plugins.push(new webpack.DefinePlugin({
-            "process.env": {NODE_ENV: JSON.stringify("development")},
-            __DEV__: true
-        }));
+        plugins.push(
+            new webpack.DefinePlugin({
+                "process.env": {NODE_ENV: JSON.stringify("development")},
+                __DEV__: true
+            })
+        );
         plugins.push(new webpack.HotModuleReplacementPlugin());
         plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
@@ -123,13 +167,13 @@ module.exports = function(env) {
     var config = {
         entry: {
             // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
-            app: env.prod ?
-            path.resolve(root_dir, "app/Main.js") :
-            [
-                "react-hot-loader/patch",
-                "webpack-hot-middleware/client",
-                path.resolve(root_dir, "app/Main-dev.js")
-            ]
+            app: env.prod
+                ? path.resolve(root_dir, "app/Main.js")
+                : [
+                      "react-hot-loader/patch",
+                      "webpack-hot-middleware/client",
+                      path.resolve(root_dir, "app/Main-dev.js")
+                  ]
         },
         output: {
             publicPath: env.prod ? "" : "/",
@@ -143,7 +187,13 @@ module.exports = function(env) {
             rules: [
                 {
                     test: /\.jsx$/,
-                    include: [path.join(root_dir, "app"), path.join(root_dir, "node_modules/react-foundation-apps")],
+                    include: [
+                        path.join(root_dir, "app"),
+                        path.join(
+                            root_dir,
+                            "node_modules/react-foundation-apps"
+                        )
+                    ],
                     use: [
                         {
                             loader: "babel-loader",
@@ -155,19 +205,27 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.js$/,
-                    exclude: [/node_modules/],
+                    include: [
+                        path.join(root_dir, "app"),
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/lodash-es")
+                    ],
                     loader: "babel-loader",
                     options: {compact: false, cacheDirectory: true}
                 },
                 {
-                    test: /\.json/, loader: "json-loader",
+                    test: /\.json/,
+                    loader: "json-loader",
                     exclude: [
                         path.resolve(root_dir, "app/lib/common"),
                         path.resolve(root_dir, "app/assets/locales")
                     ]
                 },
-                { test: /\.coffee$/, loader: "coffee-loader" },
-                { test: /\.(coffee\.md|litcoffee)$/, loader: "coffee-loader?literate" },
+                {test: /\.coffee$/, loader: "coffee-loader"},
+                {
+                    test: /\.(coffee\.md|litcoffee)$/,
+                    loader: "coffee-loader?literate"
+                },
                 {
                     test: /\.css$/,
                     use: cssLoaders
@@ -178,7 +236,13 @@ module.exports = function(env) {
                 },
                 {
                     test: /\.png$/,
-                    exclude:[path.resolve(root_dir, "app/assets/asset-symbols"), path.resolve(root_dir, "app/assets/language-dropdown/img")],
+                    exclude: [
+                        path.resolve(root_dir, "app/assets/asset-symbols"),
+                        path.resolve(
+                            root_dir,
+                            "app/assets/language-dropdown/img"
+                        )
+                    ],
                     use: [
                         {
                             loader: "url-loader",
@@ -201,7 +265,10 @@ module.exports = function(env) {
                         }
                     ]
                 },
-                { test: /.*\.svg$/, loaders: ["svg-inline-loader", "svgo-loader"] },
+                {
+                    test: /.*\.svg$/,
+                    loaders: ["svg-inline-loader", "svgo-loader"]
+                },
                 {
                     test: /\.md/,
                     use: [

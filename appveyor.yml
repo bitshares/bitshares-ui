@@ -1,21 +1,22 @@
 version: 1.0.{build}
 environment:
-  nodejs_version: "7"
+  nodejs_version: 9
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
-  - npm install
+  - npm i
 build: off
 platform:
   - x64
 cache:
-  - node_modules
+  - node_modules -> appveyor.yml&
 before_package:
   echo Before package
 after_test:
   - 7z a build\html5_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\dist -r
-  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history_ -r
+  - 7z a build\hash_history_dist_%APPVEYOR_REPO_TAG_NAME%.zip %APPVEYOR_BUILD_FOLDER%\build\hash-history -r
+  - node ./write_digest.js
 test_script:
   - npm run package
   - npm run build
@@ -27,13 +28,15 @@ artifacts:
     name: html5_history_dist
   - path: build\hash_history_dist_*.zip
     name: hash_history_dist
+  - path: build\release-checksums-*
+    name: release-checksums-windows
 deploy:
   provider: GitHub
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: "Automated release from Travis CI with added files from AppVeyor build"
   auth_token:
-    secure: F/9ssjiE7swLmbl4JXtgpgv40kr3u6q+nbcNCs+Rw2S0VEMYBAXDwmKHQuAH8uDB
-  artifact: WindowsApp, html5_history_dist, hash_history_dist
+    secure: uS05GMpB0YT6PxlANXE0RK4+QMcgVIzza/sq8FooNp6Qt0cLcxrtbf8FwslpRg5I
+  artifact: WindowsApp, html5_history_dist, hash_history_dist, release-checksums-windows
   draft: true
   force_update: true
   on:

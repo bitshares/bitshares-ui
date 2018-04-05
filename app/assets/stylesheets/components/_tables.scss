@@ -8,7 +8,7 @@
   //padding-right: 8px;
   text-transform: uppercase;
   font-weight: normal;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #777;
   text-align: left;
 }
@@ -24,7 +24,6 @@
 
 .table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
   background-color: #f5f5f5;
-  cursor: pointer;
 }
 
 .key-value-table {
@@ -40,4 +39,14 @@
   td, th {
     font-size: 94%;
   }
+}
+
+
+/* Wrap table in div with this class to make horizontal scroll */
+.responsive-table {
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+  width: 100vw;
 }

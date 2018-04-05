@@ -1,13 +1,12 @@
 import alt from "alt-instance";
 
 class CachedPropertyActions {
-
     set(name, value) {
-        return { name, value };
+        return {name, value};
     }
 
     get(name) {
-        return { name };
+        return {name};
     }
 
     reset() {

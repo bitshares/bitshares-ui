@@ -12,7 +12,6 @@ hash-history
 docs/_build/
 *.swp
 *.python-version
-
 app/.sass-cache
 node_modules
 app/bower_components
@@ -20,3 +19,4 @@ app/bundle
 app/stats-dev.json
 app/stats-prod.json
 app/test/MarketClasses.js
+yarn.lock

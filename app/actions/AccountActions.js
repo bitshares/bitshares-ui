@@ -16,21 +16,21 @@ let accountSearch = {};
  *  is that there is only ever one active "search result" at a time.
  */
 class AccountActions {
-
     /**
      *  Account search results are not managed by the ChainStore cache so are
      *  tracked as part of the AccountStore.
      */
     accountSearch(start_symbol, limit = 50) {
         let uid = `${start_symbol}_${limit}}`;
-        return (dispatch) => {
+        return dispatch => {
             if (!accountSearch[uid]) {
                 accountSearch[uid] = true;
-                return AccountApi.lookupAccounts(start_symbol, limit)
-                .then(result => {
-                    accountSearch[uid] = false;
-                    dispatch({accounts: result, searchTerm: start_symbol});
-                });
+                return AccountApi.lookupAccounts(start_symbol, limit).then(
+                    result => {
+                        accountSearch[uid] = false;
+                        dispatch({accounts: result, searchTerm: start_symbol});
+                    }
+                );
             }
         };
     }
@@ -54,18 +54,39 @@ class AccountActions {
         return account;
     }
 
+    toggleHideAccount(account, hide) {
+        return {account, hide};
+    }
+
     /**
      *  TODO:  This is a function of teh WalletApi and has no business being part of AccountActions
      */
-    transfer(from_account, to_account, amount, asset, memo, propose_account = null, fee_asset_id = "1.3.0") {
-
+    transfer(
+        from_account,
+        to_account,
+        amount,
+        asset,
+        memo,
+        propose_account = null,
+        fee_asset_id = "1.3.0"
+    ) {
         // Set the fee asset to use
-        fee_asset_id = accountUtils.getFinalFeeAsset(propose_account || from_account, "transfer", fee_asset_id);
+        fee_asset_id = accountUtils.getFinalFeeAsset(
+            propose_account || from_account,
+            "transfer",
+            fee_asset_id
+        );
 
         try {
-            return (dispatch) => {
+            return dispatch => {
                 return ApplicationApi.transfer({
-                    from_account, to_account, amount, asset, memo, propose_account, fee_asset_id
+                    from_account,
+                    to_account,
+                    amount,
+                    asset,
+                    memo,
+                    propose_account,
+                    fee_asset_id
                 }).then(result => {
                     // console.log( "transfer result: ", result )
 
@@ -73,7 +94,10 @@ class AccountActions {
                 });
             };
         } catch (error) {
-            console.log("[AccountActions.js:90] ----- transfer error ----->", error);
+            console.log(
+                "[AccountActions.js:90] ----- transfer error ----->",
+                error
+            );
             return new Promise((resolve, reject) => {
                 reject(error);
             });
@@ -91,14 +115,14 @@ class AccountActions {
         referrer_percent,
         refcode
     ) {
-        return (dispatch) => {
+        return dispatch => {
             return WalletActions.createAccount(
                 account_name,
                 registrar,
                 referrer,
                 referrer_percent,
                 refcode
-            ).then( () => {
+            ).then(() => {
                 dispatch(account_name);
                 return account_name;
             });
@@ -113,7 +137,7 @@ class AccountActions {
         referrer_percent,
         refcode
     ) {
-        return (dispatch) => {
+        return dispatch => {
             return WalletActions.createAccountWithPassword(
                 account_name,
                 password,
@@ -121,7 +145,7 @@ class AccountActions {
                 referrer,
                 referrer_percent,
                 refcode
-            ).then( () => {
+            ).then(() => {
                 dispatch(account_name);
                 return account_name;
             });
@@ -134,25 +158,28 @@ class AccountActions {
      */
     upgradeAccount(account_id, lifetime) {
         // Set the fee asset to use
-        let fee_asset_id = accountUtils.getFinalFeeAsset(account_id, "account_upgrade");
+        let fee_asset_id = accountUtils.getFinalFeeAsset(
+            account_id,
+            "account_upgrade"
+        );
 
         var tr = WalletApi.new_transaction();
         tr.add_type_operation("account_upgrade", {
-            "fee": {
+            fee: {
                 amount: 0,
                 asset_id: fee_asset_id
             },
-            "account_to_upgrade": account_id,
-            "upgrade_to_lifetime_member": lifetime
+            account_to_upgrade: account_id,
+            upgrade_to_lifetime_member: lifetime
         });
         return WalletDb.process_transaction(tr, null, true);
     }
 
-    linkAccount(name) {
+    addAccountContact(name) {
         return name;
     }
 
-    unlinkAccount(name) {
+    removeAccountContact(name) {
         return name;
     }
 

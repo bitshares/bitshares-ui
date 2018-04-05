@@ -1,4 +1,5 @@
-import DashboardContainer from "./components/Dashboard/DashboardContainer";
+import DashboardPage from "./components/Dashboard/DashboardPage";
+import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import Witnesses from "./components/Explorer/Witnesses";
 import CommitteeMembers from "./components/Explorer/CommitteeMembers";
 import FeesContainer from "./components/Blockchain/FeesContainer";
@@ -27,16 +28,28 @@ import Asset from "./components/Blockchain/Asset";
 import CreateAccount from "./components/Account/CreateAccount";
 import CreateAccountPassword from "./components/Account/CreateAccountPassword";
 import LoginSelector from "./components/LoginSelector";
-import {ExistingAccount, ExistingAccountOptions} from "./components/Wallet/ExistingAccount";
-import { WalletCreate, CreateWalletFromBrainkey } from "./components/Wallet/WalletCreate";
+import {
+    ExistingAccount,
+    ExistingAccountOptions
+} from "./components/Wallet/ExistingAccount";
+import {
+    WalletCreate,
+    CreateWalletFromBrainkey
+} from "./components/Wallet/WalletCreate";
 import ImportKeys from "./components/Wallet/ImportKeys";
 import Invoice from "./components/Transfer/Invoice";
 import {BackupCreate, BackupRestore} from "./components/Wallet/Backup";
 import WalletChangePassword from "./components/Wallet/WalletChangePassword";
-import {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete} from "./components/Wallet/WalletManager";
+import {
+    WalletManager,
+    WalletOptions,
+    ChangeActiveWallet,
+    WalletDelete
+} from "./components/Wallet/WalletManager";
 import BalanceClaimActive from "./components/Wallet/BalanceClaimActive";
 import BackupBrainkey from "./components/Wallet/BackupBrainkey";
 import Brainkey from "./components/Wallet/Brainkey";
 import Help from "./components/Help";
 import InitError from "./components/InitError";
 import CreateWorker from "./components/Account/CreateWorker";
+import News from "./components/News";

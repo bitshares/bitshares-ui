@@ -3,15 +3,17 @@ import {PropTypes} from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
+import Translate from "react-translate-component";
+var logo = require("assets/logo-ico-blue.png");
 
 class BaseModal extends React.Component {
     constructor() {
         super();
     }
 
-    componentDidMount(){
-        this.modalEscapeListener = function(e){
-            if(e.keyCode === 27){
+    componentDidMount() {
+        this.modalEscapeListener = function(e) {
+            if (e.keyCode === 27) {
                 ZfApi.publish(this.props.id, "close");
             }
         }.bind(this);
@@ -19,27 +21,65 @@ class BaseModal extends React.Component {
         document.addEventListener("keydown", this.modalEscapeListener);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         document.removeEventListener("keydown", this.modalEscapeListener);
     }
 
     render() {
-        const { props } = this;
+        const {props} = this;
+        const {
+            id,
+            overlay,
+            onClose,
+            overlayClose,
+            className,
+            modalHeader,
+            noCloseBtn,
+            noLoggo,
+            noHeader,
+            children
+        } = props;
 
         return (
-            <Modal id={this.props.id} overlay={props.overlay} onClose={props.onClose} className={props.className} overlayClose={props.overlayClose}>
-                {!props.noCloseBtn && <Trigger close={props.id}>
-                    <a href="#" className="close-button">&times;</a>
-                </Trigger>}
-                {props.children}
+            <Modal
+                id={id}
+                overlay={overlay}
+                onClose={onClose}
+                className={className}
+                overlayClose={overlayClose}
+            >
+                {!noCloseBtn && (
+                    <Trigger close={id}>
+                        <a href="#" className="close-button">
+                            &times;
+                        </a>
+                    </Trigger>
+                )}
+                {!noLoggo && (
+                    <div className="modal__logo">
+                        <img src={logo} />
+                    </div>
+                )}
+                {!noHeader &&
+                    modalHeader && (
+                        <div className="text-center">
+                            <div className="modal__title">
+                                <Translate
+                                    component="h4"
+                                    content={modalHeader}
+                                />
+                            </div>
+                        </div>
+                    )}
+                {children}
             </Modal>
         );
     }
 }
 
 BaseModal.defaultProps = {
-    overlay: false,
-}
+    overlay: false
+};
 
 BaseModal.propTypes = {
     id: PropTypes.string.isRequired,

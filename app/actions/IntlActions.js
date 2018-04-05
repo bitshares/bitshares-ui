@@ -1,14 +1,17 @@
 import alt from "alt-instance";
 
+import localeCodes from "assets/locales";
+
 var locales = {};
 if (__ELECTRON__) {
-    ["cn", "de", "es", "fr", "ko", "tr", "ru", "it"].forEach(locale => {
-        locales[locale] = require("json-loader!assets/locales/locale-" + locale + ".json");
+    localeCodes.forEach(locale => {
+        locales[
+            locale
+        ] = require(`json-loader!assets/locales/locale-${locale}.json`);
     });
 }
 
 class IntlActions {
-
     switchLocale(locale) {
         if (locale === "en") {
             return {locale};
@@ -19,22 +22,23 @@ class IntlActions {
                 localeData: locales[locale]
             };
         } else {
-            return (dispatch) => {
-                fetch(`${__BASE_URL__}locale-${locale}.json`).then( (reply) => {
-                    return reply.json().then(result => {
-                        dispatch({
-                            locale,
-                            localeData: result
+            return dispatch => {
+                fetch(`${__BASE_URL__}locale-${locale}.json`)
+                    .then(reply => {
+                        return reply.json().then(result => {
+                            dispatch({
+                                locale,
+                                localeData: result
+                            });
                         });
+                    })
+                    .catch(err => {
+                        console.log("fetch locale error:", err);
+                        return dispatch => {
+                            dispatch({locale: "en"});
+                        };
                     });
-                }).catch(err => {
-                    console.log("fetch locale error:", err);
-                    return (dispatch) => {
-                        dispatch({locale: "en"});
-                    };
-                });
             };
-
         }
     }
 

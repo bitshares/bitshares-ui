@@ -110,7 +110,6 @@ div.rudex__gateway {
 }
 
 div.service-selector {
-  margin-bottom: 2rem;
 
   @include breakpoint(medium) {
     border-bottom: 1px solid $border-color;
@@ -125,7 +124,7 @@ div.service-selector {
       border-top: 1px solid $border-color;
       border-bottom: 1px solid $border-color;
       border-right: 1px solid $border-color;
-      font-size: 1.3rem;
+      font-size: 1rem;
       @include breakpoint(medium) {
         border-bottom: none;
       }

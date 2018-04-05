@@ -14,14 +14,13 @@ import {debounce} from "lodash";
 import LoadingIndicator from "../LoadingIndicator";
 import IssueModal from "../Modal/IssueModal";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import assetUtils from "common/asset_utils";
-import { Map, List } from "immutable";
-import ChainTypes from "../Utility/ChainTypes";
-import BindToChainState from "../Utility/BindToChainState";
+import {Map, List} from "immutable";
+import AssetWrapper from "../Utility/AssetWrapper";
+import {Tabs, Tab} from "../Utility/Tabs";
 
 class AccountAssets extends React.Component {
-
     static defaultProps = {
         symbol: "",
         name: "",
@@ -31,7 +30,6 @@ class AccountAssets extends React.Component {
     };
 
     static propTypes = {
-        assetsList: ChainTypes.ChainAssetsList,
         symbol: PropTypes.string.isRequired
     };
 
@@ -65,15 +63,17 @@ class AccountAssets extends React.Component {
 
     _checkAssets(assets, force) {
         if (this.props.account.get("assets").size) return;
-        let lastAsset = assets.sort((a, b) => {
-            if (a.symbol > b.symbol) {
-                return 1;
-            } else if (a.symbol < b.symbol) {
-                return -1;
-            } else {
-                return 0;
-            }
-        }).last();
+        let lastAsset = assets
+            .sort((a, b) => {
+                if (a.symbol > b.symbol) {
+                    return 1;
+                } else if (a.symbol < b.symbol) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            })
+            .last();
 
         if (assets.size === 0 || force) {
             AssetActions.getAssetList.defer("A", 100);
@@ -99,7 +99,7 @@ class AccountAssets extends React.Component {
         if (key === "to") {
             this._searchAccounts(e.target.value);
             issue.to = e.target.value;
-            let account = this.props.searchAccounts.findEntry((name) => {
+            let account = this.props.searchAccounts.findEntry(name => {
                 return name === e.target.value;
             });
 
@@ -124,7 +124,10 @@ class AccountAssets extends React.Component {
         AssetActions.issueAsset(account_id, issue).then(result => {
             if (result) {
                 notify.addNotification({
-                    message: `Successfully issued ${utils.format_asset(issue.amount, this.props.assets.get(issue.asset_id))}`,//: ${this.state.wallet_public_name}
+                    message: `Successfully issued ${utils.format_asset(
+                        issue.amount,
+                        this.props.assets.get(issue.asset_id)
+                    )}`, //: ${this.state.wallet_public_name}
                     level: "success",
                     autoDismiss: 10
                 });
@@ -133,7 +136,7 @@ class AccountAssets extends React.Component {
                 ChainStore.getAsset(issue.asset_id);
             } else {
                 notify.addNotification({
-                    message: `Failed to issue asset`,//: ${this.state.wallet_public_name}
+                    message: "Failed to issue asset", //: ${this.state.wallet_public_name}
                     level: "error",
                     autoDismiss: 10
                 });
@@ -153,9 +156,7 @@ class AccountAssets extends React.Component {
         let {issue} = this.state;
         let asset = this.props.assets.get(issue.asset_id);
         issue.amount *= utils.get_asset_precision(asset.precision);
-        AssetActions.issueAsset(account_id, issue).then(result => {
-
-        });
+        AssetActions.issueAsset(account_id, issue);
     }
 
     _issueButtonClick(asset_id, symbol, e) {
@@ -169,7 +170,9 @@ class AccountAssets extends React.Component {
 
     _editButtonClick(symbol, account_name, e) {
         e.preventDefault();
-        this.props.router.push(`/account/${account_name}/update-asset/${symbol}`);
+        this.props.router.push(
+            `/account/${account_name}/update-asset/${symbol}`
+        );
     }
 
     _onAccountSelect(account_name) {
@@ -180,17 +183,26 @@ class AccountAssets extends React.Component {
     }
 
     render() {
-        let {account, account_name, searchAccounts, assets, assetsList} = this.props;
-        let {issue, errors, isValid, create} = this.state;
+        let {account, account_name, assets, assetsList} = this.props;
 
         let accountExists = true;
         if (!account) {
-            return <LoadingIndicator type="circle"/>;
+            return <LoadingIndicator type="circle" />;
         } else if (account.notFound) {
             accountExists = false;
         }
         if (!accountExists) {
-            return <div className="grid-block"><h5><Translate component="h5" content="account.errors.not_found" name={account_name} /></h5></div>;
+            return (
+                <div className="grid-block">
+                    <h5>
+                        <Translate
+                            component="h5"
+                            content="account.errors.not_found"
+                            name={account_name}
+                        />
+                    </h5>
+                </div>
+            );
         }
 
         if (assetsList.length) {
@@ -200,110 +212,201 @@ class AccountAssets extends React.Component {
             });
         }
         let myAssets = assets
-        .filter(asset => {
-            return asset.issuer === account.get("id");
-        })
-        .sort((a, b) => {
-            return parseInt(a.id.substring(4, a.id.length), 10) - parseInt(b.id.substring(4, b.id.length), 10);
-        })
-        .map(asset => {
-            let description = assetUtils.parseDescription(asset.options.description);
-            let desc = description.short_name ? description.short_name : description.main;
+            .filter(asset => {
+                return asset.issuer === account.get("id");
+            })
+            .sort((a, b) => {
+                return (
+                    parseInt(a.id.substring(4, a.id.length), 10) -
+                    parseInt(b.id.substring(4, b.id.length), 10)
+                );
+            })
+            .map(asset => {
+                let description = assetUtils.parseDescription(
+                    asset.options.description
+                );
+                let desc = description.short_name
+                    ? description.short_name
+                    : description.main;
 
-            if (desc.length > 100) {
-                desc = desc.substr(0, 100) + "...";
-            }
-            return (
+                if (desc.length > 100) {
+                    desc = desc.substr(0, 100) + "...";
+                }
+
+                const dynamicObject = this.props.getDynamicObject(
+                    asset.dynamic_asset_data_id
+                );
+
+                return (
                     <tr key={asset.symbol}>
-                        <td><Link to={`/asset/${asset.symbol}`}>{asset.symbol}</Link></td>
+                        <td>
+                            <Link to={`/asset/${asset.symbol}`}>
+                                {asset.symbol}
+                            </Link>
+                        </td>
                         <td style={{maxWidth: "250px"}}>{desc}</td>
-                        <td><FormattedAsset amount={parseInt(asset.dynamic.current_supply, 10)} asset={asset.id} /></td>
-                        <td><FormattedAsset amount={parseInt(asset.options.max_supply, 10)} asset={asset.id} /></td>
+                        <td>
+                            {dynamicObject ? (
+                                <FormattedAsset
+                                    amount={parseInt(
+                                        dynamicObject.get("current_supply"),
+                                        10
+                                    )}
+                                    asset={asset.id}
+                                />
+                            ) : null}
+                        </td>
+                        <td>
+                            <FormattedAsset
+                                amount={parseInt(asset.options.max_supply, 10)}
+                                asset={asset.id}
+                            />
+                        </td>
                         <td>
                             {!asset.bitasset_data_id ? (
-                            <button onClick={this._issueButtonClick.bind(this, asset.id, asset.symbol)} className="button outline">
-                                <Translate content="transaction.trxTypes.asset_issue" />
-                            </button>) : null}
+                                <button
+                                    onClick={this._issueButtonClick.bind(
+                                        this,
+                                        asset.id,
+                                        asset.symbol
+                                    )}
+                                    className="button"
+                                >
+                                    <Translate content="transaction.trxTypes.asset_issue" />
+                                </button>
+                            ) : null}
                         </td>
 
                         <td>
                             {!asset.bitasset_data_id ? (
-                            <button onClick={this._reserveButtonClick.bind(this, asset.id)} className="button outline">
-                                <Translate content="transaction.trxTypes.asset_reserve" />
-                            </button>) : null}
+                                <button
+                                    onClick={this._reserveButtonClick.bind(
+                                        this,
+                                        asset.id
+                                    )}
+                                    className="button"
+                                >
+                                    <Translate content="transaction.trxTypes.asset_reserve" />
+                                </button>
+                            ) : null}
                         </td>
 
                         <td>
-                            <button onClick={this._editButtonClick.bind(this, asset.symbol, account_name)} className="button outline">
+                            <button
+                                onClick={this._editButtonClick.bind(
+                                    this,
+                                    asset.symbol,
+                                    account_name
+                                )}
+                                className="button"
+                            >
                                 <Translate content="transaction.trxTypes.asset_update" />
                             </button>
                         </td>
                     </tr>
                 );
-        }).toArray();
+            })
+            .toArray();
 
         return (
-            <div className="grid-content">
+            <div className="grid-content app-tables no-padding" ref="appTables">
+                <div className="content-block small-12">
+                    <div className="tabs-container generic-bordered-box">
+                        <Tabs
+                            segmented={false}
+                            setting="issuedAssetsTab"
+                            className="account-tabs"
+                            tabsClass="account-overview bordered-header content-block"
+                            contentClass="padding"
+                        >
+                            <Tab title="account.user_issued_assets.issued_assets">
+                                <div className="content-block">
+                                    <table className="table dashboard-table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <Translate content="account.user_issued_assets.symbol" />
+                                                </th>
+                                                <th style={{maxWidth: "200px"}}>
+                                                    <Translate content="account.user_issued_assets.description" />
+                                                </th>
+                                                <Translate
+                                                    component="th"
+                                                    content="markets.supply"
+                                                />
+                                                <th>
+                                                    <Translate content="account.user_issued_assets.max_supply" />
+                                                </th>
+                                                <th
+                                                    style={{
+                                                        textAlign: "center"
+                                                    }}
+                                                    colSpan="3"
+                                                >
+                                                    <Translate content="account.perm.action" />
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>{myAssets}</tbody>
+                                    </table>
+                                </div>
 
-                    <div className="content-block generic-bordered-box">
-                        <div className="block-content-header">
-                            <Translate content="account.user_issued_assets.issued_assets" />
-                        </div>
-                        <div className="box-content">
-                            <table className="table dashboard-table">
-                                <thead>
-                                <tr>
-                                    <th><Translate content="account.user_issued_assets.symbol" /></th>
-                                    <th style={{maxWidth: "200px"}}><Translate content="account.user_issued_assets.description" /></th>
-                                    <Translate component="th" content="markets.supply" />
-                                    <th><Translate content="account.user_issued_assets.max_supply" /></th>
-                                    <th style={{textAlign: "center"}} colSpan="3"><Translate content="account.perm.action" /></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {myAssets}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div className="content-block">
-                        <Link to={`/account/${account_name}/create-asset/`}><button className="button outline"><Translate content="transaction.trxTypes.asset_create" /></button></Link>
+                                <div className="content-block">
+                                    <Link
+                                        to={`/account/${account_name}/create-asset/`}
+                                    >
+                                        <button className="button">
+                                            <Translate content="transaction.trxTypes.asset_create" />
+                                        </button>
+                                    </Link>
+                                </div>
+                            </Tab>
+                        </Tabs>
                     </div>
 
                     <BaseModal id="issue_asset" overlay={true}>
-                        <br/>
+                        <br />
                         <div className="grid-block vertical">
                             <IssueModal
                                 asset_to_issue={this.state.issue.asset_id}
-                                onClose={() => {ZfApi.publish("issue_asset", "close")}}
+                                onClose={() => {
+                                    ZfApi.publish("issue_asset", "close");
+                                }}
                             />
                         </div>
                     </BaseModal>
 
                     <BaseModal id="reserve_asset" overlay={true}>
-                        <br/>
+                        <br />
                         <div className="grid-block vertical">
                             <ReserveAssetModal
                                 assetId={this.state.reserve}
                                 account={account}
-                                onClose={() => {ZfApi.publish("reserve_asset", "close")}}
+                                onClose={() => {
+                                    ZfApi.publish("reserve_asset", "close");
+                                }}
                             />
                         </div>
                     </BaseModal>
+                </div>
             </div>
         );
     }
 }
 
-AccountAssets = BindToChainState(AccountAssets);
+AccountAssets = AssetWrapper(AccountAssets, {
+    propNames: ["assetsList"],
+    asList: true,
+    withDynamic: true
+});
 
 export default connect(AccountAssets, {
     listenTo() {
         return [AssetStore];
     },
     getProps(props) {
-        let assets = Map(), assetsList = List();
+        let assets = Map(),
+            assetsList = List();
         if (props.account.get("assets", []).size) {
             props.account.get("assets", []).forEach(id => {
                 assetsList = assetsList.push(id);

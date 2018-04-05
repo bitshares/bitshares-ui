@@ -24,8 +24,10 @@ occur any time the highest bid is less than the *call price* and greater than
 The margin position will be forced to sell its collateral anytime the highest
 offer to buy the collateral is less than the call price (x/BTS).
 
-    SQP        = settlement price / MSQR
-    call price = DEBT / COLLATERAL * MCR
+```
+SQP = settlement price / MSQR
+call price = DEBT / COLLATERAL * MCR
+```
 
 The margin call will take the collateral, buy shares of borrowed bitAsset at
 market rates up to the SQP and close the position. The remaining BTS of the

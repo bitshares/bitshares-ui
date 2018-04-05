@@ -1,5 +1,5 @@
 import React from "react";
-import { zipObject } from "lodash";
+import {zipObject} from "lodash";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router";
@@ -18,7 +18,7 @@ function split_into_sections(str) {
 
     for (let i = sections.length - 1; i >= 1; i -= 2) {
         // remove extra </p> and <p>
-        sections[i] = sections[i].replace(/(^<\/p>|<p>$)/g, '');
+        sections[i] = sections[i].replace(/(^<\/p>|<p>$)/g, "");
         sections[i - 1] = [sections[i - 1], sections[i]];
         sections.splice(i, 1);
     }
@@ -28,10 +28,16 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
-        if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0) return `<a href="${text}" onclick="_onClickLink(event)"`;
-        if (text.indexOf("http") === 0) return `<a href="${text}" rel="noopener noreferrer" target="_blank"`;
-        let page = endsWith(text, ".md") ? text.substr(0, text.length - 3) : text;
-        let res = `<a href="${__HASH_HISTORY__ ? "#" : ""}/help/${page}" onclick="_onClickLink(event)"`;
+        if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
+            return `<a href="${text}" onclick="_onClickLink(event)"`;
+        if (text.indexOf("http") === 0)
+            return `<a href="${text}" rel="noopener noreferrer" target="_blank"`;
+        let page = endsWith(text, ".md")
+            ? text.substr(0, text.length - 3)
+            : text;
+        let res = `<a href="${
+            __HASH_HISTORY__ ? "#" : ""
+        }/help/${page}" onclick="_onClickLink(event)"`;
         return res;
     });
 }
@@ -39,7 +45,6 @@ function adjust_links(str) {
 // console.log("-- HelpData -->", HelpData);
 
 class HelpContent extends React.Component {
-
     static propTypes = {
         path: React.PropTypes.string.isRequired,
         section: React.PropTypes.string
@@ -54,74 +59,127 @@ class HelpContent extends React.Component {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
-        req.keys().filter(a => {
-            return (
-                a.indexOf(`/${locale}/`) !== -1 ||
-                a.indexOf("/en/") !== -1
-            );
-        }).forEach(function(filename) {
-            var res = filename.match(/\/(.+?)\/(.+)\./);
-            let locale = res[1];
-            let key = res[2];
-            let help_locale = HelpData[locale];
-            if (!help_locale) HelpData[locale] = help_locale = {};
-            let content = req(filename);
-            help_locale[key] = split_into_sections(adjust_links(content));
-        });
+        req
+            .keys()
+            .filter(a => {
+                return (
+                    a.indexOf(`/${locale}/`) !== -1 || a.indexOf("/en/") !== -1
+                );
+            })
+            .forEach(function(filename) {
+                var res = filename.match(/\/(.+?)\/(.+)\./);
+                let locale = res[1];
+                let key = res[2];
+                let help_locale = HelpData[locale];
+                if (!help_locale) HelpData[locale] = help_locale = {};
+                let content = req(filename);
+                help_locale[key] = split_into_sections(adjust_links(content));
+            });
     }
 
     onClickLink(e) {
         e.preventDefault();
-        let path = (__HASH_HISTORY__ ? e.target.hash : e.target.pathname).split("/").filter(p => p && p !== "#");
+        let path = (__HASH_HISTORY__ ? e.target.hash : e.target.pathname)
+            .split("/")
+            .filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
         this.props.router.push(route);
         return false;
     }
 
-    setVars(str) {
+    setVars(str, hideIssuer) {
+        if (hideIssuer == "true") {
+            var str = str.replace(/^.*{issuer}.*$/gm, "");
+        }
+
         return str.replace(/(\{.+?\})/gi, (match, text) => {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
-            if (value.amount && value.asset) value = utils.format_asset(value.amount, value.asset, false, false);
+            if (value.amount && value.asset)
+                value = utils.format_asset(
+                    value.amount,
+                    value.asset,
+                    false,
+                    false
+                );
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
-            //console.log("-- var -->", key, value);
+            // console.log("-- var -->", key, value);
             return value;
         });
     }
+
     render() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         if (!HelpData[locale]) {
-            console.error(`missing locale '${locale}' help files, rolling back to 'en'`);
+            console.error(
+                `missing locale '${locale}' help files, rolling back to 'en'`
+            );
             locale = "en";
         }
+
         let value = HelpData[locale][this.props.path];
 
         if (!value && locale !== "en") {
-            console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to 'en'`);
-            value = HelpData['en'][this.props.path];
+            console.warn(
+                `missing path '${
+                    this.props.path
+                }' for locale '${locale}' help files, rolling back to 'en'`
+            );
+            value = HelpData["en"][this.props.path];
         }
+
         if (!value && this.props.alt_path) {
-            console.warn(`missing path '${this.props.path}' for locale '${locale}' help files, rolling back to alt_path '${this.props.alt_path}'`);
+            console.warn(
+                `missing path '${
+                    this.props.path
+                }' for locale '${locale}' help files, rolling back to alt_path '${
+                    this.props.alt_path
+                }'`
+            );
             value = HelpData[locale][this.props.alt_path];
         }
-        if (!value && this.props.alt_path && locale != 'en') {
-            console.warn(`missing alt_path '${this.props.alt_path}' for locale '${locale}' help files, rolling back to 'en'`);
-            value = HelpData['en'][this.props.alt_path];
+
+        if (!value && this.props.alt_path && locale != "en") {
+            console.warn(
+                `missing alt_path '${
+                    this.props.alt_path
+                }' for locale '${locale}' help files, rolling back to 'en'`
+            );
+            value = HelpData["en"][this.props.alt_path];
         }
 
         if (!value) {
-            console.error(`help file not found '${this.props.path}' for locale '${locale}'`);
+            console.error(
+                `help file not found '${
+                    this.props.path
+                }' for locale '${locale}'`
+            );
             return !null;
         }
+
         if (this.props.section) value = value[this.props.section];
+
         if (!value) {
-            console.error(`help section not found ${this.props.path}#${this.props.section}`);
+            console.error(
+                `help section not found ${this.props.path}#${
+                    this.props.section
+                }`
+            );
             return null;
         }
-        return <div style={this.props.style} className="help-content" dangerouslySetInnerHTML={{__html: this.setVars(value)}}/>;
+
+        return (
+            <div
+                style={this.props.style}
+                className="help-content"
+                dangerouslySetInnerHTML={{
+                    __html: this.setVars(value, this.props.hide_issuer)
+                }}
+            />
+        );
     }
 }
 

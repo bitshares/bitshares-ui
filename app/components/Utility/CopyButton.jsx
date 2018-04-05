@@ -7,7 +7,9 @@ const CopyButton = ({
     className = "button",
     text = "",
     tip = "tooltip.copy_tip",
-    dataPlace = "right"
+    dataPlace = "right",
+    buttonIcon = "clippy",
+    buttonText = ""
 }) => {
     return (
         <ClipboardButton
@@ -16,7 +18,7 @@ const CopyButton = ({
             data-place={dataPlace}
             data-tip={counterpart.translate(tip)}
         >
-            <Icon name="clippy" />
+            {!buttonText ? <Icon name={buttonIcon} /> : buttonText}
         </ClipboardButton>
     );
 };
