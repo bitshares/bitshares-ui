@@ -116,8 +116,10 @@ class AccountSelector extends React.Component {
         let value = null;
         if (typeof e === "string") {
             value = e;
-        } else {
+        } else if (e && e.target) {
             value = e.target.value.trim();
+        } else {
+            value = "";
         }
 
         if (!allowUppercase) value = value.toLowerCase();
