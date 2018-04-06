@@ -17,10 +17,8 @@ var http = require("http");
 compiler.apply(
     new ProgressPlugin(function(percentage, msg) {
         process.stdout.write(
-            (percentage * 100).toFixed(2) +
-                "% " +
-                msg +
-                "                 \033[0G"
+            (percentage * 100).toFixed(2) + "% " + msg + "\n"
+            // "                 \033[0G"
         );
     })
 );
@@ -43,10 +41,10 @@ var options = {
     cert: fs.readFileSync("./ssl/server.crt")
 };
 
-http.createServer(app).listen(8080);
+http.createServer(app).listen(8081);
 https.createServer(options, app).listen(8085);
 
-console.log("Listening at http://localhost:8080/ or https://localhost:8085/");
+console.log("Listening at http://localhost:8081/ or https://localhost:8085/");
 // new WebpackDevServer(compiler, {
 //     publicPath: config.output.publicPath,
 //     hot: true,

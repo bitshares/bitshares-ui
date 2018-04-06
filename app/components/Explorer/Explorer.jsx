@@ -22,11 +22,11 @@ class Explorer extends React.Component {
                     link: "/explorer/blocks",
                     translate: "explorer.blocks.title"
                 },
-                {
-                    name: "assets",
-                    link: "/explorer/assets",
-                    translate: "explorer.assets.title"
-                },
+                // {
+                //     name: "assets",
+                //     link: "/explorer/assets",
+                //     translate: "explorer.assets.title"
+                // },
                 {
                     name: "accounts",
                     link: "/explorer/accounts",
@@ -41,13 +41,14 @@ class Explorer extends React.Component {
                     name: "committee_members",
                     link: "/explorer/committee-members",
                     translate: "explorer.committee_members.title"
-                },
-                {
-                    name: "markets",
-                    link: "/explorer/markets",
-                    translate: "markets.title"
-                },
-                {name: "fees", link: "/explorer/fees", translate: "fees.title"}
+                }
+                // ,
+                // {
+                //     name: "markets",
+                //     link: "/explorer/markets",
+                //     translate: "markets.title"
+                // },
+                // {name: "fees", link: "/explorer/fees", translate: "fees.title"}
             ]
         };
     }
