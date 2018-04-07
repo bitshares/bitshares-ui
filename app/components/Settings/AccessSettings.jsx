@@ -104,7 +104,7 @@ class ApiNode extends React.Component {
                         style={{float: "right", position: "relative", top: "-15px"}}
                         onClick={this.activate.bind(this, autoActive ? activeNode.url : autoSelectAPI)}
                     >
-                        <input type="checkbox" checked={autoActive}  />
+                        <input id="automatic_node_switcher" type="checkbox" checked={autoActive}  />
                         <label />
                     </span>
                     <p style={{fontSize: "80%"}}>Automatic Switching {autoActive ? "on" : "off"}</p>
@@ -125,7 +125,7 @@ class ApiNode extends React.Component {
                             className="switch"
                             onClick={this.activate.bind(this, autoActive ? activeNode.url : autoSelectAPI)}
                         >
-                            <input type="checkbox" checked={autoActive} />
+                            <input id="automatic_node_switcher" type="checkbox" checked={autoActive} />
                             <label />
                         </span>
                         <Translate component="div" style={{paddingLeft: "1rem", paddingTop: "0.5rem"}} content="settings.automatic" totalNodes={totalNodes} />
@@ -148,7 +148,7 @@ class ApiNode extends React.Component {
                 <div className="api-node">
                     <div>
                         <p>{name}</p>
-                        <p>{displayUrl}</p>
+                        <p id={activeNode ? "active_node" : null}>{displayUrl}</p>
                     </div>
                     <div>
                         {isTestnet && !ping ? null : 
@@ -179,7 +179,7 @@ class ApiNode extends React.Component {
                                 </a>
                         }
                         {activeNode.url != url ? 
-                            <a><Icon name={"shuffle"} size="1_5x" onClick={this.activate.bind(this, url)} /></a>
+                            <a id={displayUrl}><Icon  name={"shuffle"} size="1_5x" onClick={this.activate.bind(this, url)} /></a>
                             :
                             <Icon name={"link"} size="2x" />
                         }
