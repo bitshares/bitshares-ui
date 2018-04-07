@@ -64,12 +64,7 @@ class BlockTime extends React.Component {
                     this.props.fullDate ? 
                         counterpart.localize(new Date(this.state.time), {
                             type: "date",
-                            format:
-                                getLocale()
-                                    .toLowerCase()
-                                    .indexOf("en-us") !== -1
-                                    ? "market_history_us"
-                                    : "market_history"
+                            format: "full"
                         }) : 
                         <TimeAgo time={this.state.time} /> 
                     : null
