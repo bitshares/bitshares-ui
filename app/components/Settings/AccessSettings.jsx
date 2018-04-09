@@ -137,15 +137,22 @@ class ApiNode extends React.Component {
                 <div className="api-status">
                     <a>
                         <Icon
-                            className={color}
-                            name={isActive ? "connected" : "reconnect"}
+                            className={color + " default-icon"}
+                            name={isActive ? "connected" : "disconnected"}
                             size="1_5x"
+                            onClick={this.activate.bind(this, url)}
                             title={
                                 isActive
                                     ? "settings.active_node"
                                     : "settings.switch"
                             }
+                        />
+                        <Icon
+                            className={color + " hover-icon"}
+                            name={"connect"}
+                            size="1_5x"
                             onClick={this.activate.bind(this, url)}
+                            title="settings.switch"
                         />
                     </a>
                     {name}
@@ -255,8 +262,15 @@ class ApiNode extends React.Component {
                             {activeNode.url != url ? (
                                 <a>
                                     <Icon
-                                        className={color}
-                                        name={"reconnect"}
+                                        className={color + " default-icon"}
+                                        name={"disconnected"}
+                                        size="1_5x"
+                                        onClick={this.activate.bind(this, url)}
+                                        title="settings.switch"
+                                    />
+                                    <Icon
+                                        className={color + " hover-icon"}
+                                        name={"connect"}
                                         size="1_5x"
                                         onClick={this.activate.bind(this, url)}
                                         title="settings.switch"
