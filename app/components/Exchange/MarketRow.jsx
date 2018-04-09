@@ -200,7 +200,7 @@ class MarketRow extends React.Component {
                             "GOLD",
                             "SILVER"
                         ];
-                        let precision = 6;
+                        let precision = 8; // we always want 8 digits as precision
                         if (
                             highPrecisionAssets.indexOf(base.get("symbol")) !==
                             -1
