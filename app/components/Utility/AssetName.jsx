@@ -32,6 +32,10 @@ class AssetName extends React.Component {
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
         const name = asset.get("symbol");
+
+        const isBridgeCoinAsset = utils.isBridgeCoinAsset(asset);
+        if (isBridgeCoinAsset) noPrefix = true;
+
         const isBitAsset = asset.has("bitasset");
         const isPredMarket =
             isBitAsset && asset.getIn(["bitasset", "is_prediction_market"]);
@@ -103,7 +107,9 @@ class AssetName extends React.Component {
                     data-place={this.props.dataPlace}
                     data-html={true}
                 >
-                    <span className="asset-prefix-replaced">{prefix}</span>
+                    {!isBridgeCoinAsset && (
+                        <span className="asset-prefix-replaced">{prefix}</span>
+                    )}
                     <span>{replacedName}</span>
                 </div>
             );

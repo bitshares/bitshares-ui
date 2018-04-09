@@ -421,6 +421,20 @@ var Utils = {
             }
         }
 
+        // rename specific CryptoBridge Coins
+        if (this.isBridgeCoinAsset(asset)) {
+            const realNames = {
+                BRIM: "BR1M",
+                SUBIX: "SUB1X",
+                DV: "DV7",
+                NLC: "NLC2"
+            };
+
+            if (realNames[name]) {
+                name = realNames[name];
+            }
+        }
+
         let prefix = isBitAsset
             ? "bit"
             : toReplace[i] ? toReplace[i].toLowerCase() : null;
@@ -430,6 +444,11 @@ var Utils = {
             prefix,
             isBitAsset: !!isBitAsset
         };
+    },
+
+    isBridgeCoinAsset(asset) {
+        if (!asset) return false;
+        return asset.get("symbol").indexOf("BRIDGE.") === 0;
     }
 };
 
