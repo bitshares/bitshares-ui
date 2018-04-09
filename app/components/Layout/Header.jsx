@@ -28,7 +28,7 @@ import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 
-var logo = require("assets/logo-ico-blue.png");
+var logo = require("assets/logo-cryptobridge.png");
 
 // const FlagImage = ({flag, width = 20, height = 20}) => {
 //     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;
