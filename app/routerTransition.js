@@ -15,6 +15,8 @@ const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
 let latencyChecks;
 import counterpart from "counterpart";
+import sha256 from "js-sha256";
+import {settingsAPIs} from "api/apiConfig";
 
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
@@ -59,6 +61,33 @@ const filterAndSortURLs = (count, latencies) => {
     return urls;
 };
 
+const apiLatenciesInconsistentWithNodes = (apiLatencies, apiNodes) => {
+    let unknownNodesCount = 0;
+
+    Object.keys(apiLatencies).forEach(url => {
+        unknownNodesCount +=
+            apiNodes.find(node => {
+                return node.url === url;
+            }) === undefined
+                ? 1
+                : 0;
+    });
+
+    return unknownNodesCount > 0;
+};
+
+const apiConfigInconsistent = () => {
+    const nodesConfigHash = sha256(JSON.stringify(settingsAPIs));
+    if (nodesConfigHash !== ss.get("nodesConfigHash", null)) {
+        // apiConfig is inconsistent
+        ss.set("nodesConfigHash", nodesConfigHash);
+
+        return true;
+    }
+
+    return false;
+};
+
 let _connectInProgress = false;
 let _connectionCheckPromise = null;
 const willTransitionTo = (
@@ -92,12 +121,17 @@ const willTransitionTo = (
     }
 
     const apiLatencies = SettingsStore.getState().apiLatencies;
+    const apiServer = SettingsStore.getState().defaults.apiServer;
     latencyChecks = ss.get("latencyChecks", 1);
     let apiLatenciesCount = Object.keys(apiLatencies).length;
     let connectionStart;
 
     if (connect) ss.set("latencyChecks", latencyChecks + 1); // Every 15 connect attempts we refresh the api latency list
-    if (latencyChecks >= 5) {
+    if (
+        latencyChecks >= 5 ||
+        apiLatenciesInconsistentWithNodes(apiLatencies, apiServer) ||
+        apiConfigInconsistent()
+    ) {
         apiLatenciesCount = 0;
         ss.set("latencyChecks", 0);
     }
