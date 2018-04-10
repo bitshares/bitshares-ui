@@ -7,7 +7,7 @@ serves as a gateway to the rest of the ecosystem.
 ## Cloud Wallet
 
 If you registered with a username and password, you have a cloud wallet. Although
-nothing is technically stored in the cloud, we user the term Cloud Wallet because
+nothing is technically stored in the cloud, we use the term Cloud Wallet because
 you can use these credentials (username and password) from any web browser at any 
 time to gain access to your account. The cloud wallet only allows for a single 
 account to be accessed at a time. This is generally the correct choice for new users. 
