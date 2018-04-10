@@ -243,8 +243,20 @@ function BindToChainState(Component, options = {}) {
                         new_state[key] = new_obj;
                     else if (new_obj && new_obj !== this.state[key])
                         new_state[key] = new_obj;
+                    else if (new_obj === null) new_state[key] = new_obj;
                     ++all_objects_counter;
                     if (new_obj !== undefined) ++resolved_objects_counter;
+                    if (prop === "bitsharesblocksazdazdz")
+                        console.log(
+                            "account:",
+                            prop,
+                            "new_obj",
+                            new_obj,
+                            "all_objects_counter",
+                            all_objects_counter,
+                            "resolved_objects_counter",
+                            resolved_objects_counter
+                        );
                 } else {
                     if (this.state[key]) new_state[key] = null;
                 }
@@ -487,7 +499,6 @@ function BindToChainState(Component, options = {}) {
             // console.time(Component.name + " setState");
 
             /* For some reason this stateChange is very expensive, so we need to limit it */
-
             if (stateChanged) this.setState(new_state);
 
             // let updateEnd = new Date().getTime();
@@ -504,7 +515,7 @@ function BindToChainState(Component, options = {}) {
             const props = omit(this.props, this.all_chain_props);
 
             for (let prop of this.required_props) {
-                if (!this.state[prop]) {
+                if (this.state[prop] === undefined) {
                     if (typeof options !== "undefined" && options.show_loader) {
                         return <LoadingIndicator />;
                     } else {

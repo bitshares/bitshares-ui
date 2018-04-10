@@ -224,6 +224,12 @@ var Utils = {
                 return false;
             }
         }
+        if (
+            (a === null && b === undefined) ||
+            (b === null && a === undefined)
+        ) {
+            return false;
+        }
         return true;
     },
 
