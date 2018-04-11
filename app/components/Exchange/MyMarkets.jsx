@@ -16,7 +16,6 @@ import AssetName from "../Utility/AssetName";
 import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
-import CryptoBridgeActions from "actions/CryptoBridgeActions";
 import cnames from "classnames";
 import {debounce} from "lodash";
 import AssetSelector from "../Utility/AssetSelector";
@@ -397,8 +396,6 @@ class MyMarkets extends React.Component {
     }
 
     componentWillMount() {
-        CryptoBridgeActions.getMarkets.defer();
-
         if (this.props.setMinWidth) {
             window.addEventListener("resize", this._setMinWidth, {
                 capture: false,
