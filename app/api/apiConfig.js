@@ -51,10 +51,12 @@ export const settingsAPIs = {
         {url: "wss://ws.gdex.top", location: "China"},
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
+        {url: "wss://la.dexnode.net/ws", location: "LA, USA"},
         {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
         {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
+        {url: "wss://node.market.rudex.org", location: "Germany"},
         {
             url: "wss://eu.nodes.bitshares.ws",
             location: "Central Europe - BitShares Infrastructure Program"
@@ -74,6 +76,21 @@ export const settingsAPIs = {
             location: "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))"
         },
         {url: "wss://api.bts.network", location: "East Coast, USA"},
+        {url: "wss://btsws.roelandp.nl/ws", location: "Canada"},
+        {url: "wss://api.bitshares.bhuz.info/ws", location: "Europe"},
+        {url: "wss://bts-api.lafona.net/ws", location: "USA"},
+        {url: "wss://kimziv.com/ws", location: "Singapore"},
+        {url: "wss://api.btsgo.net/ws", location: "Singapore"},
+        {url: "wss://bts.proxyhosts.info/wss", location: "Germany"},
+        {url: "wss://bts.open.icowallet.net/ws", location: "Hangzhou, China"},
+        {url: "wss://blockzms.xyz/ws", location: "USA"},
+        {url: "wss://crazybit.online", location: "China"},
+        {url: "wss://freedom.bts123.cc:15138/", location: "China"},
+        {url: "wss://bitshares.bts123.cc:15138/", location: "China"},
+        {url: "wss://api.bts.ai/", location: "Beijing, China"},
+        {url: "wss://ws.hellobts.com/", location: "Japan"},
+        {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
+        {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
