@@ -11,6 +11,7 @@ import SettingsStore from "stores/SettingsStore";
 import ChainTypes from "../Utility/ChainTypes";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
+import AssetImage from "../Utility/AssetImage";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
 import utils from "common/utils";
@@ -164,12 +165,9 @@ class MarketRow extends React.Component {
                             "symbol"
                         )}_${this.props.base.get("symbol")}`}
                     >
-                        <img
-                            ref={imgName.toLowerCase()}
-                            className="column-hide-small"
-                            onError={this._onError.bind(this, imgName)}
-                            style={{maxWidth: 20, marginRight: 10}}
-                            src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`}
+                        <AssetImage
+                            style={{maxWidth: 40, margin: "5px 20px 5px 0"}}
+                            marketId={marketID}
                         />
                         <AssetName dataPlace="top" name={quote.get("symbol")} />{" "}
                         :{" "}

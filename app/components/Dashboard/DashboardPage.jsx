@@ -4,11 +4,20 @@ import {connect} from "alt-react";
 import LoadingIndicator from "../LoadingIndicator";
 import LoginSelector from "../LoginSelector";
 import AccountStore from "stores/AccountStore";
+import CryptoBridgeActions from "actions/CryptoBridgeActions";
 
 import {Tabs, Tab} from "../Utility/Tabs";
-import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
+
+import {StarredMarkets, CryptoBridgeMarkets} from "./Markets";
+import CryptoBridgeNews from "./CryptoBridgeNews";
+
+import Translate from "react-translate-component";
 
 class DashboardPage extends React.Component {
+    componentWillMount() {
+        CryptoBridgeActions.getNews.defer();
+    }
+
     render() {
         let {
             myActiveAccounts,
@@ -29,31 +38,36 @@ class DashboardPage extends React.Component {
         }
 
         return (
-            <div className="grid-block page-layout">
-                <div className="grid-block no-padding">
-                    <div
-                        className="grid-content app-tables no-padding"
-                        ref="appTables"
-                    >
-                        <div className="content-block small-12">
-                            <div className="tabs-container generic-bordered-box">
-                                <Tabs
-                                    defaultActiveTab={1}
-                                    segmented={false}
-                                    setting="dashboardTab"
-                                    className="account-tabs"
-                                    tabsClass="account-overview no-padding bordered-header content-block"
-                                >
-                                    <Tab title="dashboard.starred_markets">
-                                        <StarredMarkets />
-                                    </Tab>
-                                    <Tab title="dashboard.featured_markets">
-                                        <FeaturedMarkets />
-                                    </Tab>
-                                    {/* <Tab title="dashboard.top_markets">
-                                        <TopMarkets />
-                                    </Tab> */}
-                                </Tabs>
+            <div>
+                <div className="padding">
+                    <h3>
+                        <Translate content="exchange.news" />
+                    </h3>
+                    <CryptoBridgeNews />
+                </div>
+                <div className="grid-block page-layout">
+                    <div className="grid-block no-padding">
+                        <div
+                            className="grid-content app-tables no-padding"
+                            ref="appTables"
+                        >
+                            <div className="content-block small-12">
+                                <div className="tabs-container generic-bordered-box">
+                                    <Tabs
+                                        defaultActiveTab={1}
+                                        segmented={false}
+                                        setting="dashboardTab"
+                                        className="account-tabs"
+                                        tabsClass="account-overview no-padding bordered-header content-block"
+                                    >
+                                        <Tab title="dashboard.top_markets">
+                                            <CryptoBridgeMarkets />
+                                        </Tab>
+                                        <Tab title="dashboard.starred_markets">
+                                            <StarredMarkets />
+                                        </Tab>
+                                    </Tabs>
+                                </div>
                             </div>
                         </div>
                     </div>

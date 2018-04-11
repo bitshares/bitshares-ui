@@ -24,6 +24,7 @@ import Deprecate from "./Deprecate";
 import WalletManagerStore from "stores/WalletManagerStore";
 import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
+import CryptoBridgeActions from "actions/CryptoBridgeActions";
 
 class App extends React.Component {
     constructor(props) {
@@ -56,6 +57,11 @@ class App extends React.Component {
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
         this._getWindowHeight = this._getWindowHeight.bind(this);
+    }
+
+    componentWillMount() {
+        CryptoBridgeActions.getMarkets.defer();
+        CryptoBridgeActions.getAssets.defer();
     }
 
     componentWillUnmount() {

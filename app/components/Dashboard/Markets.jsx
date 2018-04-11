@@ -4,9 +4,45 @@ import {connect} from "alt-react";
 
 import utils from "common/utils";
 import SettingsStore from "stores/SettingsStore";
+import CryptoBridgeStore from "stores/CryptoBridgeStore";
 // import SettingsActions from "actions/SettingsActions";
 import MarketsStore from "stores/MarketsStore";
 import MarketsTable from "./MarketsTable";
+import LoadingIndicator from "../LoadingIndicator";
+
+class CryptoBridgeMarkets extends React.Component {
+    render() {
+        let {cryptoBridgeMarkets} = this.props;
+        let markets = [];
+
+        if (cryptoBridgeMarkets.size) {
+            for (let market of cryptoBridgeMarkets.values()) {
+                markets.push([market.quote, market.base]);
+            }
+        }
+
+        return (
+            <div>
+                <MarketsTable markets={markets} forceDirection={true} />
+                {markets.length < 5 && (
+                    <div style={{textAlign: "center", padding: "10px"}}>
+                        <LoadingIndicator type="three-bounce" />
+                    </div>
+                )}
+            </div>
+        );
+    }
+}
+CryptoBridgeMarkets = connect(CryptoBridgeMarkets, {
+    listenTo() {
+        return [CryptoBridgeStore];
+    },
+    getProps() {
+        return {
+            cryptoBridgeMarkets: CryptoBridgeStore.getState().markets
+        };
+    }
+});
 
 class StarredMarkets extends React.Component {
     render() {
@@ -169,4 +205,4 @@ class TopMarkets extends React.Component {
     }
 }
 
-export {StarredMarkets, FeaturedMarkets, TopMarkets};
+export {StarredMarkets, FeaturedMarkets, TopMarkets, CryptoBridgeMarkets};
