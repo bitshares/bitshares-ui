@@ -91,6 +91,7 @@ export const settingsAPIs = {
         {url: "wss://ws.hellobts.com/", location: "Japan"},
         {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
         {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
+        {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
