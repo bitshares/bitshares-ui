@@ -76,7 +76,7 @@ export const settingsAPIs = {
             location: "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))"
         },
         {url: "wss://api.bts.network", location: "East Coast, USA"},
-        {url: "wss://btsws.roelandp.nl/ws", location: "Canada"},
+        {url: "wss://btsws.roelandp.nl/ws", location: "Finland"},
         {url: "wss://api.bitshares.bhuz.info/ws", location: "Europe"},
         {url: "wss://bts-api.lafona.net/ws", location: "USA"},
         {url: "wss://kimziv.com/ws", location: "Singapore"},
