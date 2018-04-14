@@ -6,7 +6,7 @@ import {
     getBackedCoins,
     getActiveWallets
 } from "common/blockTradesMethods";
-import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
+import {blockTradesAPIs} from "api/apiConfig";
 
 let inProgress = {};
 
@@ -17,7 +17,7 @@ const onGatewayTimeout = (dispatch, gateway) => {
 };
 
 class GatewayActions {
-    fetchCoins({backer = "OPEN", url = undefined, urlBridge = openledgerAPIs.BASE, urlWallets = undefined} = {}) {
+    fetchCoins({backer = "OPEN", url = undefined, urlBridge = undefined, urlWallets = undefined} = {}) {
         if (!inProgress["fetchCoins_" + backer]) {
             inProgress["fetchCoins_" + backer] = true;
             return dispatch => {
@@ -25,7 +25,6 @@ class GatewayActions {
                     onGatewayTimeout.bind(null, dispatch, backer),
                     GATEWAY_TIMEOUT
                 );
-
                 Promise.all([
                     fetchCoins(url),
                     fetchBridgeCoins(urlBridge),
@@ -77,7 +76,7 @@ class GatewayActions {
         }
     }
 
-    fetchBridgeCoins(url = undefined) {
+    fetchBridgeCoins() {
         if (!inProgress["fetchBridgeCoins"]) {
             inProgress["fetchBridgeCoins"] = true;
             return dispatch => {
@@ -86,9 +85,9 @@ class GatewayActions {
                     GATEWAY_TIMEOUT
                 );
                 Promise.all([
-                    fetchCoins(url),
-                    fetchBridgeCoins(blockTradesAPIs.BASE),
-                    getActiveWallets(url)
+                    fetchCoins(blockTradesAPIs.BASE + blockTradesAPIs.COINS_LIST),
+                    fetchBridgeCoins(blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS),
+                    getActiveWallets(blockTradesAPIs.BASE + blockTradesAPIs.ACTIVE_WALLETS)
                 ]).then(result => {
                     clearTimeout(fetchCoinsTimeout);
                     delete inProgress["fetchBridgeCoins"];

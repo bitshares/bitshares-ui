@@ -85,7 +85,7 @@ class WinexGateway extends React.Component {
     _getCoins(){
         Promise.all([
                 fetchCoins(widechainAPIs.BASE + widechainAPIs.COINS_LIST),
-                fetchBridgeCoins(widechainAPIs.BASE),
+                fetchBridgeCoins(widechainAPIs.BASE + widechainAPIs.TRADING_PAIRS),
                 getActiveWallets(widechainAPIs.BASE + widechainAPIs.ACTIVE_WALLETS)
             ]).then(result => {
                 let [coins, tradingPairs, wallets] = result;

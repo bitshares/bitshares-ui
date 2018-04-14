@@ -150,6 +150,15 @@ function gatewaySelector(args) {
         onGatewayChanged
     } = args;
 
+    let selectGatewayList = Object.keys(gatewayStatus).map((key, i) => {
+        if(gatewayStatus[key].options.enabled) 
+            return (
+                <option value={gatewayStatus[key].id} key={gatewayStatus[key].id}>
+                    {gatewayStatus[key].name}
+                </option>
+            );
+    });
+
     return (
         <div className="container-row">
             <div className="no-margin no-padding">
@@ -168,7 +177,7 @@ function gatewaySelector(args) {
                             {!error && 
                             selectedGateway &&
                             gatewayStatus[selectedGateway] && 
-                            !gatewayStatus[selectedGateway].enabled ?
+                            !gatewayStatus[selectedGateway].options.enabled ?
                                 <Translate content="modal.deposit_withdraw.disabled" />
                                 : null}
                             {error ? (
@@ -196,21 +205,7 @@ function gatewaySelector(args) {
                                     content="modal.deposit_withdraw.select_gateway"
                                 />
                             ) : null}
-                            {gatewayStatus.RUDEX.enabled ? (
-                                <option value="RUDEX">
-                                    {gatewayStatus.RUDEX.name}
-                                </option>
-                            ) : null}
-                            {gatewayStatus.OPEN.enabled ? (
-                                <option value="OPEN">
-                                    {gatewayStatus.OPEN.name}
-                                </option>
-                            ) : null}
-                            {gatewayStatus.WIN.enabled ? (
-                                <option value="WIN">
-                                    {gatewayStatus.WIN.name}
-                                </option>
-                            ) : null}
+                            {selectGatewayList}
                         </select>
                         <Icon
                             name="chevron-down"
