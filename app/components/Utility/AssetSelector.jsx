@@ -187,7 +187,7 @@ class AssetSelector extends React.Component {
                                 disabled={this.props.disabled}
                                 type="text"
                                 value={this.props.assetInput || ""}
-                                placeholder={counterpart.translate(
+                                placeholder={this.props.placeholder || counterpart.translate(
                                     "explorer.assets.symbol"
                                 )}
                                 ref="user_input"

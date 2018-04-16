@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "alt-react";
 import accountUtils from "common/account_utils";
+import {updateGatewayBackers} from "common/gatewayUtils";
 import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
@@ -13,12 +14,10 @@ import HelpContent from "../Utility/HelpContent";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import {Apis} from "bitsharesjs-ws";
-import {settingsAPIs, rudexAPIs} from "api/apiConfig";
+import {settingsAPIs} from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
-import GatewayActions from "actions/GatewayActions";
 import AccountImage from "../Account/AccountImage";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
@@ -481,15 +480,7 @@ AccountDepositWithdraw = BindToChainState(AccountDepositWithdraw);
 
 class DepositStoreWrapper extends React.Component {
     componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") {
-            // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins.defer(); // Openledger
-            GatewayActions.fetchCoinsSimple.defer({
-                backer: "RUDEX",
-                url: rudexAPIs.BASE + rudexAPIs.COINS_LIST
-            }); // RuDEX
-            GatewayActions.fetchCoins.defer({backer: "TRADE"}); // Blocktrades
-        }
+        updateGatewayBackers();
     }
 
     render() {
@@ -515,6 +506,10 @@ export default connect(DepositStoreWrapper, {
             ),
             blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
                 "TRADE",
+                []
+            ),
+            winexBackedCoins: GatewayStore.getState().backedCoins.get(
+                "WIN",
                 []
             ),
             servicesDown: GatewayStore.getState().down || {}
