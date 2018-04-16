@@ -88,6 +88,9 @@ export default class TypeAhead extends React.Component {
                 wrapperProps={{
                     className: isMenuShowing ? "typeahead__innerList" : ""
                 }}
+                wrapperStyle={{
+                    display: "block"
+                }}
                 open={isMenuShowing}
             />
         );
