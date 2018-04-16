@@ -11,7 +11,7 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import { requestDepositAddress, getDepositAddress } from "common/blockTradesMethods";
-import { blockTradesAPIs } from "api/apiConfig";
+import { blockTradesAPIs, openledgerAPIs } from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 
@@ -43,7 +43,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         let urls = {
             blocktrades: blockTradesAPIs.BASE,
-            openledger: blockTradesAPIs.BASE_OL
+            openledger: openledgerAPIs.BASE
         };
 
         this.state = {

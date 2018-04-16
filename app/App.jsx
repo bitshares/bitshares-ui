@@ -24,6 +24,7 @@ import Deprecate from "./Deprecate";
 import WalletManagerStore from "stores/WalletManagerStore";
 import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
+import {updateGatewayBackers} from "common/gatewayUtils";
 
 class App extends React.Component {
     constructor(props) {
@@ -121,12 +122,13 @@ class App extends React.Component {
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
-
+        
         isIncognito(
             function(incognito) {
                 this.setState({incognito});
             }.bind(this)
         );
+        updateGatewayBackers();
     }
 
     _onIgnoreIncognitoWarning() {

@@ -1,7 +1,15 @@
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
-    // BASE_OL: "https://api.blocktrades.us/ol/v2",
-    BASE_OL: "https://ol-api1.openledger.info/api/v0/ol/support",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
+export const openledgerAPIs = {
+    BASE: "https://ol-api1.openledger.info/api/v0/ol/support",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs",
