@@ -381,7 +381,9 @@
             "too_many_feed":
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "conflict_feed":
-                "Cannot allow witnesses and committee members to provide feeds simultaneously"
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market"
         },
         "connections": {
             "known": "Known by",

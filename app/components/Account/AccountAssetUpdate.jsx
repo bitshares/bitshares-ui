@@ -531,7 +531,8 @@ class AccountAssetUpdate extends React.Component {
             quote_asset: null,
             base_asset: null,
             max_feed_producer: null,
-            conflict_producer: null
+            conflict_producer: null,
+            invalid_market_pair: null
         };
 
         const p = this.props.asset.get("precision");
@@ -592,7 +593,15 @@ class AccountAssetUpdate extends React.Component {
                 "account.user_issued_assets.conflict_feed"
             );
         }
+
+        if(this.state.marketInput == this.props.asset.get("symbol")) {
+            errors.invalid_market_pair = counterpart.translate(
+                "account.user_issued_assets.invalid_market_pair"
+            );
+        }
+
         let isValid =
+            !errors.invalid_market_pair && 
             !errors.max_supply &&
             !errors.base_asset &&
             !errors.quote_asset &&
@@ -964,6 +973,8 @@ class AccountAssetUpdate extends React.Component {
             "is_prediction_market"
         ]);
 
+        let asset_description = assetUtils.parseDescription(this.props.asset.toJS().options.description);
+
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
@@ -1273,16 +1284,23 @@ class AccountAssetUpdate extends React.Component {
                                         onChange={this._onInputMarket.bind(
                                             this
                                         )}
+                                        placeholder={asset_description.market}
                                         asset={this.state.marketInput}
                                         assetInput={this.state.marketInput}
                                         style={{
                                             width: "100%",
-                                            paddingRight: "10px"
+                                            paddingRight: "10px",
+                                            paddingBottom: "20px"
                                         }}
                                         onFound={this._onFoundMarketAsset.bind(
                                             this
                                         )}
                                     />
+                                    {errors.invalid_market_pair ? (
+                                        <p className="grid-content has-error">
+                                            {errors.invalid_market_pair}
+                                        </p>
+                                    ) : null}
 
                                     {isPredictionMarketAsset ? (
                                         <div>
