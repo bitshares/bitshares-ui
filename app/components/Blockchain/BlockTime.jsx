@@ -3,6 +3,8 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import TimeAgo from "../Utility/TimeAgo";
 import utils from "common/utils";
+import counterpart from "counterpart";
+import getLocale from "browser-locale";
 
 /**
  * @brief displays block's date and time based on block number
@@ -58,7 +60,15 @@ class BlockTime extends React.Component {
     render() {
         return (
             <span className="time" key={this.props.block_number}>
-                {this.state.time ? <TimeAgo time={this.state.time} /> : null}
+                {this.state.time ? 
+                    this.props.fullDate ? 
+                        counterpart.localize(new Date(this.state.time), {
+                            type: "date",
+                            format: "full"
+                        }) : 
+                        <TimeAgo time={this.state.time} /> 
+                    : null
+                }
             </span>
         );
     }
