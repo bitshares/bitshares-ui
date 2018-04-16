@@ -5,6 +5,7 @@ var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 var locales = require("./app/assets/locales");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
@@ -69,7 +70,8 @@ module.exports = function(env) {
                 env.apiUrl || "https://ui.bitshares.eu/api"
             ),
             __TESTNET__: !!env.testnet,
-            __DEPRECATED__: !!env.deprecated
+            __DEPRECATED__: !!env.deprecated,
+            DEFAULT_SYMBOL: "BTS"
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
@@ -78,7 +80,13 @@ module.exports = function(env) {
         new webpack.ContextReplacementPlugin(
             /react-intl[\/\\]locale-data$/,
             localeRegex
-        )
+        ),
+        new CopyWebpackPlugin([
+            {
+                from: path.join(root_dir, "charting_library"),
+                to: "charting_library"
+            }
+        ])
     ];
 
     if (env.prod) {

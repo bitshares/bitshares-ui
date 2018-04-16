@@ -7,7 +7,8 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import utils from "common/utils";
-import PriceChartD3 from "./PriceChartD3";
+// import PriceChartD3 from "./PriceChartD3";
+import TradingViewPriceChart from "./TradingViewPriceChart";
 import assetUtils from "common/asset_utils";
 import DepthHighChart from "./DepthHighChart";
 import {debounce, cloneDeep} from "lodash";
@@ -785,7 +786,7 @@ class Exchange extends React.Component {
     _changeBucketSize(size, e) {
         if (e) e.preventDefault();
         if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize(size);
+            MarketsActions.changeBucketSize.defer(size);
             let currentSub = this.props.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
                 () => {
@@ -1638,7 +1639,7 @@ class Exchange extends React.Component {
                                     id="market-charts"
                                 >
                                     {/* Price history chart */}
-                                    <PriceChartD3
+                                    <TradingViewPriceChart
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}
                                         base={base}
