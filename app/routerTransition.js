@@ -53,17 +53,17 @@ class RouterTransitioner {
      * @returns {*}
      */
     willTransitionTo(nextState, replaceState, callback, appInit = true) {
-        console.log(
-            new Date().getTime(),
-            "nextState",
-            nextState,
-            "replaceState",
-            replaceState,
-            "callback",
-            callback,
-            "appInit",
-            appInit
-        );
+        // console.log(
+        //     new Date().getTime(),
+        //     "nextState",
+        //     nextState,
+        //     "replaceState",
+        //     replaceState,
+        //     "callback",
+        //     callback,
+        //     "appInit",
+        //     appInit
+        // );
 
         // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
         if (__DEPRECATED__) {
@@ -91,7 +91,6 @@ class RouterTransitioner {
         let latenciesEstablished = Object.keys(apiLatencies).length > 0;
 
         let latencyChecks = ss.get("latencyChecks", 1);
-        console.log("latencyChecks " + latencyChecks);
         if (latencyChecks >= 5) {
             // every x connect attempts we refresh the api latency list
             // automtically
@@ -101,8 +100,6 @@ class RouterTransitioner {
             // otherwise increase the counter
             if (appInit) ss.set("latencyChecks", latencyChecks + 1);
         }
-
-        console.log("willTransitionTo");
 
         let urls = this._getNodesToConnectTo(false, apiLatencies);
 
@@ -115,7 +112,6 @@ class RouterTransitioner {
         this._initConnectionManager(urls);
 
         if (!latenciesEstablished) {
-            console.log("doLatencyUpdate initial");
             this.doLatencyUpdate(true)
                 .then(
                     this._initiateConnection.bind(
@@ -126,8 +122,8 @@ class RouterTransitioner {
                         appInit
                     )
                 )
-                .catch(() => {
-                    console.log("catch doLatency");
+                .catch(err => {
+                    console.log("catch doLatency", err);
                 });
         } else {
             this._initiateConnection(
@@ -148,21 +144,18 @@ class RouterTransitioner {
      */
     doLatencyUpdate(refresh = true) {
         return new Promise((resolve, reject) => {
-            console.log("doLatencyUpdate begin");
             // if for some reason this method is called before connections are setup via willTransitionTo,
             // initialize the manager
             if (this._connectionManager == null) {
                 this._initConnectionManager();
             }
             if (refresh) {
-                console.log("doLatencyUpdate refresh");
                 this._connectionManager.urls = this._getNodesToConnectTo(true);
             }
             console.log(SettingsStore.getState().apiLatencies);
             this._connectionManager
                 .checkConnections()
                 .then(res => {
-                    console.log("doLatencyUpdate ping done");
                     // resort the api nodes with the new pings
                     this._connectionManager.urls = this._getNodesToConnectTo(
                         false,
@@ -173,8 +166,7 @@ class RouterTransitioner {
                     resolve();
                 })
                 .catch(err => {
-                    console.log("doLatencyUpdate error");
-                    console.log(err);
+                    console.log("doLatencyUpdate error", err);
                     reject(err);
                 });
         });
@@ -182,7 +174,6 @@ class RouterTransitioner {
 
     _initConnectionManager(urls = null) {
         if (urls == null) {
-            console.log("_initConnectionManager");
             urls = this._getNodesToConnectTo(true);
         }
         // decide where to connect to first
@@ -190,13 +181,8 @@ class RouterTransitioner {
 
         this._connectionManager = new Manager({
             url: connectionString,
-            urls: []
+            urls: urls
         });
-        // don't give urls in constructor of Manager, it removes the entry given with url.
-        // .. downside of this approach is that on error it is likely to first retry the same node again
-        //    (in case of autoSelection url == url[0]
-        // .. upside is that the urls list is still the same sorted list with lowest to highest latency
-        this._connectionManager.urls = urls;
     }
 
     _isAutoSelection() {
@@ -319,8 +305,6 @@ class RouterTransitioner {
             }
         });
         // remove before release
-        console.log("getNodes");
-        console.log(filtered);
         return filtered;
     }
 
@@ -347,7 +331,6 @@ class RouterTransitioner {
      */
     _getFirstToTry(urls) {
         let connectionString = SettingsStore.getSetting("apiServer");
-        console.log("SettingsStore url: " + connectionString);
         // fallback to the best of the pre-defined URLs ...
 
         // ... if there is no preset connectionString fallback to lowest latency
@@ -362,7 +345,6 @@ class RouterTransitioner {
         if (!this._apiUrlSecuritySuitable(connectionString))
             connectionString = urls[0];
 
-        console.log("getFirstToTry url: " + connectionString);
         return connectionString;
     }
 
@@ -394,7 +376,7 @@ class RouterTransitioner {
         this._connectionStart = new Date().getTime();
 
         if (appInit) {
-            // only true is app is initialized
+            // only true if app is initialized
             this._connectionManager
                 .connectWithFallback(true)
                 .then(() => {
@@ -434,7 +416,6 @@ class RouterTransitioner {
                     value: ""
                 });
             }
-            console.log(this._connectionManager.url);
             this._attemptReconnect(nextState, replaceState, callback);
         }
     }
@@ -480,7 +461,6 @@ class RouterTransitioner {
     _attemptReconnect(nextState, replaceState, callback) {
         this._oldChain = "old";
         Apis.reset(this._connectionManager.url, true).then(instance => {
-            console.log(instance);
             instance.init_promise
                 .then(
                     this._onConnect.bind(
@@ -577,16 +557,12 @@ class RouterTransitioner {
                             })
                             .then(() => {
                                 if (chainChanged) {
-                                    // ChainStore.clearCache();
-                                    // ChainStore.subscribed = false;
-                                    // return ChainStore.resetCache().then(() => {
                                     AccountStore.reset();
                                     return AccountStore.loadDbData(
                                         currentChain
                                     ).catch(err => {
                                         console.error(err);
                                     });
-                                    // });
                                 }
                             })
                             .catch(error => {
