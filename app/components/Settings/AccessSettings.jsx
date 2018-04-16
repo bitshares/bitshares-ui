@@ -126,7 +126,7 @@ class ApiNode extends React.Component {
                             autoActive ? activeNode.url : autoSelectAPI
                         )}
                     >
-                        <input type="checkbox" checked={autoActive} />
+                        <input id="automatic_node_switcher" type="checkbox" checked={autoActive}  />
                         <label />
                     </span>
                     <p style={{fontSize: "80%"}}>
@@ -169,7 +169,7 @@ class ApiNode extends React.Component {
                                 autoActive ? activeNode.url : autoSelectAPI
                             )}
                         >
-                            <input type="checkbox" checked={autoActive} />
+                            <input id="automatic_node_switcher" type="checkbox" checked={autoActive} />
                             <label />
                         </span>
                         <Translate
@@ -197,7 +197,7 @@ class ApiNode extends React.Component {
                 <div className="api-node">
                     <div>
                         <p>{name}</p>
-                        <p>{displayUrl}</p>
+                        <p id={activeNode ? "active_node" : null}>{displayUrl}</p>
                     </div>
                     <div>
                         {isTestnet && !ping ? null : (
@@ -260,7 +260,7 @@ class ApiNode extends React.Component {
                             )}
                         <div className="api-status">
                             {activeNode.url != url ? (
-                                <a>
+                                <a id={displayUrl}>
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
