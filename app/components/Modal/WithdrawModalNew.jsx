@@ -24,17 +24,20 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
 import {
-    _getAvailableGateways,
     gatewaySelector,
     _getNumberAvailableGateways,
     _onAssetSelected,
     _getCoinToGatewayMapping
 } from "lib/common/assetGatewayMixin";
 import {
+    updateGatewayBackers,
+    getGatewayStatusByAsset
+} from "common/gatewayUtils";
+import {getAvailableGateways} from "common/gateways";
+import {
     validateAddress as blocktradesValidateAddress,
     WithdrawAddresses
 } from "lib/common/blockTradesMethods";
-import {blockTradesAPIs} from "api/apiConfig";
 import AmountSelector from "components/Utility/AmountSelector";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
@@ -64,24 +67,7 @@ class WithdrawModalNew extends React.Component {
             memo: "",
             userEstimate: null,
             addressError: false,
-            gatewayStatus: {
-                OPEN: {
-                    id: "OPEN",
-                    name: "OPENLEDGER",
-                    enabled: false,
-                    selected: false,
-                    support_url:
-                        "https://wallet.bitshares.org/#/help/gateways/openledger"
-                },
-                RUDEX: {
-                    id: "RUDEX",
-                    name: "RUDEX",
-                    enabled: false,
-                    selected: false,
-                    support_url:
-                        "https://wallet.bitshares.org/#/help/gateways/rudex"
-                }
-            },
+            gatewayStatus: getAvailableGateways.call(),
             withdrawalCurrencyId: "",
             withdrawalCurrencyBalance: null,
             withdrawalCurrencyBalanceId: "",
@@ -119,7 +105,7 @@ class WithdrawModalNew extends React.Component {
                 )
             );
 
-            initialState.gatewayStatus = _getAvailableGateways.call(
+            initialState.gatewayStatus = getGatewayStatusByAsset.call(
                 this,
                 initialState.selectedAsset,
                 gatewayBoolCheck
@@ -162,7 +148,7 @@ class WithdrawModalNew extends React.Component {
             let newState = this._getAssetAndGatewayFromInitialSymbol(
                 np.initialSymbol
             );
-            newState.gatewayStatus = _getAvailableGateways.call(
+            newState.gatewayStatus = getGatewayStatusByAsset.call(
                 this,
                 newState.selectedAsset,
                 gatewayBoolCheck
@@ -640,10 +626,27 @@ class WithdrawModalNew extends React.Component {
         this.setState({address: value}, this._updateFee);
     }
 
+    _getBackingAssetProps() {
+        let {selectedGateway, selectedAsset} = this.state;
+        return this.props.backedCoins
+            .get(selectedGateway.toUpperCase(), [])
+            .find(c => {
+                return (
+                    c.backingCoinType === selectedAsset ||
+                    c.backingCoin === selectedAsset
+                );
+            });
+    }
+
     validateAddress(address) {
+        let {selectedGateway, gatewayStatus} = this.state;
+        
+        // Get Backing Asset Details for Gateway
+        let backingAsset = this._getBackingAssetProps();
+
         blocktradesValidateAddress({
-            url: blockTradesAPIs.BASE_OL,
-            walletType: this.state.selectedAsset.toLowerCase(),
+            url: gatewayStatus[selectedGateway].walletValidateURL,
+            walletType: backingAsset.walletType,
             newAddress: address
         }).then(isValid => {
             this.setState({addressError: isValid ? false : true});
@@ -859,14 +862,7 @@ class WithdrawModalNew extends React.Component {
         let symbolsToInclude = [];
 
         // Get Backing Asset for Gateway
-        let backingAsset = this.props.backedCoins
-            .get(selectedGateway.toUpperCase(), [])
-            .find(c => {
-                return (
-                    c.backingCoinType === selectedAsset ||
-                    c.backingCoin === selectedAsset
-                );
-            });
+        let backingAsset = this._getBackingAssetProps();
 
         let minWithdraw = null;
         let maxWithdraw = null;
@@ -1325,7 +1321,6 @@ class WithdrawModalWrapper extends React.Component {
                 {...props}
                 balances={props.account.get("balances")}
                 assets={assets}
-                skipCoinFetch={true}
             />
         );
     }

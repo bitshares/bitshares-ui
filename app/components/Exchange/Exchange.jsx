@@ -25,7 +25,6 @@ import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
@@ -59,8 +58,8 @@ class Exchange extends React.Component {
         this.state = {
             ...this._initialState(props),
             expirationType: {
-                bid: "MONTH",
-                ask: "MONTH"
+                bid: props.exchange.getIn(["lastExpiration", "bid"]) || "YEAR",
+                ask: props.exchange.getIn(["lastExpiration", "ask"]) || "YEAR"
             },
             expirationCustomTime: {
                 bid: moment().add(1, "day"),
@@ -84,6 +83,15 @@ class Exchange extends React.Component {
             ...this.state.expirationType,
             [type]: e.target.value
         };
+
+        if (e.target.value !== "SPECIFIC") {
+            SettingsActions.setExchangeLastExpiration({
+                ...((this.props.exchange.has("lastExpiration") &&
+                    this.props.exchange.get("lastExpiration").toJS()) ||
+                    {}),
+                [type]: e.target.value
+            });
+        }
 
         this.setState({
             expirationType: expirationType
@@ -135,6 +143,13 @@ class Exchange extends React.Component {
             get: () =>
                 moment()
                     .add(30, "day")
+                    .valueOf()
+        },
+        YEAR: {
+            title: "1 year",
+            get: () =>
+                moment()
+                    .add(1, "year")
                     .valueOf()
         },
         SPECIFIC: {
@@ -235,11 +250,6 @@ class Exchange extends React.Component {
     }
 
     componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") {
-            GatewayActions.fetchCoins.defer();
-            GatewayActions.fetchBridgeCoins.defer();
-        }
-
         this._checkFeeStatus();
     }
 
@@ -1230,9 +1240,6 @@ class Exchange extends React.Component {
             latestPrice,
             changeClass;
 
-        let notMyAccount =
-            currentAccount.get("id") === "1.2.3" || !this.props.isMyAccount;
-
         const showVolumeChart = this.props.viewSettings.get(
             "showVolumeChart",
             true
@@ -1373,11 +1380,7 @@ class Exchange extends React.Component {
 
         let buyForm = isFrozen ? null : (
             <BuySell
-                onBorrow={
-                    !notMyAccount && baseIsBitAsset
-                        ? this._borrowBase.bind(this)
-                        : null
-                }
+                onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
                     a => a.symbol === base.get("symbol")
@@ -1390,7 +1393,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
@@ -1464,11 +1466,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
-                onBorrow={
-                    !notMyAccount && quoteIsBitAsset
-                        ? this._borrowQuote.bind(this)
-                        : null
-                }
+                onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
                     a => a.symbol === quote.get("symbol")
@@ -1481,7 +1479,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
@@ -1807,7 +1804,6 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    notMyAccount={notMyAccount}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}
@@ -1844,7 +1840,6 @@ class Exchange extends React.Component {
                                     <MyOpenOrders
                                         smallScreen={this.props.smallScreen}
                                         className={cnames(
-                                            {disabled: notMyAccount},
                                             !smallScreen && !leftOrderBook
                                                 ? "medium-6 xlarge-4"
                                                 : "",
@@ -1965,7 +1960,7 @@ class Exchange extends React.Component {
                         </div>
                     </div>
 
-                    {!notMyAccount && quoteIsBitAsset ? (
+                    {quoteIsBitAsset ? (
                         <BorrowModal
                             ref="borrowQuote"
                             modalId={
@@ -1980,7 +1975,7 @@ class Exchange extends React.Component {
                             account={currentAccount}
                         />
                     ) : null}
-                    {!notMyAccount && baseIsBitAsset ? (
+                    {baseIsBitAsset ? (
                         <BorrowModal
                             ref="borrowBase"
                             modalId={"borrow_modal_base_" + baseAsset.get("id")}

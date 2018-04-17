@@ -2,7 +2,6 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
@@ -23,7 +22,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 
-export default class SendModal extends React.Component {
+class SendModal extends React.Component {
     static contextTypes = {
         router: React.PropTypes.object
     };
@@ -161,7 +160,7 @@ export default class SendModal extends React.Component {
             });
         }
 
-        let currentAccount = AccountStore.getState().currentAccount;
+        let {currentAccount} = this.props;
         if (!this.state.from_name) {
             this.setState({from_name: currentAccount});
         }
@@ -613,23 +612,16 @@ export default class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isToAccountValid =
-            to_account && to_account.get("name") === to_name;
         const isSendNotValid =
             !from_account ||
-            !isToAccountValid ||
             !isAmountValid ||
             !asset ||
             from_error ||
             propose_incomplete ||
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
-        let accountsList = Immutable.Set();
-        accountsList = accountsList.add(from_account);
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
-
-        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
         return !this.state.open ? null : (
             <div
@@ -696,13 +688,13 @@ export default class SendModal extends React.Component {
                                         <AccountSelector
                                             label="transfer.to"
                                             accountName={to_name}
-                                            account={to_name}
+                                            account={to_account}
                                             onChange={this.toChanged.bind(this)}
                                             onAccountChanged={this.onToAccountChanged.bind(
                                                 this
                                             )}
                                             size={60}
-                                            typeahead={greenAccounts}
+                                            typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
                                         />
@@ -930,15 +922,22 @@ export default class SendModal extends React.Component {
     }
 }
 
-SendModal = connect(SendModal, {
+class SendModalConnectWrapper extends React.Component {
+    render() {
+        return <SendModal {...this.props} ref={this.props.refCallback} />;
+    }
+}
+
+SendModalConnectWrapper = connect(SendModalConnectWrapper, {
     listenTo() {
         return [AccountStore];
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };
     }
 });
+
+export default SendModalConnectWrapper;

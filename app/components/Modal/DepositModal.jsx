@@ -12,11 +12,16 @@ import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
-    _getAvailableGateways,
     gatewaySelector,
     _getNumberAvailableGateways,
-    _onAssetSelected
+    _onAssetSelected,
+    _getCoinToGatewayMapping
 } from "lib/common/assetGatewayMixin";
+import {getAvailableGateways} from "common/gateways";
+import {
+    updateGatewayBackers,
+    getGatewayStatusByAsset
+} from "common/gatewayUtils";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -28,26 +33,10 @@ class DepositModalContent extends DecimalChecker {
             selectedGateway: null,
             fetchingAddress: false,
             backingAsset: null,
-            gatewayStatus: {
-                OPEN: {
-                    id: "OPEN",
-                    name: "OPENLEDGER",
-                    enabled: false,
-                    selected: false,
-                    support_url:
-                        "https://wallet.bitshares.org/#/help/gateways/openledger"
-                },
-                RUDEX: {
-                    id: "RUDEX",
-                    name: "RUDEX",
-                    enabled: false,
-                    selected: false,
-                    support_url:
-                        "https://wallet.bitshares.org/#/help/gateways/rudex"
-                }
-            }
+            gatewayStatus: getAvailableGateways.call()
         };
 
+        
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
     }
@@ -58,6 +47,9 @@ class DepositModalContent extends DecimalChecker {
 
     componentWillMount() {
         let {asset} = this.props;
+
+        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
+        this.setState({coinToGatewayMapping});
 
         if (!asset) return;
 
@@ -90,11 +82,31 @@ class DepositModalContent extends DecimalChecker {
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
-            asset
+            asset,
+            "depositAllowed",
+            (availableGateways, balancesByGateway) => {
+                if (availableGateways && availableGateways.length == 1)
+                    return availableGateways[0]; //autoselect gateway if exactly 1 item
+                return null;
+            }
         );
+
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
         }
+    }
+
+    _getDepositObject(selectedAsset, selectedGateway, url) {
+        let {props} = this;
+        let {account} = props;
+
+        return {
+            inputCoinType: selectedAsset.toLowerCase(),
+            outputCoinType: selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase(),
+            outputAddress: account,
+            url: url,
+            stateCallback: this.addDepositAddress
+        };
     }
 
     _getDepositAddress(selectedAsset, selectedGateway) {
@@ -103,7 +115,7 @@ class DepositModalContent extends DecimalChecker {
         this.setState({
             fetchingAddress: true,
             depositAddress: null,
-            gatewayStatus: _getAvailableGateways.call(this, selectedAsset)
+            gatewayStatus: getGatewayStatusByAsset.call(this, selectedAsset)
         });
 
         // Get Backing Asset for Gateway
@@ -127,25 +139,19 @@ class DepositModalContent extends DecimalChecker {
             return;
         }
 
-        if (selectedGateway == "OPEN") {
-            this.setState({
-                isOpenledger: true
-            });
-            let depositAddress = this.deposit_address_cache.getCachedInputAddress(
-                selectedGateway.toUpperCase(),
+        let depositAddress;
+        if(selectedGateway && selectedAsset) {
+            depositAddress = this.deposit_address_cache.getCachedInputAddress(
+                selectedGateway.toLowerCase(),
                 account,
                 selectedAsset.toLowerCase(),
-                selectedGateway.toLowerCase() +
-                    "." +
-                    selectedAsset.toLowerCase()
+                selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase()
             );
+        }
+
+        if (selectedGateway == "OPEN" || selectedGateway == "WIN") {
             if (!depositAddress) {
-                requestDepositAddress({
-                    inputCoinType: selectedAsset.toLowerCase(),
-                    outputCoinType: "open." + selectedAsset.toLowerCase(),
-                    outputAddress: account,
-                    stateCallback: this.addDepositAddress
-                });
+                requestDepositAddress(this._getDepositObject(selectedAsset, selectedGateway, this.state.gatewayStatus[selectedGateway].baseAPI.BASE));
             } else {
                 this.setState({
                     depositAddress,
@@ -159,7 +165,6 @@ class DepositModalContent extends DecimalChecker {
                     memo: "dex:" + account
                 },
                 fetchingAddress: false,
-                isOpenledger: false
             });
         } else {
             console.log(
@@ -182,7 +187,7 @@ class DepositModalContent extends DecimalChecker {
         let {account} = this.props;
 
         this.deposit_address_cache.cacheInputAddress(
-            "OPEN",
+            selectedGateway.toLowerCase(),
             account,
             selectedAsset.toLowerCase(),
             selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase(),
@@ -214,22 +219,29 @@ class DepositModalContent extends DecimalChecker {
 
         // Count available gateways
         let nAvailableGateways = _getNumberAvailableGateways.call(this);
+        let isAddressValid = depositAddress && depositAddress !== "unknown" && !depositAddress.error;
 
-        const QR =
-            depositAddress &&
-            depositAddress.address &&
-            !depositAddress.error ? (
-                <div className="QR">
-                    <QRCode size={140} value={depositAddress.address} />
-                </div>
-            ) : (
-                <div>
-                    <Icon size="5x" name="minus-circle" />
-                    <p className="error-msg">
-                        <Translate content="modal.deposit.address_generation_error" />
-                    </p>
-                </div>
+        let minDeposit = !backingAsset ? 0 : backingAsset.gateFee ? backingAsset.gateFee * 2 : 
+            utils.format_number(
+                backingAsset.minAmount /
+                utils.get_asset_precision(backingAsset.precision),
+                backingAsset.precision,
+                false
             );
+        //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
+
+        const QR = isAddressValid ? 
+            <div className="QR">
+                <QRCode size={140} value={depositAddress.address} />
+            </div>
+            :
+            <div>
+                <Icon size="5x" name="minus-circle" />
+                <p className="error-msg">
+                    <Translate content="modal.deposit.address_generation_error" />
+                </p>
+            </div>
+        ;
 
         return (
             <div className="grid-block vertical no-overflow">
@@ -264,14 +276,14 @@ class DepositModalContent extends DecimalChecker {
                         </div>
                     </div>
 
-                    {usingGateway && selectedAsset
-                        ? gatewaySelector.call(this, {
-                              selectedGateway,
-                              gatewayStatus,
-                              nAvailableGateways,
-                              error: depositAddress && depositAddress.error,
-                              onGatewayChanged: this.onGatewayChanged.bind(this)
-                          })
+                    {usingGateway && selectedAsset ? 
+                        gatewaySelector.call(this, {
+                            selectedGateway,
+                            gatewayStatus,
+                            nAvailableGateways,
+                            error: depositAddress && depositAddress.error,
+                            onGatewayChanged: this.onGatewayChanged.bind(this)
+                        })
                         : null}
 
                     {!fetchingAddress ? (
@@ -279,7 +291,7 @@ class DepositModalContent extends DecimalChecker {
                             (usingGateway &&
                                 selectedGateway &&
                                 gatewayStatus[selectedGateway].enabled)) &&
-                        depositAddress &&
+                        isAddressValid &&
                         !depositAddress.memo ? (
                             <div
                                 className="container-row"
@@ -298,34 +310,15 @@ class DepositModalContent extends DecimalChecker {
                     )}
                     {selectedGateway &&
                     gatewayStatus[selectedGateway].enabled &&
-                    depositAddress &&
-                    !depositAddress.error ? (
+                    isAddressValid ?
                         <div className="container-row">
-                            {backingAsset.minAmount ? (
-                                <div className="grid-block container-row maxDeposit">
-                                    <Translate
-                                        content="gateway.rudex.min_amount"
-                                        minAmount={utils.format_number(
-                                            backingAsset.minAmount /
-                                                utils.get_asset_precision(
-                                                    backingAsset.precision
-                                                ),
-                                            backingAsset.precision,
-                                            false
-                                        )}
-                                        symbol={selectedAsset}
-                                    />
-                                </div>
-                            ) : null}
-                            {this.state.isOpenledger && (
-                                <Translate
-                                    className="grid-block container-row maxDeposit"
-                                    style={{fontSize: "1rem"}}
-                                    content="gateway.min_deposit_warning_amount"
-                                    minDeposit={backingAsset.gateFee * 2 || 0}
-                                    coin={selectedAsset}
-                                />
-                            )}
+                            <Translate
+                                className="grid-block container-row maxDeposit"
+                                style={{fontSize: "1rem"}}
+                                content="gateway.min_deposit_warning_amount"
+                                minDeposit={minDeposit || 0}
+                                coin={selectedAsset}
+                            />
 
                             <div className="grid-block container-row">
                                 <div style={{paddingRight: "1rem"}}>
@@ -380,17 +373,15 @@ class DepositModalContent extends DecimalChecker {
                                     </div>
                                 </div>
                             ) : null}
-                            {this.state.isOpenledger && (
-                                <Translate
-                                    component="span"
-                                    style={{fontSize: "0.8rem"}}
-                                    content="gateway.min_deposit_warning_asset"
-                                    minDeposit={backingAsset.gateFee * 2 || 0}
-                                    coin={selectedAsset}
-                                />
-                            )}
+                            <Translate
+                                component="span"
+                                style={{fontSize: "0.8rem"}}
+                                content="gateway.min_deposit_warning_asset"
+                                minDeposit={minDeposit || 0}
+                                coin={selectedAsset}
+                            />
                         </div>
-                    ) : null}
+                        : null}
                     {!usingGateway ? (
                         <div className="container-row deposit-directly">
                             <h2

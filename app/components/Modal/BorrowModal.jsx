@@ -519,28 +519,57 @@ class BorrowModalContent extends React.Component {
 
         let bitAssetBalanceText = (
             <span>
-                <Translate component="span" content="transfer.available" />:{" "}
-                {bitasset_balance.id ? (
-                    <BalanceComponent balance={bitasset_balance.id} />
+                <span>
+                    <Translate component="span" content="transfer.available" />:{" "}
+                    {bitasset_balance.id ? (
+                        <BalanceComponent balance={bitasset_balance.id} />
+                    ) : (
+                        <FormattedAsset
+                            amount={0}
+                            asset={quote_asset.get("id")}
+                        />
+                    )}
+                </span>
+                <a href onClick={this._payDebt.bind(this)}>
+                    <Translate content="borrow.pay_max_debt" />
+                </a>
+                |
+                {collateral_ratio != 0 ? (
+                    <a href onClick={this._maximizeDebt.bind(this)}>
+                        <Translate content="borrow.use_max" />
+                    </a>
                 ) : (
-                    <FormattedAsset amount={0} asset={quote_asset.get("id")} />
+                    <span
+                        className="disabled-link"
+                        data-place="left"
+                        data-tip={counterpart.translate(
+                            "borrow.maximize_debt_set_ratio_slider"
+                        )}
+                    >
+                        <Translate content="borrow.use_max" />
+                    </span>
                 )}
             </span>
         );
         let backingBalanceText = (
             <span>
-                <Translate component="span" content="transfer.available" />:{" "}
-                {backing_balance.id ? (
-                    <FormattedAsset
-                        amount={remainingBalance}
-                        asset={backing_asset.get("id")}
-                    />
-                ) : (
-                    <FormattedAsset
-                        amount={0}
-                        asset={backing_asset.get("id")}
-                    />
-                )}
+                <span>
+                    <Translate component="span" content="transfer.available" />:{" "}
+                    {backing_balance.id ? (
+                        <FormattedAsset
+                            amount={remainingBalance}
+                            asset={backing_asset.get("id")}
+                        />
+                    ) : (
+                        <FormattedAsset
+                            amount={0}
+                            asset={backing_asset.get("id")}
+                        />
+                    )}
+                </span>
+                <a href onClick={this._maximizeCollateral.bind(this)}>
+                    <Translate content="borrow.use_max" />
+                </a>
             </span>
         );
 
@@ -673,8 +702,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                                ? "has-warning"
-                                                : "")
+                                              ? "has-warning"
+                                              : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -783,53 +812,13 @@ class BorrowModalContent extends React.Component {
                                     );
                                 }}
                                 href
-                                className="button info"
+                                className="button hollow primary"
                             >
                                 <Translate content="wallet.reset" />
                             </div>
                             {/*<Trigger close={this.props.modalId}>
                                 <div className="button"><Translate content="account.perm.cancel" /></div>
                             </Trigger>*/}
-
-                            <div className="no-padding grid-content button-group no-overflow float-right">
-                                <div
-                                    href
-                                    className="button info"
-                                    onClick={this._payDebt.bind(this)}
-                                >
-                                    <Translate content="borrow.pay_debt" />
-                                </div>
-                                <div
-                                    href
-                                    className={classNames("button info", {
-                                        disabled: collateral_ratio == 0
-                                    })}
-                                    onClick={
-                                        collateral_ratio == 0
-                                            ? ""
-                                            : this._maximizeDebt.bind(this)
-                                    }
-                                    data-place="left"
-                                    data-tip={
-                                        collateral_ratio == 0
-                                            ? counterpart.translate(
-                                                  "borrow.maximize_debt_set_ratio_slider"
-                                              )
-                                            : null
-                                    }
-                                >
-                                    <Translate content="borrow.maximize_debt" />
-                                </div>
-                                <div
-                                    href
-                                    className="button info"
-                                    onClick={this._maximizeCollateral.bind(
-                                        this
-                                    )}
-                                >
-                                    <Translate content="borrow.maximize_collateral" />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </form>

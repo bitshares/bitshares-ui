@@ -32,11 +32,11 @@ class MobileMenu extends React.Component {
     }
 
     render() {
-        let {id, currentAccount, linkedAccounts, myAccounts} = this.props;
+        let {id, currentAccount, myActiveAccounts, myAccounts} = this.props;
         let accounts = null;
 
-        if (linkedAccounts.size > 1) {
-            accounts = linkedAccounts
+        if (myActiveAccounts.size > 1) {
+            accounts = myActiveAccounts
                 .sort((a, b) => {
                     if (a > b) return 1;
                     if (a < b) return -1;
@@ -49,10 +49,10 @@ class MobileMenu extends React.Component {
                         </li>
                     );
                 });
-        } else if (linkedAccounts.size === 1) {
+        } else if (myActiveAccounts.size === 1) {
             accounts = (
                 <li key="account" onClick={this.onClick}>
-                    <Link to={`/account/${linkedAccounts.first()}/overview`}>
+                    <Link to={`/account/${myActiveAccounts.first()}/overview`}>
                         <Translate content="header.account" />
                     </Link>
                 </li>
@@ -60,7 +60,7 @@ class MobileMenu extends React.Component {
         }
 
         let linkToAccountOrDashboard;
-        if (linkedAccounts.size > 0)
+        if (myActiveAccounts.size > 0)
             linkToAccountOrDashboard = (
                 <a onClick={this._onNavigate.bind(this, "/dashboard")}>
                     <Translate content="header.dashboard" />
@@ -100,7 +100,7 @@ class MobileMenu extends React.Component {
                                     <Translate content="header.payments" />
                                 </Link>
                             </li>
-                            {linkedAccounts.size === 0 ? null : (
+                            {myActiveAccounts.size === 0 ? null : (
                                 <li>{tradeLink}</li>
                             )}
                             {currentAccount &&
@@ -153,7 +153,7 @@ MobileMenu = connect(MobileMenu, {
     getProps() {
         const chainID = Apis.instance().chain_id;
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             locked: WalletUnlockStore.getState().locked,
             current_wallet: WalletManagerStore.getState().current_wallet,

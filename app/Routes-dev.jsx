@@ -33,6 +33,7 @@ import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw"
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
+import Page404 from "./components/Page404/Page404";
 // import AccountOrders from "./components/Account/AccountOrders";
 import AccountSignedMessages from "./components/Account/AccountSignedMessages";
 import ExchangeContainer from "./components/Exchange/ExchangeContainer";
@@ -171,6 +172,7 @@ const routes = (
                 </Route>
             </Route>
         </Route>
+        <Route path="*" component={Page404} />
     </Route>
 );
 

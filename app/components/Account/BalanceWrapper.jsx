@@ -2,8 +2,6 @@ import React from "react";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import Immutable from "immutable";
-import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 
 class BalanceWrapper extends React.Component {
     static propTypes = {
@@ -17,14 +15,6 @@ class BalanceWrapper extends React.Component {
     };
 
     componentWillMount() {
-        if (
-            Apis.instance().chain_id.substr(0, 8) === "4018d784" &&
-            !this.props.skipCoinFetch
-        ) {
-            // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins();
-            GatewayActions.fetchBridgeCoins();
-        }
     }
 
     render() {

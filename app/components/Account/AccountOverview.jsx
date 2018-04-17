@@ -240,7 +240,7 @@ class AccountOverview extends React.Component {
 
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
-            this.refs.send_modal.show();
+            if (this.send_modal) this.send_modal.show();
         });
     }
 
@@ -327,12 +327,13 @@ class AccountOverview extends React.Component {
         const emptyCell = "-";
         balanceList.forEach(balance => {
             let balanceObject = ChainStore.getObject(balance);
+            if (!balanceObject) return;
             let asset_type = balanceObject.get("asset_type");
             let asset = ChainStore.getObject(asset_type);
+            if (!asset) return;
 
             let directMarketLink, settleLink, transferLink;
             let symbol = "";
-            if (!asset) return null;
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
@@ -1113,7 +1114,9 @@ class AccountOverview extends React.Component {
                                 {/* Send Modal */}
                                 <SendModal
                                     id="send_modal_portfolio"
-                                    ref="send_modal"
+                                    refCallback={e => {
+                                        if (e) this.send_modal = e;
+                                    }}
                                     from_name={this.props.account.get("name")}
                                     asset_id={this.state.send_asset || "1.3.0"}
                                 />

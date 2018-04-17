@@ -1,8 +1,14 @@
 {
+    "page404": {
+        "page_not_found_title": "404 page not found",
+        "page_not_found_subtitle": "This page does not exist",
+        "home": "Home"
+    },
     "counterpart": {
         "formats": {
             "date": {
                 "short_custom": "%e %b '%y",
+                "full": "%F %T %Z",
                 "market_history": "%e/%m %H:%M:%S",
                 "market_history_us": "%m/%e %H:%M:%S"
             }
@@ -22,12 +28,13 @@
     },
     "global": {
         "confirm": "Confirm",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "help": "Help"
     },
     "incognito": {
-        "no_support":
-            "This BitShares Wallet relies on Local Storage and IndexedDB which are not persistent when using Incognito Browsing. We recommend using a regular browsing session.",
-        "ignore": "I understand, continue."
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
     "sync_fail": {
         "title": "Failed to sync with the API server",
@@ -375,7 +382,9 @@
             "too_many_feed":
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "conflict_feed":
-                "Cannot allow witnesses and committee members to provide feeds simultaneously"
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market"
         },
         "connections": {
             "known": "Known by",
@@ -1090,7 +1099,9 @@
         "password": "Password",
         "backup": "Backup",
         "restore": "Restore/Import",
-        "access": "Access",
+        "access": "Nodes",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "ping": "Ping Nodes",
         "reset_text": "Restore settings to their original defaults.",
         "reset_text_description":
             "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
@@ -1131,8 +1142,10 @@
         "active_node": "Active Node",
         "node_up": "Available",
         "node_down": "Unreachable",
-        "available_nodes": "Available Nodes",
-        "hidden_nodes": "Hidden Nodes",
+        "switch": "Switch Node",
+        "available_nodes": "Available",
+        "hidden_nodes": "Hidden",
+        "my_nodes": "Personal",
         "show": "Show",
         "hide": "Hide",
         "add_api": "Add Node",
@@ -1162,7 +1175,8 @@
         "unsynced": "Out of sync",
         "disconnected": "Disconnected",
         "connected": "Connected",
-        "latency": "Latency"
+        "latency": "Latency",
+        "advanced_settings": "Advanced settings"
     },
     "exchange": {
         "buysell_formatter": "{direction} {asset}",
@@ -1209,10 +1223,8 @@
         "spread": "Spread",
         "quantity": "Quantity",
         "buy": "Buy",
-        "deposit":
-            "Deposit <span style=\"text-transform: none\">%(asset)s</span>",
-        "borrow":
-            "Borrow <span style=\"text-transform: none\">%(asset)s</span>",
+        "deposit": "Deposit",
+        "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy_min": "Buy at least",
         "sell": "Sell",
@@ -1523,11 +1535,10 @@
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance"
         },
-        "maximize_collateral": "Max Collateral",
-        "maximize_debt": "Max Debt",
+        "use_max": "Use Max",
+        "pay_max_debt": "Pay Max Debt",
         "maximize_debt_set_ratio_slider":
-            "You must set a collateral ratio before being able to maximize debt",
-        "pay_debt": "Pay Debt"
+            "You must set a collateral ratio before being able to maximize debt"
     },
     "modal": {
         "buy": {
@@ -1564,8 +1575,7 @@
             "no_gateways":
                 "Sorry, but there are no gateways available to handle this withdrawal",
             "address_not_valid": "Invalid address",
-            "cannot_cover":
-                "Insufficient funds!"
+            "cannot_cover": "Insufficient funds!"
         },
         "deposit": {
             "header": "Deposit to %(account_name)s",
@@ -1648,7 +1658,8 @@
         "id": "Proposal object id"
     },
     "gateway": {
-        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
+        "deposit_notice_delay":
+            "(new address can be generated once per 5 minutes)",
         "min_deposit_warning_amount":
             "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset":
@@ -1682,6 +1693,7 @@
         "service": "Transfer Service",
         "bridge": "Bridge",
         "gateway": "Gateway",
+        "fiat": "Fiat",
         "symbol": "Symbol",
         "asset": "Asset",
         "website": "Visit the website",
@@ -1822,6 +1834,20 @@
         "errors": {
             "fetch": "Ops... Something went wrong fetching the news"
         }
+    },
+    "openledger": {
+        "header_fiat": "Fiat",
+        "status": "Status",
+        "retry": "Retry",
+        "loading": "Loading...",
+        "refresh_transaction_history": "Refresh",
+        "header_transaction_history": "Transaction history",
+        "show_transaction_history": "Show transaction history",
+        "withdraw_amount": "Withdrawal Amount",
+        "withdraw_none": "No withdrawals",
+        "deposit_amount": "Deposit Amount",
+        "deposit_details": "Details",
+        "deposit_none": "No deposits"
     },
     "winex": {
         "gateway": {

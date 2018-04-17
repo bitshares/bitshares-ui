@@ -118,9 +118,11 @@ class Transaction extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        WalletUnlockActions.unlock().then(() => {
-            this.forceUpdate();
-        });
+        WalletUnlockActions.unlock()
+            .then(() => {
+                this.forceUpdate();
+            })
+            .catch(() => {});
     }
 
     render() {

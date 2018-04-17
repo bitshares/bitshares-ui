@@ -25,23 +25,23 @@ class AccountRow extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         return (
-            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.contacts !== this.props.contacts ||
             nextProps.account !== this.props.account
         );
     }
 
-    _onLinkAccount(account, e) {
+    _onAddContact(account, e) {
         e.preventDefault();
-        AccountActions.linkAccount(account);
+        AccountActions.addAccountContact(account);
     }
 
-    _onUnLinkAccount(account, e) {
+    _onRemoveContact(account, e) {
         e.preventDefault();
-        AccountActions.unlinkAccount(account);
+        AccountActions.removeAccountContact(account);
     }
 
     render() {
-        let {account, linkedAccounts} = this.props;
+        let {account, contacts} = this.props;
 
         let balance = account.getIn(["balances", "1.3.0"]) || null;
         let accountName = account.get("name");
@@ -49,12 +49,12 @@ class AccountRow extends React.Component {
         return (
             <tr key={account.get("id")}>
                 <td>{account.get("id")}</td>
-                {linkedAccounts.has(accountName) ? (
-                    <td onClick={this._onUnLinkAccount.bind(this, accountName)}>
+                {contacts.has(accountName) ? (
+                    <td onClick={this._onRemoveContact.bind(this, accountName)}>
                         <Icon name="minus-circle" />
                     </td>
                 ) : (
-                    <td onClick={this._onLinkAccount.bind(this, accountName)}>
+                    <td onClick={this._onAddContact.bind(this, accountName)}>
                         <Icon name="plus-circle" />
                     </td>
                 )}
@@ -92,7 +92,7 @@ AccountRowWrapper = connect(AccountRowWrapper, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts
+            contacts: AccountStore.getState().accountContacts
         };
     }
 });

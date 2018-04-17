@@ -528,6 +528,10 @@ const routes = (
                 </Route>
             </Route>
         </Route>
+        <Route
+            path="*"
+            component={System.import("components/Page404/Page404")}
+        />
     </Route>
 );
 

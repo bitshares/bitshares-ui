@@ -10,6 +10,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import {connect} from "alt-react";
 import accountUtils from "common/account_utils";
 import {List} from "immutable";
+import Page404 from "../Page404/Page404";
 
 class AccountPage extends React.Component {
     static propTypes = {
@@ -25,21 +26,30 @@ class AccountPage extends React.Component {
             AccountActions.setCurrentAccount.defer(
                 this.props.account.get("name")
             );
-        }
 
-        // Fetch possible fee assets here to avoid async issues later (will resolve assets)
-        accountUtils.getPossibleFees(this.props.account, "transfer");
+            // Fetch possible fee assets here to avoid async issues later (will resolve assets)
+            accountUtils.getPossibleFees(this.props.account, "transfer");
+        }
     }
 
     componentWillReceiveProps(np) {
         if (np.account) {
-            AccountActions.setCurrentAccount.defer(np.account.get("name"));
+            const npName = np.account.get("name");
+            const currentName =
+                this.props.account && this.props.account.get("name");
+
+            if (!this.props.account || npName !== currentName) {
+                // Update the current account in order to access the header right menu options
+                AccountActions.setCurrentAccount.defer(npName);
+                // Fetch possible fee assets here to avoid async issues later (will resolve assets)
+                accountUtils.getPossibleFees(np.account, "transfer");
+            }
         }
     }
 
     render() {
         let {
-            linkedAccounts,
+            myActiveAccounts,
             account_name,
             searchAccounts,
             settings,
@@ -48,26 +58,19 @@ class AccountPage extends React.Component {
             hiddenAssets
         } = this.props;
 
+        if (!account) {
+            return <Page404 />;
+        }
         let isMyAccount = AccountStore.isMyAccount(account);
 
         return (
             <div className="grid-block page-layout">
-                {/* <div className="show-for-medium grid-block shrink left-column no-padding" style={{minWidth: 200}}>
-                    <AccountLeftPanel
-                        account={account}
-                        isMyAccount={isMyAccount}
-                        linkedAccounts={linkedAccounts}
-                        myAccounts={myAccounts}
-                        viewSettings={this.props.viewSettings}
-                        passwordLogin={settings.get("passwordLogin")}
-                    />
-                </div> */}
                 <div className="grid-block no-padding">
                     {React.cloneElement(
                         React.Children.only(this.props.children),
                         {
                             account_name,
-                            linkedAccounts,
+                            myActiveAccounts,
                             searchAccounts,
                             settings,
                             wallet_locked,
@@ -108,7 +111,7 @@ export default connect(AccountPageStoreWrapper, {
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             searchAccounts: AccountStore.getState().searchAccounts,
             settings: SettingsStore.getState().settings,
             hiddenAssets: SettingsStore.getState().hiddenAssets,

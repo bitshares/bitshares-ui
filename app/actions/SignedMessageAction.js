@@ -169,85 +169,90 @@ class SignedMessageAction {
     signMessage(account, messageText) {
         return new Promise((resolve, reject) => {
             // make sure wallet is unlocked (we need private key)
-            Promise.resolve(WalletUnlockActions.unlock()).then(() => {
-                try {
-                    // obtain all necessary keys
-                    let memo_from_public = account
-                        .get("options")
-                        .get("memo_key");
-                    // The 1s are base58 for all zeros (null)
-                    if (/111111111111111111111/.test(memo_from_public)) {
-                        memo_from_public = null;
-                    }
-                    let memo_from_privkey;
-                    if (messageText && memo_from_public) {
-                        memo_from_privkey = WalletDb.getPrivateKey(
-                            memo_from_public
-                        );
-                        if (!memo_from_privkey) {
-                            throw new Error(
-                                counterpart.translate(
-                                    "account.signedmessages.invalidkey"
-                                )
-                            );
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    try {
+                        // obtain all necessary keys
+                        let memo_from_public = account
+                            .get("options")
+                            .get("memo_key");
+                        // The 1s are base58 for all zeros (null)
+                        if (/111111111111111111111/.test(memo_from_public)) {
+                            memo_from_public = null;
                         }
-                    }
-                    // get other meta data
-                    let irr_block = ChainStore.getObject("2.1.0").get(
-                        "last_irreversible_block_num"
-                    );
-                    let now = new Date();
-
-                    let meta =
-                        MSG_SENDER +
-                        "=" +
-                        account.get("name") +
-                        "\n" +
-                        MSG_PUBLICKEY +
-                        "=" +
-                        memo_from_public +
-                        "\n" +
-                        MSG_BLOCK +
-                        "=" +
-                        irr_block +
-                        "\n" +
-                        MSG_DATE +
-                        "=" +
-                        now.toUTCString();
-
-                    let messageContentToBeSigned = messageText + "\n" + meta;
-
-                    setTimeout(() => {
-                        // do not block gui
-                        try {
-                            let memo_signature = Signature.signBuffer(
-                                messageContentToBeSigned,
-                                memo_from_privkey,
+                        let memo_from_privkey;
+                        if (messageText && memo_from_public) {
+                            memo_from_privkey = WalletDb.getPrivateKey(
                                 memo_from_public
                             );
-                            let memo_formatted =
-                                MSG_HEAD +
-                                "\n" +
-                                messageText +
-                                "\n" +
-                                MSG_META +
-                                "\n" +
-                                meta +
-                                "\n" +
-                                MSG_SIGNATURE +
-                                "\n" +
-                                memo_signature.toHex() +
-                                "\n" +
-                                MSG_FOOT;
-                            resolve(memo_formatted);
-                        } catch (err) {
-                            reject(err);
+                            if (!memo_from_privkey) {
+                                throw new Error(
+                                    counterpart.translate(
+                                        "account.signedmessages.invalidkey"
+                                    )
+                                );
+                            }
                         }
-                    }, 0);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                        // get other meta data
+                        let irr_block = ChainStore.getObject("2.1.0").get(
+                            "last_irreversible_block_num"
+                        );
+                        let now = new Date();
+
+                        let meta =
+                            MSG_SENDER +
+                            "=" +
+                            account.get("name") +
+                            "\n" +
+                            MSG_PUBLICKEY +
+                            "=" +
+                            memo_from_public +
+                            "\n" +
+                            MSG_BLOCK +
+                            "=" +
+                            irr_block +
+                            "\n" +
+                            MSG_DATE +
+                            "=" +
+                            now.toUTCString();
+
+                        let messageContentToBeSigned =
+                            messageText + "\n" + meta;
+
+                        setTimeout(() => {
+                            // do not block gui
+                            try {
+                                let memo_signature = Signature.signBuffer(
+                                    messageContentToBeSigned,
+                                    memo_from_privkey,
+                                    memo_from_public
+                                );
+                                let memo_formatted =
+                                    MSG_HEAD +
+                                    "\n" +
+                                    messageText +
+                                    "\n" +
+                                    MSG_META +
+                                    "\n" +
+                                    meta +
+                                    "\n" +
+                                    MSG_SIGNATURE +
+                                    "\n" +
+                                    memo_signature.toHex() +
+                                    "\n" +
+                                    MSG_FOOT;
+                                resolve(memo_formatted);
+                            } catch (err) {
+                                reject(err);
+                            }
+                        }, 0);
+                    } catch (err) {
+                        reject(err);
+                    }
+                })
+                .catch(res => {
+                    reject(res);
+                });
         });
     }
 }

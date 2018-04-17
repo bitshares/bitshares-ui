@@ -58,6 +58,8 @@ $modal-bg-color: #27384b;
 
 $mobile-input-bg: #1b1c22;
 
+$incognito-bg: #e3745b;
+
 .midnightTheme {
     @include theme(
         $primary-text-color,
@@ -104,6 +106,7 @@ $mobile-input-bg: #1b1c22;
         $settings-api-node-border-color,
         $main-content-margin-block-bg-color,
         $modal-bg-color,
-        $mobile-input-bg
+        $mobile-input-bg,
+        $incognito-bg
     );
 }

@@ -5,7 +5,7 @@ import BindToChainState from "./BindToChainState";
 
 class LinkToAccountById extends React.Component {
     static propTypes = {
-        account: ChainTypes.ChainObject.isRequired,
+        account: ChainTypes.ChainAccountName.isRequired,
         subpage: React.PropTypes.string.isRequired
     };
 
@@ -15,18 +15,14 @@ class LinkToAccountById extends React.Component {
     };
 
     shouldComponentUpdate(nextProps) {
-        if (
-            nextProps.account.get("name") &&
-            this.props.account.get("name") &&
-            nextProps.account.get("name") === this.props.account.get("name")
-        ) {
+        if (nextProps.account === this.props.account) {
             return false;
         }
         return true;
     }
 
     render() {
-        let account_name = this.props.account.get("name");
+        let account_name = this.props.account;
         if (!account_name) {
             return <span>{this.props.account.get("id")}</span>;
         }
@@ -44,4 +40,4 @@ class LinkToAccountById extends React.Component {
     }
 }
 
-export default BindToChainState(LinkToAccountById);
+export default BindToChainState(LinkToAccountById, {autosubscribe: false});
