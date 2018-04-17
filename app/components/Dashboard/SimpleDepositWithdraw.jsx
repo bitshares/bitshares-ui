@@ -14,7 +14,7 @@ import {
     validateAddress,
     WithdrawAddresses,
     getDepositAddress
-} from "common/blockTradesMethods";
+} from "common/gatewayMethods";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";

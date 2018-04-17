@@ -14,7 +14,9 @@ function setCacheClearTimer(key) {
     }, fetchCacheTTL);
 }
 
-export function fetchCoins(url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST) {
+export function fetchCoins(
+    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
+) {
     const key = "fetchCoins_" + url;
     let currentPromise = fetchInProgess[key];
     if (fetchCache[key]) {
@@ -23,28 +25,30 @@ export function fetchCoins(url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
         fetchInProgess[key] = currentPromise = fetch(url)
             .then(reply =>
                 reply.json().then(result => {
+                    // throw new Error("Test");
                     return result;
                 })
             )
             .catch(err => {
-                console.log(
-                    "error fetching blocktrades list of coins",
-                    err,
-                    url
-                );
+                console.log(`fetchCoins error from ${url}: ${err}`);
+                throw err;
             });
     }
-    return new Promise(res => {
-        currentPromise.then(result => {
-            fetchCache[key] = result;
-            res(result);
-            delete fetchInProgess[key];
-            if (!clearIntervals[key]) setCacheClearTimer(key);
-        });
+    return new Promise((res, rej) => {
+        currentPromise
+            .then(result => {
+                fetchCache[key] = result;
+                res(result);
+                delete fetchInProgess[key];
+                if (!clearIntervals[key]) setCacheClearTimer(key);
+            })
+            .catch(rej);
     });
 }
 
-export function fetchCoinsSimple(url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST) {
+export function fetchCoinsSimple(
+    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
+) {
     return fetch(url)
         .then(reply =>
             reply.json().then(result => {
@@ -52,12 +56,15 @@ export function fetchCoinsSimple(url = openledgerAPIs.BASE + openledgerAPIs.COIN
             })
         )
         .catch(err => {
-            console.log("error fetching simple list of coins", err, url);
+            console.log(`fetchCoinsSimple error from ${url}: ${err}`);
+            throw err;
         });
 }
 
-export function fetchBridgeCoins(url = blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS) {
-    const key = "fetchBridgeCoins_" + url;
+export function fetchTradingPairs(
+    url = blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS
+) {
+    const key = "fetchTradingPairs_" + url;
     let currentPromise = fetchInProgess[key];
     if (fetchCache[key]) {
         return Promise.resolve(fetchCache[key]);
@@ -72,20 +79,19 @@ export function fetchBridgeCoins(url = blockTradesAPIs.BASE + blockTradesAPIs.TR
                 })
             )
             .catch(err => {
-                console.log(
-                    "error fetching blocktrades list of bridge coins",
-                    err,
-                    url
-                );
+                console.log(`fetchTradingPairs error from ${url}: ${err}`);
+                throw err;
             });
     }
-    return new Promise(res => {
-        currentPromise.then(result => {
-            fetchCache[key] = result;
-            res(result);
-            delete fetchInProgess[key];
-            if (!clearIntervals[key]) setCacheClearTimer(key);
-        });
+    return new Promise((res, rej) => {
+        currentPromise
+            .then(result => {
+                fetchCache[key] = result;
+                res(result);
+                delete fetchInProgess[key];
+                if (!clearIntervals[key]) setCacheClearTimer(key);
+            })
+            .catch(rej);
     });
 }
 
@@ -324,7 +330,7 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
     let coins_by_type = {};
 
     // Backer has no coinType == backingCoinType but uses single wallet style
-    if(!!gatewayStatus.singleWallet) {
+    if (!!gatewayStatus.singleWallet) {
         allCoins.forEach(
             coin_type => (coins_by_type[coin_type.backingCoinType] = coin_type)
         );
@@ -364,13 +370,13 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
 
             backedCoins.push({
                 name: outputCoin.name,
-                intermediateAccount: !!gatewayStatus.intermediateAccount 
-                    ? gatewayStatus.intermediateAccount 
+                intermediateAccount: !!gatewayStatus.intermediateAccount
+                    ? gatewayStatus.intermediateAccount
                     : outputCoin.intermediateAccount,
                 gateFee: outputCoin.gateFee || outputCoin.transactionFee,
                 walletType: outputCoin.walletType,
-                backingCoinType: !!gatewayStatus.singleWallet 
-                    ? inputCoin.backingCoinType.toUpperCase() 
+                backingCoinType: !!gatewayStatus.singleWallet
+                    ? inputCoin.backingCoinType.toUpperCase()
                     : outputCoin.walletSymbol,
                 symbol: inputCoin.walletSymbol,
                 supportsMemos: outputCoin.supportsOutputMemos,
@@ -391,20 +397,27 @@ export function validateAddress({
 }) {
     if (!newAddress) return new Promise(res => res());
 
-    if(!method || method == "GET") {
-        url += "/wallets/" + walletType + "/address-validator?address=" + encodeURIComponent(newAddress);
-        if(output_coin_type) {
+    if (!method || method == "GET") {
+        url +=
+            "/wallets/" +
+            walletType +
+            "/address-validator?address=" +
+            encodeURIComponent(newAddress);
+        if (output_coin_type) {
             url += "&outputCoinType=" + output_coin_type;
         }
         return fetch(url, {
             method: "get",
-            headers: new Headers({Accept: "application/json", "Content-Type": "application/json"})
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            })
         })
             .then(reply => reply.json().then(json => json.isValid))
             .catch(err => {
                 console.log("validate error:", err);
             });
-    } else if(method == "POST") {
+    } else if (method == "POST") {
         return fetch(url + "/wallets/" + walletType + "/check-address", {
             method: "post",
             headers: new Headers({

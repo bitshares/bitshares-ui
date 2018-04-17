@@ -37,7 +37,7 @@ import {availableGateways} from "common/gateways";
 import {
     validateAddress as blocktradesValidateAddress,
     WithdrawAddresses
-} from "lib/common/blockTradesMethods";
+} from "lib/common/gatewayMethods";
 import AmountSelector from "components/Utility/AmountSelector";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
@@ -625,7 +625,7 @@ class WithdrawModalNew extends React.Component {
 
     validateAddress(address) {
         let {selectedGateway, gatewayStatus} = this.state;
-        
+
         // Get Backing Asset Details for Gateway
         let backingAsset = this._getBackingAssetProps();
 
@@ -633,8 +633,14 @@ class WithdrawModalNew extends React.Component {
             url: gatewayStatus[selectedGateway].baseAPI.BASE,
             walletType: backingAsset.walletType,
             newAddress: address,
-            output_coin_type: gatewayStatus[selectedGateway].addressValidatorAsset ? this.state.selectedGateway.toLowerCase() + "." + this.state.selectedAsset.toLowerCase() : null,
-            method: gatewayStatus[selectedGateway].addressValidatorMethod || null
+            output_coin_type: gatewayStatus[selectedGateway]
+                .addressValidatorAsset
+                ? this.state.selectedGateway.toLowerCase() +
+                  "." +
+                  this.state.selectedAsset.toLowerCase()
+                : null,
+            method:
+                gatewayStatus[selectedGateway].addressValidatorMethod || null
         }).then(isValid => {
             this.setState({addressError: isValid ? false : true});
         });
@@ -758,7 +764,9 @@ class WithdrawModalNew extends React.Component {
             descriptor = memo ? new Buffer(memo, "utf-8") : "";
             to = btsAccount.get("id");
         } else {
-            assetName = gatewayStatus.useFullAssetName ? selectedGateway.toLowerCase() + "." + assetName : assetName;
+            assetName = gatewayStatus.useFullAssetName
+                ? selectedGateway.toLowerCase() + "." + assetName
+                : assetName;
             descriptor =
                 assetName +
                 ":" +
@@ -943,7 +951,8 @@ class WithdrawModalNew extends React.Component {
                                   selectedGateway,
                                   gatewayStatus,
                                   nAvailableGateways,
-                                  availableGateways: coinToGatewayMapping[selectedAsset],
+                                  availableGateways:
+                                      coinToGatewayMapping[selectedAsset],
                                   error: false,
                                   onGatewayChanged: this.onGatewayChanged.bind(
                                       this
