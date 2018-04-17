@@ -12,20 +12,38 @@ class GatewayStore {
         this.bridgeCoins = Immutable.Map(
             Immutable.fromJS(ss.get("bridgeCoins", {}))
         );
-        this.bridgeInputs = ["btc", "dash", "eth", "steem"];
+        /**
+         * bridgeInputs limits the available depositable coins through blocktrades
+         * when using the "Buy" functionaility.
+         *
+         * While the application still makes sure the asset is possible to deposit,
+         * this is to limit the app to display internal assets like bit-assets that
+         * BlockTrades accept within their platform.
+         */
+        this.bridgeInputs = [
+            "btc",
+            "dash",
+            "eth",
+            "steem",
+            "sbd",
+            "doge",
+            "bch",
+            "ppy",
+            "ltc"
+        ];
         this.down = Immutable.Map({});
 
         this.bindListeners({
             onFetchCoins: GatewayActions.fetchCoins,
             onFetchCoinsSimple: GatewayActions.fetchCoinsSimple,
-            onFetchBridgeCoins: GatewayActions.fetchBridgeCoins
+            onFetchPairs: GatewayActions.fetchPairs
         });
     }
 
     onFetchCoins({backer, coins, backedCoins, down} = {}) {
         if (backer && coins) {
             this.backedCoins = this.backedCoins.set(backer, backedCoins);
-            
+
             ss.set("backedCoins", this.backedCoins.toJS());
 
             this.down = this.down.set(backer, false);
@@ -50,7 +68,7 @@ class GatewayStore {
         }
     }
 
-    onFetchBridgeCoins({coins, bridgeCoins, wallets, down} = {}) {
+    onFetchPairs({coins, bridgeCoins, wallets, down} = {}) {
         if (coins && bridgeCoins && wallets) {
             let coins_by_type = {};
             coins.forEach(

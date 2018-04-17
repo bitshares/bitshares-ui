@@ -3,7 +3,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
 import utils from "common/utils";
-import {requestDepositAddress} from "common/blockTradesMethods";
+import {requestDepositAddress} from "common/gatewayMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
@@ -17,11 +17,8 @@ import {
     _onAssetSelected,
     _getCoinToGatewayMapping
 } from "lib/common/assetGatewayMixin";
-import {getAvailableGateways} from "common/gateways";
-import {
-    updateGatewayBackers,
-    getGatewayStatusByAsset
-} from "common/gatewayUtils";
+import {availableGateways} from "common/gateways";
+import {getGatewayStatusByAsset} from "common/gatewayUtils";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -33,10 +30,9 @@ class DepositModalContent extends DecimalChecker {
             selectedGateway: null,
             fetchingAddress: false,
             backingAsset: null,
-            gatewayStatus: getAvailableGateways.call()
+            gatewayStatus: availableGateways
         };
 
-        
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
     }
@@ -97,12 +93,20 @@ class DepositModalContent extends DecimalChecker {
     }
 
     _getDepositObject(selectedAsset, selectedGateway, url) {
-        let {props} = this;
+        let {props, state} = this;
         let {account} = props;
+        let {gatewayStatus} = state;
 
         return {
-            inputCoinType: selectedAsset.toLowerCase(),
-            outputCoinType: selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase(),
+            inputCoinType: gatewayStatus[selectedGateway].useFullAssetName
+                ? selectedGateway.toLowerCase() +
+                  "." +
+                  selectedAsset.toLowerCase()
+                : selectedAsset.toLowerCase(),
+            outputCoinType:
+                selectedGateway.toLowerCase() +
+                "." +
+                selectedAsset.toLowerCase(),
             outputAddress: account,
             url: url,
             stateCallback: this.addDepositAddress
@@ -111,6 +115,7 @@ class DepositModalContent extends DecimalChecker {
 
     _getDepositAddress(selectedAsset, selectedGateway) {
         let {account} = this.props;
+        let {gatewayStatus} = this.state;
 
         this.setState({
             fetchingAddress: true,
@@ -122,14 +127,21 @@ class DepositModalContent extends DecimalChecker {
         let backingAsset = this.props.backedCoins
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
-                return (
-                    c.backingCoinType === selectedAsset ||
-                    c.backingCoin === selectedAsset
-                );
+                if (c.backingCoinType) {
+                    return (
+                        c.backingCoinType.toUpperCase() ===
+                        selectedAsset.toUpperCase()
+                    );
+                } else if (c.backingCoin) {
+                    return (
+                        c.backingCoin.toUpperCase() ===
+                        selectedAsset.toUpperCase()
+                    );
+                }
             });
 
         if (!backingAsset) {
-            //console.log(selectedGateway + " does not support " + selectedAsset);
+            console.log(selectedGateway + " does not support " + selectedAsset);
             this.setState({
                 depositAddress: null,
                 selectedAsset,
@@ -140,39 +152,50 @@ class DepositModalContent extends DecimalChecker {
         }
 
         let depositAddress;
-        if(selectedGateway && selectedAsset) {
+        if (selectedGateway && selectedAsset) {
             depositAddress = this.deposit_address_cache.getCachedInputAddress(
                 selectedGateway.toLowerCase(),
                 account,
                 selectedAsset.toLowerCase(),
-                selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase()
+                selectedGateway.toLowerCase() +
+                    "." +
+                    selectedAsset.toLowerCase()
             );
         }
 
-        if (selectedGateway == "OPEN" || selectedGateway == "WIN") {
-            if (!depositAddress) {
-                requestDepositAddress(this._getDepositObject(selectedAsset, selectedGateway, this.state.gatewayStatus[selectedGateway].baseAPI.BASE));
-            } else {
-                this.setState({
-                    depositAddress,
-                    fetchingAddress: false
-                });
-            }
-        } else if (selectedGateway == "RUDEX") {
+        if (!!gatewayStatus[selectedGateway].simpleAssetGateway) {
             this.setState({
                 depositAddress: {
                     address: backingAsset.gatewayWallet,
-                    memo: "dex:" + account
+                    memo: !gatewayStatus[selectedGateway].fixedMemo
+                        ? account
+                        : gatewayStatus[selectedGateway].fixedMemo["prepend"] +
+                          account +
+                          gatewayStatus[selectedGateway].fixedMemo["append"]
                 },
-                fetchingAddress: false,
+                fetchingAddress: false
             });
         } else {
-            console.log(
-                "Withdraw Modal Error: Unknown Gateway " +
-                    selectedGateway +
-                    " for asset " +
-                    selectedAsset
-            );
+            if (
+                selectedGateway == "OPEN" ||
+                selectedGateway == "WIN" ||
+                selectedGateway == "BRIDGE"
+            ) {
+                if (!depositAddress) {
+                    requestDepositAddress(
+                        this._getDepositObject(
+                            selectedAsset,
+                            selectedGateway,
+                            gatewayStatus[selectedGateway].baseAPI.BASE
+                        )
+                    );
+                } else {
+                    this.setState({
+                        depositAddress,
+                        fetchingAddress: false
+                    });
+                }
+            }
         }
 
         this.setState({
@@ -219,29 +242,36 @@ class DepositModalContent extends DecimalChecker {
 
         // Count available gateways
         let nAvailableGateways = _getNumberAvailableGateways.call(this);
-        let isAddressValid = depositAddress && depositAddress !== "unknown" && !depositAddress.error;
+        let isAddressValid =
+            depositAddress &&
+            depositAddress !== "unknown" &&
+            !depositAddress.error;
 
-        let minDeposit = !backingAsset ? 0 : backingAsset.gateFee ? backingAsset.gateFee * 2 : 
-            utils.format_number(
-                backingAsset.minAmount /
-                utils.get_asset_precision(backingAsset.precision),
-                backingAsset.precision,
-                false
-            );
+        let minDeposit =
+            !backingAsset || !backingAsset.gateFee
+                ? 0
+                : backingAsset.gateFee
+                    ? backingAsset.gateFee * 2
+                    : utils.format_number(
+                          backingAsset.minAmount /
+                              utils.get_asset_precision(backingAsset.precision),
+                          backingAsset.precision,
+                          false
+                      );
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
 
-        const QR = isAddressValid ? 
+        const QR = isAddressValid ? (
             <div className="QR">
                 <QRCode size={140} value={depositAddress.address} />
             </div>
-            :
+        ) : (
             <div>
                 <Icon size="5x" name="minus-circle" />
                 <p className="error-msg">
                     <Translate content="modal.deposit.address_generation_error" />
                 </p>
             </div>
-        ;
+        );
 
         return (
             <div className="grid-block vertical no-overflow">
@@ -276,21 +306,22 @@ class DepositModalContent extends DecimalChecker {
                         </div>
                     </div>
 
-                    {usingGateway && selectedAsset ? 
-                        gatewaySelector.call(this, {
-                            selectedGateway,
-                            gatewayStatus,
-                            nAvailableGateways,
-                            error: depositAddress && depositAddress.error,
-                            onGatewayChanged: this.onGatewayChanged.bind(this)
-                        })
+                    {usingGateway && selectedAsset
+                        ? gatewaySelector.call(this, {
+                              selectedGateway,
+                              gatewayStatus,
+                              nAvailableGateways,
+                              error: depositAddress && depositAddress.error,
+                              onGatewayChanged: this.onGatewayChanged.bind(this)
+                          })
                         : null}
 
                     {!fetchingAddress ? (
                         (!usingGateway ||
                             (usingGateway &&
                                 selectedGateway &&
-                                gatewayStatus[selectedGateway].enabled)) &&
+                                gatewayStatus[selectedGateway].options
+                                    .enabled)) &&
                         isAddressValid &&
                         !depositAddress.memo ? (
                             <div
@@ -309,8 +340,8 @@ class DepositModalContent extends DecimalChecker {
                         </div>
                     )}
                     {selectedGateway &&
-                    gatewayStatus[selectedGateway].enabled &&
-                    isAddressValid ?
+                    gatewayStatus[selectedGateway].options.enabled &&
+                    isAddressValid ? (
                         <div className="container-row">
                             <Translate
                                 className="grid-block container-row maxDeposit"
@@ -381,7 +412,7 @@ class DepositModalContent extends DecimalChecker {
                                 coin={selectedAsset}
                             />
                         </div>
-                        : null}
+                    ) : null}
                     {!usingGateway ? (
                         <div className="container-row deposit-directly">
                             <h2
