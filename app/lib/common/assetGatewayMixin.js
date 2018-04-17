@@ -29,7 +29,7 @@ function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
 
 function _openGatewaySite() {
     let {selectedGateway, gatewayStatus} = this.state;
-    let win = window.open("https://wallet.bitshares.org/#/help/gateways/" + gatewayStatus[selectedGateway].name, "_blank");
+    let win = window.open("https://wallet.bitshares.org/#/help/gateways/" + gatewayStatus[selectedGateway].name.toLowerCase().replace("-",""), "_blank");
     win.focus();
 }
 

@@ -929,16 +929,18 @@ class WithdrawModalNew extends React.Component {
                 </div>
 
                 <div className="modal__body">
-                    {/*ASSET SELECTION*/}
-                    <DepositWithdrawAssetSelector
-                        onSelect={this.onAssetSelected.bind(this)}
-                        onChange={this.onAssetChanged.bind(this)}
-                        include={symbolsToInclude}
-                        selectOnBlur
-                        defaultValue={selectedAsset}
-                        includeBTS={false}
-                        usageContext="withdraw"
-                    />
+                    <div style={{marginBottom: "1em"}}>
+                        {/*ASSET SELECTION*/}
+                        <DepositWithdrawAssetSelector
+                            onSelect={this.onAssetSelected.bind(this)}
+                            onChange={this.onAssetChanged.bind(this)}
+                            include={symbolsToInclude}
+                            selectOnBlur
+                            defaultValue={selectedAsset}
+                            includeBTS={false}
+                            usageContext="withdraw"
+                        />
+                    </div>
 
                     {!isBTS && selectedAsset && !selectedGateway ? (
                         <Translate content="modal.withdraw.no_gateways" />
