@@ -174,6 +174,7 @@ class PasswordInput extends Component {
                                     ? 0
                                     : null
                             }}
+                            id="password"
                             name="password"
                             type="password"
                             ref="password"
@@ -208,6 +209,7 @@ class PasswordInput extends Component {
                             style={{position: "relative", maxWidth: "30rem"}}
                         >
                             <input
+                                id="confirm_password"
                                 name="confirm_password"
                                 type="password"
                                 ref="confirm_password"
