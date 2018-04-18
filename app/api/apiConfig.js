@@ -54,6 +54,7 @@ export const settingsAPIs = {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg, Germany"
         },
+        {url: "wss://node.blockbasis.com", location: "Global (US East) - blockbasis.com"},
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
         {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
