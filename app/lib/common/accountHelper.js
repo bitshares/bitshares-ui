@@ -1,10 +1,25 @@
 import {FetchChain} from "bitsharesjs/es";
 import {FeedPrice, Asset} from "./MarketClasses";
 
+let asyncCache = {};
+const checkMarginStatusTTL = 60000 * 1; // 1 minute
+
 function checkMarginStatus(account) {
+    if (!account || (account && !account.get("call_orders", []).size))
+        return Promise.resolve(null);
+
+    const key =
+        account.get("name") + JSON.stringify(account.get("call_orders"));
+    if (asyncCache[key]) {
+        if (asyncCache[key].result) {
+            return Promise.resolve(asyncCache[key].result);
+        }
+        return new Promise((res, rej) => {
+            asyncCache[key].queue.push({res, rej});
+        });
+    }
     return new Promise((res, rej) => {
-        if (!account || (account && !account.get("call_orders", []).size))
-            return res(null);
+        asyncCache[key] = {queue: [{res, rej}], result: null};
 
         FetchChain("getObject", account.get("call_orders").toArray())
             .then(call_orders => {
@@ -15,7 +30,7 @@ function checkMarginStatus(account) {
                     if (assets.indexOf(baseId) === -1) assets.push(baseId);
                     if (assets.indexOf(quoteId) === -1) assets.push(quoteId);
                 });
-                FetchChain("getAsset", assets).then(assets => {
+                FetchChain("getAsset", assets, 6000).then(assets => {
                     let assetsMap = {};
                     assets.forEach(asset => {
                         assetsMap[asset.get("id")] = asset.toJS();
@@ -77,10 +92,20 @@ function checkMarginStatus(account) {
                             status[debtAsset.id] = current;
                         }
                     });
-                    res(status);
+                    asyncCache[key].queue.forEach(promise => {
+                        promise.res(status);
+                    });
+                    asyncCache[key] = {result: status};
+                    setTimeout(() => {
+                        delete asyncCache[key];
+                    }, checkMarginStatusTTL);
                 });
             })
-            .catch(rej);
+            .catch(() => {
+                asyncCache[key].queue.forEach(promise => {
+                    promise.rej();
+                });
+            });
     });
 }
 
