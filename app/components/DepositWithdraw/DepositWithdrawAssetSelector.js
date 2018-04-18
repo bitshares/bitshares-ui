@@ -1,10 +1,7 @@
 import React from "react";
 import {connect} from "alt-react";
 import BindToChainState from "../Utility/BindToChainState";
-import {Apis} from "bitsharesjs-ws";
-import {rudexAPIs} from "api/apiConfig";
 import GatewayStore from "stores/GatewayStore";
-import GatewayActions from "actions/GatewayActions";
 import TypeAhead from "../Utility/TypeAhead";
 import counterpart from "counterpart";
 
@@ -20,30 +17,10 @@ class DepositWithdrawAssetSelector extends React.Component {
 
         let getCoinOption = item => {
             /* Gateway Specific Settings */
-            let gateway;
-            let backedCoin;
-
-            if (
-                item.intermediateAccount &&
-                (item.intermediateAccount == "openledger-dex" ||
-                    item.intermediateAccount == "openledger-wallet")
-            ) {
-                gateway = "OPEN";
-                backedCoin = item.backingCoinType;
-            } else if (
-                item.gatewayWallet &&
-                (item.gatewayWallet == "rudex" ||
-                    item.gatewayWallet == "rudex-gateway")
-            ) {
-                gateway = "RUDEX";
-                backedCoin = item.backingCoin;
-            } else {
-                console.log("Not Found");
-                console.log(item);
-            }
+            let [gateway, backedCoin] = item.symbol.split(".");
 
             // Return null if backedCoin is already stored
-            if (!idMap[backedCoin]) {
+            if (!idMap[backedCoin] && backedCoin && gateway) {
                 idMap[backedCoin] = true;
 
                 return {
@@ -55,7 +32,7 @@ class DepositWithdrawAssetSelector extends React.Component {
                 };
             } else {
                 return null;
-            }
+            } 
         };
 
         let coinArr = [];
@@ -63,31 +40,27 @@ class DepositWithdrawAssetSelector extends React.Component {
         if (!(this.props.includeBTS === false)) {
             coinArr.push({id: "BTS", label: "BTS", gateway: ""});
         }
+        
+        props.backedCoins.forEach((coin) => {
+            coinArr = coinArr
+                .concat(coin.map(getCoinOption))
+                .filter(item => {
+                    return item;
+                })
+                .filter(item => {
+                    if(item.id == "BTS") return true;
+                    if(include) {
+                        return (
+                            include.includes(item.id)
+                        );
+                    }
+                    return true;
+                });
+        });
 
         let coinItems = coinArr
-            .concat(props.openLedgerBackedCoins.map(getCoinOption))
-            .concat(props.rudexBackedCoins.map(getCoinOption))
-            .concat(props.blockTradesBackedCoins.map(getCoinOption))
-            .filter(item => {
-                return item;
-            })
-            .filter(item => {
-                let symbolWithGateway = item.gateway + "." + item.id;
-                let symbolWithoutGateway = item.id;
-
-                if (symbolWithoutGateway == "BTS") return true;
-
-                if (include) {
-                    return (
-                        include.includes(symbolWithGateway) ||
-                        include.includes(symbolWithoutGateway)
-                    );
-                }
-
-                return true;
-            })
             .sort(function(a, b) {
-                return a.id.localeCompare(b.id);
+                if(a.id && b.id) return a.id.localeCompare(b.id);
             });
 
         let i18n =
@@ -113,18 +86,7 @@ export default connect(DepositWithdrawAssetSelector, {
     },
     getProps() {
         return {
-            openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
-                "OPEN",
-                []
-            ),
-            rudexBackedCoins: GatewayStore.getState().backedCoins.get(
-                "RUDEX",
-                []
-            ),
-            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
-                "TRADE",
-                []
-            )
+            backedCoins: GatewayStore.getState().backedCoins,
         };
     }
 });
