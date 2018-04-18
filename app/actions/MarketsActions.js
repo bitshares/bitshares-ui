@@ -39,7 +39,7 @@ class MarketsActions {
         return size;
     }
 
-    getMarketStats(base, quote, refresh = false) {
+    getMarketStats(base, quote, refresh = false, errorCallback = null) {
         const {marketName, first, second} = marketUtils.getMarketName(
             base,
             quote
@@ -76,7 +76,9 @@ class MarketsActions {
                             "getMarketStats error for " + marketName + ":",
                             err
                         );
-                        return "criticalError";
+                        if (errorCallback != null) {
+                            errorCallback(err);
+                        }
                     });
             }
         };
@@ -665,15 +667,19 @@ actions.getMarketStatsInInterval = function(
     quote,
     refresh = false
 ) {
-    const {marketName, first, second} = marketUtils.getMarketName(base, quote);
-
     actions.getMarketStats(base, quote, refresh);
 
     var interval = setInterval(() => {
-        let answer = actions.getMarketStats(base, quote, refresh);
-        if (answer && answer == "criticalError") {
+        actions.getMarketStats(base, quote, refresh, err => {
+            const {marketName, first, second} = marketUtils.getMarketName(
+                base,
+                quote
+            );
+            console.log(
+                "Stopping intervall calls to getMarketStats " + marketName
+            );
             clearInterval(interval);
-        }
+        });
     }, interval);
     return interval;
 };
