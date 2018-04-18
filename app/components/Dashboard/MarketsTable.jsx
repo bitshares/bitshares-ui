@@ -80,11 +80,11 @@ class MarketRow extends React.Component {
 
     _setInterval(nextProps = null) {
         let {base, quote} = nextProps || this.props;
-        MarketsActions.getMarketStats(base, quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(
-            MarketsActions.getMarketStats.bind(this, base, quote),
-            35 * 1000
+        this.statsInterval = MarketsActions.getMarketStatsInInterval(
+            35 * 1000,
+            base,
+            quote
         );
     }
 

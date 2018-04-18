@@ -46,14 +46,12 @@ class MarketStatsCheck extends React.Component {
             fromAssets.forEach(asset => {
                 if (asset && asset.get("id") !== coreAsset.get("id")) {
                     setTimeout(() => {
-                        MarketsActions.getMarketStats(coreAsset, asset);
-                        this.fromStatsIntervals[asset.get("id")] = setInterval(
-                            MarketsActions.getMarketStats.bind(
-                                this,
-                                coreAsset,
-                                asset
-                            ),
-                            5 * 60 * 1000
+                        this.fromStatsIntervals[
+                            asset.get("id")
+                        ] = MarketsActions.getMarketStatsInInterval(
+                            5 * 60 * 1000,
+                            coreAsset,
+                            asset
                         );
                     }, 50);
                 }
@@ -61,10 +59,11 @@ class MarketStatsCheck extends React.Component {
 
             if (props.toAsset.get("id") !== coreAsset.get("id")) {
                 // wrap this in a timeout to prevent dispatch in the middle of a dispatch
-                MarketsActions.getMarketStats(coreAsset, props.toAsset);
-                this.toStatsInterval = setInterval(() => {
-                    MarketsActions.getMarketStats(coreAsset, props.toAsset);
-                }, 5 * 60 * 1000);
+                this.toStatsInterval = MarketsActions.getMarketStatsInInterval(
+                    5 * 60 * 1000,
+                    coreAsset,
+                    props.toAsset
+                );
             }
         }
     }

@@ -72,7 +72,11 @@ class MarketsActions {
                         });
                     })
                     .catch(err => {
-                        console.log("getMarketStats error:", err);
+                        console.log(
+                            "getMarketStats error for " + marketName + ":",
+                            err
+                        );
+                        return "criticalError";
                     });
             }
         };
@@ -652,5 +656,26 @@ class MarketsActions {
         return true;
     }
 }
+let actions = alt.createActions(MarketsActions);
 
-export default alt.createActions(MarketsActions);
+// helper method, not actually dispatching anything
+actions.getMarketStatsInInterval = function(
+    interval,
+    base,
+    quote,
+    refresh = false
+) {
+    const {marketName, first, second} = marketUtils.getMarketName(base, quote);
+
+    actions.getMarketStats(base, quote, refresh);
+
+    var interval = setInterval(() => {
+        let answer = actions.getMarketStats(base, quote, refresh);
+        if (answer && answer == "criticalError") {
+            clearInterval(interval);
+        }
+    }, interval);
+    return interval;
+};
+
+export default actions;
