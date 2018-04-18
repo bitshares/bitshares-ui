@@ -217,25 +217,7 @@ class ApiNode extends React.Component {
                             </div>
                         )}
                     </div>
-                    <div>
-                        {showControls &&
-                            allowRemoval && (
-                                <div>
-                                    <a
-                                        onClick={this.remove.bind(
-                                            this,
-                                            url,
-                                            name
-                                        )}
-                                    >
-                                        <Icon
-                                            name={"times"}
-                                            size="1_5x"
-                                            title="settings.remove"
-                                        />
-                                    </a>
-                                </div>
-                            )}
+                    <div style={{marginTop: "-5px"}}>
                         {showControls &&
                             hidden && (
                                 <a onClick={this.show.bind(this, url)}>
@@ -258,21 +240,29 @@ class ApiNode extends React.Component {
                                     />
                                 </a>
                             )}
+                        {showControls &&
+                            allowRemoval && (
+                                <a onClick={this.remove.bind(this, url, name)}>
+                                    <Icon
+                                        name={"times"}
+                                        size="1_5x"
+                                        title="settings.remove"
+                                    />
+                                </a>
+                            )}
                         <div className="api-status">
                             {activeNode.url != url ? (
-                                <a id={displayUrl}>
+                                <a id={displayUrl} onClick={this.activate.bind(this, url)}>
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
                                         size="1_5x"
-                                        onClick={this.activate.bind(this, url)}
                                         title="settings.switch"
                                     />
                                     <Icon
                                         className={color + " hover-icon"}
                                         name={"connect"}
                                         size="1_5x"
-                                        onClick={this.activate.bind(this, url)}
                                         title="settings.switch"
                                     />
                                 </a>
