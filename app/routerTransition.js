@@ -111,7 +111,7 @@ class RouterTransitioner {
 
         this._initConnectionManager(urls);
 
-        if (!latenciesEstablished) {
+        if (!latenciesEstablished || Object.keys(apiLatencies).length < 10) {
             this.doLatencyUpdate(true)
                 .then(
                     this._initiateConnection.bind(
@@ -181,8 +181,13 @@ class RouterTransitioner {
 
         this._connectionManager = new Manager({
             url: connectionString,
-            urls: urls
+            urls: urls,
+            closeCb: this._onConnectionClose.bind(this)
         });
+    }
+
+    _onConnectionClose() {
+        // Possibly do something about auto reconnect attempts here
     }
 
     _isAutoSelection() {
