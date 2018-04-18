@@ -662,7 +662,7 @@ let actions = alt.createActions(MarketsActions);
 
 // helper method, not actually dispatching anything
 actions.getMarketStatsInInterval = function(
-    interval,
+    intervalTime,
     base,
     quote,
     refresh = false
@@ -680,7 +680,7 @@ actions.getMarketStatsInInterval = function(
             );
             clearInterval(interval);
         });
-    }, interval);
+    }, intervalTime);
     return interval;
 };
 
