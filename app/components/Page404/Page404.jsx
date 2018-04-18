@@ -37,7 +37,7 @@ class Page404 extends React.Component {
                         <Translate content="page404.page_not_found_subtitle" />
                     </div>
                     <div className="page-404-button-back">
-                        <Link to={"/dashboard"}>
+                        <Link to={"/"}>
                             <Translate
                                 component="button"
                                 className="button"

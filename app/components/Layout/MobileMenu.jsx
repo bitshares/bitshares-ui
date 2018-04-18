@@ -62,7 +62,7 @@ class MobileMenu extends React.Component {
         let linkToAccountOrDashboard;
         if (myActiveAccounts.size > 0)
             linkToAccountOrDashboard = (
-                <a onClick={this._onNavigate.bind(this, "/dashboard")}>
+                <a onClick={this._onNavigate.bind(this, "/")}>
                     <Translate content="header.dashboard" />
                 </a>
             );

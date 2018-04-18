@@ -19,11 +19,11 @@ class IssueModal extends React.Component {
             amount: props.amount,
             to: props.to,
             to_id: null,
-            memo: null
+            memo: ""
         };
     }
 
-    onAmountChanged({amount, asset}) {
+    onAmountChanged({amount}) {
         this.setState({amount: amount});
     }
 
@@ -57,9 +57,10 @@ class IssueModal extends React.Component {
         );
 
         this.setState({
-            amount: null,
+            amount: 0,
+            to: "",
             to_id: null,
-            memo: null
+            memo: ""
         });
     }
 
@@ -118,25 +119,27 @@ class IssueModal extends React.Component {
                     </div>
 
                     <div className="content-block button-group">
-                        <input
+                        <button
                             type="submit"
-                            className="button success"
+                            className="button primary"
                             onClick={this.onSubmit.bind(
                                 this,
                                 this.state.to,
                                 this.state.amount
                             )}
-                            value={counterpart.translate("modal.issue.submit")}
+                            disabled={!this.state.to_id || !this.state.amount}
                             tabIndex={tabIndex++}
-                        />
+                        >
+                            {counterpart.translate("modal.issue.submit")}
+                        </button>
 
-                        <div
-                            className="button"
+                        <button
+                            className="button primary hollow"
                             onClick={this.props.onClose}
                             tabIndex={tabIndex++}
                         >
                             {counterpart.translate("cancel")}
-                        </div>
+                        </button>
                     </div>
                 </div>
             </form>
