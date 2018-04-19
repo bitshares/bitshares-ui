@@ -44,9 +44,9 @@ export default class TypeAhead extends React.Component {
             if (value == item.id && item.disabled) disabled = true;
             if (value == item.id) asset = item;
         });
-        
-        if(disabled) return;
-        
+
+        if (disabled) return;
+
         this.setState({value, filter: "", isMenuShowing: false});
         if (this.props.onSelect) this.props.onSelect(value, asset);
     }
@@ -87,6 +87,9 @@ export default class TypeAhead extends React.Component {
                 menuStyle={TypeAhead.menuStyle}
                 wrapperProps={{
                     className: isMenuShowing ? "typeahead__innerList" : ""
+                }}
+                wrapperStyle={{
+                    display: "block"
                 }}
                 open={isMenuShowing}
             />
@@ -144,7 +147,15 @@ export default class TypeAhead extends React.Component {
                 >
                     {item.label}
                 </span>
-                <span style={{float: "right", fontSize: "90%", textTransform: "uppercase"}}>{item.status}</span>
+                <span
+                    style={{
+                        float: "right",
+                        fontSize: "90%",
+                        textTransform: "uppercase"
+                    }}
+                >
+                    {item.status}
+                </span>
             </div>
         );
     };

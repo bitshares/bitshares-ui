@@ -45,12 +45,14 @@
 }
 
 div.api-node {
-    .api-status { 
-        overflow-wrap: break-word; 
-        font-size: 80%; 
+    .api-status {
+        overflow-wrap: break-word;
+        font-size: 80%;
     }
-    
-    p { margin-bottom: 0; }
+
+    p {
+        margin-bottom: 0;
+    }
     > div {
         vertical-align: top;
         display: inline-block;
@@ -60,7 +62,10 @@ div.api-node {
     }
     > div:nth-child(1) {
         width: 50%;
-        > p:nth-child(2) { overflow-wrap: break-word; font-size: 80%; }
+        > p:nth-child(2) {
+            overflow-wrap: break-word;
+            font-size: 80%;
+        }
     }
     > div:nth-child(2) {
         width: 25%;
@@ -70,6 +75,22 @@ div.api-node {
         position: absolute;
         right: 25px;
     }
+}
+
+div.api-status a .default-icon {
+    display: block;
+}
+
+div.api-status a:hover .default-icon {
+    display: none;
+}
+
+div.api-status a .hover-icon {
+    display: none;
+}
+
+div.api-status a:hover .hover-icon {
+    display: block;
 }
 
 .active-node {

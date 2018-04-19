@@ -14,7 +14,7 @@ import {
     validateAddress,
     WithdrawAddresses,
     getDepositAddress
-} from "common/blockTradesMethods";
+} from "common/gatewayMethods";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
@@ -23,7 +23,7 @@ import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs/es";
 import {debounce} from "lodash";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
-import {blockTradesAPIs} from "api/apiConfig";
+import {openledgerAPIs} from "api/apiConfig";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -376,7 +376,7 @@ class DepositWithdrawContent extends DecimalChecker {
 
     _validateAddress(address, props = this.props) {
         validateAddress({
-            url: blockTradesAPIs.BASE_OL,
+            url: openledgerAPIs.BASE,
             walletType: props.walletType,
             newAddress: address
         })

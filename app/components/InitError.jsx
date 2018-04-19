@@ -49,7 +49,17 @@ class InitError extends React.Component {
     }
 
     render() {
-        let options = this.props.apis.map(entry => {
+        let uniqueNodes = this.props.apis.reduce((a, node) => {
+            let exists =
+                a.findIndex(n => {
+                    return n.url === node.url;
+                }) !== -1;
+
+            if (!exists) a.push(node);
+            return a;
+        }, []);
+
+        let options = uniqueNodes.map(entry => {
             let onlyDescription =
                 entry.url.indexOf("fake.automatic-selection") !== -1;
             let {location} = entry;
