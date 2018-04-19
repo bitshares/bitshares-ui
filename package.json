@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.180418",
+    "version": "2.0.180418b",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -128,7 +128,7 @@
         "alt-container": "^1.0.0",
         "alt-react": "0.0.1",
         "bignumber.js": "^4.0.0",
-        "bitsharesjs": "^1.6.0",
+        "bitsharesjs": "^1.6.1",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",
@@ -174,7 +174,7 @@
         "react-tooltip": "^3.2.2",
         "react-transition-group": "^1.2.0",
         "react-translate-component": "^0.14.0",
-        "steem": "^0.7.1",
+        "steem-js-api": "^0.7.1",
         "tcomb": "2.5.2",
         "whatwg-fetch": "^2.0.1",
         "zxcvbn-async": "0.0.5"

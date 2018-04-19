@@ -53,6 +53,11 @@ module.exports = function(env) {
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
+
+    /*
+    * moment and react-intl include tons of locale files, use a regex and
+    * ContextReplacementPlugin to only include certain locale files
+    */
     let regexString = "";
     locales.forEach((l, i) => {
         regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
