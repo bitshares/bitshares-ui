@@ -360,7 +360,7 @@ class Header extends React.Component {
                         (active.indexOf("dashboard") !== -1 &&
                             active.indexOf("account") === -1)
                 })}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
+                onClick={this._onNavigate.bind(this, "/")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------
+Release 2.0.180402
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix #1376: Hide expiration for margin calls in My Orders
+- Fix #1374: Incorrect CSP making the logo not load
+- Fix #1373: AccountStore init console errors
+
+---------------------------------------------------------------------
 Release 2.0.180401
 ---------------------------------------------------------------------
 New features

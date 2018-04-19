@@ -45,6 +45,9 @@ function checkFeePoolAsync({
     });
 }
 
+let asyncCache = {};
+const feeStatusTTL = 60000; // 1 minute
+
 function checkFeeStatusAsync({
     accountID,
     feeID = "1.3.0",
@@ -52,7 +55,23 @@ function checkFeeStatusAsync({
     options = null,
     data
 } = {}) {
+    let key =
+        accountID +
+        feeID +
+        type +
+        JSON.stringify(options) +
+        JSON.stringify(data);
+    if (asyncCache[key]) {
+        if (asyncCache[key].result) {
+            return Promise.resolve(asyncCache[key].result);
+        }
+        return new Promise((res, rej) => {
+            asyncCache[key].queue.push({res, rej});
+        });
+    }
+
     return new Promise((res, rej) => {
+        asyncCache[key] = {queue: [{res, rej}], result: null};
         Promise.all([
             estimateFeeAsync(type, options, data),
             checkFeePoolAsync({assetID: feeID, type, options, data}),
@@ -133,11 +152,27 @@ function checkFeeStatusAsync({
                         feeBalance.get("balance") >= fee.getAmount()
                     )
                         hasBalance = true;
-
-                    res({fee, hasBalance, hasPoolBalance, hasValidCER});
+                    asyncCache[key].queue.forEach(promise => {
+                        promise.res({
+                            fee,
+                            hasBalance,
+                            hasPoolBalance,
+                            hasValidCER
+                        });
+                    });
+                    asyncCache[key] = {
+                        result: {fee, hasBalance, hasPoolBalance, hasValidCER}
+                    };
+                    setTimeout(() => {
+                        delete asyncCache[key];
+                    }, feeStatusTTL);
                 });
             })
-            .catch(rej);
+            .catch(() => {
+                asyncCache[key].forEach(promise => {
+                    promise.rej();
+                });
+            });
     });
 }
 

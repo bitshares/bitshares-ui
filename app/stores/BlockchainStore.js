@@ -71,6 +71,7 @@ class BlockchainStore {
             this.no_ws_connection = true;
         if (this.no_ws_connection && status === "open")
             this.no_ws_connection = false;
+        if (status === "closed") this.no_ws_connection = true;
     }
 }
 

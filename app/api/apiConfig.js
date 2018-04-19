@@ -1,7 +1,15 @@
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
-    // BASE_OL: "https://api.blocktrades.us/ol/v2",
-    BASE_OL: "https://ol-api1.openledger.info/api/v0/ol/support",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
+export const openledgerAPIs = {
+    BASE: "https://ol-api1.openledger.info/api/v0/ol/support",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs",
@@ -16,16 +24,6 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
-export const widechainAPIs = {
-    BASE: "https://gateway.winex.pro/api/v0/ol/support",
-    COINS_LIST: "/coins",
-    ACTIVE_WALLETS: "/active-wallets",
-    NEW_DEPOSIT_ADDRESS: "/new-deposit-address",
-    WITHDRAW_HISTORY: "/latelyWithdraw",
-    TRADING_PAIRS: "/trading-pairs",
-    DEPOSIT_HISTORY: "/latelyRecharge"
-};
-
 export const cryptoBridgeAPIs = {
     BASE:
         "https://api." +
@@ -35,6 +33,16 @@ export const cryptoBridgeAPIs = {
     ACTIVE_WALLETS: "/wallets",
     MARKETS: "/markets",
     TRADING_PAIRS: "/trading-pairs"
+};
+
+export const widechainAPIs = {
+    BASE: "https://gateway.winex.pro/api/v0/ol/support",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    NEW_DEPOSIT_ADDRESS: "/new-deposit-address",
+    WITHDRAW_HISTORY: "/latelyWithdraw",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_HISTORY: "/latelyRecharge"
 };
 
 const WSS_TEST_NODES = [
