@@ -1,28 +1,24 @@
 import React from "react";
 const TradingView = require("./charting_library.min.js");
-import {DataFeed} from "./tradingViewClasses";
+import {connect} from "alt-react";
+import MarketsStore from "stores/MarketsStore";
 
-export default class TradingViewPriceChart extends React.Component {
-    constructor(props) {
+class TradingViewPriceChart extends React.Component {
+    constructor() {
         super();
     }
 
     loadTradingView(props) {
-        window.DEFAULT_SYMBOL = "TEST_OPEN";
-        const datafeed = new DataFeed(props);
-        console.log(
-            "TradingView",
-            TradingView,
-            "datafeed",
-            this.datafeed,
-            "props",
-            props
-        );
+        const {dataFeed} = props;
+        console.log("TradingView", TradingView, "props", props);
+
+        if (!dataFeed) return;
+
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
             library_path: "/charting_library/",
-            datafeed: datafeed,
+            datafeed: dataFeed,
             symbol: "",
             interval: "D",
             container_id: "tv_chart",
@@ -32,8 +28,15 @@ export default class TradingViewPriceChart extends React.Component {
             charts_storage_url: "http://saveload.tradingview.com",
             charts_storage_api_version: "1.1",
             client_id: "tradingview.com",
-            user_id: "public_user_id"
+            user_id: "public_user_id",
+            autosize: true
         });
+    }
+
+    componentWillReceiveProps(np) {
+        if (!this.props.dataFeed && np.dataFeed) {
+            loadTradingView(np);
+        }
     }
 
     componentDidMount() {
@@ -46,6 +49,27 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     render() {
-        return <div id="tv_chart" />;
+        return (
+            <div className="small-12">
+                <div
+                    className="exchange-bordered"
+                    style={{
+                        height: this.props.chartHeight,
+                        marginTop: 10,
+                        marginBottom: 10
+                    }}
+                    id="tv_chart"
+                />
+            </div>
+        );
     }
 }
+
+export default connect(TradingViewPriceChart, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps() {
+        return {dataFeed: MarketsStore.getState().dataFeed};
+    }
+});

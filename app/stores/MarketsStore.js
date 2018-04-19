@@ -14,6 +14,7 @@ import {
     didOrdersChange,
     Price
 } from "common/MarketClasses";
+import {DataFeed} from "components/Exchange/tradingViewClasses";
 
 // import {
 //     SettleOrder
@@ -111,6 +112,8 @@ class MarketsStore {
             onFeedUpdate: MarketsActions.feedUpdate,
             onToggleStars: MarketsActions.toggleStars
         });
+
+        this.dataFeed = null;
     }
 
     onGetCollateralPositions(payload) {
@@ -216,6 +219,12 @@ class MarketsStore {
             this.marketReady = false;
             return this.emitChange();
         }
+
+        this.dataFeed = new DataFeed({
+            quoteSymbol: result.quote.get("symbol"),
+            baseSymbol: result.base.get("symbol"),
+            fetchHistory: () => this.priceData
+        });
 
         let limitsChanged = false,
             callsChanged = false;
@@ -707,7 +716,7 @@ class MarketsStore {
         let open, high, low, close, volume;
 
         let addTime = (time, i, bucketSize) => {
-            return new Date(time.getTime() + i * bucketSize * 1000);
+            return time + i * bucketSize * 1000;
         };
 
         for (let i = 0; i < this.priceHistory.length; i++) {
@@ -821,27 +830,25 @@ class MarketsStore {
                 low = findMin(open, close);
             }
 
-            prices.push({date, open, high, low, close, volume});
-            volumeData.push([date, volume]);
+            prices.push({time: date.getTime(), open, high, low, close, volume});
+            volumeData.push([date.getTime(), volume]);
         }
 
         // max buckets returned is 200, if we get less, fill in the gaps starting at the first data point
         let priceLength = prices.length;
         if (priceLength > 0 && priceLength < 200) {
-            let now = new Date().getTime();
+            let now = new Date();
             // let firstDate = prices[0].date;
             // ensure there's a final entry close to the current time
             let i = 1;
-            while (
-                addTime(prices[0].date, i, this.bucketSize).getTime() < now
-            ) {
+            while (addTime(prices[0].time, i, this.bucketSize) < now) {
                 i++;
             }
-            let finalDate = addTime(prices[0].date, i - 1, this.bucketSize);
+            let finalDate = addTime(prices[0].time, i - 1, this.bucketSize);
             if (prices[priceLength - 1].date !== finalDate) {
                 if (priceLength === 1) {
                     prices.push({
-                        date: addTime(finalDate, -1, this.bucketSize),
+                        time: addTime(finalDate, -1, this.bucketSize),
                         open: prices[0].close,
                         high: prices[0].close,
                         low: prices[0].close,
@@ -849,7 +856,7 @@ class MarketsStore {
                         volume: 0
                     });
                     prices.push({
-                        date: finalDate,
+                        time: finalDate,
                         open: prices[0].close,
                         high: prices[0].close,
                         low: prices[0].close,
@@ -862,7 +869,7 @@ class MarketsStore {
                     ]);
                 } else {
                     prices.push({
-                        date: finalDate,
+                        time: finalDate,
                         open: prices[priceLength - 1].close,
                         high: prices[priceLength - 1].close,
                         low: prices[priceLength - 1].close,
@@ -877,19 +884,16 @@ class MarketsStore {
             for (let ii = 0; ii < prices.length - 1; ii++) {
                 // If next date is beyond one bucket up
                 if (
-                    prices[ii + 1].date.getTime() !==
-                    addTime(prices[ii].date, 1, this.bucketSize).getTime()
+                    prices[ii + 1].time !==
+                    addTime(prices[ii].time, 1, this.bucketSize)
                 ) {
                     // Break if next date is beyond now
-                    if (
-                        addTime(prices[ii].date, 1, this.bucketSize).getTime() >
-                        now
-                    ) {
+                    if (addTime(prices[ii].time, 1, this.bucketSize) > now) {
                         break;
                     }
 
                     prices.splice(ii + 1, 0, {
-                        date: addTime(prices[ii].date, 1, this.bucketSize),
+                        time: addTime(prices[ii].time, 1, this.bucketSize),
                         open: prices[ii].close,
                         high: prices[ii].close,
                         low: prices[ii].close,
@@ -897,7 +901,7 @@ class MarketsStore {
                         volume: 0
                     });
                     volumeData.splice(ii + 1, 0, [
-                        addTime(prices[ii].date, 1, this.bucketSize),
+                        addTime(prices[ii].time, 1, this.bucketSize),
                         0
                     ]);
                 }
