@@ -1,9 +1,12 @@
 import alt from "alt-instance";
 
 import {cryptoBridgeAPIs} from "../api/apiConfig";
+import WalletDb from "stores/WalletDb";
+import {TransactionBuilder} from "bitsharesjs/es";
 
 const API_MARKET_URL = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.MARKETS;
 const API_NEWS_URL = "https://crypto-bridge.org/news.json";
+const BCO_ASSET_ID = "1.3.1564";
 
 let news = null;
 let newsTTL = 60 * 60 * 1000; // 60 minutes
@@ -85,6 +88,55 @@ class CryptoBridgeActions {
                     news = null;
                 });
         };
+    }
+
+    stakeBalance(account, period, amount) {
+        let tr = new TransactionBuilder();
+
+        tr.add_type_operation("vesting_balance_create", {
+            fee: {amount: "0", asset_id: BCO_ASSET_ID},
+            creator: account,
+            owner: account,
+            amount: {
+                amount: amount * Math.pow(10, 7),
+                asset_id: BCO_ASSET_ID
+            },
+            policy: [
+                1,
+                {
+                    start_claim: new Date().toISOString().slice(0, 19),
+                    vesting_seconds: period
+                }
+            ]
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+            .then(result => {})
+            .catch(err => {
+                console.log("vesting_balance_create err:", err);
+            });
+    }
+
+    claimStakingBalance(account, cvb) {
+        let tr = new TransactionBuilder();
+
+        const balance = cvb.balance.amount;
+
+        tr.add_type_operation("vesting_balance_withdraw", {
+            fee: {amount: "0", asset_id: BCO_ASSET_ID},
+            owner: account,
+            vesting_balance: cvb.id,
+            amount: {
+                amount: Math.floor(balance),
+                asset_id: cvb.balance.asset_id
+            }
+        });
+
+        return WalletDb.process_transaction(tr, null, true)
+            .then(result => {})
+            .catch(err => {
+                console.log("vesting_balance_withdraw err:", err);
+            });
     }
 }
 
