@@ -68,7 +68,7 @@ export const settingsAPIs = {
         {url: "wss://ws.gdex.top", location: "China"},
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
         {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
-        {url: "wss://la.dexnode.net/ws", location: "LA, USA"},
+        {url: "wss://la.dexnode.net/ws", location: "Los Angeles, USA"},
         {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
@@ -87,7 +87,7 @@ export const settingsAPIs = {
             location: "Singapore - BitShares Infrastructure Program"
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
-        {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
+        {url: "wss://api.bts.mobi/ws", location: "Virginia, USA"},
         {
             url: "wss://api.btsxchng.com", 
             location: "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))"
