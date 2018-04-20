@@ -35,8 +35,7 @@ class MarketsActions {
         return market;
     }
 
-    changeBucketSize(size, caller) {
-        console.log("changeBucketSize", size, caller);
+    changeBucketSize(size) {
         return size;
     }
 
@@ -87,7 +86,6 @@ class MarketsActions {
         clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
         currentMarket = base.get("id") + "_" + quote.get("id");
-        console.log("subscribeMarket", subID);
         let {isMarketAsset, marketAsset, inverted} = marketUtils.isMarketAsset(
             quote,
             base
@@ -414,7 +412,6 @@ class MarketsActions {
     // }
 
     unSubscribeMarket(quote, base) {
-        console.log("unSubscribeMarket", quote, base);
         let subID = quote + "_" + base;
         clearBatchTimeouts();
         return dispatch => {

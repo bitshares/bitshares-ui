@@ -777,18 +777,18 @@ class Exchange extends React.Component {
         );
     }
 
-    _changeBucketSize(size, e) {
-        if (e) e.preventDefault();
-        if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize.defer(size, "Exchange");
-            let currentSub = this.props.sub.split("_");
-            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
-                () => {
-                    this.props.subToMarket(this.props, size);
-                }
-            );
-        }
-    }
+    // _changeBucketSize(size, e) {
+    //     if (e) e.preventDefault();
+    //     if (size !== this.props.bucketSize) {
+    //         MarketsActions.changeBucketSize.defer(size);
+    //         let currentSub = this.props.sub.split("_");
+    //         MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
+    //             () => {
+    //                 this.props.subToMarket(this.props, size);
+    //             }
+    //         );
+    //     }
+    // }
 
     _changeZoomPeriod(size, e) {
         e.preventDefault();
@@ -1647,9 +1647,6 @@ class Exchange extends React.Component {
                                         buckets={buckets}
                                         bucketSize={bucketSize}
                                         currentPeriod={this.state.currentPeriod}
-                                        changeBucketSize={this._changeBucketSize.bind(
-                                            this
-                                        )}
                                         onChangeTool={key => {
                                             let tools = cloneDeep(
                                                 this.state.tools

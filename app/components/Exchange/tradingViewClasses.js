@@ -168,7 +168,7 @@ class DataFeed {
             if (!firstDataRequest) return;
 
             let newBucketSize = getBucketFromResolution(resolution);
-            MarketsActions.changeBucketSize(newBucketSize, "getBars");
+            MarketsActions.changeBucketSize(newBucketSize);
 
             return MarketsActions.unSubscribeMarket(
                 symbolInfo.quoteAsset.get("id"),
@@ -218,6 +218,7 @@ class DataFeed {
         subscriberUID,
         onResetCacheNeededCallback
     ) {
+        MarketsStore.unsubscribe("subscribeBars");
         MarketsStore.subscribe("subscribeBars", () => {
             let bars = this._getHistory();
             let newBars = bars.filter(a => {
@@ -231,14 +232,14 @@ class DataFeed {
                 this.latestBar = newBars[newBars.length - 1];
             } else {
                 // Check if latest bar is different
+                let didChange = false;
                 for (let key in this.latestBar) {
-                    let didChange = false;
                     if (this.latestBar[key] !== bars[bars.length - 1][key]) {
                         didChange = true;
                     }
-                    if (didChange) {
-                        onRealtimeCallback(bars[bars.length - 1]);
-                    }
+                }
+                if (didChange) {
+                    onRealtimeCallback(bars[bars.length - 1]);
                 }
             }
         });
