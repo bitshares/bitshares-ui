@@ -385,7 +385,8 @@ class MarketsActions {
                             base: base,
                             quote: quote,
                             inverted: inverted,
-                            ticker: results[9]
+                            ticker: results[9],
+                            init: true
                         });
                     })
                     .catch(error => {

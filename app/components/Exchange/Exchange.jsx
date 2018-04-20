@@ -1634,38 +1634,20 @@ class Exchange extends React.Component {
                                 >
                                     {/* Price history chart */}
                                     <TradingViewPriceChart
-                                        priceData={this.props.priceData}
-                                        volumeData={this.props.volumeData}
-                                        base={base}
-                                        quote={quote}
+                                        locale={this.props.locale}
+                                        dataFeed={this.props.dataFeed}
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
                                         height={height}
                                         leftOrderBook={leftOrderBook}
                                         marketReady={marketReady}
-                                        indicators={indicators}
-                                        indicatorSettings={indicatorSettings}
-                                        latest={latestPrice}
                                         theme={this.props.settings.get(
                                             "themes"
                                         )}
-                                        zoom={this.state.currentPeriod}
-                                        tools={tools}
-                                        showVolumeChart={showVolumeChart}
-                                        enableChartClamp={enableChartClamp}
                                         buckets={buckets}
                                         bucketSize={bucketSize}
                                         currentPeriod={this.state.currentPeriod}
                                         changeBucketSize={this._changeBucketSize.bind(
-                                            this
-                                        )}
-                                        changeZoomPeriod={this._changeZoomPeriod.bind(
-                                            this
-                                        )}
-                                        onSelectIndicators={this._onSelectIndicators.bind(
-                                            this
-                                        )}
-                                        onChangeIndicators={this._changeIndicator.bind(
                                             this
                                         )}
                                         onChangeTool={key => {
@@ -1692,19 +1674,6 @@ class Exchange extends React.Component {
                                             this
                                         )}
                                         chartHeight={chartHeight}
-                                        onToggleVolume={() => {
-                                            SettingsActions.changeViewSetting({
-                                                showVolumeChart: !showVolumeChart
-                                            });
-                                        }}
-                                        onToggleChartClamp={() => {
-                                            SettingsActions.changeViewSetting({
-                                                enableChartClamp: !enableChartClamp
-                                            });
-                                        }}
-                                        onChangeIndicatorSetting={this._changeIndicatorSetting.bind(
-                                            this
-                                        )}
                                     />
                                 </div>
                             ) : (

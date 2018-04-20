@@ -14,7 +14,6 @@ import {
     didOrdersChange,
     Price
 } from "common/MarketClasses";
-import {DataFeed} from "components/Exchange/tradingViewClasses";
 
 // import {
 //     SettleOrder
@@ -105,7 +104,7 @@ class MarketsStore {
             onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
             onCallOrderUpdate: MarketsActions.callOrderUpdate,
-            onClearMarket: MarketsActions.clearMarket,
+            // onClearMarket: MarketsActions.clearMarket,
             onGetMarketStats: MarketsActions.getMarketStats,
             onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
             onSwitchMarket: MarketsActions.switchMarket,
@@ -113,7 +112,39 @@ class MarketsStore {
             onToggleStars: MarketsActions.toggleStars
         });
 
-        this.dataFeed = null;
+        this.subscribers = new Map();
+
+        this.exportPublicMethods({
+            subscribe: this.subscribe.bind(this),
+            unsubscribe: this.unsubscribe.bind(this),
+            clearSubs: this.clearSubs.bind(this)
+        });
+    }
+
+    /**
+     *  Add a callback that will be called anytime any object in the cache is updated
+     */
+    subscribe(id, callback) {
+        if (this.subscribers.has(callback))
+            return console.error("Subscribe callback already exists", callback);
+        this.subscribers.set(id, callback);
+    }
+
+    /**
+     *  Remove a callback that was previously added via subscribe
+     */
+    unsubscribe(id) {
+        if (this.subscribers.has(id)) {
+            this.subscribers.delete(id);
+        }
+    }
+
+    _notifySubscriber(id, data) {
+        if (this.subscribers.has(id)) this.subscribers.get(id)(data);
+    }
+
+    clearSubs() {
+        this.subscribers = new Map();
     }
 
     onGetCollateralPositions(payload) {
@@ -215,16 +246,11 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
+        let newMarket = false;
         if (result.switchMarket) {
             this.marketReady = false;
             return this.emitChange();
         }
-
-        this.dataFeed = new DataFeed({
-            quoteSymbol: result.quote.get("symbol"),
-            baseSymbol: result.base.get("symbol"),
-            fetchHistory: () => this.priceData
-        });
 
         let limitsChanged = false,
             callsChanged = false;
@@ -245,9 +271,9 @@ class MarketsStore {
         };
 
         if (result.market && result.market !== this.activeMarket) {
-            // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.onClearMarket();
             this.activeMarket = result.market;
+            newMarket = true;
         }
 
         /* Set the feed price (null if not a bitasset market) */
@@ -442,6 +468,14 @@ class MarketsStore {
 
         this.marketReady = true;
         this.emitChange();
+
+        if (newMarket)
+            this._notifySubscriber(
+                "market_change",
+                this.quoteAsset.get("symbol") +
+                    "_" +
+                    this.baseAsset.get("symbol")
+            );
     }
 
     onCancelLimitOrderSuccess(cancellations) {
@@ -881,35 +915,40 @@ class MarketsStore {
             }
 
             // Loop over the data and fill in any blank time periods
-            for (let ii = 0; ii < prices.length - 1; ii++) {
-                // If next date is beyond one bucket up
-                if (
-                    prices[ii + 1].time !==
-                    addTime(prices[ii].time, 1, this.bucketSize)
-                ) {
-                    // Break if next date is beyond now
-                    if (addTime(prices[ii].time, 1, this.bucketSize) > now) {
-                        break;
-                    }
-
-                    prices.splice(ii + 1, 0, {
-                        time: addTime(prices[ii].time, 1, this.bucketSize),
-                        open: prices[ii].close,
-                        high: prices[ii].close,
-                        low: prices[ii].close,
-                        close: prices[ii].close,
-                        volume: 0
-                    });
-                    volumeData.splice(ii + 1, 0, [
-                        addTime(prices[ii].time, 1, this.bucketSize),
-                        0
-                    ]);
-                }
-            }
+            // for (let ii = 0; ii < prices.length - 1; ii++) {
+            //     // If next date is beyond one bucket up
+            //     if (
+            //         prices[ii + 1].time !==
+            //         addTime(prices[ii].time, 1, this.bucketSize)
+            //     ) {
+            //         // Break if next date is beyond now
+            //         if (
+            //             addTime(prices[ii].time, 1, this.bucketSize) >
+            //             now
+            //         ) {
+            //             break;
+            //         }
+            //
+            //         prices.splice(ii + 1, 0, {
+            //             time: addTime(prices[ii].time, 1, this.bucketSize),
+            //             open: prices[ii].close,
+            //             high: prices[ii].close,
+            //             low: prices[ii].close,
+            //             close: prices[ii].close,
+            //             volume: 0
+            //         });
+            //         volumeData.splice(ii + 1, 0, [
+            //             addTime(prices[ii].time, 1, this.bucketSize),
+            //             0
+            //         ]);
+            //     }
+            // }
         }
 
         this.priceData = prices;
         this.volumeData = volumeData;
+
+        this._notifySubscriber("subscribeBars");
     }
 
     _orderBook(limitsChanged = true, callsChanged = false) {

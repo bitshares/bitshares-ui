@@ -1,0 +1,25 @@
+.chart-page .chart-container {
+    border: none;
+}
+
+/*Header buttons background color */
+.header-chart-panel .button,
+.symbol-search-dialog .symbol-block input,
+input.symbol-edit,
+.favored-list-container span
+ {
+    /*background: red;
+    border-color: green;*/
+}
+
+/* Disabled features background color */
+.feature-no-touch .header-chart-panel .button.disabled:active,
+.feature-touch .header-chart-panel .button.disabled:active,
+.header-chart-panel .button.disabled,
+.header-chart-panel .button.disabled.active {
+    /*background: red;*/
+}
+
+/* Small close button */
+.tv-close-panel {
+}
