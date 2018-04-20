@@ -129,7 +129,20 @@ class DataFeed {
     ) {
         from *= 1000;
         to *= 1000;
-        let bars = this._getHistory().filter(a => {
+        let bars = this._getHistory();
+        if (bars.length > 1) {
+            for (var i = 1; i < bars.length; i++) {
+                if (bars[i].time === bars[i - 1].time) {
+                    console.error(
+                        "Indentical time in bars " + i + " and ",
+                        i - 1
+                    );
+                }
+            }
+        }
+
+        this.latestBar = bars[bars.length - 1];
+        bars = bars.filter(a => {
             return a.time >= from && a.time <= to;
         });
 
@@ -144,7 +157,6 @@ class DataFeed {
         // );
         if (!bars.length) return onHistoryCallback(bars, {noData: true});
 
-        this.latestBar = bars[bars.length - 1];
         onHistoryCallback(bars);
     }
 
