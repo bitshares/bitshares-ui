@@ -1,6 +1,7 @@
 import MarketsStore from "stores/MarketsStore";
 import {FetchChain} from "bitsharesjs/es";
 import moment from "moment-timezone";
+import MarketsActions from "actions/MarketsActions";
 
 class SymbolInfo {
     constructor(options) {
@@ -11,10 +12,48 @@ class SymbolInfo {
         this.session = "24x7";
         this.timezone = moment.tz.guess();
         this.data_status = "streaming";
-        this.resolutions = options.resolutions;
+        this.supported_resolutions = options.resolutions;
         this.has_empty_bars = true;
         this.pricescale = Math.pow(10, options.baseAsset.get("precision"));
+        this.quoteAsset = options.quoteAsset;
+        this.baseAsset = options.baseAsset;
         this.minmov = 1;
+        this.has_intraday = true;
+        this.intraday_multipliers = this.supported_resolutions.filter(r => {
+            return r.indexOf("D") === -1 && r.indexOf("S") === -1;
+        });
+    }
+}
+
+function getResolutionsFromBuckets(buckets) {
+    let resolutions = buckets
+        .map(r => {
+            let minute = r / 60;
+            if (minute < 1) {
+                return r + "S";
+            } else if (minute < 60 * 24) return minute.toString();
+            else {
+                // below 1 day we return minutes
+                let day = minute / 60 / 24;
+                if (day >= 1) {
+                    if (parseInt(day, 10) === day) {
+                        if (day === 1) return "D";
+                        return day + "D";
+                    }
+                }
+            }
+        })
+        .filter(a => !!a);
+
+    return resolutions;
+}
+
+function getBucketFromResolution(r) {
+    if (r === "D") return 24 * 60 * 60;
+    if (r.indexOf("D") !== -1) {
+        return parseInt(r.replace("D"), 10) * 24 * 60 * 60;
+    } else {
+        return parseInt(r, 10) * 60;
     }
 }
 
@@ -23,19 +62,9 @@ class DataFeed {
         for (let key in options) {
             switch (key) {
                 case "resolutions":
-                    this.supported_resolutions = options.resolutions
-                        .map(r => {
-                            let minute = r / 60;
-                            if (minute < 60 * 24) return minute;
-                            else {
-                                let hour = minute / 60;
-                                if (hour >= 24) {
-                                } else {
-                                    return hour / 24 + "D";
-                                }
-                            }
-                        })
-                        .filter(a => !!a);
+                    this.supported_resolutions = getResolutionsFromBuckets(
+                        options.resolutions
+                    );
                     break;
 
                 case "onMarketChange":
@@ -130,21 +159,38 @@ class DataFeed {
         from *= 1000;
         to *= 1000;
         let bars = this._getHistory();
-        if (bars.length > 1) {
-            for (var i = 1; i < bars.length; i++) {
-                if (bars[i].time === bars[i - 1].time) {
-                    console.error(
-                        "Indentical time in bars " + i + " and ",
-                        i - 1
-                    );
-                }
-            }
-        }
-
         this.latestBar = bars[bars.length - 1];
         bars = bars.filter(a => {
             return a.time >= from && a.time <= to;
         });
+
+        if (this.interval !== resolution) {
+            if (!firstDataRequest) return;
+
+            let newBucketSize = getBucketFromResolution(resolution);
+            MarketsActions.changeBucketSize(newBucketSize, "getBars");
+
+            return MarketsActions.unSubscribeMarket(
+                symbolInfo.quoteAsset.get("id"),
+                symbolInfo.baseAsset.get("id")
+            ).then(() => {
+                MarketsActions.subscribeMarket(
+                    symbolInfo.baseAsset,
+                    symbolInfo.quoteAsset,
+                    newBucketSize
+                ).then(() => {
+                    let bars = this._getHistory();
+                    this.latestBar = bars[bars.length - 1];
+                    bars = bars.filter(a => {
+                        return a.time >= from && a.time <= to;
+                    });
+                    this.interval = resolution;
+                    if (!bars.length)
+                        return onHistoryCallback(bars, {noData: true});
+                    onHistoryCallback(bars);
+                });
+            });
+        }
 
         // console.log(
         //     "getBars",
@@ -155,6 +201,7 @@ class DataFeed {
         //     "bars",
         //     bars
         // );
+        this.interval = resolution;
         if (!bars.length) return onHistoryCallback(bars, {noData: true});
 
         onHistoryCallback(bars);
@@ -210,4 +257,4 @@ class DataFeed {
     }
 }
 
-export {DataFeed};
+export {DataFeed, SymbolInfo, getResolutionsFromBuckets};

@@ -184,6 +184,8 @@ class MarketsStore {
             // Unsub failed, restore activeMarket
             this.activeMarket = payload.market;
         }
+
+        if (payload.resolve) payload.resolve();
     }
 
     onSwitchMarket() {
@@ -469,13 +471,15 @@ class MarketsStore {
         this.marketReady = true;
         this.emitChange();
 
-        if (newMarket)
+        if (newMarket) {
             this._notifySubscriber(
                 "market_change",
                 this.quoteAsset.get("symbol") +
                     "_" +
                     this.baseAsset.get("symbol")
             );
+        }
+        if (result.resolve) result.resolve();
     }
 
     onCancelLimitOrderSuccess(cancellations) {

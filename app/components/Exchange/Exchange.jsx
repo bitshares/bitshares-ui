@@ -372,9 +372,9 @@ class Exchange extends React.Component {
             });
         }
 
-        if (this.props.sub && nextProps.bucketSize !== this.props.bucketSize) {
-            return this._changeBucketSize(nextProps.bucketSize);
-        }
+        // if (this.props.sub && nextProps.bucketSize !== this.props.bucketSize) {
+        //     return this._changeBucketSize(nextProps.bucketSize);
+        // }
     }
 
     componentWillUnmount() {
@@ -780,7 +780,7 @@ class Exchange extends React.Component {
     _changeBucketSize(size, e) {
         if (e) e.preventDefault();
         if (size !== this.props.bucketSize) {
-            MarketsActions.changeBucketSize.defer(size);
+            MarketsActions.changeBucketSize.defer(size, "Exchange");
             let currentSub = this.props.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
                 () => {

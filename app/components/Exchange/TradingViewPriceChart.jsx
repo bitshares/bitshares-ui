@@ -1,6 +1,8 @@
 import React from "react";
 const TradingView = require("./charting_library.min.js");
 import colors from "assets/colors";
+import {getResolutionsFromBuckets} from "./tradingViewClasses";
+
 // import {connect} from "alt-react";
 // import MarketsStore from "stores/MarketsStore";
 
@@ -15,7 +17,8 @@ export default class TradingViewPriceChart extends React.Component {
         props.dataFeed.update({
             resolutions: props.buckets,
             ticker: props.quoteSymbol + "_" + props.baseSymbol,
-            onMarketChange: this._setSymbol.bind(this)
+            onMarketChange: this._setSymbol.bind(this),
+            interval: getResolutionsFromBuckets([props.bucketSize])[0]
         });
     }
 
@@ -26,16 +29,20 @@ export default class TradingViewPriceChart extends React.Component {
         if (!dataFeed) return;
         if (!!this.tvWidget) return;
 
+        console.log(
+            "currentResolution",
+            getResolutionsFromBuckets([props.bucketSize])[0],
+            "symbol",
+            props.quoteSymbol + "_" + props.baseSymbol
+        );
+
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
-            interval: "D",
+            interval: getResolutionsFromBuckets([props.bucketSize])[0],
             library_path: "/charting_library/",
             datafeed: dataFeed,
-            symbol: "",
             container_id: "tv_chart",
-            disabled_features: ["use_localstorage_for_settings"],
-            enabled_features: ["study_templates"],
             charts_storage_url: "http://saveload.tradingview.com",
             charts_storage_api_version: "1.1",
             client_id: "tradingview.com",
@@ -47,11 +54,15 @@ export default class TradingViewPriceChart extends React.Component {
             overrides: {
                 "paneProperties.background": themeColors.bgColor
             },
+            theme: props.theme, // don't think this does anything yet
             custom_css_url: "custom-css.css",
+            enabled_features: ["study_templates"],
             disabled_features: [
+                "use_localstorage_for_settings",
                 "header_saveload",
                 "symbol_info",
-                "border_around_the_chart"
+                "border_around_the_chart",
+                "header_symbol_search"
             ],
             debug: false
         });
@@ -77,7 +88,11 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     _setSymbol(ticker) {
-        if (this.tvWidget) this.tvWidget.setSymbol(ticker, "D");
+        if (this.tvWidget)
+            this.tvWidget.setSymbol(
+                ticker,
+                getResolutionsFromBuckets([this.props.bucketSize])[0]
+            );
     }
 
     componentDidMount() {
