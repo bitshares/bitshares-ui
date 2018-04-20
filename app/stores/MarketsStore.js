@@ -144,7 +144,7 @@ class MarketsStore {
     }
 
     clearSubs() {
-        this.subscribers = new Map();
+        this.subscribers.clear();
     }
 
     onGetCollateralPositions(payload) {

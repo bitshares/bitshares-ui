@@ -7,21 +7,6 @@ import {getResolutionsFromBuckets} from "./tradingViewClasses";
 // import MarketsStore from "stores/MarketsStore";
 
 export default class TradingViewPriceChart extends React.Component {
-    constructor(props) {
-        super();
-
-        this.state = {
-            marketChange: false
-        };
-
-        props.dataFeed.update({
-            resolutions: props.buckets,
-            ticker: props.quoteSymbol + "_" + props.baseSymbol,
-            onMarketChange: this._setSymbol.bind(this),
-            interval: getResolutionsFromBuckets([props.bucketSize])[0]
-        });
-    }
-
     loadTradingView(props) {
         const {dataFeed} = props;
         let themeColors = colors[props.theme];
@@ -36,6 +21,14 @@ export default class TradingViewPriceChart extends React.Component {
             props.quoteSymbol + "_" + props.baseSymbol
         );
 
+        dataFeed.update({
+            resolutions: props.buckets,
+            ticker: props.quoteSymbol + "_" + props.baseSymbol,
+            interval: getResolutionsFromBuckets([props.bucketSize])[0]
+        });
+
+        console.log("*** Load Chart ***");
+        console.time("*** Chart load time: ");
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
@@ -68,6 +61,11 @@ export default class TradingViewPriceChart extends React.Component {
         });
 
         this.tvWidget.onChartReady(() => {
+            console.log("*** Chart Ready ***");
+            console.timeEnd("*** Chart load time: ");
+            dataFeed.update({
+                onMarketChange: this._setSymbol.bind(this)
+            });
             /* For some reason these don't work if passed in the constructor */
             this.tvWidget.applyOverrides({
                 "paneProperties.horzGridProperties.color":
@@ -88,11 +86,12 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     _setSymbol(ticker) {
-        if (this.tvWidget)
+        if (this.tvWidget) {
             this.tvWidget.setSymbol(
                 ticker,
                 getResolutionsFromBuckets([this.props.bucketSize])[0]
             );
+        }
     }
 
     componentDidMount() {
@@ -100,13 +99,14 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     componentWillUnmount() {
+        console.log("Unmounting, clear subs");
         this.props.dataFeed.clearSubs();
     }
 
     shouldComponentUpdate(np) {
         if (np.chartHeight !== this.props.chartHeight) return true;
         if (!!this.tvWidget) return false;
-        if (!this.props.marketReady && !np.marketReady) return false;
+        if (!np.marketReady) return false;
         return true;
     }
 
