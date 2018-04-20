@@ -1,5 +1,6 @@
 import ls from "./localStorage";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
+import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
 
 let fetchInProgess = {};
@@ -24,24 +25,24 @@ export function fetchCoins(
         fetchInProgess[key] = currentPromise = fetch(url)
             .then(reply =>
                 reply.json().then(result => {
+                    // throw new Error("Test");
                     return result;
                 })
             )
             .catch(err => {
-                console.log(
-                    "error fetching blocktrades list of coins",
-                    err,
-                    url
-                );
+                console.log(`fetchCoins error from ${url}: ${err}`);
+                throw err;
             });
     }
-    return new Promise(res => {
-        currentPromise.then(result => {
-            fetchCache[key] = result;
-            res(result);
-            delete fetchInProgess[key];
-            if (!clearIntervals[key]) setCacheClearTimer(key);
-        });
+    return new Promise((res, rej) => {
+        currentPromise
+            .then(result => {
+                fetchCache[key] = result;
+                res(result);
+                delete fetchInProgess[key];
+                if (!clearIntervals[key]) setCacheClearTimer(key);
+            })
+            .catch(rej);
     });
 }
 
@@ -55,14 +56,15 @@ export function fetchCoinsSimple(
             })
         )
         .catch(err => {
-            console.log("error fetching simple list of coins", err, url);
+            console.log(`fetchCoinsSimple error from ${url}: ${err}`);
+            throw err;
         });
 }
 
-export function fetchBridgeCoins(baseurl = blockTradesAPIs.BASE) {
-    let url = baseurl + blockTradesAPIs.TRADING_PAIRS;
-
-    const key = "fetchBridgeCoins_" + url;
+export function fetchTradingPairs(
+    url = blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS
+) {
+    const key = "fetchTradingPairs_" + url;
     let currentPromise = fetchInProgess[key];
     if (fetchCache[key]) {
         return Promise.resolve(fetchCache[key]);
@@ -77,20 +79,19 @@ export function fetchBridgeCoins(baseurl = blockTradesAPIs.BASE) {
                 })
             )
             .catch(err => {
-                console.log(
-                    "error fetching blocktrades list of coins",
-                    err,
-                    url
-                );
+                console.log(`fetchTradingPairs error from ${url}: ${err}`);
+                throw err;
             });
     }
-    return new Promise(res => {
-        currentPromise.then(result => {
-            fetchCache[key] = result;
-            res(result);
-            delete fetchInProgess[key];
-            if (!clearIntervals[key]) setCacheClearTimer(key);
-        });
+    return new Promise((res, rej) => {
+        currentPromise
+            .then(result => {
+                fetchCache[key] = result;
+                res(result);
+                delete fetchInProgess[key];
+                if (!clearIntervals[key]) setCacheClearTimer(key);
+            })
+            .catch(rej);
     });
 }
 
@@ -325,7 +326,16 @@ export function requestDepositAddress({
 }
 
 export function getBackedCoins({allCoins, tradingPairs, backer}) {
+    let gatewayStatus = availableGateways[backer];
     let coins_by_type = {};
+
+    // Backer has no coinType == backingCoinType but uses single wallet style
+    if (!!gatewayStatus.singleWallet) {
+        allCoins.forEach(
+            coin_type => (coins_by_type[coin_type.backingCoinType] = coin_type)
+        );
+    }
+
     allCoins.forEach(
         coin_type => (coins_by_type[coin_type.coinType] = coin_type)
     );
@@ -339,66 +349,88 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
         ] = true;
     });
 
-    let blocktradesBackedCoins = [];
-    allCoins.forEach(coin_type => {
+    let backedCoins = [];
+    allCoins.forEach(inputCoin => {
+        let outputCoin = coins_by_type[inputCoin.backingCoinType];
         if (
-            coin_type.walletSymbol.startsWith(backer + ".") &&
-            coin_type.backingCoinType &&
-            coins_by_type[coin_type.backingCoinType]
+            inputCoin.walletSymbol.startsWith(backer + ".") &&
+            inputCoin.backingCoinType &&
+            outputCoin
         ) {
             let isDepositAllowed =
-                allowed_outputs_by_input[coin_type.backingCoinType] &&
-                allowed_outputs_by_input[coin_type.backingCoinType][
-                    coin_type.coinType
+                allowed_outputs_by_input[inputCoin.backingCoinType] &&
+                allowed_outputs_by_input[inputCoin.backingCoinType][
+                    inputCoin.coinType
                 ];
             let isWithdrawalAllowed =
-                allowed_outputs_by_input[coin_type.coinType] &&
-                allowed_outputs_by_input[coin_type.coinType][
-                    coin_type.backingCoinType
+                allowed_outputs_by_input[inputCoin.coinType] &&
+                allowed_outputs_by_input[inputCoin.coinType][
+                    inputCoin.backingCoinType
                 ];
 
-            blocktradesBackedCoins.push({
-                name: coins_by_type[coin_type.backingCoinType].name,
-                intermediateAccount:
-                    coins_by_type[coin_type.backingCoinType]
-                        .intermediateAccount,
-                gateFee: coins_by_type[coin_type.backingCoinType].gateFee,
-                walletType: coins_by_type[coin_type.backingCoinType].walletType,
-                backingCoinType:
-                    coins_by_type[coin_type.backingCoinType].walletSymbol,
-                symbol: coin_type.walletSymbol,
-                supportsMemos:
-                    coins_by_type[coin_type.backingCoinType]
-                        .supportsOutputMemos,
+            backedCoins.push({
+                name: outputCoin.name,
+                intermediateAccount: !!gatewayStatus.intermediateAccount
+                    ? gatewayStatus.intermediateAccount
+                    : outputCoin.intermediateAccount,
+                gateFee: outputCoin.gateFee || outputCoin.transactionFee,
+                walletType: outputCoin.walletType,
+                backingCoinType: !!gatewayStatus.singleWallet
+                    ? inputCoin.backingCoinType.toUpperCase()
+                    : outputCoin.walletSymbol,
+                symbol: inputCoin.walletSymbol,
+                supportsMemos: outputCoin.supportsOutputMemos,
                 depositAllowed: isDepositAllowed,
                 withdrawalAllowed: isWithdrawalAllowed
             });
         }
     });
-    return blocktradesBackedCoins;
+    return backedCoins;
 }
 
 export function validateAddress({
     url = blockTradesAPIs.BASE,
     walletType,
-    newAddress
+    newAddress,
+    output_coin_type = null,
+    method = null
 }) {
     if (!newAddress) return new Promise(res => res());
-    return fetch(
-        url +
+
+    if (!method || method == "GET") {
+        url +=
             "/wallets/" +
             walletType +
             "/address-validator?address=" +
-            encodeURIComponent(newAddress),
-        {
-            method: "get",
-            headers: new Headers({Accept: "application/json"})
+            encodeURIComponent(newAddress);
+        if (output_coin_type) {
+            url += "&outputCoinType=" + output_coin_type;
         }
-    )
-        .then(reply => reply.json().then(json => json.isValid))
-        .catch(err => {
-            console.log("validate error:", err);
-        });
+        return fetch(url, {
+            method: "get",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            })
+        })
+            .then(reply => reply.json().then(json => json.isValid))
+            .catch(err => {
+                console.log("validate error:", err);
+            });
+    } else if (method == "POST") {
+        return fetch(url + "/wallets/" + walletType + "/check-address", {
+            method: "post",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }),
+            body: JSON.stringify({address: newAddress})
+        })
+            .then(reply => reply.json().then(json => json.isValid))
+            .catch(err => {
+                console.log("validate error:", err);
+            });
+    }
 }
 
 let _conversionCache = {};

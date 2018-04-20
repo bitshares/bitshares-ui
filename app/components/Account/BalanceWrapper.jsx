@@ -14,9 +14,6 @@ class BalanceWrapper extends React.Component {
         orders: Immutable.List()
     };
 
-    componentWillMount() {
-    }
-
     render() {
         const {wrap, orders, ...others} = this.props;
         let balanceAssets = this.props.balances
@@ -27,7 +24,7 @@ class BalanceWrapper extends React.Component {
                 return b.get("asset_type");
             });
 
-        let ordersByAsset = orders.reduce((orders, o) => {
+        let ordersByAsset = orders.filter(o => !!o).reduce((orders, o) => {
             let asset_id = o.getIn(["sell_price", "base", "asset_id"]);
             if (!orders[asset_id]) orders[asset_id] = 0;
             orders[asset_id] += parseInt(o.get("for_sale"), 10);

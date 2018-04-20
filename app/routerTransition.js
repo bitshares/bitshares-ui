@@ -40,6 +40,25 @@ class RouterTransitioner {
 
         this._connectInProgress = false;
         this._connectionStart = null;
+
+        this.willTransitionToInProgress = false;
+
+        /* Store all current callbacks here */
+        this.callbacks = [];
+    }
+
+    /**
+     * Is used to call all current callbacks once willTransitionTo or any of the
+     * other methods has finished. It is necessary to fix a react-router bug using
+     * hash-history, where the onEnter is called twice due to redirect from "/" to "/#/"
+     * This messes up the init chain completely
+     */
+    _callCallbacks() {
+        this.willTransitionToInProgress = false;
+        this.callbacks.forEach(cb => {
+            cb();
+        });
+        this.callbacks = [];
     }
 
     /**
@@ -53,16 +72,21 @@ class RouterTransitioner {
      * @returns {*}
      */
     willTransitionTo(nextState, replaceState, callback, appInit = true) {
+        this.callbacks.push(callback);
+        if (this.willTransitionToInProgress) return;
+        this.willTransitionToInProgress = true;
         // console.log(
         //     new Date().getTime(),
         //     "nextState",
-        //     nextState,
+        //     nextState.location,
         //     "replaceState",
         //     replaceState,
         //     "callback",
         //     callback,
         //     "appInit",
-        //     appInit
+        //     appInit,
+        //     "willTransitionToInProgress",
+        //     this.willTransitionToInProgress
         // );
 
         // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
@@ -74,7 +98,7 @@ class RouterTransitioner {
                 Promise.all([
                     WalletDb.loadDbData().then(() => {
                         // console.log("wallet init done");
-                        callback();
+                        this._callCallbacks();
                     }),
                     WalletManagerStore.init()
                 ]);
@@ -83,7 +107,7 @@ class RouterTransitioner {
 
         // on init-error dont attempt connecting
         if (nextState.location.pathname === "/init-error") {
-            return callback();
+            return this._callCallbacks();
         }
 
         // dict of apiServer url as key and the latency as value
@@ -111,14 +135,13 @@ class RouterTransitioner {
 
         this._initConnectionManager(urls);
 
-        if (!latenciesEstablished) {
+        if (!latenciesEstablished || Object.keys(apiLatencies).length < 10) {
             this.doLatencyUpdate(true)
                 .then(
                     this._initiateConnection.bind(
                         this,
                         nextState,
                         replaceState,
-                        callback,
                         appInit
                     )
                 )
@@ -126,12 +149,7 @@ class RouterTransitioner {
                     console.log("catch doLatency", err);
                 });
         } else {
-            this._initiateConnection(
-                nextState,
-                replaceState,
-                callback,
-                appInit
-            );
+            this._initiateConnection(nextState, replaceState, appInit);
         }
     }
 
@@ -181,8 +199,13 @@ class RouterTransitioner {
 
         this._connectionManager = new Manager({
             url: connectionString,
-            urls: urls
+            urls: urls,
+            closeCb: this._onConnectionClose.bind(this)
         });
+    }
+
+    _onConnectionClose() {
+        // Possibly do something about auto reconnect attempts here
     }
 
     _isAutoSelection() {
@@ -363,11 +386,10 @@ class RouterTransitioner {
      *
      * @param nextState  see willTransitionTo
      * @param replaceState  see willTransitionTo
-     * @param callback  see willTransitionTo
      * @param appInit  see willTransitionTo
      * @private
      */
-    _initiateConnection(nextState, replaceState, callback, appInit) {
+    _initiateConnection(nextState, replaceState, appInit) {
         if (this._autoSelection) {
             this._connectionManager.url = this._connectionManager.urls[0];
             console.log("auto selecting to " + this._connectionManager.url);
@@ -386,7 +408,7 @@ class RouterTransitioner {
                             value: this._connectionManager.url
                         });
                     }
-                    this._onConnect(nextState, replaceState, callback);
+                    this._onConnect(nextState, replaceState);
                 })
                 .catch(error => {
                     console.error(
@@ -396,7 +418,7 @@ class RouterTransitioner {
                     );
                     if (error.name === "InvalidStateError") {
                         if (__ELECTRON__) {
-                            replaceState("/dashboard");
+                            replaceState("/");
                         } else {
                             alert(
                                 "Can't access local storage.\nPlease make sure your browser is not in private/incognito mode."
@@ -404,7 +426,7 @@ class RouterTransitioner {
                         }
                     } else {
                         replaceState("/init-error");
-                        callback();
+                        this._callCallbacks();
                     }
                 });
         } else {
@@ -416,7 +438,7 @@ class RouterTransitioner {
                     value: ""
                 });
             }
-            this._attemptReconnect(nextState, replaceState, callback);
+            this._attemptReconnect(nextState, replaceState);
         }
     }
 
@@ -426,11 +448,10 @@ class RouterTransitioner {
      * @param failingNodeUrl string url of node that failed
      * @param nextState see willTransitionTo
      * @param replaceState see willTransitionTo
-     * @param callback see willTransitionTo
      * @param err exception that occured
      * @private
      */
-    _onResetError(failingNodeUrl, nextState, replaceState, callback, err) {
+    _onResetError(failingNodeUrl, nextState, replaceState, err) {
         console.error("onResetError:", err);
         this._oldChain = "old";
         notify.addNotification({
@@ -444,7 +465,7 @@ class RouterTransitioner {
             return this.willTransitionTo(
                 nextState,
                 replaceState,
-                callback,
+                () => {}, // callback is already stored in this.callbacks
                 true
             );
         });
@@ -455,28 +476,19 @@ class RouterTransitioner {
      *
      * @param nextState see willTransitionTo
      * @param replaceState see willTransitionTo
-     * @param callback see willTransitionTo
      * @private
      */
-    _attemptReconnect(nextState, replaceState, callback) {
+    _attemptReconnect(nextState, replaceState) {
         this._oldChain = "old";
         Apis.reset(this._connectionManager.url, true).then(instance => {
             instance.init_promise
-                .then(
-                    this._onConnect.bind(
-                        this,
-                        nextState,
-                        replaceState,
-                        callback
-                    )
-                )
+                .then(this._onConnect.bind(this, nextState, replaceState))
                 .catch(
                     this._onResetError.bind(
                         this,
                         this._connectionManager.url,
                         nextState,
-                        replaceState,
-                        callback
+                        replaceState
                     )
                 );
         });
@@ -487,13 +499,12 @@ class RouterTransitioner {
      *
      * @param nextState see willTransitionTo
      * @param replaceState see willTransitionTo
-     * @param callback see willTransitionTo
      * @returns
      * @private
      */
-    _onConnect(nextState, replaceState, callback) {
+    _onConnect(nextState, replaceState) {
         // console.log(new Date().getTime(), "routerTransition onConnect", caller, "_connectInProgress", _connectInProgress);
-        if (this._connectInProgress) return callback();
+        if (this._connectInProgress) return this._callCallbacks();
         this._connectInProgress = true;
         if (Apis.instance()) {
             let currentUrl = Apis.instance().url;
@@ -529,7 +540,7 @@ class RouterTransitioner {
             console.error("db init error:", err);
             replaceState("/init-error");
             this._connectInProgress = false;
-            return callback();
+            return this._callCallbacks();
         }
 
         return Promise.all([dbPromise, SettingsStore.init()])
@@ -545,14 +556,14 @@ class RouterTransitioner {
                         WalletDb.loadDbData()
                             .then(() => {
                                 // if (!WalletDb.getWallet() && nextState.location.pathname === "/") {
-                                //     replaceState("/dashboard");
+                                //     replaceState("/");
                                 // }
                                 if (
                                     nextState.location.pathname.indexOf(
                                         "/auth/"
                                     ) === 0
                                 ) {
-                                    replaceState("/dashboard");
+                                    replaceState("/");
                                 }
                             })
                             .then(() => {
@@ -579,7 +590,7 @@ class RouterTransitioner {
                             setting: "activeNode",
                             value: this._connectionManager.url
                         });
-                        callback();
+                        this._callCallbacks();
                     });
                 });
             })
@@ -587,7 +598,7 @@ class RouterTransitioner {
                 console.error(err);
                 replaceState("/init-error");
                 this._connectInProgress = false;
-                callback();
+                this._callCallbacks();
             });
     }
 }

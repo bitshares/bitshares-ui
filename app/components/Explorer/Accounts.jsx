@@ -43,6 +43,7 @@ class AccountRow extends React.Component {
     render() {
         let {account, contacts} = this.props;
 
+        if (!account) return null;
         let balance = account.getIn(["balances", "1.3.0"]) || null;
         let accountName = account.get("name");
 
@@ -140,6 +141,15 @@ class Accounts extends React.Component {
         if (searchAccounts.size > 0 && searchTerm && searchTerm.length > 0) {
             accountRows = searchAccounts
                 .filter(a => {
+                    /*
+                    * This appears to return false negatives, perhaps from
+                    * changed account name rules when moving to graphene?. Either
+                    * way, trying to resolve invalid names fails in the ChainStore,
+                    * which in turn breaks the BindToChainState wrapper
+                    */
+                    // if (!ChainValidation.is_account_name(a, true)) {
+                    //     return false;
+                    // }
                     return a.indexOf(searchTerm) !== -1;
                 })
                 .sort((a, b) => {

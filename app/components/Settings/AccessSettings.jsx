@@ -102,7 +102,7 @@ class ApiNode extends React.Component {
         /*
         * The testnet latency is not checked in the connection manager,
         * so we force enable activation of it even though it shows as 'down'
-        * 
+        *
         */
         const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
 
@@ -126,7 +126,11 @@ class ApiNode extends React.Component {
                             autoActive ? activeNode.url : autoSelectAPI
                         )}
                     >
-                        <input id="automatic_node_switcher" type="checkbox" checked={autoActive}  />
+                        <input
+                            id="automatic_node_switcher"
+                            type="checkbox"
+                            checked={autoActive}
+                        />
                         <label />
                     </span>
                     <p style={{fontSize: "80%"}}>
@@ -169,7 +173,11 @@ class ApiNode extends React.Component {
                                 autoActive ? activeNode.url : autoSelectAPI
                             )}
                         >
-                            <input id="automatic_node_switcher" type="checkbox" checked={autoActive} />
+                            <input
+                                id="automatic_node_switcher"
+                                type="checkbox"
+                                checked={autoActive}
+                            />
                             <label />
                         </span>
                         <Translate
@@ -197,7 +205,9 @@ class ApiNode extends React.Component {
                 <div className="api-node">
                     <div>
                         <p>{name}</p>
-                        <p id={activeNode ? "active_node" : null}>{displayUrl}</p>
+                        <p id={activeNode ? "active_node" : null}>
+                            {displayUrl}
+                        </p>
                     </div>
                     <div>
                         {isTestnet && !ping ? null : (
@@ -217,25 +227,7 @@ class ApiNode extends React.Component {
                             </div>
                         )}
                     </div>
-                    <div>
-                        {showControls &&
-                            allowRemoval && (
-                                <div>
-                                    <a
-                                        onClick={this.remove.bind(
-                                            this,
-                                            url,
-                                            name
-                                        )}
-                                    >
-                                        <Icon
-                                            name={"times"}
-                                            size="1_5x"
-                                            title="settings.remove"
-                                        />
-                                    </a>
-                                </div>
-                            )}
+                    <div style={{marginTop: "-5px"}}>
                         {showControls &&
                             hidden && (
                                 <a onClick={this.show.bind(this, url)}>
@@ -258,21 +250,32 @@ class ApiNode extends React.Component {
                                     />
                                 </a>
                             )}
+                        {showControls &&
+                            allowRemoval && (
+                                <a onClick={this.remove.bind(this, url, name)}>
+                                    <Icon
+                                        name={"times"}
+                                        size="1_5x"
+                                        title="settings.remove"
+                                    />
+                                </a>
+                            )}
                         <div className="api-status">
                             {activeNode.url != url ? (
-                                <a id={displayUrl}>
+                                <a
+                                    id={displayUrl}
+                                    onClick={this.activate.bind(this, url)}
+                                >
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
                                         size="1_5x"
-                                        onClick={this.activate.bind(this, url)}
                                         title="settings.switch"
                                     />
                                     <Icon
                                         className={color + " hover-icon"}
                                         name={"connect"}
                                         size="1_5x"
-                                        onClick={this.activate.bind(this, url)}
                                         title="settings.switch"
                                     />
                                 </a>
@@ -469,6 +472,16 @@ class AccessSettings extends React.Component {
 
         let autoNode = getNode(props.nodes[0]);
         let popupCount = 0;
+
+        let uniqueNodes = nodes.reduce((a, node) => {
+            let exists =
+                a.findIndex(n => {
+                    return n.url === node.url;
+                }) !== -1;
+
+            if (!exists) a.push(node);
+            return a;
+        }, []);
         return this.props.popup ? (
             <div>
                 <div style={{fontWeight: "bold", height: 40}}>
@@ -482,7 +495,7 @@ class AccessSettings extends React.Component {
                             props.currentNode === autoSelectAPI ? "none" : ""
                     }}
                 >
-                    {nodes.map(node => {
+                    {uniqueNodes.map(node => {
                         if (node.url !== autoSelectAPI) {
                             popupCount++;
                             if (popupCount <= 5) {
@@ -557,7 +570,7 @@ class AccessSettings extends React.Component {
                             </div>
                         </div>
                     )}
-                    {nodes.map(node => {
+                    {uniqueNodes.map(node => {
                         if (node.url !== autoSelectAPI)
                             return renderNode(node, activeNode, true);
                     })}

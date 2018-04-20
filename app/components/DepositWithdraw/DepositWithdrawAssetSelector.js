@@ -17,12 +17,7 @@ class DepositWithdrawAssetSelector extends React.Component {
 
         let getCoinOption = item => {
             /* Gateway Specific Settings */
-            let gateway;
-            let backedCoin;
-
-            let _asset = item.symbol.split(".");
-            backedCoin = item.backingCoin || item.backingCoinType;
-            gateway = _asset[0] ? _asset[0] : null;
+            let [gateway, backedCoin] = item.symbol.split(".");
 
             // Return null if backedCoin is already stored
             if (!idMap[backedCoin] && backedCoin && gateway) {
@@ -45,7 +40,7 @@ class DepositWithdrawAssetSelector extends React.Component {
         if (!(this.props.includeBTS === false)) {
             coinArr.push({id: "BTS", label: "BTS", gateway: ""});
         }
-
+        
         props.backedCoins.forEach((coin) => {
             coinArr = coinArr
                 .concat(coin.map(getCoinOption))
@@ -56,7 +51,7 @@ class DepositWithdrawAssetSelector extends React.Component {
                     if(item.id == "BTS") return true;
                     if(include) {
                         return (
-                            include.includes(item.gateway + "." + item.id)
+                            include.includes(item.id)
                         );
                     }
                     return true;

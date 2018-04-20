@@ -24,6 +24,14 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
+export const cryptoBridgeAPIs = {
+    BASE: "https://api.crypto-bridge.org/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/wallets",
+    MARKETS: "/markets",
+    TRADING_PAIRS: "/trading-pairs"
+};
+
 export const widechainAPIs = {
     BASE: "https://gateway.winex.pro/api/v0/ol/support",
     COINS_LIST: "/coins",

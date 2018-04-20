@@ -142,7 +142,7 @@ class Restore extends Component {
                             name={new_wallet.toUpperCase()}
                         />
                     </h5>
-                    <Link to="/dashboard">
+                    <Link to="/">
                         <div className="button outline">
                             <Translate
                                 component="span"
