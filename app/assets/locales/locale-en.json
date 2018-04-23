@@ -1058,6 +1058,7 @@
         }
     },
     "settings": {
+        "automatic": "Automatic Switching",
         "passwordLogin": "Login mode",
         "cloud_login": "Cloud Wallet Login",
         "local_wallet": "Local Wallet Login",
