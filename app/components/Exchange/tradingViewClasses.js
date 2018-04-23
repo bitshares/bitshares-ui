@@ -18,10 +18,31 @@ class SymbolInfo {
         this.quoteAsset = options.quoteAsset;
         this.baseAsset = options.baseAsset;
         this.minmov = 1;
-        this.has_intraday = true;
+
+        this.has_intraday = this.supported_resolutions.reduce(
+            (supported, r) => {
+                return supported || !isNaN(parseInt(r, 10));
+            },
+            false
+        );
         this.intraday_multipliers = this.supported_resolutions.filter(r => {
-            return r.indexOf("D") === -1 && r.indexOf("S") === -1;
+            return !isNaN(parseInt(r, 10));
         });
+
+        this.has_seconds = this.supported_resolutions.reduce((supported, r) => {
+            return supported || r.indexOf("S") !== -1;
+        }, false);
+        this.seconds_multipliers = this.supported_resolutions.filter(r => {
+            return r.indexOf("S") !== -1;
+        });
+
+        this.has_daily = this.supported_resolutions.reduce((supported, r) => {
+            return supported || r.indexOf("D") !== -1;
+        }, false);
+
+        this.has_daily = this.supported_resolutions.reduce((supported, r) => {
+            return supported || r.indexOf("D") !== -1;
+        }, false);
     }
 }
 
@@ -29,19 +50,33 @@ function getResolutionsFromBuckets(buckets) {
     let resolutions = buckets
         .map(r => {
             let minute = r / 60;
+            let day = minute / 60 / 24;
+            let week = day / 7;
+
             if (minute < 1) {
+                // below 1 minute we return Seconds
                 return r + "S";
-            } else if (minute < 60 * 24) return minute.toString();
-            else {
-                // below 1 day we return minutes
-                let day = minute / 60 / 24;
+            } else if (day < 1 && parseInt(minute, 10) === minute) {
+                // below 1 day we return Minutes
+                return minute.toString();
+            } else if (week < 1) {
+                // below 1 week we return Days
                 if (day >= 1) {
                     if (parseInt(day, 10) === day) {
                         if (day === 1) return "D";
                         return day + "D";
                     }
                 }
+            } else {
+                // we return weeks
+                if (week >= 1) {
+                    if (parseInt(week, 10) === week) {
+                        return week + "D";
+                    }
+                }
             }
+
+            return null;
         })
         .filter(a => !!a);
 
@@ -50,8 +85,13 @@ function getResolutionsFromBuckets(buckets) {
 
 function getBucketFromResolution(r) {
     if (r === "D") return 24 * 60 * 60;
-    if (r.indexOf("D") !== -1) {
-        return parseInt(r.replace("D"), 10) * 24 * 60 * 60;
+
+    if (r.indexOf("W") !== -1) {
+        return parseInt(r.replace("D", ""), 10) * 7 * 24 * 60 * 60;
+    } else if (r.indexOf("D") !== -1) {
+        return parseInt(r.replace("D", ""), 10) * 24 * 60 * 60;
+    } else if (r.indexOf("S") !== -1) {
+        return parseInt(r.replace("S", ""), 10);
     } else {
         return parseInt(r, 10) * 60;
     }
