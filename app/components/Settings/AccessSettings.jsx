@@ -51,6 +51,7 @@ class ApiNode extends React.Component {
     }
 
     remove(url, name, e) {
+        e.target.id = "remove"; // Override target.id to allow Removal Node Modal
         this.props.triggerModal(e, url, name);
     }
 
@@ -133,9 +134,7 @@ class ApiNode extends React.Component {
                         />
                         <label />
                     </span>
-                    <p style={{fontSize: "80%"}}>
-                        Automatic Switching {autoActive ? "on" : "off"}
-                    </p>
+                    <Translate component="p" style={{fontSize: "80%"}} content="settings.automatic" /> {autoActive ? "on" : "off"}
                 </div>
             ) : (
                 <div className="api-status">
