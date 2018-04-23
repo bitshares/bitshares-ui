@@ -13,7 +13,6 @@ import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
 import Header from "components/Layout/Header";
-// import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
@@ -25,6 +24,7 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
+import titleUtils from "common/titleUtils";
 
 class App extends React.Component {
     constructor(props) {
@@ -122,13 +122,25 @@ class App extends React.Component {
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
-        
+
         isIncognito(
             function(incognito) {
                 this.setState({incognito});
             }.bind(this)
         );
         updateGatewayBackers();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.onRouteChanged();
+        }
+    }
+
+    onRouteChanged() {
+        document.title = titleUtils.GetTitleByPath(
+            this.props.router.location.pathname
+        );
     }
 
     _onIgnoreIncognitoWarning() {
