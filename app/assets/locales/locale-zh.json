@@ -1163,7 +1163,8 @@
         "show_star_2": "",
         "quote": "报价货币：",
         "search": "搜索更多交易对",
-        "order_value": "委单价值"
+        "order_value": "委单价值",
+        "group_order_limit": "分组"
     },
     "fees": {
         "title": "费率表"

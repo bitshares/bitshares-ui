@@ -1286,7 +1286,8 @@
         "buy_description":
             "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "sell_description":
-            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
+            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "group_order_limit": "Group"
     },
     "dashboard": {
         "starred_markets": "Starred Markets",

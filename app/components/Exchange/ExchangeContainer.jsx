@@ -107,6 +107,9 @@ class ExchangeContainer extends React.Component {
                             "miniDepthChart",
                             true
                         );
+                    },
+                    trackedGroupsConfig: () => {
+                        return MarketsStore.getState().trackedGroupsConfig;
                     }
                 }}
             >

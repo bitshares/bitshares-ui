@@ -144,6 +144,43 @@ class OrderBookRowHorizontal extends React.Component {
     }
 }
 
+class GroupOrderLimitSelector extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            groupLimit: ""
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({groupLimit: this.props.currentGroupOrderLimit});
+    }
+
+    render() {
+        const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
+            key => (
+                <option value={key} key={key}>
+                    {`${key / 100}%`}
+                </option>
+            )
+        );
+
+        return (
+            <select
+                dir="rtl"
+                value={this.state.groupLimit}
+                onChange={this.props.handleGroupOrderLimitChange}
+            >
+                <Translate
+                    content="exchange.group_order_limit"
+                    component="option"
+                />
+                {trackedGroupsOptionsList}
+            </select>
+        );
+    }
+}
+
 class OrderBook extends React.Component {
     constructor(props) {
         super();
@@ -332,7 +369,10 @@ class OrderBook extends React.Component {
             totalBids,
             quoteSymbol,
             baseSymbol,
-            horizontal
+            horizontal,
+            trackedGroupsConfig,
+            currentGroupOrderLimit,
+            handleGroupOrderLimitChange
         } = this.props;
         let {
             showAllAsks,
@@ -564,6 +604,23 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
+                                {this.state.flip ? (
+                                    <div className="float-right header-sub-title grouped_order">
+                                        {trackedGroupsConfig ? (
+                                            <GroupOrderLimitSelector
+                                                trackedGroupsConfig={
+                                                    trackedGroupsConfig
+                                                }
+                                                handleGroupOrderLimitChange={
+                                                    handleGroupOrderLimitChange
+                                                }
+                                                currentGroupOrderLimit={
+                                                    currentGroupOrderLimit
+                                                }
+                                            />
+                                        ) : null}
+                                    </div>
+                                ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
@@ -675,6 +732,23 @@ class OrderBook extends React.Component {
                                                 className="icon-14px"
                                             />
                                         </span>
+                                    </div>
+                                ) : null}
+                                {!this.state.flip ? (
+                                    <div className="float-right header-sub-title grouped_order">
+                                        {trackedGroupsConfig ? (
+                                            <GroupOrderLimitSelector
+                                                trackedGroupsConfig={
+                                                    trackedGroupsConfig
+                                                }
+                                                handleGroupOrderLimitChange={
+                                                    handleGroupOrderLimitChange
+                                                }
+                                                currentGroupOrderLimit={
+                                                    currentGroupOrderLimit
+                                                }
+                                            />
+                                        ) : null}
                                     </div>
                                 ) : null}
                                 <div
@@ -878,11 +952,29 @@ class OrderBook extends React.Component {
                         </StickyTable>
                     </div>
                     <div className="v-align no-padding align-center grid-block footer shrink bottom-header">
-                        <div onClick={this.props.moveOrderBook}>
+                        <div
+                            className="v-align grid-block align-center"
+                            style={{height: "2rem", overflow: "hidden"}}
+                        >
                             <Icon
                                 name="thumb-untack"
                                 className="icon-14px order-book-button-h"
+                                style={{top: "-0.5rem"}}
+                                onClick={this.props.moveOrderBook}
                             />
+                        </div>
+                        <div className="v-align grid-block align-center grouped_order">
+                            {trackedGroupsConfig ? (
+                                <GroupOrderLimitSelector
+                                    trackedGroupsConfig={trackedGroupsConfig}
+                                    handleGroupOrderLimitChange={
+                                        handleGroupOrderLimitChange
+                                    }
+                                    currentGroupOrderLimit={
+                                        currentGroupOrderLimit
+                                    }
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>

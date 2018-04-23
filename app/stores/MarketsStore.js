@@ -96,21 +96,24 @@ class MarketsStore {
             precision: 5
         };
 
-        this.bindListeners({
-            onSubscribeMarket: MarketsActions.subscribeMarket,
-            onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
-            onChangeBase: MarketsActions.changeBase,
-            onChangeBucketSize: MarketsActions.changeBucketSize,
-            onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
-            onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
-            onCallOrderUpdate: MarketsActions.callOrderUpdate,
-            onClearMarket: MarketsActions.clearMarket,
-            onGetMarketStats: MarketsActions.getMarketStats,
-            onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
-            onSwitchMarket: MarketsActions.switchMarket,
-            onFeedUpdate: MarketsActions.feedUpdate,
-            onToggleStars: MarketsActions.toggleStars
-        });
+        (this.trackedGroupsConfig = []),
+            this.bindListeners({
+                onSubscribeMarket: MarketsActions.subscribeMarket,
+                onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
+                onChangeBase: MarketsActions.changeBase,
+                onChangeBucketSize: MarketsActions.changeBucketSize,
+                onCancelLimitOrderSuccess:
+                    MarketsActions.cancelLimitOrderSuccess,
+                onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
+                onCallOrderUpdate: MarketsActions.callOrderUpdate,
+                onClearMarket: MarketsActions.clearMarket,
+                onGetMarketStats: MarketsActions.getMarketStats,
+                onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
+                onSwitchMarket: MarketsActions.switchMarket,
+                onFeedUpdate: MarketsActions.feedUpdate,
+                onToggleStars: MarketsActions.toggleStars,
+                onGetTrackedGroupsConfig: MarketsActions.getTrackedGroupsConfig
+            });
     }
 
     onGetCollateralPositions(payload) {
@@ -1383,6 +1386,12 @@ class MarketsStore {
                     )
                 );
             });
+        }
+    }
+
+    onGetTrackedGroupsConfig(result) {
+        if (result.trackedGroupsConfig.length > 0) {
+            this.trackedGroupsConfig = result.trackedGroupsConfig;
         }
     }
 }

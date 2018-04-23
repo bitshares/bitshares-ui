@@ -1979,15 +1979,21 @@
     .api-status {
         .low {
             color: $bid-color;
-            > svg > path { fill: $bid-color; }
+            > svg > path {
+                fill: $bid-color;
+            }
         }
         .medium {
             color: $call-color;
-            > svg > path { fill: $call-color; }
+            > svg > path {
+                fill: $call-color;
+            }
         }
         .high {
             color: $ask-color;
-            > svg > path { fill: $ask-color; }
+            > svg > path {
+                fill: $ask-color;
+            }
         }
     }
 
@@ -2252,6 +2258,25 @@
             font-size: 0.9rem;
             height: 28px;
             margin: 0 0 1px;
+
+            > option {
+                background-color: $light-panel-bg-color;
+            }
+        }
+    }
+
+    .grouped_order {
+        select {
+            float: right;
+            width: auto;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            color: $primary-text-color;
+            border-bottom: 1px dotted rgb(160, 159, 159);
+            font-size: 0.7rem;
+            height: 17px;
+            margin: 0 0 1px 10px;
 
             > option {
                 background-color: $light-panel-bg-color;

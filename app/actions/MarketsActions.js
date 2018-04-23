@@ -651,6 +651,27 @@ class MarketsActions {
     toggleStars() {
         return true;
     }
+
+    getTrackedGroupsConfig() {
+        return dispatch => {
+            Apis.instance()
+                .orders_api()
+                .exec("get_tracked_groups", [])
+                .then(result => {
+                    dispatch({
+                        trackedGroupsConfig: result
+                    });
+                })
+                .catch(err => {
+                    console.log(
+                        "current node api does not support grouped orders."
+                    );
+                    dispatch({
+                        trackedGroupsConfig: []
+                    });
+                });
+        };
+    }
 }
 
 export default alt.createActions(MarketsActions);

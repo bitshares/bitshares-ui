@@ -241,7 +241,8 @@ class Exchange extends React.Component {
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 425),
-            currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3) // 3 months
+            currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
+            currentGroupOrderLimit: ""
         };
     }
 
@@ -260,6 +261,8 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
+        MarketsActions.getTrackedGroupsConfig();
+
         SettingsActions.changeViewSetting.defer({
             [this._getLastMarketKey()]:
                 this.props.quoteAsset.get("symbol") +
@@ -1185,6 +1188,10 @@ class Exchange extends React.Component {
         });
     }
 
+    _onGroupOrderLimitChange(e) {
+        this.setState({currentGroupOrderLimit: e.target.value});
+    }
+
     render() {
         let {
             currentAccount,
@@ -1204,7 +1211,8 @@ class Exchange extends React.Component {
             totals,
             feedPrice,
             buckets,
-            coreAsset
+            coreAsset,
+            trackedGroupsConfig
         } = this.props;
 
         const {
@@ -1584,6 +1592,11 @@ class Exchange extends React.Component {
                     buySellTop ? 4 : 1
                 }`}
                 currentAccount={this.props.currentAccount.get("id")}
+                handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
+                    this
+                )}
+                trackedGroupsConfig={trackedGroupsConfig}
+                currentGroupOrderLimit={this.state.currentGroupOrderLimit}
             />
         );
 
