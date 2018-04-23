@@ -2,14 +2,24 @@
     border: none;
 }
 
+.header-chart-panel .group {
+    margin: 1px 0;
+}
+
 /*Header buttons background color */
 .header-chart-panel .button,
 .symbol-search-dialog .symbol-block input,
 input.symbol-edit,
 .favored-list-container span
- {
-    /*background: red;
-    border-color: green;*/
+{
+    background: #262626;
+    border: none;
+}
+
+.header-chart-panel .button.disabled {
+    background: #262626;
+    border: none;
+    opacity: 50%;
 }
 
 /* Disabled features background color */
