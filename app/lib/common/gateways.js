@@ -11,11 +11,26 @@ import {
 } from "api/apiConfig";
 
 export const availableGateways = {
+    BRIDGE: {
+        id: "BRIDGE",
+        name: "CRYPTO-BRIDGE",
+        baseAPI: cryptoBridgeAPIs,
+        isEnabled: true,
+        selected: false,
+        singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
+        addressValidatorAsset: true, // Address validator requires output_asset parameter
+        useFullAssetName: true, // Adds <gateway>.<asset> to memo and address object
+        intermediateAccount: "cryptobridge", // Fixed intermediateAccount
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
     OPEN: {
         id: "OPEN",
         name: "OPENLEDGER",
         baseAPI: openledgerAPIs,
-        isEnabled: true,
+        isEnabled: false,
         selected: false,
         options: {
             enabled: false,
@@ -26,7 +41,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RUDEX",
         baseAPI: rudexAPIs,
-        isEnabled: true,
+        isEnabled: false,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -41,23 +56,8 @@ export const availableGateways = {
         id: "WIN",
         name: "Winex",
         baseAPI: widechainAPIs,
-        isEnabled: true,
+        isEnabled: false,
         selected: false,
-        options: {
-            enabled: false,
-            selected: false
-        }
-    },
-    BRIDGE: {
-        id: "BRIDGE",
-        name: "CRYPTO-BRIDGE",
-        baseAPI: cryptoBridgeAPIs,
-        isEnabled: true,
-        selected: false,
-        singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
-        addressValidatorAsset: true, // Address validator requires output_asset parameter
-        useFullAssetName: true, // Adds <gateway>.<asset> to memo and address object
-        intermediateAccount: "cryptobridge", // Fixed intermediateAccount
         options: {
             enabled: false,
             selected: false
