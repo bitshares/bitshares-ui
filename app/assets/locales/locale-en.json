@@ -583,39 +583,7 @@
         "eq_value_header": "Value ({asset})",
         "qty": "Qty",
         "quote": "Quote",
-        "total": "Total ({asset})",
-        "cryptobridge": {
-            "id": "BCO Staking ID",
-            "title": "Stake your BridgeCoin (BCO) to earn profits from the DEX",
-            "staking_amount": "Staking amount",
-            "remaining": "Remaining in staking period",
-            "staking_text1":
-                "Everyone who stakes their BCO is entitled to %(percent)s of the trading profits from the <b>CryptoBridge decentralized exchange</b>. Staking will lock your coins for the time you specify below. During the staking period you automatically take part in the payout distributions. Payouts happen bi-weekly.",
-            "staking_text2":
-                "A longer staking duration results in a bigger payout factor. After the staking period has been reached, you can reclaim your staked BCO balance with the <b>'Claim Now'</b> button. The blockchain fee to start a new staking position is currently set at <b>%(fee)s BCO.</b>",
-            "staking_text3":
-                "You can only stake BCO that you have deposited into the <b>CryptoBridge decentralized exchange</b>. You can find more information about the advantages of the <b>CryptoBridge decentralized exchange</b> and its profit sharing at <a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>. More details on how payouts happen and how bonuses are applied are also available on the <a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>. ",
-            "status": "Status",
-            "staking": "Staking",
-            "days": "%(days)s Days",
-            "available": "Available for claiming",
-            "month_1": "1 Month (%(bonus)s bonus)",
-            "month_3": "3 Month (%(bonus)s bonus)",
-            "month_6": "6 Month (%(bonus)s bonus)",
-            "month_12": "12 Month (%(bonus)s bonus)",
-            "month_1_plural": "1 Month",
-            "month_3_plural": "3 Months",
-            "month_6_plural": "6 Months",
-            "month_12_plural": "12 Months",
-            "amount_bco": "Amount of BCO to stake",
-            "stake_bco": "Create a new BCO staking position",
-            "length": "Staking duration",
-            "understand":
-                "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds.",
-            "no_balances": "You have no open BridgeCoin staking positions.",
-            "bco_available": "Available: ",
-            "bco_not_available": "No BCO available "
-        }
+        "total": "Total ({asset})"
     },
     "pagination": {
         "newer": "Newer",
@@ -1898,6 +1866,40 @@
             "errors": {
                 "minWithdraw": "Minimum amount：%(min_amount)s"
             }
+        }
+    },
+    "cryptobridge": {
+        "account": {
+            "id": "BCO Staking ID",
+            "title": "Stake your BridgeCoin (BCO) to earn profits from the DEX",
+            "staking_amount": "Staking amount",
+            "remaining": "Remaining in staking period",
+            "staking_text1":
+                "Everyone who stakes their BCO is entitled to %(percent)s of the trading profits from the <b>CryptoBridge decentralized exchange</b>. Staking will lock your coins for the time you specify below. During the staking period you automatically take part in the payout distributions. Payouts happen bi-weekly.",
+            "staking_text2":
+                "A longer staking duration results in a bigger payout factor. After the staking period has been reached, you can reclaim your staked BCO balance with the <b>'Claim Now'</b> button. The blockchain fee to start a new staking position is currently set at <b>%(fee)s BCO.</b>",
+            "staking_text3":
+                "You can only stake BCO that you have deposited into the <b>CryptoBridge decentralized exchange</b>. You can find more information about the advantages of the <b>CryptoBridge decentralized exchange</b> and its profit sharing at <a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>. More details on how payouts happen and how bonuses are applied are also available on the <a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>. ",
+            "status": "Status",
+            "staking": "Staking",
+            "days": "%(days)s Days",
+            "available": "Available for claiming",
+            "month_1": "1 Month (%(bonus)s bonus)",
+            "month_3": "3 Month (%(bonus)s bonus)",
+            "month_6": "6 Month (%(bonus)s bonus)",
+            "month_12": "12 Month (%(bonus)s bonus)",
+            "month_1_plural": "1 Month",
+            "month_3_plural": "3 Months",
+            "month_6_plural": "6 Months",
+            "month_12_plural": "12 Months",
+            "amount_bco": "Amount of BCO to stake",
+            "stake_bco": "Create a new BCO staking position",
+            "length": "Staking duration",
+            "understand":
+                "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds.",
+            "no_balances": "You have no open BridgeCoin staking positions.",
+            "bco_available": "Available: ",
+            "bco_not_available": "No BCO available "
         }
     }
 }

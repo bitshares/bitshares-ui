@@ -240,12 +240,12 @@ class AccountStakeCreateNew extends React.Component {
                 {currentBalance.get("balance") ? (
                     <Translate
                         component="span"
-                        content="account.cryptobridge.bco_available"
+                        content="cryptobridge.account.bco_available"
                     />
                 ) : (
                     <Translate
                         component="span"
-                        content="account.cryptobridge.bco_not_available"
+                        content="cryptobridge.account.bco_not_available"
                     />
                 )}{" "}
                 <BalanceComponent balance={currentBalance.get("id")} />
@@ -254,46 +254,46 @@ class AccountStakeCreateNew extends React.Component {
 
         const stakingPeriods = [
             {
-                name1: "account.cryptobridge.month_1",
+                name1: "cryptobridge.account.month_1",
                 bonus: "0%",
-                name: counterpart.translate("account.cryptobridge.month_1", {
+                name: counterpart.translate("cryptobridge.account.month_1", {
                     bonus: "0%"
                 }),
                 monthName: counterpart.translate(
-                    "account.cryptobridge.month_1_plural"
+                    "cryptobridge.account.month_1_plural"
                 ),
                 value: 2678400
             },
             {
-                name1: "account.cryptobridge.month_3",
+                name1: "cryptobridge.account.month_3",
                 bonus: "20%",
-                name: counterpart.translate("account.cryptobridge.month_3", {
+                name: counterpart.translate("cryptobridge.account.month_3", {
                     bonus: "20%"
                 }),
                 monthName: counterpart.translate(
-                    "account.cryptobridge.month_3_plural"
+                    "cryptobridge.account.month_3_plural"
                 ),
                 value: 7776000
             },
             {
-                name1: "account.cryptobridge.month_6",
+                name1: "cryptobridge.account.month_6",
                 bonus: "50%",
-                name: counterpart.translate("account.cryptobridge.month_6", {
+                name: counterpart.translate("cryptobridge.account.month_6", {
                     bonus: "50%"
                 }),
                 monthName: counterpart.translate(
-                    "account.cryptobridge.month_6_plural"
+                    "cryptobridge.account.month_6_plural"
                 ),
                 value: 15552000
             },
             {
-                name1: "account.cryptobridge.month_12",
+                name1: "cryptobridge.account.month_12",
                 bonus: "100%",
-                name: counterpart.translate("account.cryptobridge.month_12", {
+                name: counterpart.translate("cryptobridge.account.month_12", {
                     bonus: "100%"
                 }),
                 monthName: counterpart.translate(
-                    "account.cryptobridge.month_12_plural"
+                    "cryptobridge.account.month_12_plural"
                 ),
                 value: 31536000
             }
@@ -307,23 +307,23 @@ class AccountStakeCreateNew extends React.Component {
             <div>
                 <Translate
                     component="h2"
-                    content="account.cryptobridge.title"
+                    content="cryptobridge.account.title"
                 />
                 <Translate
                     component="p"
-                    content="account.cryptobridge.staking_text1"
+                    content="cryptobridge.account.staking_text1"
                     with={{percent: "50%"}}
                     unsafe
                 />
                 <Translate
                     component="p"
-                    content="account.cryptobridge.staking_text2"
+                    content="cryptobridge.account.staking_text2"
                     with={{fee}}
                     unsafe
                 />
                 <Translate
                     component="p"
-                    content="account.cryptobridge.staking_text3"
+                    content="cryptobridge.account.staking_text3"
                     unsafe
                 />
 
@@ -331,7 +331,7 @@ class AccountStakeCreateNew extends React.Component {
                     <Translate
                         component="label"
                         unsafe
-                        content="account.cryptobridge.amount_bco"
+                        content="cryptobridge.account.amount_bco"
                     />
                     <AmountSelector
                         label="transfer.amount"
@@ -351,7 +351,7 @@ class AccountStakeCreateNew extends React.Component {
                     <Translate
                         component="label"
                         style={{marginTop: "1rem"}}
-                        content="account.cryptobridge.length"
+                        content="cryptobridge.account.length"
                     />
                     <select
                         role="combobox"
@@ -388,7 +388,7 @@ class AccountStakeCreateNew extends React.Component {
                                 )}
                                 checked={confirmationCheckboxChecked}
                             />
-                            {counterpart("account.cryptobridge.understand", {
+                            {counterpart("cryptobridge.account.understand", {
                                 amount,
                                 month: stakingPeriod.monthName
                             })}
@@ -400,7 +400,7 @@ class AccountStakeCreateNew extends React.Component {
                             onClick={this._stakeBalance.bind(this)}
                             className="button"
                         >
-                            <Translate content="account.cryptobridge.stake_bco" />
+                            <Translate content="cryptobridge.account.stake_bco" />
                         </button>
                     </div>
                 </div>
