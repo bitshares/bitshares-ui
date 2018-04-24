@@ -1,5 +1,5 @@
 import ls from "./localStorage";
-import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
+import {cryptoBridgeAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const blockTradesStorage = new ls("");
 
@@ -15,7 +15,7 @@ function setCacheClearTimer(key) {
 }
 
 export function fetchCoins(
-    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.COINS_LIST
 ) {
     const key = "fetchCoins_" + url;
     let currentPromise = fetchInProgess[key];
@@ -47,7 +47,7 @@ export function fetchCoins(
 }
 
 export function fetchCoinsSimple(
-    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.COINS_LIST
 ) {
     return fetch(url)
         .then(reply =>
@@ -62,7 +62,7 @@ export function fetchCoinsSimple(
 }
 
 export function fetchTradingPairs(
-    url = blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.TRADING_PAIRS
 ) {
     const key = "fetchTradingPairs_" + url;
     let currentPromise = fetchInProgess[key];
@@ -98,7 +98,7 @@ export function fetchTradingPairs(
 export function getDepositLimit(
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.DEPOSIT_LIMIT
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.DEPOSIT_LIMIT
 ) {
     return fetch(
         url +
@@ -127,7 +127,7 @@ export function estimateOutput(
     inputAmount,
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_OUTPUT
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.ESTIMATE_OUTPUT
 ) {
     return fetch(
         url +
@@ -158,7 +158,7 @@ export function estimateInput(
     outputAmount,
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_INPUT
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.ESTIMATE_INPUT
 ) {
     return fetch(
         url +
@@ -189,7 +189,7 @@ export function estimateInput(
 }
 
 export function getActiveWallets(
-    url = openledgerAPIs.BASE + openledgerAPIs.ACTIVE_WALLETS
+    url = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.ACTIVE_WALLETS
 ) {
     const key = "getActiveWallets_" + url;
     let currentPromise = fetchInProgess[key];
@@ -230,42 +230,55 @@ export function getDepositAddress({coin, account, stateCallback}) {
 
     let body_string = JSON.stringify(body);
 
-    fetch(openledgerAPIs.BASE + "/simple-api/get-last-address", {
-        method: "POST",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
-        .then(
-            data => {
-                data.json().then(
-                    json => {
-                        let address = {
-                            address: json.address,
-                            memo: json.memo || null,
-                            error: json.error || null,
-                            loading: false
-                        };
-                        if (stateCallback) stateCallback(address);
-                    },
-                    error => {
-                        console.log("error: ", error);
-                        if (stateCallback)
-                            stateCallback({address: error.message, memo: null});
-                    }
-                );
-            },
-            error => {
-                console.log("error: ", error);
-                if (stateCallback)
-                    stateCallback({address: error.message, memo: null});
-            }
-        )
-        .catch(err => {
-            console.log("fetch error:", err);
+    if (stateCallback)
+        // TODO remove once /simple-api/get-last-address is implemented
+        stateCallback({
+            address: "TEMP_OUTPUT_UNTIL_GET_LAST_ADDRESS_IS_IMPLEMENTED",
+            memo: null,
+            error: null,
+            loading: false
         });
+
+    if (false)
+        fetch(cryptoBridgeAPIs.BASE + "/simple-api/get-last-address", {
+            method: "POST",
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }),
+            body: body_string
+        })
+            .then(
+                data => {
+                    data.json().then(
+                        json => {
+                            let address = {
+                                address: json.address,
+                                memo: json.memo || null,
+                                error: json.error || null,
+                                loading: false
+                            };
+                            if (stateCallback) stateCallback(address);
+                        },
+                        error => {
+                            console.log("error: ", error);
+                            if (stateCallback)
+                                stateCallback({
+                                    address: error.message,
+                                    memo: null
+                                });
+                        }
+                    );
+                },
+                error => {
+                    console.log("error: ", error);
+                    if (stateCallback)
+                        stateCallback({address: error.message, memo: null});
+                }
+            )
+            .catch(err => {
+                console.log("fetch error:", err);
+            });
 }
 
 let depositRequests = {};
@@ -273,7 +286,7 @@ export function requestDepositAddress({
     inputCoinType,
     outputCoinType,
     outputAddress,
-    url = openledgerAPIs.BASE,
+    url = cryptoBridgeAPIs.BASE,
     stateCallback
 }) {
     let body = {
@@ -381,15 +394,29 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 symbol: inputCoin.walletSymbol,
                 supportsMemos: outputCoin.supportsOutputMemos,
                 depositAllowed: isDepositAllowed,
-                withdrawalAllowed: isWithdrawalAllowed
+                withdrawalAllowed: isWithdrawalAllowed,
+
+                /* CryptoBridge */
+
+                requiredConfirmations: outputCoin.requiredConfirmations,
+
+                depositAccount: outputCoin.depositAccount,
+                depositFeeEnabled: outputCoin.depositFeeEnabled,
+                depositFeeTimeframe: outputCoin.depositFeeTimeframe,
+                depositFeePercentage: outputCoin.depositFeePercentage,
+                depositFeeMinimum: outputCoin.depositFeeMinimum,
+                depositFeePercentageLowAmounts:
+                    outputCoin.depositFeePercentageLowAmounts,
+                info: outputCoin.info
             });
         }
     });
+
     return backedCoins;
 }
 
 export function validateAddress({
-    url = blockTradesAPIs.BASE,
+    url = cryptoBridgeAPIs.BASE,
     walletType,
     newAddress,
     output_coin_type = null,

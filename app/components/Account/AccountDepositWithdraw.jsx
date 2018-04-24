@@ -21,6 +21,7 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
+import CryptoBridgeGateway from "../DepositWithdraw/cryptobridge/CryptoBridgeGateway";
 
 class AccountDepositWithdraw extends React.Component {
     static propTypes = {
@@ -54,6 +55,10 @@ class AccountDepositWithdraw extends React.Component {
             !utils.are_equal_shallow(
                 nextProps.openLedgerBackedCoins,
                 this.props.openLedgerBackedCoins
+            ) ||
+            !utils.are_equal_shallow(
+                nextProps.cryptoBridgeBackedCoins,
+                this.props.cryptoBridgeBackedCoins
             ) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
@@ -118,11 +123,27 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
-    renderServices(openLedgerGatewayCoins, rudexGatewayCoins) {
+    renderServices(
+        openLedgerGatewayCoins,
+        rudexGatewayCoins,
+        cryptoBridgeGatewayCoins
+    ) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let {account} = this.props;
         let {olService, btService, rudexService} = this.state;
+
+        serList.push({
+            name: "CryptoBridge",
+            template: (
+                <div>
+                    <CryptoBridgeGateway
+                        account={account}
+                        coins={cryptoBridgeGatewayCoins}
+                    />
+                </div>
+            )
+        });
 
         serList.push({
             name: "Openledger (OPEN.X)",
@@ -359,9 +380,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+        let cryptoBridgeGatewayCoins = this.props.cryptoBridgeBackedCoins.map(
+            coin => {
+                return coin;
+            }
+        );
+
         let services = this.renderServices(
             openLedgerGatewayCoins,
-            rudexGatewayCoins
+            rudexGatewayCoins,
+            cryptoBridgeGatewayCoins
         );
 
         let options = services.map((services_obj, index) => {
@@ -373,6 +401,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         const serviceNames = [
+            "CryptoBridge",
             "Winex",
             "GDEX",
             "OPEN",
@@ -380,6 +409,7 @@ class AccountDepositWithdraw extends React.Component {
             "TRADE",
             "BITKAPITAL"
         ];
+
         const currentServiceName = serviceNames[activeService];
         const currentServiceDown = servicesDown.get(currentServiceName);
 
@@ -412,18 +442,6 @@ class AccountDepositWithdraw extends React.Component {
                     <div>
                         <div className="grid-block vertical medium-horizontal no-margin no-padding">
                             <div className="medium-6 small-order-2 medium-order-1">
-                                <Translate
-                                    component="label"
-                                    className="left-label"
-                                    content="gateway.service"
-                                />
-                                <select
-                                    onChange={this.onSetService.bind(this)}
-                                    className="bts-select"
-                                    value={activeService}
-                                >
-                                    {options}
-                                </select>
                                 {currentServiceDown ? (
                                     <Translate
                                         style={{
@@ -513,6 +531,10 @@ export default connect(DepositStoreWrapper, {
             ),
             winexBackedCoins: GatewayStore.getState().backedCoins.get(
                 "WIN",
+                []
+            ),
+            cryptoBridgeBackedCoins: GatewayStore.getState().backedCoins.get(
+                "BRIDGE",
                 []
             ),
             servicesDown: GatewayStore.getState().down || {}
