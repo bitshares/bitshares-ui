@@ -8,7 +8,6 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
-import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
 import utils from "common/utils";
 import FormattedTime from "../Utility/FormattedTime";
@@ -234,10 +233,7 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get("name") : "";
 
-        var icon = <Icon name="asset" className="asset" size="4x" />;
-
         // Add <a to any links included in the description
-
         let description = assetUtils.parseDescription(
             asset.options.description
         );

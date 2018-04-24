@@ -57,7 +57,7 @@ class AccountSelector extends React.Component {
         if (typeof account === "undefined")
             account = ChainStore.getAccount(accountName);
 
-        if (this.props.onAccountChanged && account) 
+        if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
 
         if (!this.props.typeahead && !!accountName)
@@ -78,13 +78,13 @@ class AccountSelector extends React.Component {
     getError() {
         let {account, error} = this.props;
 
-        if (!error && account && !this.getNameType(account.get("name")))
+        if (!error && account && !this.getInputType(account.get("name")))
             error = counterpart.translate("account.errors.invalid");
 
         return error;
     }
 
-    getNameType(value) {
+    getInputType(value) {
         // OK
         if (!value) return null;
         if (value[0] === "#" && utils.is_object_id("1.2." + value.substring(1)))
@@ -96,19 +96,18 @@ class AccountSelector extends React.Component {
     }
 
     onSelected(e) {
-        this.setState({ inputChanged: false });
+        this.setState({inputChanged: false});
         let _accountName = this.getVerifiedAccountName(e);
         let _account = ChainStore.getAccount(_accountName);
         if (_account) {
             this.props.onChange(_accountName);
             this.props.onAccountChanged(_account);
         }
-        
     }
 
     onInputChanged(e) {
         let {onChange, onAccountChanged, accountName, typeahead} = this.props;
-        this.setState({ inputChanged: true });
+        this.setState({inputChanged: true});
 
         let _accountName = this.getVerifiedAccountName(e);
         let _account = ChainStore.getAccount(_accountName);
@@ -129,7 +128,7 @@ class AccountSelector extends React.Component {
         let value = null;
         if (typeof e === "string") {
             value = e;
-        } else if(e && e.target) {
+        } else if (e && e.target) {
             value = e.target.value.trim();
         } else {
             value = "";
@@ -163,7 +162,7 @@ class AccountSelector extends React.Component {
         e.preventDefault();
         if (!this.getError() && onAction && !disableActionButton) {
             if (account) onAction(account);
-            else if (this.getNameType(accountName) === "pubkey")
+            else if (this.getInputType(accountName) === "pubkey")
                 onAction(accountName);
         }
     }
@@ -179,24 +178,27 @@ class AccountSelector extends React.Component {
             myActiveAccounts
         } = this.props;
 
+        const inputType = this.getInputType(accountName);
+
         let typeAheadAccounts = [];
         let error = this.getError();
         let linkedAccounts = myActiveAccounts;
         linkedAccounts = linkedAccounts.concat(contacts);
 
         // Selected Account
+        let displayText;
         if (account) {
             account.isKnownScammer = accountUtils.isKnownScammer(
                 account.get("name")
             );
-            account.accountType = this.getNameType(account.get("name"));
+            account.accountType = this.getInputType(account.get("name"));
             account.accountStatus = ChainStore.getAccountMemberStatus(account);
-            account.statusText = !account.isKnownScammer ?
-                counterpart.translate(
-                    "account.member." + account.accountStatus
-                ) : 
-                counterpart.translate("account.member.suspected_scammer");
-            account.displayText =
+            account.statusText = !account.isKnownScammer
+                ? counterpart.translate(
+                      "account.member." + account.accountStatus
+                  )
+                : counterpart.translate("account.member.suspected_scammer");
+            displayText =
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id" ? account.get("name") : null;
@@ -204,20 +206,27 @@ class AccountSelector extends React.Component {
 
         // Without Typeahead Error Handling
         if (!typeahead) {
-            if (!account)
+            if (!account && accountName && inputType !== "pubkey") {
                 error = counterpart.translate("account.errors.unknown");
+            }
         } else {
-            if (allowPubKey && account.accountType === "pubkey")
-                account.displayText = "Public Key";
-            else if (!error && accountName && !account)
+            if (
+                !(allowPubKey && inputType === "pubkey") &&
+                !error &&
+                accountName &&
+                !account
+            )
                 error = counterpart.translate("account.errors.unknown");
         }
+        if (allowPubKey && inputType === "pubkey") displayText = "Public Key";
 
         if (account && linkedAccounts)
-            account.isFavorite = myActiveAccounts.has(account.get("name")) || contacts.has(account.get("name"));
+            account.isFavorite =
+                myActiveAccounts.has(account.get("name")) ||
+                contacts.has(account.get("name"));
 
         if (typeahead && linkedAccounts) {
-            linkedAccounts.map(function(accountName) {  
+            linkedAccounts.map(function(accountName) {
                 let account = ChainStore.getAccount(accountName);
                 let account_status = ChainStore.getAccountMemberStatus(account);
                 let account_status_text = !accountUtils.isKnownScammer(
@@ -237,11 +246,11 @@ class AccountSelector extends React.Component {
             });
         }
 
-        let typeaheadHasAccount = !!accountName ? 
-            typeAheadAccounts.reduce((boolean, a) => {
-                return boolean || a.label === accountName;
-            }, false) :
-            false;
+        let typeaheadHasAccount = !!accountName
+            ? typeAheadAccounts.reduce((boolean, a) => {
+                  return boolean || a.label === accountName;
+              }, false)
+            : false;
 
         if (!!accountName && !typeaheadHasAccount && this.state.inputChanged) {
             let _account = ChainStore.getAccount(accountName);
@@ -309,7 +318,7 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {
             disabled:
-                !(account || (account && account.accountType === "pubkey")) ||
+                !(account || inputType === "pubkey") ||
                 error ||
                 disableActionButton
         });
@@ -336,8 +345,8 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{account &&
-                                        account.displayText}
+                                    {account && account.statusText}&nbsp;{!!displayText &&
+                                        displayText}
                                 </span>
                                 {linked_status}
                             </label>
@@ -371,7 +380,11 @@ class AccountSelector extends React.Component {
                                 <TypeAhead
                                     items={typeAheadAccounts}
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
@@ -394,7 +407,11 @@ class AccountSelector extends React.Component {
                             ) : (
                                 <input
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
