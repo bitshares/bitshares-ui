@@ -453,7 +453,8 @@ class RouterTransitioner {
      * @private
      */
     _onResetError(failingNodeUrl, nextState, replaceState, err) {
-        console.error("onResetError:", err);
+        console.error("onResetError:", err, failingNodeUrl);
+        this.willTransitionToInProgress = false;
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
