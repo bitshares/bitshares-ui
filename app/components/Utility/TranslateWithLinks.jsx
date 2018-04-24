@@ -123,8 +123,13 @@ export default class TranslateWithLinks extends React.Component {
                         break;
 
                     case "icon":
+                        let title = name.replace("-", "_");
                         value = (
-                            <Icon className={key.className} name={key.value} />
+                            <Icon
+                                className={key.className}
+                                name={key.value}
+                                title={title}
+                            />
                         );
                         break;
 

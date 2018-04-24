@@ -88,12 +88,14 @@ class AccountPermissionTree extends React.Component {
                             {isOK ? (
                                 <Icon
                                     name="checkmark-circle"
+                                    title="icons.checkmark_circle"
                                     size="1x"
                                     className="success"
                                 />
                             ) : (
                                 <Icon
                                     name="cross-circle"
+                                    title="icons.cross_circle"
                                     size="1x"
                                     className="error"
                                 />
@@ -182,12 +184,14 @@ class KeyPermissionBranch extends React.Component {
                         {isOK ? (
                             <Icon
                                 name="checkmark-circle"
+                                title="icons.checkmark_circle"
                                 size="1x"
                                 className="success"
                             />
                         ) : (
                             <Icon
                                 name="cross-circle"
+                                title="icons.cross_circle"
                                 size="1x"
                                 className="error"
                             />

@@ -782,7 +782,7 @@ class DepositWithdrawContent extends DecimalChecker {
                         : parseInt(currentBalance.get("balance"), 10)
                 )}
             >
-                <Icon name="clippy" />
+                <Icon name="clippy" title="icons.clippy" />
             </button>
         );
 

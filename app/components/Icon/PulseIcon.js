@@ -30,6 +30,7 @@ export default class PulseIcon extends Component {
     render() {
         const {onIcon, rest} = this.props;
         const {name = onIcon} = this.state || {};
-        return <Icon name={name} {...rest} />;
+        const title = name.replace("-", "_");
+        return <Icon name={name} title={title} {...rest} />;
     }
 }

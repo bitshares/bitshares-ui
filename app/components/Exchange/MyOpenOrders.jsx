@@ -188,7 +188,11 @@ class OrderRow extends React.Component {
                             className="order-cancel"
                             onClick={this.props.onCancel}
                         >
-                            <Icon name="cross-circle" className="icon-14px" />
+                            <Icon
+                                name="cross-circle"
+                                title="icons.cross_circle"
+                                className="icon-14px"
+                            />
                         </a>
                     )}
                 </td>
@@ -313,7 +317,11 @@ class OrderRow extends React.Component {
                             "symbol"
                         )}`}
                     >
-                        <Icon name="trade" className="icon-14px" />
+                        <Icon
+                            name="trade"
+                            title="icons.trade"
+                            className="icon-14px"
+                        />
                     </Link>
                 </td>
                 {isMyAccount ? (

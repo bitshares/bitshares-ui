@@ -198,6 +198,7 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
+                                        title="icons.download"
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -269,14 +270,14 @@ class Footer extends React.Component {
                         {block_height ? (
                             <div className="grid-block shrink">
                                 <div
-                                    onMouseEnter={() => {
-                                        this.setState({showNodesPopup: true});
-                                    }}
-                                    onMouseLeave={() => {
-                                        this.setState({showNodesPopup: false});
-                                    }}
+                                onMouseEnter={() => {
+                                    this.setState({showNodesPopup: true});
+                                }}
+                                onMouseLeave={() => {
+                                    this.setState({showNodesPopup: false});
+                                }}
                                     style={{position: "relative"}}
-                                >
+                            >
                                     <div className="footer-status">
                                         {!connected ? (
                                             <span className="warning">

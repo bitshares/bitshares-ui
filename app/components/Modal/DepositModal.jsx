@@ -260,7 +260,11 @@ class DepositModalContent extends DecimalChecker {
             </div>
         ) : (
             <div>
-                <Icon size="5x" name="minus-circle" />
+                <Icon
+                    size="5x"
+                    name="minus-circle"
+                    title="icons.minus_circle"
+                />
                 <p className="error-msg">
                     <Translate content="modal.deposit.address_generation_error" />
                 </p>
