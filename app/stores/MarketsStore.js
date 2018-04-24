@@ -96,24 +96,26 @@ class MarketsStore {
             precision: 5
         };
 
-        (this.trackedGroupsConfig = []),
-            this.bindListeners({
-                onSubscribeMarket: MarketsActions.subscribeMarket,
-                onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
-                onChangeBase: MarketsActions.changeBase,
-                onChangeBucketSize: MarketsActions.changeBucketSize,
-                onCancelLimitOrderSuccess:
-                    MarketsActions.cancelLimitOrderSuccess,
-                onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
-                onCallOrderUpdate: MarketsActions.callOrderUpdate,
-                onClearMarket: MarketsActions.clearMarket,
-                onGetMarketStats: MarketsActions.getMarketStats,
-                onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
-                onSwitchMarket: MarketsActions.switchMarket,
-                onFeedUpdate: MarketsActions.feedUpdate,
-                onToggleStars: MarketsActions.toggleStars,
-                onGetTrackedGroupsConfig: MarketsActions.getTrackedGroupsConfig
-            });
+        this.trackedGroupsConfig = [];
+        this.currentGroupLimit = 0;
+
+        this.bindListeners({
+            onSubscribeMarket: MarketsActions.subscribeMarket,
+            onUnSubscribeMarket: MarketsActions.unSubscribeMarket,
+            onChangeBase: MarketsActions.changeBase,
+            onChangeBucketSize: MarketsActions.changeBucketSize,
+            onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
+            onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
+            onCallOrderUpdate: MarketsActions.callOrderUpdate,
+            onClearMarket: MarketsActions.clearMarket,
+            onGetMarketStats: MarketsActions.getMarketStats,
+            onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
+            onSwitchMarket: MarketsActions.switchMarket,
+            onFeedUpdate: MarketsActions.feedUpdate,
+            onToggleStars: MarketsActions.toggleStars,
+            onGetTrackedGroupsConfig: MarketsActions.getTrackedGroupsConfig,
+            onChangeCurrentGroupLimit: MarketsActions.changeCurrentGroupLimit
+        });
     }
 
     onGetCollateralPositions(payload) {
@@ -215,6 +217,7 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
+        console.log("onSubscribeMarket", result);
         if (result.switchMarket) {
             this.marketReady = false;
             return this.emitChange();
@@ -1393,6 +1396,10 @@ class MarketsStore {
         if (result.trackedGroupsConfig.length > 0) {
             this.trackedGroupsConfig = result.trackedGroupsConfig;
         }
+    }
+
+    onChangeCurrentGroupLimit(groupLimit) {
+        this.currentGroupLimit = groupLimit;
     }
 }
 

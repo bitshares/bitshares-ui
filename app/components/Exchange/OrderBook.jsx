@@ -174,6 +174,7 @@ class GroupOrderLimitSelector extends React.Component {
                 <Translate
                     content="exchange.group_order_limit"
                     component="option"
+                    value="0"
                 />
                 {trackedGroupsOptionsList}
             </select>

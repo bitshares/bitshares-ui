@@ -241,8 +241,7 @@ class Exchange extends React.Component {
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 425),
-            currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
-            currentGroupOrderLimit: ""
+            currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3) // 3 months
         };
     }
 
@@ -792,7 +791,11 @@ class Exchange extends React.Component {
             let currentSub = this.props.sub.split("_");
             MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
                 () => {
-                    this.props.subToMarket(this.props, size);
+                    this.props.subToMarket(
+                        this.props,
+                        size,
+                        this.props.currentGroupOrderLimit
+                    );
                 }
             );
         }
@@ -1189,7 +1192,22 @@ class Exchange extends React.Component {
     }
 
     _onGroupOrderLimitChange(e) {
-        this.setState({currentGroupOrderLimit: e.target.value});
+        if (e) e.preventDefault();
+        let groupLimit = e.target.value;
+        MarketsActions.changeCurrentGroupLimit(e.target.value);
+        if (groupLimit !== this.props.currentGroupOrderLimit) {
+            MarketsActions.changeCurrentGroupLimit(groupLimit);
+            let currentSub = this.props.sub.split("_");
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
+                () => {
+                    this.props.subToMarket(
+                        this.props,
+                        this.props.bucketSize,
+                        groupLimit
+                    );
+                }
+            );
+        }
     }
 
     render() {

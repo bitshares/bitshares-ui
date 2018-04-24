@@ -110,6 +110,9 @@ class ExchangeContainer extends React.Component {
                     },
                     trackedGroupsConfig: () => {
                         return MarketsStore.getState().trackedGroupsConfig;
+                    },
+                    currentGroupOrderLimit: () => {
+                        return MarketsStore.getState().currentGroupLimit;
                     }
                 }}
             >
@@ -251,16 +254,20 @@ class ExchangeSubscriber extends React.Component {
         }
     }
 
-    _subToMarket(props, newBucketSize) {
-        let {quoteAsset, baseAsset, bucketSize} = props;
+    _subToMarket(props, newBucketSize, newGroupLimit) {
+        let {quoteAsset, baseAsset, bucketSize, currentGroupOrderLimit} = props;
         if (newBucketSize) {
             bucketSize = newBucketSize;
+        }
+        if (newGroupLimit) {
+            currentGroupOrderLimit = newGroupLimit;
         }
         if (quoteAsset.get("id") && baseAsset.get("id")) {
             MarketsActions.subscribeMarket.defer(
                 baseAsset,
                 quoteAsset,
-                bucketSize
+                bucketSize,
+                currentGroupOrderLimit
             );
             this.setState({
                 sub: `${quoteAsset.get("id")}_${baseAsset.get("id")}`
