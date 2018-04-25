@@ -12,7 +12,8 @@ import {
     SettleOrder,
     Asset,
     didOrdersChange,
-    Price
+    Price,
+    GroupedOrder
 } from "common/MarketClasses";
 
 // import {
@@ -53,7 +54,9 @@ class MarketsStore {
             flatBids: [],
             flatAsks: [],
             flatCalls: [],
-            flatSettles: []
+            flatSettles: [],
+            groupedBids: [],
+            groupedAsks: []
         };
         this.totals = {
             bid: 0,
@@ -181,7 +184,9 @@ class MarketsStore {
             flatBids: [],
             flatAsks: [],
             flatCalls: [],
-            flatSettles: []
+            flatSettles: [],
+            groupedBids: [],
+            groupedAsks: []
         };
         this.totals = {
             bid: 0,
@@ -217,7 +222,6 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
-        console.log("onSubscribeMarket", result);
         if (result.switchMarket) {
             this.marketReady = false;
             return this.emitChange();
@@ -433,6 +437,22 @@ class MarketsStore {
         if (result.price) {
             this.priceHistory = result.price;
             this._priceChart();
+        }
+
+        if (result.groupedOrdersBids && result.groupedOrdersAsks) {
+            const groupedOrdersBids = [];
+            const groupedOrdersAsks = [];
+            result.groupedOrdersBids.forEach((order, index) => {
+                groupedOrdersBids.push(new GroupedOrder(order, assets, true));
+            });
+            result.groupedOrdersAsks.forEach((order, index) => {
+                groupedOrdersAsks.push(new GroupedOrder(order, assets, false));
+            });
+            // Update groupedOrderbook
+            this._groupedOrderBook(groupedOrdersBids, groupedOrdersAsks);
+
+            // Update depth chart data
+            // this._depthChart();
         }
 
         marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
@@ -988,6 +1008,39 @@ class MarketsStore {
         }
 
         // console.log("time to construct orderbook:", new Date() - orderBookStart, "ms");
+    }
+
+    _groupedOrderBook(groupedOrdersBids = null, groupedOrdersAsks = null) {
+        const bidsTotal = bids => {
+            // Sum bids
+            if (bids.length > 1) {
+                for (let i = 1; i < bids.length - 1; i++) {
+                    bids[i] = bids[i].sum(bids[i - 1]);
+                }
+            }
+            return bids;
+        };
+        const asksTotal = asks => {
+            // Sum asks
+            if (asks.length > 1) {
+                for (let i = 1; i < asks.length - 1; i++) {
+                    asks[i] = asks[i].sum(asks[i - 1]);
+                }
+            }
+            return asks;
+        };
+
+        // Assign to store variables
+        if (groupedOrdersBids && groupedOrdersAsks) {
+            if (__DEV__)
+                console.time("Construct grouped orders " + this.activeMarket);
+            this.marketData.groupedBids = bidsTotal(groupedOrdersBids);
+            this.marketData.groupedAsks = asksTotal(groupedOrdersAsks);
+            if (__DEV__)
+                console.timeEnd(
+                    "Construct grouped orders " + this.activeMarket
+                );
+        }
     }
 
     constructCalls(callsArray) {

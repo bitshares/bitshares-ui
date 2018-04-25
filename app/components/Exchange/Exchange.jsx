@@ -1193,8 +1193,8 @@ class Exchange extends React.Component {
 
     _onGroupOrderLimitChange(e) {
         if (e) e.preventDefault();
-        let groupLimit = e.target.value;
-        MarketsActions.changeCurrentGroupLimit(e.target.value);
+        let groupLimit = parseInt(e.target.value);
+        MarketsActions.changeCurrentGroupLimit(groupLimit);
         if (groupLimit !== this.props.currentGroupOrderLimit) {
             MarketsActions.changeCurrentGroupLimit(groupLimit);
             let currentSub = this.props.sub.split("_");
@@ -1230,7 +1230,8 @@ class Exchange extends React.Component {
             feedPrice,
             buckets,
             coreAsset,
-            trackedGroupsConfig
+            trackedGroupsConfig,
+            currentGroupOrderLimit
         } = this.props;
 
         const {
@@ -1241,7 +1242,9 @@ class Exchange extends React.Component {
             flatBids,
             flatAsks,
             flatCalls,
-            flatSettles
+            flatSettles,
+            groupedBids,
+            groupedAsks
         } = marketData;
 
         let {
@@ -1614,7 +1617,9 @@ class Exchange extends React.Component {
                     this
                 )}
                 trackedGroupsConfig={trackedGroupsConfig}
-                currentGroupOrderLimit={this.state.currentGroupOrderLimit}
+                currentGroupOrderLimit={currentGroupOrderLimit}
+                groupedBids={groupedBids}
+                groupedAsks={groupedAsks}
             />
         );
 

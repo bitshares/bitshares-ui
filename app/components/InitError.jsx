@@ -8,6 +8,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import counterpart from "counterpart";
 
+const optionalApis = {enableCrypto: true, enableOrders: true};
 class InitError extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (
@@ -27,7 +28,7 @@ class InitError extends React.Component {
             setting: "apiServer",
             value: e.target.value
         });
-        Apis.reset(e.target.value, true);
+        Apis.reset(e.target.value, true, 4000, optionalApis);
     }
 
     onReloadClick(e) {

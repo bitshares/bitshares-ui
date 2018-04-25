@@ -28,7 +28,9 @@ class OrderBookRowVertical extends React.Component {
         const isCall = order.isCall();
         let integerClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let price = (
             <PriceText price={order.getPrice()} quote={quote} base={base} />
@@ -83,7 +85,9 @@ class OrderBookRowHorizontal extends React.Component {
 
         let integerClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let price = (
             <PriceText price={order.getPrice()} quote={quote} base={base} />
@@ -123,6 +127,95 @@ class OrderBookRowHorizontal extends React.Component {
                     order.isMine(this.props.currentAccount) ? "my-order" : ""
                 }
             >
+                {position === "left" ? (
+                    <td>{total}</td>
+                ) : (
+                    <td style={{width: "25%"}} className={integerClass}>
+                        {price}
+                    </td>
+                )}
+                <td>{position === "left" ? value : amount}</td>
+                <td>{position === "left" ? amount : value}</td>
+                {position === "right" ? (
+                    <td>{total}</td>
+                ) : (
+                    <td style={{width: "25%"}} className={integerClass}>
+                        {price}
+                    </td>
+                )}
+            </tr>
+        );
+    }
+}
+
+class GroupedOrderBookRowVertical extends React.Component {
+    render() {
+        let {order, quote, base, final} = this.props;
+        const isBid = order.isBid();
+        let integerClass = isBid ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let price = (
+            <PriceText price={order.getPrice()} quote={quote} base={base} />
+        );
+        return (
+            <div
+                onClick={this.props.onClick}
+                className={classnames("sticky-table-row order-row", {
+                    "final-row": final
+                })}
+            >
+                <div className="cell left">
+                    {utils.format_number(
+                        order[isBid ? "amountForSale" : "amountToReceive"](),
+                        base.get("precision")
+                    )}
+                </div>
+                <div className="cell">
+                    {utils.format_number(
+                        order[isBid ? "amountToReceive" : "amountForSale"](),
+                        quote.get("precision")
+                    )}
+                </div>
+                <div className={`cell ${integerClass} right`}>{price}</div>
+            </div>
+        );
+    }
+}
+
+class GroupedOrderBookRowHorizontal extends React.Component {
+    render() {
+        let {order, quote, base, position} = this.props;
+        const isBid = order.isBid();
+
+        let integerClass = isBid ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let price = (
+            <PriceText price={order.getPrice()} quote={quote} base={base} />
+        );
+        let amount = isBid
+            ? utils.format_number(
+                  order.amountToReceive(),
+                  quote.get("precision")
+              )
+            : utils.format_number(
+                  order.amountForSale(),
+                  quote.get("precision")
+              );
+        let value = isBid
+            ? utils.format_number(order.amountForSale(), base.get("precision"))
+            : utils.format_number(
+                  order.amountToReceive(),
+                  base.get("precision")
+              );
+        let total = isBid
+            ? utils.format_number(order.totalForSale(), base.get("precision"))
+            : utils.format_number(
+                  order.totalToReceive(),
+                  base.get("precision")
+              );
+
+        return (
+            <tr onClick={this.props.onClick}>
                 {position === "left" ? (
                     <td>{total}</td>
                 ) : (
@@ -373,7 +466,9 @@ class OrderBook extends React.Component {
             horizontal,
             trackedGroupsConfig,
             currentGroupOrderLimit,
-            handleGroupOrderLimitChange
+            handleGroupOrderLimitChange,
+            groupedBids,
+            groupedAsks
         } = this.props;
         let {
             showAllAsks,
@@ -400,65 +495,148 @@ class OrderBook extends React.Component {
         let bidRows = null,
             askRows = null;
         if (base && quote) {
-            bidRows = combinedBids.map((order, index) => {
-                return horizontal ? (
-                    <OrderBookRowHorizontal
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        position={!this.state.flip ? "left" : "right"}
-                        currentAccount={this.props.currentAccount}
-                    />
-                ) : (
-                    <OrderBookRowVertical
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        final={index === 0}
-                        currentAccount={this.props.currentAccount}
-                    />
-                );
-            });
+            // limit orders or grouped orders
+            if (this.props.currentGroupOrderLimit !== 0) {
+                bidRows = groupedBids.map((order, index) => {
+                    return horizontal ? (
+                        <GroupedOrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            position={!this.state.flip ? "left" : "right"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <GroupedOrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            final={index === 0}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
 
-            let tempAsks = combinedAsks;
-            if (!horizontal) {
-                tempAsks.sort((a, b) => {
-                    return b.getPrice() - a.getPrice();
+                let tempAsks = groupedAsks;
+                if (!horizontal) {
+                    tempAsks.sort((a, b) => {
+                        return b.getPrice() - a.getPrice();
+                    });
+                }
+                askRows = tempAsks.map((order, index) => {
+                    return horizontal ? (
+                        <GroupedOrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            position={!this.state.flip ? "right" : "left"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <GroupedOrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            final={0 === index}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
+            } else {
+                bidRows = combinedBids.map((order, index) => {
+                    return horizontal ? (
+                        <OrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            position={!this.state.flip ? "left" : "right"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <OrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            final={index === 0}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
+
+                let tempAsks = combinedAsks;
+                if (!horizontal) {
+                    tempAsks.sort((a, b) => {
+                        return b.getPrice() - a.getPrice();
+                    });
+                }
+                askRows = tempAsks.map((order, index) => {
+                    return horizontal ? (
+                        <OrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            position={!this.state.flip ? "right" : "left"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <OrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            final={0 === index}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
                 });
             }
-            askRows = tempAsks.map((order, index) => {
-                return horizontal ? (
-                    <OrderBookRowHorizontal
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        type={order.type}
-                        position={!this.state.flip ? "right" : "left"}
-                        currentAccount={this.props.currentAccount}
-                    />
-                ) : (
-                    <OrderBookRowVertical
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        type={order.type}
-                        final={0 === index}
-                        currentAccount={this.props.currentAccount}
-                    />
-                );
-            });
         }
 
         if (this.props.horizontal) {

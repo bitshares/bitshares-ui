@@ -160,13 +160,23 @@ class MarketsActions {
                                 ]);
                         }
 
-                        let groupedOrdersPromise = null;
+                        let groupedOrdersBidsPromise = [];
+                        let groupedOrdersAsksPromise = [];
                         if (currentGroupLimit !== 0) {
-                            groupedOrdersPromise = Apis.instance()
+                            groupedOrdersBidsPromise = Apis.instance()
                                 .orders_api()
                                 .exec("get_grouped_limit_orders", [
                                     base.get("id"),
                                     quote.get("id"),
+                                    currentGroupLimit, // group
+                                    null, // price start
+                                    100 // limit must not exceed 101
+                                ]);
+                            groupedOrdersAsksPromise = Apis.instance()
+                                .orders_api()
+                                .exec("get_grouped_limit_orders", [
+                                    quote.get("id"),
+                                    base.get("id"),
                                     currentGroupLimit, // group
                                     null, // price start
                                     100 // limit must not exceed 101
@@ -257,7 +267,8 @@ class MarketsActions {
                                     base.get("id"),
                                     quote.get("id")
                                 ]),
-                            groupedOrdersPromise
+                            groupedOrdersBidsPromise,
+                            groupedOrdersAsksPromise
                         ])
                             .then(results => {
                                 const data1 = results[5] || [];
@@ -275,7 +286,8 @@ class MarketsActions {
                                     quote: quote,
                                     inverted: inverted,
                                     ticker: results[7],
-                                    groupedOrders: results[8]
+                                    groupedOrdersBids: results[8],
+                                    groupedOrdersAsks: results[9]
                                 });
                             })
                             .catch(error => {
@@ -310,13 +322,23 @@ class MarketsActions {
                         .exec("get_settle_orders", [marketAsset.id, 300]);
                 }
 
-                let groupedOrdersPromise = null;
+                let groupedOrdersBidsPromise = [];
+                let groupedOrdersAsksPromise = [];
                 if (currentGroupLimit !== 0) {
-                    groupedOrdersPromise = Apis.instance()
+                    groupedOrdersBidsPromise = Apis.instance()
                         .orders_api()
                         .exec("get_grouped_limit_orders", [
                             base.get("id"),
                             quote.get("id"),
+                            currentGroupLimit, // group
+                            null, // price start
+                            100 // limit must not exceed 101
+                        ]);
+                    groupedOrdersAsksPromise = Apis.instance()
+                        .orders_api()
+                        .exec("get_grouped_limit_orders", [
+                            quote.get("id"),
+                            base.get("id"),
                             currentGroupLimit, // group
                             null, // price start
                             100 // limit must not exceed 101
@@ -402,7 +424,8 @@ class MarketsActions {
                     Apis.instance()
                         .db_api()
                         .exec("get_ticker", [base.get("id"), quote.get("id")]),
-                    groupedOrdersPromise
+                    groupedOrdersBidsPromise,
+                    groupedOrdersAsksPromise
                 ])
                     .then(results => {
                         const data1 = results[8] || [];
@@ -421,7 +444,8 @@ class MarketsActions {
                             quote: quote,
                             inverted: inverted,
                             ticker: results[9],
-                            groupedOrders: results[10]
+                            groupedOrdersBids: results[10],
+                            groupedOrdersAsks: results[11]
                         });
                     })
                     .catch(error => {

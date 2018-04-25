@@ -26,6 +26,7 @@ ChainStore.setDispatchFrequency(60);
 let connect = true;
 let connectionManager;
 let oldChain = "";
+const optionalApis = {enableCrypto: true, enableOrders: true};
 
 const filterAndSortURLs = (count, latencies) => {
     let urls = SettingsStore.getState()
@@ -240,7 +241,13 @@ const willTransitionTo = (
         });
     };
 
-    connectionManager = new Manager({url: connectionString, urls});
+    connectionManager = new Manager({
+        url: connectionString,
+        urls,
+        autoFallback: null,
+        closeCb: null,
+        optionalApis
+    });
     let connectionCheckPromise = !apiLatenciesCount
         ? _connectionCheckPromise
             ? _connectionCheckPromise

@@ -885,6 +885,181 @@ class SettleOrder extends LimitOrder {
     }
 }
 
+class GroupedOrder {
+    constructor(order, assets, is_bid) {
+        if (is_bid === undefined) {
+            throw new Error("GroupedOrder requires is_bid");
+        }
+        this.order = order;
+        this.assets = assets;
+        this.is_bid = is_bid;
+        this.max_price = order.max_price;
+        this.min_price = order.min_price;
+        this.total_for_sale = parseInt(order.total_for_sale, 10);
+
+        this._price = {
+            min: null,
+            max: null
+        };
+        this._for_sale = null;
+        this._to_receive = null;
+
+        const base = this.is_bid
+            ? new Asset({
+                  asset_id: order.min_price.base.asset_id,
+                  amount: parseInt(order.min_price.base.amount, 10),
+                  precision: assets[order.min_price.base.asset_id].precision
+              })
+            : new Asset({
+                  asset_id: order.max_price.quote.asset_id,
+                  amount: parseInt(order.max_price.quote.amount, 10),
+                  precision: assets[order.max_price.quote.asset_id].precision
+              });
+        const quote = this.is_bid
+            ? new Asset({
+                  asset_id: order.min_price.quote.asset_id,
+                  amount: parseInt(order.min_price.quote.amount, 10),
+                  precision: assets[order.min_price.quote.asset_id].precision
+              })
+            : new Asset({
+                  asset_id: order.max_price.base.asset_id,
+                  amount: parseInt(order.max_price.base.amount, 10),
+                  precision: assets[order.max_price.base.asset_id].precision
+              });
+
+        this.sell_price = new Price({
+            base,
+            quote
+        });
+
+        this.base = base;
+        this.quote = quote;
+
+        this.sum_for_sale = this.amountForSale();
+        this.sum_to_receive = this.amountToReceive();
+    }
+
+    isBid() {
+        return this.is_bid;
+    }
+
+    sellPrice() {
+        return this.sell_price.toReal();
+    }
+
+    getPrice() {
+        return this.sellPrice();
+    }
+
+    getOriginalPrice(priceType = "min") {
+        if (this._price[priceType]) return this._price[priceType];
+        if (priceType === "min") {
+            const base = this.is_bid
+                ? new Asset({
+                      asset_id: order.min_price.base.asset_id,
+                      amount: parseInt(order.min_price.base.amount, 10),
+                      precision: assets[order.min_price.base.asset_id].precision
+                  })
+                : new Asset({
+                      asset_id: order.min_price.quote.asset_id,
+                      amount: parseInt(order.min_price.quote.amount, 10),
+                      precision:
+                          assets[order.min_price.quote.asset_id].precision
+                  });
+            const quote = this.is_bid
+                ? new Asset({
+                      asset_id: order.min_price.quote.asset_id,
+                      amount: parseInt(order.min_price.quote.amount, 10),
+                      precision:
+                          assets[order.min_price.quote.asset_id].precision
+                  })
+                : new Asset({
+                      asset_id: order.min_price.base.asset_id,
+                      amount: parseInt(order.min_price.base.amount, 10),
+                      precision: assets[order.min_price.base.asset_id].precision
+                  });
+        } else {
+            const base = this.is_bid
+                ? new Asset({
+                      asset_id: order.max_price.base.asset_id,
+                      amount: parseInt(order.max_price.base.amount, 10),
+                      precision: assets[order.max_price.base.asset_id].precision
+                  })
+                : new Asset({
+                      asset_id: order.max_price.quote.asset_id,
+                      amount: parseInt(order.max_price.quote.amount, 10),
+                      precision:
+                          assets[order.max_price.quote.asset_id].precision
+                  });
+            const quote = this.is_bid
+                ? new Asset({
+                      asset_id: order.max_price.quote.asset_id,
+                      amount: parseInt(order.max_price.quote.amount, 10),
+                      precision:
+                          assets[order.max_price.quote.asset_id].precision
+                  })
+                : new Asset({
+                      asset_id: order.max_price.base.asset_id,
+                      amount: parseInt(order.max_price.base.amount, 10),
+                      precision: assets[order.max_price.base.asset_id].precision
+                  });
+        }
+
+        return (this._price[priceType] = new Price({
+            base,
+            quote
+        }));
+    }
+
+    amountForSale() {
+        if (this._for_sale) return this._for_sale;
+        // base asset being sold
+        return (this._for_sale = limitByPrecision(
+            this.total_for_sale / this.base.toSats(),
+            this.base.precision
+        ));
+    }
+
+    amountToReceive() {
+        if (this._to_receive) return this._to_receive;
+        // quote asset being purchased
+        // TODO: The caculation is inaccurate and need total_to_receive from api.
+        const base_amount = this.amountForSale();
+        return (this._to_receive = parseFloat(
+            (base_amount / this.getPrice()).toFixed(8)
+        ));
+    }
+
+    clone() {
+        return new GroupedOrder(this.order, this.assets, this.is_bid);
+    }
+
+    sum(order) {
+        let newOrder = this.clone();
+        newOrder.sum_for_sale += order.sum_for_sale;
+        newOrder.sum_to_receive += order.sum_to_receive;
+        newOrder._clearCache();
+        return newOrder;
+    }
+
+    totalForSale() {
+        return this.sum_for_sale;
+    }
+
+    totalToReceive() {
+        return this.sum_to_receive;
+    }
+
+    _clearCache() {
+        this._price = {
+            min: null,
+            max: null
+        };
+        this._for_sale = null;
+        this._to_receive = null;
+    }
+}
+
 export {
     Asset,
     Price,
@@ -895,5 +1070,6 @@ export {
     LimitOrder,
     CallOrder,
     SettleOrder,
-    didOrdersChange
+    didOrdersChange,
+    GroupedOrder
 };
