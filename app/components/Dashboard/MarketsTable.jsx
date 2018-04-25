@@ -166,8 +166,9 @@ class MarketRow extends React.Component {
                         )}_${this.props.base.get("symbol")}`}
                     >
                         <AssetImage
-                            style={{maxWidth: 40, margin: "5px 20px 5px 0"}}
+                            style={{width: 40, margin: "5px 20px 5px 0"}}
                             marketId={marketID}
+                            lazy={true}
                         />
                         <AssetName dataPlace="top" name={quote.get("symbol")} />{" "}
                         :{" "}

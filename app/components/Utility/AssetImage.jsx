@@ -1,6 +1,7 @@
 import React from "react";
 import CryptoBridgeStore from "stores/CryptoBridgeStore";
 import {connect} from "alt-react";
+import LazyImage from "./LazyImage";
 
 class AssetImage extends React.Component {
     static propTypes = {
@@ -64,15 +65,15 @@ class AssetImage extends React.Component {
     }
 
     render() {
-        const {style} = this.props;
+        const {style, lazy} = this.props;
         const {src} = this.state;
 
         return src ? (
-            <img
-                className="align-center"
+            <LazyImage
                 onError={this._onImageError.bind(this)}
                 style={style || {}}
                 src={src}
+                lazy={lazy === true}
             />
         ) : (
             <span />
