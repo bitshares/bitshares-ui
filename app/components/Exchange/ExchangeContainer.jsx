@@ -10,11 +10,14 @@ import ChainTypes from "../Utility/ChainTypes";
 import {EmitterInstance} from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
+import Page404 from "../Page404/Page404";
 
 class ExchangeContainer extends React.Component {
     render() {
-        let symbols = this.props.params.marketID.split("_");
-
+        let symbols = this.props.params.marketID.toUpperCase().split("_");
+        if (symbols[0] === symbols[1]) {
+            return <Page404 />;
+        }
         return (
             <AltContainer
                 stores={[
