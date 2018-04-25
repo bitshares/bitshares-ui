@@ -339,13 +339,17 @@ function BindToChainState(Component, options = {}) {
                     this.default_props[key];
                 if (prop) {
                     let new_obj = ChainStore.getAsset(prop);
+
                     if (
                         new_obj === undefined &&
                         this.required_props.indexOf(key) === -1 &&
                         new_obj !== this.state[key]
                     )
                         new_state[key] = new_obj;
-                    else if (new_obj && new_obj !== this.state[key])
+                    else if (
+                        (new_obj && new_obj !== this.state[key]) ||
+                        new_obj === null
+                    )
                         new_state[key] = new_obj;
                     ++all_objects_counter;
                     if (new_obj !== undefined) ++resolved_objects_counter;
@@ -513,7 +517,13 @@ function BindToChainState(Component, options = {}) {
 
         render() {
             const props = omit(this.props, this.all_chain_props);
-
+            if (Component.name === "ExchangeSubscriber")
+                console.log(
+                    "props:",
+                    this.all_chain_props,
+                    "state:",
+                    this.state
+                );
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
                     if (typeof options !== "undefined" && options.show_loader) {
