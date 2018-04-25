@@ -947,7 +947,7 @@ class WithdrawModalNew extends React.Component {
                     ) : null}
 
                     {/*GATEWAY SELECTION*/}
-                    <div style={{marginBottom: "1em"}}>
+                    <div style={{marginBottom: "1em", display: "none"}}>
                         {selectedGateway
                             ? gatewaySelector.call(this, {
                                   selectedGateway,

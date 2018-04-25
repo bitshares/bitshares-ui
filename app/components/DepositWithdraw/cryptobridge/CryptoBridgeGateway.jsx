@@ -9,6 +9,7 @@ import {
     RecentTransactions,
     TransactionWrapper
 } from "components/Account/RecentTransactions";
+import DepositWithdrawAssetSelector from "../DepositWithdrawAssetSelector";
 import Immutable from "immutable";
 import LoadingIndicator from "../../LoadingIndicator";
 
@@ -80,9 +81,23 @@ class CryptoBridgeGateway extends React.Component {
         });
     }
 
+    onAssetSelected = asset => {
+        this.setState({
+            activeCoin: asset
+        });
+
+        let setting = {};
+        setting[
+            `activeCoin_${this.props.provider}_${this.state.action}`
+        ] = asset;
+        SettingsActions.changeViewSetting(setting);
+    };
+
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
+
+        const isDeposit = this.state.action === "deposit";
 
         const coinIssuer = {
             name: "cryptobridge",
@@ -104,31 +119,17 @@ class CryptoBridgeGateway extends React.Component {
             }
         });
 
-        let coinOptions = filteredCoins
-            .map(coin => {
-                let option =
-                    action === "deposit"
-                        ? coin.backingCoinType.toUpperCase()
-                        : coin.symbol;
-                return (
-                    <option value={option} key={coin.symbol}>
-                        {option}
-                    </option>
-                );
-            })
-            .filter(a => {
-                return a !== null;
-            });
+        const symbolsToInclude = filteredCoins.map(coin => {
+            return coin.backingCoinType.toUpperCase();
+        });
 
         let coin = filteredCoins.filter(coin => {
-            return action === "deposit"
+            return isDeposit
                 ? coin.backingCoinType.toUpperCase() === activeCoin
                 : coin.symbol === activeCoin;
         })[0];
 
         if (!coin) coin = filteredCoins[0];
-
-        let isDeposit = this.state.action === "deposit";
 
         return (
             <div style={this.props.style}>
@@ -143,13 +144,15 @@ class CryptoBridgeGateway extends React.Component {
                                     content={"gateway.choose_" + action}
                                 />:{" "}
                             </label>
-                            <select
-                                className="external-coin-types bts-select"
-                                onChange={this.onSelectCoin.bind(this)}
-                                value={activeCoin}
-                            >
-                                {coinOptions}
-                            </select>
+                            <DepositWithdrawAssetSelector
+                                onSelect={this.onAssetSelected.bind(this)}
+                                include={symbolsToInclude}
+                                selectOnBlur
+                                defaultValue={activeCoin}
+                                includeBTS={false}
+                                usageContext={action}
+                                noLabel={true}
+                            />
                         </div>
                     </div>
 
@@ -162,11 +165,7 @@ class CryptoBridgeGateway extends React.Component {
                         </label>
                         <div style={{paddingBottom: 15}}>
                             <ul className="button-group segmented no-margin">
-                                <li
-                                    className={
-                                        action === "deposit" ? "is-active" : ""
-                                    }
-                                >
+                                <li className={isDeposit ? "is-active" : ""}>
                                     <a
                                         onClick={this.changeAction.bind(
                                             this,
@@ -176,11 +175,7 @@ class CryptoBridgeGateway extends React.Component {
                                         <Translate content="gateway.deposit" />
                                     </a>
                                 </li>
-                                <li
-                                    className={
-                                        action === "withdraw" ? "is-active" : ""
-                                    }
-                                >
+                                <li className={!isDeposit ? "is-active" : ""}>
                                     <a
                                         onClick={this.changeAction.bind(
                                             this,

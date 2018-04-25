@@ -47,7 +47,12 @@ export default class TypeAhead extends React.Component {
 
         if (disabled) return;
 
-        this.setState({value, filter: "", isMenuShowing: false});
+        this.setState({
+            value,
+            valueRender: asset.labelRender,
+            filter: "",
+            isMenuShowing: false
+        });
         if (this.props.onSelect) this.props.onSelect(value, asset);
     }
 
@@ -68,13 +73,7 @@ export default class TypeAhead extends React.Component {
             <Autocomplete
                 renderInput={this.renderInput}
                 ref="autocomplete"
-                items={
-                    props.items || [
-                        {id: "foo", label: "foo"},
-                        {id: "bar", label: "bar"},
-                        {id: "baz", label: "baz"}
-                    ]
-                }
+                items={props.items || []}
                 shouldItemRender={({label}) =>
                     label.toLowerCase().indexOf(filter.toLowerCase()) > -1
                 }
@@ -145,7 +144,7 @@ export default class TypeAhead extends React.Component {
                         isDisabled ? "typeahead__innerItem__disabled" : ""
                     }
                 >
-                    {item.label}
+                    {item.labelRender || item.label}
                 </span>
                 <span
                     style={{
@@ -163,10 +162,10 @@ export default class TypeAhead extends React.Component {
     getValueFromItem = item => item.label;
 
     selectedDisplay = () => {
-        const {value} = this.state;
+        const {value, valueRender} = this.state;
         return (
             <div onClick={this.onClick} className="typeahead__input">
-                {value}
+                {valueRender || value}
             </div>
         );
     };

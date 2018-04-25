@@ -1250,7 +1250,7 @@ class AccountOverview extends React.Component {
                                 )}
                             </Tab>
 
-                            <Tab title="account.cryptobridge.staking">
+                            <Tab title="cryptobridge.account.staking">
                                 <div className="grid-container">
                                     <div
                                         className="grid-content"

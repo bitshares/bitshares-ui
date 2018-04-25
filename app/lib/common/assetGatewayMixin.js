@@ -164,6 +164,10 @@ function gatewaySelector(args) {
             );
     });
 
+    if (selectedGateway) {
+        return <div />;
+    }
+
     return (
         <div className="container-row">
             <div className="no-margin no-padding">
