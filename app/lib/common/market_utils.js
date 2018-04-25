@@ -2,6 +2,10 @@ import utils from "./utils";
 import {ChainStore, ChainTypes} from "bitsharesjs/es";
 let {object_type} = ChainTypes;
 let opTypes = Object.keys(object_type);
+import {Asset} from "./MarketClasses";
+
+let priceCacheTTL = 1000 * 60 * 1; // 3 minutes
+let priceCache = {};
 
 const MarketUtils = {
     order_type(id) {
@@ -71,18 +75,55 @@ const MarketUtils = {
         }
     },
 
-    getFinalPrice(coreAsset, fromAsset, toAsset, marketStats, real = false) {
-        const toMarket = toAsset.get("symbol") + "_" + coreAsset.get("symbol");
-        const fromMarket =
-            fromAsset.get("symbol") + "_" + coreAsset.get("symbol");
+    getFinalPrice(
+        coreAsset,
+        fromAsset,
+        toAsset,
+        marketStats,
+        real = false,
+        forceRefresh = false
+    ) {
+        if (toAsset.get("id") === fromAsset.get("id")) {
+            return 1;
+        }
+
+        const {marketName: toMarket} = this.getMarketName(toAsset, coreAsset);
+        const {marketName: fromMarket} = this.getMarketName(
+            fromAsset,
+            coreAsset
+        );
+        const {marketName: directMarket} = this.getMarketName(
+            fromAsset,
+            toAsset
+        );
+
+        function cacheClearTimer(marketName) {
+            setTimeout(function() {
+                delete priceCache[marketName];
+            }, priceCacheTTL);
+        }
+
+        if (priceCache[directMarket] && !forceRefresh)
+            return priceCache[directMarket];
+
+        const directStats = marketStats.get(directMarket);
+        if (directStats && directStats.price && directStats.volumeBase !== 0) {
+            if (real) return directStats.price.toReal();
+            return directStats.price;
+        }
+
         let toPrice, fromPrice;
-        if (marketStats.get(fromMarket) && marketStats.get(fromMarket).price) {
-            fromPrice = marketStats.get(fromMarket).price.clone();
+
+        const fromStats = marketStats.get(fromMarket);
+        if (fromStats && fromStats.price) {
+            if (fromStats.volumeBase === 0 && fromStats.volumeQuote === 0)
+                return null;
+            fromPrice = fromStats.price.clone();
         }
-        if (marketStats.get(toMarket) && marketStats.get(toMarket).price) {
-            toPrice = marketStats.get(toMarket).price.clone();
+        const toStats = marketStats.get(toMarket);
+        if (toStats && toStats.price) {
+            toPrice = toStats.price.clone();
         }
-        if (toAsset.get("id") === fromAsset.get("id")) return 1;
 
         let finalPrice;
         if (toPrice && fromPrice) {
@@ -103,6 +144,9 @@ const MarketUtils = {
         ) {
             return null;
         }
+
+        priceCache[directMarket] = finalPrice;
+        cacheClearTimer();
         if (real) return finalPrice.toReal();
         return finalPrice;
     },
@@ -111,43 +155,35 @@ const MarketUtils = {
         amount,
         toAsset,
         fromAsset,
-        fullPrecision,
         marketStats,
-        coreAsset
+        coreAsset,
+        fullPrecision = true
     ) {
-        let toStats, fromStats;
+        let fromAmount = !fullPrecision
+            ? new Asset({
+                  real: amount,
+                  asset_id: fromAsset.get("id"),
+                  precision: fromAsset.get("precision")
+              })
+            : new Asset({
+                  amount,
+                  asset_id: fromAsset.get("id"),
+                  precision: fromAsset.get("precision")
+              });
 
-        let toID = toAsset.get("id");
-        let toSymbol = toAsset.get("symbol");
-        let fromID = fromAsset.get("id");
-        let fromSymbol = fromAsset.get("symbol");
-
-        if (!fullPrecision) {
-            amount = utils.get_asset_amount(amount, fromAsset);
-        }
-
-        if (coreAsset && marketStats) {
-            let coreSymbol = coreAsset.get("symbol");
-            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
-            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
-        }
-
-        let price = utils.convertPrice(
-            fromStats && fromStats.close
-                ? fromStats.close
-                : fromID === "1.3.0" || fromAsset.has("bitasset")
-                    ? fromAsset
-                    : null,
-            toStats && toStats.close
-                ? toStats.close
-                : toID === "1.3.0" || toAsset.has("bitasset") ? toAsset : null,
-            fromID,
-            toID
+        let price = this.getFinalPrice(
+            coreAsset,
+            fromAsset,
+            toAsset,
+            marketStats,
+            false
         );
 
-        let eqValue = price
-            ? utils.convertValue(price, amount, fromAsset, toAsset)
-            : null;
+        if (price === 1) return fromAmount.getAmount({real: !fullPrecision});
+        let eqValue =
+            price && price.toReal
+                ? fromAmount.times(price).getAmount({real: !fullPrecision})
+                : null;
         return eqValue;
     },
 

@@ -988,7 +988,9 @@ class AccountOverview extends React.Component {
 
         includedBalances.push(
             <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>{totalValueText}</td>
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
                 <td className="column-hide-small" />
                 <td style={{textAlign: "right"}}>
@@ -1000,7 +1002,9 @@ class AccountOverview extends React.Component {
 
         hiddenBalances.push(
             <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>{totalValueText}</td>
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
                 <td className="column-hide-small" />
                 <td style={{textAlign: "right"}}>
@@ -1155,6 +1159,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="exchange.price" />{" "}
                                                     (<AssetName
                                                         name={preferredUnit}
+                                                        noTip
                                                     />)
                                                 </th>
                                                 <th
@@ -1185,6 +1190,7 @@ class AccountOverview extends React.Component {
                                                                 arg: "asset"
                                                             }
                                                         ]}
+                                                        noTip
                                                     />
                                                 </th>
                                                 {showAssetPercent ? (
