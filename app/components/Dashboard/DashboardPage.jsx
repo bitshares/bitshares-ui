@@ -41,7 +41,7 @@ class DashboardPage extends React.Component {
             <div>
                 <div className="padding">
                     <h3>
-                        <Translate content="exchange.news" />
+                        <Translate content="cryptobridge.general.news" />
                     </h3>
                     <CryptoBridgeNews />
                 </div>
