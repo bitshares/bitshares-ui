@@ -160,6 +160,7 @@ class LoginSelector extends React.Component {
                         {!!childCount ? null : (
                             <div className="grid-block account-login-options">
                                 <Link
+                                    id="account_login_button"
                                     to="/create-account/password"
                                     className="button primary"
                                     data-intro={translator.translate(

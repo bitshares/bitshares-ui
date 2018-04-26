@@ -15,7 +15,7 @@ import {
     getDepositLimit,
     estimateOutput,
     estimateInput
-} from "common/blockTradesMethods";
+} from "common/gatewayMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";

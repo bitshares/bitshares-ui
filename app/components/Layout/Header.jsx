@@ -319,6 +319,8 @@ class Header extends React.Component {
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
+            Apis.instance() &&
+            Apis.instance().chain_id &&
             Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         if (starredAccounts.size) {
@@ -360,7 +362,7 @@ class Header extends React.Component {
                         (active.indexOf("dashboard") !== -1 &&
                             active.indexOf("account") === -1)
                 })}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
+                onClick={this._onNavigate.bind(this, "/")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>

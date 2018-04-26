@@ -25,7 +25,6 @@ import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
@@ -251,11 +250,6 @@ class Exchange extends React.Component {
     }
 
     componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") {
-            GatewayActions.fetchCoins.defer();
-            GatewayActions.fetchBridgeCoins.defer();
-        }
-
         this._checkFeeStatus();
     }
 

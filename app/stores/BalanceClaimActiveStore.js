@@ -148,36 +148,38 @@ class BalanceClaimActiveStore extends BaseStore {
 
     /** @return Promise.resolve(balances) */
     lookupBalanceObjects() {
-        console.log("BalanceClaimActiveStore.lookupBalanceObjects");
         var db = Apis.instance().db_api();
         var no_balance_address = new Set(this.no_balance_address);
         var no_bal_size = no_balance_address.size;
         for (let addy of this.addresses) no_balance_address.add(addy);
         // for(let addy of this.addresses) ChainStore.getBalanceObjects(addy) // Test with ChainStore
-        return db.exec("get_balance_objects", [this.addresses]).then(result => {
-            var balance_ids = [];
-            for (let balance of result) balance_ids.push(balance.id);
-            return db
-                .exec("get_vested_balances", [balance_ids])
-                .then(vested_balances => {
-                    var balances = Immutable.List().withMutations(
-                        balance_list => {
-                            for (let i = 0; i < result.length; i++) {
-                                var balance = result[i];
-                                no_balance_address.delete(balance.owner);
-                                if (balance.vesting_policy)
-                                    balance.vested_balance = vested_balances[i];
-                                balance_list.push(balance);
+        return db
+            .exec("get_balance_objects", [Array.from(this.addresses)])
+            .then(result => {
+                var balance_ids = [];
+                for (let balance of result) balance_ids.push(balance.id);
+                return db
+                    .exec("get_vested_balances", [balance_ids])
+                    .then(vested_balances => {
+                        var balances = Immutable.List().withMutations(
+                            balance_list => {
+                                for (let i = 0; i < result.length; i++) {
+                                    var balance = result[i];
+                                    no_balance_address.delete(balance.owner);
+                                    if (balance.vesting_policy)
+                                        balance.vested_balance =
+                                            vested_balances[i];
+                                    balance_list.push(balance);
+                                }
+                                if (no_bal_size !== no_balance_address.size)
+                                    this.saveNoBalanceAddresses(
+                                        no_balance_address
+                                    ).catch(error => console.error(error));
                             }
-                            if (no_bal_size !== no_balance_address.size)
-                                this.saveNoBalanceAddresses(
-                                    no_balance_address
-                                ).catch(error => console.error(error));
-                        }
-                    );
-                    return balances;
-                });
-        });
+                        );
+                        return balances;
+                    });
+            });
     }
 
     saveNoBalanceAddresses(no_balance_address) {

@@ -30,6 +30,7 @@ class SendModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
+        this.nestedRef = null;
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
@@ -179,12 +180,6 @@ class SendModal extends React.Component {
         }
     }
 
-    componentWillMount() {
-        this.nestedRef = null;
-        this._updateFee();
-        this._checkFeeStatus();
-    }
-
     shouldComponentUpdate(np, ns) {
         let {asset_types: current_types} = this._getAvailableAssets();
         let {asset_types: next_asset_types} = this._getAvailableAssets(ns);
@@ -205,6 +200,7 @@ class SendModal extends React.Component {
             }
         }
 
+        if (ns.open && !this.state.open) this._checkFeeStatus(ns);
         if (!ns.open && !this.state.open) return false;
         return true;
     }
@@ -228,7 +224,7 @@ class SendModal extends React.Component {
                 },
                 () => {
                     this._updateFee();
-                    this._checkFeeStatus(ChainStore.getAccount(np.from_name));
+                    this._checkFeeStatus();
                 }
             );
         }
@@ -264,10 +260,11 @@ class SendModal extends React.Component {
         this.setState({balanceError: !hasBalance});
     }
 
-    _checkFeeStatus(account = this.state.from_account) {
-        if (!account) return;
+    _checkFeeStatus(state = this.state) {
+        let {from_account, open} = state;
+        if (!from_account || !open) return;
 
-        const assets = Object.keys(account.get("balances").toJS()).sort(
+        const assets = Object.keys(from_account.get("balances").toJS()).sort(
             utils.sortID
         );
         let feeStatus = {};
@@ -275,7 +272,7 @@ class SendModal extends React.Component {
         assets.forEach(a => {
             p.push(
                 checkFeeStatusAsync({
-                    accountID: account.get("id"),
+                    accountID: from_account.get("id"),
                     feeID: a,
                     options: ["price_per_kbyte"],
                     data: {
@@ -363,6 +360,7 @@ class SendModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
+        if (!state.open) return;
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -435,7 +433,7 @@ class SendModal extends React.Component {
     }
 
     onMemoChanged(e) {
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let {asset_types} = this._getAvailableAssets();
         let {from_account, from_error, maxAmount} = this.state;
         if (
             from_account &&

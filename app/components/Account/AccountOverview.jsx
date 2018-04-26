@@ -457,7 +457,6 @@ class AccountOverview extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
-                                pulsate={{reverse: true, fill: "forwards"}}
                                 refCallback={c => {
                                     if (c && c.refs.bound_component)
                                         this.valueRefs[asset.get("symbol")] =
@@ -651,7 +650,9 @@ class AccountOverview extends React.Component {
                             market = "USD";
                         let preferredMarket = market
                             ? market
-                            : core_asset ? core_asset.get("symbol") : "BTS";
+                            : core_asset
+                                ? core_asset.get("symbol")
+                                : "BTS";
                         let directMarketLink = notCore ? (
                             <Link
                                 to={`/market/${asset.get(
@@ -989,11 +990,12 @@ class AccountOverview extends React.Component {
 
         includedBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioActiveAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -1002,11 +1004,12 @@ class AccountOverview extends React.Component {
 
         hiddenBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioHiddenAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -1158,6 +1161,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="exchange.price" />{" "}
                                                     (<AssetName
                                                         name={preferredUnit}
+                                                        noTip
                                                     />)
                                                 </th>
                                                 <th
@@ -1188,6 +1192,7 @@ class AccountOverview extends React.Component {
                                                                 arg: "asset"
                                                             }
                                                         ]}
+                                                        noTip
                                                     />
                                                 </th>
                                                 {showAssetPercent ? (

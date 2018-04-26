@@ -147,7 +147,10 @@ class Row extends React.Component {
                 </td>
                 <td>
                     {!this.props.hideDate ? (
-                        <BlockTime block_number={block} />
+                        <BlockTime
+                            block_number={block}
+                            fullDate={this.props.fullDate}
+                        />
                     ) : null}
                 </td>
             </tr>
@@ -213,7 +216,9 @@ class Operation extends React.Component {
             color = "info";
         let memoComponent = null;
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 if (op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />;
@@ -1318,6 +1323,7 @@ class Operation extends React.Component {
                 info={column}
                 hideFee={this.props.hideFee}
                 hidePending={this.props.hidePending}
+                fullDate={this.props.fullDate}
             />
         ) : null;
 

@@ -2,12 +2,15 @@
     "page404": {
         "page_not_found_title": "404 page not found",
         "page_not_found_subtitle": "This page does not exist",
+        "asset_not_found_subtitle": "That asset does not exist",
+        "market_not_found_subtitle": "That market does not exist",
         "home": "Home"
     },
     "counterpart": {
         "formats": {
             "date": {
                 "short_custom": "%e %b '%y",
+                "full": "%F %T %Z",
                 "market_history": "%e/%m %H:%M:%S",
                 "market_history_us": "%m/%e %H:%M:%S"
             }
@@ -381,7 +384,9 @@
             "too_many_feed":
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "conflict_feed":
-                "Cannot allow witnesses and committee members to provide feeds simultaneously"
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market"
         },
         "connections": {
             "known": "Known by",
@@ -1055,6 +1060,7 @@
         }
     },
     "settings": {
+        "automatic": "Automatic Switching",
         "passwordLogin": "Login mode",
         "cloud_login": "Cloud Wallet Login",
         "local_wallet": "Local Wallet Login",
