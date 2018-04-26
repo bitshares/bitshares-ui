@@ -166,13 +166,17 @@ class GroupedOrderBookRowVertical extends React.Component {
             >
                 <div className="cell left">
                     {utils.format_number(
-                        order[isBid ? "amountForSale" : "amountToReceive"](),
+                        order[
+                            isBid ? "amountForSale" : "amountToReceive"
+                        ]().getAmount({real: true}),
                         base.get("precision")
                     )}
                 </div>
                 <div className="cell">
                     {utils.format_number(
-                        order[isBid ? "amountToReceive" : "amountForSale"](),
+                        order[
+                            isBid ? "amountToReceive" : "amountForSale"
+                        ]().getAmount({real: true}),
                         quote.get("precision")
                     )}
                 </div>
@@ -194,23 +198,29 @@ class GroupedOrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                  order.amountToReceive(),
+                  order.amountToReceive().getAmount({real: true}),
                   quote.get("precision")
               )
             : utils.format_number(
-                  order.amountForSale(),
+                  order.amountForSale().getAmount({real: true}),
                   quote.get("precision")
               );
         let value = isBid
-            ? utils.format_number(order.amountForSale(), base.get("precision"))
+            ? utils.format_number(
+                  order.amountForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                  order.amountToReceive(),
+                  order.amountToReceive().getAmount({real: true}),
                   base.get("precision")
               );
         let total = isBid
-            ? utils.format_number(order.totalForSale(), base.get("precision"))
+            ? utils.format_number(
+                  order.totalForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                  order.totalToReceive(),
+                  order.totalToReceive().getAmount({real: true}),
                   base.get("precision")
               );
 

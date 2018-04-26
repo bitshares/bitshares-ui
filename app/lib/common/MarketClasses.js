@@ -935,8 +935,8 @@ class GroupedOrder {
         this.base = base;
         this.quote = quote;
 
-        this.sum_for_sale = this.amountForSale();
-        this.sum_to_receive = this.amountToReceive();
+        this.sum_for_sale = this.amountForSale().getAmount({real: true});
+        this.sum_to_receive = this.amountToReceive().getAmount({real: true});
     }
 
     isBid() {
@@ -944,11 +944,14 @@ class GroupedOrder {
     }
 
     sellPrice() {
-        return this.sell_price.toReal();
+        return this.sell_price;
     }
 
-    getPrice() {
-        return this.sellPrice();
+    getPrice(p = this.sell_price) {
+        if (this._real_price) {
+            return this._real_price;
+        }
+        return (this._real_price = p.toReal());
     }
 
     getOriginalPrice(priceType = "min") {
@@ -1013,42 +1016,25 @@ class GroupedOrder {
 
     amountForSale() {
         if (this._for_sale) return this._for_sale;
-        // base asset being sold
-        return (this._for_sale = limitByPrecision(
-            this.total_for_sale / this.base.toSats(),
-            this.base.precision
-        ));
+        return (this._for_sale = new Asset({
+            asset_id: this.sell_price.base.asset_id,
+            amount: this.total_for_sale,
+            precision: this.assets[this.sell_price.base.asset_id].precision
+        }));
     }
 
-    amountToReceive() {
+    amountToReceive(isBid = this.isBid()) {
         if (this._to_receive) return this._to_receive;
-        // quote asset being purchased
-        // TODO: The caculation is inaccurate and need total_to_receive from api.
-        const base_amount = this.amountForSale();
-        return (this._to_receive = parseFloat(
-            (base_amount / this.getPrice()).toFixed(8)
-        ));
+        this._to_receive = this.amountForSale().times(this.sell_price, isBid);
+        return this._to_receive;
     }
 
     clone() {
         return new GroupedOrder(this.order, this.assets, this.is_bid);
     }
 
-    sum(order) {
-        let newOrder = this.clone();
-        newOrder.sum_for_sale += order.sum_for_sale;
-        newOrder.sum_to_receive += order.sum_to_receive;
-        newOrder._clearCache();
-        return newOrder;
-    }
-
-    totalForSale() {
-        return this.sum_for_sale;
-    }
-
-    totalToReceive() {
-        return this.sum_to_receive;
-    }
+    // sum(order) {
+    // }
 
     _clearCache() {
         this._price = {
@@ -1057,6 +1043,44 @@ class GroupedOrder {
         };
         this._for_sale = null;
         this._to_receive = null;
+        this._total_to_receive = null;
+        this._total_for_sale = null;
+        this._real_price = null;
+    }
+
+    ne(order) {
+        return (
+            this.sell_price.ne(order.sell_price) ||
+            this.total_for_sale !== order.total_for_sale
+        );
+    }
+
+    equals(order) {
+        return !this.ne(order);
+    }
+
+    setTotalToReceive(total) {
+        this.total_to_receive = total;
+    }
+
+    setTotalForSale(total) {
+        this.total_for_sale = total;
+    }
+
+    totalToReceive({noCache = false} = {}) {
+        if (!noCache && this._total_to_receive) return this._total_to_receive;
+        this._total_to_receive = (
+            this.total_to_receive || this.amountToReceive()
+        ).clone();
+        return this._total_to_receive;
+    }
+
+    totalForSale({noCache = false} = {}) {
+        if (!noCache && this._total_for_sale) return this._total_for_sale;
+        this._total_for_sale = (
+            this.total_for_sale || this.amountForSale()
+        ).clone();
+        return this._total_for_sale;
     }
 }
 

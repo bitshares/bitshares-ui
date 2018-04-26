@@ -1011,35 +1011,58 @@ class MarketsStore {
     }
 
     _groupedOrderBook(groupedOrdersBids = null, groupedOrdersAsks = null) {
-        const bidsTotal = bids => {
-            // Sum bids
-            if (bids.length > 1) {
-                for (let i = 1; i < bids.length - 1; i++) {
-                    bids[i] = bids[i].sum(bids[i - 1]);
-                }
-            }
-            return bids;
-        };
-        const asksTotal = asks => {
-            // Sum asks
-            if (asks.length > 1) {
-                for (let i = 1; i < asks.length - 1; i++) {
-                    asks[i] = asks[i].sum(asks[i - 1]);
-                }
-            }
-            return asks;
-        };
-
-        // Assign to store variables
+        // Sum and assign to store variables
         if (groupedOrdersBids && groupedOrdersAsks) {
             if (__DEV__)
-                console.time("Construct grouped orders " + this.activeMarket);
-            this.marketData.groupedBids = bidsTotal(groupedOrdersBids);
-            this.marketData.groupedAsks = asksTotal(groupedOrdersAsks);
+                console.time("Sum grouped orders " + this.activeMarket);
+
+            let totalToReceive = new Asset({
+                asset_id: this.quoteAsset.get("id"),
+                precision: this.quoteAsset.get("precision")
+            });
+
+            let totalForSale = new Asset({
+                asset_id: this.baseAsset.get("id"),
+                precision: this.baseAsset.get("precision")
+            });
+            groupedOrdersBids
+                .sort((a, b) => {
+                    return b.getPrice() - a.getPrice();
+                })
+                .forEach(a => {
+                    totalToReceive.plus(a.amountToReceive(true));
+                    totalForSale.plus(a.amountForSale());
+
+                    a.setTotalForSale(totalForSale.clone());
+                    a.setTotalToReceive(totalToReceive.clone());
+                });
+
+            totalToReceive = new Asset({
+                asset_id: this.quoteAsset.get("id"),
+                precision: this.quoteAsset.get("precision")
+            });
+
+            totalForSale = new Asset({
+                asset_id: this.baseAsset.get("id"),
+                precision: this.baseAsset.get("precision")
+            });
+
+            groupedOrdersAsks
+                .sort((a, b) => {
+                    return a.getPrice() - b.getPrice();
+                })
+                .forEach(a => {
+                    totalForSale.plus(a.amountForSale());
+                    totalToReceive.plus(a.amountToReceive(false));
+                    a.setTotalForSale(totalForSale.clone());
+                    a.setTotalToReceive(totalToReceive.clone());
+                });
+
+            this.marketData.groupedBids = groupedOrdersBids;
+            this.marketData.groupedAsks = groupedOrdersAsks;
+
             if (__DEV__)
-                console.timeEnd(
-                    "Construct grouped orders " + this.activeMarket
-                );
+                console.timeEnd("Sum grouped orders " + this.activeMarket);
         }
     }
 
