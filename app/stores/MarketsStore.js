@@ -452,7 +452,7 @@ class MarketsStore {
             this._groupedOrderBook(groupedOrdersBids, groupedOrdersAsks);
 
             // Update depth chart data
-            // this._depthChart();
+            this._depthChart();
         }
 
         marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
@@ -1334,6 +1334,65 @@ class MarketsStore {
             }
         }
 
+        if (
+            this.marketData.groupedBids.length > 0 &&
+            this.marketData.groupedAsks.length > 0
+        ) {
+            bids = [];
+            asks = [];
+            totalBids = 0;
+            totalAsks = 0;
+            this.marketData.groupedBids.forEach(order => {
+                bids.push([
+                    order.getPrice(),
+                    order.amountToReceive().getAmount({real: true})
+                ]);
+                totalBids += order.amountForSale().getAmount({real: true});
+            });
+
+            this.marketData.groupedAsks.forEach(order => {
+                asks.push([
+                    order.getPrice(),
+                    order.amountForSale().getAmount({real: true})
+                ]);
+            });
+
+            // Make sure the arrays are sorted properly
+            asks.sort((a, b) => {
+                return a[0] - b[0];
+            });
+
+            bids.sort((a, b) => {
+                return a[0] - b[0];
+            });
+
+            // Flatten the arrays to get the step plot look
+            flat_bids = market_utils.flatten_orderbookchart_highcharts(
+                bids,
+                true,
+                true,
+                1000
+            );
+
+            if (flat_bids.length) {
+                flat_bids.unshift([0, flat_bids[0][1]]);
+            }
+
+            flat_asks = market_utils.flatten_orderbookchart_highcharts(
+                asks,
+                true,
+                false,
+                1000
+            );
+            if (flat_asks.length) {
+                flat_asks.push([
+                    flat_asks[flat_asks.length - 1][0] * 1.5,
+                    flat_asks[flat_asks.length - 1][1]
+                ]);
+                totalAsks = flat_asks[flat_asks.length - 1][1];
+            }
+        }
+
         // Assign to store variables
         this.marketData.flatAsks = flat_asks;
         this.marketData.flatBids = flat_bids;
@@ -1344,6 +1403,7 @@ class MarketsStore {
             ask: totalAsks,
             call: totalCalls
         };
+        // console.log(this.totals);
     }
 
     _calcMarketStats(base, quote, market, ticker) {

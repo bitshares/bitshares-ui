@@ -937,6 +937,7 @@ class GroupedOrder {
 
         this.sum_for_sale = this.amountForSale().getAmount({real: true});
         this.sum_to_receive = this.amountToReceive().getAmount({real: true});
+        this.market_base = this.quote.asset_id;
     }
 
     isBid() {
@@ -1051,7 +1052,9 @@ class GroupedOrder {
     ne(order) {
         return (
             this.sell_price.ne(order.sell_price) ||
-            this.total_for_sale !== order.total_for_sale
+            this.total_for_sale !== order.total_for_sale ||
+            this.totalToReceive() !== order.totalToReceive() ||
+            this.totalForSale() != order.totalForSale()
         );
     }
 

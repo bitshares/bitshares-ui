@@ -149,6 +149,15 @@ class OrderBookRowHorizontal extends React.Component {
 }
 
 class GroupedOrderBookRowVertical extends React.Component {
+    shouldComponentUpdate(np) {
+        if (np.order.market_base !== this.props.order.market_base) return false;
+        return (
+            np.order.ne(this.props.order) ||
+            np.index !== this.props.index ||
+            np.currentAccount !== this.props.currentAccount
+        );
+    }
+
     render() {
         let {order, quote, base, final} = this.props;
         const isBid = order.isBid();
@@ -187,6 +196,15 @@ class GroupedOrderBookRowVertical extends React.Component {
 }
 
 class GroupedOrderBookRowHorizontal extends React.Component {
+    shouldComponentUpdate(np) {
+        return (
+            np.order.ne(this.props.order) ||
+            np.position !== this.props.position ||
+            np.index !== this.props.index ||
+            np.currentAccount !== this.props.currentAccount
+        );
+    }
+
     render() {
         let {order, quote, base, position} = this.props;
         const isBid = order.isBid();
