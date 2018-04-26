@@ -1185,7 +1185,8 @@
         "show_star_2": "solo",
         "base": "Valuta di base:",
         "search": "Cerca qui altri mercati",
-        "order_value": "Valore ordine"
+        "order_value": "Valore ordine",
+        "group_order_limit": "Gruppo"
     },
     "fees": {
         "title": "Elenco commissioni"

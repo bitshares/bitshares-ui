@@ -721,7 +721,8 @@
         "show_star_1": "Show",
         "show_star_2": "only",
         "quote": "Quote currency:",
-        "search": "Search for more markets here"
+        "search": "Search for more markets here",
+        "group_order_limit": "그룹"
     },
     "markets": {
         "base": "기초 자산",

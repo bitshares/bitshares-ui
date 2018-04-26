@@ -1249,7 +1249,8 @@
         "show_star_2": "Solo",
         "quote": "Quote currency:",
         "search": "Busque más mercados aquí",
-        "order_value": "Valor del pedido"
+        "order_value": "Valor del pedido",
+        "group_order_limit": "grupo"
     },
     "fees": {
         "title": "Programa de comisiònes"

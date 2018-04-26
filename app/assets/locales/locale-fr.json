@@ -591,7 +591,8 @@
         "show_star_1": "Show",
         "show_star_2": "only",
         "quote": "Quote currency:",
-        "search": "Search for more markets here"
+        "search": "Search for more markets here",
+        "group_order_limit": "Groupe"
     },
     "markets": {
         "choose_base": "Selectionner l'actif de base",
