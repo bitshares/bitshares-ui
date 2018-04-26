@@ -7,6 +7,11 @@ import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
 
+const STATS_INTERVAL = 35 * 1000;
+
+let statsChecked = {};
+let statsInterval = {};
+
 class MarketRow extends React.Component {
     static defaultProps = {
         noSymbols: false
@@ -16,10 +21,10 @@ class MarketRow extends React.Component {
         router: React.PropTypes.object.isRequired
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.statsInterval = null;
+        this.id = props.base + props.quote;
     }
 
     _onClick(marketID) {
@@ -31,20 +36,31 @@ class MarketRow extends React.Component {
     }
 
     componentDidMount() {
-        MarketsActions.getMarketStats(this.props.base, this.props.quote);
-        this.statsChecked = new Date();
-        this.statsInterval = setInterval(
-            MarketsActions.getMarketStats.bind(
-                this,
+        if (
+            !statsChecked[this.id] ||
+            Date.now() - statsChecked[this.id].getTime() > STATS_INTERVAL
+        ) {
+            MarketsActions.getMarketStats.defer(
                 this.props.base,
                 this.props.quote
-            ),
-            35 * 1000
-        );
+            );
+
+            statsChecked[this.id] = new Date();
+            statsInterval[this.id] = setInterval(
+                MarketsActions.getMarketStats.bind(
+                    this,
+                    this.props.base,
+                    this.props.quote
+                ),
+                STATS_INTERVAL
+            );
+        }
     }
 
     componentWillUnmount() {
-        clearInterval(this.statsInterval);
+        if (statsInterval[this.id]) {
+            clearInterval(statsInterval[this.id]);
+        }
     }
 
     shouldComponentUpdate(nextProps) {

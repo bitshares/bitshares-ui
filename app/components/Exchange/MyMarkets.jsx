@@ -32,6 +32,7 @@ class MarketGroup extends React.Component {
 
     constructor(props) {
         super();
+        this.lastRender = null;
         this.state = this._getInitialState(props);
     }
 
@@ -53,17 +54,29 @@ class MarketGroup extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.unmounted = true;
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
-        if (!nextProps.markets || !this.props.markets) {
+        if (!nextProps.markets || !this.props.markets || !this.lastRender) {
             return true;
         }
-        return (
+
+        if (
             !utils.are_equal_shallow(nextState, this.state) ||
             !utils.are_equal_shallow(nextProps.markets, this.props.markets) ||
             nextProps.starredMarkets !== this.props.starredMarkets ||
-            nextProps.marketStats !== this.props.marketStats ||
             nextProps.userMarkets !== this.props.userMarkets
-        );
+        ) {
+            return true;
+        }
+
+        if (nextProps.marketStats !== this.props.marketStats) {
+            this._renderDeferred();
+        }
+
+        return false;
     }
 
     _inverseSort() {
@@ -114,7 +127,22 @@ class MarketGroup extends React.Component {
         SettingsActions.setUserMarket(base, quote, newValue);
     }
 
+    _renderDeferred() {
+        if (!this.renderDeferredTimeout) {
+            this.renderDeferredTimeout = setTimeout(() => {
+                if (this.unmounted) {
+                    return;
+                }
+
+                this.lastRender = null;
+                this.forceUpdate();
+            }, 1000);
+        }
+    }
+
     render() {
+        this.lastRender = new Date();
+
         let {
             columns,
             markets,
