@@ -1077,6 +1077,7 @@
             "The faucet address is used to pay the registration fee for new users.",
         "showSettles": "Show settle orders in depth chart",
         "showAssetPercent": "Show asset percentages on the account page",
+        "showAdvancedFeatures": "Show advanced features",
         "yes": "Yes",
         "no": "No",
         "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
@@ -1869,9 +1870,31 @@
         }
     },
     "cryptobridge": {
+        "general": {
+            "news": "News"
+        },
+        "gateway": {
+            "required_confirmations": "Required confirmations",
+            "support_block": "For support, please contact CryptoBridge at:",
+            "deposit_or_withdrawal": "Depositing or withdrawing coins",
+            "deposit_intro":
+                "If you want to deposit or withdraw funds from other blockchains, please use the form below.",
+            "deposit_to_fee_warning":
+                "WARNING: Depositing %(asset)s more than once every %(fee_time_frame)s minutes will incur a %(fee_percentage)s% deposit fee (minimum %(fee_minimum)s %(asset)s). A deposit fee of %(fee_percentage_low_amounts)s% is charged when the deposit is below 1 %(asset)s.",
+            "deposit_minimum": "Minimum deposit",
+            "deposit_login":
+                "Your wallet must be unlocked before you make a deposit",
+            "receive_funds": "Receiving funds",
+            "receive_funds_intro":
+                "In order to receive funds from another person on CryptoBridge, simply give them your account name: "
+        },
+        "footer": {
+            "title": "CryptoBridge decentralized exchange"
+        },
         "account": {
             "id": "BCO Staking ID",
             "title": "Stake your BridgeCoin (BCO) to earn profits from the DEX",
+            "intro_text_title": "Welcome to CryptoBridge",
             "staking_amount": "Staking amount",
             "remaining": "Remaining in staking period",
             "staking_text1":

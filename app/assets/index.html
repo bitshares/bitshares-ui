@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width"/>
     <meta name="format-detection" content="telephone=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; worker-src blob:;script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data:; img-src 'self' https://crypto-bridge.org data:;">
-    <title>BitShares</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; worker-src blob:; script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ https://www.googletagmanager.com/ https://www.google-analytics.com 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data:; img-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net https://wallet.crypto-bridge.org data:;">
+    <title>CryptoBridge decentralized exchange</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="app.css">
     <style>
@@ -22,12 +22,21 @@
             font-size: 44px;
         }
     </style>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113295938-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-113295938-1');
+    </script>
 </head>
 <body>
     <main id="content">
         <h1 class="centerDiv" style="">Loading...</h1>
     </main>
-
-<script src="app.js" charset="utf-8"></script>
+    <script src="app.js" charset="utf-8"></script>
 </body>
 </html>

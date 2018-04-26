@@ -61,6 +61,13 @@ class AssetImage extends React.Component {
             }
         }
 
+        if (
+            imgSrc.match(/^\//) &&
+            location.hostname !== "wallet.crypto-bridge.org"
+        ) {
+            imgSrc = "https://wallet.crypto-bridge.org" + imgSrc;
+        }
+
         return imgSrc;
     }
 

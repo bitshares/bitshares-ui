@@ -9,7 +9,7 @@ Bu yardım bölümü özet bir genel bakış sağlar ve bu uygulamanın en temel
 kavramlarını tanımlar.
 
 ## Takdim 
- * [BitShares](introduction/bitshares.md)
+ * [BitShares](introduction/cryptobridge.md)
  * [Cüzdan](introduction/wallets.md)
  * [Yedekler](introduction/backups.md)
  * [Blokzinciri](introduction/blockchain.md)

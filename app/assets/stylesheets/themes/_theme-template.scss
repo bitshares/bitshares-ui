@@ -1431,7 +1431,7 @@
     }
 
     .bid {
-        background-color: $bid-color !important;
+        background-color: darken($bid-color, 10) !important;
     }
 
     .ask {
@@ -1979,15 +1979,21 @@
     .api-status {
         .low {
             color: $bid-color;
-            > svg > path { fill: $bid-color; }
+            > svg > path {
+                fill: $bid-color;
+            }
         }
         .medium {
             color: $call-color;
-            > svg > path { fill: $call-color; }
+            > svg > path {
+                fill: $call-color;
+            }
         }
         .high {
             color: $ask-color;
-            > svg > path { fill: $ask-color; }
+            > svg > path {
+                fill: $ask-color;
+            }
         }
     }
 

@@ -132,7 +132,7 @@ class LoginSelector extends React.Component {
                         {childCount == 1 ? null : (
                             <div>
                                 <Translate
-                                    content="account.intro_text_title"
+                                    content="cryptobridge.account.intro_text_title"
                                     component="h4"
                                 />
                                 <Translate

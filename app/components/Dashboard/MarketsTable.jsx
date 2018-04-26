@@ -31,6 +31,8 @@ class MarketRow extends React.Component {
         super();
 
         this.statsInterval = null;
+        this.lastRender = null;
+
         this.state = {
             imgError: false
         };
@@ -51,14 +53,22 @@ class MarketRow extends React.Component {
     }
 
     shouldComponentUpdate(np, ns) {
-        return (
-            this._checkStats(np.marketStats, this.props.marketStats) ||
+        if (
+            !this.lastRender ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
             ns.imgError !== this.state.imgError ||
             np.starredMarkets.size !== this.props.starredMarkets
-        );
+        ) {
+            return true;
+        }
+
+        if (this._checkStats(np.marketStats, this.props.marketStats)) {
+            this._renderDeferred();
+        }
+
+        return false;
     }
 
     componentWillMount() {
@@ -66,6 +76,7 @@ class MarketRow extends React.Component {
     }
 
     componentWillUnmount() {
+        this.unmounted = true;
         this._clearInterval();
     }
 
@@ -111,7 +122,22 @@ class MarketRow extends React.Component {
         }
     }
 
+    _renderDeferred() {
+        if (!this.renderDeferredTimeout) {
+            this.renderDeferredTimeout = setTimeout(() => {
+                if (this.unmounted) {
+                    return;
+                }
+
+                this.lastRender = null;
+                this.forceUpdate();
+            }, 1000);
+        }
+    }
+
     render() {
+        this.lastRender = new Date();
+
         let {
             base,
             quote,
@@ -168,7 +194,6 @@ class MarketRow extends React.Component {
                         <AssetImage
                             style={{width: 40, margin: "5px 20px 5px 0"}}
                             marketId={marketID}
-                            lazy={true}
                         />
                         <AssetName dataPlace="top" name={quote.get("symbol")} />{" "}
                         :{" "}

@@ -53,6 +53,7 @@ class SettingsStore {
             walletLockTimeout: 60 * 10,
             themes: "darkTheme",
             passwordLogin: true,
+            showAdvancedFeatures: false,
             browser_notifications: {
                 allow: true,
                 additional: {
@@ -86,7 +87,8 @@ class SettingsStore {
             passwordLogin: [
                 {translate: "cloud_login"},
                 {translate: "local_wallet"}
-            ]
+            ],
+            showAdvancedFeatures: [{translate: "yes"}, {translate: "no"}]
             // confirmMarketOrder: [
             //     {translate: "confirm_yes"},
             //     {translate: "confirm_no"}

@@ -2,7 +2,7 @@
 
  * [ Giriş ](index.md)
  * [Terimler Listesi](glossary.md)
- * [BitShares](introduction/bitshares.md)
+ * [BitShares](introduction/cryptobridge.md)
  * [Cüzdan](introduction/wallets.md)
  * [Yedeklemeler](introduction/backups.md)
  * [Blokzinciri](introduction/blockchain.md)

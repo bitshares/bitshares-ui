@@ -44,6 +44,7 @@ class Settings extends React.Component {
                     "themes",
                     "showAssetPercent",
                     "passwordLogin",
+                    "showAdvancedFeatures",
                     "reset"
                 ],
                 access: ["apiServer", "faucet_address"]
@@ -206,6 +207,7 @@ class Settings extends React.Component {
 
             case "showSettles":
             case "showAssetPercent":
+            case "showAdvancedFeatures":
             case "passwordLogin":
                 let reference = defaults[setting][0];
                 if (reference.translate) reference = reference.translate;

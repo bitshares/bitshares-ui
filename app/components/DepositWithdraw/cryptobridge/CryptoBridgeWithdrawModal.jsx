@@ -25,6 +25,7 @@ class WithdrawModalBlocktrades extends React.Component {
         output_coin_symbol: React.PropTypes.string.isRequired,
         output_coin_type: React.PropTypes.string.isRequired,
         url: React.PropTypes.string,
+        gateFee: React.PropTypes.number,
         output_wallet_type: React.PropTypes.string,
         output_supports_memos: React.PropTypes.bool.isRequired,
         amount_to_withdraw: React.PropTypes.string,

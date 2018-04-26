@@ -208,6 +208,7 @@ class CryptoBridgeGateway extends React.Component {
                                 supports_output_memos={
                                     coin.supportsMemos === true
                                 }
+                                gate_fee={coin.gateFee}
                                 min_amount={coin.minAmount}
                                 asset_precision={coin.precision}
                                 action={this.state.action}
@@ -233,7 +234,7 @@ class CryptoBridgeGateway extends React.Component {
                             />
                             <label className="left-label">Support</label>
                             <div>
-                                <Translate content="gateway.cryptobridge.support_block" />
+                                <Translate content="cryptobridge.gateway.support_block" />
                                 <br />
                                 <br />
                                 <a

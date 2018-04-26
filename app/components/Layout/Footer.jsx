@@ -10,9 +10,13 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
-import counterpart from "counterpart";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+
+let connectedNode = null;
+let connectedNodePing = null;
+
+let trackLatencyDate = null;
 
 class Footer extends React.Component {
     static propTypes = {
@@ -46,7 +50,8 @@ class Footer extends React.Component {
         return (
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
-            nextProps.rpc_connection_status !== this.props.rpc_connection_status ||
+            nextProps.rpc_connection_status !==
+                this.props.rpc_connection_status ||
             nextProps.synced !== this.props.synced ||
             nextState.showNodesPopup !== this.state.showNodesPopup
         );
@@ -90,10 +95,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            window.open(
-                "http://docs.bitshares.org/bitshares/user/index.html",
-                "_blank"
-            );
+            this.context.router.push("/help/introduction/cryptobridge");
         } else {
             guide
                 .introJs()
@@ -141,6 +143,57 @@ class Footer extends React.Component {
         };
     }
 
+    _trackLatency(node, ping) {
+        if (
+            (!trackLatencyDate ||
+                Date.now() - trackLatencyDate.getTime() > 1000 * 60 * 15) &&
+            node &&
+            ping &&
+            (node !== connectedNode || ping !== connectedNodePing) &&
+            window.gtag
+        ) {
+            connectedNode = node;
+            connectedNodePing = ping;
+            trackLatencyDate = new Date();
+
+            gtag("event", "Node", {
+                event_category: "Connected Latency",
+                event_label: connectedNode,
+                value: connectedNodePing
+            });
+
+            try {
+                let secondBestNode = null;
+                let secondBestNodePing = null;
+
+                const {apiLatencies} = SettingsStore.getState();
+
+                Object.keys(apiLatencies).forEach(url => {
+                    const apiLatenciesPing = parseInt(apiLatencies[url]);
+
+                    if (
+                        node !== url &&
+                        (!secondBestNodePing ||
+                            apiLatenciesPing < secondBestNodePing)
+                    ) {
+                        secondBestNode = url;
+                        secondBestNodePing = apiLatenciesPing;
+                    }
+                });
+
+                if (secondBestNode && secondBestNodePing) {
+                    gtag("event", "Node", {
+                        event_category: "Second Best Latency",
+                        event_label: secondBestNode,
+                        value: secondBestNodePing
+                    });
+                }
+            } catch (e) {
+                console.warn("Could not specify second best node");
+            }
+        }
+    }
+
     render() {
         const autoSelectAPI = "wss://fake.automatic-selection.com";
         const {state, props} = this;
@@ -152,15 +205,16 @@ class Footer extends React.Component {
         let getNode = this.getNode.bind(this);
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
 
-        let activeNode = getNode(
-            nodes[currentNodeIndex] || nodes[0]
-        );
+        let activeNode = getNode(nodes[currentNodeIndex] || nodes[0]);
 
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
             activeNode = getNode(nodes[currentNodeIndex]);
         }
+
+        // Track node details
+        this._trackLatency(activeNode, parseInt(activeNode.ping));
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
         let version_match = APP_VERSION.match(/2\.0\.(\d\w+)/);
@@ -208,8 +262,10 @@ class Footer extends React.Component {
                                     />
                                 )}
                                 <span style={updateStyles}>
-                                    <Translate content="footer.title" />
-                                    <span className="version">{version}</span>
+                                    <Translate content="cryptobridge.footer.title" />
+                                    <span className="version">
+                                        &nbsp;BETA {version}
+                                    </span>
                                 </span>
 
                                 {state.newVersion && (
@@ -268,7 +324,7 @@ class Footer extends React.Component {
                             </span>
                         ) : null}
                         {block_height ? (
-                            <div 
+                            <div
                                 onMouseEnter={() => {
                                     this.setState({showNodesPopup: true});
                                 }}
@@ -325,22 +381,24 @@ class Footer extends React.Component {
                         )}
                     </div>
                 </div>
-                <div 
+                <div
                     onMouseEnter={() => {
                         this.setState({showNodesPopup: true});
                     }}
                     onMouseLeave={() => {
                         this.setState({showNodesPopup: false});
                     }}
-                    className="node-access-popup" 
+                    className="node-access-popup"
                     style={{display: this.state.showNodesPopup ? "" : "none"}}
                 >
                     <AccessSettings
                         nodes={this.props.defaults.apiServer}
                         popup={true}
                     />
-                    <div style={{paddingTop: 15}} >
-                        <a onClick={this.onAccess.bind(this)}><Translate content="footer.advanced_settings" /></a>
+                    <div style={{paddingTop: 15}}>
+                        <a onClick={this.onAccess.bind(this)}>
+                            <Translate content="footer.advanced_settings" />
+                        </a>
                     </div>
                 </div>
                 <div
@@ -381,7 +439,12 @@ class AltFooter extends Component {
         var wallet = WalletDb.getWallet();
         return (
             <AltContainer
-                stores={[CachedPropertyStore, BlockchainStore, WalletDb, SettingsStore]}
+                stores={[
+                    CachedPropertyStore,
+                    BlockchainStore,
+                    WalletDb,
+                    SettingsStore
+                ]}
                 inject={{
                     defaults: () => {
                         return SettingsStore.getState().defaults;
@@ -389,11 +452,15 @@ class AltFooter extends Component {
                     apiLatencies: () => {
                         return SettingsStore.getState().apiLatencies;
                     },
-                    currentNode: () => { 
-                        return SettingsStore.getState().settings.get("apiServer");
+                    currentNode: () => {
+                        return SettingsStore.getState().settings.get(
+                            "apiServer"
+                        );
                     },
                     activeNode: () => {
-                        return SettingsStore.getState().settings.get("activeNode");
+                        return SettingsStore.getState().settings.get(
+                            "activeNode"
+                        );
                     },
                     backup_recommended: () =>
                         wallet &&

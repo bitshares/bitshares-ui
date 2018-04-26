@@ -9,7 +9,7 @@ This help section gives a brief overview and describes the most basic concepts
 of this application.
 
 ## Introduction 
- * [BitShares](introduction/bitshares.md)
+ * [BitShares](introduction/cryptobridge.md)
  * [Wallet](introduction/wallets.md)
  * [Backups](introduction/backups.md)
  * [Blockchain](introduction/blockchain.md)
