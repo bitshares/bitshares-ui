@@ -1,122 +1,34 @@
-import t from "tcomb";
+import {struct, Str, Dat, Num, Obj, maybe, Arr} from "tcomb";
 
-let Asset = t.struct(
+let WalletTcomb = struct(
     {
-        bitasset_data_id: t.maybe(t.Str),
-        bitasset_data: t.maybe(t.Obj),
-        dynamic_asset_data_id: t.Str,
-        dynamic_data: t.maybe(t.Obj),
-        id: t.Str,
-        issuer: t.Str,
-        market_asset: t.Bool,
-        options: t.Obj,
-        precision: t.Num,
-        symbol: t.Str
-    },
-    "Asset"
-);
-
-let Block = t.struct(
-    {
-        extensions: t.Arr,
-        id: t.Num,
-        previous: t.Str,
-        timestamp: t.Dat,
-        transactions: t.Arr,
-        transaction_merkle_root: t.Str,
-        witness: t.Str,
-        witness_signature: t.Str
-    },
-    "Block"
-);
-
-let WalletTcomb = t.struct(
-    {
-        public_name: t.Str,
-        created: t.Dat,
-        last_modified: t.Dat,
-        backup_date: t.maybe(t.Dat),
-        password_pubkey: t.Str,
-        encryption_key: t.Str,
-        encrypted_brainkey: t.maybe(t.Str),
-        brainkey_pubkey: t.Str,
-        brainkey_sequence: t.Num,
-        brainkey_backup_date: t.maybe(t.Dat),
-        deposit_keys: t.maybe(t.Obj),
-        // password_checksum: t.Str,
-        chain_id: t.Str
+        public_name: Str,
+        created: Dat,
+        last_modified: Dat,
+        backup_date: maybe(Dat),
+        password_pubkey: Str,
+        encryption_key: Str,
+        encrypted_brainkey: maybe(Str),
+        brainkey_pubkey: Str,
+        brainkey_sequence: Num,
+        brainkey_backup_date: maybe(Dat),
+        deposit_keys: maybe(Obj),
+        // password_checksum: Str,
+        chain_id: Str
     },
     "WalletTcomb"
 );
 
-let PrivateKeyTcomb = t.struct(
+let PrivateKeyTcomb = struct(
     {
-        id: t.maybe(t.Num),
-        pubkey: t.Str,
-        label: t.maybe(t.Str),
-        import_account_names: t.maybe(t.Arr),
-        brainkey_sequence: t.maybe(t.Num),
-        encrypted_key: t.Str
+        id: maybe(Num),
+        pubkey: Str,
+        label: maybe(Str),
+        import_account_names: maybe(Arr),
+        brainkey_sequence: maybe(Num),
+        encrypted_key: Str
     },
     "PrivateKeyTcomb"
 );
 
-//let PublicKeyTcomb = t.struct({
-//    id: t.maybe(t.Num),
-//    pubkey: t.Str,
-//    key_id: t.maybe(t.Str)
-//}, "PublicKeyTcomb");
-
-let LimitOrder = t.struct(
-    {
-        expiration: t.Dat,
-        for_sale: t.Num,
-        id: t.Str,
-        sell_price: t.Obj,
-        seller: t.Str
-    },
-    "LimitOrder"
-);
-
-let SettleOrder = t.struct(
-    {
-        settlement_date: t.Dat,
-        balance: t.Obj,
-        owner: t.Str
-    },
-    "SettleOrder"
-);
-
-let ShortOrder = t.struct(
-    {
-        expiration: t.Dat,
-        for_sale: t.Num,
-        id: t.Str,
-        sell_price: t.Obj,
-        seller: t.Str
-    },
-    "ShortOrder"
-);
-
-let CallOrder = t.struct(
-    {
-        borrower: t.Str,
-        call_price: t.Obj,
-        collateral: t.Num,
-        debt: t.Num,
-        id: t.Str
-    },
-    "CallOrder"
-);
-
-export {
-    Asset,
-    Block,
-    WalletTcomb,
-    //PublicKeyTcomb: PublicKeyTcomb,
-    PrivateKeyTcomb,
-    LimitOrder,
-    ShortOrder,
-    CallOrder,
-    SettleOrder
-};
+export {WalletTcomb, PrivateKeyTcomb};

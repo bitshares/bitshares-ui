@@ -276,6 +276,7 @@ class WithdrawModalNew extends React.Component {
                         fromAsset,
                         toAsset,
                         marketStats,
+                        true,
                         true
                     );
                 if (precisionDifference > 0) {
