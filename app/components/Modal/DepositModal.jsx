@@ -176,25 +176,19 @@ class DepositModalContent extends DecimalChecker {
                 fetchingAddress: false
             });
         } else {
-            if (
-                selectedGateway == "OPEN" ||
-                selectedGateway == "WIN" ||
-                selectedGateway == "BRIDGE"
-            ) {
-                if (!depositAddress) {
-                    requestDepositAddress(
-                        this._getDepositObject(
-                            selectedAsset,
-                            selectedGateway,
-                            gatewayStatus[selectedGateway].baseAPI.BASE
-                        )
-                    );
-                } else {
-                    this.setState({
-                        depositAddress,
-                        fetchingAddress: false
-                    });
-                }
+            if (!depositAddress) {
+                requestDepositAddress(
+                    this._getDepositObject(
+                        selectedAsset,
+                        selectedGateway,
+                        gatewayStatus[selectedGateway].baseAPI.BASE
+                    )
+                );
+            } else {
+                this.setState({
+                    depositAddress,
+                    fetchingAddress: false
+                });
             }
         }
 

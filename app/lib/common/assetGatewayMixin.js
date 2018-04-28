@@ -39,18 +39,9 @@ function _getNumberAvailableGateways() {
     var nAvailableGateways = 0;
     for (let g in gatewayStatus) {
         this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
-            if (
-                g == "OPEN" &&
-                selectedAsset == c.backingCoinType &&
-                c.depositAllowed &&
-                c.isAvailable
-            ) {
-                nAvailableGateways++;
-            }
-            if (
-                g == "RUDEX" &&
-                selectedAsset == c.backingCoin &&
-                c.depositAllowed
+            if((selectedAsset == c.backingCoinType 
+                || selectedAsset == c.backingCoin)
+                && c.depositAllowed || c.isAvailable
             ) {
                 nAvailableGateways++;
             }
