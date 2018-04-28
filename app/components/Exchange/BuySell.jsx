@@ -129,6 +129,8 @@ class BuySell extends React.Component {
             asset_id: quote.get("asset_id"),
             precision: quote.get("precision")
         });
+        const marketFeePercent =
+            quote.getIn(["options", "market_fee_percent"]) / 100 + "%";
         const quoteFee = !amount
             ? 0
             : Math.min(
@@ -157,10 +159,10 @@ class BuySell extends React.Component {
             quoteFlagBooleans["charge_market_fee"];
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
                     <Translate content="explorer.asset.summary.market_fee" />:
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -199,10 +201,12 @@ class BuySell extends React.Component {
         ) : null;
         var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:{
+                        marketFeePercent
+                    }
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -316,8 +320,11 @@ class BuySell extends React.Component {
         let balanceToAdd;
 
         if (feeAsset.get("symbol") === balanceSymbol) {
+            // balanceToAdd = balanceAmount.clone(
+            //     balanceAmount.getAmount() - fee.getAmount()
+            // );
             balanceToAdd = balanceAmount.clone(
-                balanceAmount.getAmount() - fee.getAmount()
+                Math.round(balanceAmount.getAmount() - fee.getAmount(), 2)
             );
         } else {
             balanceToAdd = balanceAmount;
