@@ -36,6 +36,9 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import AccountTreemap from "./AccountTreemap";
 import {getBackedCoin} from "common/gatewayUtils";
 import AssetWrapper from "../Utility/AssetWrapper";
+import MarketsStore from "stores/MarketsStore";
+import MarketUtils from "common/market_utils";
+import {connect} from "alt-react";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -66,7 +69,7 @@ class AccountOverview extends React.Component {
 
         this.qtyRefs = {};
         this.priceRefs = {};
-        this.valueRefs = {};
+        this.balanceValues = undefined;
         this.changeRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
@@ -113,11 +116,9 @@ class AccountOverview extends React.Component {
             }
         },
         totalValue: function(a, b) {
-            let aRef = this.valueRefs[a.key];
-            let bRef = this.valueRefs[b.key];
-            if (aRef && bRef) {
-                let aValue = aRef.getValue();
-                let bValue = bRef.getValue();
+            if (this.balanceValues) {
+                let aValue = this.balanceValues[a.key];
+                let bValue = this.balanceValues[b.key];
                 if (!aValue && bValue) return 1;
                 if (aValue && !bValue) return -1;
                 if (!aValue && !bValue)
@@ -167,7 +168,7 @@ class AccountOverview extends React.Component {
         if (np.account !== this.props.account) {
             this._checkMarginStatus(np);
             this.priceRefs = {};
-            this.valueRefs = {};
+            this.balanceValues = undefined;
             this.changeRefs = {};
             setTimeout(this.forceUpdate.bind(this), 500);
         }
@@ -457,11 +458,6 @@ class AccountOverview extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
-                                refCallback={c => {
-                                    if (c && c.refs.bound_component)
-                                        this.valueRefs[asset.get("symbol")] =
-                                            c.refs.bound_component;
-                                }}
                             />
                         ) : null}
                     </td>
@@ -792,7 +788,12 @@ class AccountOverview extends React.Component {
                     }
                 });
         }
-
+        this.balanceValues = fetchBalanceValues(
+            balanceList,
+            preferredUnit,
+            this.props.marketStats,
+            core_asset
+        );
         balances.sort(this.sortFunctions[this.state.sortKey]);
         return balances;
     }
@@ -1408,6 +1409,53 @@ class AccountOverview extends React.Component {
         );
     }
 }
+
+function getBalanceValue(balance, toAsset, marketStats, coreAsset) {
+    const amount = Number(balance.get("balance"));
+    if (isNaN(amount)) return amount;
+    const fromAssetID = balance.get("asset_type");
+    const fromAsset = ChainStore.getObject(fromAssetID);
+    return MarketUtils.convertValue(
+        amount,
+        toAsset,
+        fromAsset,
+        marketStats,
+        coreAsset
+    );
+}
+
+function fetchBalanceValues(balanceList, toSymbol, marketStats, coreAsset) {
+    if (marketStats && marketStats.size > 0) {
+        const toAsset = ChainStore.getAsset(toSymbol);
+        return balanceList.reduce((result, balanceID) => {
+            const balanceObject = ChainStore.getObject(balanceID);
+            const assetObject = ChainStore.getObject(
+                balanceObject.get("asset_type")
+            );
+            const value = getBalanceValue(
+                balanceObject,
+                toAsset,
+                marketStats,
+                coreAsset
+            );
+            result[assetObject.get("symbol")] = value;
+            return result;
+        }, {});
+    } else {
+        return undefined;
+    }
+}
+
+AccountOverview = connect(AccountOverview, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps() {
+        return {
+            marketStats: MarketsStore.getState().allMarketStats
+        };
+    }
+});
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
 AccountOverview = AssetWrapper(AccountOverview, {
