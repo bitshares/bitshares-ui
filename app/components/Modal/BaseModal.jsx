@@ -37,7 +37,8 @@ class BaseModal extends React.Component {
             noCloseBtn,
             noLoggo,
             noHeader,
-            children
+            children,
+            leftHeader
         } = props;
 
         return (
@@ -55,13 +56,28 @@ class BaseModal extends React.Component {
                         </a>
                     </Trigger>
                 )}
-                {!noLoggo && (
-                    <div className="modal__logo">
+                {!noLoggo &&
+                    (leftHeader ? (
                         <img src={logo} />
-                    </div>
-                )}
+                    ) : (
+                        <div className="modal__logo">
+                            <img src={logo} />
+                        </div>
+                    ))}
                 {!noHeader &&
-                    modalHeader && (
+                    modalHeader &&
+                    (leftHeader ? (
+                        <b
+                            style={{
+                                paddingLeft: "0.8rem",
+                                fontSize: "1.3rem",
+                                position: "relative",
+                                top: "0.4rem"
+                            }}
+                        >
+                            <Translate content={modalHeader} />
+                        </b>
+                    ) : (
                         <div className="text-center">
                             <div className="modal__title">
                                 <Translate
@@ -70,7 +86,8 @@ class BaseModal extends React.Component {
                                 />
                             </div>
                         </div>
-                    )}
+                    ))}
+                {!noHeader && leftHeader && <hr />}
                 {children}
             </Modal>
         );

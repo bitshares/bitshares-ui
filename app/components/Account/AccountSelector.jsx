@@ -462,7 +462,14 @@ class AccountSelector extends React.Component {
                     </div>
 
                     {error ? (
-                        <div className="error-area">
+                        <div
+                            className={
+                                this.props.hideImage
+                                    ? "has-error"
+                                    : "error-area"
+                            }
+                            style={{marginTop: "1rem"}}
+                        >
                             <span>{error}</span>
                         </div>
                     ) : null}
