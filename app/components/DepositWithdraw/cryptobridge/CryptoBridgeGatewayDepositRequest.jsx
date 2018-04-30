@@ -16,6 +16,7 @@ import counterpart from "counterpart";
 import WalletUnlockActions from "../../../actions/WalletUnlockActions";
 import WalletDb from "../../../stores/WalletDb";
 import AccountActions from "../../../actions/AccountActions";
+import QRCode from "qrcode.react";
 
 class CryptoBridgeGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -101,11 +102,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
     componentWillMount() {
         if (WalletDb.isLocked()) {
-            WalletUnlockActions.unlock()
-                .then(() => {
-                    AccountActions.tryToSetCurrentAccount();
-                })
-                .catch(() => {});
+            this._unlockWallet();
         }
 
         getDepositAddress({
@@ -175,6 +172,14 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             console.error(err);
         }
     }
+
+    _unlockWallet = () => {
+        WalletUnlockActions.unlock()
+            .then(() => {
+                AccountActions.tryToSetCurrentAccount();
+            })
+            .catch(() => {});
+    };
 
     render() {
         const isDeposit = this.props.action === "deposit";
@@ -272,7 +277,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         if (
             !this.props.is_available ||
             ((isDeposit && !this.props.deposit_account && !receive_address) ||
-                (receive_address && receive_address.address === "unknown"))
+                (receive_address &&
+                    (receive_address.address === "unknown" ||
+                        receive_address.address === "Failed to fetch")))
         ) {
             return (
                 <div>
@@ -445,12 +452,22 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                             : null}
 
                         {WalletDb.isLocked() ? (
-                            <Translate
-                                className="label alert"
-                                component="label"
-                                content="cryptobridge.gateway.deposit_login"
-                                style={labelStyle}
-                            />
+                            <div className="content-block">
+                                <Translate
+                                    className="label alert"
+                                    component="label"
+                                    content="cryptobridge.gateway.deposit_login"
+                                    style={labelStyle}
+                                />
+                                <div>
+                                    <button
+                                        className="button primary"
+                                        onClick={this._unlockWallet}
+                                    >
+                                        <Translate content="header.unlock_short" />
+                                    </button>
+                                </div>
+                            </div>
                         ) : null}
 
                         <Translate
@@ -514,6 +531,16 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                         <Translate content="gateway.generate_new" />
                                     </button>
                                 </div>
+                                {deposit_address_fragment &&
+                                    !memoText &&
+                                    clipboardText && (
+                                        <div>
+                                            <QRCode
+                                                size={140}
+                                                value={clipboardText}
+                                            />
+                                        </div>
+                                    )}
                             </div>
                         ) : null}
                     </div>
