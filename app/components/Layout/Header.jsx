@@ -323,7 +323,7 @@ class Header extends React.Component {
             "showAdvancedFeatures",
             false
         );
-        const showBetaFeatures = true;
+        const showBetaFeatures = false;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
