@@ -1850,7 +1850,7 @@ class Exchange extends React.Component {
                                             value={this.state.inputValue}
                                             onChange={this._onInputName.bind(this, false)}
                                             placeholder={counterpart.translate(
-                                                "exchange.search"
+                                                "exchange.market_picker.search"
                                             )}
                                             maxLength="16"
                                             tabIndex={2}
@@ -1869,7 +1869,7 @@ class Exchange extends React.Component {
                                             value={this.state.inputValue}
                                             onChange={this._onInputName.bind(this, true)}
                                             placeholder={counterpart.translate(
-                                                "exchange.search"
+                                                "exchange.market_picker.search"
                                             )}
                                             maxLength="16"
                                             tabIndex={2}

@@ -1190,7 +1190,8 @@
             "filter_by_issuer": "Filter by issuer",
             "results": "Results (%(total_assets)s)",
             "use": "Use",
-            "show_all": "Show All"
+            "show_all": "Show All",
+            "search": "Asset name"
         },
         "chart_options": {
             "tools": "Tools",
