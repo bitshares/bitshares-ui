@@ -1677,6 +1677,8 @@
         "fee": "Gateway fee",
         "title": "Deposit & Withdraw",
         "assets": {
+            "bridge":
+                "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
             "open":
                 "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
             "trade":
