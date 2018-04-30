@@ -108,6 +108,7 @@ class Header extends React.Component {
             nextProps.lastMarket !== this.props.lastMarket ||
             nextProps.starredAccounts !== this.props.starredAccounts ||
             nextProps.currentLocale !== this.props.currentLocale ||
+            nextProps.currentTheme !== this.props.currentTheme ||
             nextState.active !== this.state.active ||
             nextState.hiddenAssets !== this.props.hiddenAssets ||
             nextState.dropdownActive !== this.state.dropdownActive ||
@@ -155,6 +156,17 @@ class Header extends React.Component {
         }
         this._closeDropdown();
     }
+
+    _toggleTheme = e => {
+        e.preventDefault();
+
+        const {currentTheme} = this.props;
+
+        SettingsActions.changeSetting({
+            setting: "themes",
+            value: currentTheme === "darkTheme" ? "lightTheme" : "darkTheme"
+        });
+    };
 
     _onNavigate(route, e) {
         e.preventDefault();
@@ -1126,6 +1138,22 @@ class Header extends React.Component {
                         </span>
                     )}
                 </div>
+                <div style={{marginLeft: 15}}>
+                    <span
+                        onClick={this._toggleTheme.bind(this)}
+                        style={{cursor: "pointer"}}
+                    >
+                        <Icon
+                            className="icon"
+                            size="1_5x"
+                            name={
+                                this.props.currentTheme === "darkTheme"
+                                    ? "sun"
+                                    : "moon"
+                            }
+                        />
+                    </span>
+                </div>
                 <div className="app-menu">
                     <div
                         onClick={this._toggleDropdownMenu}
@@ -1746,6 +1774,7 @@ export default connect(Header, {
                 "passwordLogin"
             ),
             currentLocale: SettingsStore.getState().settings.get("locale"),
+            currentTheme: SettingsStore.getState().settings.get("themes"),
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             settings: SettingsStore.getState().settings,
             locales: SettingsStore.getState().defaults.locale,
