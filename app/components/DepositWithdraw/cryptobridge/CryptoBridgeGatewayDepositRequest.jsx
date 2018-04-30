@@ -8,6 +8,7 @@ import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
+import assetUtils from "common/asset_utils";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
 import {cryptoBridgeAPIs} from "api/apiConfig";
@@ -92,7 +93,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
     _getDepositObject() {
         return {
-            inputCoinType: this.props.deposit_coin_type,
+            inputCoinType: assetUtils
+                .addCryptoBridgeNameSpace(this.props.deposit_coin_type)
+                .toLowerCase(), // TODO why does the backup coin need bridge namespace?
             outputCoinType: this.props.receive_coin_type,
             outputAddress: this.props.account.get("name"),
             url: cryptoBridgeAPIs.BASE,
@@ -312,6 +315,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             }
             return "";
         };
+
+        console.log(receive_address, clipboardText);
 
         if (isDeposit) {
             return (
@@ -590,25 +595,6 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             }}
                                         >
                                             {this.props.deposit_asset}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <Translate
-                                            component="td"
-                                            content="gateway.intermediate"
-                                        />
-                                        <td
-                                            style={{
-                                                fontWeight: "bold",
-                                                color: "#049cce",
-                                                textAlign: "right"
-                                            }}
-                                        >
-                                            <LinkToAccountById
-                                                account={this.props.issuer_account.get(
-                                                    "id"
-                                                )}
-                                            />
                                         </td>
                                     </tr>
                                     <tr>

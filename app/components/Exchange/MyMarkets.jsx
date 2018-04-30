@@ -660,7 +660,7 @@ class MyMarkets extends React.Component {
             "BRIDGE.BTC": [],
             "BRIDGE.BCO": [],
             "BRIDGE.LTC": [],
-            "BRIDGE.SMART": [],
+            //"BRIDGE.SMART": [],
             "BRIDGE.ZNY": [],
             "BRIDGE.MONA": [],
             BTS: [],
@@ -703,7 +703,7 @@ class MyMarkets extends React.Component {
                     cryptoBridgeMarketGroups[m.base].push(m);
                 }
                 if (cryptoBridgeMarketGroups[m.quote]) {
-                    cryptoBridgeMarketGroups[m.quote].push(m);
+                    //cryptoBridgeMarketGroups[m.quote].push(m);
                 }
                 if (
                     !cryptoBridgeMarketGroups[m.base] &&

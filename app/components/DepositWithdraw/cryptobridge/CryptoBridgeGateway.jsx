@@ -9,6 +9,7 @@ import {
     RecentTransactions,
     TransactionWrapper
 } from "components/Account/RecentTransactions";
+import assetUtils from "common/asset_utils";
 import DepositWithdrawAssetSelector from "../DepositWithdrawAssetSelector";
 import Immutable from "immutable";
 import LoadingIndicator from "../../LoadingIndicator";
@@ -28,23 +29,17 @@ class CryptoBridgeGateway extends React.Component {
         super();
 
         this.state = {
-            activeCoin: this._getActiveCoin(props, {action: "deposit"}),
+            activeCoin: this._getActiveCoin(props),
             action: props.viewSettings.get(`${props.provider}Action`, "deposit")
         };
     }
 
-    _getActiveCoin(props, state) {
+    _getActiveCoin(props) {
         let cachedCoin = props.viewSettings.get(
-            `activeCoin_${props.provider}_${state.action}`,
+            `activeCoin_${props.provider}`,
             null
         );
-        let firstTimeCoin = null;
-        if (state.action == "deposit") {
-            firstTimeCoin = "PPY";
-        }
-        if (state.action == "withdraw") {
-            firstTimeCoin = "PPY";
-        }
+        let firstTimeCoin = "BCO";
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
     }
@@ -52,24 +47,13 @@ class CryptoBridgeGateway extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.provider !== this.props.provider) {
             this.setState({
-                activeCoin: this._getActiveCoin(nextProps, this.state.action)
+                activeCoin: this._getActiveCoin(nextProps)
             });
         }
     }
 
-    onSelectCoin(e) {
-        this.setState({
-            activeCoin: e.target.value
-        });
-
-        let setting = {};
-        setting[`activeCoin_${this.props.provider}_${this.state.action}`] =
-            e.target.value;
-        SettingsActions.changeViewSetting(setting);
-    }
-
     changeAction(type) {
-        let activeCoin = this._getActiveCoin(this.props, {action: type});
+        let activeCoin = this._getActiveCoin(this.props);
 
         this.setState({
             action: type,
@@ -87,9 +71,7 @@ class CryptoBridgeGateway extends React.Component {
         });
 
         let setting = {};
-        setting[
-            `activeCoin_${this.props.provider}_${this.state.action}`
-        ] = asset;
+        setting[`activeCoin_${this.props.provider}`] = asset;
         SettingsActions.changeViewSetting(setting);
     };
 
@@ -125,8 +107,9 @@ class CryptoBridgeGateway extends React.Component {
 
         let coin = filteredCoins.filter(coin => {
             return isDeposit
-                ? coin.backingCoinType.toUpperCase() === activeCoin
-                : coin.symbol === activeCoin;
+                ? assetUtils.getCleanAssetSymbol(coin.backingCoinType) ===
+                      activeCoin
+                : assetUtils.getCleanAssetSymbol(coin.symbol) === activeCoin;
         })[0];
 
         if (!coin) coin = filteredCoins[0];
@@ -198,7 +181,9 @@ class CryptoBridgeGateway extends React.Component {
                                 gateway={provider}
                                 issuer_account={coinIssuer.name}
                                 account={account}
-                                deposit_asset={coin.backingCoinType.toUpperCase()}
+                                deposit_asset={assetUtils.getCleanAssetSymbol(
+                                    coin.backingCoinType
+                                )}
                                 deposit_asset_name={coin.name}
                                 deposit_coin_type={coin.backingCoinType.toLowerCase()}
                                 deposit_account={coin.depositAccount}

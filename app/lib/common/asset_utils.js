@@ -84,4 +84,16 @@ export default class AssetUtils {
 
         return parsed ? parsed : {main: description};
     }
+
+    static getCleanAssetSymbol(symbol) {
+        return symbol.toUpperCase().replace("BRIDGE.", "");
+    }
+
+    static addCryptoBridgeNameSpace(symbol) {
+        if (!symbol.match(/BRIDGE\./i)) {
+            return "BRIDGE." + symbol;
+        }
+
+        return symbol;
+    }
 }
