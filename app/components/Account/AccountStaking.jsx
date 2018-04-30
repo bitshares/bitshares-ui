@@ -5,8 +5,8 @@ import AccountStakeCreateNew from "./AccountStakeCreateNew";
 import {ChainStore} from "bitsharesjs/es";
 import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
-import WalletActions from "actions/WalletActions";
 import {Apis} from "bitsharesjs-ws";
+import CryptoBridgeActions from "../../actions/CryptoBridgeActions";
 
 const BCO_ASSET_ID = "1.3.1564";
 const BCO_ASSET_PRECISION = 7;
@@ -14,7 +14,7 @@ const BCO_ASSET_PRECISION = 7;
 class VestingBalance extends React.Component {
     _onClaim(claimAll, e) {
         e.preventDefault();
-        WalletActions.claimVestingBalance(
+        CryptoBridgeActions.claimStakingBalance(
             this.props.account.id,
             this.props.vb,
             claimAll
