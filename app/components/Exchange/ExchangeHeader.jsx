@@ -75,11 +75,6 @@ export default class ExchangeHeader extends React.Component {
         const volumeQuote = marketStats.get("volumeQuote");
         const dayChangeWithSign = dayChange > 0 ? "+" + dayChange : dayChange;
 
-        const volume24h = this.state.volumeShowQuote ? volumeQuote : volumeBase;
-        const volume24hAsset = this.state.volumeShowQuote
-            ? quoteAsset
-            : baseAsset;
-
         let showCollateralRatio = false;
 
         const quoteId = quoteAsset.get("id");
@@ -262,14 +257,23 @@ export default class ExchangeHeader extends React.Component {
                                         )}
                                         ready={marketReady}
                                         decimals={0}
-                                        volume={true}
-                                        price={volume24h}
+                                        volume={{
+                                            base: {
+                                                volume: volumeBase,
+                                                asset: baseAsset
+                                            },
+                                            quote: {
+                                                volume: volumeQuote,
+                                                asset: quoteAsset
+                                            },
+                                            swap: this.state.volumeShowQuote
+                                        }}
                                         className="hide-order-2 clickable"
-                                        base={volume24hAsset}
                                         market={marketID}
                                         content="exchange.volume_24"
                                     />
                                 ) : null}
+
                                 {!hasPrediction && feedPrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
