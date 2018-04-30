@@ -493,7 +493,6 @@ class AccountOverview extends React.Component {
                             emptyCell
                         )}
                     </td>
-                    <td>{directMarketLink}</td>
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
@@ -664,9 +663,6 @@ class AccountOverview extends React.Component {
                                         )}
                                     </td>
                                     <td>{emptyCell}</td>
-                                    <td style={{textAlign: "center"}}>
-                                        {directMarketLink}
-                                    </td>
                                     <td>
                                         {isBitAsset ? (
                                             <div
@@ -964,7 +960,7 @@ class AccountOverview extends React.Component {
         const showTotalValue = false;
         const showPriceValue = false;
         const showBuy = false;
-        const showTrade = true;
+        const showTrade = false;
         const showBorrow = false;
         const showSettle = false;
 
