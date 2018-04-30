@@ -396,13 +396,15 @@ class AssetActions {
     //     });
     // }
 
-    getAssetList(start, count) {
+    getAssetList(start, count, gateAssets = false) {
         let id = start + "_" + count;
         return dispatch => {
             if (!inProgress[id]) {
+                let assets;
                 inProgress[id] = true;
                 dispatch({loading: true});
-                return Apis.instance()
+
+                assets = Apis.instance()
                     .db_api()
                     .exec("list_assets", [start, count])
                     .then(assets => {
@@ -425,8 +427,8 @@ class AssetActions {
                         let bitAssetPromise =
                             bitAssetIDS.length > 0
                                 ? Apis.instance()
-                                      .db_api()
-                                      .exec("get_objects", [bitAssetIDS])
+                                    .db_api()
+                                    .exec("get_objects", [bitAssetIDS])
                                 : null;
 
                         Promise.all([dynamicPromise, bitAssetPromise]).then(
@@ -450,6 +452,17 @@ class AssetActions {
                         dispatch({loading: false});
                         delete inProgress[id];
                     });
+
+                // Fetch next 10 assets for each gateAsset on request
+                if(!!gateAssets) {
+                    this.getAssetList("BRIDGE." + start, 10);
+                    this.getAssetList("GDEX." + start, 10);
+                    this.getAssetList("RUDEX." + start, 10);
+                    this.getAssetList("OPEN." + start, 10);
+                    this.getAssetList("WIN." + start, 10);
+                }
+
+                return assets;
             }
         };
     }

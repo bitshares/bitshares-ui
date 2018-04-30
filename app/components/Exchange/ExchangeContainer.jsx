@@ -1,6 +1,7 @@
 import React from "react";
 import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
+import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import GatewayStore from "stores/GatewayStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -101,6 +102,12 @@ class ExchangeContainer extends React.Component {
                     },
                     bridgeCoins: () => {
                         return GatewayStore.getState().bridgeCoins;
+                    },
+                    searchAssets: () => {
+                        return AssetStore.getState().assets;
+                    },
+                    assetsLoading: () => {
+                        return AssetStore.getState().assetsLoading;
                     },
                     miniDepthChart: () => {
                         return SettingsStore.getState().viewSettings.get(

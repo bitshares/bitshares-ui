@@ -6,6 +6,9 @@ import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
+import {Link} from "react-router/es";
+import AssetName from "../Utility/AssetName";
+import Icon from "../Icon/Icon";
 import utils from "common/utils";
 import PriceChartD3 from "./PriceChartD3";
 import assetUtils from "common/asset_utils";
@@ -27,6 +30,9 @@ import Translate from "react-translate-component";
 import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
+import AssetActions from "actions/AssetActions";
+import {ChainValidation} from "bitsharesjs/es";
+import counterpart from "counterpart";
 import moment from "moment";
 
 Highcharts.setOptions({
@@ -34,6 +40,8 @@ Highcharts.setOptions({
         useUTC: false
     }
 });
+
+let lastLookup = new Date();
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -75,6 +83,7 @@ class Exchange extends React.Component {
             this
         );
 
+        this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
         this.psInit = true;
     }
 
@@ -859,6 +868,80 @@ class Exchange extends React.Component {
         this.setState({showDepthChart: !this.state.showDepthChart});
     }
 
+    _onSelectIssuer(e) {
+        this.setState({
+            filterByIssuerName: e.target.value == "0" ? null : e.target.value
+        });
+    }
+
+    _showMarketPicker(asset) {
+        let showMarketPicker = !!this.state.showMarketPicker && !!this.state.marketPickerAsset && this.state.marketPickerAsset == asset ? false : true;
+        this.setState({
+            showMarketPicker,
+            inputValue: "",
+            marketPickerAsset: asset,
+        });
+    }
+
+    _onInputName(getBackedAssets, e) {
+        let inputValue = e.target.value.trim().toUpperCase();
+        let isValidName = !ChainValidation.is_valid_symbol_error(
+            inputValue,
+            true
+        );
+
+        this.setState({
+            inputValue,
+            marketsList: "",
+            issuersList: "",
+            filterByIssuerName: null
+        });
+
+        /* Don't lookup invalid asset names */
+        if (inputValue && inputValue.length >= 3 && !isValidName) {
+            return this.setState({
+                assetNameError: true
+            });
+        } else {
+            this.setState({
+                assetNameError: false
+            });
+        }
+        this._lookupAssets(inputValue, getBackedAssets);
+    }
+
+    _lookupAssets(value, gatewayAssets = false, force = false) {
+        // console.log("__lookupAssets", value, force);
+        if (!value && value !== "") {
+            return;
+        }
+        let now = new Date();
+
+        let quote = value.toUpperCase();
+
+        this.setState({
+            lookupQuote: quote,
+        });
+
+        if (this.state.lookupQuote !== quote || force) {
+            if (quote.length < 1 || now - lastLookup <= 250) {
+                return false;
+            }
+            this.getAssetList(quote, 25, gatewayAssets);
+        }
+        
+    }
+
+    _changeMarketPickerFilter(value) {
+        this.setState({
+            marketPickerTab: value,
+            inputValue: "",
+            marketsList: "",
+            issuersList: "",
+            filterByIssuerName: null
+        });
+    }
+
     _moveOrderBook() {
         SettingsActions.changeViewSetting({
             leftOrderBook: !this.state.leftOrderBook
@@ -1198,7 +1281,9 @@ class Exchange extends React.Component {
             totals,
             feedPrice,
             buckets,
-            coreAsset
+            coreAsset,
+            searchAssets,
+            assetsLoading
         } = this.props;
 
         const {
@@ -1224,7 +1309,8 @@ class Exchange extends React.Component {
             indicators,
             indicatorSettings,
             width,
-            buySellTop
+            buySellTop,
+            lookupQuote
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
@@ -1581,6 +1667,111 @@ class Exchange extends React.Component {
             />
         );
 
+        let allMarkets = [];
+        let allIssuers = [];
+        let marketsList = this.state.marketsList;
+        let issuersList = this.state.issuersList;
+        let assetCount = 0;
+
+        if (searchAssets.size && !!this.state.inputValue && this.state.inputValue.length > 2) {
+            searchAssets
+                .filter(a => {
+                    try {
+                        if (a.options.description) {
+                            let description = JSON.parse(a.options.description);
+                            if ("visible" in description) {
+                                if (!description.visible) return false;
+                            }
+                        }
+                    } catch (e) {}
+
+                    return (
+                        a.symbol.indexOf(lookupQuote) !== -1 &&
+                        a.symbol.length >= lookupQuote.length
+                    );
+                })
+                .forEach(asset => {
+                    if(assetCount > 100) return;
+                    assetCount++;
+                    let issuer = ChainStore.getObject(asset.issuer, false, false);
+                    if(!issuer) return;
+
+                    let base = this.props.baseAsset.get("symbol");
+                    let marketID = asset.symbol + "_" + base;
+                    
+
+                    if (base !== asset.symbol 
+                        && (
+                            !this.state.filterByIssuerName ||
+                            this.state.filterByIssuerName == issuer.get("name")
+                        )
+                        && (
+                            (this.state.marketPickerTab == "search" && asset.symbol.startsWith(this.state.inputValue))
+                            || (!this.state.marketPickerTab || this.state.marketPickerTab == "filter")
+                        )
+                    )
+                    {
+                        allMarkets.push([
+                            marketID,
+                            {quote: asset.symbol, base: base, issuer: issuer.get("name")}
+                        ]);
+                    }
+                    if(!allIssuers.includes(issuer.get("name")))
+                        allIssuers.push(issuer.get("name"));
+                });
+        }
+
+        issuersList = allIssuers
+            .sort((a, b) => {
+                if (a > b) {
+                    return 1;
+                } else if (a < b) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }).map(issuer => {
+                return (
+                    <option key={issuer} value={issuer}>
+                        {issuer}
+                    </option>
+                );
+            });
+
+        marketsList = allMarkets
+            .sort((a, b) => {
+                if (a[1]["quote"] > b[1]["quote"]) {
+                    return 1;
+                } else if (a[1]["quote"] < b[1]["quote"]) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }).map(market => {
+                let isQuoteAsset = this.props.quoteAsset.get("symbol") == this.state.marketPickerAsset;
+                return (
+                    <li>
+                        <AssetName name={market[1]["quote"]} />
+                        
+                        <span style={{float: "right"}}>
+                            <Link 
+                                onClick={() => {
+                                    this.setState({
+                                        showMarketPicker: false,
+                                        marketPickerAsset: null,
+                                        marketPickerTab: null
+                                    });
+                                    MarketsActions.switchMarket();
+                                }}
+                                to={isQuoteAsset ? `/market/${market[1]["quote"]}_${baseSymbol}` : `/market/${quoteSymbol}_${market[1]["quote"]}`}
+                            >
+                                <Translate content="exchange.market_picker.use" />
+                            </Link>
+                        </span>
+                    </li>
+                );
+            });
+
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
@@ -1601,9 +1792,121 @@ class Exchange extends React.Component {
                     onSelectIndicators={this._onSelectIndicators.bind(this)}
                     marketStats={marketStats}
                     onToggleCharts={this._toggleCharts.bind(this)}
+                    onShowMarketPicker={this._showMarketPicker.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
+                
                 <div className="grid-block page-layout market-layout">
+                    {!!this.state.showMarketPicker ? 
+                        <div className="marketPicker">
+                            <div className="marketPicker__header">
+                                <div className="marketPicker__filterType">
+                                    <Translate 
+                                        className="marketPicker__filterHeader" 
+                                        component="span" 
+                                        content="exchange.market_picker.search_mode" />
+                                    <Icon 
+                                        style={{marginLeft: 5, cursor: "pointer"}} 
+                                        className={!this.state.marketPickerTab || this.state.marketPickerTab == "filter" ? "blue-icon" : ""} 
+                                        size="1_5x" 
+                                        onClick={this._changeMarketPickerFilter.bind(this, "filter")} 
+                                        name="filter" />
+                                    <Icon 
+                                        style={{marginLeft: 5, cursor: "pointer"}}
+                                        className={this.state.marketPickerTab == "search" ? "blue-icon" : ""}
+                                        size="1_5x"
+                                        onClick={this._changeMarketPickerFilter.bind(this, "search")} 
+                                        name="zoom" />
+                                </div>
+                                <Translate 
+                                    className="marketPicker__title"
+                                    component="span" 
+                                    content="exchange.market_picker.title" 
+                                />
+                            </div>
+                            <div className="marketPicker__subHeader">
+                                <Translate content="exchange.market_picker.sub_title" />&nbsp;
+                                <Link
+                                    to={`/asset/${this.state.marketPickerAsset}`}
+                                    style={{
+                                        cursor: "pointer",
+                                        color: "lightblue !important"
+                                    }}
+                                >
+                                    <AssetName name={this.state.marketPickerAsset}/>
+                                    <Icon className="blue-icon" style={{marginLeft: 5}} name="info-circle-o" />
+                                </Link>
+                                
+                            </div>
+                            <hr />
+                            <div id="search" style={{display: this.state.marketPickerTab == "search" ? "" : "none"}}>
+                                <div>
+                                    <section className="block-list no-border-bottom">
+                                        <header>
+                                            <Translate component="span" content="exchange.market_picker.search_for_asset" />
+                                        </header>
+                                        <input
+                                            type="text"
+                                            value={this.state.inputValue}
+                                            onChange={this._onInputName.bind(this, false)}
+                                            placeholder={counterpart.translate(
+                                                "exchange.search"
+                                            )}
+                                            maxLength="16"
+                                            tabIndex={2}
+                                        />
+                                    </section>
+                                </div>
+                            </div>
+                            <div id="filter" style={{display: !this.state.marketPickerTab || this.state.marketPickerTab == "filter" ? "" : "none"}}>
+                                <div>
+                                    <section className="block-list no-border-bottom">
+                                        <header>
+                                            <Translate component="span" content="exchange.market_picker.find_by_asset" />
+                                        </header>
+                                        <input
+                                            type="text"
+                                            value={this.state.inputValue}
+                                            onChange={this._onInputName.bind(this, true)}
+                                            placeholder={counterpart.translate(
+                                                "exchange.search"
+                                            )}
+                                            maxLength="16"
+                                            tabIndex={2}
+                                        />
+                                    </section>
+                                </div>
+                                <div>
+                                    <section className="block-list no-border-bottom">
+                                        <header>
+                                            <Translate component="span" content="exchange.market_picker.filter_by_issuer" />
+                                        </header>
+                                        <ul>
+                                            <li className="with-dropdpwn">
+                                                <select 
+                                                    className="settings-select"
+                                                    onChange={this._onSelectIssuer.bind(this)}
+                                                    style={{border: 0}}
+                                                >
+                                                    <option key="0" value="0">
+                                                        <Translate content="exchange.market_picker.show_all" />
+                                                    </option>
+                                                    {issuersList}
+                                                </select>
+                                            </li>
+                                        </ul>
+                                    </section>
+                                </div>
+                            </div>
+                            <section className="block-list no-border-bottom">
+                                <Translate component="header" content="exchange.market_picker.results" total_assets={allMarkets.length} />
+                            </section>
+                            {assetsLoading && allMarkets.length ? 
+                                <div style={{textAlign: "center"}}><LoadingIndicator type="three-bounce" /></div> : 
+                                <div className="results"><ul style={{marginLeft: 0}}>{marketsList}</ul></div>
+                            }
+                        </div> : null
+                    }
                     <AccountNotifications />
                     {/* Main vertical block with content */}
 

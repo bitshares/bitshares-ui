@@ -39,6 +39,10 @@ export default class ExchangeHeader extends React.Component {
         });
     }
 
+    marketPicker(asset) {
+        this.props.onShowMarketPicker(asset);
+    }
+
     render() {
         const {
             quoteAsset,
@@ -150,25 +154,21 @@ export default class ExchangeHeader extends React.Component {
                                         marginTop: "1px"
                                     }}
                                 >
-                                    <Link
-                                        to={`/asset/${quoteSymbol}`}
-                                        className="asset-prefix"
-                                    >
+                                    <span onClick={this.marketPicker.bind(this, quoteSymbol)} style={{cursor: "pointer"}}>
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
+                                            noTip
                                         />
-                                    </Link>
+                                    </span>
                                     <span style={{padding: "0 5px"}}>/</span>
-                                    <Link
-                                        to={`/asset/${baseSymbol}`}
-                                        className="asset-prefix"
-                                    >
+                                    <span onClick={this.marketPicker.bind(this, baseSymbol)} style={{cursor: "pointer"}}>
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}
+                                            noTip
                                         />
-                                    </Link>
+                                    </span>
                                 </div>
                             ) : (
                                 <a className="market-symbol">
