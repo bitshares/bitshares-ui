@@ -51,7 +51,7 @@ module.exports = function(env) {
 
     // OUTPUT PATH
     var outputPath = path.join(root_dir, "assets");
-    var revision = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION;
+    var revision = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION || "";
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
@@ -69,10 +69,13 @@ module.exports = function(env) {
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
+            __CB_BASE_URL__: JSON.stringify(
+                process.env.__CB_BASE_URL__ || env.cbBaseUrl || false
+            ),
             __UI_API__: JSON.stringify(
                 env.apiUrl || "https://ui.bitshares.eu/api"
             ),
-            __TESTNET__: !!env.testnet,
+            __TESTNET__: !!process.env.__TESTNET__ || !!env.testnet,
             __DEPRECATED__: !!env.deprecated
         }),
         new webpack.ContextReplacementPlugin(

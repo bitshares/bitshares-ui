@@ -1,3 +1,6 @@
+const cbApiBase =
+    "https://api." + (__TESTNET__ ? "testnet." : "") + "crypto-bridge.org";
+
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
@@ -25,10 +28,7 @@ export const rudexAPIs = {
 };
 
 export const cryptoBridgeAPIs = {
-    BASE:
-        "https://api." +
-        (__TESTNET__ ? "testnet." : "") +
-        "crypto-bridge.org/api/v1",
+    BASE: (__CB_BASE_URL__ || cbApiBase) + "/api/v1",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/wallets",
     MARKETS: "/markets",
@@ -54,18 +54,10 @@ const WSS_TEST_NODES = [
     {
         url: "wss://bitshares.testnet.crypto-bridge.org",
         location: "TESTNET - CryptoBridge"
-    },
-    {
-        url: "wss://node.testnet.bitshares.eu",
-        location: "TESTNET - BitShares Europe (Frankfurt, Germany)"
-    },
-    {
-        url: "wss://testnet.nodes.bitshares.ws",
-        location: "TESTNET - BitShares Infrastructure Program"
     }
 ];
 
-const WSS_PROD_NODES = [
+const WS_PROD_NODES = [
     {
         url: "wss://fake.automatic-selection.com",
         location: {translate: "settings.api_closest"}
@@ -184,8 +176,8 @@ const WSS_PROD_NODES = [
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: __TESTNET__ ? WSS_TEST_NODES : WSS_PROD_NODES,
-    DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
-    TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
+    DEFAULT_FAUCET: __CB_BASE_URL__ || cbApiBase,
+    TESTNET_FAUCET: __CB_BASE_URL__ || cbApiBase,
     RPC_URL: "https://openledger.info/api/"
 };
 
