@@ -57,7 +57,7 @@ const WSS_TEST_NODES = [
     }
 ];
 
-const WS_PROD_NODES = [
+const WSS_PROD_NODES = [
     {
         url: "wss://fake.automatic-selection.com",
         location: {translate: "settings.api_closest"}
