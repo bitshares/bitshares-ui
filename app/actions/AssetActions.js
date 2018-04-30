@@ -455,11 +455,10 @@ class AssetActions {
 
                 // Fetch next 10 assets for each gateAsset on request
                 if(!!gateAssets) {
-                    this.getAssetList("BRIDGE." + start, 10);
-                    this.getAssetList("GDEX." + start, 10);
-                    this.getAssetList("RUDEX." + start, 10);
-                    this.getAssetList("OPEN." + start, 10);
-                    this.getAssetList("WIN." + start, 10);
+                    let gatewayPrefies = ["BRIDGE", "GDEX", "RUDEX", "OPEN", "WIN"];
+                    gatewayPrefies.forEach(a => {
+                        this.getAssetList(a + "." + start, 10);    
+                    });
                 }
 
                 return assets;
