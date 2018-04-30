@@ -1,8 +1,8 @@
 {
-    "name": "BitShares2-light",
-    "version": "2.0.180418",
+    "name": "CryptoBridge",
+    "version": "0.11.6",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
-    "homepage": "https://github.com/bitshares/bitshares-ui",
+    "homepage": "https://github.com/CryptoBridge/cryptobridge-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
         "James Calfee",
@@ -17,7 +17,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/bitshares/bitshares-ui"
+        "url": "git://github.com/CryptoBridge/cryptobridge-ui"
     },
     "main": "build/electron/index.js",
     "scripts": {
@@ -34,6 +34,7 @@
         "build-github": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.deprecated --env.baseUrl='/wallet/'",
         "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
         "build-electron-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
+        "build-testnet": "cross-env NODE_ENV=production webpack --env.prod --env.testnet",
         "prepare-electron": "copyfiles -f resources/*.js build/electron/",
         "postbuild-electron": "npm run prepare-electron",
         "postbuild-electron-nougly": "npm run prepare-electron",
@@ -76,7 +77,7 @@
     },
     "browsersList": "electron 1.7",
     "build": {
-        "productName": "BitShares",
+        "productName": "CryptoBridge",
         "appId": "org.bitshares.graphene",
         "files": [
             "build/electron",
@@ -116,7 +117,7 @@
                 "deb",
                 "AppImage"
             ],
-            "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
+            "synopsis": "CryptoBridge: Cryptocurrency and Decentralized Exchange"
         },
         "directories": {
             "buildResources": "resources",
