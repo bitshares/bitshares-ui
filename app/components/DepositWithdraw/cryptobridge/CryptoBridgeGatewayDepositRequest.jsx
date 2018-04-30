@@ -316,8 +316,6 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             return "";
         };
 
-        console.log(receive_address, clipboardText);
-
         if (isDeposit) {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
