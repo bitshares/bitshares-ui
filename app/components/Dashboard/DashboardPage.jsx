@@ -54,7 +54,7 @@ class DashboardPage extends React.Component {
                             <div className="content-block small-12">
                                 <div className="tabs-container generic-bordered-box">
                                     <Tabs
-                                        defaultActiveTab={1}
+                                        defaultActiveTab={0}
                                         segmented={false}
                                         setting="dashboardTab"
                                         className="account-tabs"
