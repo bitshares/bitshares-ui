@@ -875,7 +875,7 @@ class Exchange extends React.Component {
     }
 
     _showMarketPicker(asset) {
-        let showMarketPicker = !!this.state.showMarketPicker && !!this.state.marketPickerAsset && this.state.marketPickerAsset == asset ? false : true;
+        let showMarketPicker = !!asset ? true : false;
         this.setState({
             showMarketPicker,
             inputValue: "",

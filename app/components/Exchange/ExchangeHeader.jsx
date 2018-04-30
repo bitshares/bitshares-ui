@@ -40,7 +40,14 @@ export default class ExchangeHeader extends React.Component {
     }
 
     marketPicker(asset) {
-        this.props.onShowMarketPicker(asset);
+        let {selectedMarketPickerAsset} = this.state;
+
+        selectedMarketPickerAsset = !!selectedMarketPickerAsset && selectedMarketPickerAsset == asset ? null : asset;
+
+        this.setState({
+            selectedMarketPickerAsset
+        });
+        this.props.onShowMarketPicker(selectedMarketPickerAsset);
     }
 
     render() {
@@ -141,6 +148,9 @@ export default class ExchangeHeader extends React.Component {
 
         const translator = require("counterpart");
 
+        let isQuoteSelected = !!this.state.selectedMarketPickerAsset && this.state.selectedMarketPickerAsset == quoteSymbol;
+        let isBaseSelected = !!this.state.selectedMarketPickerAsset && this.state.selectedMarketPickerAsset == baseSymbol;
+
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
@@ -154,7 +164,11 @@ export default class ExchangeHeader extends React.Component {
                                         marginTop: "1px"
                                     }}
                                 >
-                                    <span onClick={this.marketPicker.bind(this, quoteSymbol)} style={{cursor: "pointer"}}>
+                                    <span
+                                        onClick={this.marketPicker.bind(this, quoteSymbol)} style={{
+                                            cursor: "pointer",
+                                            color: isQuoteSelected ? "#2196f3" : ""
+                                        }}>
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
@@ -162,7 +176,12 @@ export default class ExchangeHeader extends React.Component {
                                         />
                                     </span>
                                     <span style={{padding: "0 5px"}}>/</span>
-                                    <span onClick={this.marketPicker.bind(this, baseSymbol)} style={{cursor: "pointer"}}>
+                                    <span
+                                        onClick={this.marketPicker.bind(this, baseSymbol)} 
+                                        style={{
+                                            cursor: "pointer",
+                                            color: isBaseSelected ? "#2196f3" : ""    
+                                        }}>
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}
