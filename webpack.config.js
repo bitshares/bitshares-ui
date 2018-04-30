@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
-var git = require("git-rev-sync");
+//var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 var locales = require("./app/assets/locales");
 
@@ -50,6 +50,7 @@ module.exports = function(env) {
 
     // OUTPUT PATH
     var outputPath = path.join(root_dir, "assets");
+    var revision = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION;
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
@@ -61,7 +62,9 @@ module.exports = function(env) {
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
-            APP_VERSION: JSON.stringify(git.tag()),
+            APP_VERSION: JSON.stringify(
+                `${pkg.version}-${revision.substr(0, 7)}`
+            ),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
