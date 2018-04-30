@@ -20,7 +20,7 @@ $light-panel-bg-color: #fff;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
 $settings-menu-hover-bg: darken($light-panel-bg-color, 10%);
 $settings-menu-active-bg: darken($light-panel-bg-color, 10%);
-$button-bg-color: #2196f3;
+$button-bg-color: #0f88c2;
 $secondary-button-bg-color: #999999;
 $input-background: darken($bg-color, 8%);
 
@@ -31,18 +31,18 @@ $warning-color: #f35b92;
 $fee-color: #7f055e;
 
 // Exchange colors
-$bid-color: #258a14;
-$ask-color: #ea340b;
+$bid-color: #4de8bc;
+$ask-color: #ff0045;
 $call-color: #bbbf2b;
-$positive-color: #528c0a;
-$negative-color: rgba(225, 66, 74, 1);
+$positive-color: #4de8bc;
+$negative-color: #ff0045;
 $row-accent-color: #ffffff;
 $header-color: #dcdcdc;
 
 // Account table view colors
 $account-header: #b1b1b1;
 $account-cells: #dadada;
-$account-green: #488a00;
+$account-green: #4de8bc;
 $account-primarytext: $primary-text-color;
 $account-dimmed: #5d5d5d;
 $account-border: rgba(50, 49, 49, 0.1);
