@@ -3,6 +3,7 @@ var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 //var git = require("git-rev-sync");
+var pkg = require("./package.json");
 require("es6-promise").polyfill();
 var locales = require("./app/assets/locales");
 
