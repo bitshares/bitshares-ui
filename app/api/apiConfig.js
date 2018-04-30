@@ -54,6 +54,14 @@ const WSS_TEST_NODES = [
     {
         url: "wss://bitshares.testnet.crypto-bridge.org",
         location: "TESTNET - CryptoBridge"
+    },
+    {
+        url: "wss://node.testnet.bitshares.eu",
+        location: "TESTNET - BitShares Europe (Frankfurt, Germany)"
+    },
+    {
+        url: "wss://testnet.nodes.bitshares.ws",
+        location: "TESTNET - BitShares Infrastructure Program"
     }
 ];
 
