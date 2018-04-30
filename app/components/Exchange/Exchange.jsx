@@ -767,6 +767,12 @@ class Exchange extends React.Component {
         }
     }
 
+    _cancelLimitOrders(orderIDs, e) {
+        e.preventDefault();
+        const {currentAccount} = this.props;
+        MarketsActions.cancelLimitOrders(currentAccount.get("id"), orderIDs);
+    }
+
     _cancelLimitOrder(orderID, e) {
         e.preventDefault();
         let {currentAccount} = this.props;
@@ -1859,6 +1865,9 @@ class Exchange extends React.Component {
                                             "ordersTab"
                                         )}
                                         onCancel={this._cancelLimitOrder.bind(
+                                            this
+                                        )}
+                                        onCancelAll={this._cancelLimitOrders.bind(
                                             this
                                         )}
                                         flipMyOrders={this.props.viewSettings.get(

@@ -26,9 +26,16 @@ class TableHeader extends React.Component {
             quoteSymbol,
             dashboard,
             isMyAccount,
-            settings
+            settings,
+            onCancelAll
         } = this.props;
         let preferredUnit = settings ? settings.get("unit") : "1.3.0";
+
+        const cancelAllAction = onCancelAll && (
+            <a className="order-cancel" onClick={onCancelAll}>
+                <Icon name="cross-circle" className="icon-14px" />
+            </a>
+        );
 
         return !dashboard ? (
             <thead>
@@ -67,7 +74,14 @@ class TableHeader extends React.Component {
                             content="transaction.expiration"
                         />
                     </th>
-                    <th style={{width: "6%"}} />
+                    <th
+                        style={{
+                            width: "6%",
+                            textAlign: this.props.leftAlign ? "left" : "right"
+                        }}
+                    >
+                        {onCancelAll ? cancelAllAction : null}
+                    </th>
                 </tr>
             </thead>
         ) : (
@@ -449,6 +463,7 @@ class MyOpenOrders extends React.Component {
         if (!base || !quote) return null;
 
         let contentContainer;
+        const cancellableOrderIDs = [];
 
         // Is asset a BitAsset with Settlements
         let baseIsBitAsset =
@@ -487,6 +502,9 @@ class MyOpenOrders extends React.Component {
                 })
                 .map(order => {
                     let price = order.getPrice();
+                    if (!order.isCall()) {
+                        cancellableOrderIDs.push(order.id);
+                    }
                     return (
                         <OrderRow
                             price={price}
@@ -508,6 +526,9 @@ class MyOpenOrders extends React.Component {
                 })
                 .map(order => {
                     let price = order.getPrice();
+                    if (!order.isCall()) {
+                        cancellableOrderIDs.push(order.id);
+                    }
                     return (
                         <OrderRow
                             price={price}
@@ -567,6 +588,11 @@ class MyOpenOrders extends React.Component {
         let openSettlementWidth =
             baseIsBitAsset || quoteIsBitAsset ? "inherit" : "none";
 
+        const onCancelAll =
+            this.props.onCancelAll && cancellableOrderIDs.length > 1
+                ? this.props.onCancelAll.bind(this, cancellableOrderIDs)
+                : null;
+
         return (
             <div
                 style={{marginBottom: "15px"}}
@@ -604,6 +630,7 @@ class MyOpenOrders extends React.Component {
                                     type="sell"
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
+                                    onCancelAll={onCancelAll}
                                 />
                             ) : (
                                 <thead>
