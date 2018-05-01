@@ -298,7 +298,7 @@ export function requestDepositAddress({
                 reply.json().then(
                     json => {
                         delete depositRequests[body_string];
-                        // console.log( "reply: ", json )
+                        // console.log( "reply: ", json );
                         let address = {
                             address: json.inputAddress || "unknown",
                             memo: json.inputMemo,
@@ -307,14 +307,14 @@ export function requestDepositAddress({
                         if (stateCallback) stateCallback(address);
                     },
                     error => {
-                        // console.log( "error: ",error  );
+                        console.log( "error: ",error  );
                         delete depositRequests[body_string];
                         if (stateCallback) stateCallback(null);
                     }
                 );
             },
             error => {
-                // console.log( "error: ",error  );
+                console.log( "error: ",error  );
                 delete depositRequests[body_string];
                 if (stateCallback) stateCallback(null);
             }
@@ -378,6 +378,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 backingCoinType: !!gatewayStatus.singleWallet
                     ? inputCoin.backingCoinType.toUpperCase()
                     : outputCoin.walletSymbol,
+                minAmount: outputCoin.minAmount || 0,
+                maxAmount: outputCoin.maxAmount || 999999999,
                 symbol: inputCoin.walletSymbol,
                 supportsMemos: outputCoin.supportsOutputMemos,
                 depositAllowed: isDepositAllowed,
