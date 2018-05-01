@@ -517,13 +517,6 @@ function BindToChainState(Component, options = {}) {
 
         render() {
             const props = omit(this.props, this.all_chain_props);
-            if (Component.name === "ExchangeSubscriber")
-                console.log(
-                    "props:",
-                    this.all_chain_props,
-                    "state:",
-                    this.state
-                );
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
                     if (typeof options !== "undefined" && options.show_loader) {
