@@ -129,7 +129,9 @@ class BuySell extends React.Component {
             asset_id: quote.get("asset_id"),
             precision: quote.get("precision")
         });
-        const marketFeePercent =
+	const baseMarketFeePercent =
+            base.getIn(["options", "market_fee_percent"]) / 100 + "%";
+        const quoteMarketFeePercent =
             quote.getIn(["options", "market_fee_percent"]) / 100 + "%";
         const quoteFee = !amount
             ? 0
@@ -160,7 +162,9 @@ class BuySell extends React.Component {
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+		    <Translate content="explorer.asset.summary.market_fee" />:{
+                        baseMarketFeePercent
+                    }
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
@@ -203,7 +207,7 @@ class BuySell extends React.Component {
             <div className="grid-block no-padding buy-sell-row">
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
                     <Translate content="explorer.asset.summary.market_fee" />:{
-                        marketFeePercent
+                        quoteMarketFeePercent
                     }
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
