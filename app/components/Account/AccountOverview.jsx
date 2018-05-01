@@ -103,9 +103,9 @@ class AccountOverview extends React.Component {
             if (aRef && bRef) {
                 let aPrice = aRef.getFinalPrice(true);
                 let bPrice = bRef.getFinalPrice(true);
-                if (!aPrice && bPrice) return 1;
-                if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice)
+                if (aPrice === null && bPrice !== null) return 1;
+                if (aPrice !== null && bPrice === null) return -1;
+                if (aPrice === null && bPrice === null)
                     return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection
                     ? aPrice - bPrice
@@ -175,10 +175,6 @@ class AccountOverview extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            !utils.are_equal_shallow(
-                nextProps.balanceAssets,
-                this.props.balanceAssets
-            ) ||
             !utils.are_equal_shallow(
                 nextProps.backedCoins,
                 this.props.backedCoins
@@ -1410,10 +1406,6 @@ class AccountOverview extends React.Component {
 }
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
-AccountOverview = AssetWrapper(AccountOverview, {
-    propNames: ["balanceAssets"],
-    asList: true
-});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {
