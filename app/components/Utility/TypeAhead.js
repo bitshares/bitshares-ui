@@ -7,8 +7,21 @@ import cnames from "classnames";
 export default class TypeAhead extends React.Component {
     constructor(props) {
         super(props);
+
+        let valueRender = null;
+
+        if (props.items) {
+            props.items.find(item => {
+                if (item.id === props.defaultValue && item.labelRender) {
+                    valueRender = item.labelRender;
+                    return true;
+                }
+            });
+        }
+
         this.state = {
-            value: this.props.defaultValue
+            value: props.defaultValue,
+            valueRender
         };
     }
 
