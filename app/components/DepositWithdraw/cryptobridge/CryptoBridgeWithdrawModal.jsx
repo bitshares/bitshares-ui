@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
+import assetUtils from "common/asset_utils";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
@@ -226,6 +227,9 @@ class WithdrawModalBlocktrades extends React.Component {
         validateAddress({
             url: props.url,
             walletType: props.output_wallet_type,
+            output_coin_type: assetUtils
+                .addCryptoBridgeNameSpace(props.output_coin_type)
+                .toLowerCase(), //TODO check why bridge namespace is needed in API
             newAddress: new_withdraw_address
         }).then(isValid => {
             if (this.state.withdraw_address === new_withdraw_address) {

@@ -90,7 +90,11 @@ export default class AssetUtils {
     }
 
     static addCryptoBridgeNameSpace(symbol) {
-        if (!symbol.match(/BRIDGE\./i)) {
+        if (
+            symbol &&
+            !symbol.match(/BRIDGE\./i) &&
+            symbol.indexOf(".") === -1
+        ) {
             return "BRIDGE." + symbol;
         }
 
