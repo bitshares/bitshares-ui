@@ -17,7 +17,7 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash";
 import {Price, Asset} from "common/MarketClasses";
 
-class WithdrawModalBlocktrades extends React.Component {
+class CryptoBridgeWithdrawModal extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
@@ -227,9 +227,7 @@ class WithdrawModalBlocktrades extends React.Component {
         validateAddress({
             url: props.url,
             walletType: props.output_wallet_type,
-            output_coin_type: assetUtils
-                .addCryptoBridgeNameSpace(props.output_coin_type)
-                .toLowerCase(), //TODO check why bridge namespace is needed in API
+            output_coin_type: props.output_coin_type,
             newAddress: new_withdraw_address
         }).then(isValid => {
             if (this.state.withdraw_address === new_withdraw_address) {
@@ -856,6 +854,6 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawModalBlocktrades, {
+export default BindToChainState(CryptoBridgeWithdrawModal, {
     keep_updating: true
 });

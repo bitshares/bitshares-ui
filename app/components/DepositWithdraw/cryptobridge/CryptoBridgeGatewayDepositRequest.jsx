@@ -655,7 +655,11 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 output_coin_name={this.props.deposit_asset_name}
                                 gateFee={gate_fee}
                                 output_coin_symbol={this.props.deposit_asset}
-                                output_coin_type={this.props.deposit_coin_type}
+                                output_coin_type={assetUtils
+                                    .addCryptoBridgeNameSpace(
+                                        this.props.deposit_coin_type
+                                    )
+                                    .toLowerCase()}
                                 output_wallet_type={
                                     this.props.deposit_wallet_type
                                 }
