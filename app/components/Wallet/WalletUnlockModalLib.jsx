@@ -69,28 +69,23 @@ export const BackupWarning = ({onChange, checked}) => (
     </div>
 );
 
-export const LoginButtons = ({onLogin, onBackupLogin, allowBackupLogin}) => (
+export const LoginButtons = ({onLogin, onBackupLogin, useBackupLogin}) => (
     <div className="button-group">
         <button
             className="button"
             data-place="bottom"
             data-html
             data-tip={counterpart.translate("tooltip.login")}
-            onClick={onLogin}
+            onClick={useBackupLogin ? onBackupLogin : onLogin}
         >
-            <Translate content="header.unlock_short" />
+            <Translate
+                content={
+                    useBackupLogin
+                        ? "wallet.backup_login"
+                        : "header.unlock_short"
+                }
+            />
         </button>
-        {allowBackupLogin && (
-            <button
-                className="button primary hollow"
-                data-place="bottom"
-                data-html
-                data-tip={counterpart.translate("tooltip.login")}
-                onClick={onBackupLogin}
-            >
-                <Translate content="wallet.backup_login" />
-            </button>
-        )}
     </div>
 );
 

@@ -350,7 +350,7 @@ class WalletUnlockModal extends React.Component {
             walletSelected &&
             !restoringBackup &&
             !(!!dbWallet && !!dbWallet.backup_date);
-        const allowBackupLogin =
+        const useBackupLogin =
             !passwordLogin && backupRequested && !stopAskingForBackup;
         const walletDisplayName = backup.name || currentWallet;
         let tabIndex = 0;
@@ -439,7 +439,7 @@ class WalletUnlockModal extends React.Component {
                     <LoginButtons
                         onLogin={this.handleLogin}
                         onBackupLogin={this.handleBackupAndLogin}
-                        allowBackupLogin={allowBackupLogin}
+                        useBackupLogin={useBackupLogin}
                     />
                 </form>
             </BaseModal>
