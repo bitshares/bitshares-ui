@@ -96,9 +96,6 @@ class TableHeader extends React.Component {
                     <th style={leftAlign}>
                         <Translate content="exchange.price_market" />
                     </th>
-                    <th style={{textAlign: "right"}}>
-                        <Translate content="exchange.value" />
-                    </th>
                     {/* <th><Translate content="transaction.expiration" /></th> */}
                     <th>
                         <Translate content="account.trade" />
@@ -304,16 +301,6 @@ class OrderRow extends React.Component {
                             hide_asset
                         />
                     )}
-                </td>
-                <td style={{textAlign: "right"}} onClick={this.props.onFlip}>
-                    <EquivalentValueComponent
-                        hide_asset
-                        amount={order.amountForSale().getAmount()}
-                        fromAsset={order.amountForSale().asset_id}
-                        noDecimals={true}
-                        toAsset={preferredUnit}
-                    />{" "}
-                    <AssetName name={preferredUnit} />
                 </td>
                 {/* <td>
                     {isCall ? null : <FormattedDate

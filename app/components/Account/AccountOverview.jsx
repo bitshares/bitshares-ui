@@ -1214,25 +1214,7 @@ class AccountOverview extends React.Component {
 
                             <Tab title="account.open_orders">
                                 <AccountOrders {...this.props}>
-                                    <tbody>
-                                        <tr className="total-value">
-                                            <td
-                                                colSpan="7"
-                                                style={{textAlign: "right"}}
-                                            >
-                                                {totalValueText}
-                                            </td>
-                                            <td
-                                                colSpan="2"
-                                                style={{textAlign: "left"}}
-                                            >
-                                                {ordersValue}
-                                            </td>
-                                            {this.props.isMyAccount ? (
-                                                <td />
-                                            ) : null}
-                                        </tr>
-                                    </tbody>
+                                    <tbody />
                                 </AccountOrders>
                             </Tab>
 
