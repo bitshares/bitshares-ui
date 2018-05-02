@@ -16,6 +16,9 @@ import {Apis} from "bitsharesjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {CallOrder, FeedPrice} from "common/MarketClasses";
 import Page404 from "../Page404/Page404";
+import FundFeePool from "../Account/FundFeePool";
+import AccountStore from "stores/AccountStore";
+import {connect} from "alt-react";
 
 class AssetFlag extends React.Component {
     render() {
@@ -585,6 +588,11 @@ class Asset extends React.Component {
                         </tr>
                     </tbody>
                 </table>
+                <FundFeePool
+                    asset={asset.symbol}
+                    funderAccountName={this.props.currentAccount}
+                    hideBalance
+                />
             </div>
         );
     }
@@ -1146,6 +1154,20 @@ class Asset extends React.Component {
         );
     }
 }
+
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        const chainID = Apis.instance().chain_id;
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
+    }
+});
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]

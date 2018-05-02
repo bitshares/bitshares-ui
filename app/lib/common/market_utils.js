@@ -4,7 +4,7 @@ let {object_type} = ChainTypes;
 let opTypes = Object.keys(object_type);
 import {Asset} from "./MarketClasses";
 
-let priceCacheTTL = 1000 * 60 * 1; // 3 minutes
+let priceCacheTTL = 1000 * 60 * 0.5; // 0.5 minutes
 let priceCache = {};
 
 const MarketUtils = {
@@ -103,12 +103,20 @@ const MarketUtils = {
             }, priceCacheTTL);
         }
 
-        if (priceCache[directMarket] && !forceRefresh)
+        if (priceCache[directMarket] && !forceRefresh) {
+            if (real)
+                return priceCache[directMarket].toReal(
+                    toAsset.get("id") !== priceCache[directMarket].base.asset_id
+                );
             return priceCache[directMarket];
+        }
 
         const directStats = marketStats.get(directMarket);
         if (directStats && directStats.price && directStats.volumeBase !== 0) {
-            if (real) return directStats.price.toReal();
+            if (real)
+                return directStats.price.toReal(
+                    toAsset.get("id") !== directStats.price.base.asset_id
+                );
             return directStats.price;
         }
 
@@ -147,7 +155,10 @@ const MarketUtils = {
 
         priceCache[directMarket] = finalPrice;
         cacheClearTimer();
-        if (real) return finalPrice.toReal();
+        if (real)
+            return finalPrice.toReal(
+                toAsset.get("id") !== finalPrice.base.asset_id
+            );
         return finalPrice;
     },
 

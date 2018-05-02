@@ -239,9 +239,11 @@ class AccountStore extends BaseStore {
         } else {
             accountStorage.set(key, account);
         }
-        this.setState({
-            passwordAccount: account
-        });
+        if (this.state.passwordAccount !== account) {
+            this.setState({
+                passwordAccount: account
+            });
+        }
     }
 
     onToggleHideAccount({account, hide}) {
@@ -294,10 +296,20 @@ class AccountStore extends BaseStore {
                                     this._unlinkAccount(a.get("name"));
                                 }
                             });
-                            this.setState({
-                                myActiveAccounts: myActiveAccounts.asImmutable(),
-                                accountsLoaded: true
-                            });
+                            let immutableAccounts = myActiveAccounts.asImmutable();
+                            if (
+                                this.state.myActiveAccounts !==
+                                immutableAccounts
+                            ) {
+                                this.setState({
+                                    myActiveAccounts: myActiveAccounts.asImmutable()
+                                });
+                            }
+
+                            if (this.state.accountsLoaded === false) {
+                                this.setState({accountsLoaded: true});
+                            }
+
                             if (!this.state.subbed)
                                 ChainStore.subscribe(this.chainStoreUpdate);
                             this.state.subbed = true;
@@ -331,15 +343,18 @@ class AccountStore extends BaseStore {
             !this.initial_account_refs_load &&
             this.account_refs === account_refs
         ) {
-            return this.setState({refsLoaded: true});
+            if (this.state.refsLoaded === false) {
+                this.setState({refsLoaded: true});
+            }
+            return;
         }
         this.account_refs = account_refs;
         let pending = false;
 
         if (this.addAccountRefsInProgress) return;
         this.addAccountRefsInProgress = true;
-        this.state.myActiveAccounts = this.state.myActiveAccounts.withMutations(
-            myActiveAccounts => {
+        let myActiveAccounts = this.state.myActiveAccounts.withMutations(
+            accounts => {
                 account_refs.forEach(id => {
                     let account = ChainStore.getAccount(id);
                     if (account === undefined) {
@@ -386,16 +401,17 @@ class AccountStore extends BaseStore {
                     }
                     if (
                         account &&
-                        !myActiveAccounts.includes(account.get("name")) &&
+                        !accounts.includes(account.get("name")) &&
                         !this.state.myHiddenAccounts.has(account.get("name"))
                     ) {
-                        myActiveAccounts.add(account.get("name"));
+                        accounts.add(account.get("name"));
                     }
                 });
             }
         );
-        // console.log("AccountStore addAccountRefs myActiveAccounts",this.state.myActiveAccounts.size);
-        this.setState({myActiveAccounts: this.state.myActiveAccounts});
+        if (myActiveAccounts !== this.state.myActiveAccounts) {
+            this.setState({myActiveAccounts});
+        }
         this.initial_account_refs_load = pending;
         this.tryToSetCurrentAccount();
         this.addAccountRefsInProgress = false;
@@ -553,7 +569,9 @@ class AccountStore extends BaseStore {
         const currentAccountKey = this._getStorageKey("currentAccount");
         if (accountStorage.has(passwordAccountKey)) {
             const acc = accountStorage.get(passwordAccountKey, null);
-            this.setState({passwordAccount: acc});
+            if (this.state.passwordAccount !== acc) {
+                this.setState({passwordAccount: acc});
+            }
             return this.setCurrentAccount(acc);
         } else if (accountStorage.has(currentAccountKey)) {
             return this.setCurrentAccount(
@@ -577,7 +595,9 @@ class AccountStore extends BaseStore {
             name = null;
         }
 
-        this.setState({currentAccount: name});
+        if (this.state.currentAccount !== name) {
+            this.setState({currentAccount: name});
+        }
 
         accountStorage.set(key, name || null);
     }

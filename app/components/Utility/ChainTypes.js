@@ -9,28 +9,22 @@ const {object_type} = grapheneChainTypes;
 function createChainableTypeChecker(validate) {
     function checkType(isRequired, props, propName, componentName, location) {
         componentName = componentName || ANONYMOUS;
-        if (componentName === "ExchangeSubscriber")
-            console.log(
-                componentName,
-                propName,
-                props[propName],
-                validate(props, propName, componentName, location)
-            );
-        // if (props[propName] == null) {
-        //     if (isRequired) {
-        //         return new Error(
-        //             "Required " +
-        //                 location +
-        //                 " `" +
-        //                 propName +
-        //                 "` was not specified in " +
-        //                 ("`" + componentName + "`.")
-        //         );
-        //     }
-        //     return null;
-        // } else {
-        return validate(props, propName, componentName, location);
-        // }
+
+        if (props[propName] == null) {
+            if (isRequired) {
+                return new Error(
+                    "Required " +
+                        location +
+                        " `" +
+                        propName +
+                        "` was not specified in " +
+                        ("`" + componentName + "`.")
+                );
+            }
+            return null;
+        } else {
+            return validate(props, propName, componentName, location);
+        }
     }
 
     let chainedCheckType = checkType.bind(null, false);
