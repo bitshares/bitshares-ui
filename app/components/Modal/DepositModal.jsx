@@ -19,6 +19,8 @@ import {
 } from "lib/common/assetGatewayMixin";
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
+import AssetDepositInfo from "../Utility/AssetDepositFeeWarning";
+import AssetDepositFeeWarning from "../Utility/AssetDepositInfo";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -305,6 +307,9 @@ class DepositModalContent extends DecimalChecker {
                             </div>
                         </div>
                     </div>
+
+                    <AssetDepositInfo asset={backingAsset} />
+                    <AssetDepositFeeWarning asset={backingAsset} />
 
                     {usingGateway && selectedAsset
                         ? gatewaySelector.call(this, {

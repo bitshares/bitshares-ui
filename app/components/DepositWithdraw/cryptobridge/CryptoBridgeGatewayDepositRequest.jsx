@@ -7,6 +7,8 @@ import CryptoBridgeWithdrawModal from "./CryptoBridgeWithdrawModal";
 import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
+import AssetDepositInfo from "components/Utility/AssetDepositInfo";
+import AssetDepositFeeWarning from "../../Utility/AssetDepositFeeWarning";
 import AssetName from "components/Utility/AssetName";
 import assetUtils from "common/asset_utils";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
@@ -306,16 +308,6 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             lineHeight: 1.4
         };
 
-        const getLabelClass = type => {
-            if (type === "warn" || type === "warning") {
-                return "warning";
-            }
-            if (type === "error" || type === "alert") {
-                return "alert";
-            }
-            return "";
-        };
-
         if (isDeposit) {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
@@ -414,46 +406,24 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
                         </label>
-                        {!!this.props.deposit_fee_enabled && (
-                            <Translate
-                                component="label"
-                                className="label warning"
-                                style={labelStyle}
-                                content="cryptobridge.gateway.deposit_to_fee_warning"
-                                with={{
-                                    asset: this.props.deposit_asset,
-                                    fee_time_frame: this.props
-                                        .deposit_fee_time_frame,
-                                    fee_percentage: this.props
-                                        .deposit_fee_percentage,
-                                    fee_percentage_low_amounts: this.props
-                                        .deposit_fee_percentage_low_amounts,
-                                    fee_minimum: this.props.deposit_fee_minimum
-                                }}
-                            />
-                        )}
-                        {this.props.coin_info && this.props.coin_info.length > 0
-                            ? this.props.coin_info.map((info, i) => {
-                                  if (
-                                      !info.section ||
-                                      info.section === "deposit"
-                                  ) {
-                                      return (
-                                          <label
-                                              key={"depositInfo" + i}
-                                              className={
-                                                  "label " +
-                                                  getLabelClass(info.type)
-                                              }
-                                              style={labelStyle}
-                                          >
-                                              {info.text}
-                                          </label>
-                                      );
-                                  }
-                              })
-                            : null}
-
+                        <AssetDepositFeeWarning
+                            asset={{
+                                name: this.props.deposit_asset,
+                                depositFeeEnabled: this.props
+                                    .deposit_fee_enabled,
+                                depositFeeTimeframe: this.props
+                                    .deposit_fee_time_frame,
+                                depositFeePercentage: this.props
+                                    .deposit_fee_percentage,
+                                depositFeePercentageLowAmounts: this.props
+                                    .deposit_fee_percentage_low_amounts,
+                                depositFeeMinimum: this.props
+                                    .deposit_fee_minimum
+                            }}
+                        />
+                        <AssetDepositInfo
+                            asset={{info: this.props.coin_info}}
+                        />
                         {WalletDb.isLocked() ? (
                             <div className="content-block">
                                 <Translate
