@@ -130,6 +130,8 @@ class MarketGroup extends React.Component {
     _renderDeferred() {
         if (!this.renderDeferredTimeout) {
             this.renderDeferredTimeout = setTimeout(() => {
+                this.renderDeferredTimeout = null;
+
                 if (this.unmounted) {
                     return;
                 }
