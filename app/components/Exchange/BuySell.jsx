@@ -304,10 +304,9 @@ class BuySell extends React.Component {
         }
         let index = 0;
         let options = feeAssets.map(asset => {
-            let {name, prefix} = utils.replaceName(asset);
+            let {name} = utils.replaceName(asset);
             return (
                 <option key={asset.get("id")} value={index++}>
-                    {prefix}
                     {name}
                 </option>
             );
