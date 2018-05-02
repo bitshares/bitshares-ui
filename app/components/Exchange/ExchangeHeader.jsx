@@ -47,7 +47,7 @@ export default class ExchangeHeader extends React.Component {
         this.setState({
             selectedMarketPickerAsset
         });
-        this.props.onShowMarketPicker(selectedMarketPickerAsset);
+        this.props.onToggleMarketPicker(selectedMarketPickerAsset);
     }
 
     render() {
