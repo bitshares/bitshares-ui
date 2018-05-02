@@ -223,7 +223,7 @@ class Price {
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
             }
-            let frac = new Fraction(real);
+            let frac = new Fraction(real * 100, 100);
             let baseSats = base.toSats(),
                 quoteSats = quote.toSats();
             let numRatio = baseSats / quoteSats,
