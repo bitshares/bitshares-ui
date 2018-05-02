@@ -1207,7 +1207,7 @@ class Exchange extends React.Component {
             totals,
             feedPrice,
             buckets,
-            coreAsset,
+            coreAsset
         } = this.props;
 
         const {
@@ -1233,9 +1233,8 @@ class Exchange extends React.Component {
             indicators,
             indicatorSettings,
             width,
-            buySellTop,
+            buySellTop
         } = this.state;
-
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
         let base = null,
@@ -1590,8 +1589,6 @@ class Exchange extends React.Component {
                 currentAccount={this.props.currentAccount.get("id")}
             />
         );
-
-
 
         return (
             <div className="grid-block vertical">
