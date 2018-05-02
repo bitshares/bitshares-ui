@@ -62,7 +62,6 @@ class App extends React.Component {
 
     componentWillMount() {
         CryptoBridgeActions.getMarkets.defer();
-        CryptoBridgeActions.getAssets.defer();
     }
 
     componentWillUnmount() {
