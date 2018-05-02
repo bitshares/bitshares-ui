@@ -147,6 +147,10 @@ class AccountStaking extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.unmounted = true;
+    }
+
     retrieveVestingBalances(accountId) {
         accountId = accountId || this.props.account.get("id");
 
@@ -154,7 +158,9 @@ class AccountStaking extends React.Component {
             .db_api()
             .exec("get_vesting_balances", [accountId])
             .then(vbs => {
-                this.setState({vbs});
+                if (!this.unmounted) {
+                    this.setState({vbs});
+                }
             })
             .catch(err => {
                 console.log("error:", err);
