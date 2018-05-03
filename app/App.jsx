@@ -134,6 +134,9 @@ class App extends React.Component {
             }.bind(this)
         );
         updateGatewayBackers();
+
+        // remove loader
+        document.getElementById("centerLoader").style.display = "none";
     }
 
     _onIgnoreIncognitoWarning() {
@@ -201,11 +204,6 @@ class App extends React.Component {
     // }
 
     render() {
-        document.getElementById("centerLoader").style.display = this.state
-            .loading
-            ? "block"
-            : "none";
-
         let {theme, incognito, incognitoWarningDismissed} = this.state;
         let {walletMode} = this.props;
 
