@@ -201,6 +201,11 @@ class App extends React.Component {
     // }
 
     render() {
+        document.getElementById("centerLoader").style.display = this.state
+            .loading
+            ? "block"
+            : "none";
+
         let {theme, incognito, incognitoWarningDismissed} = this.state;
         let {walletMode} = this.props;
 
@@ -211,13 +216,7 @@ class App extends React.Component {
         if (this.state.syncFail) {
             content = <SyncError />;
         } else if (this.state.loading) {
-            content = (
-                <div className="grid-frame vertical">
-                    <LoadingIndicator
-                        loadingText={"Connecting to APIs and starting app"}
-                    />
-                </div>
-            );
+            // do nothing
         } else if (this.props.location.pathname === "/init-error") {
             content = (
                 <div className="grid-frame vertical">{this.props.children}</div>

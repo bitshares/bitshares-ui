@@ -24,11 +24,11 @@ class CryptoBridgeMarkets extends React.Component {
         return (
             <div>
                 <MarketsTable markets={markets} forceDirection={true} />
-                {markets.length < 5 && (
+                {markets.length < 5 ? (
                     <div style={{textAlign: "center", padding: "10px"}}>
                         <LoadingIndicator type="three-bounce" />
                     </div>
-                )}
+                ) : null}
             </div>
         );
     }
