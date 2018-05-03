@@ -722,6 +722,7 @@ class AccountAssetCreate extends React.Component {
                                     <input
                                         type="checkbox"
                                         checked={isChecked}
+                                        onChange={() => {}}
                                     />
                                     <label />
                                 </div>
@@ -912,6 +913,7 @@ class AccountAssetCreate extends React.Component {
                                                         <input
                                                             type="checkbox"
                                                             checked={isBitAsset}
+                                                            onChange={() => {}}
                                                         />
                                                         <label />
                                                     </div>
@@ -954,6 +956,7 @@ class AccountAssetCreate extends React.Component {
                                                                 checked={
                                                                     is_prediction_market
                                                                 }
+                                                                onChange={() => {}}
                                                             />
                                                             <label />
                                                         </div>
@@ -1274,6 +1277,7 @@ class AccountAssetCreate extends React.Component {
                                                                     checked={
                                                                         flagBooleans.charge_market_fee
                                                                     }
+                                                                    onChange={() => {}}
                                                                 />
                                                                 <label />
                                                             </div>

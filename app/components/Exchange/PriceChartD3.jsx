@@ -906,6 +906,7 @@ export default class Wrapper extends React.Component {
                                     null,
                                     i
                                 )}
+                                onChange={() => {}}
                             />
                             <div
                                 onClick={this.props.onChangeIndicators.bind(
@@ -932,6 +933,7 @@ export default class Wrapper extends React.Component {
                                     null,
                                     i
                                 )}
+                                onChange={() => {}}
                             />
                             <div className="clickable">
                                 <Translate
@@ -1003,6 +1005,7 @@ export default class Wrapper extends React.Component {
                             <input
                                 type="checkbox"
                                 checked={this.props.showVolumeChart}
+                                onChange={() => {}}
                             />
                             <div>
                                 <Translate
@@ -1024,6 +1027,7 @@ export default class Wrapper extends React.Component {
                             <input
                                 type="checkbox"
                                 checked={this.props.enableChartClamp}
+                                onChange={() => {}}
                             />
                             <div>
                                 <Translate

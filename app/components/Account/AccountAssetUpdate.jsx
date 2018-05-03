@@ -812,6 +812,7 @@ class AccountAssetUpdate extends React.Component {
                                     <input
                                         type="checkbox"
                                         checked={isChecked}
+                                        onChange={() => {}}
                                     />
                                     <label />
                                 </div>

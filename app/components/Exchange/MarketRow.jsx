@@ -311,6 +311,7 @@ class MarketRow extends React.Component {
                                             ? "This market is a default market and cannot be removed"
                                             : null
                                     }
+                                    onChange={() => {}}
                                 />
                             </td>
                         );

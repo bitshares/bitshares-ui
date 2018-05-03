@@ -312,6 +312,7 @@ class TransactionConfirm extends React.Component {
                                         <input
                                             type="checkbox"
                                             checked={this.props.propose}
+                                            onChange={() => {}}
                                         />
                                         <label />
                                     </div>

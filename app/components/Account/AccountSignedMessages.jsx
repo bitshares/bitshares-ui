@@ -339,6 +339,7 @@ class AccountSignedMessages extends React.Component {
                                                                 value={counterpart.translate(
                                                                     "account.signedmessages.verifyonchange"
                                                                 )}
+                                                                onChange={() => {}}
                                                             />
                                                             <label />
                                                         </div>
