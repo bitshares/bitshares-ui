@@ -38,11 +38,19 @@ class ExchangeInput extends DecimalChecker {
     }
 
     render() {
+        let value = parseFloat(this.props.value);
+        if (value && value <= 0.00001) {
+            value = value.toFixed(8);
+        }
+        const props = value
+            ? Object.assign({}, this.props, {value})
+            : this.props;
+
         return (
             <input
                 ref="input"
                 type="text"
-                {...this.props}
+                {...props}
                 onPaste={this.onPaste.bind(this)}
                 onKeyPress={this.onKeyPress.bind(this)}
             />
