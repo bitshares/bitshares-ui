@@ -43,7 +43,7 @@
             "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below."
     },
     "header": {
-        "title": "BitShares UI",
+        "title": "CryptoBridge UI",
         "account": "Account",
         "dashboard": "Dashboard",
         "deposit-withdraw": "Deposit/Withdraw",
@@ -111,7 +111,7 @@
         "propose_scam":
             "This proposal was created by a known scammer, do not approve it!",
         "login":
-            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+            "This CryptoBridge wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "buy_min":
             "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
         "borrow":
@@ -194,7 +194,7 @@
         "existing_user": "Existing user",
         "restore": "Restore",
         "advanced": "Advanced",
-        "intro_text_title": "Welcome to BitShares",
+        "intro_text_title": "Welcome to CryptoBridge",
         "intro_text_1": "Your Decentralized Exchange",
         "intro_text_2":
             "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged assets such as bitUSD, bitCNY, bitBTC, bitGold and more. These assets can all be traded with <b>zero</b> counter-party risk, putting you in total control of your funds.",
@@ -211,7 +211,7 @@
         "total_estimate":
             "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
         "trade": "Trade",
-        "welcome": "Welcome to BitShares",
+        "welcome": "Welcome to CryptoBridge",
         "asset": "Asset",
         "market_value": "Market Value",
         "hour_24": "24hr Change",
@@ -304,7 +304,7 @@
             "available": "Available to claim",
             "referral_link": "Your referral link",
             "referral_text":
-                "Give this to link to people you want to refer to BitShares"
+                "Give this to link to people you want to refer to CryptoBridge"
         },
         "user_issued_assets": {
             "symbol": "Symbol",
@@ -592,7 +592,7 @@
     "transfer": {
         "header": "Transfer details",
         "header_subheader":
-            "Transfers are used for sending funds to other BitShares Account Holders",
+            "Transfers are used for sending funds to other CryptoBridge/BitShares Account Holders",
         "from": "From",
         "pay_from": "Pay From",
         "amount": "Quantity",
@@ -1164,7 +1164,7 @@
         "high_latency": "High latency"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "Block",
         "loading": "Loading...",
         "backup": "A Backup is Required",
@@ -1323,7 +1323,7 @@
         "create_importkeys_text":
             "In order to import keys, you first need to create a local wallet to contain the keys. Complete the dialog below to create a new local wallet.",
         "create_wallet_backup": "Create new wallet from backup",
-        "import_bts1": "Import from BitShares 0.9.3c",
+        "import_bts1": "Import from CryptoBridge 0.9.3c",
         "setup_wallet": "Setup your local wallet",
         "delete_wallet": "Delete Local Wallet",
         "delete_confirm_line1": "Are you ABSOLUTELY sure?",
@@ -1341,7 +1341,7 @@
         "create_backup": "Create Backup",
         "backup_brainkey": "Backup Brainkey",
         "create_backup_of": "Create backup now",
-        "import_backup": "Import BitShares 2.0 backup (.bin file)",
+        "import_backup": "Import CryptoBridge 2.0 backup (.bin file)",
         "import_backup_choose":
             "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
         "restore_backup": "Restore Backup",
@@ -1397,9 +1397,9 @@
         "noneed_backup": "No backup is needed",
         "restore": "Restore Local Wallet from Backup",
         "create_text":
-            "The BitShares local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+            "The CryptoBridge local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
         "account_create_wallet_text":
-            "This password will be used to create a new BitShares local wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+            "This password will be used to create a new CryptoBridge local wallet for you, which will only be stored locally in your browser. A CryptoBridge wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
         "create_account_text":
             "The account name you choose needs to be unique, as it will be registered publicly on the blockchain and will be your identifer for any transactions you make.",
         "first_account_paid":
@@ -1411,7 +1411,7 @@
         "backup_explain":
             "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
         "backup_new_account":
-            "Congratulations, you've just created a new account on the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+            "Congratulations, you've just created a new account on the CryptoBridge/BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
         "brainkey_not_backed_up": "This brainkey has never been backed up",
         "brainkey_backed_up": "This brainkey was last backed up",
         "new_password": "New password",
@@ -1433,7 +1433,7 @@
         "import_private_key": "Import a private key",
         "wallet_browser": "Your Web Browser is your Wallet",
         "has_wallet":
-            "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
+            "When you create your first CryptoBridge account, a CryptoBridge local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
         "go_get_started": "Getting Started",
         "wallet_crucial":
             "Your local wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>No one else can restore your account if you lose your backup.</strong>",
@@ -1449,7 +1449,7 @@
         "tips_settings": "Change the settings",
         "tips_account": "See your new account",
         "link_account": "Account",
-        "wallet_new": "New BitShares account",
+        "wallet_new": "New CryptoBridge account",
         "create_w_a": "Create a local wallet containing an account",
         "create_a": "Create a new blockchain account",
         "create_success": "Your local wallet has been created",
@@ -1508,14 +1508,14 @@
         "no_wallet": "You do not have a local wallet yet",
         "generated": "Generated password",
         "account_exp":
-            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
+            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in CryptoBridge!</strong>",
         "understand_1":
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
         "understand_3":
             " I understand that I will lose access to my funds if I lose my password",
         "bts_rules":
-            "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
+            "The first rule of CryptoBridge is: Do not lose your password.<br/>The second rule of CryptoBridge is: Do not lose your password.<br />The third rule of CryptoBridge is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
         "ok_done": "OK, take me to the dashboard",
         "local_switch":
             "Local wallet detected matching the given password, switching to local wallet mode"
@@ -1560,7 +1560,7 @@
         "withdraw": {
             "amount": "Amount to Withdraw",
             "address": "Withdraw to Address",
-            "bitshares_account": "Send to Bitshares Account",
+            "bitshares_account": "Send to CryptoBridge Account",
             "submit": "Withdraw",
             "quantity": "Quantity",
             "estimated_value": "Estimated Value",
@@ -1642,7 +1642,7 @@
         "not_connected": "Not connected",
         "browser": "Unsupported browser",
         "browser_text":
-            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+            "The Browser you are using has not been fully tested to support the CryptoBridge Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
         "understand": "I understand"
     },
     "refcode": {
@@ -1703,9 +1703,9 @@
         "deposit_to": "Please send your %(asset)s to the address below",
         "deposit_address": "Deposit address",
         "add_funds":
-            "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
+            "Quickly and easily add funds to your CryptoBridge account <strong>%(account)s</strong>. This service is provided by Openledger.",
         "withdraw_funds":
-            "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+            "You are going to withdraw funds from your CryptoBridge account to your external %(asset)s account.",
         "balance_asset": "Current %(asset)s balance",
         "withdraw_placeholder": "Please enter your %(asset)s address",
         "balance": "Current balance",
@@ -1826,9 +1826,9 @@
             "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
         "text_1": "Local wallet detected",
         "text_2":
-            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+            "Please backup your wallet now and restore the backup file to <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
         "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+            "Please use <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a> from now on, your existing credentials will let you login there as well."
     },
     "news": {
         "news": "News",
@@ -1906,7 +1906,7 @@
             "staking_text3":
                 "You can only stake BCO that you have deposited into the <b>CryptoBridge decentralized exchange</b>. You can find more information about the advantages of the <b>CryptoBridge decentralized exchange</b> and its profit sharing at <a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>. More details on how payouts happen and how bonuses are applied are also available on the <a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>. ",
             "status": "Status",
-            "staking": "Staking",
+            "staking": "BridgeCoin Staking",
             "days": "%(days)s Days",
             "available": "Available for claiming",
             "month_1": "1 Month (%(bonus)s bonus)",
