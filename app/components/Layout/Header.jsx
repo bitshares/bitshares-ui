@@ -336,6 +336,7 @@ class Header extends React.Component {
             false
         );
         const showBetaFeatures = false;
+        const showLegacyFeatures = false;
 
         let tradingAccounts = AccountStore.getMyAccounts();
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
@@ -1320,7 +1321,7 @@ class Header extends React.Component {
                                     </div>
                                 </li>
 
-                                {showAdvancedFeatures ? (
+                                {showAdvancedFeatures && showLegacyFeatures ? (
                                     <li
                                         className={cnames({
                                             active:
