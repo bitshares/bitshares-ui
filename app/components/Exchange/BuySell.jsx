@@ -354,6 +354,8 @@ class BuySell extends React.Component {
 
         const minExpirationDate = moment();
 
+        const advancedBuySellLinksEnabled = false;
+
         return (
             <div className={this.props.className}>
                 <div className="exchange-bordered buy-sell-container">
@@ -418,7 +420,8 @@ class BuySell extends React.Component {
                                 {caret}
                             </div>
                         }
-                        {this.props.currentBridges ? (
+                        {advancedBuySellLinksEnabled &&
+                        this.props.currentBridges ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onBuy.bind(this)}>
                                     <TranslateWithLinks
@@ -442,7 +445,8 @@ class BuySell extends React.Component {
                                 </a>
                             </div>
                         ) : null}
-                        {this.props.backedCoin ? (
+                        {advancedBuySellLinksEnabled &&
+                        this.props.backedCoin ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onDeposit.bind(this)}>
                                     <TranslateWithLinks
@@ -466,7 +470,7 @@ class BuySell extends React.Component {
                                 </a>
                             </div>
                         ) : null}
-                        {this.props.onBorrow ? (
+                        {advancedBuySellLinksEnabled && this.props.onBorrow ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this.props.onBorrow}>
                                     <TranslateWithLinks
