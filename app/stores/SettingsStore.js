@@ -242,9 +242,10 @@ class SettingsStore {
                 markets_4018d784: [
                     // BTS MAIN NET
                     "BRIDGE.BTC",
-                    "BRIDGE.BCO",
+                    // "BRIDGE.BCO",
                     "BRIDGE.LTC",
-                    "BRIDGE.ZNY",
+                    "BRIDGE.SMART",
+                    // "BRIDGE.ZNY",
                     "BRIDGE.MONA",
                     "BTS",
                     "OTHER"
