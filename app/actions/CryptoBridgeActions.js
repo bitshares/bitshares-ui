@@ -78,7 +78,7 @@ class CryptoBridgeActions {
                     reply.json().then(news => {
                         news = {
                             lastFetched: new Date(),
-                            data: news.content
+                            data: news.articles
                         };
 
                         dispatch(news.data);
