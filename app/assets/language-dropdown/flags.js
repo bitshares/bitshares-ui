@@ -1,5 +1,5 @@
 // Core asset
-require("file-loader?name=language-dropdown/EN.[ext]!./img/US.png");
+require("file-loader?name=language-dropdown/EN.[ext]!./img/GB.png");
 require("file-loader?name=language-dropdown/[name].[ext]!./img/FR.png");
 require("file-loader?name=language-dropdown/[name].[ext]!./img/TR.png");
 require("file-loader?name=language-dropdown/[name].[ext]!./img/ZH.png");

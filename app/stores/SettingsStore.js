@@ -6,6 +6,7 @@ import {merge} from "lodash";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
+import localeCodes from "assets/locales";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
@@ -44,7 +45,7 @@ class SettingsStore {
 
         this.initDone = false;
         this.defaultSettings = Immutable.Map({
-            locale: "en",
+            locale: this._detectDefaultLocale(),
             apiServer: settingsAPIs.DEFAULT_WS_NODE,
             faucet_address: settingsAPIs.DEFAULT_FAUCET,
             unit: CORE_ASSET,
@@ -67,18 +68,7 @@ class SettingsStore {
         let apiServer = settingsAPIs.WS_NODE_LIST;
 
         let defaults = {
-            locale: [
-                "en",
-                "zh",
-                "fr",
-                "ko",
-                "de",
-                "es",
-                "it",
-                "tr",
-                "ru",
-                "ja"
-            ],
+            locale: ["en"].concat(localeCodes),
             apiServer: apiServer,
             unit: [CORE_ASSET, "USD", "CNY", "BTC", "EUR", "GBP"],
             showSettles: [{translate: "yes"}, {translate: "no"}],
@@ -301,6 +291,22 @@ class SettingsStore {
             this.initDone = true;
             resolve();
         });
+    }
+
+    _detectDefaultLocale() {
+        const navigatorLanguage = window.navigator.language;
+
+        if (navigatorLanguage) {
+            const defaultUserLanguage = navigatorLanguage
+                .substr(0, 2)
+                .toLowerCase();
+
+            if (localeCodes.indexOf(defaultUserLanguage) !== -1) {
+                return defaultUserLanguage;
+            }
+        }
+
+        return "en";
     }
 
     getSetting(setting) {

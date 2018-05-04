@@ -11,16 +11,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
-
-const FlagImage = ({flag, width = 50, height = 50}) => {
-    return (
-        <img
-            height={height}
-            width={width}
-            src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`}
-        />
-    );
-};
+import Icon from "./Icon/Icon";
 
 class LoginSelector extends React.Component {
     constructor(props) {
@@ -64,14 +55,25 @@ class LoginSelector extends React.Component {
 
         const childCount = React.Children.count(this.props.children);
 
-        const flagDropdown = (
+        const languageDropdown = (
             <ActionSheet>
-                <ActionSheet.Button title="" style={{width: "64px"}}>
+                <ActionSheet.Button title="" style={{padding: 0}}>
                     <a
                         style={{padding: "1rem", border: "none"}}
                         className="button arrow-down"
                     >
-                        <FlagImage flag={this.state.currentLocale} />
+                        <Icon
+                            size="2x"
+                            name="globe"
+                            style={{
+                                marginBottom: "5px",
+                                display: "inline-block"
+                            }}
+                        />
+                        <br />
+                        <Translate
+                            content={"languages." + this.state.currentLocale}
+                        />
                     </a>
                 </ActionSheet.Button>
                 <ActionSheet.Content>
@@ -89,13 +91,6 @@ class LoginSelector extends React.Component {
                                             });
                                         }}
                                     >
-                                        <div className="table-cell">
-                                            <FlagImage
-                                                width="20"
-                                                height="20"
-                                                flag={locale}
-                                            />
-                                        </div>
                                         <div
                                             className="table-cell"
                                             style={{paddingLeft: 10}}
@@ -150,7 +145,7 @@ class LoginSelector extends React.Component {
                                                 "walkthrough.language_flag"
                                             )}
                                         >
-                                            {flagDropdown}
+                                            {languageDropdown}
                                         </div>
                                     </div>
                                 </div>

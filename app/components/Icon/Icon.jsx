@@ -34,6 +34,7 @@ let icons = [
     "fi-star",
     "folder",
     "gift",
+    "globe",
     "hamburger-x",
     "hamburger",
     "hourglass",
