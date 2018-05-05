@@ -12,8 +12,20 @@
         "test": {
             "presets": ["es2015", "stage-0","react"],
             "plugins": [
-                [ "babel-plugin-webpack-alias", { "config": "./conf/webpack.config.js" } ]
-            ]
+                ["module-resolver", {
+                    "root": ["./app", "./app/lib"],
+                    "alias": {
+                      "test": "./test",
+                      "bitsharesjs/es": "bitsharesjs"
+                    }
+                  }],
+                  ["transform-define", {
+                      "__ELECTRON__": false,
+                      "__DEV__": false,
+                      "__HASH_HISTORY__": false
+                      }]
+              ]
+
         }
     }
 }
