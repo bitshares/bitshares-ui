@@ -37,6 +37,10 @@
         margin-bottom: 0;
         font-size: 14.4px;
 
+        span {
+            text-transform: none;
+        }
+
         input {
             opacity: 0;
             position: absolute;

@@ -15,7 +15,9 @@ const stopPropagation = e => e.stopPropagation();
 
 export const KeyFileLabel = ({showUseOtherWalletLink, onUseOtherWallet}) => (
     <div className="label-container">
-        <label className="left-label login-label">Key file (.bin) </label>{" "}
+        <label className="left-label login-label">
+            <Translate content="wallet.key_file_bin" />{" "}
+        </label>{" "}
         {showUseOtherWalletLink && (
             <a onClick={onUseOtherWallet}>
                 (<Translate content="wallet.use_different" />)
@@ -32,7 +34,7 @@ export class StyledUpload extends React.Component {
                 onClick={this.handleLabelClick}
                 className="upload-button themed-input"
             >
-                Restore key file..
+                <Translate content="wallet.restore_key_file" />
                 <UploadButtonLogo />
                 <input
                     type="file"
@@ -124,10 +126,7 @@ const UploadButtonLogo = () => (
         className="upload-button-logo"
     >
         <g transform="translate(-86.783338,-137.44666)">
-            <path
-                style={{strokeWidth: "0.35277775"}}
-                d="m 89.958337,144.97798 h -3.174999 v -1.18208 -1.18208 l 0.387288,-1.11098 0.387288,-1.11097 h 0.847434 0.847434 v 0.31163 0.31163 l -0.65212,0.17054 -0.652119,0.17053 -0.196798,0.75256 -0.196798,0.75255 h 2.40339 2.403391 l -0.196798,-0.75255 -0.196798,-0.75256 -0.652119,-0.17053 -0.65212,-0.17054 v -0.31163 -0.31163 h 0.847434 0.847434 l 0.387288,1.11097 0.387288,1.11098 v 1.18208 1.18208 z m 0,-3.175 H 89.60556 v -1.2017 -1.20169 l -0.705556,0.1845 -0.705555,0.18451 v -0.33243 -0.33243 l 0.881944,-0.82854 0.881944,-0.82854 0.881945,0.82854 0.881944,0.82854 v 0.33243 0.33243 l -0.705555,-0.18451 -0.705556,-0.1845 v 1.20169 1.2017 z"
-            />
+            <path d="m 89.958337,144.97798 h -3.174999 v -1.18208 -1.18208 l 0.387288,-1.11098 0.387288,-1.11097 h 0.847434 0.847434 v 0.31163 0.31163 l -0.65212,0.17054 -0.652119,0.17053 -0.196798,0.75256 -0.196798,0.75255 h 2.40339 2.403391 l -0.196798,-0.75255 -0.196798,-0.75256 -0.652119,-0.17053 -0.65212,-0.17054 v -0.31163 -0.31163 h 0.847434 0.847434 l 0.387288,1.11097 0.387288,1.11098 v 1.18208 1.18208 z m 0,-3.175 H 89.60556 v -1.2017 -1.20169 l -0.705556,0.1845 -0.705555,0.18451 v -0.33243 -0.33243 l 0.881944,-0.82854 0.881944,-0.82854 0.881945,0.82854 0.881944,0.82854 v 0.33243 0.33243 l -0.705555,-0.18451 -0.705556,-0.1845 v 1.20169 1.2017 z" />
         </g>
     </svg>
 );

@@ -91,7 +91,9 @@
     #unlock_wallet_modal2 {
         .upload-button {
             border-color: $border-color;
-            color: $settings-select-color;
+            span {
+                color: $settings-select-color;
+            }
         }
 
         .login-select {

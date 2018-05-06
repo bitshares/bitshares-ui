@@ -1500,6 +1500,8 @@
         "wallet_model": "Local Wallet",
         "password_model": "Cloud Wallet",
         "key_file": "Key file",
+        "key_file_bin": "Key file (.bin)",
+        "restore_key_file": "Restore key file..",
         "wallet_model_1":
             "The local wallet stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys. The local wallet lets you use multiple accounts at the same time.",
         "wallet_model_2":
