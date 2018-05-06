@@ -7,11 +7,11 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import SettingsActions from "actions/SettingsActions";
 
 const LoginTypeSelectorView = ({value, onChange}) => (
-    <div style={{marginBottom: "2rem"}}>
-        <label className="left-label">
+    <div className="login-type-selector">
+        <label className="left-label login-label">
             <Translate content="account.login_with" />
         </label>
-        <select value={value} onChange={onChange} className="settings-select">
+        <select value={value} onChange={onChange} className="login-select">
             <option value="cloud">
                 {counterpart.translate("account.name")} ({counterpart
                     .translate("wallet.password_model")
@@ -46,7 +46,7 @@ const LoginTypeSelector = () => (
             }
         })}
     >
-        <LoginTypeSelectorView />
+        <LoginTypeSelectorView {...this.props} />
     </AltContainer>
 );
 
