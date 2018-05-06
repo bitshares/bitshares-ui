@@ -194,12 +194,7 @@ class BorrowModalContent extends React.Component {
         if (target.value.charAt(0) == ".") {
             target.value = "0.";
         }
-
-        // Catch double decimal and remove if invalid
-        if (target.value.charAt(target.value.length) != target.value.search(".")) {
-            target.value.substr(1);
-        }
-        
+       
         let ratio = target.value;
 
         let newState = {
