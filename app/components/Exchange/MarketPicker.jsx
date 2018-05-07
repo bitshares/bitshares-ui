@@ -34,21 +34,21 @@ export default class MarketPicker extends React.Component {
     }
     
     _onInputName(getBackedAssets, e) {
-        let inputValue = e.target.value.trim().toUpperCase();
+        let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(
-            inputValue,
+            toFind,
             true
         );
     
         this.setState({
-            inputValue,
+            inputValue: e.target.value.trim(),
             marketsList: "",
             issuersList: "",
             filterByIssuerName: null
         });
     
         /* Don't lookup invalid asset names */
-        if (inputValue && inputValue.length >= 3 && !isValidName) {
+        if (toFind && toFind.length >= 3 && !isValidName) {
             return this.setState({
                 assetNameError: true
             });
@@ -57,7 +57,7 @@ export default class MarketPicker extends React.Component {
                 assetNameError: false
             });
         }
-        this._lookupAssets(inputValue, getBackedAssets);
+        this._lookupAssets(toFind, getBackedAssets);
     }
     
     _lookupAssets(value, gatewayAssets = false, force = false) {
