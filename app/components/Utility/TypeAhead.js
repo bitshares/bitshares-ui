@@ -8,6 +8,10 @@ export default class TypeAhead extends React.Component {
     constructor(props) {
         super(props);
 
+        this.state = this._getInitialState(props);
+    }
+
+    _getInitialState(props) {
         let valueRender = null;
 
         if (props.items) {
@@ -19,7 +23,7 @@ export default class TypeAhead extends React.Component {
             });
         }
 
-        this.state = {
+        return {
             value: props.defaultValue,
             valueRender
         };
@@ -27,7 +31,7 @@ export default class TypeAhead extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.value && nextProps.value != this.state.value) {
-            this.setState({value: nextProps.value});
+            this.setState(this._getInitialState(nextProps));
         }
     }
 
