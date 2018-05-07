@@ -18,7 +18,6 @@ class CryptoBridgeStore {
         if (markets) {
             markets.map(m => {
                 this.markets = this.markets.set(m.id, m);
-                this.assets = this.assets.set(m.quote, m);
             });
         }
     }

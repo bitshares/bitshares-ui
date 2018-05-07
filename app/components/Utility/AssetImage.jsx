@@ -1,9 +1,8 @@
 import React from "react";
-import CryptoBridgeStore from "stores/CryptoBridgeStore";
 import {connect} from "alt-react";
 import LazyImage from "./LazyImage";
 
-class AssetImage extends React.Component {
+export default class AssetImage extends React.Component {
     static propTypes = {
         name: React.PropTypes.string,
         marketId: React.PropTypes.string
@@ -34,32 +33,16 @@ class AssetImage extends React.Component {
             name = marketId.split("_").shift();
         }
 
-        let imgSrc = cryptoBridgeAsset ? cryptoBridgeAsset.img : null;
+        let imgName = "";
 
-        if (!imgSrc) {
-            let imgName = "";
-
-            if (name === "OPEN.BTC") {
-                imgName = name;
-            } else {
-                const imgSplit = name.split(".");
-                imgName = imgSplit.length === 2 ? imgSplit[1] : imgSplit[0];
-
-                if (imgName === "BTC") {
-                    // TODO remove once added to API
-                    imgSrc = "https://crypto-bridge.org/img/btc.png";
-                }
-
-                if (imgName === "BCO") {
-                    // TODO remove once added to API
-                    imgSrc = "/asset-symbols/bco.png";
-                }
-            }
-
-            if (!imgSrc) {
-                imgSrc = `${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`;
-            }
+        if (name === "OPEN.BTC") {
+            imgName = name;
+        } else {
+            const imgSplit = name.split(".");
+            imgName = imgSplit.length === 2 ? imgSplit[1] : imgSplit[0];
         }
+
+        let imgSrc = `${__BASE_URL__}assets/${imgName.toLowerCase()}.png`;
 
         if (
             imgSrc.match(/^\//) &&
@@ -87,18 +70,3 @@ class AssetImage extends React.Component {
         );
     }
 }
-
-export default connect(AssetImage, {
-    listenTo() {
-        return [CryptoBridgeStore];
-    },
-    getProps(props) {
-        const cryptoBridgeAsset = props.marketId
-            ? CryptoBridgeStore.getState().markets.get(props.marketId)
-            : CryptoBridgeStore.getState().assets.get(props.name);
-
-        return {
-            cryptoBridgeAsset
-        };
-    }
-});

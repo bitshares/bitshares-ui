@@ -56,10 +56,6 @@ class CryptoBridgeActions {
         };
     }
 
-    getAssets() {
-        return this.getMarkets();
-    }
-
     getNews() {
         return dispatch => {
             const now = new Date();
