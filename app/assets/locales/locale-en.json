@@ -1925,6 +1925,9 @@
             "no_balances": "You have no open BridgeCoin staking positions.",
             "bco_available": "Available: ",
             "bco_not_available": "No BCO available "
+        },
+        "dashboard": {
+            "all_markets": "All Markets"
         }
     }
 }

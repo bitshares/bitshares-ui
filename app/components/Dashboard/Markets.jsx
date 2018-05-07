@@ -12,12 +12,14 @@ import LoadingIndicator from "../LoadingIndicator";
 
 class CryptoBridgeMarkets extends React.Component {
     render() {
-        let {cryptoBridgeMarkets} = this.props;
+        let {cryptoBridgeMarkets, featured} = this.props;
         let markets = [];
 
         if (cryptoBridgeMarkets.size) {
             for (let market of cryptoBridgeMarkets.values()) {
-                markets.push([market.quote, market.base]);
+                if (!featured || (featured && market.featured)) {
+                    markets.push([market.quote, market.base]);
+                }
             }
         }
 

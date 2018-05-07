@@ -60,11 +60,16 @@ class DashboardPage extends React.Component {
                                         className="account-tabs"
                                         tabsClass="account-overview no-padding bordered-header content-block"
                                     >
-                                        <Tab title="dashboard.top_markets">
-                                            <CryptoBridgeMarkets />
+                                        <Tab title="dashboard.featured_markets">
+                                            <CryptoBridgeMarkets
+                                                featured={true}
+                                            />
                                         </Tab>
                                         <Tab title="dashboard.starred_markets">
                                             <StarredMarkets />
+                                        </Tab>
+                                        <Tab title="cryptobridge.dashboard.all_markets">
+                                            <CryptoBridgeMarkets />
                                         </Tab>
                                     </Tabs>
                                 </div>
