@@ -1186,6 +1186,18 @@
     "exchange": {
         "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
+        "market_picker": {
+            "title": "Market Picker",
+            "sub_title": "Find an asset to replace",
+            "search_mode": "Mode",
+            "search_for_asset": "Search for asset",
+            "find_by_asset": "Find by asset",
+            "filter_by_issuer": "Filter by issuer",
+            "results": "Results (%(total_assets)s)",
+            "use": "Use",
+            "show_all": "Show All",
+            "search": "Asset name"
+        },
         "chart_options": {
             "tools": "Tools",
             "title": "Indicators",
