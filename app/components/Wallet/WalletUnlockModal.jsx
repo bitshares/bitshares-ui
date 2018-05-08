@@ -143,7 +143,7 @@ class WalletUnlockModal extends React.Component {
             const {password_input, account_input} = this.refs;
             const {accountName} = this.state;
 
-            if (accountName) {
+            if (accountName && password_input) {
                 password_input.focus();
             } else if (
                 account_input &&

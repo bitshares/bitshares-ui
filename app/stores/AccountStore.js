@@ -62,7 +62,10 @@ class AccountStore extends BaseStore {
             searchAccounts: Immutable.Map(),
             accountContacts: Immutable.Set(),
             linkedAccounts: Immutable.Set(), // linkedAccounts are accounts for which the user controls the private keys, which are stored in a db with the wallet and automatically loaded every time the app starts
-            referralAccount
+            referralAccount,
+            passwordLogin: accountStorage.get("settings_v3", {
+                passwordLogin: true
+            }).passwordLogin
         };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
@@ -86,7 +89,7 @@ class AccountStore extends BaseStore {
                     this._getStorageKey("hiddenAccounts", state),
                     unfollowed_accounts
                 );
-                accountStorage.delete("unfollowed_accounts");
+                accountStorage.remove("unfollowed_accounts");
                 this.setState({
                     myHiddenAccounts: Immutable.Set(unfollowed_accounts)
                 });
@@ -268,17 +271,38 @@ class AccountStore extends BaseStore {
                     this.state.linkedAccounts = Immutable.fromJS(
                         data || []
                     ).toSet();
-                    let accountPromises = data
-                        .filter(a => {
-                            if (a.chainId) {
-                                return a.chainId === chainId;
-                            } else {
-                                return true;
-                            }
-                        })
-                        .map(a => {
-                            return FetchChain("getAccount", a.name);
-                        });
+
+                    /*
+                    * If we're in cloud wallet mode, only fetch the currently
+                    * used cloud mode account, if in wallet mode fetch all the
+                    * accounts of that wallet for the current chain
+                    */
+
+                    let accountPromises =
+                        !!this.state.passwordLogin &&
+                        !!this.state.passwordAccount
+                            ? [
+                                  FetchChain(
+                                      "getAccount",
+                                      this.state.passwordAccount
+                                  )
+                              ]
+                            : !!this.state.passwordLogin
+                                ? []
+                                : data
+                                      .filter(a => {
+                                          if (a.chainId) {
+                                              return a.chainId === chainId;
+                                          } else {
+                                              return true;
+                                          }
+                                      })
+                                      .map(a => {
+                                          return FetchChain(
+                                              "getAccount",
+                                              a.name
+                                          );
+                                      });
 
                     Promise.all(accountPromises)
                         .then(accounts => {
@@ -375,7 +399,7 @@ class AccountStore extends BaseStore {
 
                     /*
                     * Some wallets contain deprecated entries with no chain
-                    * ids, remove these then write new entires with chain ids
+                    * ids, remove these then write new entries with chain ids
                     */
                     const nameOnlyEntry = this.state.linkedAccounts.findKey(
                         a => {
@@ -409,6 +433,16 @@ class AccountStore extends BaseStore {
                 });
             }
         );
+
+        /*
+        * If we're in cloud wallet mode, simply set myActiveAccounts to the current
+        * cloud wallet account
+        */
+        if (!!this.state.passwordLogin) {
+            myActiveAccounts = Immutable.Set(
+                !!this.state.passwordAccount ? [this.state.passwordAccount] : []
+            );
+        }
         if (myActiveAccounts !== this.state.myActiveAccounts) {
             this.setState({myActiveAccounts});
         }
@@ -446,15 +480,18 @@ class AccountStore extends BaseStore {
             if (auth === "full" || auth === "partial") {
                 accounts.push(account_name);
             }
-
-            // console.log("account:", account_name, "auth:", auth);
         }
-        if (
-            this.state.passwordAccount &&
-            accounts.indexOf(this.state.passwordAccount) === -1
-        )
-            accounts.push(this.state.passwordAccount);
-        // console.log("accounts:", accounts, "myActiveAccounts:", this.state.myActiveAccounts && this.state.myActiveAccounts.toJS());
+
+        /*
+        * If we're in cloud wallet mode, simply return the current
+        * cloud wallet account
+        */
+        if (this.state.passwordLogin)
+            return !!this.state.passwordAccount
+                ? [this.state.passwordAccount]
+                : [];
+
+        /* In wallet mode, return a sorted list of all the active accounts */
         return accounts.sort();
     }
 
@@ -722,9 +759,15 @@ class AccountStore extends BaseStore {
     }
 
     onChangeSetting(payload) {
-        if (payload.setting === "passwordLogin" && payload.value === false) {
-            this.onSetPasswordAccount(null);
-            accountStorage.remove(this._getStorageKey());
+        if (payload.setting === "passwordLogin") {
+            if (payload.value === false) {
+                this.onSetPasswordAccount(null);
+                accountStorage.remove(this._getStorageKey());
+                this.loadDbData();
+            } else {
+                this.setState({myActiveAccounts: Immutable.Set()});
+            }
+            this.setState({passwordLogin: payload.value});
         }
     }
 }
