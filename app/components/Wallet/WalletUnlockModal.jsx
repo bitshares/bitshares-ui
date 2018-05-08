@@ -1,10 +1,8 @@
 import React from "react";
-import Trigger from "react-foundation-apps/src/trigger";
 import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
 import notify from "actions/NotificationActions";
-import Translate from "react-translate-component";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -15,12 +13,10 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletActions from "actions/WalletActions";
 import BackupActions, {restore, backup} from "actions/BackupActions";
 import AccountActions from "actions/AccountActions";
-import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
 import {PrivateKey} from "bitsharesjs/es";
-import {Link} from "react-router/es";
 import {saveAs} from "file-saver";
 import LoginTypeSelector from "./LoginTypeSelector";
 import counterpart from "counterpart";
@@ -31,7 +27,6 @@ import {
     CustomPasswordInput,
     LoginButtons,
     BackupWarning,
-    RestoreBackupOnly,
     BackupFileSelector,
     DisableChromeAutocomplete,
     CustomError,
