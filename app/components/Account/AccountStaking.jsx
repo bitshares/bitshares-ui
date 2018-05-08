@@ -213,16 +213,17 @@ class AccountStaking extends React.Component {
                         asset={stakeAsset}
                         gateFee={this.props.gateFee}
                     />
-
-                    {!balances.length ? (
-                        <h4 style={{paddingTop: "1rem"}}>
-                            <Translate
-                                content={"cryptobridge.account.no_balances"}
-                            />
-                        </h4>
-                    ) : (
-                        balances
-                    )}
+                    <div style={{marginTop: "2rem"}}>
+                        {!balances.length ? (
+                            <h4>
+                                <Translate
+                                    content={"cryptobridge.account.no_balances"}
+                                />
+                            </h4>
+                        ) : (
+                            balances
+                        )}
+                    </div>
                 </div>
             </div>
         );

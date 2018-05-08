@@ -237,18 +237,20 @@ class AccountStakeCreateNew extends React.Component {
                 onClick={this._setTotalStakeAmount.bind(this, currentBalance)}
             >
                 {" "}
-                {currentBalance.get("balance") ? (
-                    <Translate
-                        component="span"
-                        content="cryptobridge.account.bco_available"
-                    />
+                {currentBalance && currentBalance.get("balance") ? (
+                    <span>
+                        <Translate
+                            component="span"
+                            content="cryptobridge.account.bco_available"
+                        />
+                        <BalanceComponent balance={currentBalance.get("id")} />
+                    </span>
                 ) : (
                     <Translate
                         component="span"
                         content="cryptobridge.account.bco_not_available"
                     />
                 )}{" "}
-                <BalanceComponent balance={currentBalance.get("id")} />
             </span>
         );
 
