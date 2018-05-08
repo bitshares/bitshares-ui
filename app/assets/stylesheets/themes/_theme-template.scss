@@ -930,7 +930,7 @@
     }
 
     .tab-content {
-        background-color: lighten($account-header, 4%);
+        //background-color: $account-background;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;

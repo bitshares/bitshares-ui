@@ -138,7 +138,7 @@ class RecentTransactions extends React.Component {
             var today = new Date();
             saveAs(
                 blob,
-                "btshist-" +
+                "cryptobridge-transactions-" +
                     today.getFullYear() +
                     "-" +
                     ("0" + (today.getMonth() + 1)).slice(-2) +
@@ -301,7 +301,16 @@ class RecentTransactions extends React.Component {
         display_history.push(
             <tr className="total-value" key="total_value">
                 <td className="column-hide-tiny" />
-                <td style={alignRight}>
+                <td style={{textAlign: "center"}} colSpan={2}>
+                    &nbsp;{(this.props.showMore &&
+                        historyCount > this.props.limit) ||
+                    (20 && limit < historyCount) ? (
+                        <a onClick={this._onIncreaseLimit.bind(this)}>
+                            <Icon name="chevron-down" className="icon-14px" />
+                        </a>
+                    ) : null}
+                </td>
+                <td>
                     {historyCount > 0 ? (
                         <span>
                             <a
@@ -313,17 +322,9 @@ class RecentTransactions extends React.Component {
                                 data-place="bottom"
                             >
                                 <Icon name="excel" className="icon-14px" />
+                                {" .csv"}
                             </a>
                         </span>
-                    ) : null}
-                </td>
-                <td style={{textAlign: "center"}}>
-                    &nbsp;{(this.props.showMore &&
-                        historyCount > this.props.limit) ||
-                    (20 && limit < historyCount) ? (
-                        <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon name="chevron-down" className="icon-14px" />
-                        </a>
                     ) : null}
                 </td>
             </tr>
@@ -404,7 +405,7 @@ class RecentTransactions extends React.Component {
                                     <th style={alignLeft}>
                                         <Translate content="account.transactions.info" />
                                     </th>
-                                    <th style={alignLeft}>
+                                    <th>
                                         <Translate content="account.transactions.time" />
                                     </th>
                                 </tr>
