@@ -22,7 +22,7 @@
     },
     "incognito": {
         "no_support":
-            "Esta billetera BitShares se basa en el almacenamiento local y IndexedDB que no son persistentes cuando se está usando el navegador en Incógnito. Recomendamos usar una sesión de navegación normal.",
+            "Esta billetera CryptoBridge se basa en el almacenamiento local y IndexedDB que no son persistentes cuando se está usando el navegador en Incógnito. Recomendamos usar una sesión de navegación normal.",
         "ignore": "Entiendo, continúa."
     },
     "sync_fail": {
@@ -32,7 +32,7 @@
             "Una vez que haya sincronizado su reloj, por favor actualiza esta página.<br/><br/>Si su reloj ya es correcto, el API del servidor que está utilizando podría no estar sincronizado. En ese caso, intente con un servidor diferente de la lista a continuación."
     },
     "header": {
-        "title": "BitShares - Interfaz de Usiario",
+        "title": "CryptoBridge - Interfaz de Usiario",
         "account": "Cuenta",
         "dashboard": "Tablero",
         "explorer": "Explorer",
@@ -96,7 +96,7 @@
         "propose_scam":
             "¡Esta propuesta fue creada por un estafador conocido, no la aprueba!",
         "login":
-            "Esta billetera de BitShares no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
+            "Esta billetera de CryptoBridge no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
         "buy_min":
             "Recibirá como minimo esta cantidad. Si hay pedidos que coinciden con un precio más barato del cual usted especificó, recibirá mas de esta cantidad.",
         "borrow":
@@ -176,7 +176,7 @@
         "existing_user": "Usuario existente",
         "restore": "Restaurar",
         "advanced": "Avanzado",
-        "intro_text_title": "Bienvenido en BitShares",
+        "intro_text_title": "Bienvenido en CryptoBridge",
         "intro_text_1": "Su Decentralized Exchange",
         "intro_text_2":
             "<b>El DEX</b> está inherentemente descentralizado, permitiéndote comerciar BitShares core token (BTS) y un rango de activos sin confianza con precio estable, vinculado al mercado como bitUSD, bitCNY, bitBTC, bitGold y mucho mas. estos activos pueden ser comerciados sin <b>zero</b> rischio de contraparte, poniéndote en control total de tus fondos.",
@@ -194,7 +194,7 @@
         "total_estimate":
             "Este es el valor estimado de todos sus activos, incluyendo cualquier activo oculto, ordenes abiertas, deuda y colateral. La estimación se realiza usando solo datos de cadena de bloques y puede no ser perfectamente exacto.",
         "trade": "Comercio",
-        "welcome": "Bienvenido a BitShares",
+        "welcome": "Bienvenido a CryptoBridge",
         "asset": "Activo",
         "market_value": "Valor de Mercado",
         "hour_24": "Cambio 24hs",
@@ -282,7 +282,7 @@
             "available": "Disponible para reclamar",
             "referral_link": "Tu enlace de referencia",
             "referral_text":
-                "Dale esto a personas que usted quiera referir a BitShares"
+                "Dale esto a personas que usted quiera referir a CryptoBridge"
         },
         "user_issued_assets": {
             "symbol": "Simbolo",
@@ -563,7 +563,7 @@
     "transfer": {
         "header": "Detalles de transferencia",
         "header_subheader":
-            "Las transferencias se utilizan para enviar fondos a otros titulares de cuentas BitShares",
+            "Las transferencias se utilizan para enviar fondos a otros titulares de cuentas CryptoBridge",
         "from": "Desde",
         "pay_from": "Pagar Desde",
         "amount": "Monto",
@@ -1135,7 +1135,7 @@
         "high_latency": "Alta latencia"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "Bloque de cabecera",
         "loading": "Cargando...",
         "backup": "Se requiere una copia de seguridad",
@@ -1277,7 +1277,7 @@
             "Para importar claves, primero necesita crear una billetera local para contener las llaves. Complete el cuadro de diálogo siguiente para crear una nueva billetera local. ",
         "create_wallet_backup":
             "Crear una nueva billetera desde la copia de seguridad",
-        "import_bts1": "Importar desde BitShares 0.9.3c",
+        "import_bts1": "Importar desde CryptoBridge 0.9.3c",
         "setup_wallet": "Configurar su Billetera",
         "delete_wallet": "Eliminar Billetera",
         "delete_confirm_line1": "Está usted ABSOLUTAMENTE seguro?",
@@ -1347,9 +1347,9 @@
         "noneed_backup": "No es necesario un backup",
         "restore": "Restaurar cartera local desde la copia de seguridad",
         "create_text":
-            "El monedero local BitShares se almacena en su navegador, no se almacena en la nube. Una billetera puede contener varias cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de copia de seguridad.",
+            "El monedero local CryptoBridge se almacena en su navegador, no se almacena en la nube. Una billetera puede contener varias cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de copia de seguridad.",
         "account_create_wallet_text":
-            "Esta contraseña se usará para crear una nueva billetera local de BitShares, que solo se almacenará localmente en su navegador. Un monedero BitShares puede contener múltiples cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de respaldo.",
+            "Esta contraseña se usará para crear una nueva billetera local de CryptoBridge, que solo se almacenará localmente en su navegador. Un monedero CryptoBridge puede contener múltiples cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de respaldo.",
         "create_account_text":
             "El nombre de la cuenta que elija debe ser único, ya que se registrará públicamente en la cadena de bloques y será su identificador para cualquier transacción que realice.",
         "first_account_paid":
@@ -1361,7 +1361,7 @@
         "backup_explain":
             "Al hacer clic en el siguiente botón, se generará un archivo de respaldo con una estenciòn .bin . Este archivo está encriptado con su contraseña de billetera y contiene todas las claves privadas para sus cuentas. Se puede usar para restaurar tu billetera o moverla a una computadora / navegador diferente.",
         "backup_new_account":
-            "Felicidades, acaba de crear una nueva cuenta en los BitShares blockchain! Se recomienda encarecidamente que haga una copia de seguridad de su cartera ahora. Sin un respaldo que no hay manera de restaurar su cuenta si algo le sucede a su computadora.",
+            "Felicidades, acaba de crear una nueva cuenta en los CryptoBridge/BitShares blockchain! Se recomienda encarecidamente que haga una copia de seguridad de su cartera ahora. Sin un respaldo que no hay manera de restaurar su cuenta si algo le sucede a su computadora.",
         "brainkey_not_backed_up": "Esta llave maestra nunca se ha respaldado",
         "brainkey_backed_up": "Esta brainkey fue respaldada por última vez",
         "new_password": "Nueva contraseña",
@@ -1384,7 +1384,7 @@
         "import_private_key": "Importar llave privada",
         "wallet_browser": "Su navegador web es su billetera",
         "has_wallet":
-            "Cuando cree su primera cuenta de BitShares, también se creará automáticamente una billetera local BitShares y se almacenará en su navegador. Esta billetera local está encriptada con su contraseña, y contendrá cualquier clave privada que pertenezca a sus cuentas. ¡Es importante que se tome el tiempo para hacer una copia de seguridad de esta billetera una vez creada!",
+            "Cuando cree su primera cuenta de CryptoBridge, también se creará automáticamente una billetera local CryptoBridge y se almacenará en su navegador. Esta billetera local está encriptada con su contraseña, y contendrá cualquier clave privada que pertenezca a sus cuentas. ¡Es importante que se tome el tiempo para hacer una copia de seguridad de esta billetera una vez creada!",
         "go_get_started": "Empezando",
         "wallet_crucial":
             "Su billetera local es <strong>solo almacenada</strong> en tu navegador,¡Así que es crucial que cree una copia de seguridad que le permita recuperar su billetera si se pierden los datos en su navegador! <strong>Nadie más puede restaurar su cuenta si pierde su copia de seguridad.</strong>",
@@ -1400,7 +1400,7 @@
         "tips_settings": "Cambiar la configuración",
         "tips_account": "Mira tu nueva cuenta",
         "link_account": "Cuenta",
-        "wallet_new": "Nueva cuenta BitShares",
+        "wallet_new": "Nueva cuenta CryptoBridge",
         "create_w_a": "Crea una billetera local que contenga una cuenta",
         "create_a": "Crea una nueva cuenta de blockchain",
         "create_success": "Su billetera local ha sido creada",
@@ -1459,14 +1459,14 @@
         "no_wallet": "Aún no tienes una billetera local",
         "generated": "Contraseña generada",
         "account_exp":
-            "¡Esta cuenta se creará en blockchain y será su dirección para cualquier transferencia que quiera hacer! <strong>¡No hay largas direcciones estilo Bitcoin en BitShares!</strong>",
+            "¡Esta cuenta se creará en blockchain y será su dirección para cualquier transferencia que quiera hacer! <strong>¡No hay largas direcciones estilo Bitcoin en CryptoBridge!</strong>",
         "understand_1":
             "Entiendo que nadie puede recuperar mi contraseña si la pierdo o la olvido",
         "understand_2": "He anotado o almacenado mi contraseña",
         "understand_3":
             " Entiendo que perderé el acceso a mis fondos si pierdo mi contraseña",
         "bts_rules":
-            "La primera regla de BitShares es: No pierdas tu contraseña.<br/>La segunda regla de BitShares es: No pierdas tu contraseña.<br />La tercera regla de BitShares es: no podemos recuperar su contraseña.<br />La cuarta regla: si puede recordar la contraseña, no es segura.<br />La quinta regla: use solo contraseñas generadas aleatoriamente.<br />La sexta regla: No le digas a nadie tu contraseña. <br /> La séptima regla: Siempre haz una copia de seguridad de tu contraseña.",
+            "La primera regla de CryptoBridge es: No pierdas tu contraseña.<br/>La segunda regla de CryptoBridge es: No pierdas tu contraseña.<br />La tercera regla de CryptoBridge es: no podemos recuperar su contraseña.<br />La cuarta regla: si puede recordar la contraseña, no es segura.<br />La quinta regla: use solo contraseñas generadas aleatoriamente.<br />La sexta regla: No le digas a nadie tu contraseña. <br /> La séptima regla: Siempre haz una copia de seguridad de tu contraseña.",
         "ok_done": "OK, llévame al tablero"
     },
     "borrow": {
@@ -1550,7 +1550,7 @@
         "not_connected": "No conectado",
         "browser": "Navegador no soportado",
         "browser_text":
-            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
+            "El navegador que está utilizando no se ha probado completamente para admitir la billetera CryptoBridge. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
         "understand": "entiendo"
     },
     "refcode": {
@@ -1593,9 +1593,9 @@
             "Por favor envíe su %(asset)s a la dirección a continuación",
         "deposit_address": "Dirección de depósito",
         "add_funds":
-            "Agregue fondos de manera rápida y fácil a su cuenta de BitShares <strong>%(account)s</strong>. Este servicio es provisto por Openledger.",
+            "Agregue fondos de manera rápida y fácil a su cuenta de CryptoBridge <strong>%(account)s</strong>. Este servicio es provisto por Openledger.",
         "withdraw_funds":
-            "usted està retirando fondos de su cuenta de BitShares a su cuenta externa %(asset)s cuenta.",
+            "usted està retirando fondos de su cuenta de CryptoBridge a su cuenta externa %(asset)s cuenta.",
         "balance_asset": "Balance corriente %(asset)s ",
         "withdraw_placeholder":
             "Por favor introduzca su direcciòn de %(asset)s ",
@@ -1679,8 +1679,8 @@
             "En un esfuerzo por proporcionar una mayor seguridad para el monedero basado en la web, lo estamos migrando, con efecto inmediato a la dirección a continuación. Por favor, asegúrese de actualizar los marcadores que pueda tener.",
         "text_1": "Cartera local detecta",
         "text_2":
-            "Haga una copia de seguridad de su billetera ahora y restaure el archivo de respaldo a <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, cuál será su nueva dirección para la billetera web. Gracias por su apoyo continuo.",
+            "Haga una copia de seguridad de su billetera ahora y restaure el archivo de respaldo a <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>, cuál será su nueva dirección para la billetera web. Gracias por su apoyo continuo.",
         "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> a partir de ahora, sus credenciales existentes le permitirán iniciar sesión allí también."
+            "Please use <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a> a partir de ahora, sus credenciales existentes le permitirán iniciar sesión allí también."
     }
 }

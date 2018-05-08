@@ -18,7 +18,7 @@
     },
     "incognito": {
         "no_support":
-            "Questo Portafoglio BitShares necessita di Local Storage e IndexedDB, funzionalità che non sono persistenti nella modalità in incognito. Raccomandiamo l'uso di una sessione di navigazione normale.",
+            "Questo Portafoglio CryptoBridge necessita di Local Storage e IndexedDB, funzionalità che non sono persistenti nella modalità in incognito. Raccomandiamo l'uso di una sessione di navigazione normale.",
         "ignore": "Ho capito, continua."
     },
     "sync_fail": {
@@ -29,7 +29,7 @@
             "Dopo aver sincronizzato l'ora, ricarica questa pagina.<br/><br/>Se l'ora è già impostata correttamente, il server API che stai utilizzando potrebbe essere fuori sincrono. In questo caso, prova ad utilizzare un altro server dalla lista seguente."
     },
     "header": {
-        "title": "BitShares UI",
+        "title": "CryptoBridge UI",
         "account": "Account",
         "dashboard": "Dashboard",
         "explorer": "Esplora",
@@ -93,7 +93,7 @@
         "propose_scam":
             "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
         "login":
-            "Questo portafoglio BitShares non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
+            "Questo portafoglio CryptoBridge non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
         "buy_min":
             "Riceverai come minimo questa quantità. Se vi sono ordini corrispondenti con un prezzo inferiore rispetto a quello che hai specificato, riceverai più di questa quantità.",
         "borrow":
@@ -165,7 +165,7 @@
         "existing_user": "Utente esistente",
         "restore": "Ripristina",
         "advanced": "Avanzate",
-        "intro_text_title": "Benvenuto su BitShares",
+        "intro_text_title": "Benvenuto su CryptoBridge",
         "intro_text_1": "Il tuo Exchange decentralizzato",
         "intro_text_2":
             "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
@@ -183,7 +183,7 @@
         "total_estimate":
             "Questa è una stima del valore di tutti i tuoi asset, inclusi asset nascosti, ordini aperti, debito e garanzia. La stima è ottenuta usando informazioni in tempo reale dalla blockchain, e potrebbe non essere del tutto accurata.",
         "trade": "Trading",
-        "welcome": "Benvenuto su BitShares",
+        "welcome": "Benvenuto su CryptoBridge",
         "asset": "Asset",
         "market_value": "Valore di mercato",
         "hour_24": "Variazione in 24h",
@@ -267,7 +267,7 @@
             "available": "Pronto per la riscossione",
             "referral_link": "Il tuo referral link",
             "referral_text":
-                "Comunica questo link alle persone a cui vuoi segnalare BitShares"
+                "Comunica questo link alle persone a cui vuoi segnalare CryptoBridge"
         },
         "user_issued_assets": {
             "symbol": "Simbolo",
@@ -1073,7 +1073,7 @@
         "high_latency": "Alta latenza"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "Head block",
         "loading": "Caricamento...",
         "backup": "È necessario un backup",
@@ -1212,7 +1212,7 @@
         "create_importkeys_text":
             "Per importare le chiavi, devi prima creare un portafoglio per contenerle. Completa la finestra di dialogo sotto per creare un nuovo portafoglio.",
         "create_wallet_backup": "Crea nuovo portafoglio da un backup",
-        "import_bts1": "Importa da BitShares 0.9.3c",
+        "import_bts1": "Importa da CryptoBridge 0.9.3c",
         "setup_wallet": "Configura il tuo portafoglio",
         "delete_wallet": "Cancella portafoglio",
         "delete_confirm_line1": "Sei ASSOLUTAMENTE sicuro?",
@@ -1230,7 +1230,7 @@
         "create_backup": "Crea backup",
         "backup_brainkey": "Backup della brainkey",
         "create_backup_of": "Crea backup adesso",
-        "import_backup": "Importa backup BitShares 2.0 (file .bin)",
+        "import_backup": "Importa backup CryptoBridge 2.0 (file .bin)",
         "import_backup_choose":
             "Seleziona il tuo file di backup nella finestra di dialogo sotto. Farlo è sicuro perché il file non è mai caricato online e non lascia il tuo browser.",
         "restore_backup": "Ripristina backup",
@@ -1287,9 +1287,9 @@
         "noneed_backup": "Non è necessario un file di backup",
         "restore": "Ripristina portafoglio da un backup",
         "create_text":
-            "Il portafoglio BitShares è memorizzato nel tuo browser, non nel cloud. Un portafoglio può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
+            "Il portafoglio CryptoBridge è memorizzato nel tuo browser, non nel cloud. Un portafoglio può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
         "account_create_wallet_text":
-            "Questa password sarà utilizzata per creare un nuovo portafoglio BitShares, che sarà solo memorizzato localmente nel tuo browser. Un portafoglio BitShares può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
+            "Questa password sarà utilizzata per creare un nuovo portafoglio CryptoBridge, che sarà solo memorizzato localmente nel tuo browser. Un portafoglio CryptoBridge può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
         "create_account_text":
             "Il nome account che scegli deve essere unico, dal momento che sarà registrato pubblicamente sulla blockchain e sarà il tuo identificatore per ogni tua transazione.",
         "first_account_paid":
@@ -1327,7 +1327,7 @@
         "import_private_key": "Importa una chiave privata",
         "wallet_browser": "Il tuo Browser Web è il tuo portafoglio",
         "has_wallet":
-            "Quando crei il tuo primo account BitShares, un portafoglio BitShares viene creato automaticamente e memorizzato nel tuo browser. Questo portafoglio è crittografato con la tua password, e contiene tutte le chiavi private che appartengono al tuo account. È molto importante che dedichi il tempo necessario per creare un backup di questo portafoglio, dopo la creazione!",
+            "Quando crei il tuo primo account CryptoBridge, un portafoglio CryptoBridge viene creato automaticamente e memorizzato nel tuo browser. Questo portafoglio è crittografato con la tua password, e contiene tutte le chiavi private che appartengono al tuo account. È molto importante che dedichi il tempo necessario per creare un backup di questo portafoglio, dopo la creazione!",
         "go_get_started": "Vedi i suggerimenti per iniziare",
         "wallet_crucial":
             "Il portafoglio è <strong>memorizzato solo</strong> nel tuo browser, pertanto è cruciale che crei un file di backup che ti permetterà di recuperare il portafoglio se i dati del tuo browser sono persi! <strong>Nessun altro potrà aiutarti a recuperare il portafoglio se perdi il file di backup.</strong>",
@@ -1343,7 +1343,7 @@
         "tips_settings": "Cambia le impostazioni",
         "tips_account": "Vedi il tuo nuovo account",
         "link_account": "Account",
-        "wallet_new": "Nuovo account BitShares",
+        "wallet_new": "Nuovo account CryptoBridge",
         "create_w_a": "Crea un portafoglio e un account",
         "create_a": "Crea un nuovo account",
         "create_success": "Il tuo portafoglio è stato creato",
@@ -1402,7 +1402,7 @@
         "no_wallet": "Non hai ancora un portafoglio",
         "generated": "Password generata",
         "account_exp":
-            "Questo account sarà creato nella blockchain e sarà il tuo indirizzo per ogni trasferimento tu voglia effettuare! <strong>Non ci sono lunghi indirizzi stile Bitcoin su BitShares!</strong>",
+            "Questo account sarà creato nella blockchain e sarà il tuo indirizzo per ogni trasferimento tu voglia effettuare! <strong>Non ci sono lunghi indirizzi stile Bitcoin su CryptoBridge!</strong>",
         "understand_1":
             "Ho capito che non potrò recuperare la mia password se la perdo o me ne dimentico",
         "understand_2":
@@ -1410,7 +1410,7 @@
         "understand_3":
             "Ho capito che perderò l'accesso ai miei fondi se perdo la mia password",
         "bts_rules":
-            "La prima regola di BitShares è: Non perdere la tua password.<br/>La seconda regola di BitShares è: Non perdere la tua password.<br />La terza regola di BitShares è: Non possiamo recuperare la tua password.<br />La quarta regola: Se puoi ricordare la tua password, allora non è sicura.<br />La quinta regola: Usa solo password generate a caso.<br />La sesta regola: Non dire a nessuno la tua password.<br />La settima regola: Fai sempre il backup della tua password.",
+            "La prima regola di CryptoBridge è: Non perdere la tua password.<br/>La seconda regola di CryptoBridge è: Non perdere la tua password.<br />La terza regola di CryptoBridge è: Non possiamo recuperare la tua password.<br />La quarta regola: Se puoi ricordare la tua password, allora non è sicura.<br />La quinta regola: Usa solo password generate a caso.<br />La sesta regola: Non dire a nessuno la tua password.<br />La settima regola: Fai sempre il backup della tua password.",
         "ok_done": "OK, portami alla dashboard"
     },
     "borrow": {
@@ -1489,7 +1489,7 @@
         "not_connected": "Non connesso",
         "browser": "Browser non supportato",
         "browser_text":
-            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
+            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio CryptoBridge. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
         "understand": "Ho capito"
     },
     "refcode": {
@@ -1531,9 +1531,9 @@
         "deposit_to":
             "Per favore invia i tuoi %(asset)s all'indirizzo seguente",
         "add_funds":
-            "Aggiungi fondi rapidamente e facilmente al tuo account BitShares <strong>%(account)s</strong>. Questo servizio è fornito da Openledger.",
+            "Aggiungi fondi rapidamente e facilmente al tuo account CryptoBridge <strong>%(account)s</strong>. Questo servizio è fornito da Openledger.",
         "withdraw_funds":
-            "Stai per ritirare fondi dal tuo account BitShares verso il tuo conto %(asset)s esterno.",
+            "Stai per ritirare fondi dal tuo account CryptoBridge verso il tuo conto %(asset)s esterno.",
         "balance_asset": "Saldo %(asset)s attuale",
         "withdraw_placeholder":
             "Per favore inserisci il tuo indirizzo %(asset)s",

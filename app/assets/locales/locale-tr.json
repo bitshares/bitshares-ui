@@ -77,11 +77,11 @@
         "propose_scam":
             "Bu işlem teklifi bilinen bir dolandırıcı tarafından sunulmuştur, onaylamayın!",
         "login":
-            "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+            "CryptoBridge cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
         "buy_min":
             "En az bu miktar kadar dijital varlık alacaksınız. Belirlediğiniz fiyattan daha iyi bir fiyat piyasada varsa, toplam alacağınız miktar bu miktarı geçebilir.",
         "borrow":
-            "Blokzincirinden %(asset)s borç al. Bu işlem ile belirli bir miktar teminat belirleyerek Bitshares'in akıllı kontrat sistemi aracılığıyla dijital ürün borç alabilirsiniz. Borcu ödediğinizde teminat da serbest kalacaktır.",
+            "Blokzincirinden %(asset)s borç al. Bu işlem ile belirli bir miktar teminat belirleyerek CryptoBridge'in akıllı kontrat sistemi aracılığıyla dijital ürün borç alabilirsiniz. Borcu ödediğinizde teminat da serbest kalacaktır.",
         "transfer_actions":
             "Dijital ürün transferi ya da (eğer destekleniyorsa) yatırma-çekme işlemi yapmak için buraya tıklayın.",
         "deposit_tip":
@@ -129,11 +129,11 @@
     "cancel": "İptal",
     "account": {
         "search": "Search for an account",
-        "intro_text_title": "Bitshares'e Hoş Geldiniz",
+        "intro_text_title": "CryptoBridge'e Hoş Geldiniz",
         "intro_text_1":
-            "<b>Bitshares Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
+            "<b>CryptoBridge Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
         "intro_text_2":
-            "<b>Bitshares</b>'de al-sat işlemleri herhangi bir aracı olmaksızın, doğrudan kullanıcıların kendi arasında gerçekleşir.",
+            "<b>CryptoBridge</b>'de al-sat işlemleri herhangi bir aracı olmaksızın, doğrudan kullanıcıların kendi arasında gerçekleşir.",
         "intro_text_3":
             "Platform üzerinde kullanıcılar kendi hesaplarının tam kontrolüne sahiptir - hiçbir aracı kurum işlemlerinize müdahale edemez!",
         "intro_text_4":
@@ -150,7 +150,7 @@
         "bittrex_scam":
             "Bu adres Bittrex'in gerçek adresi değildir. Lütfen alıcıyı bittrex-deposit olarak değiştirin.",
         "estimate_value": "Toplam hesap değeri (yaklaşık)",
-        "welcome": "Bitshares'e Hoşgeldiniz",
+        "welcome": "CryptoBridge'e Hoşgeldiniz",
         "asset": "Dijital Varlık",
         "market_value": "Piyasa Değeri",
         "hour_24": "24 Saat",
@@ -225,7 +225,7 @@
             "available": "Sahip olunabilecek",
             "referral_link": "Davet bağlantınız",
             "referral_text":
-                "Bu bağlantıyı BitShares'e davet etmek istediğiniz kişilere gönderin"
+                "Bu bağlantıyı CryptoBridge'e davet etmek istediğiniz kişilere gönderin"
         },
         "user_issued_assets": {
             "symbol": "Sembol",
@@ -957,7 +957,7 @@
             "Unable to connect to API node %(url)s, falling back to known working nodes"
     },
     "footer": {
-        "title": "Bitshares",
+        "title": "CryptoBridge",
         "block": "İşlenen son blok",
         "loading": "Yükleniyor...",
         "backup": "Cüzdanınızı yedekleyin",
@@ -1066,7 +1066,7 @@
     },
     "wallet": {
         "account_create_wallet_text":
-            "Bu şifre yeni bir Bitshares cüzdanı oluşturmak için kullanılacak ve tarayıcınızda saklanacaktır. Cüzdanınızı yedeklerseniz, bu şifre ile birlikte başka bilgisayarlardan ve tarayıcılardan cüzdanınıza ulaşabilirsiniz.",
+            "Bu şifre yeni bir CryptoBridge cüzdanı oluşturmak için kullanılacak ve tarayıcınızda saklanacaktır. Cüzdanınızı yedeklerseniz, bu şifre ile birlikte başka bilgisayarlardan ve tarayıcılardan cüzdanınıza ulaşabilirsiniz.",
         "all_set": "İşleminiz başarıyla tamamlandı!",
         "backup_explain":
             "Aşağıdaki butona tıkladığınızda .bin uzantılı bir yedekleme dosyası oluşturulacaktır. Bu dosya, cüzdan şifreniz ile şifrelenmiştir, ve kendi şifreniz ile birlikte kullanıldığında cüzdanınıza tam erişim sağlar. Yedekleme dosyasını cüzdanınızı başka bir tarayıcı ya da bilgisayara taşımak için de kullanabilirsiniz.",
@@ -1086,18 +1086,18 @@
             "Özel anahtarınızı aktarmak için öncelikle bir cüzdan oluşturmalısınız, bunun için lütfen aşağıdaki formu doldurun.",
         "create_success": "Tebrikler! Hesabınız oluşturuldu.",
         "create_text":
-            "Bitshares cüzdanınız tamamen kendi bilgisayarınızda tutulur ve cüzdan bilgileriniz ya da şifreniz siz paylaşmadığınız sürece kimseyle paylaşılmaz.",
+            "CryptoBridge cüzdanınız tamamen kendi bilgisayarınızda tutulur ve cüzdan bilgileriniz ya da şifreniz siz paylaşmadığınız sürece kimseyle paylaşılmaz.",
         "create_w_a": "Ücretsiz hesap oluşturun",
         "create_wallet_backup": "Yedeklenmiş cüzdanı aktar.",
         "delete_confirm_line4": "Evet, şu cüzdanı silmek istiyorum: %(name)s",
         "has_wallet":
-            "Bitshares hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
+            "CryptoBridge hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
         "create_account_text":
             "Hesabınıza ait .bin dosyasını kaybetmeniz, veya TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, bir sonraki adımda cüzdanınızı yedeklemeli ve .bin dosyanızı, şifrenizi ve TekAnahtarınızı kesinlikle kaybetmemelisiniz.",
         "first_account_paid":
             "TekAnahtarınızı, şifrenizi veya .bin dosyasını güvende tutmazsanız, bilgisayarınızda oluşacak herhangi bir sorun ya da güncelleme nedeniyle cüzdanınıza erişimi kaybedebilirsiniz. Bu durumda cüzdanınızdaki dijital varlıkları geri getirmenin hiçbir yolu yoktur.",
         "not_first_account":
-            "Zaten bir Bitshares hesabı ile giriş yapılmış, bu yüzden yeni oluşturacağınız her hesap için ağ ücreti ödemeniz gerekmektedir.",
+            "Zaten bir CryptoBridge hesabı ile giriş yapılmış, bu yüzden yeni oluşturacağınız her hesap için ağ ücreti ödemeniz gerekmektedir.",
         "import_backup_choose":
             "Lütfen yedekleme dosyasını seçin. Bu işlem esnasında dosya kendi bilgisayarınızdan dışarıya asla aktarılmaz, bütün işlem bilgisayarınızda gerçekleşir.",
         "import_balance": "Bakiyeyi aktar.",
@@ -1126,7 +1126,7 @@
         "wallet_lose_warning": "",
         "wallet_move":
             "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_new": "Bitshares'e Hoş Geldiniz",
+        "wallet_new": "CryptoBridge'e Hoş Geldiniz",
         "import_bts": "BTS 0.9.3c anahtar aktarma",
         "title": "Cüzdan",
         "confirm": "Şifre (teyit)",
@@ -1136,7 +1136,7 @@
         "change_wallet": "Cüzdanı Değiştir",
         "wallet_created": "Cüzdan Oluşturuldu",
         "create_wallet": "Cüzdan Oluştur",
-        "import_bts1": "BitShares 0.9.3c den aktarım",
+        "import_bts1": "CryptoBridge 0.9.3c den aktarım",
         "setup_wallet": "Cüzdanınızı Oluşturun",
         "delete_wallet": "Cüzdanı Sil",
         "delete_confirm_line1": "KESİNLİKLE emin misiniz?",
@@ -1213,7 +1213,7 @@
             "Lütfen şifrenizi kaybetmeyeceğiniz şekilde bir yere yazın ve güvende tutun. Şifrenizi kaybederseniz hesabınıza erişmenin HİÇBİR YOLU YOKTUR. <strong>Şifrenizi hatırlamak yalnızca ve tamamen sizin sorumluluğunuzdur.</strong>.",
         "password_show": "Şifreyi göster",
         "tips_explore_pass":
-            "Hesabınız başarıyla oluşturulmuştur. Soldaki bağlantılardan birine tıklayarak Bitshares Merkezsiz Kriptopara Borsası'nı keşfedin!",
+            "Hesabınız başarıyla oluşturulmuştur. Soldaki bağlantılardan birine tıklayarak CryptoBridge Merkezsiz Kriptopara Borsası'nı keşfedin!",
         "create_account_password_text":
             "Yeni hesabınız için gereken özel anahtarlar şifreniz kullanılarak üretilecektir. <strong>Şifreniz bilgisayarınızda ya da herhangi bir yerde otomatik olarak kayıtlı TUTULMAZ. Şifrenizi not etmek ya da ezberlemek ve sonrasında hatırlamak tamamen ve yalnızca sizin sorumluluğunuzdur.</strong>",
         "create_password": "Şifre kullanarak yeni bir hesap oluştur.",
@@ -1246,7 +1246,7 @@
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
         "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+            "The first rule of CryptoBridge is: Do not lose your password.<br/>The second rule of CryptoBridge is: Do not lose your password.<br />The third rule of CryptoBridge is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
     },
     "borrow": {
         "title": "%(asset_symbol)s Marjin",
@@ -1304,7 +1304,7 @@
         "not_connected": "Bağlı değil",
         "browser": "Desteklenmeyen tarayıcı",
         "browser_text":
-            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
+            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden CryptoBridge Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
         "understand": "Anladım ve onaylıyorum."
     },
     "refcode": {
@@ -1324,13 +1324,13 @@
         "title": "Yatır & Çek",
         "assets": {
             "open":
-                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+                "<br/><br/>Bu dijital varlık CryptoBridge üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "trade":
-                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+                "<br/><br/>Bu dijital varlık CryptoBridge üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "bit":
-                "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
+                "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz BitShares blokzinciri tarafından sağlanır.",
             "bitcny":
-                "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/"
+                "<br/><br/>bitCNY, Çin Yuanı'nın BitShares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/"
         },
         "your_account": "Kullanıcı adınız",
         "bitkapital_receive":
@@ -1377,7 +1377,7 @@
         "bridge_text":
             " Köprüler bir dijital varlıktan bir diğerine geçiş yapmanızı sağlar, örn. BTC'yi BTS'ye.",
         "gateway_text":
-            "Geçitler BitShares'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
+            "Geçitler CryptoBridge'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
         "fiat_text":
             "Buradaki kripto para yatırma işlemleri CCEDK tarafından sağlanan bir hizmettir. Bu hizmetten faydalanmanız için öncelikle CCEDK kaydınız olmalıdır. Kayıt işleminden sonra aşağıdaki dönüşümleri yapabilirsiniz:",
         "meta": {

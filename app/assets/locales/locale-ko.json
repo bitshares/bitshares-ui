@@ -76,7 +76,7 @@
         "propose_scam":
             "This proposal was created by a known scammer, do not approve it!",
         "login":
-            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+            "This CryptoBridge wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "buy_min":
             "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
         "borrow":
@@ -841,7 +841,7 @@
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
         "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+            "The first rule of CryptoBridge is: Do not lose your password.<br/>The second rule of CryptoBridge is: Do not lose your password.<br />The third rule of CryptoBridge is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
     },
     "borrow": {
         "title": "Collateral position for %(asset_symbol)s",

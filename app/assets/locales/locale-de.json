@@ -17,7 +17,7 @@
         "ja": "日本語"
     },
     "header": {
-        "title": "BitShares UI",
+        "title": "CryptoBridge UI",
         "account": "Konto",
         "dashboard": "Übersicht",
         "explorer": "Explorer",
@@ -77,7 +77,7 @@
         "propose_scam":
             "This proposal was created by a known scammer, do not approve it!",
         "login":
-            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+            "This CryptoBridge wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "buy_min":
             "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
         "borrow":
@@ -805,7 +805,7 @@
             "Unable to connect to API node %(url)s, falling back to known working nodes"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "Spitzenblock",
         "loading": "Lade..."
     },
@@ -920,7 +920,7 @@
         "change_wallet": "Geldbörse wechseln",
         "wallet_created": "Geldbörse erstellt",
         "create_wallet": "Geldbörse erstellen",
-        "import_bts1": "Importieren aus BitShares 0.9.3c",
+        "import_bts1": "Importieren aus CryptoBridge 0.9.3c",
         "setup_wallet": "Geldbörse einrichten",
         "delete_confirm_line1": "Sind Sie ABSOLUT sicher?",
         "delete_confirm_line2":
@@ -1023,7 +1023,7 @@
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
         "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+            "The first rule of CryptoBridge is: Do not lose your password.<br/>The second rule of CryptoBridge is: Do not lose your password.<br />The third rule of CryptoBridge is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
     },
     "borrow": {
         "title": "Kollateral Position für %(asset_symbol)s",
@@ -1077,7 +1077,7 @@
         "not_connected": "Nicht verbunden",
         "browser": "Nicht unterstützter Browser",
         "browser_text":
-            "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+            "Ihr Browser ist unzureichend mit der CryptoBridge-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
         "understand": "Verstanden!"
     },
     "refcode": {

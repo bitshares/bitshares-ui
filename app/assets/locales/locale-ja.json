@@ -27,7 +27,7 @@
     },
     "incognito": {
         "no_support":
-            "このBitShares Walletは、ローカルストレージとIndexedDBに依存しています。シークレットブラウジングモードを使用した場合、持続的ではありません。通常のブラウザーセッションを使用することをおすすめします。",
+            "このCryptoBridgeウォレットはローカルストレージとIndexedDBを使用しており、シークレットブラウザを使用した場合は維持されません。通常モードのブラウザを使用することをおすすめします。",
         "ignore": "理解しました。"
     },
     "sync_fail": {
@@ -37,7 +37,7 @@
             "時計を同期させたらこのページを更新してください。<br/><br/>既に時計が正しい場合は、使用しているAPIサーバーが同期していません。その場合は下のリストから他のサーバーを選んで再試行してください。"
     },
     "header": {
-        "title": "BitShares UI",
+        "title": "CryptoBridge UI",
         "account": "アカウント",
         "dashboard": "ダッシュボード",
         "deposit-withdraw": "入金/出金",
@@ -106,7 +106,7 @@
         "propose_scam":
             "この提案は有名な詐欺師によるものです。応じないでください！",
         "login":
-            "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+            "CryptoBridgeウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
         "buy_min":
             "最低でもこの金額を受け取れます。あなたが指定した価格よりも低い価格でマッチする注文があった場合、あなたはこれ以上の金額を受け取れます。",
         "borrow":
@@ -186,15 +186,15 @@
         "existing_user": "既存ユーザー",
         "restore": "リストア",
         "advanced": "高度な設定",
-        "intro_text_title": "BitShares分散型取引所へようこそ",
-        "intro_text_1": "あなたのための分散型取引所",
+        "intro_text_title": "CryptoBridge分散型取引所へようこそ",
+        "intro_text_1":
+            "CryptoBridgeは高性能でスケーラブルなブロックチェーンを利用して開発された分散型取引所です。",
         "intro_text_2":
-            "BitSharesは<b>DEX</b>として分散化されており、BitSharesのコアトークンであるBTSと、bitUSD、bitCNY、bitBTC、bitGoldなどのトラストレスで価格安定性のあるアセット間のトレードを可能にします。これらの資産はすべてカウンターパーティリスク<b>ゼロ</b>で取引することができるため、あなた自身が資金を完全にコントロールすることができます。",
+            "障害の中心となる場所は存在しません。すべての入出金とオーダーブックはブロックチェーンに透過的に格納されています。各クライアントは自身のコインに秘密キーを持っています。CryptoBridgeがクライアントの資金にアクセスすることはありません。",
         "intro_text_3":
-            "<b>DEX</b>では、ユーザー発行型アセット（UIA）の作成も可能です。ユーザー発行型アセットは、プラットフォーム上の他のユーザー発行型アセット、及びトラストレスアセット間のトレードが可能です。 DEX上でよく知られているアセット発行者である、<b>OpenLedger</b>、はBTC、ETH、STEEM、DASH、LTC、DOGE、その他多数のアセットをホスティングしています。",
+            "分散型取引所の背景にあるブロックチェーン、Grapheneは毎秒100,000以上のトランザクションを処理し、平均確認時間はわずか3秒です。",
         "intro_text_4":
-            "これにより、仮想通貨トレーダーは使い慣れた取引インタフェースを通して、伝統的なトレーディングスタイルと分散型のトレーディングスタイルのユニークな融合を体験することができます。",
-        "in_open": "これは注文中の%(asset)sの金額です。",
+            "これは使いやすい取引所インターフェースによって、暗号通貨トレーダーに従来のトレードと分散型トレードの独特な融合を提供します。トレードをお楽しみください！",
         "in_open_value": "これは注文中の%(asset)sの相当額です。",
         "transfer_actions": "転送アクション",
         "market_actions": "市場アクション",
@@ -202,7 +202,7 @@
         "total_estimate":
             "これは非表示のもの、注文中のもの、賃借、担保を含むすべてのアセットの推定価格です。推定は現在のブロックチェーンデータのみを使用しており、正確とは限りません。",
         "trade": "トレード",
-        "welcome": "BitSharesへようこそ",
+        "welcome": "CryptoBridgeへようこそ",
         "asset": "アセット",
         "market_value": "市場価格",
         "hour_24": "24時間の変化",
@@ -298,7 +298,7 @@
             "available": "請求可能",
             "referral_link": "あなたの紹介リンク",
             "referral_text":
-                "BitSharesに紹介したい人にこのリンクを教えてください"
+                "CryptoBridgeに紹介したい人にこのリンクを教えてください"
         },
         "user_issued_assets": {
             "symbol": "シンボル",
@@ -580,7 +580,7 @@
     "transfer": {
         "header": "転送の詳細設定",
         "header_subheader":
-            "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
+            "転送機能は他のCryptoBridgeアカウントに資金を送金するために使用されます。",
         "from": "From",
         "pay_from": "送信元",
         "amount": "金額",
@@ -902,7 +902,7 @@
             "short_limit": "ショート制限",
             "feed_price": "フィード価格",
             "settlement_price": "決済金額",
-            "go_to": "Go to block"
+            "go_to": "ブロックへ移動"
         },
         "assets": {
             "title": "アセット",
@@ -1137,7 +1137,7 @@
         "high_latency": "レイテンシー高"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "ブロック",
         "loading": "ロード中...",
         "backup": "バックアップが必要です",
@@ -1296,7 +1296,7 @@
         "create_importkeys_text":
             "キーをインポートするには、まずキーを格納するウォレットを作成する必要があります。以下の新しいウォレット作成のダイアログを完了させてください。",
         "create_wallet_backup": "バックアップから新しいウォレットを作成する",
-        "import_bts1": "BitShares 0.9.3cからインポートする",
+        "import_bts1": "CryptoBridge 0.9.3cからインポートする",
         "setup_wallet": "ウォレットをセットアップする",
         "delete_wallet": "ウォレットを削除する",
         "delete_confirm_line1": "本当によろしいですか？",
@@ -1315,7 +1315,7 @@
         "backup_brainkey": "ブレインキーのバックアップ",
         "create_backup_of": "今すぐバックアップを作成する",
         "import_backup":
-            "BitShares 2.0バックアップ (.bin ファイル) をインポートする",
+            "CryptoBridge 2.0バックアップ (.bin ファイル) をインポートする",
         "import_backup_choose":
             "以下のダイアログでバックアップファイルを選択してください。ファイルはどこにもアップロードされず、ブラウザから離れないため、この操作は安全です。",
         "restore_backup": "バックアップのリストア",
@@ -1372,9 +1372,9 @@
         "noneed_backup": "バックアップは必要ありません",
         "restore": "バックアップからウォレットをリストアする",
         "create_text":
-            "BitSharesウォレットはブラウザに保存され、クラウドには保存されません。ウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
+            "CryptoBridgeウォレットはブラウザに保存され、クラウドには保存されません。ウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
         "account_create_wallet_text":
-            "このパスワードは新しいBitSharesウォレットの作成に使用されます。ウォレットはブラウザにのみローカルで格納されます。BitSharesウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
+            "このパスワードは新しいCryptoBridgeウォレットの作成に使用されます。ウォレットはブラウザにのみローカルで格納されます。CryptoBridgeウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
         "create_account_text":
             "選択するアカウント名はブロックチェーン上で公開登録され、あなたが作成したすべての取引が特定されるため、ユニークである必要があります。",
         "first_account_paid":
@@ -1411,7 +1411,7 @@
         "import_private_key": "秘密キーをインポートする",
         "wallet_browser": "あなたのWebブラウザがあなたのウォレットです",
         "has_wallet":
-            "最初のBitSharesアカウントを作成すると、自動的にBitSharesウォレットも作成され、ブラウザに格納されます。このウォレットはあなたのパスワードで暗号化されており、アカウントに付属する秘密キーを含んでいます。このウォレットのバックアップを作成することが大切です！",
+            "最初のCryptoBridgeアカウントを作成すると、自動的にCryptoBridgeウォレットも作成され、ブラウザに格納されます。このウォレットはあなたのパスワードで暗号化されており、アカウントに付属する秘密キーを含んでいます。このウォレットのバックアップを作成することが大切です！",
         "go_get_started": "開始時のヒントを見る",
         "wallet_crucial":
             "あなたのウォレットは<strong>ブラウザにのみ</strong>格納されており、ブラウザのデータをクリアした場合、ウォレットをリストアするためにバックアップから復元する必要があるため、バックアップを作成しておくことがとても重要です！<strong>バックアップをなくした場合、誰にもアカウントをリストアすることはできなくなります。</strong>",
@@ -1427,7 +1427,7 @@
         "tips_settings": "設定を変更する",
         "tips_account": "新しいアカウントを見る",
         "link_account": "アカウント",
-        "wallet_new": "新しいBitSharesアカウント",
+        "wallet_new": "新しいCryptoBridgeアカウント",
         "create_w_a": "ウォレットとアカウントを作成する",
         "create_a": "新しいアカウントを作成する",
         "create_success": "ウォレットを作成しました",
@@ -1486,7 +1486,7 @@
         "no_wallet": "まだウォレットを持っていません",
         "generated": "生成したパスワード",
         "account_exp":
-            "このアカウントはブロックチェーン上に作成され、アセット転送用のアドレスになります！ <strong>BitSharesにはBitcoinスタイルの長いアドレスはありません！</strong>",
+            "このアカウントはブロックチェーン上に作成され、アセット転送用のアドレスになります！ <strong>CryptoBridgeにはBitcoinスタイルの長いアドレスはありません！</strong>",
         "understand_1":
             "パスワードを紛失または忘れた場合、回復することができないことを理解しました",
         "understand_2":
@@ -1494,7 +1494,7 @@
         "understand_3":
             "パスワードを紛失した場合、資金にアクセスできなくなることを理解しました",
         "bts_rules":
-            "BitSharesの第1のルールは: パスワードをなくさないこと。<br/>BitSharesの第2のルールは: パスワードをなくさないでください。<br/>BitSharesの第3のルールは: 我々はあなたのパスワードを回復することができません。<br />第4のルールは：覚えられるパスワードは安全ではありません。<br />第5のルールは：ランダムに生成したパスワードのみを使用してください。<br />第6のルールは：誰にもパスワードを教えないでください。<br/>第7のルールは：いつもパスワードをバックアップしてください。",
+            "CryptoBridgeの第1のルールは: パスワードをなくさないこと。<br/>CryptoBridgeの第2のルールは: パスワードをなくさないでください。<br/>CryptoBridgeの第3のルールは: 我々はあなたのパスワードを回復することができません。<br />第4のルールは：覚えられるパスワードは安全ではありません。<br />第5のルールは：ランダムに生成したパスワードのみを使用してください。<br />第6のルールは：誰にもパスワードを教えないでください。<br/>第7のルールは：いつもパスワードをバックアップしてください。",
         "ok_done": "OKです。ダッシュボードに連れて行ってください",
         "local_switch":
             "ウォレットと指定されたパスワードが一致したため、ウォレットモデルに切り替わりました"
@@ -1529,7 +1529,7 @@
         "withdraw": {
             "amount": "出金数量",
             "address": "出金先アドレス",
-            "bitshares_account": "Send to Bitshares Account",
+            "bitshares_account": "Send to CryptoBridge Account",
             "submit": "出金",
             "quantity": "数量",
             "estimated_value": "推定価格",
@@ -1616,7 +1616,7 @@
         "not_connected": "接続していません",
         "browser": "サポートされていないブラウザ",
         "browser_text":
-            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
+            "使用しているブラウザはCryptoBridgeウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
         "understand": "理解しました。"
     },
     "refcode": {
@@ -1670,9 +1670,9 @@
         "deposit_to": "%(asset)sを以下のアドレスに送ってください",
         "deposit_address": "入金アドレス",
         "add_funds":
-            "あなたのBitSharesアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されています。",
+            "あなたのCryptoBridgeアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されています。",
         "withdraw_funds":
-            "BitSharesアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
+            "CryptoBridgeアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
         "balance_asset": "現在の%(asset)s残高",
         "withdraw_placeholder": "%(asset)sアドレスを入力してください",
         "balance": "現在の残高",
@@ -1703,7 +1703,7 @@
         "intermediate": "中間アカウント",
         "asset_to_withdraw": "出金するアセット:",
         "support_block":
-            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください（英語のみ）:",
+            "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",
         "valid_address": "有効な%(coin_type)sのアドレスを入力してください",
         "withdraw_coin": "%(coin)s (%(symbol)s) を出金",
         "convert_coin": "%(coin)s (%(symbol)s) に変換",
@@ -1787,14 +1787,14 @@
             "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
     },
     "migration": {
-        "title": "Notice",
+        "title": "お知らせ",
         "announcement_1":
-            "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
-        "text_1": "Local wallet detected",
+            "webベースウォレットのセキュリティを強化するために移行しています。すぐに以下のアドレスに移行してください。ブックマークしている場合は更新してください。",
+        "text_1": "ローカルウォレットが検出されました",
         "text_2":
-            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+            "今すぐウォレットをバックアップし、webウォレットの新しいアドレス<a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>でバックアップファイルをリストアしてください。継続的な支援に感謝します。",
         "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+            "今後は<a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>を使用してください。既存の資格情報でそこにログインできます。"
     },
     "news": {
         "news": "ニュース",
@@ -1835,6 +1835,67 @@
             "errors": {
                 "minWithdraw": "Minimum amount：%(min_amount)s"
             }
+        }
+    },
+    "cryptobridge": {
+        "general": {
+            "news": "News"
+        },
+        "gateway": {
+            "required_confirmations": "入金残高反映に必要な確認回数",
+            "support_block":
+                "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",
+            "deposit_or_withdrawal": "コインの入金または出金",
+            "deposit_intro":
+                "他のブロックチェーンの資金を入金または出金する場合は、以下のフォームを使用してください。",
+            "deposit_to_fee_warning":
+                "注意: %(asset)sを%(fee_time_frame)s>分に1回以上の頻度で入金する場合、%(fee_percentage)s%の入金手数料が発生します (最小%(minimum)s %(asset)s)。%(fee_percentage_low_amounts)s%の入金手数料は1 %(asset)s未満の入金をした場合に課されます。",
+            "deposit_minimum": "Minimum deposit",
+            "deposit_login":
+                "入金するにはウォレットのロックを解除する必要があります",
+            "receive_funds": "Receiving funds",
+            "receive_funds_intro":
+                "BTSを他の人や取引所から受け取るには、あなたのアカウント名を相手に教えてください: "
+        },
+        "footer": {
+            "title": "CryptoBridge"
+        },
+        "account": {
+            "intro_text_title": "CryptoBridge分散型取引所へようこそ",
+            "id": "BCOステーキングID",
+            "title":
+                "DEXからの収益を得るためにBridgeCoin (BCO) をステーキングします",
+            "staking_amount": "ステーキング数量",
+            "remaining": "残りステーキング期間",
+            "staking_text1":
+                "BCOステーキングをしている人には、<b>CryptoBridge分散型取引所</b>から取引収益の%(percent)sを得る資格があります。ステーキングはあなたが以下で指定した期間コインをロックします。ステーキング期間中は自動的に払い出しの一部を受け取ることができます。支払いは隔週で行われます。",
+            "staking_text2":
+                "長期間のステーキングには、大きい支払い係数がつきます。ステーキング期間に達した後は、<b>'請求する'</b>ボタンを押すことでステーキングしたBCO残高を再請求できます。新しくステーキングを始めるためのブロックチェーン手数料は現在<b>%(fee)s BCO</b>に設定されています。",
+            "staking_text3":
+                "<b>CryptoBridge分散型取引所</b>に入金したBCOのみステーキング可能です。<b>CryptoBridge分散型取引所</b>のメリットと収益分配についての情報は<a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>を見てください。どのように支払われ、ボーナスがどのように適用されるのかの詳細情報は<a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>を見てください。",
+            "status": "ステータス",
+            "staking": "BridgeCoinステーキング",
+            "days": "%(days)s日",
+            "available": "請求可能",
+            "month_1": "1ヶ月 (%(bonus)sボーナス)",
+            "month_3": "3ヶ月 (%(bonus)sボーナス)",
+            "month_6": "6ヶ月 (%(bonus)sボーナス)",
+            "month_12": "12ヶ月 (%(bonus)sボーナス)",
+            "month_1_plural": "1ヶ月",
+            "month_3_plural": "3ヶ月",
+            "month_6_plural": "6ヶ月",
+            "month_12_plural": "12ヶ月",
+            "amount_bco": "ステーキングするBCO数",
+            "stake_bco": "新しいBCOステーキングを作成する",
+            "length": "ステーキング期間",
+            "understand":
+                "私は%(amount)s BCOのステーキングに同意し、それらは%(month)sヶ月間ロックされ、ステーキング期間が終了するまで取り戻すことができないことを完全に理解しました。また、私はステーキングした資金によって、CryptoBridgeプラットフォームの収益の一部を受け取ります。",
+            "no_balances": "ステーキング中のBridgeCoinはありません。",
+            "bco_available": "利用可能: ",
+            "bco_not_available": "利用可能なBCOがありません "
+        },
+        "dashboard": {
+            "all_markets": "すべてのマーケット"
         }
     }
 }

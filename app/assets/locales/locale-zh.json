@@ -37,7 +37,7 @@
             "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。"
     },
     "header": {
-        "title": "BitShares 钱包",
+        "title": "CryptoBridge 钱包",
         "account": "账户",
         "dashboard": "资产总览",
         "explorer": "浏览",
@@ -169,7 +169,7 @@
         "total_estimate":
             "这是你所有资产的估值，其中包含在界面中设置隐藏的资产、委单中的资产、债务及抵押物。估值采用实时获得的区块链上的价格，可能并不完全准确。",
         "trade": "交易",
-        "welcome": "欢迎使用 BitShares 系统",
+        "welcome": "欢迎使用 CryptoBridge 系统",
         "asset": "资产",
         "market_value": "市值",
         "hour_24": "日涨跌幅%",
@@ -519,7 +519,7 @@
     },
     "transfer": {
         "header": "转账详情",
-        "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
+        "header_subheader": "可以将资产转账给其他 CryptoBridge 帐号持有者",
         "from": "来自",
         "pay_from": "支付自",
         "amount": "数量",
@@ -1052,7 +1052,7 @@
         "high_latency": "高延迟"
     },
     "footer": {
-        "title": "BitShares",
+        "title": "CryptoBridge",
         "block": "最新区块",
         "loading": "载入中…",
         "backup": "需要备份",
@@ -1190,7 +1190,7 @@
         "create_importkeys_text":
             "导入私钥前，你需要创建一个新的钱包来存储私钥。请根据提示创建钱包。",
         "create_wallet_backup": "从备份创建新钱包",
-        "import_bts1": "从BitShares 0.9.3c导入",
+        "import_bts1": "从CryptoBridge 0.9.3c导入",
         "setup_wallet": "设置钱包",
         "delete_wallet": "删除钱包",
         "delete_confirm_line1": "你确定么？",
@@ -1457,7 +1457,7 @@
         "not_connected": "未连接",
         "browser": "不支持的浏览器",
         "browser_text":
-            "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+            "你使用的浏览器未经过 CryptoBridge 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
         "understand": "我理解"
     },
     "refcode": {
@@ -1537,7 +1537,7 @@
         "bridge_text":
             "桥接服务能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
         "gateway_text":
-            "网关能让你将 BitShares 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
+            "网关能让你将 CryptoBridge 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
         "fiat_text":
             "法币的充值提现服务由 CCEDK 提供。你必须先行在 CCEDK 上进行账户注册。下面是支持的货币：",
         "meta": {
@@ -1613,9 +1613,9 @@
             "为了提高浏览器钱包的安全性，我们已经将服务迁移至以下地址。请更新您的书签。",
         "text_1": "检测到本地钱包",
         "text_2":
-            "请立刻备份钱包，并在 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>将钱包恢复。请今后使用此地址访问浏览器钱包。感谢您一贯的支持。",
+            "请立刻备份钱包，并在 <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>将钱包恢复。请今后使用此地址访问浏览器钱包。感谢您一贯的支持。",
         "text_3":
-            "请今后使用 <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> 访问浏览器钱包。您当前的账户和密码不变，可以继续使用。"
+            "请今后使用 <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a> 访问浏览器钱包。您当前的账户和密码不变，可以继续使用。"
     },
     "news": {
         "news": "新闻",
