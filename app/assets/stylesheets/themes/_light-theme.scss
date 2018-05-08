@@ -14,7 +14,7 @@ $settings-select-bg: #e5e6e4;
 $settings-select-color: #656565;
 $settings-api-node-border-color: #e6e6e6;
 $main-content-margin-block-bg-color: #f8f9f8;
-$bg-color: #fff;
+$bg-color: #fbfbfb;
 $panel-bg-color: #e5e6e4;
 $light-panel-bg-color: #fff;
 $super-light-panel-bg-color: darken($light-panel-bg-color, 1%);
@@ -31,10 +31,10 @@ $warning-color: #f35b92;
 $fee-color: #7f055e;
 
 // Exchange colors
-$bid-color: #4de8bc;
+$bid-color: #00d8a1;
 $ask-color: #ff0045;
 $call-color: #bbbf2b;
-$positive-color: #4de8bc;
+$positive-color: #00d8a1;
 $negative-color: #ff0045;
 $row-accent-color: #ffffff;
 $header-color: #dcdcdc;
@@ -42,7 +42,7 @@ $header-color: #dcdcdc;
 // Account table view colors
 $account-header: #b1b1b1;
 $account-cells: #dadada;
-$account-green: #4de8bc;
+$account-green: #00d8a1;
 $account-primarytext: $primary-text-color;
 $account-dimmed: #5d5d5d;
 $account-border: rgba(50, 49, 49, 0.1);
