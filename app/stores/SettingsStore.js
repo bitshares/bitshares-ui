@@ -244,6 +244,7 @@ class SettingsStore {
                     "BRIDGE.BTC",
                     // "BRIDGE.BCO",
                     "BRIDGE.LTC",
+                    "BRIDGE.RVN",
                     "BRIDGE.SMART",
                     // "BRIDGE.ZNY",
                     "BRIDGE.MONA",
