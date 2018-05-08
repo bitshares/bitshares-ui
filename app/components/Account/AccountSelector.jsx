@@ -175,7 +175,11 @@ class AccountSelector extends React.Component {
             typeahead,
             disableActionButton,
             contacts,
-            myActiveAccounts
+            myActiveAccounts,
+            noPlaceHolder,
+            useHR,
+            labelClass,
+            reserveErrorSpace
         } = this.props;
 
         const inputType = this.getInputType(accountName);
@@ -352,10 +356,11 @@ class AccountSelector extends React.Component {
                             </label>
 
                             <Translate
-                                className="left-label"
+                                className={"left-label " + (labelClass || "")}
                                 component="label"
                                 content={this.props.label}
                             />
+                            {useHR && <hr />}
                         </div>
                     ) : null}
                     <div className="input-area">
@@ -461,8 +466,15 @@ class AccountSelector extends React.Component {
                         </div>
                     </div>
 
-                    {error ? (
-                        <div className="error-area">
+                    {error || reserveErrorSpace ? (
+                        <div
+                            className={
+                                this.props.hideImage
+                                    ? "has-error"
+                                    : "error-area"
+                            }
+                            style={{marginTop: "1rem"}}
+                        >
                             <span>{error}</span>
                         </div>
                     ) : null}
