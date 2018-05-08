@@ -21,7 +21,7 @@ export default class MarketPicker extends React.Component {
             marketsList: "",
             issuersList: "",
             lookupQuote: null,
-            filterByIssuerName: null,
+            filterByIssuerName: null
         };
 
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
@@ -32,21 +32,18 @@ export default class MarketPicker extends React.Component {
             filterByIssuerName: e.target.value == "0" ? null : e.target.value
         });
     }
-    
+
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
-        let isValidName = !ChainValidation.is_valid_symbol_error(
-            toFind,
-            true
-        );
-    
+        let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
+
         this.setState({
             inputValue: e.target.value.trim(),
             marketsList: "",
             issuersList: "",
             filterByIssuerName: null
         });
-    
+
         /* Don't lookup invalid asset names */
         if (toFind && toFind.length >= 3 && !isValidName) {
             return this.setState({
@@ -59,29 +56,28 @@ export default class MarketPicker extends React.Component {
         }
         this._lookupAssets(toFind, getBackedAssets);
     }
-    
+
     _lookupAssets(value, gatewayAssets = false, force = false) {
         // console.log("__lookupAssets", value, force);
         if (!value && value !== "") {
             return;
         }
         let now = new Date();
-    
+
         let quote = value.toUpperCase();
-    
+
         this.setState({
-            lookupQuote: quote,
+            lookupQuote: quote
         });
-    
+
         if (this.state.lookupQuote !== quote || force) {
             if (quote.length < 1 || now - lastLookup <= 250) {
                 return false;
             }
             this.getAssetList(quote, 25, gatewayAssets);
         }
-        
     }
-    
+
     _changeMarketPickerFilter(value) {
         this.setState({
             marketPickerTab: value,
@@ -93,15 +89,11 @@ export default class MarketPicker extends React.Component {
     }
 
     render() {
+        let {searchAssets, assetsLoading, marketPickerAsset} = this.props;
+
         let {
-            searchAssets, 
-            assetsLoading,
-            marketPickerAsset,
-        } = this.props;
-        
-        let {
-            lookupQuote, 
-            marketPickerTab, 
+            lookupQuote,
+            marketPickerTab,
             filterByIssuerName,
             inputValue
         } = this.state;
@@ -133,29 +125,36 @@ export default class MarketPicker extends React.Component {
                     );
                 })
                 .forEach(asset => {
-                    if(assetCount > 100) return;
+                    if (assetCount > 100) return;
                     assetCount++;
-                    let issuer = ChainStore.getObject(asset.issuer, false, false);
-                    if(!issuer) return;
+                    let issuer = ChainStore.getObject(
+                        asset.issuer,
+                        false,
+                        false
+                    );
+                    if (!issuer) return;
 
                     let base = this.props.baseAsset.get("symbol");
                     let marketID = asset.symbol + "_" + base;
-                    
 
-                    if (base !== asset.symbol 
-                        && (!filterByIssuerName || filterByIssuerName == issuer.get("name"))
-                        && (
-                            (marketPickerTab == "search" && asset.symbol.startsWith(inputValue))
-                            || (!marketPickerTab || marketPickerTab == "filter")
-                        )
-                    )
-                    {
+                    if (
+                        base !== asset.symbol &&
+                        (!filterByIssuerName ||
+                            filterByIssuerName == issuer.get("name")) &&
+                        ((marketPickerTab == "search" &&
+                            asset.symbol.startsWith(inputValue)) ||
+                            (!marketPickerTab || marketPickerTab == "filter"))
+                    ) {
                         allMarkets.push([
                             marketID,
-                            {quote: asset.symbol, base: base, issuer: issuer.get("name")}
+                            {
+                                quote: asset.symbol,
+                                base: base,
+                                issuer: issuer.get("name")
+                            }
                         ]);
                     }
-                    if(!allIssuers.includes(issuer.get("name")))
+                    if (!allIssuers.includes(issuer.get("name")))
                         allIssuers.push(issuer.get("name"));
                 });
         }
@@ -169,7 +168,8 @@ export default class MarketPicker extends React.Component {
                 } else {
                     return 0;
                 }
-            }).map(issuer => {
+            })
+            .map(issuer => {
                 return (
                     <option key={issuer} value={issuer}>
                         {issuer}
@@ -186,19 +186,29 @@ export default class MarketPicker extends React.Component {
                 } else {
                     return 0;
                 }
-            }).map(market => {
-                let isQuoteAsset = this.props.quoteAsset.get("symbol") == marketPickerAsset;
+            })
+            .map(market => {
+                let isQuoteAsset =
+                    this.props.quoteAsset.get("symbol") == marketPickerAsset;
                 return (
-                    <li>
+                    <li key={market[0]}>
                         <AssetName name={market[1]["quote"]} />
-                        
+
                         <span style={{float: "right"}}>
-                            <Link 
+                            <Link
                                 onClick={() => {
                                     this.props.onToggleMarketPicker(null),
-                                    MarketsActions.switchMarket();
+                                        MarketsActions.switchMarket();
                                 }}
-                                to={isQuoteAsset ? `/market/${market[1]["quote"]}_${baseSymbol}` : `/market/${quoteSymbol}_${market[1]["quote"]}`}
+                                to={
+                                    isQuoteAsset
+                                        ? `/market/${
+                                              market[1]["quote"]
+                                          }_${baseSymbol}`
+                                        : `/market/${quoteSymbol}_${
+                                              market[1]["quote"]
+                                          }`
+                                }
                             >
                                 <Translate content="exchange.market_picker.use" />
                             </Link>
@@ -207,31 +217,49 @@ export default class MarketPicker extends React.Component {
                 );
             });
 
-        return(
+        return (
             <div className="marketPicker">
                 <div className="marketPicker__header">
                     <div className="marketPicker__filterType">
-                        <Translate 
-                            className="marketPicker__filterHeader" 
-                            component="span" 
-                            content="exchange.market_picker.search_mode" />
-                        <Icon 
-                            style={{marginLeft: 5, cursor: "pointer"}} 
-                            className={!this.state.marketPickerTab || this.state.marketPickerTab == "filter" ? "blue-icon" : ""} 
-                            size="1_5x" 
-                            onClick={this._changeMarketPickerFilter.bind(this, "filter")} 
-                            name="filter" />
-                        <Icon 
+                        <Translate
+                            className="marketPicker__filterHeader"
+                            component="span"
+                            content="exchange.market_picker.search_mode"
+                        />
+                        <Icon
                             style={{marginLeft: 5, cursor: "pointer"}}
-                            className={this.state.marketPickerTab == "search" ? "blue-icon" : ""}
+                            className={
+                                !this.state.marketPickerTab ||
+                                this.state.marketPickerTab == "filter"
+                                    ? "blue-icon"
+                                    : ""
+                            }
                             size="1_5x"
-                            onClick={this._changeMarketPickerFilter.bind(this, "search")} 
-                            name="zoom" />
+                            onClick={this._changeMarketPickerFilter.bind(
+                                this,
+                                "filter"
+                            )}
+                            name="filter"
+                        />
+                        <Icon
+                            style={{marginLeft: 5, cursor: "pointer"}}
+                            className={
+                                this.state.marketPickerTab == "search"
+                                    ? "blue-icon"
+                                    : ""
+                            }
+                            size="1_5x"
+                            onClick={this._changeMarketPickerFilter.bind(
+                                this,
+                                "search"
+                            )}
+                            name="zoom"
+                        />
                     </div>
-                    <Translate 
+                    <Translate
                         className="marketPicker__title"
-                        component="span" 
-                        content="exchange.market_picker.title" 
+                        component="span"
+                        content="exchange.market_picker.title"
                     />
                 </div>
                 <div className="marketPicker__subHeader">
@@ -243,17 +271,26 @@ export default class MarketPicker extends React.Component {
                             color: "lightblue !important"
                         }}
                     >
-                        <AssetName name={marketPickerAsset}/>
-                        <Icon className="blue-icon" style={{marginLeft: 5}} name="info-circle-o" />
+                        <AssetName name={marketPickerAsset} />
+                        <Icon
+                            className="blue-icon"
+                            style={{marginLeft: 5}}
+                            name="info-circle-o"
+                        />
                     </Link>
-                    
                 </div>
                 <hr />
-                <div id="search" style={{display: marketPickerTab == "search" ? "" : "none"}}>
+                <div
+                    id="search"
+                    style={{display: marketPickerTab == "search" ? "" : "none"}}
+                >
                     <div>
                         <section className="block-list no-border-bottom">
                             <header>
-                                <Translate component="span" content="exchange.market_picker.search_for_asset" />
+                                <Translate
+                                    component="span"
+                                    content="exchange.market_picker.search_for_asset"
+                                />
                             </header>
                             <input
                                 type="text"
@@ -268,11 +305,23 @@ export default class MarketPicker extends React.Component {
                         </section>
                     </div>
                 </div>
-                <div id="filter" style={{display: !this.state.marketPickerTab || this.state.marketPickerTab == "filter" ? "" : "none"}}>
+                <div
+                    id="filter"
+                    style={{
+                        display:
+                            !this.state.marketPickerTab ||
+                            this.state.marketPickerTab == "filter"
+                                ? ""
+                                : "none"
+                    }}
+                >
                     <div>
                         <section className="block-list no-border-bottom">
                             <header>
-                                <Translate component="span" content="exchange.market_picker.find_by_asset" />
+                                <Translate
+                                    component="span"
+                                    content="exchange.market_picker.find_by_asset"
+                                />
                             </header>
                             <input
                                 type="text"
@@ -289,13 +338,18 @@ export default class MarketPicker extends React.Component {
                     <div>
                         <section className="block-list no-border-bottom">
                             <header>
-                                <Translate component="span" content="exchange.market_picker.filter_by_issuer" />
+                                <Translate
+                                    component="span"
+                                    content="exchange.market_picker.filter_by_issuer"
+                                />
                             </header>
                             <ul>
                                 <li className="with-dropdpwn">
-                                    <select 
+                                    <select
                                         className="settings-select"
-                                        onChange={this._onSelectIssuer.bind(this)}
+                                        onChange={this._onSelectIssuer.bind(
+                                            this
+                                        )}
                                         style={{border: 0}}
                                     >
                                         <option key="0" value="0">
@@ -309,17 +363,22 @@ export default class MarketPicker extends React.Component {
                     </div>
                 </div>
                 <section className="block-list no-border-bottom">
-                    <Translate component="header" content="exchange.market_picker.results" total_assets={allMarkets.length} />
+                    <Translate
+                        component="header"
+                        content="exchange.market_picker.results"
+                        total_assets={allMarkets.length}
+                    />
                 </section>
-                {assetsLoading && allMarkets.length ? 
-                    <div style={{textAlign: "center"}}><LoadingIndicator type="three-bounce" /></div> : 
-                    <div className="results"><ul style={{marginLeft: 0}}>{marketsList}</ul></div>
-                }
+                {assetsLoading && allMarkets.length ? (
+                    <div style={{textAlign: "center"}}>
+                        <LoadingIndicator type="three-bounce" />
+                    </div>
+                ) : (
+                    <div className="results">
+                        <ul style={{marginLeft: 0}}>{marketsList}</ul>
+                    </div>
+                )}
             </div>
         );
     }
 }
-
-
-
-
