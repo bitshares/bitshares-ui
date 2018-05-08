@@ -134,7 +134,9 @@ class ApiNode extends React.Component {
                         />
                         <label />
                     </span>
-                    <Translate component="p" style={{fontSize: "80%"}} content="settings.automatic" /> {autoActive ? "on" : "off"}
+                    <p style={{fontSize: "80%"}}>
+                        <Translate content="settings.automatic_short" />:
+                    </p>
                 </div>
             ) : (
                 <div className="api-status">
