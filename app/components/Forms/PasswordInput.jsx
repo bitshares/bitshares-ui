@@ -165,7 +165,11 @@ class PasswordInput extends Component {
                 <div className={password_class_name}>
                     {/* {noLabel ? null : <Translate component="label" content="wallet.password" />} */}
                     <section>
-                        <label className="left-label">
+                        <label
+                            className={
+                                "left-label " + (this.props.labelClass || "")
+                            }
+                        >
                             <Translate content="wallet.enter_password" />
                         </label>
                         <input

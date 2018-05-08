@@ -42,6 +42,7 @@ class LoginSelector extends React.Component {
 
         // do redirect to portfolio if user already logged in
         if (
+            this.props.router &&
             Array.isArray(myAccounts) &&
             myAccounts.length !== 0 &&
             childCount === 0

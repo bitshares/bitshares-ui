@@ -87,12 +87,22 @@ function checkFeeStatusAsync({
                 let coreBalanceID = account.getIn(["balances", "1.3.0"]),
                     feeBalanceID = account.getIn(["balances", feeID]);
 
-                if (feeID === "1.3.0" && !coreBalanceID)
-                    return res({
-                        fee: new Asset({amount: coreFee}),
-                        hasBalance,
-                        hasPoolBalance
+                if (feeID === "1.3.0" && !coreBalanceID) {
+                    asyncCache[key].queue.forEach(promise => {
+                        promise.res({
+                            fee: new Asset({amount: coreFee}),
+                            hasBalance,
+                            hasPoolBalance
+                        });
                     });
+                    asyncCache[key] = {
+                        result: {fee, hasBalance, hasPoolBalance, hasValidCER}
+                    };
+                    setTimeout(() => {
+                        delete asyncCache[key];
+                    }, feeStatusTTL);
+                    return;
+                }
 
                 Promise.all([
                     coreBalanceID
@@ -147,6 +157,7 @@ function checkFeeStatusAsync({
                         feeBalance.get("balance") >= fee.getAmount()
                     )
                         hasBalance = true;
+
                     asyncCache[key].queue.forEach(promise => {
                         promise.res({
                             fee,
@@ -164,7 +175,7 @@ function checkFeeStatusAsync({
                 });
             })
             .catch(() => {
-                asyncCache[key].forEach(promise => {
+                asyncCache[key].queue.forEach(promise => {
                     promise.rej();
                 });
             });
