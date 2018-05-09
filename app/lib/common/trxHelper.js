@@ -52,9 +52,13 @@ function checkFeeStatusAsync({
 } = {}) {
     let key =
         accountID +
+        "_" +
         feeID +
+        "_" +
         type +
+        "_" +
         JSON.stringify(options) +
+        "_" +
         JSON.stringify(data);
     if (asyncCache[key]) {
         if (asyncCache[key].result) {
