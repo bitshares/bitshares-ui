@@ -296,16 +296,21 @@ class Exchange extends React.Component {
                 })
             );
         });
-        Promise.all(p).then(status => {
-            assets.forEach((a, idx) => {
-                feeStatus[a.get("id")] = status[idx];
-            });
-            if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                this.setState({
-                    feeStatus
+        Promise.all(p)
+            .then(status => {
+                assets.forEach((a, idx) => {
+                    feeStatus[a.get("id")] = status[idx];
                 });
-            }
-        });
+                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
+                    this.setState({
+                        feeStatus
+                    });
+                }
+            })
+            .catch(err => {
+                console.log("checkFeeStatusAsync error", err);
+                this.setState({feeStatus: {}});
+            });
     }
 
     _getWindowSize() {
