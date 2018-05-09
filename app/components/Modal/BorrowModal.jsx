@@ -183,7 +183,7 @@ class BorrowModalContent extends React.Component {
     _onRatioChange(e) {
         let feed_price = this._getFeedPrice();
         let target = e.target;
-        
+
         // Ensure input is valid
         const regexp_numeral = new RegExp(/[[:digit:]]/);
         if (!regexp_numeral.test(target.value)) {
@@ -194,7 +194,7 @@ class BorrowModalContent extends React.Component {
         if (target.value.charAt(0) == ".") {
             target.value = "0.";
         }
-       
+
         let ratio = target.value;
 
         let newState = {
@@ -714,8 +714,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                              ? "has-warning"
-                                              : "")
+                                                ? "has-warning"
+                                                : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -765,31 +765,42 @@ class BorrowModalContent extends React.Component {
                                 tabIndex={1}
                             />
                             {errors.collateral_balance ? (
-                                <div 
+                                <div
                                     className="float-left"
                                     style={{
-                                        paddingTop: 5,
-                                    }}>
+                                        paddingTop: 5
+                                    }}
+                                >
                                     {errors.collateral_balance}
                                 </div>
                             ) : null}
                         </div>
                         {!isPredictionMarket ? (
                             <div>
-                                <div 
+                                <div
                                     className={collateralRatioClass}
-                                    style={{marginBottom: "3rem"}}
+                                    style={{marginBottom: "3.5rem"}}
                                 >
                                     <Translate
                                         component="label"
                                         content="borrow.coll_ratio"
                                     />
                                     <span>
-                                        <input 
-                                            value={collateral_ratio == 0 ? null : collateral_ratio}
-                                            onChange={this._onRatioChange.bind(this)} 
-                                            type="text" 
-                                            style={{width: "12%", float: "right", marginTop: -10}} 
+                                        <input
+                                            value={
+                                                collateral_ratio == 0
+                                                    ? null
+                                                    : collateral_ratio
+                                            }
+                                            onChange={this._onRatioChange.bind(
+                                                this
+                                            )}
+                                            type="text"
+                                            style={{
+                                                width: "12%",
+                                                float: "right",
+                                                marginTop: -10
+                                            }}
                                         />
                                         <input
                                             style={{width: "85%"}}
@@ -804,18 +815,18 @@ class BorrowModalContent extends React.Component {
                                         />
                                     </span>
                                     {errors.below_maintenance ||
-                                        errors.close_maintenance ? (
-                                            <div
-                                                style={{
-                                                    height: "1em",
-                                                    maxWidth: "calc(85% - 50px)"
-                                                }}
-                                                className="float-left"
-                                            >
-                                                {errors.below_maintenance}
-                                                {errors.close_maintenance}
-                                            </div>
-                                        ) : null}
+                                    errors.close_maintenance ? (
+                                        <div
+                                            style={{
+                                                height: "1em",
+                                                maxWidth: "85%"
+                                            }}
+                                            className="float-left"
+                                        >
+                                            {errors.below_maintenance}
+                                            {errors.close_maintenance}
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
                         ) : null}
