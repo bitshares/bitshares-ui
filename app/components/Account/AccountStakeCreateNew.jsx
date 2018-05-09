@@ -228,6 +228,8 @@ class AccountStakeCreateNew extends React.Component {
         } = this.state;
 
         const fee = (feeAmount && feeAmount.getAmount({real: true})) || 0;
+        const reclaimFee =
+            ((feeAmount && feeAmount.getAmount({real: true})) || 0) * 2;
         const currentBalance = this._getCurrentBalance();
         const amount = asset.getAmount({real: true});
 
@@ -320,7 +322,10 @@ class AccountStakeCreateNew extends React.Component {
                 <Translate
                     component="p"
                     content="cryptobridge.account.staking_text2"
-                    with={{fee}}
+                    with={{
+                        fee,
+                        reclaimFee
+                    }}
                     unsafe
                 />
                 <Translate

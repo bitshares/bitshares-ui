@@ -1902,7 +1902,7 @@
             "staking_text1":
                 "Everyone who stakes their BCO is entitled to %(percent)s of the trading profits from the <b>CryptoBridge decentralized exchange</b>. Staking will lock your coins for the time you specify below. During the staking period you automatically take part in the payout distributions. Payouts happen bi-weekly.",
             "staking_text2":
-                "A longer staking duration results in a bigger payout factor. After the staking period has been reached, you can reclaim your staked BCO balance with the <b>'Claim Now'</b> button. The blockchain fee to start a new staking position is currently set at <b>%(fee)s BCO.</b>",
+                "A longer staking duration results in a bigger payout factor. After the staking period has been reached, you can reclaim your staked BCO balance with the <b>'Claim Now'</b> button. The blockchain fee to start a new staking position is currently set at <b>%(fee)s BCO</b>. The blockchain fee to reclaim your staked BCO is currently set at <b>%(reclaimFee)s BCO.</b>",
             "staking_text3":
                 "You can only stake BCO that you have deposited into the <b>CryptoBridge decentralized exchange</b>. You can find more information about the advantages of the <b>CryptoBridge decentralized exchange</b> and its profit sharing at <a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>. More details on how payouts happen and how bonuses are applied are also available on the <a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>. ",
             "status": "Status",
