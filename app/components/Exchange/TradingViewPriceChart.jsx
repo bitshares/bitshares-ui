@@ -27,8 +27,8 @@ export default class TradingViewPriceChart extends React.Component {
             interval: getResolutionsFromBuckets([props.bucketSize])[0]
         });
 
-        console.log("*** Load Chart ***");
-        console.time("*** Chart load time: ");
+        if (__DEV__) console.log("*** Load Chart ***");
+        if (__DEV__) console.time("*** Chart load time: ");
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
@@ -63,8 +63,8 @@ export default class TradingViewPriceChart extends React.Component {
         });
 
         this.tvWidget.onChartReady(() => {
-            console.log("*** Chart Ready ***");
-            console.timeEnd("*** Chart load time: ");
+            if (__DEV__) console.log("*** Chart Ready ***");
+            if (__DEV__) console.timeEnd("*** Chart load time: ");
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
             });
