@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router/es";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
+import AssetImage from "../Utility/AssetImage";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
 import PriceStatWithLabel from "./PriceStatWithLabel";
@@ -132,6 +133,15 @@ export default class ExchangeHeader extends React.Component {
 
         const translator = require("counterpart");
 
+        const styles = {
+            assetImage: {
+                maxWidth: 16,
+                maxHeight: 16,
+                marginRight: 5,
+                marginTop: -2
+            }
+        };
+
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
@@ -149,6 +159,10 @@ export default class ExchangeHeader extends React.Component {
                                         to={`/asset/${quoteSymbol}`}
                                         className="asset-prefix"
                                     >
+                                        <AssetImage
+                                            name={quoteSymbol}
+                                            style={styles.assetImage}
+                                        />
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
@@ -159,6 +173,10 @@ export default class ExchangeHeader extends React.Component {
                                         to={`/asset/${baseSymbol}`}
                                         className="asset-prefix"
                                     >
+                                        <AssetImage
+                                            name={baseSymbol}
+                                            style={styles.assetImage}
+                                        />
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}

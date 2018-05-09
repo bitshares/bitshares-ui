@@ -1,8 +1,9 @@
 import React from "react";
 import {connect} from "alt-react";
 import LazyImage from "./LazyImage";
+import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
 
-export default class AssetImage extends React.Component {
+class AssetImage extends React.Component {
     static propTypes = {
         name: React.PropTypes.string,
         marketId: React.PropTypes.string
@@ -17,7 +18,10 @@ export default class AssetImage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.cryptoBridgeAsset !== this.props.cryptoBridgeAsset) {
+        if (
+            nextProps.cryptoBridgeMarket !== this.props.cryptoBridgeMarket ||
+            nextProps.name !== this.props.name
+        ) {
             this.setState({src: this._getImgSrcFromProps(nextProps)});
         }
     }
@@ -27,31 +31,33 @@ export default class AssetImage extends React.Component {
     }
 
     _getImgSrcFromProps(props) {
-        let {name, marketId, cryptoBridgeAsset} = props;
+        let {name, marketId, cryptoBridgeMarket} = props;
 
-        if (!name && marketId) {
-            name = marketId.split("_").shift();
+        let img, symbol;
+
+        if (cryptoBridgeMarket && cryptoBridgeMarket.img) {
+            img = cryptoBridgeMarket.img;
         }
 
-        let imgName = "";
+        if (!img) {
+            if (!name && marketId) {
+                symbol = marketId.split("_").shift();
+            } else {
+                const imgSplit = name.split(".");
+                symbol = imgSplit.length === 2 ? imgSplit[1] : imgSplit[0];
+            }
 
-        if (name === "OPEN.BTC") {
-            imgName = name;
-        } else {
-            const imgSplit = name.split(".");
-            imgName = imgSplit.length === 2 ? imgSplit[1] : imgSplit[0];
+            img = `${__BASE_URL__}assets/${symbol.toLowerCase()}.png`;
         }
-
-        let imgSrc = `${__BASE_URL__}assets/${imgName.toLowerCase()}.png`;
 
         if (
-            imgSrc.match(/^\//) &&
+            img.match(/^\//) &&
             location.hostname !== "wallet.crypto-bridge.org"
         ) {
-            imgSrc = "https://wallet.crypto-bridge.org" + imgSrc;
+            img = "https://wallet.crypto-bridge.org" + img;
         }
 
-        return imgSrc;
+        return img;
     }
 
     render() {
@@ -70,3 +76,16 @@ export default class AssetImage extends React.Component {
         );
     }
 }
+
+export default connect(AssetImage, {
+    listenTo() {
+        return [CryptoBridgeStore];
+    },
+    getProps(props) {
+        return {
+            cryptoBridgeMarket: props.marketId
+                ? CryptoBridgeStore.getState().markets.get(props.marketId)
+                : null
+        };
+    }
+});
