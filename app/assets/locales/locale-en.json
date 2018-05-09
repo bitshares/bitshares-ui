@@ -565,6 +565,7 @@
         "create_account": "Create account",
         "create_new": "Create A New Account",
         "password_login": "Login with password",
+        "login_with": "Login with",
         "identicon": "Identicon",
         "pay_from": "Pay with account",
         "existing_accounts": "Existing Accounts",
@@ -1060,7 +1061,7 @@
         }
     },
     "settings": {
-        "automatic": "Automatic Switching",
+        "automatic_short": "Automatic Switching",
         "passwordLogin": "Login mode",
         "cloud_login": "Cloud Wallet Login",
         "local_wallet": "Local Wallet Login",
@@ -1117,6 +1118,7 @@
         "access_text": "",
         "view_keys": "View keys",
         "backup_backup": "Restore from a backup file (.bin)",
+        "backup_backup_short": "Restore from a backup",
         "backup_key": "Import a private key",
         "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
         "backup_brainkey": "Restore using a local wallet brainkey",
@@ -1184,6 +1186,18 @@
     "exchange": {
         "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
+        "market_picker": {
+            "title": "Market Picker",
+            "sub_title": "Find an asset to replace",
+            "search_mode": "Mode",
+            "search_for_asset": "Search for asset",
+            "find_by_asset": "Find by asset",
+            "filter_by_issuer": "Filter by issuer",
+            "results": "Results (%(total_assets)s)",
+            "use": "Use",
+            "show_all": "Show All",
+            "search": "Asset name"
+        },
         "chart_options": {
             "tools": "Tools",
             "title": "Indicators",
@@ -1347,6 +1361,16 @@
         "import_backup_choose":
             "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
         "restore_backup": "Restore Backup",
+        "ask_to_select_wallet": "Please select a key file",
+        "dont_ask_for_backup": "Don't ask me to back up again",
+        "different_file_type": "Have a different file type?",
+        "restore_it_here": "Restore it here",
+        "backup_login": "Backup & login",
+        "select_wallet": "Select key file",
+        "using": "Using:",
+        "use_different": "Use different file",
+        "backup_warning":
+            "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "import_keys": "Import Keys",
         "import_keys_tool": "Key Import Tool",
         "brainkey": "Brainkey",
@@ -1487,6 +1511,9 @@
         "login_type": "Login type selection",
         "wallet_model": "Local Wallet",
         "password_model": "Cloud Wallet",
+        "key_file": "Key file",
+        "key_file_bin": "Key file (.bin)",
+        "restore_key_file": "Restore key file..",
         "wallet_model_1":
             "The local wallet stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys. The local wallet lets you use multiple accounts at the same time.",
         "wallet_model_2":
@@ -1507,7 +1534,7 @@
         "switch_model_password": "Switch to cloud wallet",
         "account_public": "Account Name (Public)",
         "current_pass": "Current password",
-        "no_wallet": "You do not have a local wallet yet",
+        "no_wallet": "You do not have a local wallet yet?",
         "generated": "Generated password",
         "account_exp":
             "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
