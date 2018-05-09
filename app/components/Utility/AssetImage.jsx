@@ -18,7 +18,10 @@ class AssetImage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.cryptoBridgeMarket !== this.props.cryptoBridgeMarket) {
+        if (
+            nextProps.cryptoBridgeMarket !== this.props.cryptoBridgeMarket ||
+            nextProps.name !== this.props.name
+        ) {
             this.setState({src: this._getImgSrcFromProps(nextProps)});
         }
     }
@@ -79,8 +82,6 @@ export default connect(AssetImage, {
         return [CryptoBridgeStore];
     },
     getProps(props) {
-        console.log(props.marketId);
-
         return {
             cryptoBridgeMarket: props.marketId
                 ? CryptoBridgeStore.getState().markets.get(props.marketId)
