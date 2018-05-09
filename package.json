@@ -27,6 +27,7 @@
         "profile-build": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.hash --env.baseUrl='' --profile --json > stats-prod.json",
         "profile-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.hash --env.noUgly --profile --json > stats-prod-nougly.json",
         "start": "cross-env NODE_ENV=development node server.js",
+        "prestart-electron": "cross-env NODE_ENV=production webpack --env.hash --env.noUgly --env.electron --env.prod && npm run prepare-electron",
         "start-electron": "electron build/electron/index.js",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
         "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
