@@ -31,15 +31,10 @@ function checkFeePoolAsync({
         } else {
             Promise.all([
                 estimateFeeAsync(type, options, data),
-                FetchChain("getAsset", assetID)
+                FetchChain("getObject", assetID.replace(/^1\./, "2."))
             ]).then(result => {
-                const [fee, feeAsset] = result;
-                FetchChain(
-                    "getObject",
-                    feeAsset.get("dynamic_asset_data_id")
-                ).then(dynamicObject => {
-                    res(parseInt(dynamicObject.get("fee_pool"), 10) >= fee);
-                });
+                const [fee, dynamicObject] = result;
+                res(parseInt(dynamicObject.get("fee_pool"), 10) >= fee);
             });
         }
     });
@@ -57,9 +52,13 @@ function checkFeeStatusAsync({
 } = {}) {
     let key =
         accountID +
+        "_" +
         feeID +
+        "_" +
         type +
+        "_" +
         JSON.stringify(options) +
+        "_" +
         JSON.stringify(data);
     if (asyncCache[key]) {
         if (asyncCache[key].result) {

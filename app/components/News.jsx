@@ -2,7 +2,6 @@ import React from "react";
 import counterpart from "counterpart";
 import {api} from "steem-js-api";
 import Translate from "react-translate-component";
-console.log("api:", api);
 import LoadingIndicator from "./LoadingIndicator";
 
 const query = {tag: "bitshares.fdn", limit: 20};

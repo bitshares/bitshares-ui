@@ -60,3 +60,4 @@ require("file-loader?name=asset-symbols/[name].png!./gxs.png");
 require("file-loader?name=asset-symbols/[name].png!./tt.png");
 require("file-loader?name=asset-symbols/[name].png!./scr.png");
 require("file-loader?name=asset-symbols/[name].png!./zeph.png");
+require("file-loader?name=asset-symbols/[name].png!./egem.png");

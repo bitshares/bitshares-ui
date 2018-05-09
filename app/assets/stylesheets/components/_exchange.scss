@@ -514,6 +514,10 @@ table thead tr th.mymarkets-header {
     padding-right: 0.25rem;
 }
 
+.blue-icon > svg > path {
+    fill: #2196f3 !important;
+}
+
 .gold-star > svg > path {
     fill: #cc9f00 !important;
 }
@@ -687,4 +691,62 @@ form.hide-container {
 
 tbody.orderbook > tr.my-order > td {
     font-weight: bold;
+}
+
+.marketPicker {
+    border: 1px solid black;
+    position: absolute;
+    z-index: 100;
+    width: 400px;
+    min-height: 300px;
+    padding: 10px;
+
+    .marketPicker__header {
+        padding: 0 5px;
+        margin-top: 1px;
+
+        .marketPicker__title {
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .marketPicker__filterType {
+            float: right;
+            position: absolute;
+            top: 0;
+            right: 10px;
+            font-size: 16px;
+            padding-bottom: 5px;
+        }
+
+        .marketPicker__filterHeader {
+            float: left;
+            margin-top: 5px;
+        }
+    }
+
+    .marketPicker__subHeader {
+        padding: 10px 5px 0px 5px;
+        font-size: 1rem;
+    }
+
+    input {
+        font-size: 0.9rem;
+        position: relative;
+        top: 1;
+    }
+
+    .results {
+        padding: 10px;
+        max-height: 300px;
+        min-height: 100px;
+        overflow: auto;
+        overflow-x: hidden;
+
+        li {
+            list-style-type: none;
+            border-bottom: 1px solid black;
+        }
+    }
 }

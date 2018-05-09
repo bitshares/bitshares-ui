@@ -182,8 +182,20 @@ class BorrowModalContent extends React.Component {
 
     _onRatioChange(e) {
         let feed_price = this._getFeedPrice();
+        let target = e.target;
 
-        let ratio = e.target.value;
+        // Ensure input is valid
+        const regexp_numeral = new RegExp(/[[:digit:]]/);
+        if (!regexp_numeral.test(target.value)) {
+            target.value = target.value.replace(/[^0-9.]/g, "");
+        }
+
+        // Catch initial decimal input
+        if (target.value.charAt(0) == ".") {
+            target.value = "0.";
+        }
+
+        let ratio = target.value;
 
         let newState = {
             short_amount: this.state.short_amount,
@@ -702,8 +714,8 @@ class BorrowModalContent extends React.Component {
                                         (errors.below_maintenance
                                             ? "has-error"
                                             : errors.close_maintenance
-                                              ? "has-warning"
-                                              : "")
+                                                ? "has-warning"
+                                                : "")
                                     }
                                 >
                                     <span className="borrow-price-label">
@@ -753,41 +765,63 @@ class BorrowModalContent extends React.Component {
                                 tabIndex={1}
                             />
                             {errors.collateral_balance ? (
-                                <div style={{paddingTop: "0.5rem"}}>
+                                <div
+                                    className="float-left"
+                                    style={{
+                                        paddingTop: 5
+                                    }}
+                                >
                                     {errors.collateral_balance}
                                 </div>
                             ) : null}
                         </div>
                         {!isPredictionMarket ? (
                             <div>
-                                <div className={collateralRatioClass}>
+                                <div
+                                    className={collateralRatioClass}
+                                    style={{marginBottom: "3.5rem"}}
+                                >
                                     <Translate
                                         component="label"
                                         content="borrow.coll_ratio"
                                     />
-                                    <input
-                                        min="0"
-                                        max="6"
-                                        step="0.01"
-                                        onChange={this._onRatioChange.bind(
-                                            this
-                                        )}
-                                        value={collateral_ratio}
-                                        type="range"
-                                    />
-                                    <div className="inline-block">
-                                        {utils.format_number(
-                                            collateral_ratio,
-                                            2
-                                        )}
-                                    </div>
+                                    <span>
+                                        <input
+                                            value={
+                                                collateral_ratio == 0
+                                                    ? null
+                                                    : collateral_ratio
+                                            }
+                                            onChange={this._onRatioChange.bind(
+                                                this
+                                            )}
+                                            type="text"
+                                            style={{
+                                                width: "12%",
+                                                float: "right",
+                                                marginTop: -10
+                                            }}
+                                        />
+                                        <input
+                                            style={{width: "85%"}}
+                                            min="0"
+                                            max="6"
+                                            step="0.01"
+                                            onChange={this._onRatioChange.bind(
+                                                this
+                                            )}
+                                            value={collateral_ratio}
+                                            type="range"
+                                        />
+                                    </span>
                                     {errors.below_maintenance ||
                                     errors.close_maintenance ? (
                                         <div
                                             style={{
-                                                maxWidth: "calc(100% - 50px)"
+                                                height: "1em",
+                                                maxWidth: "85%"
                                             }}
-                                            className="float-right"
+                                            className="float-left"
                                         >
                                             {errors.below_maintenance}
                                             {errors.close_maintenance}

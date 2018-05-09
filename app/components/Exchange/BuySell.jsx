@@ -129,6 +129,10 @@ class BuySell extends React.Component {
             asset_id: quote.get("asset_id"),
             precision: quote.get("precision")
         });
+        const baseMarketFeePercent =
+            base.getIn(["options", "market_fee_percent"]) / 100 + "%";
+        const quoteMarketFeePercent =
+            quote.getIn(["options", "market_fee_percent"]) / 100 + "%";
         const quoteFee = !amount
             ? 0
             : Math.min(
@@ -136,13 +140,13 @@ class BuySell extends React.Component {
                   amount *
                       quote.getIn(["options", "market_fee_percent"]) /
                       10000
-              );
+              ).toFixed(maxQuoteMarketFee.precision);
         const baseFee = !amount
             ? 0
             : Math.min(
                   maxBaseMarketFee.getAmount({real: true}),
                   total * base.getIn(["options", "market_fee_percent"]) / 10000
-              );
+              ).toFixed(maxBaseMarketFee.precision);
         const baseFlagBooleans = assetUtils.getFlagBooleans(
             base.getIn(["options", "flags"]),
             base.has("bitasset_data_id")
@@ -152,15 +156,20 @@ class BuySell extends React.Component {
             quote.has("bitasset_data_id")
         );
 
+        const {name: baseName, prefix: basePrefix} = utils.replaceName(
+            this.props.base
+        );
         const hasMarketFee =
             baseFlagBooleans["charge_market_fee"] ||
             quoteFlagBooleans["charge_market_fee"];
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
+                        baseMarketFeePercent
+                    }
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -176,7 +185,7 @@ class BuySell extends React.Component {
                             percent:
                                 base.getIn(["options", "market_fee_percent"]) /
                                 100,
-                            asset: base.get("symbol")
+                            asset: (basePrefix || "") + baseName
                         })}
                         className="inline-block tooltip"
                     >
@@ -197,12 +206,18 @@ class BuySell extends React.Component {
                 </div>
             </div>
         ) : null;
+
+        const {name: quoteName, prefix: quotePrefix} = utils.replaceName(
+            this.props.quote
+        );
         var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
+                        quoteMarketFeePercent
+                    }
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -218,7 +233,7 @@ class BuySell extends React.Component {
                             percent:
                                 quote.getIn(["options", "market_fee_percent"]) /
                                 100,
-                            asset: quote.get("symbol")
+                            asset: (quotePrefix || "") + quoteName
                         })}
                         className="inline-block tooltip"
                     >

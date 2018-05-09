@@ -6,6 +6,7 @@ import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
+import MarketPicker from "./MarketPicker";
 import utils from "common/utils";
 import PriceChartD3 from "./PriceChartD3";
 import assetUtils from "common/asset_utils";
@@ -282,9 +283,6 @@ class Exchange extends React.Component {
         ],
         account = this.props.currentAccount
     ) {
-        if (assets[0] === assets[2] || assets[1] === assets[2]) {
-            assets.splice(2, 1);
-        }
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -862,6 +860,14 @@ class Exchange extends React.Component {
         });
 
         this.setState({showDepthChart: !this.state.showDepthChart});
+    }
+
+    _toggleMarketPicker(asset) {
+        let showMarketPicker = !!asset ? true : false;
+        this.setState({
+            showMarketPicker,
+            marketPickerAsset: asset
+        });
     }
 
     _moveOrderBook() {
@@ -1606,9 +1612,20 @@ class Exchange extends React.Component {
                     onSelectIndicators={this._onSelectIndicators.bind(this)}
                     marketStats={marketStats}
                     onToggleCharts={this._toggleCharts.bind(this)}
+                    onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
+
                 <div className="grid-block page-layout market-layout">
+                    {!!this.state.showMarketPicker ? (
+                        <MarketPicker
+                            marketPickerAsset={this.state.marketPickerAsset}
+                            onToggleMarketPicker={this._toggleMarketPicker.bind(
+                                this
+                            )}
+                            {...this.props}
+                        />
+                    ) : null}
                     <AccountNotifications />
                     {/* Main vertical block with content */}
 

@@ -7,7 +7,8 @@ import {
     rudexAPIs,
     widechainAPIs,
     openledgerAPIs,
-    cryptoBridgeAPIs
+    cryptoBridgeAPIs,
+    gdex2APIs
 } from "api/apiConfig";
 
 export const availableGateways = {
@@ -58,6 +59,16 @@ export const availableGateways = {
         addressValidatorAsset: true, // Address validator requires output_asset parameter
         useFullAssetName: true, // Adds <gateway>.<asset> to memo and address object
         intermediateAccount: "cryptobridge", // Fixed intermediateAccount
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    GDEX: {
+        id: "GDEX",
+        name: "GDEX",
+        baseAPI: gdex2APIs,
+        isEnabled: true,
         options: {
             enabled: false,
             selected: false
