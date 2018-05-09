@@ -1,41 +1,194 @@
 .modal-header {
-  padding: 1rem;
-  text-align: center;
+    padding: 1rem;
+    text-align: center;
 }
 
 .modal-content {
-  padding: 1rem;
+    padding: 1rem;
 }
 
 .modal-footer {
-  text-align: right;
+    text-align: right;
+}
+
+#unlock_wallet_modal2 {
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 1px;
+
+    hr {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+    .login-type-selector {
+        margin-bottom: 4rem;
+    }
+
+    .upload-button {
+        cursor: pointer;
+        border: 1px dashed grey;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-transform: none;
+        height: 2.4rem;
+        padding-left: 0.5rem;
+        padding-right: 0.2rem;
+        margin-bottom: 0;
+        font-size: 14.4px;
+
+        span {
+            text-transform: none;
+        }
+
+        input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+            height: 0;
+        }
+
+        .upload-button-logo {
+            height: 75%;
+            margin-right: 0.15rem;
+            path {
+                fill: $bs-blue;
+                stroke-width: 0.35277775;
+            }
+        }
+    }
+
+    .has-error {
+        display: block;
+        height: 20px;
+        margin-bottom: 1rem;
+    }
+
+    .login-hint {
+        font-size: 14.4px;
+    }
+
+    .key-file-selector {
+        margin-bottom: calc(2rem + 20px);
+
+        .content-box {
+            padding-top: 0.5rem;
+            height: 2.4rem;
+        }
+
+        &.restoring {
+            margin-bottom: 0;
+        }
+
+        .label-container {
+            height: 29px;
+        }
+
+        .content-box {
+            font-size: 14.4px;
+        }
+
+        span {
+            font-size: 14.4px;
+        }
+
+        .login-hint {
+            height: 20px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+    }
+    .account-selector {
+        .form-group {
+            margin-bottom: 0;
+        }
+    }
+    .content-block {
+        margin-bottom: 1rem;
+    }
+    .login-select {
+        padding: 0;
+        padding-left: 0.2rem;
+        height: 2.4rem;
+        font-size: 14.4px;
+    }
+    input {
+        font-size: 14.4px !important;
+        height: 2.4rem;
+        border-radius: 1px !important;
+        padding: 0;
+        padding-left: 0.5rem;
+    }
+    .has-error {
+        font-size: 14.4px;
+    }
+    .error-area {
+        font-size: 14.4px;
+    }
+    .modal-header {
+        text-align: left;
+        padding-left: 2rem;
+        padding-right: 2rem;
+
+        .close-button {
+            color: $bs-blue;
+            font-size: 1.5rem;
+        }
+    }
+    .modal-content {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    .login-label {
+        display: inline-block;
+        font-variant: normal;
+        text-transform: none;
+        font-size: 15px;
+
+        span {
+            text-transform: none;
+        }
+    }
+    .backup-warning {
+        p {
+            border: 1px solid yellow;
+            padding: 1rem;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            span {
+                margin-left: 0.5rem;
+            }
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 .text-group {
-  width: 100%;
-  display: table;
-  padding:0.5em;
-  div {
-  display: table-cell;
-  vertical-align: middle;
-  }
-  div:nth-child(1) {
-    min-width: 3rem;
-  }
-  div:nth-child(2) {
-    text-align: right;
-    padding-left: 0.5rem;
-  }
+    width: 100%;
+    display: table;
+    padding: 0.5em;
+    div {
+        display: table-cell;
+        vertical-align: middle;
+    }
+    div:nth-child(1) {
+        min-width: 3rem;
+    }
+    div:nth-child(2) {
+        text-align: right;
+        padding-left: 0.5rem;
+    }
 }
 
-.text-group 
-
-.left-menu {
-  padding-bottom: 1em;
+.text-group .left-menu {
+    padding-bottom: 1em;
 }
 
 @include breakpoint(medium) {
-  .left-menu {
-    padding-top: 5em;
-  }
+    .left-menu {
+        padding-top: 5em;
+    }
 }

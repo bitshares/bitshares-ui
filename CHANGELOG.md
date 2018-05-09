@@ -1,8 +1,33 @@
 ---------------------------------------------------------------------
+Release 2.0.180418
+---------------------------------------------------------------------
+New features
+--------
+- #1372 Node Switcher Design Pattern
+- #1396 - Full Date in Account Transaction
+- #1275: Withdraw/Deposit Modal - Add Winex Support
+- #1223: Access Node Popup / Access Nodes List
+
+Bug fixes and improvements
+--------
+- routerTransition refactor, improvements to connectionn logic
+- Fix #1395: Issue asset button not working
+- Fix #1420: Preferred Market Pairing Resets to null
+- #1244: Cleaning up Backend API calls to outside gateways and bridges
+- Filter nodes in AccessSettings to fix key warning
+- Update russian translations
+- Fix possible undefined error in AccountOverview
+- Add several witness-provuided API servers
+- Fix #1388
+- Fix #1367: Restore missing Linux launcher icon
+- Add a phishing account
+
+---------------------------------------------------------------------
 Release 2.0.180402
 ---------------------------------------------------------------------
 Bug fixes and improvements
 --------
+- Fixes to AccountSelector and IssueModal
 - Fix #1376: Hide expiration for margin calls in My Orders
 - Fix #1374: Incorrect CSP making the logo not load
 - Fix #1373: AccountStore init console errors

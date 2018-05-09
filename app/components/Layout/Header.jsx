@@ -319,6 +319,8 @@ class Header extends React.Component {
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
+            Apis.instance() &&
+            Apis.instance().chain_id &&
             Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         if (starredAccounts.size) {
