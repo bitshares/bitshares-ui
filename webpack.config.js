@@ -229,8 +229,7 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2"),
-                        path.join(root_dir, "node_modules/lodash-es")
+                        path.join(root_dir, "node_modules/react-datepicker2")
                     ],
                     use: [
                         {
@@ -243,14 +242,6 @@ module.exports = function(env) {
                         }
                     ]
                 },
-                // {
-                //     type: "javascript/auto",
-                //     test: /\.json/,
-                //     include: [
-                //         path.resolve(root_dir, "app/lib/common"),
-                //         path.resolve(root_dir, "app/assets/locales")
-                //     ]
-                // },
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
                     test: /\.(coffee\.md|litcoffee)$/,
@@ -297,7 +288,15 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
-                    loaders: ["svg-inline-loader", "svgo-loader"]
+                    use: [
+                        {
+                            loader: "svg-inline-loader"
+                        },
+                        {
+                            loader: "svgo-loader",
+                            options: {}
+                        }
+                    ]
                 },
                 {
                     test: /\.md/,

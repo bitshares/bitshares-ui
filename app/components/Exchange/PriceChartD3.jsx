@@ -615,6 +615,7 @@ class CandleStickChartWithZoomPan extends React.Component {
                       return a.date > filterDate;
                   });
         const last = filteredData[filteredData.length - 1] || {high: 1};
+
         return (
             <ChartCanvas
                 ratio={ratio}
@@ -1043,7 +1044,6 @@ export default class Wrapper extends React.Component {
         });
 
         if (!this.props.priceData.length) {
-            console.log("PriceChartD3 render placeholder");
             return (
                 <div className="grid-content text-center">
                     <div
@@ -1059,7 +1059,6 @@ export default class Wrapper extends React.Component {
         }
 
         const translator = require("counterpart");
-        console.log("PriceChartD3 render Chart");
         return (
             <div
                 className="no-margin no-padding"
