@@ -425,28 +425,29 @@
             "valid_pub": "有効な公開キー"
         },
         "signedmessages": {
-            "menuitem": "Signed Messages",
+            "menuitem": "署名付きメッセージ",
             "invalidkey":
-                "Private key could not be obtained, is the public key valid?",
-            "title": "Signed Messages",
-            "signmessage": "Sign Message",
-            "verifymessage": "Verify Message",
-            "signing": "Signing, please wait ...",
-            "verifying": "Verifying, please wait ...",
-            "invalidformat": "Signed message format can't be recognized",
-            "invaliduser": "Account of the message sender is invalid",
+                "秘密キーを入手できませんでした。公開キーは正しいですか？",
+            "title": "署名付きメッセージ",
+            "signmessage": "メッセージに署名",
+            "verifymessage": "メッセージを確認",
+            "signing": "署名しています、お待ち下さい ...",
+            "verifying": "確認しています、お待ち下さい ...",
+            "invalidformat": "署名付きメッセージのフォーマットを認識できません",
+            "invaliduser": "メッセージ送信者のアカウントが無効です",
             "invalidsignature":
-                "The content of the message could not be validated against the signature",
-            "errorverifying": "An error occured while verifying the message",
+                "メッセージ内容を署名に対して検証することができます",
+            "errorverifying": "メッセージの確認でエラーが発生しました",
             "keymismatch":
-                "Given public key of the sender doesn't to the one stored in the senders account",
-            "sign": "Sign",
-            "verify": "Verify",
-            "automaticcreation": "Signed message will be created automatically",
-            "entermessage": "Enter message here",
-            "copysuccessful": "Signed message copied to clipboard",
-            "copyunsuccessful": "Failed to copy message",
-            "verifyonchange": "Verify while typing"
+                "与えられた送信者公開キーは送信者アカウントに含まれていません",
+            "sign": "署名",
+            "verify": "確認",
+            "automaticcreation": "署名付きメッセージは自動的に生成されます",
+            "entermessage": "ここにメッセージを入力してください",
+            "copysuccessful":
+                "署名付きメッセージをクリップボードにコピーしました",
+            "copyunsuccessful": "メッセージのコピーに失敗しました",
+            "verifyonchange": "入力時に確認します"
         },
         "votes": {
             "proxy_current": "現在の代理人: ",
