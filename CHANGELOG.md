@@ -1,4 +1,42 @@
 ---------------------------------------------------------------------
+Release 2.0.180509
+---------------------------------------------------------------------
+New features
+--------
+- #1475: Add a textbox to the slider in the collateral borrowing section
+- #1369 display market fee percent for sells
+- #1379: Add Market Picker
+- #1276: Enable GDEX gateway
+- #1463: Handle non-existant assets in exchange and asset pages
+- Update bitsharesjs to enable new orders api
+- #1288 - Extract FundFeePool from AccountAssetUpdate and use it in Asset
+- Added titles to all areas of the app to improve history navigation
+
+Bug fixes and improvements
+--------
+- Update electron and electron-builder
+- #1475: Fix warning text and button overlap
+- Fix a text overflow issue in AccessSettings hover popup
+- #1478: Set version in package.json instead of git tag
+- #1481: Fix checkFeeStatusAsync duplicate asset resolution issues with BTS
+- #1469 display market fee precision
+- Fix #1328: Portfolio price/value sorting
+- Performance fix: don't update AccountStore state when no changes are made
+- Added ExchangeHeader Selected Asset Highlight
+- Fix #1464: Refactor MarketStatsCheck and marketUtils to use direct route
+- #1446: Showing "Switch Node" popup only on node description hover
+- Fix willTransitionTo onResetError method
+- Fix #1455
+- Fix #1406: Use higher precision ints for getSqueezePrice
+- Fix #1432, also fixes a balance lookup bug
+- Remove unused code in tcomb_structs
+- Remove pulsate on BalanceValueComponent
+- Fix removal of personal nodes
+- Fix #1451: Restore pub key support to AccountSelector
+- Limited a greedy regex that was wiping out the asset decription
+- Replace extremely heavy steem lib with lightweight steem-js-api fork
+
+---------------------------------------------------------------------
 Release 2.0.180418
 ---------------------------------------------------------------------
 New features
