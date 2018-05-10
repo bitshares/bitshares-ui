@@ -63,9 +63,8 @@ module.exports = function(env) {
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
-            APP_VERSION: JSON.stringify(
-                `${pkg.version}-${revision.substr(0, 7)}`
-            ),
+            APP_VERSION: JSON.stringify(`${pkg.version}`),
+            APP_REVISION: JSON.stringify(`${revision.substr(0, 7)}`),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),

@@ -40,7 +40,7 @@ CRCCheck on
 SilentInstall normal
 
 XPStyle on
-ShowInstDetails nevershow
+ShowInstDetails hide
 AutoCloseWindow false
 WindowIcon off
 
@@ -50,6 +50,7 @@ SubCaption 3 " "
 SubCaption 4 " "
 
 Page custom welcome
+Page directory
 Page instfiles
 
 Var Image
@@ -96,6 +97,9 @@ Section "Install"
 
     ; Include all files from /build directory
     File /r "${src}\*"
+
+    ; Create desktop shortcut
+    CreateShortCut "$DESKTOP\${productName}.lnk" "$INSTDIR\${exec}" ""
 
     ; Create start menu shortcut
     CreateShortCut "$SMPROGRAMS\${productName}.lnk" "$INSTDIR\${exec}" "" "$INSTDIR\icon.ico"
