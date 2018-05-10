@@ -867,22 +867,22 @@ class WithdrawModalNew extends React.Component {
         let minWithdraw = null;
         let maxWithdraw = null;
         if (!!backingAsset.minAmount) {
-            minWithdraw = !!backingAsset.precision ? 
-                utils.format_number(
-                    backingAsset.minAmount /
-                        utils.get_asset_precision(backingAsset.precision),
-                    backingAsset.precision,
-                    false
-                ) :
-                backingAsset.minAmount;
+            minWithdraw = !!backingAsset.precision
+                ? utils.format_number(
+                      backingAsset.minAmount /
+                          utils.get_asset_precision(backingAsset.precision),
+                      backingAsset.precision,
+                      false
+                  )
+                : backingAsset.minAmount;
         } else {
             minWithdraw =
-            backingAsset.gateFee * 2 ||
-            0 + backingAsset.transactionFee ||
-            0;
+                backingAsset.gateFee * 2 ||
+                0 + backingAsset.transactionFee ||
+                0;
         }
 
-        if(!!backingAsset.maxAmount) {
+        if (!!backingAsset.maxAmount) {
             maxWithdraw = backingAsset.maxAmount;
         }
 

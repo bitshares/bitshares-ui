@@ -43,7 +43,7 @@ class IssueModal extends React.Component {
         let precision = utils.get_asset_precision(
             asset_to_issue.get("precision")
         );
-        let amount = this.state.amount.replace(/,/g, "");
+        let amount = this.state.amount.toString().replace(/,/g, "");
         amount *= precision;
 
         AssetActions.issueAsset(

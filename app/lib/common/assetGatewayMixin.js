@@ -41,9 +41,11 @@ function _getNumberAvailableGateways() {
     var nAvailableGateways = 0;
     for (let g in gatewayStatus) {
         this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
-            if((selectedAsset == c.backingCoinType 
-                || selectedAsset == c.backingCoin)
-                && c.depositAllowed || c.isAvailable
+            if (
+                ((selectedAsset == c.backingCoinType ||
+                    selectedAsset == c.backingCoin) &&
+                    c.depositAllowed) ||
+                c.isAvailable
             ) {
                 nAvailableGateways++;
             }

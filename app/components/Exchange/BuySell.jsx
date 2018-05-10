@@ -137,7 +137,7 @@ class BuySell extends React.Component {
             ? 0
             : Math.min(
                   maxQuoteMarketFee.getAmount({real: true}),
-		  amount *
+                  amount *
                       quote.getIn(["options", "market_fee_percent"]) /
                       10000
               ).toFixed(maxQuoteMarketFee.precision);
@@ -145,9 +145,7 @@ class BuySell extends React.Component {
             ? 0
             : Math.min(
                   maxBaseMarketFee.getAmount({real: true}),
-                  total * 
-		      base.getIn(["options", "market_fee_percent"]) / 
-		      10000
+                  total * base.getIn(["options", "market_fee_percent"]) / 10000
               ).toFixed(maxBaseMarketFee.precision);
         const baseFlagBooleans = assetUtils.getFlagBooleans(
             base.getIn(["options", "flags"]),

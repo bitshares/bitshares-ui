@@ -307,14 +307,14 @@ export function requestDepositAddress({
                         if (stateCallback) stateCallback(address);
                     },
                     error => {
-                        console.log( "error: ",error  );
+                        console.log("error: ", error);
                         delete depositRequests[body_string];
                         if (stateCallback) stateCallback(null);
                     }
                 );
             },
             error => {
-                console.log( "error: ",error  );
+                console.log("error: ", error);
                 delete depositRequests[body_string];
                 if (stateCallback) stateCallback(null);
             }

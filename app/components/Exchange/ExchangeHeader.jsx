@@ -42,7 +42,10 @@ export default class ExchangeHeader extends React.Component {
     marketPicker(asset) {
         let {selectedMarketPickerAsset} = this.state;
 
-        selectedMarketPickerAsset = !!selectedMarketPickerAsset && selectedMarketPickerAsset == asset ? null : asset;
+        selectedMarketPickerAsset =
+            !!selectedMarketPickerAsset && selectedMarketPickerAsset == asset
+                ? null
+                : asset;
 
         this.setState({
             selectedMarketPickerAsset
@@ -148,8 +151,12 @@ export default class ExchangeHeader extends React.Component {
 
         const translator = require("counterpart");
 
-        let isQuoteSelected = !!this.state.selectedMarketPickerAsset && this.state.selectedMarketPickerAsset == quoteSymbol;
-        let isBaseSelected = !!this.state.selectedMarketPickerAsset && this.state.selectedMarketPickerAsset == baseSymbol;
+        let isQuoteSelected =
+            !!this.state.selectedMarketPickerAsset &&
+            this.state.selectedMarketPickerAsset == quoteSymbol;
+        let isBaseSelected =
+            !!this.state.selectedMarketPickerAsset &&
+            this.state.selectedMarketPickerAsset == baseSymbol;
 
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
@@ -165,10 +172,17 @@ export default class ExchangeHeader extends React.Component {
                                     }}
                                 >
                                     <span
-                                        onClick={this.marketPicker.bind(this, quoteSymbol)} style={{
+                                        onClick={this.marketPicker.bind(
+                                            this,
+                                            quoteSymbol
+                                        )}
+                                        style={{
                                             cursor: "pointer",
-                                            color: isQuoteSelected ? "#2196f3" : ""
-                                        }}>
+                                            color: isQuoteSelected
+                                                ? "#2196f3"
+                                                : ""
+                                        }}
+                                    >
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
@@ -177,11 +191,17 @@ export default class ExchangeHeader extends React.Component {
                                     </span>
                                     <span style={{padding: "0 5px"}}>/</span>
                                     <span
-                                        onClick={this.marketPicker.bind(this, baseSymbol)} 
+                                        onClick={this.marketPicker.bind(
+                                            this,
+                                            baseSymbol
+                                        )}
                                         style={{
                                             cursor: "pointer",
-                                            color: isBaseSelected ? "#2196f3" : ""    
-                                        }}>
+                                            color: isBaseSelected
+                                                ? "#2196f3"
+                                                : ""
+                                        }}
+                                    >
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}

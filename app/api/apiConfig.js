@@ -46,7 +46,7 @@ export const gdex2APIs = {
     BASE: "https://api.gdex.io/adjust",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
-    TRADING_PAIRS: "/trading-pairs"  
+    TRADING_PAIRS: "/trading-pairs"
 };
 
 // Legacy Deposit/Withdraw

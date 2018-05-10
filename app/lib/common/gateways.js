@@ -3,7 +3,13 @@
  * General API Settings are stored in api/apiConfig and should be imported here
  */
 
-import {rudexAPIs, widechainAPIs, openledgerAPIs, cryptoBridgeAPIs, gdex2APIs} from "api/apiConfig";
+import {
+    rudexAPIs,
+    widechainAPIs,
+    openledgerAPIs,
+    cryptoBridgeAPIs,
+    gdex2APIs
+} from "api/apiConfig";
 
 export const availableGateways = {
     OPEN: {
@@ -56,7 +62,7 @@ export const availableGateways = {
         options: {
             enabled: false,
             selected: false
-        },
+        }
     },
     GDEX: {
         id: "GDEX",
