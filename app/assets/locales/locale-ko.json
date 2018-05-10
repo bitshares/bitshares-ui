@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "4페이지를 찾을 수 없습니다",
+        "page_not_found_subtitle": "이 페이지는 존재하지 않습니다",
+        "home": "집"
+    },
     "languages": {
         "en": "English",
         "zh": "简体中文",

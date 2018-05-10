@@ -174,10 +174,12 @@ class OrderRow extends React.Component {
                     className="tooltip"
                     data-tip={new Date(order.expiration)}
                 >
-                    {counterpart.localize(new Date(order.expiration), {
-                        type: "date",
-                        format: "short_custom"
-                    })}
+                    {isCall
+                        ? null
+                        : counterpart.localize(new Date(order.expiration), {
+                              type: "date",
+                              format: "short_custom"
+                          })}
                 </td>
                 <td className="text-center" style={{width: "6%"}}>
                     {isCall ? null : (

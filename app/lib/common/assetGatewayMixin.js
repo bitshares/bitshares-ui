@@ -1,36 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import Icon from "../../components/Icon/Icon";
-
-function _getAvailableGateways(selectedAsset, boolCheck = "depositAllowed") {
-    let {gatewayStatus} = this.state;
-
-    for (let g in gatewayStatus) {
-        gatewayStatus[g].enabled = false;
-    }
-
-    for (let g in gatewayStatus) {
-        this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
-            if (
-                g == "OPEN" &&
-                selectedAsset == c.backingCoinType &&
-                c[boolCheck] &&
-                c.isAvailable
-            ) {
-                gatewayStatus.OPEN.enabled = true;
-            }
-            if (
-                g == "RUDEX" &&
-                selectedAsset == c.backingCoin &&
-                c[boolCheck]
-            ) {
-                gatewayStatus.RUDEX.enabled = true;
-            }
-        });
-    }
-
-    return gatewayStatus;
-}
+import {getGatewayStatusByAsset} from "common/gatewayUtils";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -56,7 +27,11 @@ function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
 
 function _openGatewaySite() {
     let {selectedGateway, gatewayStatus} = this.state;
-    let win = window.open(gatewayStatus[selectedGateway].support_url, "_blank");
+    let win = window.open(
+        "https://wallet.bitshares.org/#/help/gateways/" +
+            gatewayStatus[selectedGateway].name.toLowerCase().replace("-", ""),
+        "_blank"
+    );
     win.focus();
 }
 
@@ -67,17 +42,10 @@ function _getNumberAvailableGateways() {
     for (let g in gatewayStatus) {
         this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
             if (
-                g == "OPEN" &&
-                selectedAsset == c.backingCoinType &&
-                c.depositAllowed &&
+                ((selectedAsset == c.backingCoinType ||
+                    selectedAsset == c.backingCoin) &&
+                    c.depositAllowed) ||
                 c.isAvailable
-            ) {
-                nAvailableGateways++;
-            }
-            if (
-                g == "RUDEX" &&
-                selectedAsset == c.backingCoin &&
-                c.depositAllowed
             ) {
                 nAvailableGateways++;
             }
@@ -87,9 +55,13 @@ function _getNumberAvailableGateways() {
     return nAvailableGateways;
 }
 
-function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
+function _onAssetSelected(
+    selectedAsset,
+    boolCheck = "depositAllowed",
+    selectGatewayFn = null
+) {
     const {balances, assets} = this.props || {}; //Function must be bound on calling component and these props must be passed to calling component
-    let gatewayStatus = _getAvailableGateways.call(
+    let gatewayStatus = getGatewayStatusByAsset.call(
         this,
         selectedAsset,
         boolCheck
@@ -127,7 +99,8 @@ function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
         coinToGatewayMapping[selectedAsset]
     ) {
         let gateways = coinToGatewayMapping[selectedAsset];
-        if (gateways.length) {
+        if (gateways.length && !selectGatewayFn) {
+            //Default gateway selection logic is to pick the gateway with the highest balance, or default to the first available
             if (balancesByAssetAndGateway[selectedAsset]) {
                 let greatestBalance = null;
                 let greatestBalanceGateway = null;
@@ -146,6 +119,11 @@ function _onAssetSelected(selectedAsset, boolCheck = "depositAllowed") {
             } else {
                 selectedGateway = gateways[0];
             }
+        } else if (gateways.length && selectGatewayFn) {
+            selectedGateway = selectGatewayFn(
+                coinToGatewayMapping[selectedAsset],
+                balancesByAssetAndGateway[selectedAsset]
+            );
         }
     }
 
@@ -167,6 +145,18 @@ function gatewaySelector(args) {
         onGatewayChanged
     } = args;
 
+    let selectGatewayList = Object.keys(gatewayStatus).map((key, i) => {
+        if (gatewayStatus[key].options.enabled)
+            return (
+                <option
+                    value={gatewayStatus[key].id}
+                    key={gatewayStatus[key].id}
+                >
+                    {gatewayStatus[key].name}
+                </option>
+            );
+    });
+
     return (
         <div className="container-row">
             <div className="no-margin no-padding">
@@ -182,8 +172,10 @@ function gatewaySelector(args) {
                             </span>
                         ) : null}
                         <span className="floatRight error-msg">
-                            {selectedGateway &&
-                            !gatewayStatus[selectedGateway].enabled ? (
+                            {!error &&
+                            selectedGateway &&
+                            gatewayStatus[selectedGateway] &&
+                            !gatewayStatus[selectedGateway].options.enabled ? (
                                 <Translate content="modal.deposit_withdraw.disabled" />
                             ) : null}
                             {error ? (
@@ -211,16 +203,7 @@ function gatewaySelector(args) {
                                     content="modal.deposit_withdraw.select_gateway"
                                 />
                             ) : null}
-                            {gatewayStatus.RUDEX.enabled ? (
-                                <option value="RUDEX">
-                                    {gatewayStatus.RUDEX.name}
-                                </option>
-                            ) : null}
-                            {gatewayStatus.OPEN.enabled ? (
-                                <option value="OPEN">
-                                    {gatewayStatus.OPEN.name}
-                                </option>
-                            ) : null}
+                            {selectGatewayList}
                         </select>
                         <Icon
                             name="chevron-down"
@@ -238,7 +221,6 @@ function gatewaySelector(args) {
 }
 
 export {
-    _getAvailableGateways,
     gatewaySelector,
     _getNumberAvailableGateways,
     _onAssetSelected,

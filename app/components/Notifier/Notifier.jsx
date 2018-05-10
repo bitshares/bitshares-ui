@@ -16,7 +16,12 @@ class Notifier extends React.Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.account.size && this.props.account.get("history")) {
+        if (
+            nextProps.account &&
+            nextProps.account.size &&
+            this.props.account &&
+            this.props.account.get("history")
+        ) {
             let ch =
                 this.props.account.get("history") &&
                 this.props.account.get("history").first()
@@ -49,6 +54,7 @@ class Notifier extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        if (!nextProps.account || !this.props.account) return false;
         return (
             !Immutable.is(
                 nextProps.account.get("history"),

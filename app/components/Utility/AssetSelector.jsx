@@ -18,7 +18,6 @@ class AssetDropdown extends React.Component {
 
     render() {
         if (this.props.assets.length === 0 || !this.props.value) return null;
-        console.log("assets:", this.props.assets);
         return (
             <FloatingDropdown
                 entries={this.props.assets
@@ -188,9 +187,12 @@ class AssetSelector extends React.Component {
                                 disabled={this.props.disabled}
                                 type="text"
                                 value={this.props.assetInput || ""}
-                                placeholder={counterpart.translate(
-                                    "explorer.assets.symbol"
-                                )}
+                                placeholder={
+                                    this.props.placeholder ||
+                                    counterpart.translate(
+                                        "explorer.assets.symbol"
+                                    )
+                                }
                                 ref="user_input"
                                 onChange={this.onInputChanged.bind(this)}
                                 onKeyDown={this.onKeyDown.bind(this)}

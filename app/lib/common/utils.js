@@ -211,6 +211,9 @@ var Utils = {
                 return false;
             }
         }
+        if (typeof a === "string" && typeof b === "string") {
+            return a !== b;
+        }
         for (var key in a) {
             if (!(key in b) || a[key] !== b[key]) {
                 return false;
@@ -220,6 +223,12 @@ var Utils = {
             if (!(key in a) || a[key] !== b[key]) {
                 return false;
             }
+        }
+        if (
+            (a === null && b === undefined) ||
+            (b === null && a === undefined)
+        ) {
+            return false;
         }
         return true;
     },

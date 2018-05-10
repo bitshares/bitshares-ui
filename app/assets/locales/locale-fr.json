@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "404 Page non trouvée",
+        "page_not_found_subtitle": "Cette page n'existe pas",
+        "home": "Accueil"
+    },
     "languages": {
         "en": "English",
         "zh": "简体中文",

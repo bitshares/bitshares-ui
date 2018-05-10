@@ -103,9 +103,9 @@ class AccountOverview extends React.Component {
             if (aRef && bRef) {
                 let aPrice = aRef.getFinalPrice(true);
                 let bPrice = bRef.getFinalPrice(true);
-                if (!aPrice && bPrice) return 1;
-                if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice)
+                if (aPrice === null && bPrice !== null) return 1;
+                if (aPrice !== null && bPrice === null) return -1;
+                if (aPrice === null && bPrice === null)
                     return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection
                     ? aPrice - bPrice
@@ -176,10 +176,6 @@ class AccountOverview extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(
-                nextProps.balanceAssets,
-                this.props.balanceAssets
-            ) ||
-            !utils.are_equal_shallow(
                 nextProps.backedCoins,
                 this.props.backedCoins
             ) ||
@@ -240,7 +236,7 @@ class AccountOverview extends React.Component {
 
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
-            this.refs.send_modal.show();
+            if (this.send_modal) this.send_modal.show();
         });
     }
 
@@ -327,12 +323,13 @@ class AccountOverview extends React.Component {
         const emptyCell = "-";
         balanceList.forEach(balance => {
             let balanceObject = ChainStore.getObject(balance);
+            if (!balanceObject) return;
             let asset_type = balanceObject.get("asset_type");
             let asset = ChainStore.getObject(asset_type);
+            if (!asset) return;
 
             let directMarketLink, settleLink, transferLink;
             let symbol = "";
-            if (!asset) return null;
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
@@ -456,7 +453,6 @@ class AccountOverview extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
-                                pulsate={{reverse: true, fill: "forwards"}}
                                 refCallback={c => {
                                     if (c && c.refs.bound_component)
                                         this.valueRefs[asset.get("symbol")] =
@@ -988,11 +984,12 @@ class AccountOverview extends React.Component {
 
         includedBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioActiveAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -1001,11 +998,12 @@ class AccountOverview extends React.Component {
 
         hiddenBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioHiddenAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -1113,7 +1111,9 @@ class AccountOverview extends React.Component {
                                 {/* Send Modal */}
                                 <SendModal
                                     id="send_modal_portfolio"
-                                    ref="send_modal"
+                                    refCallback={e => {
+                                        if (e) this.send_modal = e;
+                                    }}
                                     from_name={this.props.account.get("name")}
                                     asset_id={this.state.send_asset || "1.3.0"}
                                 />
@@ -1155,6 +1155,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="exchange.price" />{" "}
                                                     (<AssetName
                                                         name={preferredUnit}
+                                                        noTip
                                                     />)
                                                 </th>
                                                 <th
@@ -1185,6 +1186,7 @@ class AccountOverview extends React.Component {
                                                                 arg: "asset"
                                                             }
                                                         ]}
+                                                        noTip
                                                     />
                                                 </th>
                                                 {showAssetPercent ? (
@@ -1404,10 +1406,6 @@ class AccountOverview extends React.Component {
 }
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
-AccountOverview = AssetWrapper(AccountOverview, {
-    propNames: ["balanceAssets"],
-    asList: true
-});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {

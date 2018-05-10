@@ -59,6 +59,7 @@ class AccountItemRow extends React.Component {
                 ? "http://" + url
                 : url;
         const isSupported = action === "remove";
+
         return (
             <tr className={isSupported ? "" : "unsupported"}>
                 <td style={{textAlign: "right"}}>{this.props.idx + 1}</td>
@@ -196,7 +197,7 @@ class VotingAccountsList extends React.Component {
                     b
                 );
                 if (a_votes !== b_votes) {
-                    return b_votes - a_votes;
+                    return parseInt(b_votes, 10) - parseInt(a_votes, 10);
                 } else if (a.get("name") > b.get("name")) {
                     return 1;
                 } else if (a.get("name") < b.get("name")) {

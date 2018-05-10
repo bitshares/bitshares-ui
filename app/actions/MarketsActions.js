@@ -60,6 +60,7 @@ class MarketsActions {
                 marketStats[marketName] = {
                     lastFetched: new Date()
                 };
+
                 Apis.instance()
                     .db_api()
                     .exec("get_ticker", [second.get("id"), first.get("id")])

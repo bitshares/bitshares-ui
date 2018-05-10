@@ -1,6 +1,7 @@
 import React from "react";
 import MarketsStore from "stores/MarketsStore";
 import AccountStore from "stores/AccountStore";
+import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import GatewayStore from "stores/GatewayStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -10,11 +11,14 @@ import ChainTypes from "../Utility/ChainTypes";
 import {EmitterInstance} from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
+import Page404 from "../Page404/Page404";
 
 class ExchangeContainer extends React.Component {
     render() {
-        let symbols = this.props.params.marketID.split("_");
-
+        let symbols = this.props.params.marketID.toUpperCase().split("_");
+        if (symbols[0] === symbols[1]) {
+            return <Page404 subtitle="market_not_found_subtitle" />;
+        }
         return (
             <AltContainer
                 stores={[
@@ -69,14 +73,17 @@ class ExchangeContainer extends React.Component {
                     currentAccount: () => {
                         return AccountStore.getState().currentAccount;
                     },
-                    linkedAccounts: () => {
-                        return AccountStore.getState().linkedAccounts;
+                    myActiveAccounts: () => {
+                        return AccountStore.getState().myActiveAccounts;
                     },
                     viewSettings: () => {
                         return SettingsStore.getState().viewSettings;
                     },
                     settings: () => {
                         return SettingsStore.getState().settings;
+                    },
+                    exchange: () => {
+                        return SettingsStore.getState().exchange;
                     },
                     starredMarkets: () => {
                         return SettingsStore.getState().starredMarkets;
@@ -98,6 +105,12 @@ class ExchangeContainer extends React.Component {
                     },
                     bridgeCoins: () => {
                         return GatewayStore.getState().bridgeCoins;
+                    },
+                    searchAssets: () => {
+                        return AssetStore.getState().assets;
+                    },
+                    assetsLoading: () => {
+                        return AssetStore.getState().assetsLoading;
                     },
                     miniDepthChart: () => {
                         return SettingsStore.getState().viewSettings.get(
@@ -145,6 +158,9 @@ class ExchangeSubscriber extends React.Component {
     }
 
     componentWillMount() {
+        if (this.props.quoteAsset === null || this.props.baseAsset === null) {
+            return;
+        }
         if (this.props.quoteAsset.toJS && this.props.baseAsset.toJS) {
             this._subToMarket(this.props);
             // this._addMarket(this.props.quoteAsset.get("symbol"), this.props.baseAsset.get("symbol"));
@@ -197,6 +213,9 @@ class ExchangeSubscriber extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.quoteAsset === null || nextProps.baseAsset === null) {
+            return;
+        }
         /* Prediction markets should only be shown in one direction, if the link goes to the wrong one we flip it */
         if (
             nextProps.baseAsset &&
@@ -232,6 +251,10 @@ class ExchangeSubscriber extends React.Component {
 
     componentWillUnmount() {
         let {quoteAsset, baseAsset} = this.props;
+        if (quoteAsset === null || baseAsset === null) {
+            return;
+        }
+
         MarketsActions.unSubscribeMarket(
             quoteAsset.get("id"),
             baseAsset.get("id")
@@ -263,14 +286,14 @@ class ExchangeSubscriber extends React.Component {
     }
 
     render() {
+        if (this.props.quoteAsset === null || this.props.baseAsset === null)
+            return <Page404 subtitle="market_not_found_subtitle" />;
+
         return (
             <Exchange
                 {...this.props}
                 sub={this.state.sub}
                 subToMarket={this._subToMarket}
-                isMyAccount={AccountStore.isMyAccount(
-                    this.props.currentAccount
-                )}
             />
         );
     }

@@ -65,12 +65,13 @@ class BlockchainStore {
 
     onUpdateRpcConnectionStatus(status) {
         let prev_status = this.rpc_connection_status;
-        if (status === "reconnect") ChainStore.resetCache();
+        if (status === "reconnect") ChainStore.resetCache(false);
         else this.rpc_connection_status = status;
         if (prev_status === null && status === "error")
             this.no_ws_connection = true;
         if (this.no_ws_connection && status === "open")
             this.no_ws_connection = false;
+        if (status === "closed") this.no_ws_connection = true;
     }
 }
 

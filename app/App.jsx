@@ -13,7 +13,6 @@ import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
 import Header from "components/Layout/Header";
-// import MobileMenu from "components/Layout/MobileMenu";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
@@ -21,12 +20,15 @@ import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
-// import Incognito from "./components/Layout/Incognito";
-// import { isIncognito } from "feature_detect";
+import WalletManagerStore from "stores/WalletManagerStore";
+import Incognito from "./components/Layout/Incognito";
+import {isIncognito} from "feature_detect";
+import {updateGatewayBackers} from "common/gatewayUtils";
+import titleUtils from "common/titleUtils";
 import {hot} from "react-hot-loader";
 
 class App extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         // Check for mobile device to disable chat
@@ -46,10 +48,6 @@ class App extends React.Component {
             synced: this._syncStatus(),
             syncFail,
             theme: SettingsStore.getState().settings.get("themes"),
-            isMobile: !!(
-                /android|ipad|ios|iphone|windows phone/i.test(user_agent) ||
-                isSafari
-            ),
             incognito: false,
             incognitoWarningDismissed: false,
             height: window && window.innerHeight
@@ -125,6 +123,25 @@ class App extends React.Component {
         this.props.router.listen(this._rebuildTooltips);
 
         this._rebuildTooltips();
+
+        isIncognito(
+            function(incognito) {
+                this.setState({incognito});
+            }.bind(this)
+        );
+        updateGatewayBackers();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.location !== prevProps.location) {
+            this.onRouteChanged();
+        }
+    }
+
+    onRouteChanged() {
+        document.title = titleUtils.GetTitleByPath(
+            this.props.router.location.pathname
+        );
     }
 
     _onIgnoreIncognitoWarning() {
@@ -173,7 +190,7 @@ class App extends React.Component {
     }
 
     _onSettingsChange() {
-        let {settings, viewSettings} = SettingsStore.getState();
+        let {settings} = SettingsStore.getState();
         if (settings.get("themes") !== this.state.theme) {
             this.setState({
                 theme: settings.get("themes")
@@ -192,16 +209,13 @@ class App extends React.Component {
     // }
 
     render() {
-        let {isMobile, theme} = this.state;
+        let {theme, incognito, incognitoWarningDismissed} = this.state;
+        let {walletMode} = this.props;
 
         let content = null;
 
         let showFooter = 1;
-        // if(incognito && !incognitoWarningDismissed){
-        //     content = (
-        //         <Incognito onClickIgnore={this._onIgnoreIncognitoWarning.bind(this)}/>
-        //     );
-        // } else
+
         if (this.state.syncFail) {
             content = <SyncError />;
         } else if (this.state.loading) {
@@ -243,6 +257,13 @@ class App extends React.Component {
                 style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}}
                 className={this.state.theme}
             >
+                {walletMode && incognito && !incognitoWarningDismissed ? (
+                    <Incognito
+                        onClickIgnore={this._onIgnoreIncognitoWarning.bind(
+                            this
+                        )}
+                    />
+                ) : null}
                 <div id="content-wrapper">
                     {content}
                     <NotificationSystem
@@ -286,11 +307,14 @@ class RootIntl extends React.Component {
 
 RootIntl = connect(RootIntl, {
     listenTo() {
-        return [IntlStore];
+        return [IntlStore, WalletManagerStore, SettingsStore];
     },
     getProps() {
         return {
-            locale: IntlStore.getState().currentLocale
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet
         };
     }
 });

@@ -1,7 +1,7 @@
 import React from "react";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
-import ReactDOM from "react-dom";
+import {findDOMNode} from "react-dom";
 
 /** This component gives a convenient way to indicate loading.
  *
@@ -125,7 +125,7 @@ class LoadingButton extends React.Component {
         if (this.props.onClick != null) {
             // persist button width
             this.setState({
-                loadingButtonWidth: ReactDOM.findDOMNode(
+                loadingButtonWidth: findDOMNode(
                     this.loadingButton
                 ).getBoundingClientRect().width,
                 loading: true

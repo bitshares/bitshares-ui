@@ -1,4 +1,4 @@
-// Modals with specific width 
+// Modals with specific width
 
 .modal#send_modal_header,
 .modal#send_modal_portfolio,
@@ -67,6 +67,26 @@
             text-align: right;
             text-transform: uppercase;
             font-size: 0.85rem;
+        }
+    }
+
+    .amount-selector {
+        span {
+            display: inline-block;
+        }
+
+        a,
+        .disabled-link {
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 0 5px;
+            text-transform: none;
+            font-variant: normal;
+        }
+
+        span + a,
+        span + .disabled-link {
+            margin-left: 8px;
         }
     }
 }

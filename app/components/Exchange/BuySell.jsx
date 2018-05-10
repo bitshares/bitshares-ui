@@ -15,7 +15,7 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
-import DatePicker from "react-datepicker2";
+import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 
@@ -129,6 +129,10 @@ class BuySell extends React.Component {
             asset_id: quote.get("asset_id"),
             precision: quote.get("precision")
         });
+        const baseMarketFeePercent =
+            base.getIn(["options", "market_fee_percent"]) / 100 + "%";
+        const quoteMarketFeePercent =
+            quote.getIn(["options", "market_fee_percent"]) / 100 + "%";
         const quoteFee = !amount
             ? 0
             : Math.min(
@@ -136,13 +140,13 @@ class BuySell extends React.Component {
                   amount *
                       quote.getIn(["options", "market_fee_percent"]) /
                       10000
-              );
+              ).toFixed(maxQuoteMarketFee.precision);
         const baseFee = !amount
             ? 0
             : Math.min(
                   maxBaseMarketFee.getAmount({real: true}),
                   total * base.getIn(["options", "market_fee_percent"]) / 10000
-              );
+              ).toFixed(maxBaseMarketFee.precision);
         const baseFlagBooleans = assetUtils.getFlagBooleans(
             base.getIn(["options", "flags"]),
             base.has("bitasset_data_id")
@@ -152,15 +156,20 @@ class BuySell extends React.Component {
             quote.has("bitasset_data_id")
         );
 
+        const {name: baseName, prefix: basePrefix} = utils.replaceName(
+            this.props.base
+        );
         const hasMarketFee =
             baseFlagBooleans["charge_market_fee"] ||
             quoteFlagBooleans["charge_market_fee"];
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
+                        baseMarketFeePercent
+                    }
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -176,7 +185,7 @@ class BuySell extends React.Component {
                             percent:
                                 base.getIn(["options", "market_fee_percent"]) /
                                 100,
-                            asset: base.get("symbol")
+                            asset: (basePrefix || "") + baseName
                         })}
                         className="inline-block tooltip"
                     >
@@ -197,12 +206,18 @@ class BuySell extends React.Component {
                 </div>
             </div>
         ) : null;
+
+        const {name: quoteName, prefix: quotePrefix} = utils.replaceName(
+            this.props.quote
+        );
         var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
-                <div className="grid-block small-3 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
+                        quoteMarketFeePercent
+                    }
                 </div>
-                <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
+                <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
                         disabled
                         type="text"
@@ -218,7 +233,7 @@ class BuySell extends React.Component {
                             percent:
                                 quote.getIn(["options", "market_fee_percent"]) /
                                 100,
-                            asset: quote.get("symbol")
+                            asset: (quotePrefix || "") + quoteName
                         })}
                         className="inline-block tooltip"
                     >
@@ -421,19 +436,47 @@ class BuySell extends React.Component {
                         {this.props.currentBridges ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onBuy.bind(this)}>
-                                    <Translate content="exchange.buy" />&nbsp;<span className="asset-name">
-                                        {buyBorrowDepositName}
-                                    </span>
+                                    <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.buy",
+                                                arg: "direction"
+                                            }
+                                        ]}
+                                    />
                                 </a>
                             </div>
                         ) : null}
                         {this.props.backedCoin ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this._onDeposit.bind(this)}>
-                                    <Translate
-                                        unsafe
-                                        content="exchange.deposit"
-                                        asset={buyBorrowDepositName}
+                                    <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.deposit",
+                                                arg: "direction"
+                                            }
+                                        ]}
                                     />
                                 </a>
                             </div>
@@ -441,10 +484,23 @@ class BuySell extends React.Component {
                         {this.props.onBorrow ? (
                             <div className="float-right buy-sell-deposit">
                                 <a onClick={this.props.onBorrow}>
-                                    <Translate
-                                        unsafe
-                                        content="exchange.borrow"
-                                        asset={buyBorrowDepositName}
+                                    <TranslateWithLinks
+                                        string="exchange.buysell_formatter"
+                                        noLink
+                                        keys={[
+                                            {
+                                                type: "asset",
+                                                value: this.props[
+                                                    isBid ? "base" : "quote"
+                                                ].get("symbol"),
+                                                arg: "asset"
+                                            },
+                                            {
+                                                type: "translate",
+                                                value: "exchange.borrow",
+                                                arg: "direction"
+                                            }
+                                        ]}
                                     />
                                 </a>
                             </div>
@@ -688,6 +744,9 @@ class BuySell extends React.Component {
                                                 {this.props.expirationType ===
                                                 "SPECIFIC" ? (
                                                     <DatePicker
+                                                        pickerPosition={
+                                                            "bottom center"
+                                                        }
                                                         wrapperClassName={theme}
                                                         timePicker={true}
                                                         min={minExpirationDate}

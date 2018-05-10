@@ -1,4 +1,9 @@
 {
+    "page404": {
+        "page_not_found_title": "ページが見つかりません。",
+        "page_not_found_subtitle": "このページは存在しません",
+        "home": "ホーム"
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -1192,6 +1197,9 @@
         "spread": "スプレッド",
         "quantity": "数量",
         "buy": "買う",
+        "deposit": "入金",
+        "borrow": "借り入れ",
+        "borrow_short": "借り入れ",
         "buy_min": "最低購入量",
         "sell": "売る",
         "receive": "取得",
@@ -1230,7 +1238,6 @@
         "no_data": "データなし",
         "time": "ローソク足",
         "zoom": "拡大",
-        "borrow": "借り入れ",
         "no_balance": "残高不足",
         "invalid_amount": "数量が不正です",
         "invalid_price": "価格が不正です",
@@ -1656,6 +1663,7 @@
         "service": "転送サービス",
         "bridge": "ブリッジ",
         "gateway": "ゲートウェイ",
+        "fiat": "法定通貨",
         "symbol": "シンボル",
         "asset": "アセット",
         "website": "ウェブサイトに行く",
@@ -1795,6 +1803,20 @@
         "errors": {
             "fetch": "Ops... Something went wrong fetching the news"
         }
+    },
+    "openledger": {
+        "header_fiat": "法定通貨",
+        "status": "ステータス",
+        "retry": "再試行",
+        "loading": "ロード中...",
+        "refresh_transaction_history": "更新",
+        "header_transaction_history": "取引履歴",
+        "show_transaction_history": "取引履歴を表示する",
+        "withdraw_amount": "出金額",
+        "withdraw_none": "出金なし",
+        "deposit_amount": "入金額",
+        "deposit_details": "詳細",
+        "deposit_none": "入金なし"
     },
     "winex": {
         "gateway": {

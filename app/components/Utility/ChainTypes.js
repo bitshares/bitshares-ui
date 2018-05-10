@@ -1,11 +1,15 @@
 import utils from "common/utils";
 import Immutable from "immutable";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {
+    ChainTypes as grapheneChainTypes,
+    ChainValidation
+} from "bitsharesjs/es";
 const {object_type} = grapheneChainTypes;
 
 function createChainableTypeChecker(validate) {
     function checkType(isRequired, props, propName, componentName, location) {
         componentName = componentName || ANONYMOUS;
+
         if (props[propName] == null) {
             if (isRequired) {
                 return new Error(
@@ -29,7 +33,7 @@ function createChainableTypeChecker(validate) {
     return chainedCheckType;
 }
 
-function objectIdChecker(props, propName, componentName, location) {
+function objectIdChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -51,7 +55,7 @@ function objectIdChecker(props, propName, componentName, location) {
     return null;
 }
 
-function keyChecker(props, propName, componentName, location) {
+function keyChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -69,7 +73,7 @@ function keyChecker(props, propName, componentName, location) {
     return null;
 }
 
-function assetChecker(props, propName, componentName, location) {
+function assetChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -87,7 +91,7 @@ function assetChecker(props, propName, componentName, location) {
     return null;
 }
 
-function accountChecker(props, propName, componentName, location) {
+function accountChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -114,7 +118,7 @@ function accountChecker(props, propName, componentName, location) {
     return null;
 }
 
-function objectsListChecker(props, propName, componentName, location) {
+function objectsListChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -134,7 +138,7 @@ function objectsListChecker(props, propName, componentName, location) {
     return null;
 }
 
-function assetsListChecker(props, propName, componentName, location) {
+function assetsListChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -154,7 +158,7 @@ function assetsListChecker(props, propName, componentName, location) {
     return null;
 }
 
-function accountsListChecker(props, propName, componentName, location) {
+function accountsListChecker(props, propName, componentName) {
     componentName = componentName || "ANONYMOUS";
     if (props[propName]) {
         let value = props[propName];
@@ -167,6 +171,22 @@ function accountsListChecker(props, propName, componentName, location) {
         } else {
             return new Error(
                 `${propName} in ${componentName} should be Immutable.List`
+            );
+        }
+    }
+    // assume all ok
+    return null;
+}
+
+function accountNameChecker(props, propName, componentName) {
+    componentName = componentName || "ANONYMOUS";
+    if (props[propName]) {
+        let value = props[propName];
+        if (ChainValidation.is_account_name(value)) {
+            return null;
+        } else {
+            return new Error(
+                `${propName} value of ${value} in ${componentName} is not a valid account name`
             );
         }
     }
@@ -176,6 +196,7 @@ function accountsListChecker(props, propName, componentName, location) {
 
 let ChainObject = createChainableTypeChecker(objectIdChecker);
 let ChainAccount = createChainableTypeChecker(accountChecker);
+let ChainAccountName = createChainableTypeChecker(accountNameChecker);
 let ChainKeyRefs = createChainableTypeChecker(keyChecker);
 let ChainAddressBalances = createChainableTypeChecker(keyChecker);
 let ChainAsset = createChainableTypeChecker(assetChecker);
@@ -186,6 +207,7 @@ let ChainAssetsList = createChainableTypeChecker(assetsListChecker);
 export default {
     ChainObject,
     ChainAccount,
+    ChainAccountName,
     ChainKeyRefs,
     ChainAddressBalances,
     ChainAsset,

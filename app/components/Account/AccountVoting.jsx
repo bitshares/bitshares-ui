@@ -55,6 +55,7 @@ class AccountVoting extends React.Component {
 
     componentWillMount() {
         accountUtils.getFinalFeeAsset(this.props.account, "account_update");
+        ChainStore.fetchAllWorkers();
         this.getBudgetObject();
     }
 
@@ -91,7 +92,7 @@ class AccountVoting extends React.Component {
         let votes = options.get("votes");
         let vote_ids = votes.toArray();
         let vids = Immutable.Set(vote_ids);
-        // ChainStore.getObjectsByVoteIds(vote_ids);
+        ChainStore.getObjectsByVoteIds(vote_ids);
 
         let proxyPromise = null,
             proxy_vids = Immutable.Set([]);
@@ -100,15 +101,17 @@ class AccountVoting extends React.Component {
             let proxy_votes = proxyOptions.get("votes");
             let proxy_vote_ids = proxy_votes.toArray();
             proxy_vids = Immutable.Set(proxy_vote_ids);
+            ChainStore.getObjectsByVoteIds(proxy_vote_ids);
+
             proxyPromise = FetchChainObjects(
                 ChainStore.getObjectByVoteID,
                 proxy_vote_ids,
-                5000
+                10000
             );
         }
 
         Promise.all([
-            FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 5000),
+            FetchChainObjects(ChainStore.getObjectByVoteID, vote_ids, 10000),
             proxyPromise
         ]).then(res => {
             const [vote_objs, proxy_vote_objs] = res;
@@ -172,9 +175,16 @@ class AccountVoting extends React.Component {
         let lastIdx;
         if (!vote_ids) {
             vote_ids = [];
-            let active = this.props.globalObject.get(
-                isWitness ? "active_witnesses" : "active_committee_members"
-            );
+            let active = this.props.globalObject
+                .get(
+                    isWitness ? "active_witnesses" : "active_committee_members"
+                )
+                .sort((a, b) => {
+                    return (
+                        parseInt(a.split(".")[2], 10) -
+                        parseInt(b.split(".")[2], 10)
+                    );
+                });
             const lastActive = active.last() || `1.${isWitness ? "6" : "5"}.1`;
             lastIdx = parseInt(lastActive.split(".")[2], 10);
             for (var i = 1; i <= lastIdx + 10; i++) {
@@ -199,7 +209,7 @@ class AccountVoting extends React.Component {
                     )
                 );
                 if (!!vote_objs[vote_objs.length - 1]) {
-                    // there are more valid vote objs, fetch more
+                    // there are more valid vote objs, fetch 10 more
                     vote_ids = [];
                     for (var i = lastIdx + 11; i <= lastIdx + 20; i++) {
                         vote_ids.push(`1.${isWitness ? "6" : "5"}.${i}`);
@@ -478,14 +488,10 @@ class AccountVoting extends React.Component {
     _getWorkerArray() {
         let workerArray = [];
 
-        for (let i = 0; i < 100; i++) {
-            let id = "1.14." + i;
-            let worker = ChainStore.getObject(id, false, false);
-            if (worker === null) {
-                break;
-            }
-            workerArray.push(worker);
-        }
+        ChainStore.workers.forEach(workerId => {
+            let worker = ChainStore.getObject(workerId, false, false);
+            if (worker) workerArray.push(worker);
+        });
 
         return workerArray;
     }
@@ -673,11 +679,12 @@ class AccountVoting extends React.Component {
         let proxyInput = (
             <AccountSelector
                 hideImage
-                style={{width: "50%", maxWidth: 250}}
+                style={{width: "50%", maxWidth: 350}}
                 account={this.state.current_proxy_input}
                 accountName={this.state.current_proxy_input}
                 onChange={this.onProxyChange.bind(this)}
                 onAccountChanged={this.onProxyAccountFound}
+                typeahead={true}
                 tabIndex={1}
                 placeholder="Proxy not set"
             >

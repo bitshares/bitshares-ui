@@ -2,7 +2,6 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
-import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
@@ -23,7 +22,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 
-export default class SendModal extends React.Component {
+class SendModal extends React.Component {
     static contextTypes = {
         router: React.PropTypes.object
     };
@@ -31,6 +30,7 @@ export default class SendModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
+        this.nestedRef = null;
 
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
 
@@ -161,7 +161,7 @@ export default class SendModal extends React.Component {
             });
         }
 
-        let currentAccount = AccountStore.getState().currentAccount;
+        let {currentAccount} = this.props;
         if (!this.state.from_name) {
             this.setState({from_name: currentAccount});
         }
@@ -178,12 +178,6 @@ export default class SendModal extends React.Component {
                 });
             }
         }
-    }
-
-    componentWillMount() {
-        this.nestedRef = null;
-        this._updateFee();
-        this._checkFeeStatus();
     }
 
     shouldComponentUpdate(np, ns) {
@@ -206,6 +200,7 @@ export default class SendModal extends React.Component {
             }
         }
 
+        if (ns.open && !this.state.open) this._checkFeeStatus(ns);
         if (!ns.open && !this.state.open) return false;
         return true;
     }
@@ -229,7 +224,7 @@ export default class SendModal extends React.Component {
                 },
                 () => {
                     this._updateFee();
-                    this._checkFeeStatus(ChainStore.getAccount(np.from_name));
+                    this._checkFeeStatus();
                 }
             );
         }
@@ -265,10 +260,11 @@ export default class SendModal extends React.Component {
         this.setState({balanceError: !hasBalance});
     }
 
-    _checkFeeStatus(account = this.state.from_account) {
-        if (!account) return;
+    _checkFeeStatus(state = this.state) {
+        let {from_account, open} = state;
+        if (!from_account || !open) return;
 
-        const assets = Object.keys(account.get("balances").toJS()).sort(
+        const assets = Object.keys(from_account.get("balances").toJS()).sort(
             utils.sortID
         );
         let feeStatus = {};
@@ -276,7 +272,7 @@ export default class SendModal extends React.Component {
         assets.forEach(a => {
             p.push(
                 checkFeeStatusAsync({
-                    accountID: account.get("id"),
+                    accountID: from_account.get("id"),
                     feeID: a,
                     options: ["price_per_kbyte"],
                     data: {
@@ -364,6 +360,7 @@ export default class SendModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
+        if (!state.open) return;
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -436,7 +433,7 @@ export default class SendModal extends React.Component {
     }
 
     onMemoChanged(e) {
-        let {asset_types, fee_asset_types} = this._getAvailableAssets();
+        let {asset_types} = this._getAvailableAssets();
         let {from_account, from_error, maxAmount} = this.state;
         if (
             from_account &&
@@ -613,23 +610,16 @@ export default class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isToAccountValid =
-            to_account && to_account.get("name") === to_name;
         const isSendNotValid =
             !from_account ||
-            !isToAccountValid ||
             !isAmountValid ||
             !asset ||
             from_error ||
             propose_incomplete ||
             balanceError ||
             (!AccountStore.isMyAccount(from_account) && !propose);
-        let accountsList = Immutable.Set();
-        accountsList = accountsList.add(from_account);
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
-
-        let greenAccounts = AccountStore.getState().linkedAccounts.toArray();
 
         return !this.state.open ? null : (
             <div
@@ -696,13 +686,13 @@ export default class SendModal extends React.Component {
                                         <AccountSelector
                                             label="transfer.to"
                                             accountName={to_name}
-                                            account={to_name}
+                                            account={to_account}
                                             onChange={this.toChanged.bind(this)}
                                             onAccountChanged={this.onToAccountChanged.bind(
                                                 this
                                             )}
                                             size={60}
-                                            typeahead={greenAccounts}
+                                            typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
                                         />
@@ -930,15 +920,22 @@ export default class SendModal extends React.Component {
     }
 }
 
-SendModal = connect(SendModal, {
+class SendModalConnectWrapper extends React.Component {
+    render() {
+        return <SendModal {...this.props} ref={this.props.refCallback} />;
+    }
+}
+
+SendModalConnectWrapper = connect(SendModalConnectWrapper, {
     listenTo() {
         return [AccountStore];
     },
     getProps() {
         return {
-            linkedAccounts: AccountStore.getState().linkedAccounts,
             currentAccount: AccountStore.getState().currentAccount,
             passwordAccount: AccountStore.getState().passwordAccount
         };
     }
 });
+
+export default SendModalConnectWrapper;

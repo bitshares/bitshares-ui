@@ -42,6 +42,7 @@ class LoginSelector extends React.Component {
 
         // do redirect to portfolio if user already logged in
         if (
+            this.props.router &&
             Array.isArray(myAccounts) &&
             myAccounts.length !== 0 &&
             childCount === 0
@@ -160,6 +161,7 @@ class LoginSelector extends React.Component {
                         {!!childCount ? null : (
                             <div className="grid-block account-login-options">
                                 <Link
+                                    id="account_login_button"
                                     to="/create-account/password"
                                     className="button primary"
                                     data-intro={translator.translate(

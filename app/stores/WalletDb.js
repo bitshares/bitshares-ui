@@ -143,80 +143,86 @@ class WalletDb extends BaseStore {
                     Apis.instance().chain_id
             );
 
-        return WalletUnlockActions.unlock().then(() => {
-            AccountActions.tryToSetCurrentAccount();
-            return Promise.all([
-                tr.set_required_fees(),
-                tr.update_head_block()
-            ]).then(() => {
-                let signer_pubkeys_added = {};
-                if (signer_pubkeys) {
-                    // Balance claims are by address, only the private
-                    // key holder can know about these additional
-                    // potential keys.
-                    let pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(
-                        signer_pubkeys
-                    );
-                    if (!pubkeys.length) throw new Error("Missing signing key");
-
-                    for (let pubkey_string of pubkeys) {
-                        let private_key = this.getPrivateKey(pubkey_string);
-                        tr.add_signer(private_key, pubkey_string);
-                        signer_pubkeys_added[pubkey_string] = true;
-                    }
-                }
-
-                return tr
-                    .get_potential_signatures()
-                    .then(({pubkeys, addys}) => {
-                        let my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(
-                            pubkeys.concat(extra_keys),
-                            addys
+        return WalletUnlockActions.unlock()
+            .then(() => {
+                AccountActions.tryToSetCurrentAccount();
+                return Promise.all([
+                    tr.set_required_fees(),
+                    tr.update_head_block()
+                ]).then(() => {
+                    let signer_pubkeys_added = {};
+                    if (signer_pubkeys) {
+                        // Balance claims are by address, only the private
+                        // key holder can know about these additional
+                        // potential keys.
+                        let pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(
+                            signer_pubkeys
                         );
+                        if (!pubkeys.length)
+                            throw new Error("Missing signing key");
 
-                        //{//Testing only, don't send All public keys!
-                        //    let pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
-                        //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
-                        //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
-                        //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
-                        //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
-                        //}
-                        return tr
-                            .get_required_signatures(my_pubkeys)
-                            .then(required_pubkeys => {
-                                for (let pubkey_string of required_pubkeys) {
-                                    if (signer_pubkeys_added[pubkey_string])
-                                        continue;
-                                    let private_key = this.getPrivateKey(
-                                        pubkey_string
-                                    );
-                                    if (!private_key)
-                                        // This should not happen, get_required_signatures will only
-                                        // returned keys from my_pubkeys
-                                        throw new Error(
-                                            "Missing signing key for " +
-                                                pubkey_string
+                        for (let pubkey_string of pubkeys) {
+                            let private_key = this.getPrivateKey(pubkey_string);
+                            tr.add_signer(private_key, pubkey_string);
+                            signer_pubkeys_added[pubkey_string] = true;
+                        }
+                    }
+
+                    return tr
+                        .get_potential_signatures()
+                        .then(({pubkeys, addys}) => {
+                            let my_pubkeys = PrivateKeyStore.getPubkeys_having_PrivateKey(
+                                pubkeys.concat(extra_keys),
+                                addys
+                            );
+
+                            //{//Testing only, don't send All public keys!
+                            //    let pubkeys_all = PrivateKeyStore.getPubkeys() // All public keys
+                            //    tr.get_required_signatures(pubkeys_all).then( required_pubkey_strings =>
+                            //        console.log('get_required_signatures all\t',required_pubkey_strings.sort(), pubkeys_all))
+                            //    tr.get_required_signatures(my_pubkeys).then( required_pubkey_strings =>
+                            //        console.log('get_required_signatures normal\t',required_pubkey_strings.sort(), pubkeys))
+                            //}
+                            return tr
+                                .get_required_signatures(my_pubkeys)
+                                .then(required_pubkeys => {
+                                    for (let pubkey_string of required_pubkeys) {
+                                        if (signer_pubkeys_added[pubkey_string])
+                                            continue;
+                                        let private_key = this.getPrivateKey(
+                                            pubkey_string
                                         );
-                                    tr.add_signer(private_key, pubkey_string);
-                                }
-                            });
-                    })
-                    .then(() => {
-                        if (broadcast) {
-                            if (this.confirm_transactions) {
-                                let p = new Promise((resolve, reject) => {
-                                    TransactionConfirmActions.confirm(
-                                        tr,
-                                        resolve,
-                                        reject
-                                    );
+                                        if (!private_key)
+                                            // This should not happen, get_required_signatures will only
+                                            // returned keys from my_pubkeys
+                                            throw new Error(
+                                                "Missing signing key for " +
+                                                    pubkey_string
+                                            );
+                                        tr.add_signer(
+                                            private_key,
+                                            pubkey_string
+                                        );
+                                    }
                                 });
-                                return p;
-                            } else return tr.broadcast();
-                        } else return tr.serialize();
-                    });
-            });
-        });
+                        })
+                        .then(() => {
+                            if (broadcast) {
+                                if (this.confirm_transactions) {
+                                    let p = new Promise((resolve, reject) => {
+                                        TransactionConfirmActions.confirm(
+                                            tr,
+                                            resolve,
+                                            reject
+                                        );
+                                    });
+                                    return p;
+                                } else return tr.broadcast();
+                            } else return tr.serialize();
+                        });
+                });
+            })
+            .catch(() => {});
     }
 
     transaction_update() {
@@ -334,7 +340,7 @@ class WalletDb extends BaseStore {
                         this.setState({wallet});
                         if (unlock) {
                             aes_private = local_aes_private;
-                            WalletUnlockActions.unlock();
+                            WalletUnlockActions.unlock().catch(() => {});
                         }
                     });
                 Promise.all([add, end])
