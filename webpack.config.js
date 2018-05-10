@@ -192,6 +192,7 @@ module.exports = function(env) {
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
                       "webpack-hot-middleware/client",
+                      "react-hot-loader/patch",
                       path.resolve(root_dir, "app/Main-dev.js")
                   ]
         },
@@ -218,7 +219,8 @@ module.exports = function(env) {
                         {
                             loader: "babel-loader",
                             options: {
-                                cacheDirectory: env.prod ? false : true
+                                cacheDirectory: env.prod ? false : true,
+                                plugins: ["react-hot-loader/babel"]
                             }
                         }
                     ]
@@ -230,8 +232,16 @@ module.exports = function(env) {
                         path.join(root_dir, "node_modules/react-datepicker2"),
                         path.join(root_dir, "node_modules/lodash-es")
                     ],
-                    loader: "babel-loader",
-                    options: {compact: false, cacheDirectory: true}
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                compact: false,
+                                cacheDirectory: env.prod ? false : true,
+                                plugins: ["react-hot-loader/babel"]
+                            }
+                        }
+                    ]
                 },
                 // {
                 //     type: "javascript/auto",

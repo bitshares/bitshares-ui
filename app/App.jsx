@@ -1,5 +1,6 @@
-import {ChainStore} from "bitsharesjs/es";
+import {hot} from "react-hot-loader";
 import React from "react";
+import {ChainStore} from "bitsharesjs/es";
 import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
@@ -25,7 +26,6 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import titleUtils from "common/titleUtils";
-import {hot} from "react-hot-loader";
 
 class App extends React.Component {
     constructor(props) {
