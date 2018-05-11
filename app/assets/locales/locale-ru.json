@@ -2,12 +2,15 @@
     "page404": {
         "page_not_found_title": "404 Страница не найдена",
         "page_not_found_subtitle": "Эта страница не существует.",
+        "asset_not_found_subtitle": "Такого актива не существует",
+        "market_not_found_subtitle": "Такого рынка не существует",
         "home": "Главная"
     },
     "counterpart": {
         "formats": {
             "date": {
                 "short_custom": "%e %b '%y",
+                "full": "%F %T %Z",
                 "market_history": "%e/%m %H:%M:%S",
                 "market_history_us": "%m/%e %H:%M:%S"
             }
@@ -196,7 +199,7 @@
             "restore_link": "восстановить ваш аккаунт",
             "restore_form": "расширенная форма"
         },
-        "search": "Search for an account",
+        "search": "Поиск аккаунта",
         "new_user": "Новый пользователь?",
         "existing_user": "Существующий пользователь",
         "restore": "Восстановить",
@@ -234,7 +237,7 @@
         "as_collateral": "Обеспечение",
         "open_orders": "Открытые ордера",
         "filter_orders": "Фильтровать",
-        "submit_orders": "Добавить",
+        "submit_orders": "Подтвердить",
         "reset_orders": "Сбросить",
         "total_value": "Общая стоимость",
         "show_hidden": "Скрытые",
@@ -401,7 +404,9 @@
             "too_many_feed":
                 "Число производителей котировок превысило максимально допустимое (%(max)s).",
             "conflict_feed":
-                "Невозможно разрешить заверителям и членам комитета предоставлять котировки одновременно"
+                "Невозможно разрешить заверителям и членам комитета предоставлять котировки одновременно",
+            "invalid_market_pair":
+                "Предпочитаемая рыночная пара не может быть с того же рынка"
         },
         "connections": {
             "known": "Известен по",
@@ -583,6 +588,7 @@
         "create_account": "Создать аккаунт",
         "create_new": "Создать новый аккаунт",
         "password_login": "Войти используя пароль",
+        "login_with": "Войти при помощи",
         "identicon": "Айдентикон",
         "pay_from": "Оплатить из",
         "existing_accounts": "Существующие аккаунты",
@@ -957,7 +963,7 @@
         },
         "assets": {
             "title": "Активы",
-            "market": "SmartCoins",
+            "market": "Смарткойны",
             "user": "Эмитированные пользователем активы",
             "prediction": "Активы рынка предсказаний",
             "symbol": "Тикер",
@@ -987,7 +993,7 @@
                     "Максимальный коэффициент краткого сжатия (MSSR)",
                 "global_settlement_price": "Цена глобального погашения",
                 "settlement_delay": "Задержка погашения",
-                "force_settlement_offset": "Force settlement offset"
+                "force_settlement_offset": "Смещение принудительного погашения"
             },
             "fee_pool": {
                 "title": "Пул комиссии",
@@ -1089,6 +1095,7 @@
         }
     },
     "settings": {
+        "automatic_short": "Автоматическое переключение",
         "passwordLogin": "Режим входа",
         "cloud_login": "Вход в облачный кошелек (модель \"Аккаунт\")",
         "local_wallet": "Вход в локальный кошелек (модель \"Кошелек\")",
@@ -1134,7 +1141,7 @@
         "restore": "Восстановить/импортировать",
         "access": "Доступ",
         "automatic": "Выбирать узел автоматически (доступно %(totalNodes)s)",
-        "ping": "Ping Nodes",
+        "ping": "Проверить Узлы",
         "reset_text":
             "Восстановить настройки до их первоначальных значений по умолчанию",
         "reset_text_description":
@@ -1149,6 +1156,7 @@
         "access_text": "",
         "view_keys": "Просмотреть ключи",
         "backup_backup": "Восстановить из файла резервной копии (.bin)",
+        "backup_backup_short": "Восстановить из резервной копии",
         "backup_key": "Импортировать приватный ключ",
         "backup_legacy": "Импортировать экспорт-файл (.json) ключа BTS 0.9.3c",
         "backup_brainkey":
@@ -1217,6 +1225,18 @@
     "exchange": {
         "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Торговая пара",
+        "market_picker": {
+            "title": "Выбор рынка",
+            "sub_title": "Найти актив для замены",
+            "search_mode": "Режим",
+            "search_for_asset": "Поиск актива",
+            "find_by_asset": "Фильтр по активу",
+            "filter_by_issuer": "Фильтр по эмитенту",
+            "results": "Результаты (%(total_assets)s)",
+            "use": "Использовать",
+            "show_all": "Показать все",
+            "search": "Имя актива"
+        },
         "chart_options": {
             "tools": "Инструменты",
             "title": "Индикаторы",
@@ -1330,7 +1350,7 @@
         "starred_markets": "Избранные рынки",
         "top_markets": "Лучшие рынки",
         "featured_markets": "Популярные рынки",
-        "table_empty": "No market matched"
+        "table_empty": "Соответствующего рынка не найдено"
     },
     "fees": {
         "title": "Прейскурант Комиссионных Сборов"
@@ -1380,6 +1400,18 @@
         "import_backup_choose":
             "Пожалуйста, выберите Вашу резервную копию в окне ниже. Это абсолютно безопасно, так как файл копии никуда не загружается и никогда не покинет Ваш браузер.",
         "restore_backup": "Восстановить из резервной копии",
+        "ask_to_select_wallet":
+            "Пожалуйста, выберите файл резервной копии ключей",
+        "dont_ask_for_backup":
+            "Больше не спрашивать о создании резервной копии",
+        "different_file_type": "У вас другой тип файла?",
+        "restore_it_here": "Восстановите его здесь",
+        "backup_login": "Резервное копирование и вход в систему",
+        "select_wallet": "Выбрать файл резервной копии ключей",
+        "using": "Используемый:",
+        "use_different": "Использовать другой файл",
+        "backup_warning":
+            "Резервная копия файлов ваших закрытых ключей еще не создавалась. В целях безопасности мы рекомендуем пользователям не входить в систему без предварительно созданной резервной копии своих закрытых ключей.",
         "import_keys": "Импортировать ключи",
         "import_keys_tool": "Инструмент импорта ключей",
         "brainkey": "Brainkey",
@@ -1527,6 +1559,9 @@
         "login_type": "Выбор типа логина",
         "wallet_model": "Модель кошелька",
         "password_model": "Модель аккаунта",
+        "key_file": "Файл резервной копии",
+        "key_file_bin": "Файл резервной копии (.bin)",
+        "restore_key_file": "Восстановить файл резервной копии ключей",
         "wallet_model_1":
             "Модель кошелька хранит кошелек в Вашем браузере. Он зашифрован выбранным Вами паролем и позволяет создать его резервную копию, используя либо brainkey, либо зашифрованный бинарный файл, содержащий все приватные ключи.",
         "wallet_model_2":
@@ -1579,7 +1614,7 @@
             "collateral": "Недостаточный остаток на счете"
         },
         "use_max": "Использовать максимум",
-        "pay_max_debt": "Pay Max Debt",
+        "pay_max_debt": "Выплатить максимальный долг",
         "maximize_debt_set_ratio_slider":
             "Прежде чем максимизировать долг, вы должны задать коэффициент залогового обеспечения"
     },
@@ -1614,7 +1649,7 @@
             "cancel": "Отменить",
             "available": "Доступно: ",
             "submit_beta": "Вывод (бета)",
-            "no_estimate": "No estimate available for this object",
+            "no_estimate": "Для этого объекта нет доступных оценок",
             "header": "Вывод (бета)",
             "no_gateways":
                 "Извините, для обработки этой операции вывода нет доступных шлюзов",
@@ -1859,7 +1894,7 @@
             "success": "успех",
             "fail": "не удалось"
         },
-        "asset_search_deposit": "Search for an asset to deposit",
+        "asset_search_deposit": "Поиск актива для депозита",
         "asset_search_withdraw": "Поиск актива для снятия"
     },
     "trx_error": {
@@ -1893,10 +1928,10 @@
         "header_transaction_history": "История транзакций",
         "show_transaction_history": "Показать историю транзакций",
         "withdraw_amount": "Сумма для вывода",
-        "withdraw_none": "No withdrawals",
+        "withdraw_none": "Не выводить средства",
         "deposit_amount": "Сумма депозита",
         "deposit_details": "Подробности",
-        "deposit_none": "No deposits"
+        "deposit_none": "Не размещать депозиты"
     },
     "winex": {
         "gateway": {
