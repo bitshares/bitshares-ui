@@ -368,7 +368,7 @@ class DepositModalContent extends DecimalChecker {
                                             selectedAsset
                                         }
                                     />
-                                    <div className="modal__highlight">
+                                    <div className="modal__highlight" style={{fontSize: "0.9rem"}}>
                                         {depositAddress.address}
                                     </div>
                                 </div>

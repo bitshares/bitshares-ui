@@ -866,7 +866,7 @@ class WithdrawModalNew extends React.Component {
 
         let minWithdraw = null;
         let maxWithdraw = null;
-        if (!!backingAsset.minAmount) {
+        if (backingAsset && backingAsset.minAmount) {
             minWithdraw = !!backingAsset.precision
                 ? utils.format_number(
                       backingAsset.minAmount /
@@ -875,14 +875,14 @@ class WithdrawModalNew extends React.Component {
                       false
                   )
                 : backingAsset.minAmount;
-        } else {
+        } else if(backingAsset) {
             minWithdraw =
                 backingAsset.gateFee * 2 ||
                 0 + backingAsset.transactionFee ||
                 0;
         }
 
-        if (!!backingAsset.maxAmount) {
+        if (backingAsset && backingAsset.maxAmount) {
             maxWithdraw = backingAsset.maxAmount;
         }
 
