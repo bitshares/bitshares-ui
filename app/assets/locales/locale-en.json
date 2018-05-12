@@ -1306,7 +1306,9 @@
         "buy_description":
             "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "sell_description":
-            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
+            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "no_orders": "No orders",
+        "no_bids": "No bids"
     },
     "dashboard": {
         "starred_markets": "Starred Markets",

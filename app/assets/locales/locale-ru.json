@@ -1324,7 +1324,9 @@
         "buy_description":
             "Купить %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
         "sell_description":
-            "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s"
+            "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
+        "no_orders": "Нет ордеров",
+        "no_bids": "Нет ставок"
     },
     "dashboard": {
         "starred_markets": "Избранные рынки",
