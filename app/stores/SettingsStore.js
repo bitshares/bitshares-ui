@@ -494,7 +494,7 @@ class SettingsStore {
         this.setExchangeSettings("lastExpiration", fromJS(value));
     }
 
-    getExhchangeLastExpiration() {
+    getExchangeLastExpiration() {
         return this.getExchangeSettings("lastExpiration");
     }
 }

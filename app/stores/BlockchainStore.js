@@ -21,6 +21,7 @@ class BlockchainStore {
         });
 
         this.maxBlocks = 30;
+        this.maxTransactions = 100;
     }
 
     onGetBlock(block) {
@@ -57,7 +58,7 @@ class BlockchainStore {
                 });
             }
 
-            if (this.latestTransactions.size > this.maxBlocks) {
+            while (this.latestTransactions.size > this.maxTransactions) {
                 this.latestTransactions = this.latestTransactions.pop();
             }
         }

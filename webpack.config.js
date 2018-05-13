@@ -74,7 +74,8 @@ module.exports = function(env) {
                 env.apiUrl || "https://ui.bitshares.eu/api"
             ),
             __TESTNET__: !!env.testnet,
-            __DEPRECATED__: !!env.deprecated
+            __DEPRECATED__: !!env.deprecated,
+            __TEST__: false
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,

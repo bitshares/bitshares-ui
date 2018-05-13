@@ -2,7 +2,10 @@ import alt from "alt-instance";
 import IntlActions from "actions/IntlActions";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
-var locale_en = require("json-loader!assets/locales/locale-en");
+
+const locale_en = !__TEST__
+    ? require("json-loader!assets/locales/locale-en.json")
+    : require("assets/locales/locale-en.json");
 import ls from "common/localStorage";
 let ss = new ls("__graphene__");
 
@@ -22,18 +25,12 @@ class IntlStore {
             ? ss.get("settings_v3").locale
             : "en";
 
-        this.locales = ["en"];
         this.localesObject = {en: locale_en};
 
         this.bindListeners({
             onSwitchLocale: IntlActions.switchLocale,
-            onGetLocale: IntlActions.getLocale,
             onClearSettings: SettingsActions.clearSettings
         });
-    }
-
-    hasLocale(locale) {
-        return this.locales.indexOf(locale) !== -1;
     }
 
     getCurrentLocale() {
@@ -47,18 +44,13 @@ class IntlStore {
                 break;
 
             default:
+                this.localesObject[locale] = localeData;
                 counterpart.registerTranslations(locale, localeData);
                 break;
         }
 
         counterpart.setLocale(locale);
         this.currentLocale = locale;
-    }
-
-    onGetLocale(locale) {
-        if (this.locales.indexOf(locale) === -1) {
-            this.locales.push(locale);
-        }
     }
 
     onClearSettings() {

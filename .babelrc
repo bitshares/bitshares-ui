@@ -22,6 +22,7 @@
                   ["transform-define", {
                       "__ELECTRON__": false,
                       "__DEV__": false,
+                      "__TEST__": true,
                       "__HASH_HISTORY__": false
                       }]
               ]

@@ -9,6 +9,10 @@ if (__ELECTRON__) {
             locale
         ] = require(`json-loader!assets/locales/locale-${locale}.json`);
     });
+} else if (__TEST__) {
+    localeCodes.forEach(locale => {
+        locales[locale] = require(`../assets/locales/locale-${locale}.json`);
+    });
 }
 
 class IntlActions {
@@ -16,7 +20,7 @@ class IntlActions {
         if (locale === "en") {
             return {locale};
         }
-        if (__ELECTRON__) {
+        if (__ELECTRON__ || __TEST__) {
             return {
                 locale: locale,
                 localeData: locales[locale]
@@ -40,10 +44,6 @@ class IntlActions {
                     });
             };
         }
-    }
-
-    getLocale(locale) {
-        return locale;
     }
 }
 
