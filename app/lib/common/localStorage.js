@@ -24,7 +24,10 @@ const localStorage = key => {
             if (object && object.toJS) {
                 object = object.toJS();
             }
-            ls.setItem(STORAGE_KEY + key, JSON.stringify(object));
+            if (typeof object !== "string") {
+                object = JSON.stringify(object);
+            }
+            ls.setItem(STORAGE_KEY + key, object);
         },
 
         remove(key) {
