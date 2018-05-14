@@ -836,8 +836,8 @@ class OrderBook extends React.Component {
                                                     }
                                                     title={
                                                         this.state.autoScroll
-                                                            ? "icons.locked"
-                                                            : "icons.unlocked"
+                                                            ? "icons.locked.enable_auto_scroll"
+                                                            : "icons.unlocked.disable_auto_scroll"
                                                     }
                                                 />
                                                 {!!this.props.latest && (

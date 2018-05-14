@@ -151,11 +151,6 @@ class ApiNode extends React.Component {
                             }
                             size="1_5x"
                             onClick={this.activate.bind(this, url)}
-                            title={
-                                isActive
-                                    ? "settings.active_node"
-                                    : "settings.switch"
-                            }
                         />
                         <Icon
                             className={color + " hover-icon"}
@@ -163,7 +158,6 @@ class ApiNode extends React.Component {
                             title="icons.connect"
                             size="1_5x"
                             onClick={this.activate.bind(this, url)}
-                            title="settings.switch"
                         />
                     </a>
                     {name}
@@ -243,7 +237,6 @@ class ApiNode extends React.Component {
                                         name={"eye-striked"}
                                         title="icons.eye_striked"
                                         size="1_5x"
-                                        title="settings.show"
                                     />
                                 </a>
                             )}
@@ -255,7 +248,6 @@ class ApiNode extends React.Component {
                                         name={"eye"}
                                         title="icons.eye"
                                         size="1_5x"
-                                        title="settings.hide"
                                     />
                                 </a>
                             )}
@@ -266,7 +258,6 @@ class ApiNode extends React.Component {
                                         name={"times"}
                                         title="icons.times"
                                         size="1_5x"
-                                        title="settings.remove"
                                     />
                                 </a>
                             )}
@@ -279,16 +270,14 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
-                                        title="icons.disconnected"
+                                        title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                     <Icon
                                         className={color + " hover-icon"}
                                         name={"connect"}
                                         title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                 </a>
                             ) : (

@@ -211,12 +211,12 @@ class WorkerApproval extends React.Component {
                             }
                             title={
                                 approvalState
-                                    ? "icons.checkmark_circle"
-                                    : "icons.minus_circle"
+                                    ? "icons.checkmark_circle.approved"
+                                    : "icons.minus_circle.disapproved"
                             }
                         />
                     ) : (
-                        <Icon name="locked" title="icons.locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>

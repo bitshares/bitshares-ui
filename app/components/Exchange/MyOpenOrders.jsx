@@ -190,7 +190,7 @@ class OrderRow extends React.Component {
                         >
                             <Icon
                                 name="cross-circle"
-                                title="icons.cross_circle"
+                                title="icons.cross_circle.cancel_order"
                                 className="icon-14px"
                             />
                         </a>
@@ -319,7 +319,7 @@ class OrderRow extends React.Component {
                     >
                         <Icon
                             name="trade"
-                            title="icons.trade"
+                            title="icons.trade.trade"
                             className="icon-14px"
                         />
                     </Link>

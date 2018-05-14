@@ -252,7 +252,7 @@ export default class ExchangeHeader extends React.Component {
                                     <Icon
                                         className={starClass}
                                         name="fi-star"
-                                        title="icons.fi_star"
+                                        title="icons.fi_star.market"
                                     />
                                 </Link>
                             </div>

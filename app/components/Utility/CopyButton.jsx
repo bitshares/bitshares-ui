@@ -19,7 +19,7 @@ const CopyButton = ({
             data-tip={counterpart.translate(tip)}
         >
             {!buttonText ? (
-                <Icon name={buttonIcon} title={buttonIcon.replace("-", "_")} />
+                <Icon name={buttonIcon} title={"icons.clippy.copy"} />
             ) : (
                 buttonText
             )}

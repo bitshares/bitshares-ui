@@ -300,7 +300,7 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="user"
-                    title="icons.user"
+                    title="icons.user.following"
                 />
             </span>
         ) : (
@@ -317,7 +317,7 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="plus-circle"
-                    title="icons.plus_circle"
+                    title="icons.plus_circle.add_contact"
                 />
             </span>
         );

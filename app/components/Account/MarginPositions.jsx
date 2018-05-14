@@ -360,7 +360,7 @@ class MarginPosition extends React.Component {
                         <a onClick={this._onClosePosition.bind(this)}>
                             <Icon
                                 name="cross-circle"
-                                title="icons.cross_circle"
+                                title="icons.cross_circle.close_position"
                                 className="icon-14px"
                             />
                         </a>

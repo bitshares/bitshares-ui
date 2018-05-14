@@ -112,7 +112,7 @@ class MarketRow extends React.Component {
                                 <Icon
                                     className={starClass}
                                     name="fi-star"
-                                    title="icons.fi_star"
+                                    title="icons.fi_star.symbol"
                                 />
                             </td>
                         );

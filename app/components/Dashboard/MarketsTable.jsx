@@ -155,7 +155,7 @@ class MarketRow extends React.Component {
                             style={{cursor: "pointer"}}
                             className={starClass}
                             name="fi-star"
-                            title="icons.fi_star"
+                            title="icons.fi_star.market"
                         />
                     </div>
                 </td>
@@ -217,8 +217,8 @@ class MarketRow extends React.Component {
                             name={isHidden ? "plus-circle" : "cross-circle"}
                             title={
                                 isHidden
-                                    ? "icons.plus-circle"
-                                    : "icons.cross-circle"
+                                    ? "icons.plus_circle.show_market"
+                                    : "icons.cross_circle.hide_market"
                             }
                             className="icon-14px"
                         />

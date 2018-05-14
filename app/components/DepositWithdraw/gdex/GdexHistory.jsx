@@ -239,7 +239,7 @@ class GdexHistory extends React.Component {
                         <a onClick={this.getTransactionHistory.bind(this)}>
                             <Icon
                                 name="chevron-down"
-                                title="icons.chevron_down"
+                                title="icons.chevron_down.transactions"
                                 className="icon-14px"
                             />
                         </a>

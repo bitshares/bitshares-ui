@@ -298,7 +298,7 @@ class DashboardList extends React.Component {
                                 <Icon
                                     className={starClass}
                                     name="fi-star"
-                                    title="icons.fi_star"
+                                    title="icons.fi_star.account"
                                 />
                             </td>
                             {isContactsList
@@ -311,7 +311,7 @@ class DashboardList extends React.Component {
                                       >
                                           <Icon
                                               name="plus-circle"
-                                              title="icons.plus_circle"
+                                              title="icons.plus_circle.add_contact"
                                           />
                                       </td>
                                   )) || (
@@ -323,7 +323,7 @@ class DashboardList extends React.Component {
                                       >
                                           <Icon
                                               name="minus-circle"
-                                              title="icons.minus_circle"
+                                              title="icons.minus_circle.remove_contact"
                                           />
                                       </td>
                                   )
@@ -493,12 +493,15 @@ class DashboardList extends React.Component {
                                     <Icon
                                         className="grey-star"
                                         name="fi-star"
-                                        title="icons.fi_star"
+                                        title="icons.fi_star.sort_accounts"
                                     />
                                 </th>
                                 {isContactsList ? (
                                     <th>
-                                        <Icon name="user" title="icons.user" />
+                                        <Icon
+                                            name="user"
+                                            title="icons.user.account"
+                                        />
                                     </th>
                                 ) : null}
                                 <th style={{textAlign: "left"}}>ID</th>

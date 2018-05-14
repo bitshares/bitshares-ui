@@ -696,7 +696,7 @@ class AccountVoting extends React.Component {
                         display: hasProxy ? "" : "none"
                     }}
                 >
-                    <Icon name="locked" title="icons.locked" size="1x" />
+                    <Icon name="locked" title="icons.locked.action" size="1x" />
                 </span>
                 <span
                     style={{

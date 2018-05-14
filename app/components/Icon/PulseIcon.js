@@ -7,7 +7,8 @@ export default class PulseIcon extends Component {
     static propTypes = {
         duration: PropTypes.number.isRequired,
         offIcon: PropTypes.string.isRequired,
-        onIcon: PropTypes.string.isRequired
+        onIcon: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired
     };
 
     componentDidMount() {
@@ -30,7 +31,7 @@ export default class PulseIcon extends Component {
     render() {
         const {onIcon, rest} = this.props;
         const {name = onIcon} = this.state || {};
-        const title = name.replace("-", "_");
+        const {title} = this.props;
         return <Icon name={name} title={title} {...rest} />;
     }
 }

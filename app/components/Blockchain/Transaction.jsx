@@ -153,7 +153,10 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" title="icons.locked" />
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;
@@ -966,7 +969,10 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" title="icons.locked" />
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;

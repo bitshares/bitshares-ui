@@ -114,12 +114,12 @@ class AccountItemRow extends React.Component {
                             }
                             title={
                                 isSupported
-                                    ? "icons.checkmark_circle"
-                                    : "icons.minus_circle"
+                                    ? "icons.checkmark_circle.yes"
+                                    : "icons.minus_circle.no"
                             }
                         />
                     ) : (
-                        <Icon name="locked" title="icons.locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>

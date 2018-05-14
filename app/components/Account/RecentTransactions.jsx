@@ -328,7 +328,7 @@ class RecentTransactions extends React.Component {
                         <a onClick={this._onIncreaseLimit.bind(this)}>
                             <Icon
                                 name="chevron-down"
-                                title="icons.chevron_down"
+                                title="icons.chevron_down.transactions"
                                 className="icon-14px"
                             />
                         </a>

@@ -638,9 +638,9 @@ class WinexWithdrawModal extends React.Component {
                 );
             }
             // if (this.state.withdraw_address_is_valid)
-            //   invalid_address_message = <Icon name="checkmark-circle" title="icons.checkmark_circle" className="success" />;
+            //   invalid_address_message = <Icon name="checkmark-circle" title="icons.checkmark_circle.operation_succeed" className="success" />;
             // else
-            //   invalid_address_message = <Icon name="cross-circle" title="icons.cross_circle" className="alert" />;
+            //   invalid_address_message = <Icon name="cross-circle" title="icons.cross_circle.operation_failed" className="alert" />;
         }
 
         let tabIndex = 1;
