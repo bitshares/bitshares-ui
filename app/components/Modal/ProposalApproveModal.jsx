@@ -12,6 +12,28 @@ import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
 import {ChainStore} from "bitsharesjs/es";
 
+export const finalRequiredPerms = (
+    requiredPermissions,
+    available,
+    availableKeys
+) => {
+    let finalRequired = [];
+
+    requiredPermissions.forEach(account => {
+        finalRequired = finalRequired.concat(account.getMissingSigs(available));
+    });
+
+    let finalRequiredKeys = [];
+
+    requiredPermissions.forEach(account => {
+        finalRequiredKeys = finalRequiredKeys.concat(
+            account.getMissingKeys(availableKeys)
+        );
+    });
+
+    return [finalRequired, finalRequiredKeys];
+};
+
 class ProposalApproveModal extends React.Component {
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList
@@ -155,6 +177,7 @@ class ProposalApproveModal extends React.Component {
                         style={{paddingRight: "20%"}}
                     >
                         <NestedApprovalState
+                            expanded
                             proposal={proposal.get("id")}
                             type={type}
                             added={
@@ -171,6 +194,7 @@ class ProposalApproveModal extends React.Component {
                                         : this.state[type] || null
                                     : null
                             }
+                            noFail
                         />
                     </div>
 
@@ -285,7 +309,7 @@ class FirstLevel extends React.Component {
             proposal.get(`available_${type}_approvals`)
         );
         let availableKeys = pu.listToIDs(
-            proposal.get(`available_key_approvals`)
+            proposal.get("available_key_approvals")
         );
 
         this.setState({
@@ -299,21 +323,12 @@ class FirstLevel extends React.Component {
     render() {
         let {action} = this.props;
         let {requiredPermissions, available, availableKeys, type} = this.state;
-        let finalRequired = [];
 
-        requiredPermissions.forEach(account => {
-            finalRequired = finalRequired.concat(
-                account.getMissingSigs(available)
-            );
-        });
-
-        let finalRequiredKeys = [];
-
-        requiredPermissions.forEach(account => {
-            finalRequiredKeys = finalRequiredKeys.concat(
-                account.getMissingKeys(availableKeys)
-            );
-        });
+        const [finalRequired, finalRequiredKeys] = finalRequiredPerms(
+            requiredPermissions,
+            available,
+            availableKeys
+        );
 
         return (
             <ProposalApproveModal

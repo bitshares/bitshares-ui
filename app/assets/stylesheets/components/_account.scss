@@ -43,6 +43,101 @@
     }
 }
 
+.proposals {
+    .proposal {
+        padding-top: 0;
+        text-align: left !important;
+    }
+    .proposal.first {
+        padding-top: 2rem;
+    }
+    > thead {
+        > tr {
+            > th {
+                text-align: left !important;
+            }
+        }
+    }
+    .top-left-align {
+        > td {
+            text-align: left !important;
+            vertical-align: top !important;
+        }
+    }
+    hr {
+        margin-top: 0.3rem;
+        margin-bottom: 0.5rem;
+        margin-right: 24px;
+    }
+    .list-item {
+        padding-bottom: 5px;
+        padding-top: 5px;
+    }
+    .approval-buttons {
+        padding-top: 0;
+        .button {
+            margin-right: 2rem;
+        }
+        .button.hidden {
+            opacity: 0;
+            cursor: default;
+        }
+    }
+    .scam-error {
+        margin-right: 1rem;
+        display: inline-block;
+    }
+}
+
+.nested-approval-state {
+    .icon {
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-top: 0.1rem;
+        margin-bottom: 0.1rem;
+    }
+    .root-status {
+        padding-top: 5px;
+        margin-bottom: 0.5rem;
+    }
+    .expand-button {
+        display: inline-block;
+        padding-left: 0.5rem;
+    }
+    .table-container {
+        border-left: 2px dashed #777;
+        padding-bottom: 0.4rem;
+        table {
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+        }
+    }
+    .appended {
+        display: inline-block;
+        padding-left: 0.5rem;
+    }
+    table {
+        text-align: left;
+        > tbody {
+            > tr {
+                > td {
+                    padding-right: 0.5rem;
+                    vertical-align: middle;
+                    > * {
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+    .spacer {
+        height: 0.5rem;
+    }
+    .heading-perm {
+        font-size: 14px;
+    }
+}
+
 .flash {
     animation-name: flash;
 }

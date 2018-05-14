@@ -726,7 +726,9 @@
         "feed_producer":
             "Update the feed producers for the asset {asset} using the account {account}",
         "call_order_update":
-            "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}"
+            "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "proposals": "Proposals",
+        "approvers": "Approver(s)"
     },
     "transaction": {
         "confirm": "Please confirm the transaction",
@@ -1047,7 +1049,17 @@
                 "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
         },
         "proposals": {
-            "title": "Proposed transactions"
+            "title": "Proposed transactions",
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "pending_approval": "Pending approval.",
+            "pending": "Pending",
+            "review": "Review",
+            "pending_review": "Approved, review time.",
+            "failed_execute": "Approved, failed to execute.",
+            "failed": "Failed"
         },
         "account": {
             "title": "Account"

@@ -173,6 +173,18 @@
         border-color: $warning-color;
     }
 
+    .nested-approval-state {
+        .tooltip {
+            text-decoration: underline dotted $primary-text-color;
+        }
+        .tooltip.error {
+            color: $alert-color;
+        }
+        .tooltip.warning {
+            color: $warning-color;
+        }
+    }
+
     .label.cancel,
     .label.alert {
         color: $alert-color;
@@ -1154,14 +1166,14 @@
     }
 
     .icon.success {
-        padding-right: 1rem;
+        padding-right: 0.5rem;
         > svg > path {
             fill: $success-color;
         }
     }
 
     .icon.error {
-        padding-right: 1rem;
+        padding-right: 0.5rem;
         > svg > path {
             fill: $warning-color;
         }
