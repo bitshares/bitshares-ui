@@ -52,8 +52,6 @@ let icons = [
     "user",
     "warning",
     "withdraw",
-    "witnesses",
-    "workers",
     "filter",
     "info-circle-o",
     "zoom"

@@ -1018,6 +1018,9 @@
             "following": "You are following this user"
         },
         "warning": "Permissions",
-        "withdraw": "Withdraw"
+        "withdraw": "Withdraw",
+        "filter": "Filter",
+        "info_circle_o": "Info",
+        "zoom": "Search"
     }
 }
