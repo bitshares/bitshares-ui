@@ -165,12 +165,22 @@ function BindToChainState(Component, options = {}) {
         componentDidMount() {
             for (let prop of this.required_props) {
                 if (this.state[prop] === undefined) {
-                    if (typeof options !== "undefined" && options.show_login) {
+                    if (
+                        typeof options !== "undefined" &&
+                        options.auth_required
+                    ) {
                         WalletUnlockActions.unlock()
                             .then(() => {
                                 AccountActions.tryToSetCurrentAccount();
                             })
-                            .catch(() => {});
+                            .catch(() => {
+                                if (
+                                    options.auth_required_redirect_home &&
+                                    this.props.router
+                                ) {
+                                    this.props.router.push("/");
+                                }
+                            });
                     }
                 }
             }
@@ -536,7 +546,7 @@ function BindToChainState(Component, options = {}) {
                         return <LoadingIndicator />;
                     } else if (
                         typeof options !== "undefined" &&
-                        options.show_login
+                        options.auth_required
                     ) {
                         return <span />;
                     } else {
