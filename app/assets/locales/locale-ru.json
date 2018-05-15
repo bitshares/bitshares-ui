@@ -1919,108 +1919,109 @@
         }
     },
     "icons": {
-        "adjust": "Adjust margin position",
-        "assets": "Assets",
+        "adjust": "Изменить маржинальную позицию",
+        "assets": "Активы",
         "checkmark_circle": {
-            "yes": "Yes",
-            "operation_succeed": "Operation succeed",
-            "approved": "Approved"
+            "yes": "Да",
+            "operation_succeed": "Операция успешна",
+            "approved": "Утверждено"
         },
         "chevron_down": {
-            "transactions": "Show more transactions",
-            "gateways": "Show more gateways",
-            "other": "Show more items"
+            "transactions": "Показать больше транзакций",
+            "gateways": "Показать больше шлюзов",
+            "other": "Показать больше элементов"
         },
         "clippy": {
-            "withdraw_full": "Withdraw the full balance",
-            "copy": "Copy to clipboard"
+            "withdraw_full": "Вывести баланс целиком",
+            "copy": "Скопировать в буфер обмена"
         },
-        "clock": "Please check your computer's clock",
-        "cog": "Settings",
-        "cogs": "Settings",
-        "connected": "API Node is connected",
-        "connect": "Connect to this API Node",
+        "clock": "Пожалуйста, проверьте часы на вашем компьютере",
+        "cog": "Настройки",
+        "cogs": "Настройки",
+        "connected": "Узел API подключен",
+        "connect": "Подключиться к этому узлу API",
         "cross_circle": {
-            "hide_asset": "Hide asset",
-            "hide_market": "Hide market",
-            "remove": "Remove",
-            "close_position": "Close position",
-            "operation_failed": "Operation failed",
-            "cancel_order": "Cancel order"
+            "hide_asset": "Спрятать актив",
+            "hide_market": "Спрятать рынок",
+            "remove": "Удалить",
+            "close_position": "Закрыть позицию",
+            "operation_failed": "Операция провалена",
+            "cancel_order": "Отменить ордер"
         },
-        "dashboard": "Dashboard",
+        "dashboard": "Панель управления",
         "deposit": {
-            "deposit": "Deposit",
-            "deposit_withdraw": "Deposit/Withdraw"
+            "deposit": "Пополнить",
+            "deposit_withdraw": "Ввод/Вывод"
         },
-        "disconnected": "API Node is disconnected",
+        "disconnected": "Узел API отключен",
         "dollar": {
-            "buy": "Buy",
-            "borrow": "Borrow"
+            "buy": "Купить",
+            "borrow": "Одолжить"
         },
-        "download": "Download new version of BitShares UI",
-        "excel": "Download .csv file",
-        "eye": "Hide Node",
-        "eye-striked": "Show Node",
-        "fees": "Fees",
+        "download": "Скачать новую версию BitShares UI",
+        "excel": "Скачать файл .csv",
+        "eye": "Спрятать узел",
+        "eye-striked": "Отобразить узел",
+        "fees": "Комиссии",
         "fi_star": {
-            "account": "Add/remove account from favorites",
-            "sort_accounts": "Sort by favorites",
-            "market": "Add/remove market from favorites",
-            "symbol": "Add/remove symbol from favorites"
+            "account": "Добавить/удалить аккаунт из избранного",
+            "sort_accounts": "Сортировать по избранному",
+            "market": "Добавить/удалить рынок из избранного",
+            "symbol": "Добавить/удалить тикер из избранного"
         },
-        "folder": "Accounts",
-        "hamburger_x": "Close menu",
-        "hamburger": "Open menu",
-        "hourglass": "Vesting balances",
-        "key": "Key",
-        "list": "Whitelist",
+        "folder": "Аккаунты",
+        "hamburger_x": "Закрыть меню",
+        "hamburger": "Открыть меню",
+        "hourglass": "Вестинговые балансы",
+        "key": "Ключ",
+        "list": "Белый список",
         "locked": {
-            "common": "Click to unlock your account",
-            "action": "Click to unlock your account to perform this action",
-            "enable_auto_scroll": "Enable auto scroll"
+            "common": "Щелкните для разблокировки аккаунта",
+            "action":
+                "Щелкните для разблокировки аккаунта для совершения этого действия",
+            "enable_auto_scroll": "Включить автопрокрутку"
         },
         "minus_circle": {
-            "no": "No",
-            "disapproved": "Disapproved",
-            "remove_contact": "Remove contact from the list",
-            "wrong_address": "Unable to generate address"
+            "no": "Нет",
+            "disapproved": "Не утверждено",
+            "remove_contact": "Удалить контакт из списка",
+            "wrong_address": "Невозможно создать адрес"
         },
-        "news": "News",
+        "news": "Новости",
         "plus_circle": {
-            "show_asset": "Show asset",
-            "show_market": "Show market",
-            "add_contact": "Add contact to the list"
+            "show_asset": "Показать актив",
+            "show_market": "Показать рынок",
+            "add_contact": "Добавить контакт в список"
         },
-        "power": "Login",
-        "question_circle": "Help",
-        "server": "Explore",
-        "settle": "Settle",
-        "share": "About",
-        "shuffle": "Switch trading pair",
+        "power": "Логин",
+        "question_circle": "Помощь",
+        "server": "Обозреватель",
+        "settle": "Погашение",
+        "share": "Детальнее",
+        "shuffle": "Переключить торговую пару",
         "text": {
-            "signed_messages": "Signed messages",
-            "membership_stats": "Membership stats"
+            "signed_messages": "Подписанные сообщения",
+            "membership_stats": "Статистика членства"
         },
-        "thumb_tack": "Pin panel to the left side",
-        "thumb_untack": "Unpin panel",
-        "thumbs_up": "Voting",
-        "times": "Remove API Node",
+        "thumb_tack": "Прикрепить панель слева",
+        "thumb_untack": "Открепить панель",
+        "thumbs_up": "Голосование",
+        "times": "Удалить узел API",
         "trade": {
-            "trade": "Trade",
-            "exchange": "Exchange"
+            "trade": "Торговать",
+            "exchange": "Биржа"
         },
-        "transfer": "Send",
+        "transfer": "Отправить",
         "unlocked": {
-            "common": "Click to lock your account",
-            "disable_auto_scroll": "Disable auto scroll"
+            "common": "Щелкните для блокировки аккаунта",
+            "disable_auto_scroll": "Выключить автопрокрутку"
         },
         "user": {
-            "create_account": "Create account",
-            "account": "Account",
-            "following": "You are following this user"
+            "create_account": "Создать аккаунт",
+            "account": "Аккаунт",
+            "following": "Вы отслеживаете этого пользователя"
         },
-        "warning": "Permissions",
-        "withdraw": "Withdraw"
+        "warning": "Права доступа",
+        "withdraw": "Вывод"
     }
 }
