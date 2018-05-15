@@ -1919,73 +1919,108 @@
         }
     },
     "icons": {
-        "accounts": "Accounts",
-        "adjust": "Adjust",
+        "adjust": "Adjust margin position",
         "assets": "Assets",
-        "b_logo": "Logo",
-        "blocks": "Blocks",
-        "checkmark_circle": "Checkmark",
-        "checkmark": "Checkmark",
-        "chevron-down": "Checkmark",
-        "clippy": "Clippy",
-        "clock": "Clock",
-        "cog": "Cog",
-        "cogs": "Cogs",
-        "committee_members": "Committee Members",
-        "connected": "Connected",
-        "connect": "Connect",
-        "cross_circle": "Cancel",
+        "checkmark_circle": {
+            "yes": "Yes",
+            "operation_succeed": "Operation succeed",
+            "approved": "Approved"
+        },
+        "chevron_down": {
+            "transactions": "Show more transactions",
+            "gateways": "Show more gateways",
+            "other": "Show more items"
+        },
+        "clippy": {
+            "withdraw_full": "Withdraw the full balance",
+            "copy": "Copy to clipboard"
+        },
+        "clock": "Please check your computer's clock",
+        "cog": "Settings",
+        "cogs": "Settings",
+        "connected": "API Node is connected",
+        "connect": "Connect to this API Node",
+        "cross_circle": {
+            "hide_asset": "Hide asset",
+            "hide_market": "Hide market",
+            "remove": "Remove",
+            "close_position": "Close position",
+            "operation_failed": "Operation failed",
+            "cancel_order": "Cancel order"
+        },
         "dashboard": "Dashboard",
-        "database": "Database",
-        "deposit": "Deposit",
-        "disconnected": "Disconnected",
-        "dollar_green": "Dollar",
-        "dollar": "Dollar",
-        "download": "Download",
-        "excel": "Excel",
-        "eye": "Visible",
-        "eye-striked": "Hidden",
+        "deposit": {
+            "deposit": "Deposit",
+            "deposit_withdraw": "Deposit/Withdraw"
+        },
+        "disconnected": "API Node is disconnected",
+        "dollar": {
+            "buy": "Buy",
+            "borrow": "Borrow"
+        },
+        "download": "Download new version of BitShares UI",
+        "excel": "Download .csv file",
+        "eye": "Hide Node",
+        "eye-striked": "Show Node",
         "fees": "Fees",
-        "fi_star": "Favorite",
-        "folder": "Folder",
-        "gift": "Gift",
-        "hamburger_x": "Hamburger",
-        "hamburger": "Hamburger",
-        "hourglass": "Hourglass",
+        "fi_star": {
+            "account": "Add/remove account from favorites",
+            "sort_accounts": "Sort by favorites",
+            "market": "Add/remove market from favorites",
+            "symbol": "Add/remove symbol from favorites"
+        },
+        "folder": "Accounts",
+        "hamburger_x": "Close menu",
+        "hamburger": "Open menu",
+        "hourglass": "Vesting balances",
         "key": "Key",
-        "layers": "Layers",
-        "link": "Link",
-        "list": "List",
-        "locked": "Locked",
-        "markets": "Markets",
-        "menu": "Menu",
-        "minus-circle": "Remove",
+        "list": "Whitelist",
+        "locked": {
+            "common": "Click to unlock your account",
+            "action": "Click to unlock your account to perform this action",
+            "enable_auto_scroll": "Enable auto scroll"
+        },
+        "minus_circle": {
+            "no": "No",
+            "disapproved": "Disapproved",
+            "remove_contact": "Remove contact from the list",
+            "wrong_address": "Unable to generate address"
+        },
         "news": "News",
-        "piggy": "Piggy",
-        "plus_circle": "Plus",
-        "power": "Power",
-        "proposals": "Proposals",
-        "question_circle": "Question",
-        "search": "Search",
-        "server": "Server",
+        "plus_circle": {
+            "show_asset": "Show asset",
+            "show_market": "Show market",
+            "add_contact": "Add contact to the list"
+        },
+        "power": "Login",
+        "question_circle": "Help",
+        "server": "Explore",
         "settle": "Settle",
-        "share": "Share",
-        "shuffle": "Shuffle",
-        "text": "Text",
-        "thumb_tack": "Tack",
-        "thumb_untack": "Untack",
-        "thumbs_up": "Thumbs Up",
-        "times": "Times",
-        "trade": "Trade",
-        "transfer": "Transfer",
-        "trash": "Trash",
-        "unlocked": "Unlocked",
-        "user": "User",
-        "users": "Users",
-        "wand": "Wand",
-        "warning": "Warning",
-        "withdraw": "Withdraw",
-        "witnesses": "Witnesses",
-        "workers": "Workers"
+        "share": "About",
+        "shuffle": "Switch trading pair",
+        "text": {
+            "signed_messages": "Signed messages",
+            "membership_stats": "Membership stats"
+        },
+        "thumb_tack": "Pin panel to the left side",
+        "thumb_untack": "Unpin panel",
+        "thumbs_up": "Voting",
+        "times": "Remove API Node",
+        "trade": {
+            "trade": "Trade",
+            "exchange": "Exchange"
+        },
+        "transfer": "Send",
+        "unlocked": {
+            "common": "Click to lock your account",
+            "disable_auto_scroll": "Disable auto scroll"
+        },
+        "user": {
+            "create_account": "Create account",
+            "account": "Account",
+            "following": "You are following this user"
+        },
+        "warning": "Permissions",
+        "withdraw": "Withdraw"
     }
 }
