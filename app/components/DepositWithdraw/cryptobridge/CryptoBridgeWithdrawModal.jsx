@@ -4,7 +4,6 @@ import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import utils from "common/utils";
-import assetUtils from "common/asset_utils";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
@@ -16,6 +15,7 @@ import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash";
 import {Price, Asset} from "common/MarketClasses";
+import TransactionConfirmStore from "../../../stores/TransactionConfirmStore";
 
 class CryptoBridgeWithdrawModal extends React.Component {
     static propTypes = {
@@ -65,11 +65,33 @@ class CryptoBridgeWithdrawModal extends React.Component {
     componentWillMount() {
         this._updateFee();
         this._checkFeeStatus();
+        TransactionConfirmStore.listen(this.onTrxIncluded);
     }
 
     componentWillUnmount() {
         this.unMounted = true;
+        TransactionConfirmStore.unlisten(this.onTrxIncluded);
     }
+
+    onTrxIncluded = confirmStoreState => {
+        if (
+            confirmStoreState.included &&
+            confirmStoreState.broadcasted_transaction
+        ) {
+            if (!this.unMounted) {
+                this.setState({
+                    transferring: true
+                });
+            }
+            ZfApi.publish(this.getWithdrawModalId(), "close");
+        } else if (confirmStoreState.closed) {
+            if (!this.unMounted) {
+                this.setState({
+                    transferring: false
+                });
+            }
+        }
+    };
 
     componentWillReceiveProps(np) {
         if (
@@ -262,7 +284,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
             this.state.withdraw_amount !== null
         ) {
             if (!this.state.withdraw_address_is_valid) {
-                ZfApi.publish(this.getWithdrawModalId(), "open");
+                ZfApi.publish(this.getWithdrawModalConfirmationId(), "open");
             } else if (parseFloat(this.state.withdraw_amount) > 0) {
                 if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
                     let withdrawals = [];
@@ -358,7 +380,8 @@ class CryptoBridgeWithdrawModal extends React.Component {
                 );
 
                 this.setState({
-                    empty_withdraw_value: false
+                    empty_withdraw_value: false,
+                    transferring: true
                 });
             } else {
                 this.setState({
@@ -369,7 +392,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
     }
 
     onSubmitConfirmation() {
-        ZfApi.publish(this.getWithdrawModalId(), "close");
+        ZfApi.publish(this.getWithdrawModalConfirmationId(), "close");
 
         if (!WithdrawAddresses.has(this.props.output_wallet_type)) {
             let withdrawals = [];
@@ -433,8 +456,12 @@ class CryptoBridgeWithdrawModal extends React.Component {
         }
     }
 
-    getWithdrawModalId() {
+    getWithdrawModalConfirmationId() {
         return "confirmation";
+    }
+
+    getWithdrawModalId() {
+        return this.props.modal_id || "cryptoBridgeWithDrawModal";
     }
 
     onAccountBalance() {
@@ -558,7 +585,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
 
-        let withdrawModalId = this.getWithdrawModalId();
+        let withdrawModalConfirmationId = this.getWithdrawModalConfirmationId();
         let invalid_address_message = null;
         let options = null;
         let confirmation = null;
@@ -600,8 +627,8 @@ class CryptoBridgeWithdrawModal extends React.Component {
                     </div>
                 );
                 confirmation = (
-                    <Modal id={withdrawModalId} overlay={true}>
-                        <Trigger close={withdrawModalId}>
+                    <Modal id={withdrawModalConfirmationId} overlay={true}>
+                        <Trigger close={withdrawModalConfirmationId}>
                             <a href="#" className="close-button">
                                 &times;
                             </a>
@@ -620,7 +647,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
                                     "modal.confirmation.accept"
                                 )}
                             />
-                            <Trigger close={withdrawModalId}>
+                            <Trigger close={withdrawModalConfirmationId}>
                                 <a href className="secondary button">
                                     <Translate content="modal.confirmation.cancel" />
                                 </a>
@@ -694,7 +721,8 @@ class CryptoBridgeWithdrawModal extends React.Component {
         const disableSubmit =
             this.state.error ||
             this.state.balanceError ||
-            !this.state.withdraw_amount;
+            !this.state.withdraw_amount ||
+            this.state.transferring;
 
         return (
             <form className="grid-block vertical full-width-content">
@@ -841,7 +869,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
                             <Translate content="modal.withdraw.submit" />
                         </div>
 
-                        <Trigger close={this.props.modal_id}>
+                        <Trigger close={this.getWithdrawModalId()}>
                             <div className="button">
                                 <Translate content="account.perm.cancel" />
                             </div>

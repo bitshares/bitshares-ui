@@ -527,27 +527,6 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("deposit-withdraw") !== -1) {
-            dynamicMenuItem = (
-                <a
-                    style={{flexFlow: "row"}}
-                    className={cnames({
-                        active: active.indexOf("deposit-withdraw") !== -1
-                    })}
-                >
-                    <Icon
-                        size="1_5x"
-                        style={{position: "relative", top: 0, left: -8}}
-                        name="deposit"
-                    />
-                    <Translate
-                        className="column-hide-small"
-                        component="span"
-                        content="header.deposit-withdraw"
-                    />
-                </a>
-            );
-        }
         if (active.indexOf("news") !== -1) {
             dynamicMenuItem = (
                 <a
@@ -1049,6 +1028,40 @@ class Header extends React.Component {
                                     </a>
                                 </li>
                             ) : null}
+                            <li className="column-hide-small">
+                                <a
+                                    style={{flexFlow: "row"}}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/deposit-withdraw"
+                                    )}
+                                    className={cnames(
+                                        active.indexOf("deposit-withdraw") !==
+                                        -1
+                                            ? null
+                                            : "column-hide-xxs",
+                                        {
+                                            active:
+                                                active.indexOf(
+                                                    "deposit-withdraw"
+                                                ) !== -1
+                                        }
+                                    )}
+                                >
+                                    <Icon
+                                        size="1_5x"
+                                        style={{
+                                            position: "relative",
+                                            top: 0,
+                                            left: -8
+                                        }}
+                                        name="deposit"
+                                    />
+                                    <span>
+                                        <Translate content="header.deposit-withdraw" />
+                                    </span>
+                                </a>
+                            </li>
                             {!!createAccountLink ? null : (
                                 <li className="column-hide-small">
                                     <a
