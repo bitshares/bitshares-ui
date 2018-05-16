@@ -1,8 +1,0 @@
-@keyframes highlight-animation {
-    0% {
-        background: transparent;
-    }
-    to {
-        background: #ffe868;
-    }
-}

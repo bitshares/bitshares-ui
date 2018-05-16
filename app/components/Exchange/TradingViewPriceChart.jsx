@@ -1,5 +1,5 @@
 import React from "react";
-const TradingView = require("./charting_library.min.js");
+const TradingView = require("../../../charting_library/charting_library.min.js");
 import colors from "assets/colors";
 import {getResolutionsFromBuckets} from "./tradingViewClasses";
 
