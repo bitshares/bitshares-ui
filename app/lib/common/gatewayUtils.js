@@ -2,6 +2,16 @@ import {Apis} from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import availableGateways from "common/gateways";
 
+const gatewayPrefixes = Object.keys(availableGateways);
+
+export function getGatewayName(asset) {
+    const prefix = asset.get("symbol").split(".")[0];
+    if (gatewayPrefixes.indexOf(prefix) !== -1) {
+        return availableGateways[prefix].name;
+    }
+    return null;
+}
+
 export function getGatewayStatusByAsset(
     selectedAsset,
     boolCheck = "depositAllowed"

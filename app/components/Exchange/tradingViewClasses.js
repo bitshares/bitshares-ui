@@ -2,12 +2,24 @@ import MarketsStore from "stores/MarketsStore";
 import {FetchChain} from "bitsharesjs/es";
 import moment from "moment-timezone";
 import MarketsActions from "actions/MarketsActions";
+import {getGatewayName} from "common/gatewayUtils";
 
 class SymbolInfo {
     constructor(options) {
         this.name = options.ticker;
         this.ticker = options.ticker;
-        this.description = "Temp";
+
+        const quoteGateway = getGatewayName(options.quoteAsset);
+        const baseGateway = getGatewayName(options.baseAsset);
+        let currentExchange =
+            quoteGateway === baseGateway
+                ? quoteGateway
+                : quoteGateway && !baseGateway
+                    ? quoteGateway
+                    : !quoteGateway && baseGateway ? baseGateway : "BitShares";
+        this.description = `${options.quoteAsset.get(
+            "symbol"
+        )} / ${options.baseAsset.get("symbol")} (${currentExchange})`;
         this.type = "bitcoin";
         this.session = "24x7";
         this.timezone = moment.tz.guess();

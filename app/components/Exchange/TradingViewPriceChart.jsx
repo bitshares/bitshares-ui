@@ -45,7 +45,7 @@ export default class TradingViewPriceChart extends React.Component {
             autosize: true,
             locale: props.locale,
             timezone: "Europe/Berlin",
-            toolbar_bg: "#484848",
+            toolbar_bg: themeColors.bgColor,
             overrides: {
                 "paneProperties.background": themeColors.bgColor
             },
@@ -56,8 +56,10 @@ export default class TradingViewPriceChart extends React.Component {
                 "use_localstorage_for_settings",
                 "header_saveload",
                 "symbol_info",
+                "symbol_search_hot_key",
                 "border_around_the_chart",
-                "header_symbol_search"
+                "header_symbol_search",
+                "header_compare"
             ],
             debug: false
         });
