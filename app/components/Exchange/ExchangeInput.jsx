@@ -1,4 +1,5 @@
 import React from "react";
+import utils from "common/utils";
 
 export class DecimalChecker extends React.Component {
     onPaste(e) {
@@ -38,13 +39,15 @@ class ExchangeInput extends DecimalChecker {
     }
 
     render() {
-        let value = parseFloat(this.props.value);
-        if (value && value <= 0.00001) {
-            value = value.toFixed(8);
+        let {value} = this.props;
+
+        if (typeof value === "undefined") {
+            value = "";
+        } else {
+            value = utils.toFixedString(value);
         }
-        const props = value
-            ? Object.assign({}, this.props, {value})
-            : this.props;
+
+        const props = Object.assign({}, this.props, {value});
 
         return (
             <input
