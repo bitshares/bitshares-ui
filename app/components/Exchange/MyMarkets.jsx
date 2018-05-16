@@ -945,7 +945,7 @@ class MyMarkets extends React.Component {
                                 maxLength="16"
                                 name="focus"
                                 required="required"
-                                value={this.state.myMarketFilter}
+                                value={this.state.myMarketFilter || ""}
                                 onChange={this.handleSearchUpdate}
                             />
                             <button

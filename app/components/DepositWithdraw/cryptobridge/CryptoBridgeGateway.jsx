@@ -223,7 +223,7 @@ class CryptoBridgeGateway extends React.Component {
                                 <br />
                                 <br />
                                 <a
-                                    href={coinIssuer.support}
+                                    href={"mailto:" + coinIssuer.support}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >

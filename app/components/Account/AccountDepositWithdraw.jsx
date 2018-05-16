@@ -502,7 +502,8 @@ class AccountDepositWithdraw extends React.Component {
     }
 }
 AccountDepositWithdraw = BindToChainState(AccountDepositWithdraw, {
-    show_login: true
+    auth_required: true,
+    auth_required_redirect_home: true
 });
 
 class DepositStoreWrapper extends React.Component {

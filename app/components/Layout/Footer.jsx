@@ -43,7 +43,7 @@ class Footer extends React.Component {
     componentDidMount() {
         this.checkNewVersionAvailable.call(this);
 
-        this.downloadLink = "https://bitshares.org/download";
+        this.downloadLink = "https://crypto-bridge.org/#download";
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -60,7 +60,7 @@ class Footer extends React.Component {
     checkNewVersionAvailable() {
         if (__ELECTRON__) {
             fetch(
-                "https://api.github.com/repos/bitshares/bitshares-ui/releases/latest"
+                "https://api.github.com/repos/cryptobridge/cryptobridge-ui/releases/latest"
             )
                 .then(res => {
                     return res.json();
@@ -221,6 +221,7 @@ class Footer extends React.Component {
         let version = version_match
             ? `.${version_match[1]}`
             : ` ${APP_VERSION}`;
+        let revision = APP_REVISION;
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
@@ -265,6 +266,7 @@ class Footer extends React.Component {
                                     <Translate content="cryptobridge.footer.title" />
                                     <span className="version">
                                         &nbsp;BETA {version}
+                                        {revision ? "-" + revision : ""}
                                     </span>
                                 </span>
 

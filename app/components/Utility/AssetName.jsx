@@ -96,6 +96,10 @@ class AssetName extends React.Component {
                       !isBitAsset || includeBitAssetDescription ? optional : ""
                   }</div>`;
 
+            if (this.props.onRenderedName) {
+                this.props.onRenderedName(replacedName);
+            }
+
             return (
                 <div
                     className={

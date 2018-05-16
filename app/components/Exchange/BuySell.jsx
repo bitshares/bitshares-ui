@@ -244,13 +244,17 @@ class BuySell extends React.Component {
         //     balanceAmount = 0;
         // }
         const isBid = type === "bid";
+
+        const realBalanceAmount = balanceAmount.getAmount({real: true});
+        const showFeeAmount = amount > 0 && price > 0;
+
         let marketFee =
             isBid && quoteMarketFee
                 ? quoteMarketFee
                 : !isBid && baseMarketFee ? baseMarketFee : null;
         let hasBalance = isBid
-            ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
-            : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
+            ? realBalanceAmount >= parseFloat(total)
+            : realBalanceAmount >= parseFloat(amount);
 
         let buttonText = isPredictionMarket
             ? counterpart.translate("exchange.short")
@@ -579,17 +583,27 @@ class BuySell extends React.Component {
                                 <div className="grid-block small-5 no-margin no-overflow buy-sell-input">
                                     <input
                                         className={
-                                            !hasFeeBalance ? "no-balance" : ""
+                                            !hasFeeBalance &&
+                                            showFeeAmount &&
+                                            realBalanceAmount > 0
+                                                ? "no-balance"
+                                                : ""
                                         }
                                         disabled
                                         type="text"
                                         id={`${type}Fee`}
                                         value={
-                                            !hasFeeBalance
+                                            !hasFeeBalance &&
+                                            showFeeAmount &&
+                                            realBalanceAmount > 0
                                                 ? counterpart.translate(
                                                       "transfer.errors.insufficient"
                                                   )
-                                                : fee.getAmount({real: true})
+                                                : showFeeAmount
+                                                    ? fee.getAmount({
+                                                          real: true
+                                                      })
+                                                    : 0
                                         }
                                         autoComplete="off"
                                     />

@@ -906,37 +906,16 @@ class AccountOverview extends React.Component {
 
         const preferredUnit =
             settings.get("unit") || this.props.core_asset.get("symbol");
-        const totalValueText = (
-            <TranslateWithLinks
-                noLink
-                string="account.total"
-                keys={[{type: "asset", value: preferredUnit, arg: "asset"}]}
-            />
-        );
 
         includedBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
-                <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
-                    {portfolioActiveAssetsBalance}
-                </td>
-                <td colSpan="9" />
+                <td colSpan="15" />
             </tr>
         );
 
         hiddenBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
-                <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
-                    {portfolioHiddenAssetsBalance}
-                </td>
-                <td colSpan="9" />
+                <td colSpan="15" />
             </tr>
         );
 

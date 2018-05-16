@@ -181,7 +181,7 @@ class AccountStaking extends React.Component {
 
         let balances = vbs
             .map(vb => {
-                if (vb.balance.amount) {
+                if (vb.balance.amount && vb.balance.asset_id === BCO_ASSET_ID) {
                     return (
                         <VestingBalance
                             key={vb.id}
