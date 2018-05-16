@@ -28,6 +28,7 @@
         "profile-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.profile --env.hash --env.noUgly --profile --json > stats-prod-nougly.json",
         "start": "cross-env NODE_ENV=development node server.js",
         "start-electron": "electron build/electron/index.js",
+        "fix-locale-files": "node ./app/assets/locales-fixup.js",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
         "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
         "build-hash-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.noUgly --env.baseUrl=''",
