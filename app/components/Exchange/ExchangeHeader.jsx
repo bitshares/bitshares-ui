@@ -10,6 +10,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs/es";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
+import utils from "../../lib/common/utils";
 
 export default class ExchangeHeader extends React.Component {
     constructor() {
@@ -23,6 +24,27 @@ export default class ExchangeHeader extends React.Component {
     shouldComponentUpdate(nextProps) {
         if (!nextProps.marketReady) return false;
         return true;
+    }
+
+    componentDidUpdate() {
+        this._updateTitle();
+    }
+
+    componentWillUnmount() {
+        document.title = "CryptoBridge decentralized exchange";
+    }
+
+    _updateTitle() {
+        const {quoteAsset, baseAsset, latestPrice} = this.props;
+
+        if (latestPrice && this._quoteName && this._baseName) {
+            document.title =
+                utils.price_text(latestPrice.full, quoteAsset, baseAsset) +
+                " " +
+                this._quoteName +
+                " / " +
+                this._baseName;
+        }
     }
 
     _addMarket(quote, base) {
@@ -166,6 +188,9 @@ export default class ExchangeHeader extends React.Component {
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
+                                            onRenderedName={name => {
+                                                this._quoteName = name;
+                                            }}
                                         />
                                     </Link>
                                     <span style={{padding: "0 5px"}}>/</span>
@@ -180,6 +205,9 @@ export default class ExchangeHeader extends React.Component {
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}
+                                            onRenderedName={name => {
+                                                this._baseName = name;
+                                            }}
                                         />
                                     </Link>
                                 </div>
