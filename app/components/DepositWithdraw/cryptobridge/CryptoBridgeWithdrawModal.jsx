@@ -466,20 +466,32 @@ class CryptoBridgeWithdrawModal extends React.Component {
 
     onAccountBalance() {
         const {feeAmount} = this.state;
+        const {asset, account, balance, gateFee} = this.props;
+
         if (
-            Object.keys(this.props.account.get("balances").toJS()).includes(
-                this.props.asset.get("id")
+            Object.keys(account.get("balances").toJS()).includes(
+                asset.get("id")
             )
         ) {
             let total = new Asset({
-                amount: this.props.balance.get("balance"),
-                asset_id: this.props.asset.get("id"),
-                precision: this.props.asset.get("precision")
+                amount: balance.get("balance"),
+                asset_id: asset.get("id"),
+                precision: asset.get("precision")
             });
 
             // Subtract the fee if it is using the same asset
             if (total.asset_id === feeAmount.asset_id) {
                 total.minus(feeAmount);
+            }
+
+            if (gateFee) {
+                const gateFeeAmount = new Asset({
+                    asset_id: asset.get("id"),
+                    precision: asset.get("precision"),
+                    real: gateFee
+                });
+
+                total.minus(gateFeeAmount);
             }
 
             this.setState(
