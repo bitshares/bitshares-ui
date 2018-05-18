@@ -19,6 +19,7 @@ import ProposedOperation from "./ProposedOperation";
 import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
+import moment from "moment";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -303,7 +304,7 @@ class Transaction extends React.Component {
                             </td>
                             <td>
                                 <FormattedDate
-                                    value={op[1].expiration}
+                                    value={moment.utc(op[1].expiration)}
                                     format="full"
                                     timeZoneName="short"
                                 />
