@@ -1693,6 +1693,7 @@ class Exchange extends React.Component {
                                             this
                                         )}
                                         chartHeight={chartHeight}
+                                        mobile={width < 800}
                                     />
                                 </div>
                             ) : (

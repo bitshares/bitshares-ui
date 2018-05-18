@@ -61,7 +61,8 @@ export default class TradingViewPriceChart extends React.Component {
                 "header_symbol_search",
                 "header_compare"
             ],
-            debug: false
+            debug: false,
+            preset: this.props.mobile ? "mobile" : ""
         });
 
         this.tvWidget.onChartReady(() => {
