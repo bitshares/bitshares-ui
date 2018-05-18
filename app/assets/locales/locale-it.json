@@ -544,7 +544,9 @@
         "my_orders": "I miei ordini attivi",
         "new": "Nuovo",
         "no_balance": "Saldo insufficiente",
+        "no_bids": "No bids",
         "no_data": "Nessun dato",
+        "no_orders": "No orders",
         "order_depth": "Market Depth",
         "others": "Altri",
         "overbought": "Overbought",
@@ -734,6 +736,16 @@
             "type": "Tipo di commissione"
         },
         "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "Transazioni proposte"
         },
         "witnesses": {
@@ -1219,6 +1231,7 @@
     "proposal": {
         "action": "Azioni",
         "approve": "Approva",
+        "approvers": "Approver(s)",
         "asset_create": "Crea l'asset %(asset)s usando l'account {account}",
         "asset_issue": "Emetti {amount} a {to} usando {account}",
         "asset_reserve": "Riserva (brucia) {amount} usando {account}",
@@ -1238,6 +1251,7 @@
             "Ordina la vendita di {amount} a {price} per {account}",
         "override_transfer":
             "Trasferisci {amount} da {from} a {to} per autorità di {issuer}",
+        "proposals": "Proposals",
         "reject": "Respingi",
         "status": "Stato",
         "transfer": "Trasferisci {amount} da {from} a {to}",

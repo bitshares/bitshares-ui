@@ -540,7 +540,9 @@
         "my_orders": "Açık emirlerim",
         "new": "Yeni",
         "no_balance": "Yetersiz bakiye",
+        "no_bids": "No bids",
         "no_data": "Veri yok",
+        "no_orders": "No orders",
         "order_depth": "Piyasa Derinliği",
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",
@@ -729,6 +731,16 @@
             "type": "Ücret Türü"
         },
         "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "Teklif edilmiş işlemler"
         },
         "witnesses": {
@@ -1213,6 +1225,7 @@
     "proposal": {
         "action": "Hareketler",
         "approve": "Onayla",
+        "approvers": "Approver(s)",
         "asset_create":
             "%(asset)s dijital varlığını {account} hesabından oluştur.",
         "asset_issue": "Issue {amount} to {to} using {account}",
@@ -1234,6 +1247,7 @@
             "{account} adlı hesaptan {price} fiyatı üzerinden {amount} satmak için bir emir ver",
         "override_transfer":
             "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "proposals": "Proposals",
         "reject": "Reddet",
         "status": "Durum",
         "transfer": "Transfer miktarı: {amount}, gönderen: {from}, alıcı: {to}",

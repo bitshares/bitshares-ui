@@ -517,7 +517,9 @@
         "my_orders": "我的委单",
         "new": "新增",
         "no_balance": "余额不足",
+        "no_bids": "No bids",
         "no_data": "暂无数据",
+        "no_orders": "No orders",
         "order_depth": "市场深度",
         "others": "其他",
         "overbought": "超买",
@@ -703,6 +705,16 @@
             "type": "手续费类型"
         },
         "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "提案"
         },
         "witnesses": {
@@ -1164,6 +1176,7 @@
     "proposal": {
         "action": "操作",
         "approve": "批准",
+        "approvers": "Approver(s)",
         "asset_create": "使用账户 {account} 创建资产 %{asset}s",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 {amount}",
@@ -1183,6 +1196,7 @@
             "为账户 {account} 下单，以价格 {price} 卖出 {amount}",
         "override_transfer":
             "由 {issuer} 授权，将 {amount} 从账户 {from} 转账到 {to}",
+        "proposals": "Proposals",
         "reject": "否决",
         "status": "状态",
         "transfer": "将 {amount} 从账户 {from} 转账到 {to}",

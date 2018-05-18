@@ -547,9 +547,9 @@
         "my_orders": "Мои открытые ордера",
         "new": "Новый",
         "no_balance": "Недостаточно средств",
+        "no_bids": "Нет ставок",
         "no_data": "Нет данных",
         "no_orders": "Нет ордеров",
-        "no_bids": "Нет ставок",
         "order_depth": "Глубина Рынка",
         "others": "Другие",
         "overbought": "Перекуплен",
@@ -741,6 +741,16 @@
             "type": "Тип комиссии"
         },
         "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "Предложенные транзакции"
         },
         "witnesses": {
@@ -1224,6 +1234,7 @@
     "proposal": {
         "action": "Действия",
         "approve": "Подтвердить",
+        "approvers": "Approver(s)",
         "asset_create": "Создать актив %(asset)s, используя аккаунт {account}",
         "asset_issue": "Выпустить {amount} {to}, используя {account}",
         "asset_reserve": "Сжечь (зарезервировать) {amount} с помощью {account}",
@@ -1244,6 +1255,7 @@
             "Разместить ордер на продажу {amount} за {price} для {account}",
         "override_transfer":
             "Перевести {amount} от {from} к {to} по поручению {issuer}",
+        "proposals": "Proposals",
         "reject": "Отклонить",
         "status": "Статус",
         "transfer": "Перевести {amount} с {from} на {to}",

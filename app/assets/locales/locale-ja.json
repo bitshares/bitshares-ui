@@ -534,7 +534,9 @@
         "my_orders": "自分の未執行注文",
         "new": "新しい",
         "no_balance": "残高不足",
+        "no_bids": "No bids",
         "no_data": "データなし",
+        "no_orders": "No orders",
         "order_depth": "マーケットデプス",
         "others": "その他",
         "overbought": "買われすぎ",
@@ -723,6 +725,16 @@
             "type": "手数料種別"
         },
         "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "提案された取引"
         },
         "witnesses": {
@@ -1200,6 +1212,7 @@
     "proposal": {
         "action": "操作",
         "approve": "承認",
+        "approvers": "Approver(s)",
         "asset_create": "{account}アカウントでアセット%(asset)sを作成します",
         "asset_issue": "{account}で{amount}を{to}に発行します",
         "asset_reserve": "account}で{amount}を消却 (バーン) します",
@@ -1218,6 +1231,7 @@
         "limit_order_sell": "{amount}を{price}で{account}が売り注文を出します",
         "override_transfer":
             "{issuer}の権限で{amount}を{from}から{to}へ転送します",
+        "proposals": "Proposals",
         "reject": "拒否",
         "status": "ステータス",
         "transfer": "{amount}を{from}から{to}に転送します",
