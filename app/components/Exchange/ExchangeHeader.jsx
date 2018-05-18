@@ -313,7 +313,7 @@ export default class ExchangeHeader extends React.Component {
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
-                                            "tooltip.settle_price"
+                                            "tooltip.feed_price"
                                         )}
                                         ready={marketReady}
                                         className="hide-order-3"
