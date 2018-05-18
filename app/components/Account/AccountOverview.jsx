@@ -1334,11 +1334,11 @@ class AccountOverview extends React.Component {
                             account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"
-                                    subText={
+                                    subText={String(
                                         account.get("proposals")
                                             ? account.get("proposals").size
                                             : 0
-                                    }
+                                    )}
                                 >
                                     <Proposals
                                         className="dashboard-table"
