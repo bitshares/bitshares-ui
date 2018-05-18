@@ -799,7 +799,7 @@ class OrderBook extends React.Component {
                                         colSpan={3}
                                         className="no-orders padtop"
                                     >
-                                        No orders
+                                        <Translate content="exchange.no_orders" />
                                     </td>
                                 ) : (
                                     <td
@@ -816,7 +816,7 @@ class OrderBook extends React.Component {
                                                                 .toggleSpreadValue
                                                         }
                                                     >
-                                                        Spread{" "}
+                                                        <Translate content="exchange.spread" />{" "}
                                                         <span className="spread-value">
                                                             {spread}
                                                         </span>
@@ -835,7 +835,7 @@ class OrderBook extends React.Component {
                                                 />
                                                 {!!this.props.latest && (
                                                     <span className="right">
-                                                        Latest{" "}
+                                                        <Translate content="exchange.latest" />{" "}
                                                         <span
                                                             className={
                                                                 this.props
@@ -870,7 +870,7 @@ class OrderBook extends React.Component {
                                                   className="cell no-orders"
                                                   colSpan="3"
                                               >
-                                                  No bids
+                                                  <Translate content="exchange.no_bids" />
                                               </td>
                                           </div>
                                       )}
