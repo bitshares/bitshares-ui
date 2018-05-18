@@ -9,7 +9,11 @@ export function getGatewayName(asset) {
     if (asset.get("issuer") === "1.2.0") {
         return counterpart.translate("exchange.native");
     }
-    const prefix = asset.get("symbol").split(".")[0];
+
+    const prefix =
+        asset.get("symbol") === "PPY"
+            ? "RUDEX"
+            : asset.get("symbol").split(".")[0];
     if (gatewayPrefixes.indexOf(prefix) !== -1) {
         return availableGateways[prefix].name;
     }
