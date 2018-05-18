@@ -535,6 +535,8 @@
         "new": "New",
         "no_balance": "Insufficient balance",
         "no_data": "No data",
+        "no_orders": "No orders",
+        "no_bids": "No bids",
         "order_depth": "Market Depth",
         "others": "Others",
         "overbought": "Overbought",
