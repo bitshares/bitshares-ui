@@ -19,7 +19,9 @@ class SymbolInfo {
                     : !quoteGateway && baseGateway ? baseGateway : "BitShares";
         this.description = `${options.quoteAsset.get(
             "symbol"
-        )} / ${options.baseAsset.get("symbol")} (${currentExchange})`;
+        )} / ${options.baseAsset.get("symbol")} ${
+            !!currentExchange ? `(${currentExchange})` : ""
+        }`;
         this.type = "bitcoin";
         this.session = "24x7";
         this.timezone = moment.tz.guess();

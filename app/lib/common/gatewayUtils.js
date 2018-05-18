@@ -1,10 +1,14 @@
 import {Apis} from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import availableGateways from "common/gateways";
+import counterpart from "counterpart";
 
 const gatewayPrefixes = Object.keys(availableGateways);
 
 export function getGatewayName(asset) {
+    if (asset.get("issuer") === "1.2.0") {
+        return counterpart.translate("exchange.native");
+    }
     const prefix = asset.get("symbol").split(".")[0];
     if (gatewayPrefixes.indexOf(prefix) !== -1) {
         return availableGateways[prefix].name;

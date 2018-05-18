@@ -1184,6 +1184,7 @@
         "advanced_settings": "Advanced settings"
     },
     "exchange": {
+        "native": "Native",
         "buysell_formatter": "{direction} {asset}",
         "trading_pair": "Trading pair",
         "market_picker": {
