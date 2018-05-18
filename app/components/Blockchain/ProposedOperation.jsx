@@ -21,6 +21,20 @@ require("./operations.scss");
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
 
+export const TransactionIDAndExpiry = ({id, expiration, style}) => {
+    const endDate = counterpart.localize(new Date(expiration), {
+        format: "short"
+    });
+    return (
+        <b style={style}>
+            <span>#{id} | </span>
+            <span>
+                <Translate content="proposal.expires" />: {endDate}
+            </span>
+        </b>
+    );
+};
+
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
@@ -54,19 +68,19 @@ class Row extends React.Component {
 
     render() {
         let {
+            id,
             block,
             fee,
             color,
             type,
             hideDate,
             hideFee,
-            hideOpLabel
+            hideOpLabel,
+            hideExpiration,
+            expiration
         } = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
-        let endDate = counterpart.localize(new Date(this.props.expiration), {
-            format: "short"
-        });
 
         return (
             <div style={{padding: "5px 0", textAlign: "left"}}>
@@ -89,14 +103,19 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {this.props.expiration ? (
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
-                        <span>#{this.props.id} | </span>
-                        <span>
-                            <Translate content="proposal.expires" />: {endDate}
-                        </span>
-                    </div>
-                ) : null}
+                {!hideExpiration &&
+                    this.props.expiration && (
+                        <TransactionIDAndExpiry
+                            id={id}
+                            expiration={expiration}
+                            style={{
+                                paddingTop: 5,
+                                fontSize: "0.85rem",
+                                paddingBottom: "0.5rem",
+                                display: "block"
+                            }}
+                        />
+                    )}
             </div>
         );
     }
@@ -145,7 +164,7 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, hideExpiration} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -1201,6 +1220,7 @@ class ProposedOperation extends React.Component {
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
                 expiration={this.props.expiration}
+                hideExpiration={hideExpiration}
             />
         ) : null;
 

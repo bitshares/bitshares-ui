@@ -726,7 +726,17 @@
             "type": "Fee Type"
         },
         "proposals": {
-            "title": "Proposed transactions"
+            "title": "Proposed transactions",
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "pending_approval": "Pending approval.",
+            "pending": "Pending",
+            "review": "Review",
+            "pending_review": "Approved, review time.",
+            "failed_execute": "Approved, failed to execute.",
+            "failed": "Failed"
         },
         "witnesses": {
             "budget": "Remaining budget",
@@ -1202,6 +1212,7 @@
     "proposal": {
         "action": "Actions",
         "approve": "Approve",
+        "approvers": "Approver(s)",
         "asset_create":
             "Create the asset %(asset)s using the account {account}",
         "asset_issue": "Issue {amount} to {to} using {account}",
@@ -1223,6 +1234,7 @@
             "Place an order to sell {amount} at {price} for {account}",
         "override_transfer":
             "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "proposals": "Proposals",
         "reject": "Reject",
         "status": "Status",
         "transfer": "Transfer {amount} from {from} to {to}",
