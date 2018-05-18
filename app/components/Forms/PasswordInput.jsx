@@ -3,7 +3,7 @@ import {Component} from "react";
 import PropTypes from "prop-types";
 import cname from "classnames";
 import Translate from "react-translate-component";
-import pw from "zxcvbn";
+import zxcvbnAsync from "zxcvbn-async";
 
 class PasswordInput extends Component {
     static propTypes = {
@@ -72,6 +72,27 @@ class PasswordInput extends Component {
         const doesnt_match = this.props.confirmation
             ? confirmation && password !== confirmation
             : false;
+
+        let strength = 0,
+            score;
+        if (this.props.checkStrength) {
+            if (this.state.value.length > 100) {
+                strength = {score: 4};
+            } else {
+                let zxcvbn = zxcvbnAsync.load({sync: true});
+                strength = zxcvbn(this.state.value || "");
+            }
+            /* Require a length of passwordLength + 50% for the max score */
+            score = Math.min(
+                5,
+                strength.score +
+                    Math.floor(
+                        this.state.value.length /
+                            (this.props.passwordLength * 1.5)
+                    )
+            );
+        }
+
         let state = {
             valid:
                 !this.state.error &&
@@ -80,6 +101,7 @@ class PasswordInput extends Component {
                 confirmation &&
                 password.length >= this.props.passwordLength,
             value: password,
+            score,
             doesnt_match
         };
         if (this.props.onChange) this.props.onChange(state);
@@ -91,6 +113,7 @@ class PasswordInput extends Component {
     }
 
     render() {
+        let {score} = this.state;
         let password_error = null,
             confirmation_error = null;
         if (this.state.wrong || this.props.wrongPassword)
@@ -138,30 +161,16 @@ class PasswordInput extends Component {
             confirmMatch = true;
         }
 
-        let strength = 0,
-            score;
-        if (this.props.checkStrength) {
-            strength =
-                this.state.value.length > 100
-                    ? {score: 4}
-                    : pw(this.state.value || "");
-            /* Require a length of passwordLength + 50% for the max score */
-            score = Math.min(
-                5,
-                strength.score +
-                    Math.floor(
-                        this.state.value.length /
-                            (this.props.passwordLength * 1.5)
-                    )
-            );
-        }
-
         return (
             <div className="account-selector">
                 <div className={password_class_name}>
                     {/* {noLabel ? null : <Translate component="label" content="wallet.password" />} */}
                     <section>
-                        <label className="left-label">
+                        <label
+                            className={
+                                "left-label " + (this.props.labelClass || "")
+                            }
+                        >
                             <Translate content="wallet.enter_password" />
                         </label>
                         <input
@@ -170,6 +179,7 @@ class PasswordInput extends Component {
                                     ? 0
                                     : null
                             }}
+                            id="password"
                             name="password"
                             type="password"
                             ref="password"
@@ -204,6 +214,7 @@ class PasswordInput extends Component {
                             style={{position: "relative", maxWidth: "30rem"}}
                         >
                             <input
+                                id="confirm_password"
                                 name="confirm_password"
                                 type="password"
                                 ref="confirm_password"

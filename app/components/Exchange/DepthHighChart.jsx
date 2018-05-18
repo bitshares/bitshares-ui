@@ -91,24 +91,8 @@ class DepthHighChart extends React.Component {
             axisLineColor
         } = this._getThemeColors();
 
-        let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(
-            base.get("symbol"),
-            base.has("bitasset") &&
-                !(
-                    base.has("bitasset") &&
-                    base.getIn(["bitasset", "is_prediction_market"])
-                ) &&
-                base.get("issuer") === "1.2.0"
-        );
-        let {name: quoteSymbol, prefix: quotePrefix} = utils.replaceName(
-            quote.get("symbol"),
-            quote.has("bitasset") &&
-                !(
-                    quote.has("bitasset") &&
-                    quote.getIn(["bitasset", "is_prediction_market"])
-                ) &&
-                quote.get("issuer") === "1.2.0"
-        );
+        let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(base);
+        let {name: quoteSymbol, prefix: quotePrefix} = utils.replaceName(quote);
         baseSymbol = (basePrefix || "") + baseSymbol;
         quoteSymbol = (quotePrefix || "") + quoteSymbol;
 

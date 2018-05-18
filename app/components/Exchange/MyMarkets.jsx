@@ -3,6 +3,7 @@ import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import utils from "common/utils";
 import Translate from "react-translate-component";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {connect} from "alt-react";
 import MarketRow from "./MarketRow";
 import SettingsStore from "stores/SettingsStore";
@@ -16,7 +17,6 @@ import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
 import {debounce} from "lodash";
-import Icon from "../Icon/Icon";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -838,10 +838,18 @@ class MyMarkets extends React.Component {
                                     MarketsActions.toggleStars();
                                 }}
                             />
-                            <span>
-                                &nbsp;<Translate content="exchange.show_star_1" />
-                                <Icon className="gold-star" name="fi-star" />{" "}
-                                <Translate content="exchange.show_star_2" />
+                            <span style={{paddingLeft: "0.4rem"}}>
+                                <TranslateWithLinks
+                                    string="exchange.show_only_star_formatter"
+                                    keys={[
+                                        {
+                                            type: "icon",
+                                            value: "fi-star",
+                                            className: "gold-star",
+                                            arg: "star_icon"
+                                        }
+                                    ]}
+                                />
                             </span>
                         </label>
                         <div
@@ -860,7 +868,9 @@ class MyMarkets extends React.Component {
                                     }}
                                     type="text"
                                     className="no-margin market-filter-input"
-                                    placeholder="Filter"
+                                    placeholder={counterpart.translate(
+                                        "exchange.filter"
+                                    )}
                                     maxLength="16"
                                     name="focus"
                                     required="required"
@@ -933,6 +943,7 @@ class MyMarkets extends React.Component {
                                                 "exchange.search"
                                             )}
                                             maxLength="16"
+                                            tabIndex={2}
                                         />
                                         {this.state.assetNameError ? (
                                             <div

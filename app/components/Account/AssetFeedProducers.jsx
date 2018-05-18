@@ -6,12 +6,11 @@ import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
 
 export default class AccountFeedProducers extends React.Component {
-
     constructor(props) {
         super(props);
 
         this.state = {
-            producer_name: null,
+            producer_name: null
         };
     }
 
@@ -33,8 +32,15 @@ export default class AccountFeedProducers extends React.Component {
         if (witnessFed || committeeFed) {
             return (
                 <div className="grid-content small-12 large-8 large-offset-2">
-                    <Translate component="p" content="account.user_issued_assets.feed_not_allowed_1" className="has-error"></Translate>
-                    <Translate component="p" content="account.user_issued_assets.feed_not_allowed_2"></Translate>
+                    <Translate
+                        component="p"
+                        content="account.user_issued_assets.feed_not_allowed_1"
+                        className="has-error"
+                    />
+                    <Translate
+                        component="p"
+                        content="account.user_issued_assets.feed_not_allowed_2"
+                    />
                 </div>
             );
         }
@@ -44,19 +50,37 @@ export default class AccountFeedProducers extends React.Component {
                 <table className="table dashboard-table table-hover">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th style={{textAlign: "left"}}><Translate content="explorer.account.title" /></th>
-                            <th><Translate content="account.perm.remove_text" /></th>
+                            <th />
+                            <th style={{textAlign: "left"}}>
+                                <Translate content="explorer.account.title" />
+                            </th>
+                            <th>
+                                <Translate content="account.perm.remove_text" />
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.props.producers.map((a, i) => {
                             return (
                                 <tr key={a}>
-                                    <td style={{textAlign: "left"}}>#{i + 1}</td>
-                                    <td style={{textAlign: "left"}}><LinkToAccountById account={a} /></td>
-                                    <td className="clickable" onClick={this.props.onChangeList.bind(this, "remove", a)}>
-                                        <Icon name="cross-circle" className="icon-14px" />
+                                    <td style={{textAlign: "left"}}>
+                                        #{i + 1}
+                                    </td>
+                                    <td style={{textAlign: "left"}}>
+                                        <LinkToAccountById account={a} />
+                                    </td>
+                                    <td
+                                        className="clickable"
+                                        onClick={this.props.onChangeList.bind(
+                                            this,
+                                            "remove",
+                                            a
+                                        )}
+                                    >
+                                        <Icon
+                                            name="cross-circle"
+                                            className="icon-14px"
+                                        />
                                     </td>
                                 </tr>
                             );
@@ -73,9 +97,13 @@ export default class AccountFeedProducers extends React.Component {
                         error={null}
                         tabIndex={1}
                         action_label="account.perm.confirm_add"
-                        onAction={this.props.onChangeList.bind(this, "add", this.state.new_producer_id)}
-                     />
-                 </div>
+                        onAction={this.props.onChangeList.bind(
+                            this,
+                            "add",
+                            this.state.new_producer_id
+                        )}
+                    />
+                </div>
             </div>
         );
     }

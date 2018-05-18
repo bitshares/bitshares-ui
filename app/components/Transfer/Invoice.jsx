@@ -258,6 +258,7 @@ class Invoice extends React.Component {
                                 </div>
                                 <br />
                                 <a
+                                    href
                                     className={payButtonClass}
                                     onClick={this.onPayClick.bind(this)}
                                 >

@@ -24,7 +24,7 @@ import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
 // import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import PropTypes from "prop-types";
@@ -101,7 +101,7 @@ class Header extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            nextProps.linkedAccounts !== this.props.linkedAccounts ||
+            nextProps.myActiveAccounts !== this.props.myActiveAccounts ||
             nextProps.currentAccount !== this.props.currentAccount ||
             nextProps.passwordLogin !== this.props.passwordLogin ||
             nextProps.locked !== this.props.locked ||
@@ -122,7 +122,7 @@ class Header extends React.Component {
 
     _showSend(e) {
         e.preventDefault();
-        this.refs.send_modal.show();
+        if (this.send_modal) this.send_modal.show();
         this._closeDropdown();
     }
 
@@ -146,9 +146,11 @@ class Header extends React.Component {
     _toggleLock(e) {
         e.preventDefault();
         if (WalletDb.isLocked()) {
-            WalletUnlockActions.unlock().then(() => {
-                AccountActions.tryToSetCurrentAccount();
-            });
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    AccountActions.tryToSetCurrentAccount();
+                })
+                .catch(() => {});
         } else {
             WalletUnlockActions.lock();
         }
@@ -290,12 +292,12 @@ class Header extends React.Component {
         }
     }
 
-    _onLinkAccount() {
-        AccountActions.linkAccount(this.props.currentAccount);
+    _onAddContact() {
+        AccountActions.addAccountContact(this.props.currentAccount);
     }
 
-    _onUnLinkAccount() {
-        AccountActions.unlinkAccount(this.props.currentAccount);
+    _onRemoveContact() {
+        AccountActions.removeAccountContact(this.props.currentAccount);
     }
 
     render() {
@@ -316,9 +318,11 @@ class Header extends React.Component {
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
-        const isContact = this.props.linkedAccounts.has(currentAccount);
+        const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
-            Apis.instance().chain_id.substr(0, 8) === "4018d784" && isMyAccount;
+            Apis.instance() &&
+            Apis.instance().chain_id &&
+            Apis.instance().chain_id.substr(0, 8) === "4018d784";
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {
@@ -338,7 +342,10 @@ class Header extends React.Component {
 
         let walletBalance =
             myAccounts.length && this.props.currentAccount ? (
-                <div className="total-value">
+                <div
+                    className="total-value"
+                    onClick={this._toggleAccountDropdownMenu}
+                >
                     <TotalBalanceValue.AccountWrapper
                         hiddenAssets={this.props.hiddenAssets}
                         accounts={List([this.props.currentAccount])}
@@ -356,7 +363,7 @@ class Header extends React.Component {
                         (active.indexOf("dashboard") !== -1 &&
                             active.indexOf("account") === -1)
                 })}
-                onClick={this._onNavigate.bind(this, "/dashboard")}
+                onClick={this._onNavigate.bind(this, "/")}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>
@@ -1041,11 +1048,15 @@ class Header extends React.Component {
                 </div>
 
                 <div
-                    onClick={this._toggleAccountDropdownMenu}
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <div className="text account-name">{currentAccount}</div>
+                    <div
+                        className="text account-name"
+                        onClick={this._toggleAccountDropdownMenu}
+                    >
+                        {currentAccount}
+                    </div>
                     {walletBalance}
 
                     {hasLocalWallet && (
@@ -1198,8 +1209,8 @@ class Header extends React.Component {
                                         className="divider"
                                         onClick={this[
                                             isContact
-                                                ? "_onUnLinkAccount"
-                                                : "_onLinkAccount"
+                                                ? "_onRemoveContact"
+                                                : "_onAddContact"
                                         ].bind(this)}
                                     >
                                         <div className="table-cell">
@@ -1267,22 +1278,14 @@ class Header extends React.Component {
                                 </li>
 
                                 <li
-                                    className={cnames(
-                                        {
-                                            active:
-                                                active.indexOf("/transfer") !==
-                                                -1
-                                        },
-                                        {disabled: !isMyAccount}
+                                    className={cnames({
+                                        active:
+                                            active.indexOf("/transfer") !== -1
+                                    })}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/transfer"
                                     )}
-                                    onClick={
-                                        !isMyAccount
-                                            ? () => {}
-                                            : this._onNavigate.bind(
-                                                  this,
-                                                  "/transfer"
-                                              )
-                                    }
                                 >
                                     <div className="table-cell">
                                         <Icon size="2x" name="transfer" />
@@ -1647,7 +1650,9 @@ class Header extends React.Component {
                 </div>
                 <SendModal
                     id="send_modal_header"
-                    ref="send_modal"
+                    refCallback={e => {
+                        if (e) this.send_modal = e;
+                    }}
                     from_name={currentAccount}
                 />
 
@@ -1681,7 +1686,7 @@ export default connect(Header, {
         const chainID = Apis.instance().chain_id;
         return {
             backedCoins: GatewayStore.getState().backedCoins,
-            linkedAccounts: AccountStore.getState().linkedAccounts,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
             currentAccount:
                 AccountStore.getState().currentAccount ||
                 AccountStore.getState().passwordAccount,
@@ -1698,7 +1703,8 @@ export default connect(Header, {
             currentLocale: SettingsStore.getState().settings.get("locale"),
             hiddenAssets: SettingsStore.getState().hiddenAssets,
             settings: SettingsStore.getState().settings,
-            locales: SettingsStore.getState().defaults.locale
+            locales: SettingsStore.getState().defaults.locale,
+            contacts: AccountStore.getState().accountContacts
         };
     }
 });

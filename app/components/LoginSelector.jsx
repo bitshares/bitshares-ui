@@ -3,6 +3,7 @@ import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
 import {Link} from "react-router/es";
 import Translate from "react-translate-component";
+import TranslateWithLinks from "./Utility/TranslateWithLinks";
 import {isIncognito} from "feature_detect";
 var logo = require("assets/logo-ico-blue.png");
 import SettingsActions from "actions/SettingsActions";
@@ -41,6 +42,7 @@ class LoginSelector extends React.Component {
 
         // do redirect to portfolio if user already logged in
         if (
+            this.props.router &&
             Array.isArray(myAccounts) &&
             myAccounts.length !== 0 &&
             childCount === 0
@@ -79,6 +81,7 @@ class LoginSelector extends React.Component {
                             return (
                                 <li key={locale}>
                                     <a
+                                        href
                                         onClick={e => {
                                             e.preventDefault();
                                             IntlActions.switchLocale(locale);
@@ -158,6 +161,7 @@ class LoginSelector extends React.Component {
                         {!!childCount ? null : (
                             <div className="grid-block account-login-options">
                                 <Link
+                                    id="account_login_button"
                                     to="/create-account/password"
                                     className="button primary"
                                     data-intro={translator.translate(
@@ -184,26 +188,33 @@ class LoginSelector extends React.Component {
 
                         {!!childCount ? null : (
                             <div className="additional-account-options">
-                                <p>
-                                    Optionally,{" "}
-                                    <Link
-                                        to="/wallet/backup/restore"
-                                        data-intro={translator.translate(
-                                            "walkthrough.restore_account"
-                                        )}
-                                    >
-                                        restore your account
-                                    </Link>{" "}
-                                    or create an account using the{" "}
-                                    <Link
-                                        to="/create-account/wallet"
-                                        data-intro={translator.translate(
-                                            "walkthrough.create_local_wallet"
-                                        )}
-                                    >
-                                        advanced form
-                                    </Link>.
-                                </p>
+                                <h5 style={{textAlign: "center"}}>
+                                    <TranslateWithLinks
+                                        string="account.optional.formatter"
+                                        keys={[
+                                            {
+                                                type: "link",
+                                                value: "/wallet/backup/restore",
+                                                translation:
+                                                    "account.optional.restore_link",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.restore_account"
+                                                ),
+                                                arg: "restore_link"
+                                            },
+                                            {
+                                                type: "link",
+                                                value: "/create-account/wallet",
+                                                translation:
+                                                    "account.optional.restore_form",
+                                                dataIntro: translator.translate(
+                                                    "walkthrough.create_local_wallet"
+                                                ),
+                                                arg: "restore_form"
+                                            }
+                                        ]}
+                                    />
+                                </h5>
                             </div>
                         )}
 

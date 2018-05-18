@@ -6,8 +6,9 @@ import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
+import MarketPicker from "./MarketPicker";
 import utils from "common/utils";
-import PriceChartD3 from "./PriceChartD3";
+// import PriceChartD3 from "./PriceChartD3";
 import assetUtils from "common/asset_utils";
 import DepthHighChart from "./DepthHighChart";
 import {debounce, cloneDeep} from "lodash";
@@ -25,9 +26,9 @@ import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
+import moment from "moment";
 
 Highcharts.setOptions({
     global: {
@@ -55,12 +56,110 @@ class Exchange extends React.Component {
     constructor(props) {
         super();
 
-        this.state = this._initialState(props);
+        this.state = {
+            ...this._initialState(props),
+            expirationType: {
+                bid: props.exchange.getIn(["lastExpiration", "bid"]) || "YEAR",
+                ask: props.exchange.getIn(["lastExpiration", "ask"]) || "YEAR"
+            },
+            expirationCustomTime: {
+                bid: moment().add(1, "day"),
+                ask: moment().add(1, "day")
+            }
+        };
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
+
+        this._handleExpirationChange = this._handleExpirationChange.bind(this);
+        this._handleCustomExpirationChange = this._handleCustomExpirationChange.bind(
+            this
+        );
+
         this.psInit = true;
     }
+
+    _handleExpirationChange(type, e) {
+        let expirationType = {
+            ...this.state.expirationType,
+            [type]: e.target.value
+        };
+
+        if (e.target.value !== "SPECIFIC") {
+            SettingsActions.setExchangeLastExpiration({
+                ...((this.props.exchange.has("lastExpiration") &&
+                    this.props.exchange.get("lastExpiration").toJS()) ||
+                    {}),
+                [type]: e.target.value
+            });
+        }
+
+        this.setState({
+            expirationType: expirationType
+        });
+    }
+
+    _handleCustomExpirationChange(type, time) {
+        let expirationCustomTime = {
+            ...this.state.expirationCustomTime,
+            [type]: time
+        };
+
+        this.setState({
+            expirationCustomTime: expirationCustomTime
+        });
+    }
+
+    EXPIRATIONS = {
+        HOUR: {
+            title: "1 hour",
+            get: () =>
+                moment()
+                    .add(1, "hour")
+                    .valueOf()
+        },
+        "12HOURS": {
+            title: "12 hours",
+            get: () =>
+                moment()
+                    .add(12, "hour")
+                    .valueOf()
+        },
+        "24HOURS": {
+            title: "24 hours",
+            get: () =>
+                moment()
+                    .add(1, "day")
+                    .valueOf()
+        },
+        "7DAYS": {
+            title: "7 days",
+            get: () =>
+                moment()
+                    .add(7, "day")
+                    .valueOf()
+        },
+        MONTH: {
+            title: "30 days",
+            get: () =>
+                moment()
+                    .add(30, "day")
+                    .valueOf()
+        },
+        YEAR: {
+            title: "1 year",
+            get: () =>
+                moment()
+                    .add(1, "year")
+                    .valueOf()
+        },
+        SPECIFIC: {
+            title: "Specific",
+            get: type => {
+                return this.state.expirationCustomTime[type].valueOf();
+            }
+        }
+    };
 
     _initialState(props) {
         let ws = props.viewSettings;
@@ -152,11 +251,6 @@ class Exchange extends React.Component {
     }
 
     componentWillMount() {
-        if (Apis.instance().chain_id.substr(0, 8) === "4018d784") {
-            GatewayActions.fetchCoins.defer();
-            GatewayActions.fetchBridgeCoins.defer();
-        }
-
         this._checkFeeStatus();
     }
 
@@ -189,9 +283,6 @@ class Exchange extends React.Component {
         ],
         account = this.props.currentAccount
     ) {
-        if (assets[0] === assets[2] || assets[1] === assets[2]) {
-            assets.splice(2, 1);
-        }
         let feeStatus = {};
         let p = [];
         assets.forEach(a => {
@@ -203,16 +294,21 @@ class Exchange extends React.Component {
                 })
             );
         });
-        Promise.all(p).then(status => {
-            assets.forEach((a, idx) => {
-                feeStatus[a.get("id")] = status[idx];
-            });
-            if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
-                this.setState({
-                    feeStatus
+        Promise.all(p)
+            .then(status => {
+                assets.forEach((a, idx) => {
+                    feeStatus[a.get("id")] = status[idx];
                 });
-            }
-        });
+                if (!utils.are_equal_shallow(this.state.feeStatus, feeStatus)) {
+                    this.setState({
+                        feeStatus
+                    });
+                }
+            })
+            .catch(err => {
+                console.log("checkFeeStatusAsync error", err);
+                this.setState({feeStatus: {}});
+            });
     }
 
     _getWindowSize() {
@@ -512,9 +608,24 @@ class Exchange extends React.Component {
     }
 
     _createLimitOrder(type, feeID) {
-        let current = this.state[type === "sell" ? "ask" : "bid"];
+        let actionType = type === "sell" ? "ask" : "bid";
+
+        let current = this.state[actionType];
+
+        let expirationTime = null;
+        if (this.state.expirationType[actionType] === "SPECIFIC") {
+            expirationTime = this.EXPIRATIONS[
+                this.state.expirationType[actionType]
+            ].get(actionType);
+        } else {
+            expirationTime = this.EXPIRATIONS[
+                this.state.expirationType[actionType]
+            ].get();
+        }
+
         const order = new LimitOrderCreate({
             for_sale: current.for_sale,
+            expiration: new Date(expirationTime || false),
             to_receive: current.to_receive,
             seller: this.props.currentAccount.get("id"),
             fee: {
@@ -749,6 +860,14 @@ class Exchange extends React.Component {
         });
 
         this.setState({showDepthChart: !this.state.showDepthChart});
+    }
+
+    _toggleMarketPicker(asset) {
+        let showMarketPicker = !!asset ? true : false;
+        this.setState({
+            showMarketPicker,
+            marketPickerAsset: asset
+        });
     }
 
     _moveOrderBook() {
@@ -1132,9 +1251,6 @@ class Exchange extends React.Component {
             latestPrice,
             changeClass;
 
-        let notMyAccount =
-            currentAccount.get("id") === "1.2.3" || !this.props.isMyAccount;
-
         const showVolumeChart = this.props.viewSettings.get(
             "showVolumeChart",
             true
@@ -1270,13 +1386,12 @@ class Exchange extends React.Component {
             minChartHeight
         );
 
+        let expirationType = this.state.expirationType;
+        let expirationCustomTime = this.state.expirationCustomTime;
+
         let buyForm = isFrozen ? null : (
             <BuySell
-                onBorrow={
-                    !notMyAccount && baseIsBitAsset
-                        ? this._borrowBase.bind(this)
-                        : null
-                }
+                onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
                     a => a.symbol === base.get("symbol")
@@ -1289,7 +1404,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
@@ -1302,6 +1416,17 @@ class Exchange extends React.Component {
                           } buy-form`
                 )}
                 type="bid"
+                expirationType={expirationType["bid"]}
+                expirations={this.EXPIRATIONS}
+                expirationCustomTime={expirationCustomTime["bid"]}
+                onExpirationTypeChange={this._handleExpirationChange.bind(
+                    this,
+                    "bid"
+                )}
+                onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                    this,
+                    "bid"
+                )}
                 amount={bid.toReceiveText}
                 price={bid.priceText}
                 total={bid.forSaleText}
@@ -1352,11 +1477,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
-                onBorrow={
-                    !notMyAccount && quoteIsBitAsset
-                        ? this._borrowQuote.bind(this)
-                        : null
-                }
+                onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
                     a => a.symbol === quote.get("symbol")
@@ -1369,7 +1490,6 @@ class Exchange extends React.Component {
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
                     "small-12 no-padding middle-content",
-                    {disabled: notMyAccount},
                     leftOrderBook || smallScreen
                         ? "medium-6"
                         : "medium-6 xlarge-4",
@@ -1387,6 +1507,17 @@ class Exchange extends React.Component {
                 total={ask.toReceiveText}
                 quote={quote}
                 base={base}
+                expirationType={expirationType["ask"]}
+                expirations={this.EXPIRATIONS}
+                expirationCustomTime={expirationCustomTime["ask"]}
+                onExpirationTypeChange={this._handleExpirationChange.bind(
+                    this,
+                    "ask"
+                )}
+                onExpirationCustomChange={this._handleCustomExpirationChange.bind(
+                    this,
+                    "ask"
+                )}
                 amountChange={this._onInputSell.bind(this, "ask", false)}
                 priceChange={this._onInputPrice.bind(this, "ask")}
                 setPrice={this._currentPriceClick.bind(this)}
@@ -1481,9 +1612,20 @@ class Exchange extends React.Component {
                     onSelectIndicators={this._onSelectIndicators.bind(this)}
                     marketStats={marketStats}
                     onToggleCharts={this._toggleCharts.bind(this)}
+                    onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
+
                 <div className="grid-block page-layout market-layout">
+                    {!!this.state.showMarketPicker ? (
+                        <MarketPicker
+                            marketPickerAsset={this.state.marketPickerAsset}
+                            onToggleMarketPicker={this._toggleMarketPicker.bind(
+                                this
+                            )}
+                            {...this.props}
+                        />
+                    ) : null}
                     <AccountNotifications />
                     {/* Main vertical block with content */}
 
@@ -1512,7 +1654,7 @@ class Exchange extends React.Component {
                                     id="market-charts"
                                 >
                                     {/* Price history chart */}
-                                    <PriceChartD3
+                                    {/* <PriceChartD3
                                         priceData={this.props.priceData}
                                         volumeData={this.props.volumeData}
                                         base={base}
@@ -1584,7 +1726,7 @@ class Exchange extends React.Component {
                                         onChangeIndicatorSetting={this._changeIndicatorSetting.bind(
                                             this
                                         )}
-                                    />
+                                    /> */}
                                 </div>
                             ) : (
                                 <div className="grid-block vertical no-padding shrink">
@@ -1684,7 +1826,6 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    notMyAccount={notMyAccount}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}
@@ -1721,7 +1862,6 @@ class Exchange extends React.Component {
                                     <MyOpenOrders
                                         smallScreen={this.props.smallScreen}
                                         className={cnames(
-                                            {disabled: notMyAccount},
                                             !smallScreen && !leftOrderBook
                                                 ? "medium-6 xlarge-4"
                                                 : "",
@@ -1842,7 +1982,7 @@ class Exchange extends React.Component {
                         </div>
                     </div>
 
-                    {!notMyAccount && quoteIsBitAsset ? (
+                    {quoteIsBitAsset ? (
                         <BorrowModal
                             ref="borrowQuote"
                             modalId={
@@ -1857,7 +1997,7 @@ class Exchange extends React.Component {
                             account={currentAccount}
                         />
                     ) : null}
-                    {!notMyAccount && baseIsBitAsset ? (
+                    {baseIsBitAsset ? (
                         <BorrowModal
                             ref="borrowBase"
                             modalId={"borrow_modal_base_" + baseAsset.get("id")}

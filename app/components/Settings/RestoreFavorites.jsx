@@ -5,7 +5,7 @@ import notify from "actions/NotificationActions";
 import counterpart from "counterpart";
 
 class RestoreFavorites extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -14,7 +14,7 @@ class RestoreFavorites extends React.Component {
         };
     }
 
-    upload(evt){
+    upload(evt) {
         this.setState({error: false, json: null});
 
         let file = evt.target.files[0];
@@ -25,30 +25,31 @@ class RestoreFavorites extends React.Component {
             try {
                 let json = JSON.parse(contents);
 
-                for(var key in json){
+                for (var key in json) {
                     let market = json[key];
-                    let { quote, base } = market;
+                    let {quote, base} = market;
 
-                    if(!quote || !base) throw new Error("Cannot parse json data.");
+                    if (!quote || !base)
+                        throw new Error("Cannot parse json data.");
                 }
 
                 this.setState({json});
                 // this.finish();
-            } catch(message) {
+            } catch (message) {
                 this.setState({error: true});
             }
         };
         reader.readAsText(file);
     }
 
-    finish(){
-        const { json } = this.state;
+    finish() {
+        const {json} = this.state;
 
         SettingsActions.clearStarredMarkets();
 
-        for(var key in json){
+        for (var key in json) {
             let market = json[key];
-            let { quote, base } = market;
+            let {quote, base} = market;
 
             SettingsActions.addStarMarket(quote, base);
         }
@@ -60,33 +61,40 @@ class RestoreFavorites extends React.Component {
         });
     }
 
-    render(){
-        const { state } = this;
+    render() {
+        const {state} = this;
 
-        return <div>
-            <input
-              type="file"
-              id="file_input"
-              accept=".json"
-              style={{
-                  border: "solid" ,
-                  marginBottom: 15
-              }}
-              onChange={this.upload.bind(this)}
-            />
+        return (
+            <div>
+                <input
+                    type="file"
+                    id="file_input"
+                    accept=".json"
+                    style={{
+                        border: "solid",
+                        marginBottom: 15
+                    }}
+                    onChange={this.upload.bind(this)}
+                />
 
-            {state.error && <h5>
-                <Translate content="settings.backup_favorites_error" />
-            </h5>}
+                {state.error && (
+                    <h5>
+                        <Translate content="settings.backup_favorites_error" />
+                    </h5>
+                )}
 
-            {state.json &&
-                <p>
-                    <button onClick={this.finish.bind(this)} className="button success">
-                        <Translate content="settings.backup_favorites_finish" />
-                    </button>
-                </p>
-            }
-        </div>
+                {state.json && (
+                    <p>
+                        <button
+                            onClick={this.finish.bind(this)}
+                            className="button success"
+                        >
+                            <Translate content="settings.backup_favorites_finish" />
+                        </button>
+                    </p>
+                )}
+            </div>
+        );
     }
 }
 

@@ -60,6 +60,7 @@ class MarketsActions {
                 marketStats[marketName] = {
                     lastFetched: new Date()
                 };
+
                 Apis.instance()
                     .db_api()
                     .exec("get_ticker", [second.get("id"), first.get("id")])
@@ -499,7 +500,6 @@ class MarketsActions {
         //     fee_asset_id = "1.3.0";
         // }
 
-        order.setExpiration();
         order = order.toObject();
 
         tr.add_type_operation("limit_order_create", order);

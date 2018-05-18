@@ -104,7 +104,8 @@ class WinexRecentTransactions extends React.Component {
                                     "https://www.cryptofresh.com/tx/" +
                                     record.txid
                                 }
-                                target={"_blank"}
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 {record.txid}
                             </a>

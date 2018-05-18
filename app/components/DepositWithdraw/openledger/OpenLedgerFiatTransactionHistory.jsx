@@ -1,6 +1,7 @@
 import React from "react";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
+import Translate from "react-translate-component";
 import PropTypes from "prop-types";
 
 class OpenLedgerFiatTransactionHistory extends React.Component {
@@ -84,15 +85,24 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Withdrawal Amount</th>
-                                <th>Status</th>
+                                <th>
+                                    <Translate content="openledger.withdraw_amount" />
+                                </th>
+                                <th>
+                                    <Translate content="openledger.status" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody>{openledger_withdrawal_history_rows}</tbody>
                     </table>
                 );
             } else
-                openledger_withdrawal_history_fragment = <p>No withdrawals</p>;
+                openledger_withdrawal_history_fragment = (
+                    <Translate
+                        component="p"
+                        content="openledger.withdraw_none"
+                    />
+                );
         }
 
         let openledger_deposit_history_fragment = null;
@@ -122,15 +132,27 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Deposit Amount</th>
-                                <th>Details</th>
-                                <th>Status</th>
+                                <th>
+                                    <Translate content="openledger.deposit_amount" />
+                                </th>
+                                <th>
+                                    <Translate content="openledger.deposit_details" />
+                                </th>
+                                <th>
+                                    <Translate content="openledger.status" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody>{openledger_deposit_history_rows}</tbody>
                     </table>
                 );
-            } else openledger_deposit_history_fragment = <p>No deposits</p>;
+            } else
+                openledger_deposit_history_fragment = (
+                    <Translate
+                        component="p"
+                        content="openledger.deposit_none"
+                    />
+                );
         }
 
         let openledger_transaction_history_fragment = null;
@@ -144,8 +166,7 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                             this
                         )}
                     >
-                        {" "}
-                        Retry{" "}
+                        <Translate content="openledger.retry" />
                     </button>
                     <p>{this.state.error}</p>
                 </div>
@@ -160,29 +181,32 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
                         )}
                         disabled="true"
                     >
-                        {" "}
-                        Show Transaction History{" "}
+                        <Translate content="openledger.show_transaction_history" />
                     </button>
-                    <p>Loading...</p>
+                    <Translate component="p" content="openledger.loading" />
                 </div>
             );
         else {
             let button_label =
-                this.state.current_status === "never_loaded"
-                    ? "Show Transaction History"
-                    : "Refresh";
+                this.state.current_status === "never_loaded" ? (
+                    <Translate content="openledger.show_transaction_history" />
+                ) : (
+                    <Translate content="openledger.refresh_transaction_history" />
+                );
             openledger_transaction_history_fragment = (
                 <div className="content-block">
                     <br />
-                    <h4>Transaction History</h4>
+                    <Translate
+                        component="h4"
+                        content="openledger.header_transaction_history"
+                    />
                     <button
                         className={"button outline"}
                         onClick={this.onShowOpenLedgerTransactionHistory.bind(
                             this
                         )}
                     >
-                        {" "}
-                        {button_label}{" "}
+                        {button_label}
                     </button>
                     {openledger_withdrawal_history_fragment}
                     {openledger_deposit_history_fragment}

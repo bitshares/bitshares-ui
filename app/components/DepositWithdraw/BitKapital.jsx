@@ -11,7 +11,6 @@ import utils from "common/utils";
 import SettingsStore from "stores/SettingsStore";
 
 class BitKapital extends React.Component {
-
     static propTypes = {
         jianjolly: ChainTypes.ChainAccount.isRequired,
         onay: ChainTypes.ChainAccount.isRequired,
@@ -37,26 +36,30 @@ class BitKapital extends React.Component {
     }
 
     _renderDeposits() {
- //       return <iframe
- //           style={{width: "100%", border: 0, minHeight: 800}}
- //           src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
- //       >
- //       </iframe>;
+        //       return <iframe
+        //           style={{width: "100%", border: 0, minHeight: 800}}
+        //           src={"https://bitkapital.com/kapital.html?u=" + this.props.account.get("name") + `&theme=${SettingsStore.getState().settings.get("themes")}`}
+        //       >
+        //       </iframe>;
 
-	// interim maintenance tout per issue #341 
-	return 
-		<div style={{width: "100%", border: 0, minHeight: 600}}>
-		Onarim / Under Maintenance 
-		</div>;
+        // interim maintenance tout per issue #341
+        return;
+        <div style={{width: "100%", border: 0, minHeight: 600}}>
+            Onarim / Under Maintenance
+        </div>;
     }
 
     _renderWithdrawals() {
         return (
             <form onSubmit={this._onSubmit.bind(this)}>
-
                 <div style={{padding: "20px 0"}}>
-                    <Translate content="gateway.balance" />:
-                    &nbsp;<span style={{fontWeight: "bold", color: "#4A90E2", textAlign: "right"}}>
+                    <Translate content="gateway.balance" />: &nbsp;<span
+                        style={{
+                            fontWeight: "bold",
+                            color: "#4A90E2",
+                            textAlign: "right"
+                        }}
+                    >
                         <AccountBalance
                             account={this.props.account.get("name")}
                             asset={this.props.asset.get("symbol")}
@@ -64,15 +67,26 @@ class BitKapital extends React.Component {
                     </span>
                 </div>
 
-                <label><Translate content="exchange.quantity" />
-                    <input ref="amount" required id="amount" type="number" min={this.state.min} max={this.state.max}></input>
+                <label>
+                    <Translate content="exchange.quantity" />
+                    <input
+                        ref="amount"
+                        required
+                        id="amount"
+                        type="number"
+                        min={this.state.min}
+                        max={this.state.max}
+                    />
                 </label>
 
-                <label><Translate content="gateway.iban" />
-                    <input ref="iban" required id="iban" type="text"></input>
+                <label>
+                    <Translate content="gateway.iban" />
+                    <input ref="iban" required id="iban" type="text" />
                 </label>
 
-                <button className="button" type="submit"><Translate content="gateway.withdraw_now" /></button>
+                <button className="button" type="submit">
+                    <Translate content="gateway.withdraw_now" />
+                </button>
             </form>
         );
     }
@@ -109,15 +123,18 @@ class BitKapital extends React.Component {
             asset.get("id"), // bitkapital asset id
             new Buffer("BOZDURMA - " + iban.toUpperCase(), "utf-8"), // memo
             null, // propose set to false
-            asset.get("id"), // Pay fee with KAPITAL
-        ).then( () => {
+            asset.get("id") // Pay fee with KAPITAL
+        ).then(() => {
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.listen(this.onTrxIncluded);
         });
     }
 
     onTrxIncluded(confirm_store_state) {
-        if(confirm_store_state.included && confirm_store_state.broadcasted_transaction) {
+        if (
+            confirm_store_state.included &&
+            confirm_store_state.broadcasted_transaction
+        ) {
             // this.setState(Transfer.getInitialState());
             TransactionConfirmStore.unlisten(this.onTrxIncluded);
             TransactionConfirmStore.reset();
@@ -127,7 +144,6 @@ class BitKapital extends React.Component {
         }
     }
 
-
     render() {
         let {jianjolly, onay, account} = this.props;
         let {action} = this.state;
@@ -136,11 +152,30 @@ class BitKapital extends React.Component {
         return (
             <div className="BitKapital">
                 <div className="content-block">
-                <div style={{paddingBottom: 15}}>
-                    <div style={{marginRight: 10}} onClick={this.changeAction.bind(this, "deposit")} className={cnames("button", action === "deposit" ? "active" : "outline")}><Translate content="gateway.deposit" /></div>
-                    <div onClick={this.changeAction.bind(this, "withdraw")} className={cnames("button", action === "withdraw" ? "active" : "outline")}><Translate content="gateway.withdraw" /></div>
-                </div>
-                {action === "deposit" ? this._renderDeposits() : this._renderWithdrawals()}
+                    <div style={{paddingBottom: 15}}>
+                        <div
+                            style={{marginRight: 10}}
+                            onClick={this.changeAction.bind(this, "deposit")}
+                            className={cnames(
+                                "button",
+                                action === "deposit" ? "active" : "outline"
+                            )}
+                        >
+                            <Translate content="gateway.deposit" />
+                        </div>
+                        <div
+                            onClick={this.changeAction.bind(this, "withdraw")}
+                            className={cnames(
+                                "button",
+                                action === "withdraw" ? "active" : "outline"
+                            )}
+                        >
+                            <Translate content="gateway.withdraw" />
+                        </div>
+                    </div>
+                    {action === "deposit"
+                        ? this._renderDeposits()
+                        : this._renderWithdrawals()}
                 </div>
             </div>
         );

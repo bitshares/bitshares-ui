@@ -64,15 +64,32 @@ class AccountOverview extends React.Component {
             ]
         };
 
+        this.qtyRefs = {};
         this.priceRefs = {};
         this.valueRefs = {};
         this.changeRefs = {};
         for (let key in this.sortFunctions) {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
+
+        this._handleFilterInput = this._handleFilterInput.bind(this);
+    }
+
+    _handleFilterInput(e) {
+        e.preventDefault();
+        this.setState({
+            filterValue: e.target.value
+        });
     }
 
     sortFunctions = {
+        qty: function(a, b, force) {
+            if (Number(this.qtyRefs[a.key]) < Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? -1 : 1;
+
+            if (Number(this.qtyRefs[a.key]) > Number(this.qtyRefs[b.key]))
+                return this.state.sortDirection || force ? 1 : -1;
+        },
         alphabetic: function(a, b, force) {
             if (a.key > b.key)
                 return this.state.sortDirection || force ? 1 : -1;
@@ -86,9 +103,9 @@ class AccountOverview extends React.Component {
             if (aRef && bRef) {
                 let aPrice = aRef.getFinalPrice(true);
                 let bPrice = bRef.getFinalPrice(true);
-                if (!aPrice && bPrice) return 1;
-                if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice)
+                if (aPrice === null && bPrice !== null) return 1;
+                if (aPrice !== null && bPrice === null) return -1;
+                if (aPrice === null && bPrice === null)
                     return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection
                     ? aPrice - bPrice
@@ -105,7 +122,7 @@ class AccountOverview extends React.Component {
                 if (aValue && !bValue) return -1;
                 if (!aValue && !bValue)
                     return this.sortFunctions.alphabetic(a, b, true);
-                return !this.state.sortDirection
+                return this.state.sortDirection
                     ? aValue - bValue
                     : bValue - aValue;
             }
@@ -159,10 +176,6 @@ class AccountOverview extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(
-                nextProps.balanceAssets,
-                this.props.balanceAssets
-            ) ||
-            !utils.are_equal_shallow(
                 nextProps.backedCoins,
                 this.props.backedCoins
             ) ||
@@ -170,7 +183,8 @@ class AccountOverview extends React.Component {
             nextProps.account !== this.props.account ||
             nextProps.settings !== this.props.settings ||
             nextProps.hiddenAssets !== this.props.hiddenAssets ||
-            !utils.are_equal_shallow(nextState, this.state)
+            !utils.are_equal_shallow(nextState, this.state) ||
+            this.state.filterValue !== nextState.filterValue
         );
     }
 
@@ -222,7 +236,7 @@ class AccountOverview extends React.Component {
 
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
-            this.refs.send_modal.show();
+            if (this.send_modal) this.send_modal.show();
         });
     }
 
@@ -309,12 +323,13 @@ class AccountOverview extends React.Component {
         const emptyCell = "-";
         balanceList.forEach(balance => {
             let balanceObject = ChainStore.getObject(balance);
+            if (!balanceObject) return;
             let asset_type = balanceObject.get("asset_type");
             let asset = ChainStore.getObject(asset_type);
+            if (!asset) return;
 
             let directMarketLink, settleLink, transferLink;
             let symbol = "";
-            if (!asset) return null;
 
             const assetName = asset.get("symbol");
             const notCore = asset.get("id") !== "1.3.0";
@@ -378,6 +393,13 @@ class AccountOverview extends React.Component {
                 (hasBalance && balanceObject.get("balance") != 0);
             const canBuy = !!this.props.bridgeCoins.get(symbol);
 
+            const assetAmount = balanceObject.get("balance");
+
+            this.qtyRefs[asset.get("symbol")] = utils.get_asset_amount(
+                assetAmount,
+                asset
+            );
+
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
@@ -428,7 +450,6 @@ class AccountOverview extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
-                                pulsate={{reverse: true, fill: "forwards"}}
                                 refCallback={c => {
                                     if (c && c.refs.bound_component)
                                         this.valueRefs[asset.get("symbol")] =
@@ -791,6 +812,7 @@ class AccountOverview extends React.Component {
                 portfolioSort: key
             });
             this.setState({
+                sortDirection: false,
                 sortKey: key
             });
         }
@@ -863,22 +885,41 @@ class AccountOverview extends React.Component {
 
             // Separate balances into hidden and included
             account_balances.forEach((a, asset_type) => {
-                if (hiddenAssets.includes(asset_type)) {
+                const asset = ChainStore.getAsset(asset_type);
+
+                let assetName = "";
+                let filter = "";
+
+                if (this.state.filterValue) {
+                    filter = this.state.filterValue
+                        ? String(this.state.filterValue).toLowerCase()
+                        : "";
+                    assetName = asset.get("symbol").toLowerCase();
+                    let {isBitAsset} = utils.replaceName(asset);
+                    if (isBitAsset) {
+                        assetName = "bit" + assetName;
+                    }
+                }
+
+                if (
+                    hiddenAssets.includes(asset_type) &&
+                    assetName.includes(filter)
+                ) {
                     hiddenBalancesList = hiddenBalancesList.push(a);
-                } else {
+                } else if (assetName.includes(filter)) {
                     includedBalancesList = includedBalancesList.push(a);
                 }
             });
 
             let included = this._renderBalances(
                 includedBalancesList,
-                this.state.alwaysShowAssets,
+                !this.state.filterValue ? this.state.alwaysShowAssets : null,
                 true
             );
             includedBalances = included;
             let hidden = this._renderBalances(
                 hiddenBalancesList,
-                this.state.alwaysShowAssets
+                !this.state.filterValue ? this.state.alwaysShowAsset : null
             );
             hiddenBalances = hidden;
         }
@@ -940,11 +981,12 @@ class AccountOverview extends React.Component {
 
         includedBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioActiveAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -953,11 +995,12 @@ class AccountOverview extends React.Component {
 
         hiddenBalances.push(
             <tr key="portfolio" className="total-value">
-                <td style={{textAlign: "left"}}>{totalValueText}</td>
-                <td />
+                <td colSpan="2" style={{textAlign: "left"}}>
+                    {totalValueText}
+                </td>
                 <td className="column-hide-small" />
-                <td />
-                <td className="column-hide-small" style={{textAlign: "right"}}>
+                <td className="column-hide-small" />
+                <td style={{textAlign: "right"}}>
                     {portfolioHiddenAssetsBalance}
                 </td>
                 <td colSpan="9" />
@@ -977,16 +1020,9 @@ class AccountOverview extends React.Component {
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
-        const preferredAsset = ChainStore.getAsset(preferredUnit);
-        let assetName = !!preferredAsset ? preferredAsset.get("symbol") : "";
-        if (preferredAsset) {
-            const {prefix, name} = utils.replaceName(
-                assetName,
-                !!preferredAsset.get("bitasset_data_id")
-            );
-            assetName = (prefix || "") + name;
-        }
-        const hiddenSubText = <span style={{visibility: "hidden"}}>H</span>;
+        // add unicode non-breaking space as subtext to Activity Tab to ensure that all titles are aligned
+        // horizontally
+        const hiddenSubText = "\u00a0";
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -1004,7 +1040,14 @@ class AccountOverview extends React.Component {
                                 subText={portfolioActiveAssetsBalance}
                             >
                                 <div className="header-selector">
-                                    <div className="selector">
+                                    <div className="filter inline-block">
+                                        <input
+                                            type="text"
+                                            placeholder="Filter"
+                                            onChange={this._handleFilterInput}
+                                        />
+                                    </div>
+                                    <div className="selector inline-block">
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
@@ -1065,7 +1108,9 @@ class AccountOverview extends React.Component {
                                 {/* Send Modal */}
                                 <SendModal
                                     id="send_modal_portfolio"
-                                    ref="send_modal"
+                                    refCallback={e => {
+                                        if (e) this.send_modal = e;
+                                    }}
                                     from_name={this.props.account.get("name")}
                                     asset_id={this.state.send_asset || "1.3.0"}
                                 />
@@ -1087,6 +1132,11 @@ class AccountOverview extends React.Component {
                                                     />
                                                 </th>
                                                 <th
+                                                    onClick={this._toggleSortOrder.bind(
+                                                        this,
+                                                        "qty"
+                                                    )}
+                                                    className="clickable"
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.qty" />
@@ -1102,6 +1152,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="exchange.price" />{" "}
                                                     (<AssetName
                                                         name={preferredUnit}
+                                                        noTip
                                                     />)
                                                 </th>
                                                 <th
@@ -1132,6 +1183,7 @@ class AccountOverview extends React.Component {
                                                                 arg: "asset"
                                                             }
                                                         ]}
+                                                        noTip
                                                     />
                                                 </th>
                                                 {showAssetPercent ? (
@@ -1162,7 +1214,7 @@ class AccountOverview extends React.Component {
                                                     <Translate content="account.trade" />
                                                 </th>
                                                 <th>
-                                                    <Translate content="exchange.borrow" />
+                                                    <Translate content="exchange.borrow_short" />
                                                 </th>
                                                 <th>
                                                     <Translate content="account.settle" />
@@ -1279,11 +1331,11 @@ class AccountOverview extends React.Component {
                             account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"
-                                    subText={
+                                    subText={String(
                                         account.get("proposals")
                                             ? account.get("proposals").size
                                             : 0
-                                    }
+                                    )}
                                 >
                                     <Proposals
                                         className="dashboard-table"
@@ -1351,10 +1403,6 @@ class AccountOverview extends React.Component {
 }
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
-AccountOverview = AssetWrapper(AccountOverview, {
-    propNames: ["balanceAssets"],
-    asList: true
-});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {

@@ -33,7 +33,8 @@ class GdexGatewayInfo extends React.Component {
         super();
         this.state = {
             receive_address: null,
-            isAvailable: true
+            isAvailable: true,
+            qrcode: ""
         };
         this.deposit_address_cache = new GdexCache();
         this._copy = this._copy.bind(this);
@@ -77,17 +78,18 @@ class GdexGatewayInfo extends React.Component {
                 if (data.address && data.address.address) {
                     var receive_address = {
                         address: data.address.address,
-                        memo: null
+                        memo: data.address.memo
                     };
                     _this.deposit_address_cache.cacheInputAddress(
                         user_name,
                         coin.outerSymbol,
                         coin.innerSymbol,
                         receive_address.address,
-                        ""
+                        receive_address.memo
                     );
                     _this.setState({receive_address: receive_address});
                 } else {
+                    _this.setState({receive_address: null});
                 }
             })
             .catch(err => {
@@ -132,6 +134,10 @@ class GdexGatewayInfo extends React.Component {
         ZfApi.publish(this.getWithdrawModalId(), "open");
     }
 
+    onShowQrcode(text) {
+        this.setState({qrcode: text}, () => ZfApi.publish("qrcode", "open"));
+    }
+
     _copy(e) {
         try {
             if (this.state.clipboardText)
@@ -171,9 +177,12 @@ class GdexGatewayInfo extends React.Component {
         // asset is not loaded
         if (!btsCoin) return emptyRow;
         let receive_address = this.state.receive_address;
+        let qrcode = this.state.qrcode;
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
         let clipboardText = "";
+        let memoText = "";
+        let deposit_memo_fragment = null;
 
         var withdraw_memo_prefix = coin.outerSymbol + ":";
         if (this.props.action === "deposit") {
@@ -182,6 +191,10 @@ class GdexGatewayInfo extends React.Component {
                     <span>{receive_address.address}</span>
                 );
                 clipboardText = receive_address.address;
+                if (receive_address.memo) {
+                    deposit_memo_fragment = <span>{receive_address.memo}</span>;
+                    memoText = receive_address.memo;
+                }
             }
             withdraw_memo_prefix = "";
         }
@@ -314,52 +327,83 @@ class GdexGatewayInfo extends React.Component {
                                 asset={coin.outerSymbol}
                             />
                         </p>
-
-                        <div
-                            style={{
-                                padding: "10px 0",
-                                fontSize: "1.1rem",
-                                fontWeight: "bold"
-                            }}
-                        >
-                            {deposit_address_fragment}
-                            <div
-                                className="small-12 medium-5"
-                                style={{paddingTop: "10px"}}
-                            >
-                                {receive_address ? (
-                                    <QRCode
-                                        size={120}
-                                        value={receive_address.address}
-                                    />
-                                ) : null}
-                            </div>
-                            <div
-                                className="button-group"
-                                style={{paddingTop: 10}}
-                            >
-                                {deposit_address_fragment && receive_address ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        Copy address
-                                    </div>
-                                ) : (
-                                    <div
-                                        className="button"
-                                        onClick={this.getDepositAddress.bind(
-                                            this
-                                        )}
-                                    >
-                                        Refresh
-                                    </div>
-                                )}
-                                {/*{memoText ? <div className="button" onClick={this.toClipboard.bind(this, memoText)}>Copy memo</div> : null}*/}
-                            </div>
+                        {memoText ? (
+                            <p style={{color: "red"}}>
+                                <Translate
+                                    content="gateway.deposit_warning_memo"
+                                    asset={coin.outerSymbol}
+                                />
+                            </p>
+                        ) : null}
+                        <div>
+                            <table className="table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <Translate content="gateway.address" />:
+                                        </td>
+                                        <td>{deposit_address_fragment}</td>
+                                        <td>
+                                            <div
+                                                style={{width: "125px"}}
+                                                className="button"
+                                                onClick={this.toClipboard.bind(
+                                                    this,
+                                                    clipboardText
+                                                )}
+                                            >
+                                                <Translate content="transfer.copy_address" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div
+                                                className="button"
+                                                onClick={this.onShowQrcode.bind(
+                                                    this,
+                                                    clipboardText
+                                                )}
+                                            >
+                                                <Translate content="modal.qrcode.label" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {memoText ? (
+                                        <tr>
+                                            <td>
+                                                <Translate content="gateway.memo" />:
+                                            </td>
+                                            <td>{memoText}</td>
+                                            <td>
+                                                <div
+                                                    style={{width: "125px"}}
+                                                    className="button"
+                                                    onClick={this.toClipboard.bind(
+                                                        this,
+                                                        memoText
+                                                    )}
+                                                >
+                                                    <Translate content="transfer.copy_memo" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    className="button"
+                                                    onClick={this.onShowQrcode.bind(
+                                                        this,
+                                                        memoText
+                                                    )}
+                                                >
+                                                    <Translate content="modal.qrcode.label" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ) : null}
+                                </tbody>
+                            </table>
+                            <BaseModal id="qrcode" overlay={true}>
+                                {/*<div className="gdex-gateway">abc</div>*/}
+                                <DepositQrCodeModal text={qrcode} />
+                            </BaseModal>
                         </div>
                     </div>
                 </div>
@@ -496,6 +540,24 @@ class GdexGatewayInfo extends React.Component {
                 </div>
             );
         }
+    }
+}
+
+class DepositQrCodeModal extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        let text = this.props.text;
+        return (
+            <div className="small-12" style={{textAlign: "center"}}>
+                <QRCode size={200} value={text} />
+                <br />
+                <br />
+                <label>{text}</label>
+            </div>
+        );
     }
 }
 

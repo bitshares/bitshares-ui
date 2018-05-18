@@ -10,6 +10,7 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gdexMethods";
+import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
@@ -44,6 +45,7 @@ class GdexWithdrawModal extends React.Component {
             below_minumum_withdraw_value: false,
             precision_error: false,
             memo_error: false,
+            memo_length_error: false,
             from_account: props.account,
             fee_asset_id: "1.3.0",
             feeStatus: {},
@@ -117,6 +119,12 @@ class GdexWithdrawModal extends React.Component {
                             break;
                     }
                 });
+                if (memo_message.length > 100) {
+                    this.setState({memo_length_error: true});
+                    return null;
+                } else {
+                    this.setState({memo_length_error: false});
+                }
                 this.setState({memo_error: false});
                 return memo_message;
             }
@@ -703,6 +711,14 @@ class GdexWithdrawModal extends React.Component {
                             <Translate content="transfer.errors.memo_error" />
                         </p>
                     ) : null}
+                    {this.state.memo_length_error ? (
+                        <p
+                            className="has-error no-margin"
+                            style={{paddingTop: 10}}
+                        >
+                            <Translate content="transfer.errors.memo_length_error" />
+                        </p>
+                    ) : null}
                 </div>
             );
         }
@@ -909,6 +925,7 @@ class GdexWithdrawModal extends React.Component {
                                 "button" +
                                 (this.state.below_minumum_withdraw_value ||
                                 this.state.memo_error ||
+                                this.state.memo_length_error ||
                                 this.state.error ||
                                 this.state.balanceError ||
                                 this.state.precision_error

@@ -2,8 +2,6 @@ import React from "react";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import Immutable from "immutable";
-import {Apis} from "bitsharesjs-ws";
-import GatewayActions from "actions/GatewayActions";
 
 class BalanceWrapper extends React.Component {
     static propTypes = {
@@ -16,17 +14,6 @@ class BalanceWrapper extends React.Component {
         orders: Immutable.List()
     };
 
-    componentWillMount() {
-        if (
-            Apis.instance().chain_id.substr(0, 8) === "4018d784" &&
-            !this.props.skipCoinFetch
-        ) {
-            // Only fetch this when on BTS main net
-            GatewayActions.fetchCoins();
-            GatewayActions.fetchBridgeCoins();
-        }
-    }
-
     render() {
         const {wrap, orders, ...others} = this.props;
         let balanceAssets = this.props.balances
@@ -37,7 +24,7 @@ class BalanceWrapper extends React.Component {
                 return b.get("asset_type");
             });
 
-        let ordersByAsset = orders.reduce((orders, o) => {
+        let ordersByAsset = orders.filter(o => !!o).reduce((orders, o) => {
             let asset_id = o.getIn(["sell_price", "base", "asset_id"]);
             if (!orders[asset_id]) orders[asset_id] = 0;
             orders[asset_id] += parseInt(o.get("for_sale"), 10);

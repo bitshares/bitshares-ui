@@ -12,7 +12,7 @@ import RestoreSettings from "./RestoreSettings";
 import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
-import _ from "lodash";
+import {set} from "lodash";
 import PropTypes from "prop-types";
 
 class Settings extends React.Component {
@@ -122,7 +122,7 @@ class Settings extends React.Component {
         // use different change handler because checkbox doesn't work
         // normal with e.preventDefault()
 
-        let updatedValue = _.set(
+        let updatedValue = set(
             this.props.settings.get("browser_notifications"),
             path,
             value

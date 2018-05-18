@@ -9,11 +9,8 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {
-    requestDepositAddress,
-    getDepositAddress
-} from "common/blockTradesMethods";
-import {blockTradesAPIs} from "api/apiConfig";
+import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
+import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
@@ -46,7 +43,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         let urls = {
             blocktrades: blockTradesAPIs.BASE,
-            openledger: blockTradesAPIs.BASE_OL
+            openledger: openledgerAPIs.BASE
         };
 
         this.state = {

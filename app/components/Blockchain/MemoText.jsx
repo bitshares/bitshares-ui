@@ -22,10 +22,12 @@ class MemoText extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        WalletUnlockActions.unlock().then(() => {
-            console.log("unlocked");
-            ReactTooltip.rebuild();
-        });
+        WalletUnlockActions.unlock()
+            .then(() => {
+                console.log("unlocked");
+                ReactTooltip.rebuild();
+            })
+            .catch(() => {});
     }
 
     render() {

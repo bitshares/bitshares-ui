@@ -157,10 +157,12 @@ export default class PrivateKeyView extends Component {
     }
 
     onShow() {
-        WalletUnlockActions.unlock().then(() => {
-            var private_key = WalletDb.getPrivateKey(this.props.pubkey);
-            this.setState({wif: private_key.toWif()});
-        });
+        WalletUnlockActions.unlock()
+            .then(() => {
+                var private_key = WalletDb.getPrivateKey(this.props.pubkey);
+                this.setState({wif: private_key.toWif()});
+            })
+            .catch(() => {});
     }
 
     onHide() {

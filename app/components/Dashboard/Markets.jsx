@@ -93,7 +93,23 @@ class FeaturedMarkets extends React.Component {
                 ["BTS", "OPEN.HEAT"],
                 ["BTS", "OPEN.INCENT"],
                 ["HEMPSWEET", "OPEN.BTC"],
-                ["KAPITAL", "BTS"]
+                ["KAPITAL", "BTS"],
+                ["BTS", "RUDEX.STEEM"],
+                ["USD", "RUDEX.STEEM"],
+                ["BTS", "RUDEX.SBD"],
+                ["BTS", "RUDEX.KRM"],
+                ["USD", "RUDEX.KRM"],
+                ["RUBLE", "RUDEX.GOLOS"],
+                ["CNY", "RUDEX.GOLOS"],
+                ["RUBLE", "RUDEX.GBG"],
+                ["CNY", "RUDEX.GBG"],
+                ["BTS", "RUDEX.MUSE"],
+                ["BTS", "RUDEX.TT"],
+                ["BTS", "RUDEX.SCR"],
+                ["BTS", "RUDEX.ETH"],
+                ["BTS", "RUDEX.DGB"],
+                ["BTS", "ZEPH"],
+                ["BTS", "HERTZ"]
             ],
             "39f5e2ed": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
         };

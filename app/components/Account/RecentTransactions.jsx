@@ -277,6 +277,8 @@ class RecentTransactions extends React.Component {
             ? history.slice(0, limit).map(o => {
                   return (
                       <Operation
+                          includeOperationId={true}
+                          operationId={o.id}
                           style={alignLeft}
                           key={o.id}
                           op={o.op}
@@ -286,6 +288,7 @@ class RecentTransactions extends React.Component {
                           hideFee
                           inverted={false}
                           hideOpLabel={compactView}
+                          fullDate={true}
                       />
                   );
               })
@@ -387,6 +390,12 @@ class RecentTransactions extends React.Component {
                         >
                             <thead>
                                 <tr>
+                                    <th
+                                        className="column-hide-tiny"
+                                        style={alignLeft}
+                                    >
+                                        <Translate content="account.transactions.id" />
+                                    </th>
                                     <th
                                         className="column-hide-tiny"
                                         style={alignLeft}

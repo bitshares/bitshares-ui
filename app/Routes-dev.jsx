@@ -6,8 +6,7 @@ import {
     IndexRoute,
     browserHistory,
     hashHistory,
-    Redirect,
-    IndexRedirect
+    Redirect
 } from "react-router/es";
 import willTransitionTo from "./routerTransition";
 import App from "./App";
@@ -33,6 +32,7 @@ import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw"
 import AccountPermissions from "./components/Account/AccountPermissions";
 import AccountWhitelist from "./components/Account/AccountWhitelist";
 import AccountVoting from "./components/Account/AccountVoting";
+import Page404 from "./components/Page404/Page404";
 // import AccountOrders from "./components/Account/AccountOrders";
 import AccountSignedMessages from "./components/Account/AccountSignedMessages";
 import ExchangeContainer from "./components/Exchange/ExchangeContainer";
@@ -69,7 +69,6 @@ import Help from "./components/Help";
 import InitError from "./components/InitError";
 import LoginSelector from "./components/LoginSelector";
 import CreateWorker from "./components/Account/CreateWorker";
-import DepositWithdrawAssetSelector from "./components/DepositWithdraw/DepositWithdrawAssetSelector";
 
 const history = __HASH_HISTORY__ ? hashHistory : browserHistory;
 
@@ -81,9 +80,8 @@ class Auth extends React.Component {
 
 const routes = (
     <Route path="/" component={App} onEnter={willTransitionTo}>
-        <IndexRedirect to="/dashboard" />
+        <IndexRoute component={DashboardPage} />
         <Route path="/auth/:data" component={Auth} />
-        <Route path="/dashboard" component={DashboardPage} />
         <Route path="explorer" component={Explorer} />
         <Route path="/explorer/fees" component={FeesContainer} />
         <Route path="/explorer/blocks" component={BlocksContainer} />
@@ -171,6 +169,7 @@ const routes = (
                 </Route>
             </Route>
         </Route>
+        <Route path="*" component={Page404} />
     </Route>
 );
 

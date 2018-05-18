@@ -38,6 +38,8 @@ class BrowserNotifications extends React.Component {
         }
 
         if (
+            nextProps.account &&
+            this.props.account &&
             nextProps.account.size &&
             this.props.account.get("history") &&
             nextProps.account.get("history")
@@ -161,7 +163,7 @@ class BrowserNotifications extends React.Component {
 
     _getAccountNameById(accountId) {
         const account = ChainStore.getAccount(accountId);
-
+        if (!account) return "";
         return account.get("name");
     }
 

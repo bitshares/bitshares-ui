@@ -10,7 +10,7 @@ import AccountBalance from "../../Account/AccountBalance";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress} from "common/blockTradesMethods";
+import {requestDepositAddress} from "common/gatewayMethods";
 import {widechainAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import QRCode from "qrcode.react";
@@ -275,6 +275,8 @@ class WinexGatewayRequest extends React.Component {
                                 ? ""
                                 : "mailto:") + issuer.support
                         }
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
                         {issuer.support}
                     </a>
@@ -284,6 +286,7 @@ class WinexGatewayRequest extends React.Component {
                     <a
                         target="_blank"
                         href="//shang.qq.com/wpa/qunwpa?idkey=5346c21c6da5f4990daf9b178e2c71a160e0d4cfd2bbb7bbae21eea80f44a11f"
+                        rel="noopener noreferrer"
                     >
                         623556771
                     </a>

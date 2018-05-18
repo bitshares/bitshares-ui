@@ -2,17 +2,13 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
-var git = require("git-rev-sync");
 require("es6-promise").polyfill();
-
+var locales = require("./app/assets/locales");
+var __VERSION__ = require("./package.json").version;
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
 
 module.exports = function(env) {
-    // if (!env.profile) {
-    //     console.log("env:", env);
-    // }
-    // console.log(env.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = [
         {
@@ -52,10 +48,20 @@ module.exports = function(env) {
 
     // COMMON PLUGINS
     const baseUrl = env.electron ? "" : "baseUrl" in env ? env.baseUrl : "/";
+
+    /*
+    * moment and react-intl include tons of locale files, use a regex and
+    * ContextReplacementPlugin to only include certain locale files
+    */
+    let regexString = "";
+    locales.forEach((l, i) => {
+        regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
+    });
+    const localeRegex = new RegExp(regexString);
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
-            APP_VERSION: JSON.stringify(git.tag()),
+            APP_VERSION: JSON.stringify(__VERSION__),
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
@@ -64,7 +70,15 @@ module.exports = function(env) {
             ),
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated
-        })
+        }),
+        new webpack.ContextReplacementPlugin(
+            /moment[\/\\]locale$/,
+            localeRegex
+        ),
+        new webpack.ContextReplacementPlugin(
+            /react-intl[\/\\]locale-data$/,
+            localeRegex
+        )
     ];
 
     if (env.prod) {
@@ -113,7 +127,7 @@ module.exports = function(env) {
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(
             new webpack.DefinePlugin({
-                "process.env": {NODE_ENV: JSON.stringify("production")},
+                "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEV__: false
             })
         );
@@ -152,7 +166,6 @@ module.exports = function(env) {
 
     var config = {
         entry: {
-            // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
@@ -194,6 +207,8 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/lodash-es"),
                         path.join(root_dir, "node_modules/react-stockcharts")
                     ],
                     loader: "babel-loader",

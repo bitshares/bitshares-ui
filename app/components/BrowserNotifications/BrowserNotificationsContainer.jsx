@@ -5,9 +5,7 @@ import AltContainer from "alt-container";
 import BrowserNotifications from "./BrowserNotifications";
 
 class BrowserNotificationsContainer extends React.Component {
-
     render() {
-
         return (
             <AltContainer
                 stores={[AccountStore]}
@@ -17,10 +15,10 @@ class BrowserNotificationsContainer extends React.Component {
                     },
                     settings: () => {
                         return SettingsStore.getState().settings;
-                    },
+                    }
                 }}
             >
-                <BrowserNotifications/>
+                <BrowserNotifications />
             </AltContainer>
         );
     }

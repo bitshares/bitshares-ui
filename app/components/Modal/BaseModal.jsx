@@ -31,14 +31,14 @@ class BaseModal extends React.Component {
             id,
             overlay,
             onClose,
-            modalClass,
-            overlayClass,
             overlayClose,
+            className,
             modalHeader,
             noCloseBtn,
             noLoggo,
             noHeader,
-            children
+            children,
+            leftHeader
         } = props;
 
         return (
@@ -46,34 +46,51 @@ class BaseModal extends React.Component {
                 id={id}
                 overlay={overlay}
                 onClose={onClose}
-                modalClass={modalClass}
-                overlayClass={overlayClass}
+                className={className}
                 overlayClose={overlayClose}
             >
-                {!noCloseBtn && (
-                    <Trigger close={id}>
-                        <a href="#" className="close-button">
-                            &times;
-                        </a>
-                    </Trigger>
-                )}
-                {!noLoggo && (
-                    <div className="modal__logo">
-                        <img src={logo} />
-                    </div>
-                )}
-                {!noHeader &&
-                    modalHeader && (
-                        <div className="text-center">
-                            <div className="modal__title">
-                                <Translate
-                                    component="h3"
-                                    content={modalHeader}
-                                />
-                            </div>
-                        </div>
+                <div className="modal-header">
+                    {!noCloseBtn && (
+                        <Trigger close={id}>
+                            <a href="#" className="close-button">
+                                &times;
+                            </a>
+                        </Trigger>
                     )}
-                {children}
+                    {!noLoggo &&
+                        (leftHeader ? (
+                            <img src={logo} />
+                        ) : (
+                            <div className="modal__logo">
+                                <img src={logo} />
+                            </div>
+                        ))}
+                    {!noHeader &&
+                        modalHeader &&
+                        (leftHeader ? (
+                            <b
+                                style={{
+                                    paddingLeft: "0.8rem",
+                                    fontSize: "1.3rem",
+                                    position: "relative",
+                                    top: "0.4rem"
+                                }}
+                            >
+                                <Translate content={modalHeader} />
+                            </b>
+                        ) : (
+                            <div className="text-center">
+                                <div className="modal__title">
+                                    <Translate
+                                        component="h4"
+                                        content={modalHeader}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                </div>
+                {!noHeader && leftHeader && <hr />}
+                <div className="modal-content">{children}</div>
             </Modal>
         );
     }
