@@ -1615,6 +1615,8 @@ class Exchange extends React.Component {
                     onToggleCharts={this._toggleCharts.bind(this)}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
                     showVolumeChart={showVolumeChart}
+                    chartHeight={chartHeight}
+                    onChangeChartHeight={this.onChangeChartHeight.bind(this)}
                 />
 
                 <div className="grid-block page-layout market-layout">
@@ -1689,9 +1691,6 @@ class Exchange extends React.Component {
                                                 });
                                             });
                                         }}
-                                        onChangeChartHeight={this.onChangeChartHeight.bind(
-                                            this
-                                        )}
                                         chartHeight={chartHeight}
                                         mobile={width < 800}
                                     />

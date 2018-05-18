@@ -1199,6 +1199,9 @@
             "show_all": "Show All",
             "search": "Asset name"
         },
+        "chart_modal": "Chart options",
+        "chart_height": "Chart height (pixels)",
+        "chart_type": "Chart type",
         "chart_options": {
             "tools": "Tools",
             "title": "Indicators",
