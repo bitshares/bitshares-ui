@@ -310,4 +310,80 @@ class DataFeed {
     }
 }
 
-export {DataFeed, SymbolInfo, getResolutionsFromBuckets};
+const supportedTimeZones = [
+    "Africa/Johannesburg",
+    "America/Argentina/Buenos_Aires",
+    "America/Bogota",
+    "America/Caracas",
+    "America/Chicago",
+    "America/El_Salvador",
+    "America/Los_Angeles",
+    "America/Mexico_City",
+    "America/New_York",
+    "America/Phoenix",
+    "America/Sao_Paulo",
+    "America/Toronto",
+    "America/Vancouver",
+    "Asia/Almaty",
+    "Asia/Ashkhabad",
+    "Asia/Bangkok",
+    "Asia/Dubai",
+    "Asia/Hong_Kong",
+    "Asia/Kathmandu",
+    "Asia/Kolkata",
+    "Asia/Seoul",
+    "Asia/Shanghai",
+    "Asia/Singapore",
+    "Asia/Taipei",
+    "Asia/Tehran",
+    "Asia/Tokyo",
+    "Australia/ACT",
+    "Australia/Adelaide",
+    "Australia/Brisbane",
+    "Australia/Sydney",
+    "Europe/Athens",
+    "Europe/Berlin",
+    "Europe/Istanbul",
+    "Europe/London",
+    "Europe/Madrid",
+    "Europe/Moscow",
+    "Europe/Paris",
+    "Europe/Warsaw",
+    "Europe/Zurich",
+    "Pacific/Auckland",
+    "Pacific/Chatham",
+    "Pacific/Fakaofo",
+    "Pacific/Honolulu",
+    "US/Mountain"
+];
+
+function getTVTimezone() {
+    const current = moment.tz.guess();
+
+    let isSupported = supportedTimeZones.indexOf(current) !== -1;
+    if (isSupported) return current;
+    else {
+        /* Try to find a matching timezone from the limited list supported by TradingView */
+        const time = moment().toISOString();
+        const defaultZone = "Europe/London";
+        const actual = moment.tz(time, current).format();
+        let continent = current.split("/")[0];
+        let possibleZones = supportedTimeZones.filter(
+            z => z.indexOf(continent) !== -1
+        );
+        if (!possibleZones.length) return defaultZone; // default
+        for (var i = 0; i < possibleZones.length; i++) {
+            let zoneTime = moment.tz(time, possibleZones[i]);
+            if (zoneTime.format() === actual) {
+                // Found a match, return that zone
+                return possibleZones[i];
+            }
+        }
+    }
+    console.log(
+        `No matching timezone found for ${current}, setting to default value of Europe/London`
+    );
+    return defaultZone;
+}
+
+export {DataFeed, SymbolInfo, getResolutionsFromBuckets, getTVTimezone};

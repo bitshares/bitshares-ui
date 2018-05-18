@@ -1,7 +1,7 @@
 import React from "react";
 const TradingView = require("../../../charting_library/charting_library.min.js");
 import colors from "assets/colors";
-import {getResolutionsFromBuckets} from "./tradingViewClasses";
+import {getResolutionsFromBuckets, getTVTimezone} from "./tradingViewClasses";
 
 // import {connect} from "alt-react";
 // import MarketsStore from "stores/MarketsStore";
@@ -18,7 +18,9 @@ export default class TradingViewPriceChart extends React.Component {
             "currentResolution",
             getResolutionsFromBuckets([props.bucketSize])[0],
             "symbol",
-            props.quoteSymbol + "_" + props.baseSymbol
+            props.quoteSymbol + "_" + props.baseSymbol,
+            "timezone:",
+            getTVTimezone()
         );
 
         dataFeed.update({
@@ -44,7 +46,7 @@ export default class TradingViewPriceChart extends React.Component {
             user_id: "public_user_id",
             autosize: true,
             locale: props.locale,
-            timezone: "Europe/Berlin",
+            timezone: getTVTimezone(),
             toolbar_bg: themeColors.bgColor,
             overrides: {
                 "paneProperties.background": themeColors.bgColor
