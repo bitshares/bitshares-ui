@@ -3,6 +3,7 @@ import {FetchChain} from "bitsharesjs/es";
 import moment from "moment-timezone";
 import MarketsActions from "actions/MarketsActions";
 import {getGatewayName} from "common/gatewayUtils";
+import utils from "common/utils";
 
 class SymbolInfo {
     constructor(options) {
@@ -17,9 +18,16 @@ class SymbolInfo {
                 : quoteGateway && !baseGateway
                     ? quoteGateway
                     : !quoteGateway && baseGateway ? baseGateway : "BitShares";
-        this.description = `${options.quoteAsset.get(
-            "symbol"
-        )} / ${options.baseAsset.get("symbol")} ${
+
+        let {name: baseSymbol, prefix: basePrefix} = utils.replaceName(
+            options.baseAsset
+        );
+        let {name: quoteSymbol, prefix: quotePrefix} = utils.replaceName(
+            options.quoteAsset
+        );
+
+        this.description = `${quotePrefix || ""}${quoteSymbol} / ${basePrefix ||
+            ""}${baseSymbol} ${
             !!currentExchange ? `(${currentExchange})` : ""
         }`;
         this.type = "bitcoin";
@@ -273,9 +281,11 @@ class DataFeed {
         onResetCacheNeededCallback
     ) {
         MarketsStore.unsubscribe("subscribeBars");
+        onResetCacheNeededCallback();
         MarketsStore.subscribe("subscribeBars", () => {
             let bars = this._getHistory();
             let newBars = bars.filter(a => {
+                if (!this.latestBar) return true;
                 return a.time > this.latestBar.time;
             });
             // console.log("subscribeBars", MarketsStore.getState().activeMarket, "found new bars:", newBars);
@@ -300,7 +310,15 @@ class DataFeed {
     }
 
     unsubscribeBars() {
-        MarketsStore.unsubscribe("subscribeBars");
+        /*
+        * This is ALWAYS called after subscribeBars for some reason, but
+        * sometimes it executes BEFORE the subscribe call in subscribeBars and
+        * sometimes AFTER. This causes the callback to be cleared and we stop
+        * receiving updates from the MarketStore. Unless we find it causes bugs,
+        * it's best to just not use this.
+        */
+        // MarketsStore.unsubscribe("subscribeBars");
+        // this.latestBar = null;
     }
 
     calculateHistoryDepth(resolution, resolutionBack, intervalBack) {

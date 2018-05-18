@@ -125,7 +125,7 @@ class MarketsStore {
      *  Add a callback that will be called anytime any object in the cache is updated
      */
     subscribe(id, callback) {
-        if (this.subscribers.has(callback))
+        if (this.subscribers.has(id) && this.subscribers.get(id) === callback)
             return console.error("Subscribe callback already exists", callback);
         this.subscribers.set(id, callback);
     }
@@ -276,6 +276,12 @@ class MarketsStore {
             this.onClearMarket();
             this.activeMarket = result.market;
             newMarket = true;
+            /*
+            * To prevent the callback from DataFeed to be called with new data
+            * before subscribeBars in DataFeed has been updated, we clear the
+            * callback subscription here
+            */
+            this.unsubscribe("subscribeBars");
         }
 
         /* Set the feed price (null if not a bitasset market) */
