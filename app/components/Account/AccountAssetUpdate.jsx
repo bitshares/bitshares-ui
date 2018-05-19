@@ -1676,7 +1676,7 @@ class ConfirmModal extends React.Component {
                 id={this.props.modalId}
                 overlay={true}
                 modalHeader="account.confirm_asset_modal.header"
-                noLoggo
+                noLogo
             >
                 <Translate
                     content="account.confirm_asset_modal.are_you_sure"
