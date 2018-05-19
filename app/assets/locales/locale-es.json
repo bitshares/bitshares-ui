@@ -477,6 +477,8 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Precio de Rescate (Call Price)",
         "change": "cambio",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
         "chart_options": {
             "bb": "Bandas de Bollinger",
             "clamp_chart": "Clamp chart edge",
@@ -495,6 +497,7 @@
             "volume": "Mostrar tabla de volúmenes",
             "volume_title": "Indicadores de volumen"
         },
+        "chart_type": "Chart type",
         "confirm_buy":
             "Tu pedido es %(diff)s veces más alto que la demanda más baja, ¿estás seguro?",
         "confirm_no_orders_buy":
@@ -544,11 +547,10 @@
         "my_bids": "Mis ofertas",
         "my_history": "Mis comercios",
         "my_orders": "Mis ordenes abiertos",
+        "native": "Native",
         "new": "Nuevo",
         "no_balance": "Saldo insuficiente",
-        "no_bids": "No bids",
         "no_data": "No data",
-        "no_orders": "No orders",
         "order_depth": "Profundidad de Mercado",
         "others": "Otros",
         "overbought": "Sobrecomprado",

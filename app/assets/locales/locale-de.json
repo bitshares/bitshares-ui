@@ -469,6 +469,8 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Preis",
         "change": "Änderung",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
         "chart_options": {
             "bb": "Bollinger Bands",
             "clamp_chart": "Clamp chart edge",
@@ -487,6 +489,7 @@
             "volume": "Show volume chart",
             "volume_title": "Volume indicators"
         },
+        "chart_type": "Chart type",
         "confirm_buy":
             "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy":
@@ -536,11 +539,10 @@
         "my_bids": "Meine Bids",
         "my_history": "Meine Historie",
         "my_orders": "My open orders",
+        "native": "Native",
         "new": "New",
         "no_balance": "Ungenügendes Guthaben",
-        "no_bids": "No bids",
         "no_data": "Keine Daten",
-        "no_orders": "No orders",
         "order_depth": "Ordertiefe",
         "others": "Others",
         "overbought": "Overbought",

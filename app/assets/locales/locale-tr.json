@@ -471,6 +471,8 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Çağrı Fiyatı",
         "change": "Değişim",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
         "chart_options": {
             "bb": "Bollinger Bands",
             "clamp_chart": "Clamp chart edge",
@@ -489,6 +491,7 @@
             "volume": "Show volume chart",
             "volume_title": "Volume indicators"
         },
+        "chart_type": "Chart type",
         "confirm_buy":
             "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
         "confirm_no_orders_buy":
@@ -538,11 +541,10 @@
         "my_bids": "Alış Fiyatlarım",
         "my_history": "Önceki İşlemlerim",
         "my_orders": "Açık emirlerim",
+        "native": "Native",
         "new": "Yeni",
         "no_balance": "Yetersiz bakiye",
-        "no_bids": "No bids",
         "no_data": "Veri yok",
-        "no_orders": "No orders",
         "order_depth": "Piyasa Derinliği",
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",

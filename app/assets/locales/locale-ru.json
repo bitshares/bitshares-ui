@@ -479,6 +479,8 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Цена досрочного погашения",
         "change": "Изменение",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
         "chart_options": {
             "bb": "Линии Боллинджера",
             "clamp_chart": "Зажмите край диаграммы",
@@ -497,6 +499,7 @@
             "volume": "Показать график объема",
             "volume_title": "Индикаторы объема"
         },
+        "chart_type": "Chart type",
         "confirm_buy":
             "Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
         "confirm_no_orders_buy":
@@ -545,11 +548,10 @@
         "my_bids": "Мои ставки",
         "my_history": "Мои сделки",
         "my_orders": "Мои открытые ордера",
+        "native": "Native",
         "new": "Новый",
         "no_balance": "Недостаточно средств",
-        "no_bids": "Нет ставок",
         "no_data": "Нет данных",
-        "no_orders": "Нет ордеров",
         "order_depth": "Глубина Рынка",
         "others": "Другие",
         "overbought": "Перекуплен",

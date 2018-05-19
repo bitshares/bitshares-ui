@@ -465,6 +465,8 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Prix de flux",
         "change": "Change",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
         "chart_options": {
             "bb": "Bollinger Bands",
             "clamp_chart": "Clamp chart edge",
@@ -483,6 +485,7 @@
             "volume": "Show volume chart",
             "volume_title": "Volume indicators"
         },
+        "chart_type": "Chart type",
         "confirm_buy":
             "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy":
@@ -532,11 +535,10 @@
         "my_bids": "My bids",
         "my_history": "My trades",
         "my_orders": "My open orders",
+        "native": "Native",
         "new": "New",
         "no_balance": "Insufficient balance",
-        "no_bids": "No bids",
         "no_data": "No data",
-        "no_orders": "No orders",
         "order_depth": "Carnet d'ordres",
         "others": "Others",
         "overbought": "Overbought",
