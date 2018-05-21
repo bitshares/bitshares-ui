@@ -952,7 +952,8 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Account",
