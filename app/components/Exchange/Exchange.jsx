@@ -1,6 +1,7 @@
 import React from "react";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
+import SettingsStore from "stores/SettingsStore";
 import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
@@ -29,6 +30,8 @@ import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
+import guide from "intro.js";
+import translator from "counterpart";
 
 Highcharts.setOptions({
     global: {
@@ -328,8 +331,50 @@ class Exchange extends React.Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         this._initPsContainer();
+
+        if (
+            !this.state.isTutorialShown &&
+            prevProps.coreAsset &&
+            prevState.feeStatus
+        ) {
+            if (!this.props.exchange.get("tutorialShown")) {
+                // use setState to immediately block
+                // new help hint because
+                // settingsStore takes effect with a little delay
+                this.setState({
+                    isTutorialShown: true
+                });
+
+                const theme = SettingsStore.getState().settings.get("themes");
+
+                guide
+                    .introJs()
+                    .setOptions({
+                        tooltipClass: theme,
+                        highlightClass: theme,
+                        showBullets: false,
+                        hideNext: true,
+                        hidePrev: true,
+                        nextLabel: translator.translate(
+                            "walkthrough.next_label"
+                        ),
+                        prevLabel: translator.translate(
+                            "walkthrough.prev_label"
+                        ),
+                        skipLabel: translator.translate(
+                            "walkthrough.skip_label"
+                        ),
+                        doneLabel: translator.translate(
+                            "walkthrough.done_label"
+                        )
+                    })
+                    .start();
+
+                SettingsActions.setExchangeTutorialShown(true);
+            }
+        }
     }
 
     _initPsContainer() {
