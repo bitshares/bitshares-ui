@@ -386,11 +386,13 @@ class OrderBook extends React.Component {
             });
 
             let tempAsks = combinedAsks;
-            if (!horizontal) {
-                tempAsks.sort((a, b) => {
+            tempAsks.sort((a, b) => {
+                if (horizontal) {
+                    return a.getPrice() - b.getPrice();
+                } else {
                     return b.getPrice() - a.getPrice();
-                });
-            }
+                }
+            });
             askRows = tempAsks.map((order, index) => {
                 return horizontal ? (
                     <OrderBookRowHorizontal
