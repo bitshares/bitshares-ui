@@ -1449,7 +1449,7 @@
     "transaction": {
         "amount_sell": "Amount to sell",
         "asset_claim_fees":
-            "claimed asset fees of %(balance_amount)s from %(asset)s fee pool",
+            "claimed asset fees of {balance_amount} from {asset} fee pool",
         "asset_reserve": "burned asset amount",
         "at": "at",
         "balance_id": "Balance ID",

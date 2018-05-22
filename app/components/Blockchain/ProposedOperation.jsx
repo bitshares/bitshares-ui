@@ -1117,14 +1117,12 @@ class ProposedOperation extends React.Component {
                             asset={op[1].amount_to_claim.asset_id}
                         >
                             {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="proposal.asset_claim_fees"
-                                    balance_amount={utils.format_asset(
-                                        op[1].amount_to_claim.amount,
-                                        asset
-                                    )}
-                                    asset={asset.get("symbol")}
+                                <TranslateWithLinks
+                                    string="transaction.asset_claim_fees"
+                                    keys={[
+                                        {type: "amount", value: op[1].amount_to_claim, arg: "balance_amount"},
+                                        {type: "asset", value: asset.get("id"), arg: "asset"}
+                                    ]}
                                 />
                             )}
                         </BindToChainState.Wrapper>
