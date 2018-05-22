@@ -67,9 +67,19 @@ export const ExpandButton = ({onToggle, expanded}) => (
 
 export const ApprovedIcon = ({approved}) =>
     approved ? (
-        <Icon name="checkmark-circle" size="1x" className="success" />
+        <Icon
+            name="checkmark-circle"
+            size="1x"
+            className="success"
+            title="icons.checkmark_circle.operation_succeed"
+        />
     ) : (
-        <Icon name="cross-circle" size="1x" className="error" />
+        <Icon
+            name="cross-circle"
+            size="1x"
+            className="error"
+            title="icons.cross_circle.operation_failed"
+        />
     );
 
 export const KeyPermissionBranch = ({available, permission, weight, level}) => (

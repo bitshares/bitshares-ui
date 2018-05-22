@@ -800,7 +800,7 @@ class SendModal extends React.Component {
                                             {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
                                             <span className="grid-block tooltip" data-place="top" data-tip={counterpart.translate("tooltip.propose_tip")} onClick={this.onProposeTooltip.bind(this)}>
                                                 <Translate className="left-label" component="label" content="propose"/>
-                                                <Icon style={{position: "relative", top: 0, marginLeft: "0.5rem"}} name="question-circle" />
+                                                <Icon style={{position: "relative", top: 0, marginLeft: "0.5rem"}} name="question-circle" title="icons.question_circle" />
                                             </span>
                                             <div className="switch" style={{marginBottom: "-6px"}} onClick={this.onPropose.bind(this)}>
                                                 <input type="checkbox" checked={this.state.propose} tabIndex={tabIndex++} />
