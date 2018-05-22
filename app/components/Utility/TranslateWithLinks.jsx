@@ -90,8 +90,9 @@ export default class TranslateWithLinks extends React.Component {
                                     hide_asset
                                 />&nbsp;
                                 {this.linkToAsset(key.value.asset_id)}
-                            </span>);
-                        
+                            </span>
+                        );
+
                         break;
 
                     case "price":
@@ -127,8 +128,13 @@ export default class TranslateWithLinks extends React.Component {
                         break;
 
                     case "icon":
+                        let title = name.replace("-", "_");
                         value = (
-                            <Icon className={key.className} name={key.value} />
+                            <Icon
+                                className={key.className}
+                                name={key.value}
+                                title={title}
+                            />
                         );
                         break;
 

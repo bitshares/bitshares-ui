@@ -109,7 +109,11 @@ class MarketRow extends React.Component {
                                 )}
                                 key={column.index}
                             >
-                                <Icon className={starClass} name="fi-star" />
+                                <Icon
+                                    className={starClass}
+                                    name="fi-star"
+                                    title="icons.fi_star.symbol"
+                                />
                             </td>
                         );
 

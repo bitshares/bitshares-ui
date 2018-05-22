@@ -198,6 +198,7 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
+                                        title="icons.download"
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
