@@ -18,17 +18,11 @@ import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 const leftAlign = {textAlign: "left"};
+import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
-        let {
-            baseSymbol,
-            quoteSymbol,
-            dashboard,
-            isMyAccount,
-            settings
-        } = this.props;
-        let preferredUnit = settings ? settings.get("unit") : "1.3.0";
+        let {baseSymbol, quoteSymbol, dashboard, isMyAccount} = this.props;
 
         return !dashboard ? (
             <thead>

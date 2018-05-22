@@ -1267,6 +1267,7 @@
         "asset_issue": "{account}は{amount}を{to}に発行しました",
         "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
         "asset_settle": "{account}は{amount}の決済を依頼しました",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers":
             "{account}はアセット{asset}のフィード作成者を更新しました",
@@ -1653,6 +1654,7 @@
             "asset_publish_feed": "フィードを公開",
             "asset_reserve": "アセットを消却",
             "asset_settle": "アセット決済",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "アセットを更新",
             "asset_update_bitasset": "スマートコインを更新",
             "asset_update_feed_producers": "アセットのフィード作成者を更新",

@@ -595,14 +595,20 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate
-                            component="span"
-                            content="proposal.asset_settle"
-                        />
-                        &nbsp;<FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
+                        <TranslateWithLinks
+                            string="proposal.asset_settle"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].account,
+                                    arg: "account"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                }
+                            ]}
                         />
                     </span>
                 );
@@ -1120,8 +1126,16 @@ class ProposedOperation extends React.Component {
                                 <TranslateWithLinks
                                     string="transaction.asset_claim_fees"
                                     keys={[
-                                        {type: "amount", value: op[1].amount_to_claim, arg: "balance_amount"},
-                                        {type: "asset", value: asset.get("id"), arg: "asset"}
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount_to_claim,
+                                            arg: "balance_amount"
+                                        },
+                                        {
+                                            type: "asset",
+                                            value: asset.get("id"),
+                                            arg: "asset"
+                                        }
                                     ]}
                                 />
                             )}

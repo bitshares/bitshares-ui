@@ -1265,6 +1265,7 @@
         "asset_issue": "{account} issued {amount} to {to}",
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
@@ -1325,7 +1326,7 @@
             "Create the asset %(asset)s using the account {account}",
         "asset_issue": "Issue {amount} to {to} using {account}",
         "asset_reserve": "Burn (reserve) {amount} using {account}",
-        "asset_settle": "Request a settlement of",
+        "asset_settle": "Request a settlement of {amount} for {account}",
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update":
             "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
@@ -1651,6 +1652,7 @@
             "asset_publish_feed": "Publish feed",
             "asset_reserve": "Burn asset",
             "asset_settle": "Asset settlement",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Update asset",
             "asset_update_bitasset": "Update SmartCoin",
             "asset_update_feed_producers": "Update asset feed producers",

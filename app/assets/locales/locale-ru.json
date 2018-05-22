@@ -1287,6 +1287,7 @@
         "asset_issue": "{account} эмитировал {amount} к {to}",
         "asset_reserve": "{account} сжег (зарезервировал) {amount}",
         "asset_settle": "{account} запросил погашение {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} обновил актив {asset}",
         "asset_update_feed_producers":
             "{account} обновил определяющих котировки актива {asset}",
@@ -1684,6 +1685,7 @@
             "asset_publish_feed": "Публикация котировок",
             "asset_reserve": "Сжечь актив",
             "asset_settle": "Погашение активов",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Обновление актива",
             "asset_update_bitasset": "Обновление SmartCoin",
             "asset_update_feed_producers":

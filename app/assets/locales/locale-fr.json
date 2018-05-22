@@ -1265,6 +1265,7 @@
         "asset_issue": "{account} à assigné {amount} à {to}",
         "asset_reserve": "{account} a détruit {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} a mis à jour l'actif {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
@@ -1653,6 +1654,7 @@
             "asset_publish_feed": "Publication de flux",
             "asset_reserve": "Destruction d'actif",
             "asset_settle": "Couvrement d'actif",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Mise à jour d'actif",
             "asset_update_bitasset": "Mise à jour d'actif de marché",
             "asset_update_feed_producers": "Mise à jour des flux",

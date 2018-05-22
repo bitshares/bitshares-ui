@@ -1273,6 +1273,7 @@
             "{account} tarafından {amount}, {to} adlı hesaba düzenlendi.",
         "asset_reserve": "{account} {amount} kadar miktarı rezerve etti.",
         "asset_settle": "{account} ödeme talep etti - Miktar: {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} şu dijital varlığı güncelledi: {asset}",
         "asset_update_feed_producers":
             "{account} şu dijital varlığın fiyat kaynaklarını güncelledi: {asset}",
@@ -1665,6 +1666,7 @@
             "asset_publish_feed": "Yayın Duyurma",
             "asset_reserve": "Rezerve et",
             "asset_settle": "Aktif ödemesi",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Güncelle",
             "asset_update_bitasset": "Akıllıpara güncelleme",
             "asset_update_feed_producers": "Fiyat kaynağı hesabı güncelleme",

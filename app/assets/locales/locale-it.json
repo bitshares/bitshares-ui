@@ -1281,6 +1281,7 @@
         "asset_issue": "{account} ha emesso {amount} a {to}",
         "asset_reserve": "{account} ha riservato (bruciato) {amount}",
         "asset_settle": "{account} ha richiesto il settlement di {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} ha aggiornato l'asset {asset}",
         "asset_update_feed_producers":
             "{account} ha aggiornato i produttori di feed per l'asset {asset}",
@@ -1680,6 +1681,7 @@
             "asset_publish_feed": "Pubblica feed",
             "asset_reserve": "Riserva asset",
             "asset_settle": "Settlement dell'asset",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Aggiorna asset",
             "asset_update_bitasset": "Aggiorna SmartCoin",
             "asset_update_feed_producers":

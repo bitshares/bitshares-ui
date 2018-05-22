@@ -1280,6 +1280,7 @@
         "asset_issue": "{account} emitido {amount} a {to}",
         "asset_reserve": "{account} reservado {amount}",
         "asset_settle": "{account} solicitó la liquidación de {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} actualizado el activo {asset}",
         "asset_update_feed_producers":
             "{account} actualizado los productores para el activo {asset}",
@@ -1684,6 +1685,7 @@
             "asset_publish_feed": "Publicar feed",
             "asset_reserve": "Incinerar activo",
             "asset_settle": "Liquidación de Activos",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Actualizar activo",
             "asset_update_bitasset": "Actualizar SmartCoin",
             "asset_update_feed_producers":
