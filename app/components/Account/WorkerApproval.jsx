@@ -60,7 +60,9 @@ class WorkerApproval extends React.Component {
         let total_votes = worker.total_votes_for - worker.total_votes_against;
         let approvalState = this.props.vote_ids.has(worker.vote_for)
             ? true
-            : this.props.vote_ids.has(worker.vote_against) ? false : null;
+            : this.props.vote_ids.has(worker.vote_against)
+                ? false
+                : null;
 
         let fundedPercent = 0;
 
@@ -119,7 +121,7 @@ class WorkerApproval extends React.Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon name="share" />
+                            <Icon name="share" title="icons.share" />
                         </a>
                     </div>
                     <div
@@ -209,9 +211,14 @@ class WorkerApproval extends React.Component {
                                     ? "checkmark-circle"
                                     : "minus-circle"
                             }
+                            title={
+                                approvalState
+                                    ? "icons.checkmark_circle.approved"
+                                    : "icons.minus_circle.disapproved"
+                            }
                         />
                     ) : (
-                        <Icon name="locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>

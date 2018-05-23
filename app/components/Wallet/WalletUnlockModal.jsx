@@ -184,8 +184,8 @@ class WalletUnlockModal extends React.Component {
             WalletUnlockActions.change();
             if (stopAskingForBackup) WalletActions.setBackupDate();
             else if (this.shouldUseBackupLogin()) this.backup();
-            WalletUnlockActions.cancel();
             resolve();
+            WalletUnlockActions.cancel();
         }
     };
 

@@ -302,6 +302,7 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="user"
+                    title="icons.user.following"
                 />
             </span>
         ) : (
@@ -318,6 +319,7 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="plus-circle"
+                    title="icons.plus_circle.add_contact"
                 />
             </span>
         );
@@ -369,7 +371,11 @@ class AccountSelector extends React.Component {
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
-                                    <Icon name="key" size="4x" />
+                                    <Icon
+                                        name="key"
+                                        title="icons.key"
+                                        size="4x"
+                                    />
                                 </div>
                             ) : this.props.hideImage ? null : (
                                 <AccountImage

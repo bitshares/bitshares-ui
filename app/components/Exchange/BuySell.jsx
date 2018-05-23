@@ -192,6 +192,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question_circle"
                         />
                     </span>
                 </div>
@@ -240,6 +241,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question-circle"
                         />
                     </span>
                 </div>
@@ -262,7 +264,9 @@ class BuySell extends React.Component {
         let marketFee =
             isBid && quoteMarketFee
                 ? quoteMarketFee
-                : !isBid && baseMarketFee ? baseMarketFee : null;
+                : !isBid && baseMarketFee
+                    ? baseMarketFee
+                    : null;
         let hasBalance = isBid
             ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
             : balanceAmount.getAmount({real: true}) >= parseFloat(amount);

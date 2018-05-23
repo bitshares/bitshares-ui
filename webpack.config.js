@@ -9,10 +9,6 @@ var __VERSION__ = require("./package.json").version;
 var root_dir = path.resolve(__dirname);
 
 module.exports = function(env) {
-    // if (!env.profile) {
-    //     console.log("env:", env);
-    // }
-    // console.log(env.prod ? "Using PRODUCTION options\n" : "Using DEV options\n");
     // STYLE LOADERS
     var cssLoaders = [
         {
@@ -170,7 +166,6 @@ module.exports = function(env) {
 
     var config = {
         entry: {
-            // vendor: ["react", "react-dom", "highcharts/highstock", "bitsharesjs", "lodash"],
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [

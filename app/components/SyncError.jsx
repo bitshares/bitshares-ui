@@ -10,7 +10,6 @@ import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import counterpart from "counterpart";
 import AccessSettings from "./Settings/AccessSettings";
 
-const optionalApis = {enableCrypto: true, enableOrders: true};
 class SyncError extends React.Component {
     triggerModal(e) {
         this.refs.ws_modal.show(e);
@@ -21,7 +20,7 @@ class SyncError extends React.Component {
             setting: "apiServer",
             value: e.target.value
         });
-        Apis.reset(e.target.value, true, 4000, optionalApis);
+        Apis.reset(e.target.value, true);
         setTimeout(() => {
             this.onReloadClick();
         }, 50);
@@ -80,7 +79,8 @@ class SyncError extends React.Component {
                     <p style={{marginBottom: 0}}>
                         <Translate content="sync_fail.sub_text_1" />
                     </p>
-                    <Icon name="clock" size="5x" />
+
+                    <Icon name="clock" title="icons.clock" size="5x" />
 
                     <p>
                         <Translate unsafe content="sync_fail.sub_text_2" />

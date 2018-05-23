@@ -19,6 +19,7 @@ import ProposedOperation from "./ProposedOperation";
 import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
+import moment from "moment";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -138,7 +139,9 @@ class Transaction extends React.Component {
             let key = 0;
 
             let color = "";
-            switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+            switch (
+                ops[op[0]] // For a list of trx types, see chain_types.coffee
+            ) {
                 case "transfer":
                     color = "success";
 
@@ -153,7 +156,10 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" />
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;
@@ -303,7 +309,7 @@ class Transaction extends React.Component {
                             </td>
                             <td>
                                 <FormattedDate
-                                    value={op[1].expiration}
+                                    value={moment.utc(op[1].expiration)}
                                     format="full"
                                     timeZoneName="short"
                                 />
@@ -966,7 +972,10 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
                                 <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" />
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;
