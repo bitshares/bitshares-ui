@@ -312,7 +312,11 @@ class RecentTransactions extends React.Component {
                                 )}
                                 data-place="bottom"
                             >
-                                <Icon name="excel" className="icon-14px" />
+                                <Icon
+                                    name="excel"
+                                    title="icons.excel"
+                                    className="icon-14px"
+                                />
                             </a>
                         </span>
                     ) : null}
@@ -322,7 +326,11 @@ class RecentTransactions extends React.Component {
                         historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (
                         <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon name="chevron-down" className="icon-14px" />
+                            <Icon
+                                name="chevron-down"
+                                title="icons.chevron_down.transactions"
+                                className="icon-14px"
+                            />
                         </a>
                     ) : null}
                 </td>

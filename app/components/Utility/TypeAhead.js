@@ -191,6 +191,7 @@ export default class TypeAhead extends React.Component {
                 <Icon
                     onClick={this.onClick}
                     name="chevron-down"
+                    title="icons.chevron_down.other"
                     style={{
                         position: "absolute",
                         right: 10,
