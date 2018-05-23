@@ -347,7 +347,7 @@ class Exchange extends React.Component {
                     isTutorialShown: true
                 });
 
-                const theme = SettingsStore.getState().settings.get("themes");
+                const theme = this.props.settings.get("themes");
 
                 guide
                     .introJs()
