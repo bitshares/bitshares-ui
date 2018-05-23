@@ -1189,14 +1189,20 @@ class Operation extends React.Component {
                             asset={op[1].amount_to_claim.asset_id}
                         >
                             {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="transaction.asset_claim_fees"
-                                    balance_amount={utils.format_asset(
-                                        op[1].amount_to_claim.amount,
-                                        asset
-                                    )}
-                                    asset={asset.get("symbol")}
+                                <TranslateWithLinks
+                                    string="transaction.asset_claim_fees"
+                                    keys={[
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount_to_claim,
+                                            arg: "balance_amount"
+                                        },
+                                        {
+                                            type: "asset",
+                                            value: asset.get("id"),
+                                            arg: "asset"
+                                        }
+                                    ]}
                                 />
                             )}
                         </BindToChainState.Wrapper>
@@ -1270,6 +1276,22 @@ class Operation extends React.Component {
                             },
                             {type: "account", value: op[1].from, arg: "from"},
                             {type: "account", value: op[1].to, arg: "to"},
+                            {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
+                );
+                break;
+
+            case "asset_settle_cancel":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_settle_cancel"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
                             {type: "amount", value: op[1].amount, arg: "amount"}
                         ]}
                     />

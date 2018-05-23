@@ -82,6 +82,7 @@ class TransactionConfirm extends React.Component {
                             &nbsp;&nbsp;<span>
                                 <Icon
                                     name="checkmark-circle"
+                                    title="icons.checkmark_circle.operation_succeed"
                                     size="1x"
                                     className="success"
                                 />
@@ -140,6 +141,7 @@ class TransactionConfirm extends React.Component {
                     <div className="float-left">
                         <Icon
                             name="checkmark-circle"
+                            title="icons.checkmark_circle.operation_succeed"
                             size="4x"
                             className="success"
                         />

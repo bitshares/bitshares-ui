@@ -386,11 +386,13 @@ class OrderBook extends React.Component {
             });
 
             let tempAsks = combinedAsks;
-            if (!horizontal) {
-                tempAsks.sort((a, b) => {
+            tempAsks.sort((a, b) => {
+                if (horizontal) {
+                    return a.getPrice() - b.getPrice();
+                } else {
                     return b.getPrice() - a.getPrice();
-                });
-            }
+                }
+            });
             askRows = tempAsks.map((order, index) => {
                 return horizontal ? (
                     <OrderBookRowHorizontal
@@ -559,6 +561,7 @@ class OrderBook extends React.Component {
                                         >
                                             <Icon
                                                 name="thumb-tack"
+                                                title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
                                         </span>
@@ -672,6 +675,7 @@ class OrderBook extends React.Component {
                                         >
                                             <Icon
                                                 name="thumb-tack"
+                                                title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
                                         </span>
@@ -799,7 +803,7 @@ class OrderBook extends React.Component {
                                         colSpan={3}
                                         className="no-orders padtop"
                                     >
-                                        No orders
+                                        <Translate content="exchange.no_orders" />
                                     </td>
                                 ) : (
                                     <td
@@ -816,7 +820,7 @@ class OrderBook extends React.Component {
                                                                 .toggleSpreadValue
                                                         }
                                                     >
-                                                        Spread{" "}
+                                                        <Translate content="exchange.spread" />{" "}
                                                         <span className="spread-value">
                                                             {spread}
                                                         </span>
@@ -832,10 +836,15 @@ class OrderBook extends React.Component {
                                                             ? "locked"
                                                             : "unlocked"
                                                     }
+                                                    title={
+                                                        this.state.autoScroll
+                                                            ? "icons.locked.enable_auto_scroll"
+                                                            : "icons.unlocked.disable_auto_scroll"
+                                                    }
                                                 />
                                                 {!!this.props.latest && (
                                                     <span className="right">
-                                                        Latest{" "}
+                                                        <Translate content="exchange.latest" />{" "}
                                                         <span
                                                             className={
                                                                 this.props
@@ -870,7 +879,7 @@ class OrderBook extends React.Component {
                                                   className="cell no-orders"
                                                   colSpan="3"
                                               >
-                                                  No bids
+                                                  <Translate content="exchange.no_bids" />
                                               </td>
                                           </div>
                                       )}
@@ -881,6 +890,7 @@ class OrderBook extends React.Component {
                         <div onClick={this.props.moveOrderBook}>
                             <Icon
                                 name="thumb-untack"
+                                title="icons.thumb_untack"
                                 className="icon-14px order-book-button-h"
                             />
                         </div>

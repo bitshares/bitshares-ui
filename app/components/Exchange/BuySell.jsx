@@ -192,6 +192,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question_circle"
                         />
                     </span>
                 </div>
@@ -240,6 +241,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question-circle"
                         />
                     </span>
                 </div>

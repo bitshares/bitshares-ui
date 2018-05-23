@@ -82,7 +82,11 @@ class PubKeyInput extends React.Component {
                         <span className="inline-label">
                             <div className="account-image">
                                 <PrivateKeyView pubkey={this.props.value}>
-                                    <Icon name="key" size="4x" />
+                                    <Icon
+                                        name="key"
+                                        title="icons.key"
+                                        size="4x"
+                                    />
                                 </PrivateKeyView>
                             </div>
                             <input

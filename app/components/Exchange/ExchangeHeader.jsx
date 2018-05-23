@@ -231,7 +231,11 @@ export default class ExchangeHeader extends React.Component {
                                         "walkthrough.switch_button"
                                     )}
                                 >
-                                    <Icon className="shuffle" name="shuffle" />
+                                    <Icon
+                                        className="shuffle"
+                                        name="shuffle"
+                                        title="icons.shuffle"
+                                    />
                                 </Link>
 
                                 <Link
@@ -248,6 +252,7 @@ export default class ExchangeHeader extends React.Component {
                                     <Icon
                                         className={starClass}
                                         name="fi-star"
+                                        title="icons.fi_star.market"
                                     />
                                 </Link>
                             </div>
@@ -313,7 +318,7 @@ export default class ExchangeHeader extends React.Component {
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
-                                            "tooltip.settle_price"
+                                            "tooltip.feed_price"
                                         )}
                                         ready={marketReady}
                                         className="hide-order-3"

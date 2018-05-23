@@ -616,9 +616,7 @@ class AccountAssetUpdate extends React.Component {
 
         amount.amount = utils.limitByPrecision(
             amount.amount,
-            type === "quote"
-                ? this.props.asset.get("precision")
-                : this.props.core.get("precision")
+            amount.asset.get("precision")
         );
 
         let {core_exchange_rate} = this.state;

@@ -119,7 +119,7 @@ class WorkerApproval extends React.Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon name="share" />
+                            <Icon name="share" title="icons.share" />
                         </a>
                     </div>
                     <div
@@ -209,9 +209,14 @@ class WorkerApproval extends React.Component {
                                     ? "checkmark-circle"
                                     : "minus-circle"
                             }
+                            title={
+                                approvalState
+                                    ? "icons.checkmark_circle.approved"
+                                    : "icons.minus_circle.disapproved"
+                            }
                         />
                     ) : (
-                        <Icon name="locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>
