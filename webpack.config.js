@@ -294,7 +294,14 @@ module.exports = function(env) {
                         },
                         {
                             loader: "svgo-loader",
-                            options: {}
+                            options: {
+                                plugins: [
+                                    {cleanupAttrs: true},
+                                    {removeMetadata: true},
+                                    {removeXMLNS: true},
+                                    {removeViewBox: false}
+                                ]
+                            }
                         }
                     ]
                 },
