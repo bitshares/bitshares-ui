@@ -3,6 +3,7 @@ import BaseModal from "components/Modal/BaseModal";
 import QrReader from "react-qr-reader";
 import Icon from "./Icon/Icon";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import counterpart from "counterpart";
 
 class QRScanner extends React.Component {
     modalId = "qr_scanner_modal";
@@ -134,7 +135,9 @@ class QRScanner extends React.Component {
                             <div>
                                 <div className="qr-address-scanner-status">
                                     <div className="qr-address-scanner-status-title">
-                                        Address found:
+                                        {counterpart.translate(
+                                            "qr_address_scanner.address_found"
+                                        )}:
                                     </div>
                                     <div className="qr-address-scanner-status-address">
                                         {this.state.address}
@@ -142,7 +145,9 @@ class QRScanner extends React.Component {
 
                                     {this.state.amount && (
                                         <div className="qr-address-scanner-status-title">
-                                            Amount:
+                                            {counterpart.translate(
+                                                "qr_address_scanner.amount"
+                                            )}
                                         </div>
                                     )}
                                     {this.state.amount && (
@@ -159,13 +164,17 @@ class QRScanner extends React.Component {
                                         className="button"
                                         onClick={this.submit}
                                     >
-                                        use address
+                                        {counterpart.translate(
+                                            "qr_address_scanner.use_address"
+                                        )}
                                     </button>
                                     <button
                                         className="button hollow primary"
                                         onClick={this.retry}
                                     >
-                                        retry
+                                        {counterpart.translate(
+                                            "qr_address_scanner.retry"
+                                        )}
                                     </button>
                                 </div>
                             </div>

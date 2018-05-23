@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "Adresse gefunden",
+        "amount": "Betrag",
+        "use_address": "Adresse verwenden",
+        "retry": "Wiederholen"
+    },
     "account": {
         "accounts": "Accounts",
         "activity": "Activity",

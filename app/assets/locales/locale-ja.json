@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "住所が見つかりました",
+        "amount": "量",
+        "use_address": "住所を使用する",
+        "retry": "リトライ"
+    },
     "account": {
         "accounts": "アカウント",
         "activity": "アクティビティ",

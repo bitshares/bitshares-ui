@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "다시 해 보다",
+        "amount": "양",
+        "use_address": "주소를 사용하다",
+        "retry": "다시 해 보다"
+    },
     "account": {
         "accounts": "Accounts",
         "activity": "Activity",

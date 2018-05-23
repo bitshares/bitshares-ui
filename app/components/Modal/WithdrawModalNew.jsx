@@ -841,6 +841,8 @@ class WithdrawModalNew extends React.Component {
     }
 
     handleQrScanSuccess(data) {
+        // if user don't put quantity on field by himself
+        // use amount detected on QR code
         if (!this.state.quantity) {
             this.setState({
                 address: data.address,

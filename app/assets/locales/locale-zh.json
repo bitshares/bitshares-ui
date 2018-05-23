@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "找到地址",
+        "amount": "量",
+        "use_address": "使用地址",
+        "retry": "重试"
+    },
     "account": {
         "accounts": "账户",
         "activity": "账户记录",
