@@ -24,6 +24,8 @@ class SettingsStore {
         this.bindListeners({
             onSetExchangeLastExpiration:
                 SettingsActions.setExchangeLastExpiration,
+            onSetExchangeTutorialShown:
+                SettingsActions.setExchangeTutorialShown,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
@@ -492,6 +494,10 @@ class SettingsStore {
 
     onSetExchangeLastExpiration(value) {
         this.setExchangeSettings("lastExpiration", fromJS(value));
+    }
+
+    onSetExchangeTutorialShown(value) {
+        this.setExchangeSettings("tutorialShown", value);
     }
 
     getExhchangeLastExpiration() {

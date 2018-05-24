@@ -937,7 +937,14 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
+    },
+    "qr_address_scanner": {
+        "address_found": "Address found",
+        "amount": "Amount",
+        "use_address": "Use Address",
+        "retry": "Retry"
     },
     "header": {
         "account": "Account",

@@ -2313,6 +2313,60 @@
             border: 1px solid $bg-color;
         }
     }
+
+    .qr-address-scanner {
+        &-btn {
+            background: #049cce;
+            height: 2.4rem;
+            border-radius: 0 5px 5px 0;
+            width: 40px;
+            span.icon {
+                background: transparent;
+            }
+            svg {
+                background: transparent;
+            }
+        }
+        &-divider {
+            margin: 24px 0;
+            height: 1px;
+            width: 100%;
+            background: $bg-color;
+        }
+        &-modal {
+        }
+        &-input-field {
+            border-radius: 5px 0 0 5px !important;
+        }
+
+        &-status {
+            font-size: 0.95rem;
+            margin: 24px;
+            &-title {
+                margin-bottom: 12px;
+                margin-top: 12px;
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+            &-address {
+                color: $success-color;
+            }
+            &-amount {
+                color: $success-color;
+            }
+        }
+
+        &-actions {
+            margin: 24px;
+        }
+
+        .modal {
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    }
 }
 
 .rc-time-picker-panel {
