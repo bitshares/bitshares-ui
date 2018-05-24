@@ -68,6 +68,10 @@ class SettingsActions {
     setExchangeLastExpiration(value) {
         return value;
     }
+
+    setExchangeTutorialShown(value) {
+        return value;
+    }
 }
 
 export default alt.createActions(SettingsActions);

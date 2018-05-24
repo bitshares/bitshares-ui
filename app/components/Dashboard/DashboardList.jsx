@@ -15,6 +15,7 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
+import PropTypes from "prop-types";
 
 const starSort = function(a, b, inverse, starredAccounts) {
     let aName = a.get("name");
@@ -39,7 +40,7 @@ const starSort = function(a, b, inverse, starredAccounts) {
 
 class DashboardList extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     static propTypes = {

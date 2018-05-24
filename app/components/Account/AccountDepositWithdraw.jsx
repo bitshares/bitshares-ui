@@ -21,11 +21,12 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
+import PropTypes from "prop-types";
 
 class AccountDepositWithdraw extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        contained: React.PropTypes.bool
+        contained: PropTypes.bool
     };
 
     static defaultProps = {

@@ -9,7 +9,7 @@ import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash";
+import {debounce, isNaN} from "lodash-es";
 import {
     checkFeeStatusAsync,
     checkBalance,
@@ -21,10 +21,11 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
+import PropTypes from "prop-types";
 
 class SendModal extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {

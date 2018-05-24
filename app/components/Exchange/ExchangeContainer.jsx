@@ -4,6 +4,7 @@ import AccountStore from "stores/AccountStore";
 import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import GatewayStore from "stores/GatewayStore";
+import IntlStore from "stores/IntlStore";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import AltContainer from "alt-container";
 import Exchange from "./Exchange";
@@ -11,6 +12,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import {EmitterInstance} from "bitsharesjs/es";
 import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
+import {DataFeed} from "components/Exchange/tradingViewClasses";
 import Page404 from "../Page404/Page404";
 
 class ExchangeContainer extends React.Component {
@@ -25,9 +27,11 @@ class ExchangeContainer extends React.Component {
                     MarketsStore,
                     AccountStore,
                     SettingsStore,
-                    WalletUnlockStore
+                    WalletUnlockStore,
+                    IntlStore
                 ]}
                 inject={{
+                    locale: () => IntlStore.getState().currentLocale,
                     lockedWalletState: () => {
                         return WalletUnlockStore.getState().locked;
                     },
@@ -118,6 +122,9 @@ class ExchangeContainer extends React.Component {
                             true
                         );
                     },
+
+                    dataFeed: () => new DataFeed(),
+
                     trackedGroupsConfig: () => {
                         return MarketsStore.getState().trackedGroupsConfig;
                     },
@@ -310,7 +317,6 @@ class ExchangeSubscriber extends React.Component {
 }
 
 ExchangeSubscriber = BindToChainState(ExchangeSubscriber, {
-    keep_updating: true,
     show_loader: true
 });
 

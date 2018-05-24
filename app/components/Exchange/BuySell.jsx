@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -866,4 +866,4 @@ class BuySell extends React.Component {
     }
 }
 
-export default BindToChainState(BuySell, {keep_updating: true});
+export default BindToChainState(BuySell);

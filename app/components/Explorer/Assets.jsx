@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import AssetActions from "actions/AssetActions";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router/es";
@@ -135,7 +135,9 @@ class Assets extends React.Component {
                         "_" +
                         (description.market
                             ? description.market
-                            : coreAsset ? coreAsset.get("symbol") : "BTS");
+                            : coreAsset
+                                ? coreAsset.get("symbol")
+                                : "BTS");
 
                     return (
                         <tr key={asset.symbol}>
@@ -194,7 +196,9 @@ class Assets extends React.Component {
                         "_" +
                         (description.market
                             ? description.market
-                            : coreAsset ? coreAsset.get("symbol") : "BTS");
+                            : coreAsset
+                                ? coreAsset.get("symbol")
+                                : "BTS");
 
                     return (
                         <tr key={asset.symbol}>
@@ -263,7 +267,9 @@ class Assets extends React.Component {
                         "_" +
                         (description.market
                             ? description.market
-                            : coreAsset ? coreAsset.get("symbol") : "BTS");
+                            : coreAsset
+                                ? coreAsset.get("symbol")
+                                : "BTS");
 
                     return (
                         <tr key={asset.id.split(".")[2]}>

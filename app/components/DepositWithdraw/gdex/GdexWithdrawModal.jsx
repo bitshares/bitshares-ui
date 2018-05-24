@@ -10,21 +10,21 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gdexMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset, Price} from "common/MarketClasses";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
+import PropTypes from "prop-types";
 
 class GdexWithdrawModal extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
-        memo_rule: React.PropTypes.string.isRequired,
+        memo_rule: PropTypes.string.isRequired,
         balance: ChainTypes.ChainObject,
-        output_supports_memos: React.PropTypes.bool.isRequired
+        output_supports_memos: PropTypes.bool.isRequired
     };
 
     constructor(props) {
@@ -677,7 +677,7 @@ class GdexWithdrawModal extends React.Component {
                                 )}
                             />
                             <Trigger close={withdrawModalId}>
-                                <a href className="secondary button">
+                                <a className="secondary button">
                                     <Translate content="modal.confirmation.cancel" />
                                 </a>
                             </Trigger>
@@ -948,4 +948,4 @@ class GdexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(GdexWithdrawModal, {keep_updating: true});
+export default BindToChainState(GdexWithdrawModal);

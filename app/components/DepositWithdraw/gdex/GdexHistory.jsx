@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import utils from "common/utils";
 import Icon from "../../Icon/Icon";
 import {getTransactionRecordList} from "../../../lib/common/gdexMethods";
+import PropTypes from "prop-types";
 
 const DEPOSIT_STATUS = {
     1: "confirming",
@@ -23,14 +24,14 @@ const WITHDRAW_STATUS = {
 
 class GdexHistory extends React.Component {
     static propTypes = {
-        compactView: React.PropTypes.bool,
-        maxHeight: React.PropTypes.number,
-        fullHeight: React.PropTypes.bool,
-        userId: React.PropTypes.number,
-        assetId: React.PropTypes.number,
-        assetName: React.PropTypes.string,
-        recordType: React.PropTypes.number,
-        userAccount: React.PropTypes.string
+        compactView: PropTypes.bool,
+        maxHeight: PropTypes.number,
+        fullHeight: PropTypes.bool,
+        userId: PropTypes.number,
+        assetId: PropTypes.number,
+        assetName: PropTypes.string,
+        recordType: PropTypes.number,
+        userAccount: PropTypes.string
     };
 
     static defaultProps = {

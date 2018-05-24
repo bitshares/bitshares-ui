@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from "react";
+import React, {Component} from "react";
+import PropTypes from "prop-types";
 import cname from "classnames";
 import {hash, key} from "bitsharesjs/es";
 
@@ -6,7 +7,7 @@ var dictionary_set;
 
 if (__ELECTRON__) {
     dictionary_set = new Set(
-        require("json-loader!common/dictionary_en.json").en.split(",")
+        require("common/dictionary_en.json").en.split(",")
     );
 }
 

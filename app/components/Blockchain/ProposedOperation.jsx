@@ -15,6 +15,7 @@ import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
+import PropTypes from "prop-types";
 
 require("./operations.scss");
 
@@ -53,7 +54,7 @@ class TransactionLabel extends React.Component {
 
 class Row extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -86,7 +87,7 @@ class Row extends React.Component {
             <div style={{padding: "5px 0", textAlign: "left"}}>
                 {hideOpLabel ? null : (
                     <span className="left-td">
-                        <a href onClick={this.showDetails}>
+                        <a onClick={this.showDetails}>
                             <TransactionLabel color={color} type={type} />
                         </a>
                     </span>
@@ -133,12 +134,12 @@ class ProposedOperation extends React.Component {
     };
 
     static propTypes = {
-        op: React.PropTypes.array.isRequired,
-        current: React.PropTypes.string,
-        block: React.PropTypes.number,
-        hideDate: React.PropTypes.bool,
-        hideFee: React.PropTypes.bool,
-        csvExportMode: React.PropTypes.bool
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string,
+        block: PropTypes.number,
+        hideDate: PropTypes.bool,
+        hideFee: PropTypes.bool,
+        csvExportMode: PropTypes.bool
     };
 
     // shouldComponentUpdate(nextProps) {

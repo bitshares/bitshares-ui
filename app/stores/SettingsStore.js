@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import {merge} from "lodash";
+import {merge} from "lodash-es";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
@@ -24,6 +24,8 @@ class SettingsStore {
         this.bindListeners({
             onSetExchangeLastExpiration:
                 SettingsActions.setExchangeLastExpiration,
+            onSetExchangeTutorialShown:
+                SettingsActions.setExchangeTutorialShown,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
@@ -492,6 +494,10 @@ class SettingsStore {
 
     onSetExchangeLastExpiration(value) {
         this.setExchangeSettings("lastExpiration", fromJS(value));
+    }
+
+    onSetExchangeTutorialShown(value) {
+        this.setExchangeSettings("tutorialShown", value);
     }
 
     getExhchangeLastExpiration() {

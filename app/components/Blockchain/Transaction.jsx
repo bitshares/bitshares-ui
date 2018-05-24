@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {Link as RealLink} from "react-router/es";
 import Translate from "react-translate-component";
@@ -155,7 +155,7 @@ class Transaction extends React.Component {
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
-                                <a href onClick={this._toggleLock.bind(this)}>
+                                <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
                                         title="icons.locked.action"
@@ -971,7 +971,7 @@ class Transaction extends React.Component {
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
-                                <a href onClick={this._toggleLock.bind(this)}>
+                                <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
                                         title="icons.locked.action"

@@ -13,7 +13,7 @@ import {
     indicator,
     helper,
     interactive
-} from "react-stockcharts/es";
+} from "react-stockcharts";
 
 const {
     CandlestickSeries,
@@ -1166,7 +1166,6 @@ export default class Wrapper extends React.Component {
                                 <Icon
                                     className="icon-14px settings-cog"
                                     name="cog"
-                                    title="icons.cog"
                                 />
                             </div>
                             {dropdowns.settings ? (
