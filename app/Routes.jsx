@@ -529,7 +529,11 @@ const routes = (
         </Route>
         <Route
             path="*"
-            component={System.import("components/Page404/Page404")}
+            getComponent={(location, cb) => {
+                import("components/Page404/Page404")
+                    .then(loadRoute(cb))
+                    .catch(errorLoading);
+            }}
         />
     </Route>
 );

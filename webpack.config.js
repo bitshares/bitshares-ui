@@ -195,7 +195,7 @@ module.exports = function(env) {
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: env.prod ? "none" : "eval",
+        devtool: env.dev || env.noUgly ? "eval" : "none",
         module: {
             rules: [
                 {
