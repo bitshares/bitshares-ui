@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "Adres bulundu",
+        "amount": "Miktar",
+        "use_address": "Adres kullan",
+        "retry": "Tekrar dene"
+    },
     "account": {
         "accounts": "Hesaplar",
         "activity": "Activity",

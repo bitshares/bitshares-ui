@@ -1,4 +1,10 @@
 {
+    "qr_address_scanner": {
+        "address_found": "Адрес найден",
+        "amount": "Количество",
+        "use_address": "Использовать",
+        "retry": "Еще раз"
+    },
     "account": {
         "accounts": "Аккаунты",
         "activity": "Активность",

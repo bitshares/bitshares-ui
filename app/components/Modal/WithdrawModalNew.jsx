@@ -22,6 +22,7 @@ import AccountStore from "stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
+import QRScanner from "../QRAddressScanner";
 import counterpart from "counterpart";
 import {
     gatewaySelector,
@@ -82,6 +83,7 @@ class WithdrawModalNew extends React.Component {
             btsAccount: ""
         };
 
+        this.handleQrScanSuccess = this.handleQrScanSuccess.bind(this);
         this._checkFeeStatus = debounce(this._checkFeeStatus.bind(this), 250);
         this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
@@ -838,6 +840,21 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
+    handleQrScanSuccess(data) {
+        // if user don't put quantity on field by himself
+        // use amount detected on QR code
+        if (!this.state.quantity) {
+            this.setState({
+                address: data.address,
+                quantity: data.amount
+            });
+        } else {
+            this.setState({
+                address: data.address
+            });
+        }
+    }
+
     render() {
         const {state, props} = this;
         let {preferredCurrency, assets, balances} = props;
@@ -1131,6 +1148,7 @@ class WithdrawModalNew extends React.Component {
                                         onChange={this.onAddressChanged.bind(
                                             this
                                         )}
+                                        className="qr-address-scanner-input-field"
                                         autoComplete="off"
                                     />
                                     {storedAddresses.length > 1 ? (
@@ -1142,6 +1160,10 @@ class WithdrawModalNew extends React.Component {
                                             &#9660;
                                         </span>
                                     ) : null}
+                                    <QRScanner
+                                        label="Scan"
+                                        onSuccess={this.handleQrScanSuccess}
+                                    />
                                 </div>
                             </div>
                             <div className="blocktrades-position-options">

@@ -4,6 +4,7 @@ import React from "react";
 import counterpart from "counterpart";
 
 let icons = [
+    "photo-camera",
     "adjust",
     "assets",
     "checkmark-circle",
