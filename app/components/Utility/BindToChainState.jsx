@@ -1,5 +1,5 @@
 import React from "react";
-import {curry, flow, reject, clone, toPairs, omit, get, map} from "lodash-es";
+import {curry, flow, reject, clone, toPairs, omit, get, pick} from "lodash-es";
 import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
@@ -165,8 +165,7 @@ function BindToChainState(Component, options = {}) {
                 );
                 this.all_chain_props = this.chain_objects;
 
-                let newState = map(this.state, this.chain_objects);
-                console.log("newState", newState);
+                let newState = pick(this.state, this.chain_objects);
                 if (!utils.are_equal_shallow(newState, this.state)) {
                     this.setState(newState);
                 }
