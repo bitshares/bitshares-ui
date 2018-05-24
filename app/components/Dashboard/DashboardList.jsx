@@ -296,7 +296,11 @@ class DashboardList extends React.Component {
                                     isStarred
                                 )}
                             >
-                                <Icon className={starClass} name="fi-star" />
+                                <Icon
+                                    className={starClass}
+                                    name="fi-star"
+                                    title="icons.fi_star.account"
+                                />
                             </td>
                             {isContactsList
                                 ? (isHiddenAccountsList && (
@@ -306,7 +310,10 @@ class DashboardList extends React.Component {
                                               accountName
                                           )}
                                       >
-                                          <Icon name="plus-circle" />
+                                          <Icon
+                                              name="plus-circle"
+                                              title="icons.plus_circle.add_contact"
+                                          />
                                       </td>
                                   )) || (
                                       <td
@@ -315,7 +322,10 @@ class DashboardList extends React.Component {
                                               accountName
                                           )}
                                       >
-                                          <Icon name="minus-circle" />
+                                          <Icon
+                                              name="minus-circle"
+                                              title="icons.minus_circle.remove_contact"
+                                          />
                                       </td>
                                   )
                                 : null}
@@ -484,11 +494,15 @@ class DashboardList extends React.Component {
                                     <Icon
                                         className="grey-star"
                                         name="fi-star"
+                                        title="icons.fi_star.sort_accounts"
                                     />
                                 </th>
                                 {isContactsList ? (
                                     <th>
-                                        <Icon name="user" />
+                                        <Icon
+                                            name="user"
+                                            title="icons.user.account"
+                                        />
                                     </th>
                                 ) : null}
                                 <th style={{textAlign: "left"}}>ID</th>

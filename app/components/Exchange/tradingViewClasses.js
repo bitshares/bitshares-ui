@@ -12,7 +12,6 @@ class SymbolInfo {
 
         const quoteGateway = getGatewayName(options.quoteAsset);
         const baseGateway = getGatewayName(options.baseAsset);
-        console.log("quoteGateway", quoteGateway, "baseGateway", baseGateway);
         let currentExchange =
             quoteGateway === baseGateway
                 ? quoteGateway

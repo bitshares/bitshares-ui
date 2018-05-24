@@ -67,7 +67,8 @@ class AmountSelector extends React.Component {
     };
 
     static defaultProps = {
-        disabled: false
+        disabled: false,
+        tabIndex: 0
     };
 
     componentDidMount() {
@@ -102,6 +103,8 @@ class AmountSelector extends React.Component {
         let value = this.props.error
             ? counterpart.translate(this.props.error)
             : this.formatAmount(this.props.amount);
+
+        console.log("tabIndex:", tabIndex);
         return (
             <div className="amount-selector" style={this.props.style}>
                 <label className="right-label">

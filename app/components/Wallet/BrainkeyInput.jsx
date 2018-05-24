@@ -7,7 +7,7 @@ var dictionary_set;
 
 if (__ELECTRON__) {
     dictionary_set = new Set(
-        require("json-loader!common/dictionary_en.json").en.split(",")
+        require("common/dictionary_en.json").en.split(",")
     );
 }
 

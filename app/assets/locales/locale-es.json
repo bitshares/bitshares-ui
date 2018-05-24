@@ -479,24 +479,6 @@
         "change": "cambio",
         "chart_height": "Chart height (pixels)",
         "chart_modal": "Chart options",
-        "chart_options": {
-            "bb": "Bandas de Bollinger",
-            "clamp_chart": "Clamp chart edge",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "fib": "Dibuja el retroceso de Fibonacci",
-            "height": "Altura de la carta",
-            "macd": "MACD chart",
-            "period": "Período",
-            "price_title": "Indicadores de precio",
-            "sma": "SMA",
-            "smaVolume": "SMA",
-            "title": "Indicators",
-            "tools": "Herramientas",
-            "trendline": "Dibujar línea de tendencia",
-            "volume": "Mostrar tabla de volúmenes",
-            "volume_title": "Indicadores de volumen"
-        },
         "chart_type": "Chart type",
         "confirm_buy":
             "Tu pedido es %(diff)s veces más alto que la demanda más baja, ¿estás seguro?",
@@ -519,7 +501,6 @@
         "history": "Trades del mercado",
         "horizontal": "Horizontal",
         "index": "Index",
-        "indicators": "Indicadores",
         "invalid_amount": "Monto invalido",
         "invalid_price": "Precio inválido",
         "invert": "Invierta el precio",
@@ -970,7 +951,8 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Cuenta",
@@ -999,6 +981,114 @@
         "unlock_short": "Inicio de sesión",
         "unlocked_tip": "Billetera desbloqueada. Click para bloquear",
         "update_asset": "Actualizar activo"
+    },
+    "icons": {
+        "adjust": "Adjust margin position",
+        "assets": "Assets",
+        "checkmark_circle": {
+            "approved": "Approved",
+            "operation_succeed": "Operation succeed",
+            "yes": "Yes"
+        },
+        "chevron_down": {
+            "gateways": "Show more gateways",
+            "other": "Show more items",
+            "transactions": "Show more transactions"
+        },
+        "clippy": {
+            "copy": "Copy to clipboard",
+            "withdraw_full": "Withdraw the full balance"
+        },
+        "clock": "Please check your computer's clock",
+        "cog": "Settings",
+        "cogs": "Settings",
+        "connect": "Connect to this API Node",
+        "connected": "API Node is connected",
+        "cross_circle": {
+            "cancel_order": "Cancel order",
+            "close_position": "Close position",
+            "hide_asset": "Hide asset",
+            "hide_market": "Hide market",
+            "operation_failed": "Operation failed",
+            "remove": "Remove"
+        },
+        "dashboard": "Dashboard",
+        "deposit": {
+            "deposit": "Deposit",
+            "deposit_withdraw": "Deposit/Withdraw"
+        },
+        "disconnected": "API Node is disconnected",
+        "dollar": {
+            "borrow": "Borrow",
+            "buy": "Buy"
+        },
+        "download": "Download new version of BitShares UI",
+        "excel": "Download .csv file",
+        "eye": "Hide Node",
+        "eye-striked": "Show Node",
+        "fees": "Fees",
+        "fi_star": {
+            "account": "Add/remove account from favorites",
+            "market": "Add/remove market from favorites",
+            "sort_accounts": "Sort by favorites",
+            "symbol": "Add/remove symbol from favorites"
+        },
+        "filter": "Filter",
+        "folder": "Accounts",
+        "hamburger": "Open menu",
+        "hamburger_x": "Close menu",
+        "hourglass": "Vesting balances",
+        "info_circle_o": "Info",
+        "key": "Key",
+        "list": "Whitelist",
+        "locked": {
+            "action": "Click to unlock your account to perform this action",
+            "common": "Click to unlock your account",
+            "enable_auto_scroll": "Enable auto scroll"
+        },
+        "minus_circle": {
+            "disapproved": "Disapproved",
+            "no": "No",
+            "remove_contact": "Remove contact from the list",
+            "wrong_address": "Unable to generate address"
+        },
+        "news": "News",
+        "plus_circle": {
+            "add_contact": "Add contact to the list",
+            "show_asset": "Show asset",
+            "show_market": "Show market"
+        },
+        "power": "Login",
+        "question_circle": "Help",
+        "server": "Explore",
+        "settle": "Settle",
+        "share": "About",
+        "shuffle": "Switch trading pair",
+        "text": {
+            "membership_stats": "Membership stats",
+            "signed_messages": "Signed messages"
+        },
+        "thumb_tack": "Pin panel to the left side",
+        "thumb_untack": "Unpin panel",
+        "thumbs_up": "Voting",
+        "times": "Remove API Node",
+        "trade": {
+            "exchange": "Exchange",
+            "trade": "Trade"
+        },
+        "transfer": "Send",
+        "unlocked": {
+            "common": "Click to lock your account",
+            "disable_auto_scroll": "Disable auto scroll"
+        },
+        "user": {
+            "account": "Account",
+            "create_account": "Create account",
+            "following": "You are following this user"
+        },
+        "warning": "Permissions",
+        "withdraw": "Withdraw",
+        "zoom": "Search"
     },
     "incognito": {
         "mode": "Private/Incognito:",
@@ -1174,6 +1264,7 @@
         "asset_issue": "{account} emitido {amount} a {to}",
         "asset_reserve": "{account} reservado {amount}",
         "asset_settle": "{account} solicitó la liquidación de {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} actualizado el activo {asset}",
         "asset_update_feed_producers":
             "{account} actualizado los productores para el activo {asset}",
@@ -1278,6 +1369,12 @@
         "review_period": "Comienza el período de revisión"
     },
     "propose": "Propose",
+    "qr_address_scanner": {
+        "address_found": "Dirección encontrada",
+        "amount": "Importe",
+        "retry": "Reintentar",
+        "use_address": "Usar dirección"
+    },
     "refcode": {
         "claim": "Reclamar",
         "claim_refcode": "Reclamar código de referencia",
@@ -1578,6 +1675,7 @@
             "asset_publish_feed": "Publicar feed",
             "asset_reserve": "Incinerar activo",
             "asset_settle": "Liquidación de Activos",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Actualizar activo",
             "asset_update_bitasset": "Actualizar SmartCoin",
             "asset_update_feed_producers":

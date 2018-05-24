@@ -343,6 +343,7 @@ class MarginPosition extends React.Component {
                         <a onClick={this._onUpdatePosition.bind(this)}>
                             <Icon
                                 name="adjust"
+                                title="icons.adjust"
                                 className="icon-14px rotate90"
                             />
                         </a>
@@ -358,7 +359,11 @@ class MarginPosition extends React.Component {
                         style={{paddingBottom: 5}}
                     >
                         <a onClick={this._onClosePosition.bind(this)}>
-                            <Icon name="cross-circle" className="icon-14px" />
+                            <Icon
+                                name="cross-circle"
+                                title="icons.cross_circle.close_position"
+                                className="icon-14px"
+                            />
                         </a>
                     </div>
                     {debtAsset ? (
@@ -564,6 +569,7 @@ class MarginPositionPlaceHolder extends React.Component {
                         <a onClick={this._onUpdatePosition.bind(this)}>
                             <Icon
                                 name="adjust"
+                                title="icons.adjust"
                                 className="icon-14px rotate90"
                             />
                         </a>

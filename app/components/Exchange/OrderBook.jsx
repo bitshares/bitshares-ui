@@ -10,7 +10,6 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
-import "react-sticky-table/dist/react-sticky-table.css";
 
 class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(np) {
@@ -386,11 +385,13 @@ class OrderBook extends React.Component {
             });
 
             let tempAsks = combinedAsks;
-            if (!horizontal) {
-                tempAsks.sort((a, b) => {
+            tempAsks.sort((a, b) => {
+                if (horizontal) {
+                    return a.getPrice() - b.getPrice();
+                } else {
                     return b.getPrice() - a.getPrice();
-                });
-            }
+                }
+            });
             askRows = tempAsks.map((order, index) => {
                 return horizontal ? (
                     <OrderBookRowHorizontal
@@ -559,6 +560,7 @@ class OrderBook extends React.Component {
                                         >
                                             <Icon
                                                 name="thumb-tack"
+                                                title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
                                         </span>
@@ -672,6 +674,7 @@ class OrderBook extends React.Component {
                                         >
                                             <Icon
                                                 name="thumb-tack"
+                                                title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
                                         </span>
@@ -832,6 +835,11 @@ class OrderBook extends React.Component {
                                                             ? "locked"
                                                             : "unlocked"
                                                     }
+                                                    title={
+                                                        this.state.autoScroll
+                                                            ? "icons.locked.enable_auto_scroll"
+                                                            : "icons.unlocked.disable_auto_scroll"
+                                                    }
                                                 />
                                                 {!!this.props.latest && (
                                                     <span className="right">
@@ -881,6 +889,7 @@ class OrderBook extends React.Component {
                         <div onClick={this.props.moveOrderBook}>
                             <Icon
                                 name="thumb-untack"
+                                title="icons.thumb_untack"
                                 className="icon-14px order-book-button-h"
                             />
                         </div>

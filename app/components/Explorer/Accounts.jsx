@@ -52,11 +52,17 @@ class AccountRow extends React.Component {
                 <td>{account.get("id")}</td>
                 {contacts.has(accountName) ? (
                     <td onClick={this._onRemoveContact.bind(this, accountName)}>
-                        <Icon name="minus-circle" />
+                        <Icon
+                            name="minus-circle"
+                            title="icons.minus_circle.remove_contact"
+                        />
                     </td>
                 ) : (
                     <td onClick={this._onAddContact.bind(this, accountName)}>
-                        <Icon name="plus-circle" />
+                        <Icon
+                            name="plus-circle"
+                            title="icons.plus_circle.add_contact"
+                        />
                     </td>
                 )}
                 <td>
@@ -192,7 +198,10 @@ class Accounts extends React.Component {
                                         />
                                     </th>
                                     <th>
-                                        <Icon name="user" />
+                                        <Icon
+                                            name="user"
+                                            title="icons.user.account"
+                                        />
                                     </th>
                                     <th>
                                         <Translate

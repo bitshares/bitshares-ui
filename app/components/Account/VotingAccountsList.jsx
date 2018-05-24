@@ -74,7 +74,7 @@ class AccountItemRow extends React.Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon name="share" />
+                            <Icon name="share" title="icons.share" />
                         </a>
                     ) : null}
                 </td>
@@ -113,9 +113,14 @@ class AccountItemRow extends React.Component {
                                     ? "checkmark-circle"
                                     : "minus-circle"
                             }
+                            title={
+                                isSupported
+                                    ? "icons.checkmark_circle.yes"
+                                    : "icons.minus_circle.no"
+                            }
                         />
                     ) : (
-                        <Icon name="locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>

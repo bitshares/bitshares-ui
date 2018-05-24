@@ -211,7 +211,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         let deposit_memo = null;
         // if (this.props.deprecated_in_favor_of)
         // {
-        //     deposit_address_fragment = <span>please use {this.props.deprecated_in_favor_of.get("symbol")} instead. <span data-tip={this.props.deprecated_message} data-place="right" data-html={true}><Icon name="question-circle" /></span><ReactTooltip /></span>;
+        //     deposit_address_fragment = <span>please use {this.props.deprecated_in_favor_of.get("symbol")} instead. <span data-tip={this.props.deprecated_message} data-place="right" data-html={true}><Icon name="question-circle" title="icons.question_circle" /></span><ReactTooltip /></span>;
         // }
         // else
         // {
