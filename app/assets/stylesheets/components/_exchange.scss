@@ -105,7 +105,6 @@ form.order-form {
 }
 
 #market-charts {
-    padding-left: 10px;
     > div.Stockcharts__wrapper {
         overflow: hidden;
     }
@@ -326,11 +325,6 @@ ul.market-stats {
             @include RobotoMedium;
         }
     }
-}
-
-.stats div.indicators {
-    text-transform: uppercase;
-    height: 100%;
 }
 
 .stats .stat:first-child {

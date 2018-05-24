@@ -875,7 +875,7 @@ class WithdrawModalNew extends React.Component {
                       false
                   )
                 : backingAsset.minAmount;
-        } else if(backingAsset) {
+        } else if (backingAsset) {
             minWithdraw =
                 backingAsset.gateFee * 2 ||
                 0 + backingAsset.transactionFee ||

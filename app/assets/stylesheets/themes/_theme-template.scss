@@ -1568,6 +1568,10 @@
                 color: $negative-color !important;
             }
         }
+
+        &.clickable:hover {
+            background-color: lighten($panel-bg-color, 4%);
+        }
     }
 
     .stat-text {
@@ -1642,7 +1646,6 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
 
-    .indicators,
     li.stat.clickable {
         color: $secondary-text-color;
         // &:hover{

@@ -64,7 +64,7 @@ class QRScanner extends React.Component {
                     <BaseModal
                         id={this.modalId}
                         overlay={true}
-                        noLoggo={true}
+                        noLogo={true}
                         onClose={this.handleClose}
                     >
                         <QrReader

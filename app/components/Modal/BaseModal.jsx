@@ -35,7 +35,7 @@ class BaseModal extends React.Component {
             className,
             modalHeader,
             noCloseBtn,
-            noLoggo,
+            noLogo,
             noHeader,
             children,
             leftHeader
@@ -57,7 +57,7 @@ class BaseModal extends React.Component {
                             </a>
                         </Trigger>
                     )}
-                    {!noLoggo &&
+                    {!noLogo &&
                         (leftHeader ? (
                             <img src={logo} />
                         ) : (
