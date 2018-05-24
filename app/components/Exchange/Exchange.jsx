@@ -294,20 +294,13 @@ class Exchange extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         this._initPsContainer();
-
         if (
-            !this.state.isTutorialShown &&
+            !this.props.exchange.get("tutorialShown") &&
             prevProps.coreAsset &&
             prevState.feeStatus
         ) {
-            if (!this.props.exchange.get("tutorialShown")) {
-                // use setState to immediately block
-                // new help hint because
-                // settingsStore takes effect with a little delay
-                this.setState({
-                    isTutorialShown: true
-                });
-
+            if (!this.tutorialShown) {
+                this.tutorialShown = true;
                 const theme = this.props.settings.get("themes");
 
                 guide
@@ -333,7 +326,7 @@ class Exchange extends React.Component {
                     })
                     .start();
 
-                SettingsActions.setExchangeTutorialShown(true);
+                SettingsActions.setExchangeTutorialShown.defer(true);
             }
         }
     }
