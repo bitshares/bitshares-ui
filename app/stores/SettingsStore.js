@@ -239,7 +239,14 @@ class SettingsStore {
                     "RUDEX.GBG",
                     "RUDEX.GOLOS",
                     "RUDEX.MUSE",
-                    "RUDEX.DCT"
+                    "RUDEX.DCT",
+                    "OPEN.DOGE",
+                    "OPEN.KRM",
+                    "OPEN.TUSD",
+                    "OPEN.ZEC",
+                    "OPEN.WAVES",
+                    "OPEN.ZRX",
+                    "OPEN.NEO"
                 ],
                 markets_39f5e2ed: [
                     // TESTNET
