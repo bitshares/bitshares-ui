@@ -104,7 +104,6 @@ export default class TradingViewPriceChart extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log("Unmounting, clear subs");
         this.props.dataFeed.clearSubs();
     }
 

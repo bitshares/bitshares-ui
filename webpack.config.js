@@ -3,8 +3,8 @@ var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
 require("es6-promise").polyfill();
-var locales = require("./app/assets/locales");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+var locales = require("./app/assets/locales");
 var __VERSION__ = require("./package.json").version;
 
 // BASE APP DIR
@@ -32,10 +32,7 @@ module.exports = function(env) {
             loader: "css-loader"
         },
         {
-            loader: "postcss-loader",
-            options: {
-                plugins: [require("autoprefixer")]
-            }
+            loader: "postcss-loader"
         },
         {
             loader: "sass-loader",
@@ -89,7 +86,6 @@ module.exports = function(env) {
             }
         ])
     ];
-
     if (env.prod) {
         // PROD OUTPUT PATH
         let outputDir = env.electron
@@ -111,10 +107,7 @@ module.exports = function(env) {
             use: [
                 {loader: "css-loader"},
                 {
-                    loader: "postcss-loader",
-                    options: {
-                        plugins: [require("autoprefixer")]
-                    }
+                    loader: "postcss-loader"
                 }
             ]
         });
@@ -123,10 +116,7 @@ module.exports = function(env) {
             use: [
                 {loader: "css-loader"},
                 {
-                    loader: "postcss-loader",
-                    options: {
-                        plugins: [require("autoprefixer")]
-                    }
+                    loader: "postcss-loader"
                 },
                 {loader: "sass-loader", options: {outputStyle: "expanded"}}
             ]
@@ -136,7 +126,6 @@ module.exports = function(env) {
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(
             new webpack.DefinePlugin({
-                "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEV__: false
             })
         );
@@ -147,20 +136,6 @@ module.exports = function(env) {
                 debug: false
             })
         );
-        plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
-        if (!env.noUgly) {
-            plugins.push(
-                new webpack.optimize.UglifyJsPlugin({
-                    sourceMap: true,
-                    compress: {
-                        warnings: true
-                    },
-                    output: {
-                        screw_ie8: true
-                    }
-                })
-            );
-        }
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(
@@ -170,16 +145,46 @@ module.exports = function(env) {
             })
         );
         plugins.push(new webpack.HotModuleReplacementPlugin());
-        plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
 
+    plugins.push(
+        new CopyWebpackPlugin(
+            [
+                {
+                    from: path.join(
+                        root_dir,
+                        "app",
+                        "assets",
+                        "locales",
+                        "*.json"
+                    ),
+                    to: path.join(outputPath, "[name].[ext]"),
+                    toType: "template"
+                },
+                {
+                    from: path.join(
+                        root_dir,
+                        "app",
+                        "lib",
+                        "common",
+                        "dictionary_en.json"
+                    ),
+                    to: path.join(outputPath, "dictionary.json"),
+                    toType: "file"
+                }
+            ],
+            {}
+        )
+    );
+
     var config = {
+        mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
                 : [
-                      "react-hot-loader/patch",
                       "webpack-hot-middleware/client",
+                      "react-hot-loader/patch",
                       path.resolve(root_dir, "app/Main-dev.js")
                   ]
         },
@@ -190,7 +195,7 @@ module.exports = function(env) {
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: env.prod ? "cheap-module-source-map" : "eval",
+        devtool: env.dev || env.noUgly ? "eval" : "none",
         module: {
             rules: [
                 {
@@ -206,7 +211,8 @@ module.exports = function(env) {
                         {
                             loader: "babel-loader",
                             options: {
-                                cacheDirectory: env.prod ? false : true
+                                cacheDirectory: env.prod ? false : true,
+                                plugins: ["react-hot-loader/babel"]
                             }
                         }
                     ]
@@ -215,18 +221,17 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2"),
-                        path.join(root_dir, "node_modules/lodash-es")
+                        path.join(root_dir, "node_modules/react-datepicker2")
                     ],
-                    loader: "babel-loader",
-                    options: {compact: false, cacheDirectory: true}
-                },
-                {
-                    test: /\.json/,
-                    loader: "json-loader",
-                    exclude: [
-                        path.resolve(root_dir, "app/lib/common"),
-                        path.resolve(root_dir, "app/assets/locales")
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                compact: false,
+                                cacheDirectory: env.prod ? false : true,
+                                plugins: ["react-hot-loader/babel"]
+                            }
+                        }
                     ]
                 },
                 {test: /\.coffee$/, loader: "coffee-loader"},
@@ -275,7 +280,22 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
-                    loaders: ["svg-inline-loader", "svgo-loader"]
+                    use: [
+                        {
+                            loader: "svg-inline-loader"
+                        },
+                        {
+                            loader: "svgo-loader",
+                            options: {
+                                plugins: [
+                                    {cleanupAttrs: true},
+                                    {removeMetadata: true},
+                                    {removeXMLNS: true},
+                                    {removeViewBox: false}
+                                ]
+                            }
+                        }
+                    ]
                 },
                 {
                     test: /\.md/,
@@ -287,11 +307,8 @@ module.exports = function(env) {
                             }
                         },
                         {
-                            loader: "remarkable-loader",
-                            options: {
-                                preset: "full",
-                                typographer: true
-                            }
+                            loader: "markdown-loader",
+                            options: {}
                         }
                     ]
                 }

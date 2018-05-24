@@ -202,6 +202,7 @@ class Exchange extends React.Component {
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
+            feeStatus: {},
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
@@ -1309,7 +1310,7 @@ class Exchange extends React.Component {
         }
 
         // Fees
-        if (!coreAsset || !this.state.feeStatus) {
+        if (!coreAsset || !Object.keys(this.state.feeStatus).length) {
             return null;
         }
 

@@ -1,5 +1,6 @@
-import {ChainStore} from "bitsharesjs/es";
+import {hot} from "react-hot-loader";
 import React from "react";
+import {ChainStore} from "bitsharesjs/es";
 import IntlStore from "stores/IntlStore";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
@@ -350,4 +351,5 @@ class Root extends React.Component {
     }
 }
 
-export default supplyFluxContext(alt)(Root);
+Root = supplyFluxContext(alt)(Root);
+export default hot(module)(Root);

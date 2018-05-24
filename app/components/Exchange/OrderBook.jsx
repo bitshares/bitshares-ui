@@ -10,7 +10,6 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
-import "react-sticky-table/dist/react-sticky-table.css";
 
 class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(np) {
