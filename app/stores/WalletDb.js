@@ -3,7 +3,7 @@ import BaseStore from "stores/BaseStore";
 
 import iDB from "idb-instance";
 import idb_helper from "idb-helper";
-import {cloneDeep} from "lodash";
+import {cloneDeep} from "lodash-es";
 
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import SettingsStore from "stores/SettingsStore";

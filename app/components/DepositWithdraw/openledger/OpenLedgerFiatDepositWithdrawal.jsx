@@ -210,8 +210,7 @@ class OpenLedgerFiatDepositWithdrawCurrency extends React.Component {
     }
 } // OpenLedgerFiatDepositWithdrawCurrency
 OpenLedgerFiatDepositWithdrawCurrency = BindToChainState(
-    OpenLedgerFiatDepositWithdrawCurrency,
-    {keep_updating: true}
+    OpenLedgerFiatDepositWithdrawCurrency
 );
 
 class OpenLedgerFiatDepositWithdrawal extends React.Component {
@@ -312,8 +311,7 @@ class OpenLedgerFiatDepositWithdrawal extends React.Component {
     }
 } // OpenLedgerFiatDepositWithdrawal
 OpenLedgerFiatDepositWithdrawal = BindToChainState(
-    OpenLedgerFiatDepositWithdrawal,
-    {keep_updating: true}
+    OpenLedgerFiatDepositWithdrawal
 );
 
 export default OpenLedgerFiatDepositWithdrawal;

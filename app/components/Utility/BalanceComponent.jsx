@@ -37,4 +37,4 @@ class BalanceComponent extends React.Component {
     }
 }
 
-export default BindToChainState(BalanceComponent, {keep_updating: true});
+export default BindToChainState(BalanceComponent);

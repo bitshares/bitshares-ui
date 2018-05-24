@@ -215,4 +215,4 @@ class Block extends React.Component {
     }
 }
 
-export default BindToChainState(Block, {keep_updating: true});
+export default BindToChainState(Block);

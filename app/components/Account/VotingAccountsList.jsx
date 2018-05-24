@@ -306,4 +306,4 @@ class VotingAccountsList extends React.Component {
     }
 }
 
-export default BindToChainState(VotingAccountsList, {keep_updating: true});
+export default BindToChainState(VotingAccountsList);

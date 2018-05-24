@@ -377,7 +377,7 @@ class Footer extends React.Component {
         this.context.router.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {

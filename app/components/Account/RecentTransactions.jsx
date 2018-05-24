@@ -457,9 +457,7 @@ class RecentTransactions extends React.Component {
         );
     }
 }
-RecentTransactions = BindToChainState(RecentTransactions, {
-    keep_updating: true
-});
+RecentTransactions = BindToChainState(RecentTransactions);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

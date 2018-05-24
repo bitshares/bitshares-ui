@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import {merge} from "lodash";
+import {merge} from "lodash-es";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";

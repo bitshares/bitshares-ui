@@ -148,7 +148,7 @@
         "intro.js": "^2.8.0-alpha.1",
         "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
         "js-sha256": "^0.2.3",
-        "lodash": "^3.10.1",
+        "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
         "moment": "^2.20.1",
         "moment-timezone": "^0.5.16",

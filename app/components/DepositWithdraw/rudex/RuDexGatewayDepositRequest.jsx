@@ -551,6 +551,4 @@ class RuDexGatewayDepositRequest extends React.Component {
     }
 }
 
-export default BindToChainState(RuDexGatewayDepositRequest, {
-    keep_updating: true
-});
+export default BindToChainState(RuDexGatewayDepositRequest);

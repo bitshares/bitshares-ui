@@ -142,4 +142,4 @@ class WithdrawFiatOpenLedger extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawFiatOpenLedger, {keep_updating: true});
+export default BindToChainState(WithdrawFiatOpenLedger);

@@ -218,6 +218,4 @@ class OpenLedgerFiatTransactionHistory extends React.Component {
     }
 } // OpenLedgerFiatTransactionHistory
 
-export default BindToChainState(OpenLedgerFiatTransactionHistory, {
-    keep_updating: true
-});
+export default BindToChainState(OpenLedgerFiatTransactionHistory);

@@ -34,4 +34,4 @@ class MyAccounts extends Component {
     }
 }
 
-export default BindToChainState(MyAccounts, {keep_updating: true});
+export default BindToChainState(MyAccounts);

@@ -18,7 +18,7 @@ import {
     checkBalance,
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
-import {debounce, isNaN} from "lodash";
+import {debounce, isNaN} from "lodash-es";
 import classnames from "classnames";
 import {Asset} from "common/MarketClasses";
 
@@ -547,7 +547,9 @@ class Transfer extends React.Component {
                                 asset={
                                     asset_types.length > 0 && asset
                                         ? asset.get("id")
-                                        : asset_id ? asset_id : asset_types[0]
+                                        : asset_id
+                                            ? asset_id
+                                            : asset_types[0]
                                 }
                                 assets={asset_types}
                                 display_balance={balance}

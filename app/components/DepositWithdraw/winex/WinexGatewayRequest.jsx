@@ -660,4 +660,4 @@ class WinexGatewayRequest extends React.Component {
     }
 }
 
-export default BindToChainState(WinexGatewayRequest, {keep_updating: true});
+export default BindToChainState(WinexGatewayRequest);

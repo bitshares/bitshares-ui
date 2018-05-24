@@ -75,6 +75,6 @@ class BlockTime extends React.Component {
         );
     }
 }
-BlockTime = BindToChainState(BlockTime, {keep_updating: true});
+BlockTime = BindToChainState(BlockTime);
 
 export default BlockTime;

@@ -73,9 +73,7 @@ class CommitteeMemberCard extends React.Component {
         );
     }
 }
-CommitteeMemberCard = BindToChainState(CommitteeMemberCard, {
-    keep_updating: true
-});
+CommitteeMemberCard = BindToChainState(CommitteeMemberCard);
 
 class CommitteeMemberRow extends React.Component {
     static propTypes = {
@@ -127,9 +125,7 @@ class CommitteeMemberRow extends React.Component {
         );
     }
 }
-CommitteeMemberRow = BindToChainState(CommitteeMemberRow, {
-    keep_updating: true
-});
+CommitteeMemberRow = BindToChainState(CommitteeMemberRow);
 
 class CommitteeMemberList extends React.Component {
     static propTypes = {
@@ -308,7 +304,6 @@ class CommitteeMemberList extends React.Component {
     }
 }
 CommitteeMemberList = BindToChainState(CommitteeMemberList, {
-    keep_updating: true,
     show_loader: true
 });
 
@@ -430,7 +425,7 @@ class CommitteeMembers extends React.Component {
         return <Explorer tab="committee_members" content={content} />;
     }
 }
-CommitteeMembers = BindToChainState(CommitteeMembers, {keep_updating: true});
+CommitteeMembers = BindToChainState(CommitteeMembers);
 
 class CommitteeMembersStoreWrapper extends React.Component {
     render() {

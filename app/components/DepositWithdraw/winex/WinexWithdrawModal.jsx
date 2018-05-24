@@ -10,12 +10,11 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import PropTypes from "prop-types";
 
 class WinexWithdrawModal extends React.Component {
@@ -893,4 +892,4 @@ class WinexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(WinexWithdrawModal, {keep_updating: true});
+export default BindToChainState(WinexWithdrawModal);

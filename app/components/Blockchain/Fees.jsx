@@ -207,7 +207,7 @@ class FeeGroup extends React.Component {
         );
     }
 }
-FeeGroup = BindToChainState(FeeGroup, {keep_updating: true});
+FeeGroup = BindToChainState(FeeGroup);
 
 class Fees extends React.Component {
     render() {

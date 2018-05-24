@@ -133,4 +133,4 @@ class WithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawModal, {keep_updating: true});
+export default BindToChainState(WithdrawModal);

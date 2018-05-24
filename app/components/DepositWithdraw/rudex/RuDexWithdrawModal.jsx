@@ -14,7 +14,7 @@ import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Price, Asset} from "common/MarketClasses";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import PropTypes from "prop-types";
 
 class RuDexWithdrawModal extends React.Component {
@@ -861,4 +861,4 @@ class RuDexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(RuDexWithdrawModal, {keep_updating: true});
+export default BindToChainState(RuDexWithdrawModal);

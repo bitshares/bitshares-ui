@@ -16,7 +16,7 @@ import SettingsActions from "actions/SettingsActions";
 import AssetActions from "actions/AssetActions";
 import MarketsActions from "actions/MarketsActions";
 import cnames from "classnames";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";

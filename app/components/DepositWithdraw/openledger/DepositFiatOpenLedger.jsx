@@ -231,4 +231,4 @@ class DepositFiatOpenLedger extends React.Component {
     }
 }
 
-export default BindToChainState(DepositFiatOpenLedger, {keep_updating: true});
+export default BindToChainState(DepositFiatOpenLedger);

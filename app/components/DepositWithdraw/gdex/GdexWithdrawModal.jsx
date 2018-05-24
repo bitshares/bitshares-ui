@@ -10,12 +10,11 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gdexMethods";
-import AccountStore from "stores/AccountStore";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset, Price} from "common/MarketClasses";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import PropTypes from "prop-types";
 
 class GdexWithdrawModal extends React.Component {
@@ -949,4 +948,4 @@ class GdexWithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(GdexWithdrawModal, {keep_updating: true});
+export default BindToChainState(GdexWithdrawModal);

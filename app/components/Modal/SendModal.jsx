@@ -9,7 +9,7 @@ import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash";
+import {debounce, isNaN} from "lodash-es";
 import {
     checkFeeStatusAsync,
     checkBalance,

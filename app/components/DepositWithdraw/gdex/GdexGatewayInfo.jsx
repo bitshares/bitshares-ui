@@ -561,4 +561,4 @@ class DepositQrCodeModal extends React.Component {
     }
 }
 
-export default BindToChainState(GdexGatewayInfo, {keep_updating: true});
+export default BindToChainState(GdexGatewayInfo);

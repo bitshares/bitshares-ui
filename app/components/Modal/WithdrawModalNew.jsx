@@ -5,7 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector";
 import Translate from "react-translate-component";
 import ExchangeInput from "components/Exchange/ExchangeInput";
-import {extend, debounce} from "lodash";
+import {extend, debounce} from "lodash-es";
 import GatewayStore from "stores/GatewayStore";
 import AssetStore from "stores/AssetStore";
 import MarketsStore from "stores/MarketsStore";
@@ -1351,19 +1351,16 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(
-    BindToChainState(WithdrawModalWrapper, {keep_updating: true}),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});
 
 export default class WithdrawModal extends React.Component {
     constructor() {

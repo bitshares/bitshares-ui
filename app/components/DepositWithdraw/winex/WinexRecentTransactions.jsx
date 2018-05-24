@@ -158,4 +158,4 @@ class WinexRecentTransactions extends React.Component {
     }
 }
 
-export default BindToChainState(WinexRecentTransactions, {keep_updating: true});
+export default BindToChainState(WinexRecentTransactions);

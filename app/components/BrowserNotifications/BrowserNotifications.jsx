@@ -172,8 +172,6 @@ class BrowserNotifications extends React.Component {
     }
 }
 
-BrowserNotifications = BindToChainState(BrowserNotifications, {
-    keep_updating: true
-});
+BrowserNotifications = BindToChainState(BrowserNotifications);
 
 export default BrowserNotifications;

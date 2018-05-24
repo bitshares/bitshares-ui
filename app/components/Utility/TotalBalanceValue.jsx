@@ -310,7 +310,7 @@ class TotalValue extends MarketStatsCheck {
         }
     }
 }
-TotalValue = BindToChainState(TotalValue, {keep_updating: true});
+TotalValue = BindToChainState(TotalValue);
 TotalValue = AssetWrapper(TotalValue, {
     propNames: ["fromAssets"],
     asList: true
@@ -395,7 +395,7 @@ class TotalBalanceValue extends React.Component {
         );
     }
 }
-TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});
+TotalBalanceValue = BindToChainState(TotalBalanceValue);
 
 class AccountWrapper extends React.Component {
     static propTypes = {
@@ -525,7 +525,7 @@ class AccountWrapper extends React.Component {
         }
     }
 }
-AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});
+AccountWrapper = BindToChainState(AccountWrapper);
 
 TotalBalanceValue.AccountWrapper = AccountWrapper;
 export default TotalBalanceValue;

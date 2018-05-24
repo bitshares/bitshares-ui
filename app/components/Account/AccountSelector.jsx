@@ -206,7 +206,9 @@ class AccountSelector extends React.Component {
             displayText =
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
-                    : account.accountType === "id" ? account.get("name") : null;
+                    : account.accountType === "id"
+                        ? account.get("name")
+                        : null;
         }
 
         // Without Typeahead Error Handling
@@ -491,7 +493,7 @@ class AccountSelector extends React.Component {
     }
 }
 
-AccountSelector = BindToChainState(AccountSelector, {keep_updating: true});
+AccountSelector = BindToChainState(AccountSelector);
 
 AccountSelector = connect(AccountSelector, {
     listenTo() {

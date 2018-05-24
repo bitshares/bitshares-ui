@@ -264,7 +264,9 @@ class BuySell extends React.Component {
         let marketFee =
             isBid && quoteMarketFee
                 ? quoteMarketFee
-                : !isBid && baseMarketFee ? baseMarketFee : null;
+                : !isBid && baseMarketFee
+                    ? baseMarketFee
+                    : null;
         let hasBalance = isBid
             ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
             : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
@@ -864,4 +866,4 @@ class BuySell extends React.Component {
     }
 }
 
-export default BindToChainState(BuySell, {keep_updating: true});
+export default BindToChainState(BuySell);

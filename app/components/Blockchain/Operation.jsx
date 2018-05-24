@@ -158,7 +158,7 @@ class Row extends React.Component {
         );
     }
 }
-Row = BindToChainState(Row, {keep_updating: true});
+Row = BindToChainState(Row);
 
 class Operation extends React.Component {
     static defaultProps = {
@@ -217,7 +217,9 @@ class Operation extends React.Component {
             color = "info";
         let memoComponent = null;
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 if (op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />;
