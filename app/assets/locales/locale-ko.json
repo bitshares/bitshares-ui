@@ -1,10 +1,4 @@
 {
-    "qr_address_scanner": {
-        "address_found": "다시 해 보다",
-        "amount": "양",
-        "use_address": "주소를 사용하다",
-        "retry": "다시 해 보다"
-    },
     "account": {
         "accounts": "Accounts",
         "activity": "Activity",
@@ -941,7 +935,8 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "계정",
@@ -1354,6 +1349,12 @@
         "review_period": "Review period begin"
     },
     "propose": "Propose",
+    "qr_address_scanner": {
+        "address_found": "다시 해 보다",
+        "amount": "양",
+        "retry": "다시 해 보다",
+        "use_address": "주소를 사용하다"
+    },
     "refcode": {
         "claim": "Claim",
         "claim_refcode": "Claim Referral Code",

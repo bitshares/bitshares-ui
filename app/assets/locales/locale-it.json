@@ -1,10 +1,4 @@
 {
-    "qr_address_scanner": {
-        "address_found": "Indirizzo trovato",
-        "amount": "Importo",
-        "use_address": "Usa indirizzo",
-        "retry": "Riprova"
-    },
     "account": {
         "accounts": "Account",
         "activity": "Attività",
@@ -959,7 +953,8 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Account",
@@ -1377,6 +1372,12 @@
         "review_period": "Inizio periodo di revisione"
     },
     "propose": "Proponi",
+    "qr_address_scanner": {
+        "address_found": "Indirizzo trovato",
+        "amount": "Importo",
+        "retry": "Riprova",
+        "use_address": "Usa indirizzo"
+    },
     "refcode": {
         "claim": "Richesta",
         "claim_refcode": "Richiedi Referral Code",

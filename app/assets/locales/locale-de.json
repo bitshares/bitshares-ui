@@ -1,10 +1,4 @@
 {
-    "qr_address_scanner": {
-        "address_found": "Adresse gefunden",
-        "amount": "Betrag",
-        "use_address": "Adresse verwenden",
-        "retry": "Wiederholen"
-    },
     "account": {
         "accounts": "Accounts",
         "activity": "Activity",
@@ -948,7 +942,8 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Konto",
@@ -1362,6 +1357,12 @@
         "review_period": "Review period begin"
     },
     "propose": "vorschlagen",
+    "qr_address_scanner": {
+        "address_found": "Adresse gefunden",
+        "amount": "Betrag",
+        "retry": "Wiederholen",
+        "use_address": "Adresse verwenden"
+    },
     "refcode": {
         "claim": "Beanspruchen",
         "claim_refcode": "Referralcode einlösen",

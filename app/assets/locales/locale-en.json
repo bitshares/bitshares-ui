@@ -940,12 +940,6 @@
         "help": "Help",
         "scan_qr_code": "Scan QR code"
     },
-    "qr_address_scanner": {
-        "address_found": "Address found",
-        "amount": "Amount",
-        "use_address": "Use Address",
-        "retry": "Retry"
-    },
     "header": {
         "account": "Account",
         "account_notify": "The active account is now %(account)s",
@@ -1359,6 +1353,12 @@
         "review_period": "Review period begin"
     },
     "propose": "Propose",
+    "qr_address_scanner": {
+        "address_found": "Address found",
+        "amount": "Amount",
+        "retry": "Retry",
+        "use_address": "Use Address"
+    },
     "refcode": {
         "claim": "Claim",
         "claim_refcode": "Claim Referral Code",

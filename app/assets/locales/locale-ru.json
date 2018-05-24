@@ -1,10 +1,4 @@
 {
-    "qr_address_scanner": {
-        "address_found": "Адрес найден",
-        "amount": "Количество",
-        "use_address": "Использовать",
-        "retry": "Еще раз"
-    },
     "account": {
         "accounts": "Аккаунты",
         "activity": "Активность",
@@ -963,7 +957,8 @@
     "global": {
         "cancel": "Отменить",
         "confirm": "Подтвердить",
-        "help": "Помощь"
+        "help": "Помощь",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Аккаунт",
@@ -1382,6 +1377,12 @@
         "review_period": "Начало отчетного периода"
     },
     "propose": "Предложить",
+    "qr_address_scanner": {
+        "address_found": "Адрес найден",
+        "amount": "Количество",
+        "retry": "Еще раз",
+        "use_address": "Использовать"
+    },
     "refcode": {
         "claim": "Ввести",
         "claim_refcode": "Ввести реферальный код",

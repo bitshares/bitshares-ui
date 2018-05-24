@@ -30,6 +30,7 @@
         "prestart-electron": "cross-env NODE_ENV=production webpack --env.hash --env.noUgly --env.electron --env.prod && npm run prepare-electron",
         "start-electron": "electron build/electron/index.js",
         "fix-locale-files": "node ./app/assets/locales-fixup.js",
+        "postfix-locale-files": "./node_modules/prettier/bin-prettier.js app/assets/locales/locale-*.json --write",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
         "build-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.noUgly",
         "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
