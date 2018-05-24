@@ -14,14 +14,15 @@ export default class TradingViewPriceChart extends React.Component {
         if (!dataFeed) return;
         if (!!this.tvWidget) return;
 
-        console.log(
-            "currentResolution",
-            getResolutionsFromBuckets([props.bucketSize])[0],
-            "symbol",
-            props.quoteSymbol + "_" + props.baseSymbol,
-            "timezone:",
-            getTVTimezone()
-        );
+        if (__DEV__)
+            console.log(
+                "currentResolution",
+                getResolutionsFromBuckets([props.bucketSize])[0],
+                "symbol",
+                props.quoteSymbol + "_" + props.baseSymbol,
+                "timezone:",
+                getTVTimezone()
+            );
 
         dataFeed.update({
             resolutions: props.buckets,
@@ -49,7 +50,13 @@ export default class TradingViewPriceChart extends React.Component {
             timezone: getTVTimezone(),
             toolbar_bg: themeColors.bgColor,
             overrides: {
-                "paneProperties.background": themeColors.bgColor
+                "paneProperties.background": themeColors.bgColor,
+                "paneProperties.horzGridProperties.color":
+                    themeColors.axisLineColor,
+                "paneProperties.vertGridProperties.color":
+                    themeColors.axisLineColor,
+                "scalesProperties.lineColor": themeColors.axisLineColor,
+                "scalesProperties.textColor": themeColors.textColor
             },
             theme: props.theme, // don't think this does anything yet
             custom_css_url: "custom-css.css",
@@ -72,15 +79,6 @@ export default class TradingViewPriceChart extends React.Component {
             if (__DEV__) console.timeEnd("*** Chart load time: ");
             dataFeed.update({
                 onMarketChange: this._setSymbol.bind(this)
-            });
-            /* For some reason these don't work if passed in the constructor */
-            this.tvWidget.applyOverrides({
-                "paneProperties.horzGridProperties.color":
-                    themeColors.axisLineColor,
-                "paneProperties.vertGridProperties.color":
-                    themeColors.axisLineColor,
-                "scalesProperties.lineColor": themeColors.axisLineColor,
-                "scalesProperties.textColor": themeColors.textColor
             });
         });
     }

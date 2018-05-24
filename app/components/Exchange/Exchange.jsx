@@ -12,7 +12,7 @@ import utils from "common/utils";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import assetUtils from "common/asset_utils";
 import DepthHighChart from "./DepthHighChart";
-import {debounce, cloneDeep} from "lodash";
+import {debounce} from "lodash";
 import BorrowModal from "../Modal/BorrowModal";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";
@@ -23,19 +23,12 @@ import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
 import ConfirmOrderModal from "./ConfirmOrderModal";
-import Highcharts from "highcharts/highstock";
 import ExchangeHeader from "./ExchangeHeader";
 import Translate from "react-translate-component";
 import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
-
-Highcharts.setOptions({
-    global: {
-        useUTC: false
-    }
-});
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -193,32 +186,6 @@ class Exchange extends React.Component {
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
 
-        /* Make sure the indicators objects only contains the current indicators */
-        let savedIndicators = ws.get("indicators", {});
-        let indicators = {};
-        [
-            ["sma", true],
-            ["ema1", false],
-            ["ema2", false],
-            ["smaVolume", true],
-            ["macd", false],
-            ["bb", false]
-        ].forEach(i => {
-            indicators[i[0]] =
-                i[0] in savedIndicators ? savedIndicators[i[0]] : i[1];
-        });
-
-        let savedIndicatorsSettings = ws.get("indicatorSettings", {});
-        let indicatorSettings = {};
-        [["sma", 7], ["ema1", 20], ["ema2", 50], ["smaVolume", 30]].forEach(
-            i => {
-                indicatorSettings[i[0]] =
-                    i[0] in savedIndicatorsSettings
-                        ? savedIndicatorsSettings[i[0]]
-                        : i[1];
-            }
-        );
-
         return {
             history: [],
             buySellOpen: ws.get("buySellOpen", true),
@@ -230,16 +197,10 @@ class Exchange extends React.Component {
             leftOrderBook: ws.get("leftOrderBook", false),
             buyDiff: false,
             sellDiff: false,
-            indicators,
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
             feeStatus: {},
-            indicatorSettings,
-            tools: {
-                fib: false,
-                trendline: false
-            },
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
@@ -944,10 +905,6 @@ class Exchange extends React.Component {
         this.refs.borrowBase.show();
     }
 
-    _onSelectIndicators() {
-        this.refs.indicators.show();
-    }
-
     _getSettlementInfo() {
         let {lowestCallPrice, feedPrice, quoteAsset} = this.props;
 
@@ -964,36 +921,6 @@ class Exchange extends React.Component {
             lowestCallPrice &&
             !quoteAsset.getIn(["bitasset", "is_prediction_market"])
         );
-    }
-
-    _changeIndicator(key) {
-        let indicators = cloneDeep(this.state.indicators);
-        indicators[key] = !indicators[key];
-        this.setState({
-            indicators
-        });
-
-        SettingsActions.changeViewSetting({
-            indicators
-        });
-    }
-
-    _changeIndicatorSetting(key, e) {
-        e.preventDefault();
-        let indicatorSettings = cloneDeep(this.state.indicatorSettings);
-        let value = parseInt(e.target.value, 10);
-        if (isNaN(value)) {
-            value = 1;
-        }
-        indicatorSettings[key] = value;
-
-        this.setState({
-            indicatorSettings: indicatorSettings
-        });
-
-        SettingsActions.changeViewSetting({
-            indicatorSettings: indicatorSettings
-        });
     }
 
     onChangeFeeAsset(type, e) {
@@ -1021,7 +948,6 @@ class Exchange extends React.Component {
         const newHeight = value
             ? value
             : this.state.chartHeight + (increase ? 20 : -20);
-        console.log("newHeight", newHeight);
         this.setState({
             chartHeight: newHeight
         });
@@ -1230,12 +1156,9 @@ class Exchange extends React.Component {
             ask,
             leftOrderBook,
             showDepthChart,
-            tools,
             chartHeight,
             buyDiff,
             sellDiff,
-            indicators,
-            indicatorSettings,
             width,
             buySellTop
         } = this.state;
@@ -1611,7 +1534,6 @@ class Exchange extends React.Component {
                     marketReady={marketReady}
                     latestPrice={latestPrice}
                     showDepthChart={showDepthChart}
-                    onSelectIndicators={this._onSelectIndicators.bind(this)}
                     marketStats={marketStats}
                     onToggleCharts={this._toggleCharts.bind(this)}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
@@ -1663,7 +1585,6 @@ class Exchange extends React.Component {
                                         dataFeed={this.props.dataFeed}
                                         baseSymbol={baseSymbol}
                                         quoteSymbol={quoteSymbol}
-                                        height={height}
                                         leftOrderBook={leftOrderBook}
                                         marketReady={marketReady}
                                         theme={this.props.settings.get(
@@ -1672,27 +1593,11 @@ class Exchange extends React.Component {
                                         buckets={buckets}
                                         bucketSize={bucketSize}
                                         currentPeriod={this.state.currentPeriod}
-                                        onChangeTool={key => {
-                                            let tools = cloneDeep(
-                                                this.state.tools
-                                            );
-                                            for (let k in tools) {
-                                                if (k === key) {
-                                                    tools[k] = !tools[k];
-                                                } else {
-                                                    tools[k] = false;
-                                                }
-                                            }
-                                            this.setState({tools}, () => {
-                                                this.setState({
-                                                    tools: {
-                                                        fib: false,
-                                                        trendline: false
-                                                    }
-                                                });
-                                            });
-                                        }}
-                                        chartHeight={chartHeight}
+                                        chartHeight={
+                                            this.state.height > 1100
+                                                ? chartHeight
+                                                : chartHeight - 150
+                                        }
                                         mobile={width < 800}
                                     />
                                 </div>
@@ -1719,7 +1624,11 @@ class Exchange extends React.Component {
                                         totalAsks={totals.ask}
                                         base={base}
                                         quote={quote}
-                                        height={height}
+                                        height={
+                                            this.state.height > 1100
+                                                ? chartHeight
+                                                : chartHeight - 150
+                                        }
                                         onClick={this._depthChartClick.bind(
                                             this,
                                             base,

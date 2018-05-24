@@ -126,7 +126,6 @@ module.exports = function(env) {
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
         plugins.push(
             new webpack.DefinePlugin({
-                "process.env.NODE_ENV": JSON.stringify("production"),
                 __DEV__: false
             })
         );
@@ -137,20 +136,6 @@ module.exports = function(env) {
                 debug: false
             })
         );
-        // plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
-        if (!env.noUgly) {
-            // plugins.push(
-            //     new webpack.optimize.UglifyJsPlugin({
-            //         sourceMap: true,
-            //         compress: {
-            //             warnings: true
-            //         },
-            //         output: {
-            //             screw_ie8: true
-            //         }
-            //     })
-            // );
-        }
     } else {
         // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(
@@ -160,7 +145,6 @@ module.exports = function(env) {
             })
         );
         plugins.push(new webpack.HotModuleReplacementPlugin());
-        // plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
 
     plugins.push(
@@ -194,7 +178,7 @@ module.exports = function(env) {
     );
 
     var config = {
-        mode: env.prod ? "production" : "development",
+        mode: env.noUgly ? "none" : env.prod ? "production" : "development",
         entry: {
             app: env.prod
                 ? path.resolve(root_dir, "app/Main.js")
