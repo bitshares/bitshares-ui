@@ -1,6 +1,6 @@
 import React from "react";
 import ReactHighstock from "react-highcharts/dist/ReactHighstock";
-import {takeRight} from "lodash";
+import {takeRight} from "lodash-es";
 import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {

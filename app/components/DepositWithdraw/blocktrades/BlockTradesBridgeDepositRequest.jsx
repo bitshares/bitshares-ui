@@ -11,7 +11,7 @@ import utils from "common/utils";
 import AccountActions from "actions/AccountActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {blockTradesAPIs} from "api/apiConfig";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 import {ChainStore} from "bitsharesjs/es";
@@ -48,7 +48,9 @@ class ButtonConversion extends React.Component {
         const balances = props.account.get("balances");
         let feeID = balances.has("1.3.0")
             ? "1.3.0"
-            : balance ? balance.get("asset_type") : "1.3.0";
+            : balance
+                ? balance.get("asset_type")
+                : "1.3.0";
         return feeID;
     }
 

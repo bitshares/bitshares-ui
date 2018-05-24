@@ -10,7 +10,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import utils from "common/utils";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import LoadingIndicator from "../LoadingIndicator";
 import IssueModal from "../Modal/IssueModal";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";

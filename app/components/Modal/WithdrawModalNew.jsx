@@ -5,7 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector";
 import Translate from "react-translate-component";
 import ExchangeInput from "components/Exchange/ExchangeInput";
-import {extend, debounce} from "lodash";
+import {extend, debounce} from "lodash-es";
 import GatewayStore from "stores/GatewayStore";
 import AssetStore from "stores/AssetStore";
 import MarketsStore from "stores/MarketsStore";

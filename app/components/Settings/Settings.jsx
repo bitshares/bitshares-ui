@@ -12,7 +12,7 @@ import RestoreSettings from "./RestoreSettings";
 import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
-import {set} from "lodash";
+import {set} from "lodash-es";
 
 class Settings extends React.Component {
     static contextTypes = {

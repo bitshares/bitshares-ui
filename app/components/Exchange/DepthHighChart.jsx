@@ -3,7 +3,7 @@ import {PropTypes} from "react";
 import ReactHighstock from "react-highcharts/dist/ReactHighstock";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import {cloneDeep} from "lodash";
+import {cloneDeep} from "lodash-es";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 import AssetName from "../Utility/AssetName";

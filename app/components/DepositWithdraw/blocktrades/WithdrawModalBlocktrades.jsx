@@ -13,7 +13,7 @@ import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {Price, Asset} from "common/MarketClasses";
 
 class WithdrawModalBlocktrades extends React.Component {

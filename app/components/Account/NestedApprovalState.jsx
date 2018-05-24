@@ -3,7 +3,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import pu from "common/permission_utils";
-import {cloneDeep} from "lodash";
+import {cloneDeep} from "lodash-es";
 import {ChainStore} from "bitsharesjs/es";
 import {
     AuthorityDepthOverflowWarning,

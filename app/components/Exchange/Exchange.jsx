@@ -12,7 +12,7 @@ import utils from "common/utils";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import assetUtils from "common/asset_utils";
 import DepthHighChart from "./DepthHighChart";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import BorrowModal from "../Modal/BorrowModal";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";

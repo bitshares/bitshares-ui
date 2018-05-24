@@ -1,5 +1,5 @@
 import React, {PropTypes} from "react";
-import {isFinite} from "lodash";
+import {isFinite} from "lodash-es";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";

@@ -4,7 +4,7 @@ import {Link} from "react-router/es";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import AccountActions from "actions/AccountActions";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import ChainTypes from "../Utility/ChainTypes";
 import Icon from "../Icon/Icon";
 import BindToChainState from "../Utility/BindToChainState";

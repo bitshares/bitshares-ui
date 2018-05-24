@@ -3,7 +3,7 @@ import MarketsActions from "actions/MarketsActions";
 import {Link} from "react-router/es";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
