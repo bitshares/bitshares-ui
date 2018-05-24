@@ -1,7 +1,6 @@
 import React from "react";
 import {PropTypes} from "react";
 import MarketsActions from "actions/MarketsActions";
-import SettingsStore from "stores/SettingsStore";
 import {MyOpenOrders} from "./MyOpenOrders";
 import OrderBook from "./OrderBook";
 import MarketHistory from "./MarketHistory";
