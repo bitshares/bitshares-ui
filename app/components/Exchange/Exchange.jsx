@@ -804,21 +804,21 @@ class Exchange extends React.Component {
         }
     }
 
-    _depthChartClick(base, quote, power, e) {
+    _depthChartClick(base, quote, e) {
         e.preventDefault();
         let {bid, ask} = this.state;
 
         bid.price = new Price({
             base: this.state.bid.for_sale,
             quote: this.state.bid.to_receive,
-            real: e.xAxis[0].value / power
+            real: e.xAxis[0].value
         });
         bid.priceText = bid.price.toReal();
 
         ask.price = new Price({
             base: this.state.ask.to_receive,
             quote: this.state.ask.for_sale,
-            real: e.xAxis[0].value / power
+            real: e.xAxis[0].value
         });
         ask.priceText = ask.price.toReal();
         let newState = {
