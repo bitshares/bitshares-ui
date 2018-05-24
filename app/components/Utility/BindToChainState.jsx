@@ -158,7 +158,6 @@ function BindToChainState(Component, options = {}) {
         }
 
         componentWillReceiveProps(next_props) {
-            console.log("nextProps", options);
             if (options && options.all_props) {
                 this.chain_objects = reject(
                     Object.keys(next_props),
