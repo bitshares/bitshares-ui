@@ -2,6 +2,7 @@
 
 import React from "react";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 let icons = [
     "photo-camera",
@@ -104,11 +105,11 @@ class Icon extends React.Component {
 }
 
 Icon.propTypes = {
-    name: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string,
-    size: React.PropTypes.oneOf(["1x", "1_5x", "2x", "3x", "4x", "5x", "10x"]),
-    inverse: React.PropTypes.bool,
-    className: React.PropTypes.string
+    name: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    size: PropTypes.oneOf(["1x", "1_5x", "2x", "3x", "4x", "5x", "10x"]),
+    inverse: PropTypes.bool,
+    className: PropTypes.string
 };
 
 Icon.defaultProps = {

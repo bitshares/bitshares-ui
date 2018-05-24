@@ -1,37 +1,39 @@
 .page-layout {
-  > .grid-block {
-    // border-top: 1px solid transparent;
-    // border-bottom: 1px solid transparent;
-    > .grid-content, > .grid-block, > .grid-container {
-      padding: 0 10px;
+    > .grid-block {
+        // border-top: 1px solid transparent;
+        // border-bottom: 1px solid transparent;
+        > .grid-content,
+        > .grid-block,
+        > .grid-container {
+            padding: 0 10px;
+        }
     }
-  }
 
-  .padding-top {
-    padding-top: 1rem;
-  }
-
-  .left-column {
-    background-color: #fafafa;
-  }
-
-  .main-content {
-    padding-top: 0px ;
-    background-color: #f3f3f3;
-
-    &.margin-block {
-      margin: 20px;
-      padding: 1rem .75rem;
+    .padding-top {
+        padding-top: 1rem;
     }
-  }
 
-  .right-column {
-    background-color: #eaeaea;
-  }
+    .left-column {
+        background-color: #fafafa;
+    }
 
-  .regular-padding {
-    padding: 2rem 1.75rem !important;
-  }
+    .main-content {
+        padding-top: 0px;
+        background-color: #f3f3f3;
+
+        &.margin-block {
+            margin: 20px;
+            padding: 1rem 0.75rem;
+        }
+    }
+
+    .right-column {
+        background-color: #eaeaea;
+    }
+
+    .regular-padding {
+        padding: 2rem 1.75rem !important;
+    }
 }
 
 #account-notify {
@@ -42,64 +44,64 @@
 }
 
 @media (max-width: 1100px) {
-  .hide-column-small {
-    display: none !important;
-  }
+    .hide-column-small {
+        display: none !important;
+    }
 }
 
 @media (max-width: 1300px) {
-  .hide-column-large {
-    display: none !important;
-  }
+    .hide-column-large {
+        display: none !important;
+    }
 }
 
 div.bordered-header {
-  text-transform: uppercase;
-  font-size: 1.10rem;
-  padding-left: 10px;
-  padding-top: 0.55rem;
-  font-weight: 500;
-  overflow: hidden;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    padding-left: 10px;
+    padding-top: 0.55rem;
+    font-weight: 500;
+    overflow: hidden;
 }
 
 .exchange-bordered {
-  border: 1px solid rgba(183, 183, 183, 0.29);
+    border: 1px solid rgba(183, 183, 183, 0.29);
 
-  div:first-child & {
-    margin: 0 10px 0 10px;
-  }
+    div:first-child & {
+        margin: 0 10px 0 10px;
+    }
 
-  div:last-child & {
-    margin: 0 10px 0 10px;
-  }
+    div:last-child & {
+        margin: 0 10px 0 10px;
+    }
 }
 
 .generic-bordered-box {
-  //border: 1px solid rgba(183, 183, 183, 0.29);
+    //border: 1px solid rgba(183, 183, 183, 0.29);
 
-  .box-content {
-    //padding-left: 10px;
-  }
+    .box-content {
+        //padding-left: 10px;
+    }
 }
 
 .block-content-header {
-  font-size: 1.4375rem;
-  padding: 1.5rem 0;
+    font-size: 1.4375rem;
+    padding: 1.5rem 0;
 
-  @include breakpoint(small only) {
-      font-size: 1.125rem;
-  }
+    @include breakpoint(small only) {
+        font-size: 1.125rem;
+    }
 }
 
-.table-cell{
-  display: table-cell;
+.table-cell {
+    display: table-cell;
 }
 
 .grid-content.app-tables {
-  box-sizing: border-box;
-  padding: 0px;
-  height: 100%;
-  position: relative;
+    box-sizing: border-box;
+    padding: 0px;
+    height: 100%;
+    position: relative;
 }
 
 // .grid-content.app-tables > .content-block, .grid-content.app-tables > .content-block > .generic-bordered-box, .grid-content.app-tables > .content-block > .generic-bordered-box > .account-tabs {
@@ -107,5 +109,5 @@ div.bordered-header {
 // }
 
 .grid-content.app-tables > .content-block {
-  margin-bottom: 0 !important;
+    margin-bottom: 0 !important;
 }

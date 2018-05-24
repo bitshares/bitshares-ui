@@ -29,4 +29,4 @@ class Statistics extends React.Component {
     }
 }
 
-export default BindToChainState(Statistics, {keep_updating: true});
+export default BindToChainState(Statistics);

@@ -11,6 +11,7 @@ import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
+import PropTypes from "prop-types";
 
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
@@ -31,11 +32,11 @@ function textContent(n) {
 class RecentTransactions extends React.Component {
     static propTypes = {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
-        compactView: React.PropTypes.bool,
-        limit: React.PropTypes.number,
-        maxHeight: React.PropTypes.number,
-        fullHeight: React.PropTypes.bool,
-        showFilters: React.PropTypes.bool
+        compactView: PropTypes.bool,
+        limit: PropTypes.number,
+        maxHeight: PropTypes.number,
+        fullHeight: PropTypes.bool,
+        showFilters: PropTypes.bool
     };
 
     static defaultProps = {
@@ -456,9 +457,7 @@ class RecentTransactions extends React.Component {
         );
     }
 }
-RecentTransactions = BindToChainState(RecentTransactions, {
-    keep_updating: true
-});
+RecentTransactions = BindToChainState(RecentTransactions);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

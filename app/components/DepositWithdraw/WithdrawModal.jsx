@@ -14,9 +14,9 @@ class WithdrawModal extends React.Component {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
-        receive_asset_name: React.PropTypes.string,
-        receive_asset_symbol: React.PropTypes.string,
-        memo_prefix: React.PropTypes.string
+        receive_asset_name: PropTypes.string,
+        receive_asset_symbol: PropTypes.string,
+        memo_prefix: PropTypes.string
     };
 
     constructor(props) {
@@ -133,4 +133,4 @@ class WithdrawModal extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawModal, {keep_updating: true});
+export default BindToChainState(WithdrawModal);

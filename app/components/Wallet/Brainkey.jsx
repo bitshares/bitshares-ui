@@ -81,7 +81,7 @@ class BrainkeyAccounts {
         return <span>{rows}</span>;
     }
 }
-BrainkeyAccounts = BindToChainState(BrainkeyAccounts, {keep_updating: true});
+BrainkeyAccounts = BindToChainState(BrainkeyAccounts);
 
 export class BrainkeyInputAccept extends Component {
     constructor() {

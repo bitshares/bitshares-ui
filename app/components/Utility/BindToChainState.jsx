@@ -1,5 +1,5 @@
 import React from "react";
-import {curry, flow, reject, clone, toPairs, omit, get, map} from "lodash-es";
+import {curry, flow, reject, clone, toPairs, omit, get, pick} from "lodash-es";
 import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
@@ -64,10 +64,7 @@ function BindToChainState(Component, options = {}) {
             if (options && options.all_props) {
                 this.chain_objects = reject(
                     Object.keys(this.props),
-                    e =>
-                        e === "children" ||
-                        e === "keep_updating" ||
-                        e === "show_loader"
+                    e => e === "children" || e === "show_loader"
                 );
                 this.chain_accounts = [];
                 this.chain_account_names = [];
@@ -164,19 +161,14 @@ function BindToChainState(Component, options = {}) {
             if (options && options.all_props) {
                 this.chain_objects = reject(
                     Object.keys(next_props),
-                    e =>
-                        e === "children" ||
-                        e === "keep_updating" ||
-                        e === "show_loader"
+                    e => e === "children" || e === "show_loader"
                 );
                 this.all_chain_props = this.chain_objects;
-                console.log(
-                    "state:",
-                    this.state,
-                    "pick:",
-                    map(this.state, this.chain_objects)
-                );
-                this.state = map(this.state, this.chain_objects);
+
+                let newState = pick(this.state, this.chain_objects);
+                if (!utils.are_equal_shallow(newState, this.state)) {
+                    this.setState(newState);
+                }
             }
             let props_obj = null;
             for (let k in this.dynamic_props) {
@@ -192,8 +184,6 @@ function BindToChainState(Component, options = {}) {
         }
 
         update(next_props = null) {
-            //let keep_updating = (options && options.keep_updating) || this.props.keep_updating;
-            //if(!next_props && !keep_updating && this.state.resolved) return;
             // let updateStart = new Date().getTime();
 
             let props = next_props || this.props;

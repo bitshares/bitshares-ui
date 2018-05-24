@@ -14,27 +14,28 @@ import {requestDepositAddress} from "common/gatewayMethods";
 import {widechainAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import QRCode from "qrcode.react";
+import PropTypes from "prop-types";
 
 class WinexGatewayRequest extends React.Component {
     static propTypes = {
-        url: React.PropTypes.string,
-        gateway: React.PropTypes.string,
-        deposit_coin_type: React.PropTypes.string,
-        deposit_asset_name: React.PropTypes.string,
-        deposit_account: React.PropTypes.string,
-        receive_coin_type: React.PropTypes.string,
+        url: PropTypes.string,
+        gateway: PropTypes.string,
+        deposit_coin_type: PropTypes.string,
+        deposit_asset_name: PropTypes.string,
+        deposit_account: PropTypes.string,
+        receive_coin_type: PropTypes.string,
         account: ChainTypes.ChainAccount,
         issuer_account: ChainTypes.ChainAccount,
-        deposit_asset: React.PropTypes.string,
-        deposit_wallet_type: React.PropTypes.string,
+        deposit_asset: PropTypes.string,
+        deposit_wallet_type: PropTypes.string,
         receive_asset: ChainTypes.ChainAsset,
         deprecated_in_favor_of: ChainTypes.ChainAsset,
-        deprecated_message: React.PropTypes.string,
-        action: React.PropTypes.string,
-        supports_output_memos: React.PropTypes.bool.isRequired,
-        min_withdraw_amount: React.PropTypes.any,
-        max_withdraw_amount: React.PropTypes.any,
-        fee_type: React.PropTypes.string
+        deprecated_message: PropTypes.string,
+        action: PropTypes.string,
+        supports_output_memos: PropTypes.bool.isRequired,
+        min_withdraw_amount: PropTypes.any,
+        max_withdraw_amount: PropTypes.any,
+        fee_type: PropTypes.string
     };
 
     static defaultProps = {
@@ -659,4 +660,4 @@ class WinexGatewayRequest extends React.Component {
     }
 }
 
-export default BindToChainState(WinexGatewayRequest, {keep_updating: true});
+export default BindToChainState(WinexGatewayRequest);

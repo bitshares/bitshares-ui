@@ -26,6 +26,7 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import titleUtils from "common/titleUtils";
+import PropTypes from "prop-types";
 
 class App extends React.Component {
     constructor(props) {
@@ -321,8 +322,8 @@ RootIntl = connect(RootIntl, {
 
 class Root extends React.Component {
     static childContextTypes = {
-        router: React.PropTypes.object,
-        location: React.PropTypes.object
+        router: PropTypes.object,
+        location: PropTypes.object
     };
 
     componentDidMount() {

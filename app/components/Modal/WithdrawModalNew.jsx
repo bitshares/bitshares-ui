@@ -1351,19 +1351,16 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(
-    BindToChainState(WithdrawModalWrapper, {keep_updating: true}),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});
 
 export default class WithdrawModal extends React.Component {
     constructor() {

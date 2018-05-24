@@ -21,6 +21,7 @@ import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import {ChainValidation} from "bitsharesjs/es";
+import PropTypes from "prop-types";
 
 let lastLookup = new Date();
 
@@ -325,7 +326,7 @@ class MyMarkets extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor(props) {

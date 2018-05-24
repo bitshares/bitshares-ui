@@ -113,6 +113,6 @@ class Notifier extends React.Component {
         );
     }
 }
-Notifier = BindToChainState(Notifier, {keep_updating: true});
+Notifier = BindToChainState(Notifier);
 
 export default Notifier;

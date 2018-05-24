@@ -3,6 +3,7 @@ import {zipObject} from "lodash-es";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router";
+import PropTypes from "prop-types";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -46,8 +47,8 @@ function adjust_links(str) {
 
 class HelpContent extends React.Component {
     static propTypes = {
-        path: React.PropTypes.string.isRequired,
-        section: React.PropTypes.string
+        path: PropTypes.string.isRequired,
+        section: PropTypes.string
     };
 
     constructor(props) {

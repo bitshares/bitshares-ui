@@ -195,7 +195,7 @@ module.exports = function(env) {
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: env.dev || env.noUgly ? "eval" : "none",
+        devtool: env.noUgly || !env.prod ? "eval" : "none",
         module: {
             rules: [
                 {
@@ -205,7 +205,8 @@ module.exports = function(env) {
                         path.join(
                             root_dir,
                             "node_modules/react-foundation-apps"
-                        )
+                        ),
+                        path.join(root_dir, "node_modules/react-stockcharts")
                     ],
                     use: [
                         {

@@ -28,4 +28,4 @@ class VestingBalance extends React.Component {
     }
 }
 
-export default BindToChainState(VestingBalance, {keep_updating: true});
+export default BindToChainState(VestingBalance);

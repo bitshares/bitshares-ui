@@ -21,10 +21,11 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
+import PropTypes from "prop-types";
 
 class SendModal extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {

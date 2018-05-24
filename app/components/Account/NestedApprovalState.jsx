@@ -19,6 +19,7 @@ import {
     statusText,
     notNestdWeight
 } from "./NestedApprovalStateLib";
+import PropTypes from "prop-types";
 
 class AccountPermissionTree extends React.Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class AccountPermissionTree extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         accounts: ChainTypes.ChainAccountsList,
-        level: React.PropTypes.number.isRequired
+        level: PropTypes.number.isRequired
     };
 
     static defaultProps = {
@@ -328,12 +329,12 @@ class FirstLevel extends React.Component {
         );
     }
 }
-FirstLevel = BindToChainState(FirstLevel, {keep_updating: true});
+FirstLevel = BindToChainState(FirstLevel);
 
 class ProposalWrapper extends React.Component {
     static propTypes = {
         proposal: ChainTypes.ChainObject.isRequired,
-        type: React.PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired
     };
 
@@ -361,4 +362,4 @@ class ProposalWrapper extends React.Component {
     }
 }
 
-export default BindToChainState(ProposalWrapper, {keep_updating: true});
+export default BindToChainState(ProposalWrapper);

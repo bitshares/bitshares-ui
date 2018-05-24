@@ -120,9 +120,9 @@ export default class TradingViewPriceChart extends React.Component {
                 <div
                     className="exchange-bordered"
                     style={{
-                        height: this.props.chartHeight,
                         marginTop: 10,
-                        marginBottom: 10
+                        marginBottom: 10,
+                        height: this.props.chartHeight + "px"
                     }}
                     id="tv_chart"
                 />
