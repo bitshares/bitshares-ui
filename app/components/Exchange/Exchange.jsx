@@ -29,6 +29,8 @@ import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
+import guide from "intro.js";
+import translator from "counterpart";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -290,8 +292,43 @@ class Exchange extends React.Component {
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         this._initPsContainer();
+        if (
+            !this.props.exchange.get("tutorialShown") &&
+            prevProps.coreAsset &&
+            prevState.feeStatus
+        ) {
+            if (!this.tutorialShown) {
+                this.tutorialShown = true;
+                const theme = this.props.settings.get("themes");
+
+                guide
+                    .introJs()
+                    .setOptions({
+                        tooltipClass: theme,
+                        highlightClass: theme,
+                        showBullets: false,
+                        hideNext: true,
+                        hidePrev: true,
+                        nextLabel: translator.translate(
+                            "walkthrough.next_label"
+                        ),
+                        prevLabel: translator.translate(
+                            "walkthrough.prev_label"
+                        ),
+                        skipLabel: translator.translate(
+                            "walkthrough.skip_label"
+                        ),
+                        doneLabel: translator.translate(
+                            "walkthrough.done_label"
+                        )
+                    })
+                    .start();
+
+                SettingsActions.setExchangeTutorialShown.defer(true);
+            }
+        }
     }
 
     _initPsContainer() {
