@@ -18,7 +18,7 @@ then
     git checkout gh-pages
     rm -rf ./*
     git checkout ./CNAME
-    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history_/* .
+    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* .
     git add -A
     git commit -a -m "Update wallet by Travis: v$TRAVIS_TAG"
     git push

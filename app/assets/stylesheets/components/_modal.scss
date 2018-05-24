@@ -1,0 +1,136 @@
+// Modals with specific width
+
+.modal#send_modal_header,
+.modal#send_modal_portfolio,
+.modal#simple_bridge_modal,
+.modal#deposit_modal_new,
+.modal#withdraw_modal_new {
+    max-width: 500px;
+}
+
+.modal {
+    max-width: 700px;
+    border-radius: 8px;
+    overflow: auto !important;
+    padding: 1rem 2rem 1rem 2rem;
+
+    .modal__header {
+        text-align: center;
+        padding-top: 1rem;
+        > p {
+            padding: 0px;
+            margin: 0px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+    }
+
+    .modal__logo {
+        text-align: center;
+        img {
+            height: 70px;
+        }
+    }
+
+    .modal__title {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    .modal__body {
+        padding-top: 1rem;
+        height: auto;
+        min-height: 350px;
+        .container-row {
+            padding-bottom: 1rem;
+        }
+        .double-row {
+            .small-6 {
+                display: inline-block;
+            }
+        }
+    }
+
+    form {
+        padding-top: 20px;
+    }
+
+    .has-error,
+    .facolor-error,
+    .facolor-warning {
+        max-width: 100%;
+    }
+    .floatRight {
+        width: auto;
+        padding-top: 2px;
+        .error-msg {
+            text-align: right;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+    }
+
+    .amount-selector {
+        span {
+            display: inline-block;
+        }
+
+        a,
+        .disabled-link {
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 0 5px;
+            text-transform: none;
+            font-variant: normal;
+        }
+
+        span + a,
+        span + .disabled-link {
+            margin-left: 8px;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .modal {
+        width: 100%;
+        border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .modal {
+        .modal__body {
+            .double-row {
+                .small-6 {
+                    display: initial;
+                }
+            }
+        }
+    }
+}
+
+#withdraw_modal_new {
+    .modal__body {
+        min-height: 450px;
+    }
+}
+
+#simple_transfer_modal {
+    max-width: 650px;
+}
+
+#simple_deposit_modal,
+#simple_deposit_modal_ask,
+#simple_withdraw_modal,
+#simple_bridge_modal_ask {
+    overflow: auto !important;
+    max-width: 500px;
+}
+
+#simple_deposit_modal label,
+#simple_deposit_modal_ask label,
+#simple_withdraw_modal label,
+#simple_bridge_modal_ask label {
+    text-transform: none !important;
+}

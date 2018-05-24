@@ -1,12 +1,10 @@
 import React from "react";
-import ReactHighstock from "react-highcharts/dist/ReactHighstock";
-import {takeRight} from "lodash";
+import ReactHighchart from "react-highcharts";
+import {takeRight} from "lodash-es";
 import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {
-
     shouldComponentUpdate(nextProps) {
-
         if (nextProps.blockTimes.length < 19) {
             return false;
         } else if (this.props.blockTimes.length === 0) {
@@ -17,13 +15,17 @@ class BlocktimeChart extends React.Component {
         if (chart) {
             let {blockTimes, colors} = this._getData(nextProps);
             let series = chart.series[0];
-            let finalValue = series.xData[series.xData.length -1];
+            let finalValue = series.xData[series.xData.length - 1];
 
             if (series.xData.length) {
                 // console.log(chart, "series:", series.data, "finalValue:", finalValue);
                 blockTimes.forEach(point => {
                     if (point[0] > finalValue) {
-                        series.addPoint(point, false, series.xData.length >= 30);
+                        series.addPoint(
+                            point,
+                            false,
+                            series.xData.length >= 30
+                        );
                     }
                 });
 
@@ -35,7 +37,8 @@ class BlocktimeChart extends React.Component {
         }
 
         return (
-            nextProps.blockTimes[nextProps.blockTimes.length - 1][0] !== this.props.blockTimes[this.props.blockTimes.length - 1][0] ||
+            nextProps.blockTimes[nextProps.blockTimes.length - 1][0] !==
+                this.props.blockTimes[this.props.blockTimes.length - 1][0] ||
             nextProps.blockTimes.length !== this.props.blockTimes.length
         );
     }
@@ -44,7 +47,7 @@ class BlocktimeChart extends React.Component {
         let {blockTimes, head_block} = this.props;
 
         blockTimes.filter(a => {
-            return a[0] >= (head_block - 30);
+            return a[0] >= head_block - 30;
         });
 
         if (blockTimes && blockTimes.length) {
@@ -61,16 +64,15 @@ class BlocktimeChart extends React.Component {
             } else {
                 return "#deb869";
             }
-        })
+        });
 
         return {
             blockTimes,
             colors
-        }
+        };
     }
 
     render() {
-
         let {blockTimes, colors} = this._getData(this.props);
 
         let tooltipLabel = counterpart.translate("explorer.blocks.block_time");
@@ -103,7 +105,7 @@ class BlocktimeChart extends React.Component {
             tooltip: {
                 shared: false,
                 formatter: function() {
-                    return tooltipLabel + ": " + this.point.y + "s";
+                    return tooltipLabel + ": " + this.y + "s";
                 }
             },
             series: [
@@ -145,10 +147,10 @@ class BlocktimeChart extends React.Component {
             }
         };
 
-        return (
-            blockTimes.length ? <ReactHighstock ref="chart" config={config}/> : null
-        );
+        return blockTimes.length ? (
+            <ReactHighchart ref="chart" config={config} />
+        ) : null;
     }
-};
+}
 
 export default BlocktimeChart;

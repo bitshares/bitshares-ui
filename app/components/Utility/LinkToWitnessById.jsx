@@ -6,7 +6,7 @@ import LinkToAccountById from "./LinkToAccountById";
 class LinkToWitnessById extends React.Component {
     static propTypes = {
         witness: ChainTypes.ChainObject.isRequired
-    }
+    };
 
     render() {
         let witness_account = this.props.witness.get("witness_account");

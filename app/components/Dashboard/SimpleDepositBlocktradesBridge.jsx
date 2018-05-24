@@ -2,13 +2,20 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
-import { Asset } from "common/MarketClasses";
+import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import ReactTooltip from "react-tooltip";
 import counterpart from "counterpart";
-import {requestDepositAddress, validateAddress, WithdrawAddresses, getDepositLimit, estimateOutput, estimateInput} from "common/blockTradesMethods";
+import {
+    requestDepositAddress,
+    validateAddress,
+    WithdrawAddresses,
+    getDepositLimit,
+    estimateOutput,
+    estimateInput
+} from "common/gatewayMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
@@ -24,7 +31,6 @@ import QRCode from "qrcode.react";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
 
 class SimpleDepositBlocktradesBridge extends React.Component {
-
     static propTypes = {
         sender: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired
@@ -34,7 +40,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         super();
         this.state = {
             toAddress: WithdrawAddresses.getLast(props.walletType),
-            withdrawValue:"",
+            withdrawValue: "",
             amountError: null,
             inputAmount: 0,
             receiveLoading: false,
@@ -61,7 +67,10 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if (np.inputCoinType !== this.props.inputCoinType || np.outputCoinType !== this.props.outputCoinType) {
+        if (
+            np.inputCoinType !== this.props.inputCoinType ||
+            np.outputCoinType !== this.props.outputCoinType
+        ) {
             this._getDepositLimit(np);
             this._estimateOutput(np);
             this._getDepositAddress(np);
@@ -82,18 +91,20 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
     _getDepositLimit(props = this.props) {
         this.setState({limitLoading: true});
-        getDepositLimit(props.inputCoinType, props.outputCoinType).then(res => {
-            this.setState({
-                depositLimit: res.depositLimit,
-                limitLoading: false
+        getDepositLimit(props.inputCoinType, props.outputCoinType)
+            .then(res => {
+                this.setState({
+                    depositLimit: res.depositLimit,
+                    limitLoading: false
+                });
+            })
+            .catch(err => {
+                console.log("deposit limit error:", err);
+                this.setState({
+                    depositLimit: null,
+                    limitLoading: false
+                });
             });
-        }).catch(err => {
-            console.log("deposit limit error:", err);
-            this.setState({
-                depositLimit: null,
-                limitLoading: false
-            });
-        });
     }
 
     _onAmountChange(value, e) {
@@ -101,65 +112,89 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const target = e.target;
 
         // Ensure input is valid
-        if(!regexp_numeral.test(target.value)) {
+        if (!regexp_numeral.test(target.value)) {
             target.value = target.value.replace(/[^0-9.]/g, "");
         }
 
         // Catch initial decimal input
-        if(target.value.charAt(0) == ".") { 
-            target.value = "0."; 
+        if (target.value.charAt(0) == ".") {
+            target.value = "0.";
         }
 
         // Catch double decimal and remove if invalid
-        if(target.value.charAt(target.value.length) != target.value.search(".")) { 
+        if (
+            target.value.charAt(target.value.length) != target.value.search(".")
+        ) {
             target.value.substr(1);
         }
 
         target.value = utils.limitByPrecision(target.value, 8);
 
-        switch(value) {
+        switch (value) {
             case "input":
-                this.setState({inputAmount: target.value}, this._estimateOutput.bind(this));
+                this.setState(
+                    {inputAmount: target.value},
+                    this._estimateOutput.bind(this)
+                );
                 break;
 
             case "output":
-                this.setState({outputAmount: target.value}, this._estimateInput.bind(this));
+                this.setState(
+                    {outputAmount: target.value},
+                    this._estimateInput.bind(this)
+                );
                 break;
         }
     }
 
     _estimateOutput(props = this.props) {
         this.setState({receiveAmount: 0, sendAmount: this.state.inputAmount});
-        if(!this.state.inputAmount) { return; }
+        if (!this.state.inputAmount) {
+            return;
+        }
 
         this.setState({receiveLoading: true});
-        estimateOutput(this.state.inputAmount, props.inputCoinType, props.outputCoinType).then(res => {
-            this.setState({
-                inputAmount: res.inputAmount,
-                receiveAmount: res.outputAmount,
-                receiveLoading: false
+        estimateOutput(
+            this.state.inputAmount,
+            props.inputCoinType,
+            props.outputCoinType
+        )
+            .then(res => {
+                this.setState({
+                    inputAmount: res.inputAmount,
+                    receiveAmount: res.outputAmount,
+                    receiveLoading: false
+                });
+            })
+            .catch(err => {
+                console.log("receive amount err:", err);
+                this.setState({receiveLoading: false, apiError: true});
             });
-        }).catch(err => {
-            console.log("receive amount err:", err);
-            this.setState({receiveLoading: false, apiError: true});
-        });
     }
 
     _estimateInput(props = this.props) {
         this.setState({receiveAmount: this.state.outputAmount, sendAmount: 0});
-        if(!this.state.outputAmount) { return; }
+        if (!this.state.outputAmount) {
+            return;
+        }
 
         this.setState({receiveLoading: true});
-        estimateInput(this.state.outputAmount, props.inputCoinType, props.outputCoinType).then(res => {
-            this.setState({
-                inputAmount: res.inputAmount,
-                sendAmount: utils.limitByPrecision(res.inputAmount,8),
-                receiveLoading: false
+        estimateInput(
+            this.state.outputAmount,
+            props.inputCoinType,
+            props.outputCoinType
+        )
+            .then(res => {
+                this.setState({
+                    inputAmount: res.inputAmount,
+                    sendAmount: utils.limitByPrecision(res.inputAmount, 8),
+                    receiveLoading: false
+                });
+            })
+            .catch(err => {
+                console.log("send amount err:", err);
+                this.setState({receiveLoading: false, apiError: true});
             });
-        }).catch(err => {
-            console.log("send amount err:", err);
-            this.setState({receiveLoading: false, apiError: true});
-        });
     }
 
     _getDepositAddress(props = this.props) {
@@ -190,7 +225,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             outputCoinType: props.outputCoinType.toLowerCase(),
             outputAddress: props.sender.get("name"),
             url: blockTradesAPIs.BASE,
-            stateCallback: (receive_address) => {
+            stateCallback: receive_address => {
                 this.addDepositAddress(
                     props.inputCoinType.toLowerCase(),
                     props.outputCoinType.toLowerCase(),
@@ -201,7 +236,12 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         };
     }
 
-    addDepositAddress( input_coin_type, output_coin_type, account, receive_address ) {
+    addDepositAddress(
+        input_coin_type,
+        output_coin_type,
+        account,
+        receive_address
+    ) {
         this.deposit_address_cache.cacheInputAddress(
             "blocktrades",
             account,
@@ -228,7 +268,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         validAddress: isValid
                     });
                 }
-            }).catch(err => {
+            })
+            .catch(err => {
                 console.error("Error when validating address:", err);
             });
     }
@@ -238,7 +279,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         let newWnd = window.open(SettingsStore.site_registr, "_blank");
         newWnd.opener = null;
     }
-
 
     _onDropDownSelect(e) {
         SettingsActions.changeViewSetting({preferredBridge: e});
@@ -251,61 +291,125 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     _renderDeposit() {
-        const {name: assetName, prefix} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
+        const {name: assetName, prefix} = utils.replaceName(this.props.asset);
         const {receive_address, apiError} = this.state;
-        const hasMemo = receive_address && "memo" in receive_address && receive_address.memo;
-        const addressValue = receive_address && receive_address.address || "";
-        const QR = <div className="SimpleTrade__QR"><QRCode size={140} value={addressValue}/></div>;
+        const hasMemo =
+            receive_address &&
+            "memo" in receive_address &&
+            receive_address.memo;
+        const addressValue = (receive_address && receive_address.address) || "";
+        const QR = (
+            <div className="QR" style={{textAlign: "center"}}>
+                <QRCode size={140} value={addressValue} />
+            </div>
+        );
 
         let bridgeAssets = Object.keys(this.props.bridges.toJS());
 
         const inputName = this.props.inputCoinType.toUpperCase();
         const receiveName = (prefix ? prefix : "") + assetName;
 
-        let price = (this.state.receiveAmount / this.state.inputAmount).toFixed(4);
+        let price = (this.state.receiveAmount / this.state.inputAmount).toFixed(
+            4
+        );
         let priceSuffix = receiveName + "/" + inputName;
 
-        const aboveLimit = this.state.inputAmount > parseFloat(this.state.depositLimit) || this.state.sendAmount > parseFloat(this.state.depositLimit);
-        const aboveLimitStyle = aboveLimit ? {border: "1px solid #a94442"} : null;
+        const aboveLimit =
+            this.state.inputAmount > parseFloat(this.state.depositLimit) ||
+            this.state.sendAmount > parseFloat(this.state.depositLimit);
+        const aboveLimitStyle = aboveLimit
+            ? {border: "1px solid #a94442"}
+            : null;
 
         return (
-            <div className={!addressValue ? "no-overflow" : ""}>
-                <div className="SimpleTrade__withdraw-row">
-                    <label className="left-label">ASSET</label>
+            <div className="modal__body">
+                <div className="container-row">
+                    <label className="left-label">
+                        <Translate content="modal.buy.asset" />
+                    </label>
                     <div className="inline-label input-wrapper">
-                        <input disabled type="text" defaultValue={receiveName} />
+                        <input
+                            disabled
+                            type="text"
+                            defaultValue={receiveName}
+                        />
                     </div>
                 </div>
-                <div className="SimpleTrade__withdraw-row">
+                <div className="container-row">
                     <div className="grid-block">
-                        <label className="left-label">BRIDGE</label>
-                        <span data-tip={counterpart.translate("tooltip.bridge_TRADE")} className="inline-block tooltip" onClick={this.onBlockTradesContact.bind(this)}>
-                            &nbsp;<Icon style={{position: "relative", top: 0}} name="question-circle" />
+                        <label className="left-label">
+                            <Translate content="modal.buy.bridge" />
+                        </label>
+                        <span
+                            data-tip={counterpart.translate(
+                                "tooltip.bridge_TRADE"
+                            )}
+                            className="inline-block tooltip"
+                            onClick={this.onBlockTradesContact.bind(this)}
+                        >
+                            &nbsp;<Icon
+                                style={{position: "relative", top: 0}}
+                                name="question-circle"
+                                title="icons.question_circle"
+                            />
                         </span>
                     </div>
                     <div className="inline-label input-wrapper">
-                        <input disabled type="text" defaultValue={"BLOCKTRADES"} /> {/* Change this when we gain more brdiges */}
+                        <input
+                            disabled
+                            type="text"
+                            defaultValue={"BLOCKTRADES"}
+                        />{" "}
+                        {/* Change this when we gain more brdiges */}
                     </div>
                 </div>
                 <span style={!apiError ? {display: ""} : {display: "none"}}>
-                    <div className="SimpleTrade__withdraw-row">
+                    <div className="container-row double-row">
                         <div className="no-margin no-padding">
                             <div className="small-6" style={{paddingRight: 10}}>
                                 <div className="grid-block">
-                                    <label className="left-label"><Translate content="transfer.send" /></label>
-                                    {aboveLimit ? 
-                                        <div className="error-msg inline-block tooltip" data-tip={counterpart.translate("tooltip.over_limit")}>
-                                            <Translate content="gateway.over_limit" />&nbsp;<Icon name="question-circle" />
-                                        </div> : null}
+                                    <label className="left-label">
+                                        <Translate content="transfer.send" />
+                                    </label>
+                                    {aboveLimit ? (
+                                        <div
+                                            className="error-msg inline-block tooltip"
+                                            data-tip={counterpart.translate(
+                                                "tooltip.over_limit"
+                                            )}
+                                        >
+                                            <Translate content="gateway.over_limit" />&nbsp;<Icon
+                                                name="question-circle"
+                                                title="icons.question_circle"
+                                            />
+                                        </div>
+                                    ) : null}
                                 </div>
                                 <div className="inline-label input-wrapper">
-                                    <input style={aboveLimitStyle} type="text" value={this.state.sendAmount} onInput={this._onAmountChange.bind(this, "input")}/>
+                                    <input
+                                        style={aboveLimitStyle}
+                                        type="text"
+                                        value={this.state.sendAmount}
+                                        onInput={this._onAmountChange.bind(
+                                            this,
+                                            "input"
+                                        )}
+                                    />
                                     <div className="form-label select floating-dropdown">
                                         <FloatingDropdown
                                             entries={bridgeAssets}
-                                            values={bridgeAssets.reduce((map, a) => {if (a) map[a] = a; return map;}, {})}
+                                            values={bridgeAssets.reduce(
+                                                (map, a) => {
+                                                    if (a) map[a] = a;
+                                                    return map;
+                                                },
+                                                {}
+                                            )}
                                             singleEntry={bridgeAssets[0]}
-                                            value={this.props.preferredBridge || bridgeAssets[0]}
+                                            value={
+                                                this.props.preferredBridge ||
+                                                bridgeAssets[0]
+                                            }
                                             onChange={this._onDropDownSelect}
                                             upperCase
                                         />
@@ -314,70 +418,158 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                             </div>
 
                             <div className="small-6" style={{paddingLeft: 10}}>
-                                <label className="left-label"><Translate content="gateway.deposit_limit" /></label>
+                                <label className="left-label">
+                                    <Translate content="gateway.deposit_limit" />
+                                </label>
                                 <div className="inline-label input-wrapper">
-                                    <input disabled type="number" value={this.state.depositLimit && parseFloat(this.state.depositLimit).toFixed(4) || 0}/>
-                                    <div className="input-right-symbol">{inputName}</div>
+                                    <input
+                                        disabled
+                                        type="number"
+                                        value={
+                                            (this.state.depositLimit &&
+                                                parseFloat(
+                                                    this.state.depositLimit
+                                                ).toFixed(4)) ||
+                                            0
+                                        }
+                                    />
+                                    <div className="input-right-symbol">
+                                        {inputName}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="SimpleTrade__withdraw-row">
+                    <div className="container-row double-row">
                         <div className="no-margin no-padding">
                             <div className="small-6" style={{paddingRight: 10}}>
-                                <label className="left-label"><Translate content="exchange.receive" /></label>
+                                <label className="left-label">
+                                    <Translate content="exchange.receive" />
+                                </label>
                                 <div className="inline-label input-wrapper">
-                                    <input style={aboveLimitStyle} type="text" value={this.state.receiveAmount} onInput={this._onAmountChange.bind(this, "output")} />
-                                    <div className="input-right-symbol">{receiveName}</div>
+                                    <input
+                                        style={aboveLimitStyle}
+                                        type="text"
+                                        value={this.state.receiveAmount}
+                                        onInput={this._onAmountChange.bind(
+                                            this,
+                                            "output"
+                                        )}
+                                    />
+                                    <div className="input-right-symbol">
+                                        {receiveName}
+                                    </div>
                                 </div>
                             </div>
                             <div className="small-6" style={{paddingLeft: 10}}>
                                 <div className="grid-block">
-                                    <label className="left-label"><Translate content="exchange.price" />
-                                    &nbsp;&nbsp;{this.state.receiveLoading ? <Translate content="footer.loading" /> : ""}</label>
+                                    <label className="left-label">
+                                        <Translate content="exchange.price" />
+                                        &nbsp;&nbsp;{this.state
+                                            .receiveLoading ? (
+                                            <Translate content="footer.loading" />
+                                        ) : (
+                                            ""
+                                        )}
+                                    </label>
                                 </div>
                                 <div className="inline-label input-wrapper">
-                                    <input disabled type="number" value={aboveLimit ? 0 : price} />
-                                    <div className="input-right-symbol">{priceSuffix}</div>
+                                    <input
+                                        disabled
+                                        type="number"
+                                        value={aboveLimit ? 0 : price}
+                                    />
+                                    <div className="input-right-symbol">
+                                        {priceSuffix}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {!addressValue ? <div style={{textAlign: "center"}}><LoadingIndicator type="three-bounce"/></div> :
-                        <div className="SimpleTrade__withdraw-row" style={{textAlign: "center"}}>
+                    {!addressValue ? (
+                        <div style={{textAlign: "center"}}>
+                            <LoadingIndicator type="three-bounce" />
+                        </div>
+                    ) : (
+                        <div className="container-row">
                             {hasMemo ? null : QR}
-                            <div className="grid-block SimpleTrade__deposit-info">
+                            <div className="grid-block">
                                 <div className="copyIcon">
-                                    <CopyButton text={addressValue} className={"SimpleTrade__copyIcon"} />
+                                    <CopyButton
+                                        text={addressValue}
+                                        className="copyIcon"
+                                    />
                                 </div>
-                                <div className="deposit-details">
-                                    <div><Translate content="gateway.purchase_notice" inputAsset={inputName} outputAsset={receiveName} /></div>
-                                    <div>{addressValue}</div>
+                                <div>
+                                    <Translate
+                                        component="div"
+                                        style={{
+                                            fontSize: "0.8rem",
+                                            fontWeight: "bold",
+                                            paddingBottom: "0.3rem"
+                                        }}
+                                        content="gateway.purchase_notice"
+                                        inputAsset={inputName}
+                                        outputAsset={receiveName}
+                                    />
+
+                                    <div className="modal__highlight">
+                                        {addressValue}
+                                    </div>
                                 </div>
                             </div>
-                            {hasMemo ?
-                                <div className="grid-block SimpleTrade__deposit-info" style={{marginTop: "10px"}}>
+                            {hasMemo ? (
+                                <div
+                                    className="grid-block"
+                                    style={{marginTop: "10px"}}
+                                >
                                     <div className="copyIcon">
-                                        <CopyButton text={receive_address.memo} className={"SimpleTrade__copyIcon"} />
+                                        <CopyButton
+                                            text={receive_address.memo}
+                                            className="copyIcon"
+                                        />
                                     </div>
-                                    <div className="deposit-details">
-                                        <div><Translate unsafe content="gateway.purchase_notice_memo" /></div>
-                                        <div>{receive_address.memo}</div>
+                                    <div>
+                                        <Translate
+                                            unsafe
+                                            content="gateway.purchase_notice_memo"
+                                            component="div"
+                                            style={{
+                                                fontSize: "0.8rem",
+                                                fontWeight: "bold",
+                                                paddingBottom: "0.3rem"
+                                            }}
+                                        />
+                                        <div className="modal__highlight">
+                                            {receive_address.memo}
+                                        </div>
                                     </div>
-                                </div> : null}
-                        </div>}
-                    <div className="SimpleTrade__withdraw-row" style={{textAlign: "center", paddingBottom: "2rem"}}>
+                                </div>
+                            ) : null}
+                        </div>
+                    )}
+                    <div>
                         <div className="no-margin no-padding">
-                            <button className="ActionButton_Close" onClick={this.onClose.bind(this)}>
+                            <button
+                                className="button primary hollow"
+                                onClick={this.onClose.bind(this)}
+                            >
                                 <Translate content="transfer.close" />
                             </button>
                         </div>
                     </div>
                 </span>
                 <span style={apiError ? {display: ""} : {display: "none"}}>
-                    <div className="SimpleTrade__withdraw-row" style={{textAlign: "center", paddingBottom: "2rem", color: "#bb2926"}}>
-                        <Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" />
-                        <button className="ActionButton_Close" onClick={this.onClose.bind(this)}>
+                    <div className="container-row double-row">
+                        <Translate
+                            className="txtlabel cancel"
+                            content="gateway.unavailable_TRADE"
+                            component="h3"
+                        />
+                        <button
+                            className="button primary hollow"
+                            onClick={this.onClose.bind(this)}
+                        >
                             <Translate content="transfer.close" />
                         </button>
                     </div>
@@ -387,40 +579,63 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     _renderCurrentBalance() {
-        const {name: assetName} = utils.replaceName(this.props.asset.get("symbol"), !!this.props.asset.get("bitasset"));
+        const {name: assetName} = utils.replaceName(this.props.asset);
         const isDeposit = this.props.action === "deposit";
 
         let currentBalance = this.props.balances.find(b => {
             return b && b.get("asset_type") === this.props.asset.get("id");
         });
 
-        let asset = currentBalance ? new Asset({
-            asset_id: currentBalance.get("asset_type"),
-            precision: this.props.asset.get("precision"),
-            amount: currentBalance.get("balance")
-        }) : null;
+        let asset = currentBalance
+            ? new Asset({
+                  asset_id: currentBalance.get("asset_type"),
+                  precision: this.props.asset.get("precision"),
+                  amount: currentBalance.get("balance")
+              })
+            : null;
 
-        const applyBalanceButton = isDeposit ?
-            <span style={{border: "2px solid black", borderLeft: "none"}} className="form-label">{assetName}</span> :
-        (
+        const applyBalanceButton = isDeposit ? (
+            <span
+                style={{border: "2px solid black", borderLeft: "none"}}
+                className="form-label"
+            >
+                {assetName}
+            </span>
+        ) : (
             <button
-                data-place="right" data-tip={counterpart.translate("tooltip.withdraw_full")}
+                data-place="right"
+                data-tip={counterpart.translate("tooltip.withdraw_full")}
                 className="button"
                 style={{border: "2px solid black", borderLeft: "none"}}
-                onClick={this._updateAmount.bind(this, !currentBalance ? 0 : parseInt(currentBalance.get("balance"), 10))}
+                onClick={this._updateAmount.bind(
+                    this,
+                    !currentBalance
+                        ? 0
+                        : parseInt(currentBalance.get("balance"), 10)
+                )}
             >
-                <Icon name="clippy" />
+                <Icon name="clippy" title="icons.clippy.withdraw_full" />
             </button>
         );
 
         return (
-            <div className="SimpleTrade__withdraw-row" style={{fontSize: "1rem"}}>
+            <div
+                className="SimpleTrade__withdraw-row"
+                style={{fontSize: "1rem"}}
+            >
                 <label style={{fontSize: "1rem"}}>
-                    {counterpart.translate("gateway.balance_asset", {asset: assetName})}:
+                    {counterpart.translate("gateway.balance_asset", {
+                        asset: assetName
+                    })}:
                     <span className="inline-label">
                         <input
                             disabled
-                            style={{color: "black", border: "2px solid black", padding: 10, width: "100%"}}
+                            style={{
+                                color: "black",
+                                border: "2px solid black",
+                                padding: 10,
+                                width: "100%"
+                            }}
                             value={!asset ? 0 : asset.getAmount({real: true})}
                         />
                         {applyBalanceButton}
@@ -436,36 +651,39 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         if (!asset) {
             return null;
         }
-        
-        let logo = require("assets/logo-ico-blue.png");
 
         return (
-            <div className="SimpleTrade__modal">
-                <div className="Modal__header" style={{background: "none"}}></div>
-                
-                <div
-                    className="grid-block vertical no-overflow"
-                    style={{
-                        zIndex: 1002,
-                        paddingLeft: "2rem",
-                        paddingRight: "2rem",
-                    }}>
-
-                    <div style={{textAlign: "center"}}>
-                        <img style={{margin: 0, height: 80}} src={logo} /><br />
-                        <p style={{fontSize: "1.8rem", fontWeight: "bold", marginBottom: 0}}>Buy</p>
-                    </div>
-
-                    {this.props.isDown ?
-                        <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable_TRADE" component="p" /></div> :
-                        !this.props.isAvailable ? <div style={{textAlign: "center"}}><Translate className="txtlabel cancel" content="gateway.unavailable" component="p" /></div> :
-                        this._renderDeposit()}
+            <div className="grid-block vertical no-overflow">
+                <div className="modal__header">
+                    <Translate component="p" content="modal.buy.title" />
                 </div>
+
+                {this.props.isDown ? (
+                    <div style={{textAlign: "center"}}>
+                        <Translate
+                            className="txtlabel cancel"
+                            content="gateway.unavailable_TRADE"
+                            component="p"
+                        />
+                    </div>
+                ) : !this.props.isAvailable ? (
+                    <div style={{textAlign: "center"}}>
+                        <Translate
+                            className="txtlabel cancel"
+                            content="gateway.unavailable"
+                            component="p"
+                        />
+                    </div>
+                ) : (
+                    this._renderDeposit()
+                )}
             </div>
         );
     }
 }
-SimpleDepositBlocktradesBridge = BindToChainState(SimpleDepositBlocktradesBridge);
+SimpleDepositBlocktradesBridge = BindToChainState(
+    SimpleDepositBlocktradesBridge
+);
 
 class StoreWrapper extends React.Component {
     render() {
@@ -475,7 +693,13 @@ class StoreWrapper extends React.Component {
             currentBridge = this.props.bridges.first();
             preferredBridge = currentBridge.inputCoinType;
         }
-        return <SimpleDepositBlocktradesBridge {...others} preferredBridge={preferredBridge} {...currentBridge.toJS()} />;
+        return (
+            <SimpleDepositBlocktradesBridge
+                {...others}
+                preferredBridge={preferredBridge}
+                {...currentBridge.toJS()}
+            />
+        );
     }
 }
 
@@ -485,7 +709,10 @@ StoreWrapper = connect(StoreWrapper, {
     },
     getProps() {
         return {
-            preferredBridge: SettingsStore.getState().viewSettings.get("preferredBridge", "btc")
+            preferredBridge: SettingsStore.getState().viewSettings.get(
+                "preferredBridge",
+                "btc"
+            )
         };
     }
 });
@@ -512,9 +739,16 @@ export default class SimpleDepositBlocktradesBridgeModal extends React.Component
     render() {
         if (!this.props.bridges) return null;
 
-        return (
-            <BaseModal className="test" onClose={this.onClose.bind(this)} id={this.props.modalId} overlay={true}>
-                {this.state.open ? <StoreWrapper {...this.props} open={this.state.open} /> : null}
+        return !this.state.open ? null : (
+            <BaseModal
+                id={this.props.modalId}
+                onClose={this.onClose.bind(this)}
+                noCloseBtn
+                overlay={true}
+            >
+                {this.state.open ? (
+                    <StoreWrapper {...this.props} open={this.state.open} />
+                ) : null}
             </BaseModal>
         );
     }

@@ -2,6 +2,10 @@ import utils from "./utils";
 import {ChainStore, ChainTypes} from "bitsharesjs/es";
 let {object_type} = ChainTypes;
 let opTypes = Object.keys(object_type);
+import {Asset} from "./MarketClasses";
+
+let priceCacheTTL = 1000 * 60 * 0.5; // 0.5 minutes
+let priceCache = {};
 
 const MarketUtils = {
     order_type(id) {
@@ -27,14 +31,22 @@ const MarketUtils = {
     },
 
     limitByPrecision(value, asset, floor = true) {
-        let assetPrecision = asset.toJS ? asset.get("precision") : asset.precision;
+        let assetPrecision = asset.toJS
+            ? asset.get("precision")
+            : asset.precision;
         let valueString = value.toString();
         let splitString = valueString.split(".");
-        if (splitString.length === 1 || splitString.length === 2 && splitString[1].length <= assetPrecision) {
+        if (
+            splitString.length === 1 ||
+            (splitString.length === 2 &&
+                splitString[1].length <= assetPrecision)
+        ) {
             return value;
         }
         let precision = utils.get_asset_precision(assetPrecision);
-        value = floor ? Math.floor(value * precision) / precision : Math.round(value * precision) / precision;
+        value = floor
+            ? Math.floor(value * precision) / precision
+            : Math.round(value * precision) / precision;
         if (isNaN(value) || !isFinite(value)) {
             return 0;
         }
@@ -42,8 +54,12 @@ const MarketUtils = {
     },
 
     getFeedPrice(settlement_price, invert = false) {
-        let quoteAsset = ChainStore.getAsset(settlement_price.getIn(["quote", "asset_id"]));
-        let baseAsset = ChainStore.getAsset(settlement_price.getIn(["base", "asset_id"]));
+        let quoteAsset = ChainStore.getAsset(
+            settlement_price.getIn(["quote", "asset_id"])
+        );
+        let baseAsset = ChainStore.getAsset(
+            settlement_price.getIn(["base", "asset_id"])
+        );
 
         let price = utils.get_asset_price(
             settlement_price.getIn(["quote", "amount"]),
@@ -59,14 +75,141 @@ const MarketUtils = {
         }
     },
 
+    getFinalPrice(
+        coreAsset,
+        fromAsset,
+        toAsset,
+        marketStats,
+        real = false,
+        forceRefresh = false
+    ) {
+        if (toAsset.get("id") === fromAsset.get("id")) {
+            return 1;
+        }
+
+        const {marketName: toMarket} = this.getMarketName(toAsset, coreAsset);
+        const {marketName: fromMarket} = this.getMarketName(
+            fromAsset,
+            coreAsset
+        );
+        const {marketName: directMarket} = this.getMarketName(
+            fromAsset,
+            toAsset
+        );
+
+        function cacheClearTimer(marketName) {
+            setTimeout(function() {
+                delete priceCache[marketName];
+            }, priceCacheTTL);
+        }
+
+        if (priceCache[directMarket] && !forceRefresh) {
+            if (real)
+                return priceCache[directMarket].toReal(
+                    toAsset.get("id") !== priceCache[directMarket].base.asset_id
+                );
+            return priceCache[directMarket];
+        }
+
+        const directStats = marketStats.get(directMarket);
+        if (directStats && directStats.price && directStats.volumeBase !== 0) {
+            if (real)
+                return directStats.price.toReal(
+                    toAsset.get("id") !== directStats.price.base.asset_id
+                );
+            return directStats.price;
+        }
+
+        let toPrice, fromPrice;
+
+        const fromStats = marketStats.get(fromMarket);
+        if (fromStats && fromStats.price) {
+            if (fromStats.volumeBase === 0 && fromStats.volumeQuote === 0)
+                return null;
+            fromPrice = fromStats.price.clone();
+        }
+        const toStats = marketStats.get(toMarket);
+        if (toStats && toStats.price) {
+            toPrice = toStats.price.clone();
+        }
+
+        let finalPrice;
+        if (toPrice && fromPrice) {
+            if (fromPrice.base.amount == 0 || toPrice.base.amount == 0)
+                return null;
+            finalPrice = toPrice.times(fromPrice);
+        } else if (toPrice) {
+            finalPrice = toPrice;
+        } else if (fromPrice) {
+            finalPrice = fromPrice;
+        }
+        if (!finalPrice) return null;
+        const finalId =
+            finalPrice.base.asset_id + "_" + finalPrice.quote.asset_id;
+        if (
+            finalId.indexOf(toAsset.get("id")) === -1 ||
+            finalId.indexOf(fromAsset.get("id")) === -1
+        ) {
+            return null;
+        }
+
+        priceCache[directMarket] = finalPrice;
+        cacheClearTimer();
+        if (real)
+            return finalPrice.toReal(
+                toAsset.get("id") !== finalPrice.base.asset_id
+            );
+        return finalPrice;
+    },
+
+    convertValue(
+        amount,
+        toAsset,
+        fromAsset,
+        marketStats,
+        coreAsset,
+        fullPrecision = true
+    ) {
+        let fromAmount = !fullPrecision
+            ? new Asset({
+                  real: amount,
+                  asset_id: fromAsset.get("id"),
+                  precision: fromAsset.get("precision")
+              })
+            : new Asset({
+                  amount,
+                  asset_id: fromAsset.get("id"),
+                  precision: fromAsset.get("precision")
+              });
+
+        let price = this.getFinalPrice(
+            coreAsset,
+            fromAsset,
+            toAsset,
+            marketStats,
+            false
+        );
+
+        if (price === 1) return fromAmount.getAmount({real: !fullPrecision});
+        let eqValue =
+            price && price.toReal
+                ? fromAmount.times(price).getAmount({real: !fullPrecision})
+                : null;
+        return eqValue;
+    },
+
     parseOrder(order, base, quote, invert = false) {
         let ask = this.isAsk(order, base);
 
-        let quotePrecision = utils.get_asset_precision(quote.toJS ? quote.get("precision") : quote.precision);
-        let basePrecision = utils.get_asset_precision(base.toJS ? base.get("precision") : base.precision);
-        let pricePrecision = order.call_price ?
-            (quote.toJS ? quote.get("precision") : quote.precision) :
-            (base.toJS ? base.get("precision") : base.precision);
+        let quotePrecision = utils.get_asset_precision(
+            quote.toJS ? quote.get("precision") : quote.precision
+        );
+        let basePrecision = utils.get_asset_precision(
+            base.toJS ? base.get("precision") : base.precision
+        );
+        let pricePrecision = order.call_price
+            ? quote.toJS ? quote.get("precision") : quote.precision
+            : base.toJS ? base.get("precision") : base.precision;
 
         let buy, sell;
         let callPrice;
@@ -76,11 +219,12 @@ const MarketUtils = {
         } else if (order.call_price) {
             buy = order.call_price.base;
             sell = order.call_price.quote;
-            let marginPrice = (buy.amount / basePrecision) / (sell.amount / quotePrecision);
+            let marginPrice =
+                buy.amount / basePrecision / (sell.amount / quotePrecision);
             if (!invert) {
                 callPrice = marginPrice;
             } else {
-                callPrice = 1 / (marginPrice);
+                callPrice = 1 / marginPrice;
             }
         }
 
@@ -91,8 +235,14 @@ const MarketUtils = {
         if (typeof buy.amount !== "number") {
             buy.amount = parseInt(buy.amount, 10);
         }
-        let fullPrice = callPrice ? callPrice : (sell.amount / basePrecision) / (buy.amount / quotePrecision)
-        let price = utils.price_to_text(fullPrice, order.call_price ? base : quote, order.call_price ? quote : base);
+        let fullPrice = callPrice
+            ? callPrice
+            : sell.amount / basePrecision / (buy.amount / quotePrecision);
+        let price = utils.price_to_text(
+            fullPrice,
+            order.call_price ? base : quote,
+            order.call_price ? quote : base
+        );
 
         let amount, value;
 
@@ -113,14 +263,23 @@ const MarketUtils = {
                 // buy is in USD, sell is in BTS
                 // quote is USD, base is BTS
 
-                amount = this.limitByPrecision(order.debt / quotePrecision, quote);
+                amount = this.limitByPrecision(
+                    order.debt / quotePrecision,
+                    quote
+                );
                 value = price.full * amount;
             }
         } else if (!ask) {
-            amount = this.limitByPrecision((buy.amount / sell.amount) * order.for_sale / quotePrecision, quote);
+            amount = this.limitByPrecision(
+                buy.amount / sell.amount * order.for_sale / quotePrecision,
+                quote
+            );
             value = order.for_sale / basePrecision;
         } else {
-            amount = this.limitByPrecision(order.for_sale / quotePrecision, quote);
+            amount = this.limitByPrecision(
+                order.for_sale / quotePrecision,
+                quote
+            );
             value = price.full * amount;
         }
 
@@ -138,26 +297,48 @@ const MarketUtils = {
     },
 
     parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped) {
-        let isCall = order.order_id.split(".")[1] == object_type.limit_order ? false : true;
-        let receivePrecision = utils.get_asset_precision(receivesAsset.get("precision"));
-        let payPrecision = utils.get_asset_precision(paysAsset.get("precision"));
+        let isCall =
+            order.order_id.split(".")[1] == object_type.limit_order
+                ? false
+                : true;
+        let receivePrecision = utils.get_asset_precision(
+            receivesAsset.get("precision")
+        );
+        let payPrecision = utils.get_asset_precision(
+            paysAsset.get("precision")
+        );
 
         let receives = order.receives.amount / receivePrecision;
-        receives = utils.format_number(receives, receivesAsset.get("precision"));
+        receives = utils.format_number(
+            receives,
+            receivesAsset.get("precision")
+        );
         let pays = order.pays.amount / payPrecision;
         pays = utils.format_number(pays, paysAsset.get("precision"));
-        let price_full = utils.get_asset_price(order.receives.amount, receivesAsset, order.pays.amount, paysAsset, isAsk);
+        let price_full = utils.get_asset_price(
+            order.receives.amount,
+            receivesAsset,
+            order.pays.amount,
+            paysAsset,
+            isAsk
+        );
         // price_full = !flipped ? (1 / price_full) : price_full;
         // let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
 
-        let {int, dec, trailing} = utils.price_to_text(price_full, isAsk ? receivesAsset : paysAsset, isAsk ? paysAsset : receivesAsset);
-        let className = isCall ? "orderHistoryCall" : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
+        let {int, dec, trailing} = utils.price_to_text(
+            price_full,
+            isAsk ? receivesAsset : paysAsset,
+            isAsk ? paysAsset : receivesAsset
+        );
+        let className = isCall
+            ? "orderHistoryCall"
+            : isAsk ? "orderHistoryBid" : "orderHistoryAsk";
 
         let time;
         if (order.time) {
             time = order.time.split("T")[1];
             let now = new Date();
-            let offset = now.getTimezoneOffset() / 60;            
+            let offset = now.getTimezoneOffset() / 60;
             let date = utils.format_date(order.time).split(/\W/);
             let hour = time.substr(0, 2);
             let hourNumber = parseInt(hour, 10);
@@ -171,13 +352,14 @@ const MarketUtils = {
             if (parseInt(hourString, 10) < 10) {
                 hourString = "0" + hourString;
             }
-            time = date[0] + "/" + date[1] + " " + time.replace(hour, hourString);
+            time =
+                date[0] + "/" + date[1] + " " + time.replace(hour, hourString);
         }
         return {
             receives: isAsk ? receives : pays,
-            pays : isAsk ? pays : receives,
+            pays: isAsk ? pays : receives,
             full: price_full,
-            int : int,
+            int: int,
             dec: dec,
             trailing: trailing,
             className: className,
@@ -187,7 +369,9 @@ const MarketUtils = {
 
     split_price(price, pricePrecision) {
         // We need to figure out a better way to set the number of decimals
-        let price_split = utils.format_number(price, Math.max(5, pricePrecision)).split(".");
+        let price_split = utils
+            .format_number(price, Math.max(5, pricePrecision))
+            .split(".");
         let int = price_split[0];
         let dec = price_split[1];
         return {int: int, dec: dec};
@@ -278,10 +462,12 @@ const MarketUtils = {
         let arrayLength;
 
         if (inverse) {
-
             if (array && array.length) {
                 arrayLength = array.length - 1;
-                orderBookArray.unshift([array[arrayLength][0], array[arrayLength][1]]);
+                orderBookArray.unshift([
+                    array[arrayLength][0],
+                    array[arrayLength][1]
+                ]);
                 if (array.length > 1) {
                     for (let i = array.length - 2; i >= 0; i--) {
                         if (sumBoolean) {
@@ -312,16 +498,22 @@ const MarketUtils = {
     },
 
     priceToObject(x, type) {
-        let tolerance = 1.0E-8;
-        let h1=1; let h2=0;
-        let k1=0; let k2=1;
+        let tolerance = 1.0e-8;
+        let h1 = 1;
+        let h2 = 0;
+        let k1 = 0;
+        let k2 = 1;
         let b = x;
         do {
             let a = Math.floor(b);
-            let aux = h1; h1 = a*h1+h2; h2 = aux;
-            aux = k1; k1 = a*k1+k2; k2 = aux;
-            b = 1/(b-a);
-        } while (Math.abs(x-h1/k1) > x*tolerance);
+            let aux = h1;
+            h1 = a * h1 + h2;
+            h2 = aux;
+            aux = k1;
+            k1 = a * k1 + k2;
+            k2 = aux;
+            b = 1 / (b - a);
+        } while (Math.abs(x - h1 / k1) > x * tolerance);
 
         if (type === "ask") {
             return {base: h1, quote: k1};
@@ -333,12 +525,22 @@ const MarketUtils = {
     },
 
     isMarketAsset(quote, base) {
-        let isMarketAsset = false, marketAsset, inverted = false;
+        let isMarketAsset = false,
+            marketAsset,
+            inverted = false;
 
-        if (quote.get("bitasset") && base.get("id") === quote.getIn(["bitasset", "options", "short_backing_asset"])) {
+        if (
+            quote.get("bitasset") &&
+            base.get("id") ===
+                quote.getIn(["bitasset", "options", "short_backing_asset"])
+        ) {
             isMarketAsset = true;
             marketAsset = {id: quote.get("id")};
-        } else if (base.get("bitasset") && quote.get("id") === base.getIn(["bitasset", "options", "short_backing_asset"])) {
+        } else if (
+            base.get("bitasset") &&
+            quote.get("id") ===
+                base.getIn(["bitasset", "options", "short_backing_asset"])
+        ) {
             inverted = true;
             isMarketAsset = true;
             marketAsset = {id: base.get("id")};
@@ -351,13 +553,16 @@ const MarketUtils = {
         };
     },
 
-    getMarketID(base, quote) {
-        if (!base || !quote) return {marketId: "_"};
+    getMarketName(base, quote) {
+        if (!base || !quote) return {marketName: "_"};
         let baseID = parseInt(base.get("id").split(".")[2], 10);
         let quoteID = parseInt(quote.get("id").split(".")[2], 10);
-        const marketID = quoteID > baseID ? `${quote.get("symbol")}_${base.get("symbol")}` : `${base.get("symbol")}_${quote.get("symbol")}`;
 
-        return {baseID, quoteID, marketID, first: quoteID > baseID ? quote : base, second: quoteID > baseID ? base : quote};
+        let first = quoteID > baseID ? quote : base;
+        let second = quoteID > baseID ? base : quote;
+
+        const marketName = `${first.get("symbol")}_${second.get("symbol")}`;
+        return {baseID, quoteID, marketName, first, second};
     }
 };
 

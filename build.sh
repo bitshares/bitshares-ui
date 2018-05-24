@@ -1,8 +1,10 @@
 cd $TRAVIS_BUILD_DIR
 unamestr=`uname`
-if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG ]]
+if [ "$unamestr" == 'Linux' ]
 then
-    # npm run build-github
     npm run build-hash
 fi
-npm run-script package
+if [ $TRAVIS_TAG ]
+then
+    npm run-script package
+fi

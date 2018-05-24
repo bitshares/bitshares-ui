@@ -7,7 +7,6 @@ import AmountSelector from "../Utility/AmountSelector";
 import AssetActions from "actions/AssetActions";
 
 export default class ReserveAssetModal extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -20,10 +19,16 @@ export default class ReserveAssetModal extends React.Component {
     }
 
     onSubmit() {
-        let precision = utils.get_asset_precision(this.state.asset.get("precision"));
+        let precision = utils.get_asset_precision(
+            this.state.asset.get("precision")
+        );
         let amount = this.state.amount.replace(/,/g, "");
         amount *= precision;
-        AssetActions.reserveAsset(amount, this.props.assetId, this.props.account.get("id"))
+        AssetActions.reserveAsset(
+            amount,
+            this.props.assetId,
+            this.props.account.get("id")
+        );
         this.props.onClose();
     }
 
@@ -39,20 +44,28 @@ export default class ReserveAssetModal extends React.Component {
                             label="modal.reserve.amount"
                             amount={this.state.amount}
                             onChange={this.onAmountChanged.bind(this)}
-                            asset={ assetId  }
+                            asset={assetId}
                             assets={[assetId]}
-                            display_balance={<BalanceComponent balance={this.props.account.getIn(["balances", assetId])}/>}
+                            display_balance={
+                                <BalanceComponent
+                                    balance={this.props.account.getIn([
+                                        "balances",
+                                        assetId
+                                    ])}
+                                />
+                            }
                             tabIndex={1}
                         />
                     </div>
 
                     <div className="content-block button-group">
-
                         <input
                             type="submit"
                             className="button success"
                             onClick={this.onSubmit.bind(this)}
-                            value={counterpart.translate("modal.reserve.submit")}
+                            value={counterpart.translate(
+                                "modal.reserve.submit"
+                            )}
                             tabIndex={2}
                         />
 
@@ -63,7 +76,6 @@ export default class ReserveAssetModal extends React.Component {
                         >
                             {counterpart.translate("cancel")}
                         </div>
-
                     </div>
                 </div>
             </form>

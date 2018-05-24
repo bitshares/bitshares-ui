@@ -31,23 +31,122 @@
 }
 
 @keyframes flash {
-  from, 50%, to {
-    opacity: 1;
-  }
+    from,
+    50%,
+    to {
+        opacity: 1;
+    }
 
-  25%, 75% {
-    opacity: 0;
-  }
+    25%,
+    75% {
+        opacity: 0;
+    }
+}
+
+.proposals {
+    .proposal {
+        padding-top: 0;
+        text-align: left !important;
+    }
+    .proposal.first {
+        padding-top: 2rem;
+    }
+    > thead {
+        > tr {
+            > th {
+                text-align: left !important;
+            }
+        }
+    }
+    .top-left-align {
+        > td {
+            text-align: left !important;
+            vertical-align: top !important;
+        }
+    }
+    hr {
+        margin-top: 0.3rem;
+        margin-bottom: 0.5rem;
+        margin-right: 24px;
+    }
+    .list-item {
+        padding-bottom: 5px;
+        padding-top: 5px;
+    }
+    .approval-buttons {
+        padding-top: 0;
+        .button {
+            margin-right: 2rem;
+        }
+        .button.hidden {
+            opacity: 0;
+            cursor: default;
+        }
+    }
+    .scam-error {
+        margin-right: 1rem;
+        display: inline-block;
+    }
+}
+
+.nested-approval-state {
+    .icon {
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-top: 0.1rem;
+        margin-bottom: 0.1rem;
+    }
+    .root-status {
+        padding-top: 5px;
+        margin-bottom: 0.5rem;
+    }
+    .expand-button {
+        display: inline-block;
+        padding-left: 0.5rem;
+    }
+    .table-container {
+        border-left: 2px dashed #777;
+        padding-bottom: 0.4rem;
+        table {
+            margin-left: 1rem;
+            margin-top: 0.4rem;
+        }
+    }
+    .appended {
+        display: inline-block;
+        padding-left: 0.5rem;
+    }
+    table {
+        text-align: left;
+        > tbody {
+            > tr {
+                > td {
+                    padding-right: 0.5rem;
+                    vertical-align: middle;
+                    > * {
+                        vertical-align: middle;
+                    }
+                }
+            }
+        }
+    }
+    .spacer {
+        height: 0.5rem;
+    }
+    .heading-perm {
+        font-size: 14px;
+    }
 }
 
 .flash {
-  animation-name: flash;
+    animation-name: flash;
 }
 
 .account-info {
     text-align: center;
     .account-title {
-        transition: opacity 0.25s linear, transform 0.25s linear, color 0.25s linear;
+        transition: opacity 0.25s linear, transform 0.25s linear,
+            color 0.25s linear;
         margin-bottom: 0;
         font-weight: 600;
         &.flash {
@@ -61,7 +160,6 @@
     }
 
     .account-image {
-
         padding-bottom: 1rem;
         > canvas {
             padding: 1rem;
@@ -140,6 +238,14 @@ a.action-button > span {
 }
 
 div.header-selector {
+    > .filter {
+        margin-right: 1rem;
+        input {
+            margin: 0;
+            height: 2rem;
+            padding: 0 10px;
+        }
+    }
     > .selector div {
         font-size: 1rem;
         margin-bottom: 0.5rem;
@@ -159,8 +265,8 @@ div.header-selector {
 }
 
 div.account-tabs {
-    .padding { 
-        padding: 20px; 
+    .padding {
+        padding: 20px;
     }
 
     > div.service-selector {
@@ -224,7 +330,8 @@ ul.account-overview {
 }
 
 table.table.dashboard-table {
-    > thead > tr > th:first-of-type, > tbody > tr > td:first-of-type {
+    > thead > tr > th:first-of-type,
+    > tbody > tr > td:first-of-type {
         padding-left: 1.5rem;
     }
     > thead > tr > th {
@@ -304,7 +411,10 @@ div.header-selector > div.new-worker-button {
 }
 
 .trading-pair {
-    > a span.icon > svg { margin-left: 10px; margin-right: 10px; }
+    > a span.icon > svg {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }
 
 div.tabs-container {
@@ -345,5 +455,12 @@ div.tabs-container {
             min-width: 5rem;
             margin-left: 0.5rem;
         }
+    }
+}
+
+.account-treemap {
+    padding: 10px;
+    text {
+        @include RobotoRegular;
     }
 }

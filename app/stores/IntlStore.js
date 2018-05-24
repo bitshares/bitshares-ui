@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import IntlActions from "actions/IntlActions";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
-var locale_en = require("json-loader!assets/locales/locale-en");
+var locale_en = require("assets/locales/locale-en.json");
 import ls from "common/localStorage";
 let ss = new ls("__graphene__");
 
@@ -18,7 +18,9 @@ for (let localeCode of localeCodes) {
 
 class IntlStore {
     constructor() {
-        this.currentLocale = ss.has("settings_v3") ? ss.get("settings_v3").locale : "en";
+        this.currentLocale = ss.has("settings_v3")
+            ? ss.get("settings_v3").locale
+            : "en";
 
         this.locales = ["en"];
         this.localesObject = {en: locale_en};
@@ -40,13 +42,13 @@ class IntlStore {
 
     onSwitchLocale({locale, localeData}) {
         switch (locale) {
-        case "en":
-            counterpart.registerTranslations("en", this.localesObject.en);
-            break;
+            case "en":
+                counterpart.registerTranslations("en", this.localesObject.en);
+                break;
 
-        default:
-            counterpart.registerTranslations(locale, localeData);
-            break;
+            default:
+                counterpart.registerTranslations(locale, localeData);
+                break;
         }
 
         counterpart.setLocale(locale);

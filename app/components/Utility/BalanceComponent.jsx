@@ -2,6 +2,7 @@ import React from "react";
 import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import PropTypes from "prop-types";
 
 /**
  *  Given a balance_object, displays it in a pretty way
@@ -10,11 +11,10 @@ import BindToChainState from "./BindToChainState";
  */
 
 class BalanceComponent extends React.Component {
-
     static propTypes = {
         balance: ChainTypes.ChainObject.isRequired,
-        assetInfo: React.PropTypes.node,
-        hide_asset: React.PropTypes.bool
+        assetInfo: PropTypes.node,
+        hide_asset: PropTypes.bool
     };
 
     static defaultProps = {
@@ -37,4 +37,4 @@ class BalanceComponent extends React.Component {
     }
 }
 
-export default BindToChainState(BalanceComponent, {keep_updating: true});
+export default BindToChainState(BalanceComponent);

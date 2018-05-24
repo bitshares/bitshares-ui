@@ -8,7 +8,7 @@ const MSG_HEAD = "-----BEGIN BITSHARES SIGNED MESSAGE-----";
 const MSG_META = "-----BEGIN META-----";
 const MSG_SIGNATURE = "-----BEGIN SIGNATURE-----";
 const MSG_FOOT = "-----END BITSHARES SIGNED MESSAGE-----";
-const MSG_SENDER =  "account";
+const MSG_SENDER = "account";
 const MSG_PUBLICKEY = "memokey";
 const MSG_BLOCK = "block";
 const MSG_DATE = "timestamp";
@@ -32,7 +32,6 @@ const MSG_DATE = "timestamp";
  *    @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
  */
 class SignedMessageAction {
-
     /**
      * Parses the given raw string to a processing friendly dictionary
      *
@@ -62,16 +61,23 @@ class SignedMessageAction {
             // how the signed content it built is crucial, consider encapsulating
             messageSignedContent = messageContent + "\n" + messageMeta;
         } catch (err) {
-            throw new Error(counterpart.translate("account.signedmessages.invalidformat"));
+            throw new Error(
+                counterpart.translate("account.signedmessages.invalidformat")
+            );
         }
 
-        let messageMetaAccount, messageMetaKey, messageMetaBlock, messageMetaTimestamp;
+        let messageMetaAccount,
+            messageMetaKey,
+            messageMetaBlock,
+            messageMetaTimestamp;
         if (messageMeta) {
             try {
                 // process meta
                 // ... sender
                 messageMetaAccount = messageMeta.split(MSG_SENDER + "=");
-                messageMetaAccount = messageMetaAccount[1].split("\n")[0].trim();
+                messageMetaAccount = messageMetaAccount[1]
+                    .split("\n")[0]
+                    .trim();
 
                 // ... and its public key
                 messageMetaKey = messageMeta.split(MSG_PUBLICKEY + "=");
@@ -83,16 +89,28 @@ class SignedMessageAction {
 
                 // ... time stamp
                 messageMetaTimestamp = messageMeta.split(MSG_DATE + "=");
-                messageMetaTimestamp = messageMetaTimestamp[1].split("\n")[0].trim();
+                messageMetaTimestamp = messageMetaTimestamp[1]
+                    .split("\n")[0]
+                    .trim();
             } catch (err) {
-                throw new Error(counterpart.translate("account.signedmessages.invalidformat"));
+                throw new Error(
+                    counterpart.translate(
+                        "account.signedmessages.invalidformat"
+                    )
+                );
             }
         }
 
-        return { content : messageContent,
-            meta : { account : messageMetaAccount, key : messageMetaKey, block : messageMetaBlock, timestamp : messageMetaTimestamp },
-            signed : messageSignedContent,
-            signature : messageSignature,
+        return {
+            content: messageContent,
+            meta: {
+                account: messageMetaAccount,
+                key: messageMetaKey,
+                block: messageMetaBlock,
+                timestamp: messageMetaTimestamp
+            },
+            signed: messageSignedContent,
+            signature: messageSignature
         };
     }
 
@@ -116,19 +134,28 @@ class SignedMessageAction {
         // validate account and key
         let storedAccount = ChainStore.getAccount(message_signed.meta.account);
         if (storedAccount == null) {
-            throw new Error(counterpart.translate("account.signedmessages.invaliduser"));
+            throw new Error(
+                counterpart.translate("account.signedmessages.invaliduser")
+            );
         }
 
         // verify message signed
         let verified = false;
         try {
-            verified = Signature.fromHex(message_signed.signature).verifyBuffer(message_signed.signed, PublicKey.fromPublicKeyString(message_signed.meta.key));
+            verified = Signature.fromHex(message_signed.signature).verifyBuffer(
+                message_signed.signed,
+                PublicKey.fromPublicKeyString(message_signed.meta.key)
+            );
         } catch (err) {
             // wrap message that could be raised from Signature
-            throw new Error(counterpart.translate("account.signedmessages.errorverifying"));
+            throw new Error(
+                counterpart.translate("account.signedmessages.errorverifying")
+            );
         }
         if (!verified) {
-            throw new Error(counterpart.translate("account.signedmessages.invalidsignature"));
+            throw new Error(
+                counterpart.translate("account.signedmessages.invalidsignature")
+            );
         }
         return message_signed;
     }
@@ -142,53 +169,92 @@ class SignedMessageAction {
     signMessage(account, messageText) {
         return new Promise((resolve, reject) => {
             // make sure wallet is unlocked (we need private key)
-            Promise.resolve(WalletUnlockActions.unlock()).then(() => {
-                try {
-                    // obtain all necessary keys
-                    let memo_from_public = account.get("options").get("memo_key");
-                    // The 1s are base58 for all zeros (null)
-                    if (/111111111111111111111/.test(memo_from_public)) {
-                        memo_from_public = null;
-                    }
-                    let memo_from_privkey;
-                    if (messageText && memo_from_public) {
-                        memo_from_privkey = WalletDb.getPrivateKey(memo_from_public);
-                        if (!memo_from_privkey) {
-                            throw new Error(counterpart.translate("account.signedmessages.invalidkey"));
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    try {
+                        // obtain all necessary keys
+                        let memo_from_public = account
+                            .get("options")
+                            .get("memo_key");
+                        // The 1s are base58 for all zeros (null)
+                        if (/111111111111111111111/.test(memo_from_public)) {
+                            memo_from_public = null;
                         }
-                    }
-                    // get other meta data
-                    let irr_block = ChainStore.getObject("2.1.0").get("last_irreversible_block_num");
-                    let now = new Date();
-                    
-                    let meta = MSG_SENDER + "=" + account.get("name") + "\n"
-                        + MSG_PUBLICKEY + "=" + memo_from_public + "\n"
-                        + MSG_BLOCK + "=" + irr_block + "\n"
-                        + MSG_DATE + "=" + now.toUTCString();
-
-                    let messageContentToBeSigned = messageText + "\n" + meta;
-
-                    setTimeout(() => { // do not block gui
-                        try {
-                            let memo_signature = Signature.signBuffer(messageContentToBeSigned, memo_from_privkey, memo_from_public);
-                            let memo_formatted = MSG_HEAD + "\n"
-                                + messageText + "\n"
-                                + MSG_META + "\n"
-                                + meta + "\n"
-                                + MSG_SIGNATURE + "\n"
-                                + memo_signature.toHex() + "\n"
-                                + MSG_FOOT;
-                            resolve(memo_formatted);
-                        } catch (err) {
-                            reject(err);
+                        let memo_from_privkey;
+                        if (messageText && memo_from_public) {
+                            memo_from_privkey = WalletDb.getPrivateKey(
+                                memo_from_public
+                            );
+                            if (!memo_from_privkey) {
+                                throw new Error(
+                                    counterpart.translate(
+                                        "account.signedmessages.invalidkey"
+                                    )
+                                );
+                            }
                         }
-                    }, 0);
-                } catch (err) {
-                    reject(err);
-                }
-            });
+                        // get other meta data
+                        let irr_block = ChainStore.getObject("2.1.0").get(
+                            "last_irreversible_block_num"
+                        );
+                        let now = new Date();
+
+                        let meta =
+                            MSG_SENDER +
+                            "=" +
+                            account.get("name") +
+                            "\n" +
+                            MSG_PUBLICKEY +
+                            "=" +
+                            memo_from_public +
+                            "\n" +
+                            MSG_BLOCK +
+                            "=" +
+                            irr_block +
+                            "\n" +
+                            MSG_DATE +
+                            "=" +
+                            now.toUTCString();
+
+                        let messageContentToBeSigned =
+                            messageText + "\n" + meta;
+
+                        setTimeout(() => {
+                            // do not block gui
+                            try {
+                                let memo_signature = Signature.signBuffer(
+                                    messageContentToBeSigned,
+                                    memo_from_privkey,
+                                    memo_from_public
+                                );
+                                let memo_formatted =
+                                    MSG_HEAD +
+                                    "\n" +
+                                    messageText +
+                                    "\n" +
+                                    MSG_META +
+                                    "\n" +
+                                    meta +
+                                    "\n" +
+                                    MSG_SIGNATURE +
+                                    "\n" +
+                                    memo_signature.toHex() +
+                                    "\n" +
+                                    MSG_FOOT;
+                                resolve(memo_formatted);
+                            } catch (err) {
+                                reject(err);
+                            }
+                        }, 0);
+                    } catch (err) {
+                        reject(err);
+                    }
+                })
+                .catch(res => {
+                    reject(res);
+                });
         });
     }
 }
 
-export default alt.createActions(SignedMessageAction)
+export default alt.createActions(SignedMessageAction);

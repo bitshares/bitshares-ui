@@ -3,13 +3,12 @@ import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import { connect } from "alt-react";
+import {connect} from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
 import ReactTooltip from "react-tooltip";
 
 class MemoText extends React.Component {
-
     static defaultProps = {
         fullLength: false
     };
@@ -23,10 +22,12 @@ class MemoText extends React.Component {
 
     _toggleLock(e) {
         e.preventDefault();
-        WalletUnlockActions.unlock().then(() => {
-            console.log("unlocked");
-            ReactTooltip.rebuild();
-        });
+        WalletUnlockActions.unlock()
+            .then(() => {
+                console.log("unlocked");
+                ReactTooltip.rebuild();
+            })
+            .catch(() => {});
     }
 
     render() {
@@ -37,12 +38,14 @@ class MemoText extends React.Component {
 
         let {text, isMine} = PrivateKeyStore.decodeMemo(memo);
 
-        if ( !text && isMine) {
+        if (!text && isMine) {
             return (
                 <div className="memo">
-                    <span>{counterpart.translate("transfer.memo_unlock")} </span>
-                    <a href onClick={this._toggleLock.bind(this)}>
-                        <Icon name="locked"/>
+                    <span>
+                        {counterpart.translate("transfer.memo_unlock")}{" "}
+                    </span>
+                    <a onClick={this._toggleLock.bind(this)}>
+                        <Icon name="locked" title="icons.locked.action" />
                     </a>
                 </div>
             );
@@ -56,7 +59,14 @@ class MemoText extends React.Component {
         if (text) {
             return (
                 <div className="memo" style={{paddingTop: 5, cursor: "help"}}>
-                    <span className="inline-block" data-class="memo-tip" data-tip={full_memo !== text ? full_memo : null} data-place="bottom" data-offset="{'bottom': 10}" data-html>
+                    <span
+                        className="inline-block"
+                        data-class="memo-tip"
+                        data-tip={full_memo !== text ? full_memo : null}
+                        data-place="bottom"
+                        data-offset="{'bottom': 10}"
+                        data-html
+                    >
                         {text}
                     </span>
                 </div>
@@ -68,8 +78,8 @@ class MemoText extends React.Component {
 }
 
 class MemoTextStoreWrapper extends React.Component {
-    render () {
-        return <MemoText {...this.props}/>;
+    render() {
+        return <MemoText {...this.props} />;
     }
 }
 
