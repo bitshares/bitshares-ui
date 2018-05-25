@@ -9,6 +9,9 @@ const dark = require("assets/logo-404-dark.png");
 const midnight = require("assets/logo-404-midnight.png");
 
 class Page404 extends React.Component {
+    static defaultProps = {
+        subtitle: "page_not_found_subtitle"
+    };
     render() {
         let logo;
 
@@ -34,7 +37,7 @@ class Page404 extends React.Component {
                         <Translate content="page404.page_not_found_title" />
                     </div>
                     <div className="page-404-subtitle">
-                        <Translate content="page404.page_not_found_subtitle" />
+                        <Translate content={"page404." + this.props.subtitle} />
                     </div>
                     <div className="page-404-button-back">
                         <Link to={"/"}>

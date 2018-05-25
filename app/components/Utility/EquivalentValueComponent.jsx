@@ -61,9 +61,9 @@ class ValueComponent extends MarketStatsCheck {
             amount,
             toAsset,
             fromAsset,
-            fullPrecision,
             marketStats,
-            coreAsset
+            coreAsset,
+            fullPrecision
         );
     }
 

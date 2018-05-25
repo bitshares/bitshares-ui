@@ -78,13 +78,13 @@ class AccountSelector extends React.Component {
     getError() {
         let {account, error} = this.props;
 
-        if (!error && account && !this.getNameType(account.get("name")))
+        if (!error && account && !this.getInputType(account.get("name")))
             error = counterpart.translate("account.errors.invalid");
 
         return error;
     }
 
-    getNameType(value) {
+    getInputType(value) {
         // OK
         if (!value) return null;
         if (value[0] === "#" && utils.is_object_id("1.2." + value.substring(1)))
@@ -162,7 +162,7 @@ class AccountSelector extends React.Component {
         e.preventDefault();
         if (!this.getError() && onAction && !disableActionButton) {
             if (account) onAction(account);
-            else if (this.getNameType(accountName) === "pubkey")
+            else if (this.getInputType(accountName) === "pubkey")
                 onAction(accountName);
         }
     }
@@ -175,8 +175,14 @@ class AccountSelector extends React.Component {
             typeahead,
             disableActionButton,
             contacts,
-            myActiveAccounts
+            myActiveAccounts,
+            noPlaceHolder,
+            useHR,
+            labelClass,
+            reserveErrorSpace
         } = this.props;
+
+        const inputType = this.getInputType(accountName);
 
         let typeAheadAccounts = [];
         let error = this.getError();
@@ -184,18 +190,19 @@ class AccountSelector extends React.Component {
         linkedAccounts = linkedAccounts.concat(contacts);
 
         // Selected Account
+        let displayText;
         if (account) {
             account.isKnownScammer = accountUtils.isKnownScammer(
                 account.get("name")
             );
-            account.accountType = this.getNameType(account.get("name"));
+            account.accountType = this.getInputType(account.get("name"));
             account.accountStatus = ChainStore.getAccountMemberStatus(account);
             account.statusText = !account.isKnownScammer
                 ? counterpart.translate(
                       "account.member." + account.accountStatus
                   )
                 : counterpart.translate("account.member.suspected_scammer");
-            account.displayText =
+            displayText =
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
                     : account.accountType === "id" ? account.get("name") : null;
@@ -203,14 +210,19 @@ class AccountSelector extends React.Component {
 
         // Without Typeahead Error Handling
         if (!typeahead) {
-            if (!account)
+            if (!account && accountName && inputType !== "pubkey") {
                 error = counterpart.translate("account.errors.unknown");
+            }
         } else {
-            if (allowPubKey && account.accountType === "pubkey")
-                account.displayText = "Public Key";
-            else if (!error && accountName && !account)
+            if (
+                !(allowPubKey && inputType === "pubkey") &&
+                !error &&
+                accountName &&
+                !account
+            )
                 error = counterpart.translate("account.errors.unknown");
         }
+        if (allowPubKey && inputType === "pubkey") displayText = "Public Key";
 
         if (account && linkedAccounts)
             account.isFavorite =
@@ -310,7 +322,7 @@ class AccountSelector extends React.Component {
 
         let action_class = classnames("button", {
             disabled:
-                !(account || (account && account.accountType === "pubkey")) ||
+                !(account || inputType === "pubkey") ||
                 error ||
                 disableActionButton
         });
@@ -337,17 +349,18 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{account &&
-                                        account.displayText}
+                                    {account && account.statusText}&nbsp;{!!displayText &&
+                                        displayText}
                                 </span>
                                 {linked_status}
                             </label>
 
                             <Translate
-                                className="left-label"
+                                className={"left-label " + (labelClass || "")}
                                 component="label"
                                 content={this.props.label}
                             />
+                            {useHR && <hr />}
                         </div>
                     ) : null}
                     <div className="input-area">
@@ -372,7 +385,11 @@ class AccountSelector extends React.Component {
                                 <TypeAhead
                                     items={typeAheadAccounts}
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
@@ -395,7 +412,11 @@ class AccountSelector extends React.Component {
                             ) : (
                                 <input
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
@@ -445,8 +466,15 @@ class AccountSelector extends React.Component {
                         </div>
                     </div>
 
-                    {error ? (
-                        <div className="error-area">
+                    {error || reserveErrorSpace ? (
+                        <div
+                            className={
+                                this.props.hideImage
+                                    ? "has-error"
+                                    : "error-area"
+                            }
+                            style={{marginTop: "1rem"}}
+                        >
                             <span>{error}</span>
                         </div>
                     ) : null}
