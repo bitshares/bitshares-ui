@@ -23,8 +23,6 @@ class AssetName extends React.Component {
             this.props.asset !== np.asset ||
             this.props.noPrefix !== np.noPrefix ||
             this.props.noTip !== np.noTip ||
-            this.props.replace !== np.replace ||
-            this.props.noTip !== np.noTip ||
             this.props.dataPlace !== np.dataPlace
         );
     }

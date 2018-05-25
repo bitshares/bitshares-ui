@@ -62,6 +62,20 @@ export default class ExchangeHeader extends React.Component {
         });
     }
 
+    marketPicker(asset) {
+        let {selectedMarketPickerAsset} = this.state;
+
+        selectedMarketPickerAsset =
+            !!selectedMarketPickerAsset && selectedMarketPickerAsset == asset
+                ? null
+                : asset;
+
+        this.setState({
+            selectedMarketPickerAsset
+        });
+        this.props.onToggleMarketPicker(selectedMarketPickerAsset);
+    }
+
     render() {
         const {
             quoteAsset,
@@ -164,6 +178,13 @@ export default class ExchangeHeader extends React.Component {
             }
         };
 
+        let isQuoteSelected =
+            !!this.state.selectedMarketPickerAsset &&
+            this.state.selectedMarketPickerAsset == quoteSymbol;
+        let isBaseSelected =
+            !!this.state.selectedMarketPickerAsset &&
+            this.state.selectedMarketPickerAsset == baseSymbol;
+
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
@@ -177,9 +198,17 @@ export default class ExchangeHeader extends React.Component {
                                         marginTop: "1px"
                                     }}
                                 >
-                                    <Link
-                                        to={`/asset/${quoteSymbol}`}
-                                        className="asset-prefix"
+                                    <span
+                                        onClick={this.marketPicker.bind(
+                                            this,
+                                            quoteSymbol
+                                        )}
+                                        style={{
+                                            cursor: "pointer",
+                                            color: isQuoteSelected
+                                                ? "#2196f3"
+                                                : ""
+                                        }}
                                     >
                                         <AssetImage
                                             name={quoteSymbol}
@@ -188,15 +217,24 @@ export default class ExchangeHeader extends React.Component {
                                         <AssetName
                                             name={quoteSymbol}
                                             replace={true}
+                                            noTip
                                             onRenderedName={name => {
                                                 this._quoteName = name;
                                             }}
                                         />
-                                    </Link>
+                                    </span>
                                     <span style={{padding: "0 5px"}}>/</span>
-                                    <Link
-                                        to={`/asset/${baseSymbol}`}
-                                        className="asset-prefix"
+                                    <span
+                                        onClick={this.marketPicker.bind(
+                                            this,
+                                            baseSymbol
+                                        )}
+                                        style={{
+                                            cursor: "pointer",
+                                            color: isBaseSelected
+                                                ? "#2196f3"
+                                                : ""
+                                        }}
                                     >
                                         <AssetImage
                                             name={baseSymbol}
@@ -205,11 +243,12 @@ export default class ExchangeHeader extends React.Component {
                                         <AssetName
                                             name={baseSymbol}
                                             replace={true}
+                                            noTip
                                             onRenderedName={name => {
                                                 this._baseName = name;
                                             }}
                                         />
-                                    </Link>
+                                    </span>
                                 </div>
                             ) : (
                                 <a className="market-symbol">

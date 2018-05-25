@@ -1,8 +1,7 @@
 import React from "react";
 import counterpart from "counterpart";
-import {api} from "steem";
+import {api} from "steem-js-api";
 import Translate from "react-translate-component";
-
 import LoadingIndicator from "./LoadingIndicator";
 
 const query = {tag: "bitshares.fdn", limit: 20};
@@ -152,10 +151,14 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-        api.getDiscussionsByBlog(query, (err, discussions) => {
-            if (err) this.setState({isLoading: false, isWrong: true});
-            this.orderDiscussions(discussions);
-        });
+        api
+            .getDiscussionsByBlog(query)
+            .then(discussions => {
+                this.orderDiscussions(discussions);
+            })
+            .catch(() => {
+                this.setState({isLoading: false, isWrong: true});
+            });
     }
 
     componentWillUnmount() {

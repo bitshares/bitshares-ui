@@ -74,7 +74,10 @@ let icons = [
     "warning",
     "withdraw",
     "witnesses",
-    "workers"
+    "workers",
+    "filter",
+    "info-circle-o",
+    "zoom"
 ];
 
 let icons_map = {};

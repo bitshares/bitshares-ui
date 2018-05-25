@@ -105,9 +105,9 @@ class AccountOverview extends React.Component {
             if (aRef && bRef) {
                 let aPrice = aRef.getFinalPrice(true);
                 let bPrice = bRef.getFinalPrice(true);
-                if (!aPrice && bPrice) return 1;
-                if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice)
+                if (aPrice === null && bPrice !== null) return 1;
+                if (aPrice !== null && bPrice === null) return -1;
+                if (aPrice === null && bPrice === null)
                     return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection
                     ? aPrice - bPrice
@@ -177,10 +177,6 @@ class AccountOverview extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            !utils.are_equal_shallow(
-                nextProps.balanceAssets,
-                this.props.balanceAssets
-            ) ||
             !utils.are_equal_shallow(
                 nextProps.backedCoins,
                 this.props.backedCoins
@@ -1057,6 +1053,20 @@ class AccountOverview extends React.Component {
                                                 >
                                                     <Translate content="account.qty" />
                                                 </th>
+                                                <th
+                                                    onClick={this._toggleSortOrder.bind(
+                                                        this,
+                                                        "priceValue"
+                                                    )}
+                                                    className="column-hide-small clickable"
+                                                    style={{textAlign: "right"}}
+                                                >
+                                                    <Translate content="exchange.price" />{" "}
+                                                    (<AssetName
+                                                        name={preferredUnit}
+                                                        noTip
+                                                    />)
+                                                </th>
                                                 {showPriceValue ? (
                                                     <th
                                                         onClick={this._toggleSortOrder.bind(
@@ -1083,6 +1093,27 @@ class AccountOverview extends React.Component {
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.hour_24_short" />
+                                                </th>
+                                                <th
+                                                    onClick={this._toggleSortOrder.bind(
+                                                        this,
+                                                        "totalValue"
+                                                    )}
+                                                    style={{textAlign: "right"}}
+                                                    className="column-hide-small clickable"
+                                                >
+                                                    <TranslateWithLinks
+                                                        noLink
+                                                        string="account.eq_value_header"
+                                                        keys={[
+                                                            {
+                                                                type: "asset",
+                                                                value: preferredUnit,
+                                                                arg: "asset"
+                                                            }
+                                                        ]}
+                                                        noTip
+                                                    />
                                                 </th>
                                                 {showTotalValue ? (
                                                     <th
@@ -1197,44 +1228,6 @@ class AccountOverview extends React.Component {
                                 </AccountOrders>
                             </Tab>
 
-                            {/*<Tab*/}
-                            {/*title="account.collaterals"*/}
-                            {/*subText={*/}
-                            {/*<span*/}
-                            {/*className={*/}
-                            {/*this.state.globalMarginStatus*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*{marginValue}*/}
-                            {/*</span>*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*<div className="content-block">*/}
-                            {/*<div className="generic-bordered-box">*/}
-                            {/*<MarginPositions*/}
-                            {/*preferredUnit={preferredUnit}*/}
-                            {/*className="dashboard-table"*/}
-                            {/*callOrders={call_orders}*/}
-                            {/*account={account}*/}
-                            {/*>*/}
-                            {/*<tr className="total-value">*/}
-                            {/*<td>{totalValueText}</td>*/}
-                            {/*<td />*/}
-                            {/*<td>{debtValue}</td>*/}
-                            {/*<td className="column-hide-medium">*/}
-                            {/*{collateralValue}*/}
-                            {/*</td>*/}
-                            {/*<td />*/}
-                            {/*<td>{marginValue}</td>*/}
-                            {/*<td className="column-hide-small" />*/}
-                            {/*<td className="column-hide-small" />*/}
-                            {/*<td colSpan="3" />*/}
-                            {/*</tr>*/}
-                            {/*</MarginPositions>*/}
-                            {/*</div>*/}
-                            {/*</div>*/}
-                            {/*</Tab>*/}
-
                             <Tab title="account.activity">
                                 <RecentTransactions
                                     accountsList={Immutable.fromJS([
@@ -1325,10 +1318,6 @@ class AccountOverview extends React.Component {
 }
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
-AccountOverview = AssetWrapper(AccountOverview, {
-    propNames: ["balanceAssets"],
-    asList: true
-});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {

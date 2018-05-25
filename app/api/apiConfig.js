@@ -45,6 +45,29 @@ export const widechainAPIs = {
     DEPOSIT_HISTORY: "/latelyRecharge"
 };
 
+export const gdex2APIs = {
+    BASE: "https://api.gdex.io/adjust",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs"
+};
+
+// Legacy Deposit/Withdraw
+export const gdexAPIs = {
+    BASE: "https://api.gdex.io",
+    ASSET_LIST: "/gateway/asset/assetList",
+    ASSET_DETAIL: "/gateway/asset/assetDetail",
+    GET_DEPOSIT_ADDRESS: "/gateway/address/getAddress",
+    CHECK_WITHDRAY_ADDRESS: "/gateway/address/checkAddress",
+    DEPOSIT_RECORD_LIST: "/gateway/deposit/recordList",
+    DEPOSIT_RECORD_DETAIL: "/gateway/deposit/recordDetail",
+    WITHDRAW_RECORD_LIST: "/gateway/withdraw/recordList",
+    WITHDRAW_RECORD_DETAIL: "/gateway/withdraw/recordDetail",
+    GET_USER_INFO: "/gateway/user/getUserInfo",
+    USER_AGREEMENT: "/gateway/user/isAgree",
+    WITHDRAW_RULE: "/gateway/withdraw/rule"
+};
+
 const WSS_TEST_NODES = [
     {
         url: "wss://fake.automatic-selection.com",
@@ -187,19 +210,4 @@ export const settingsAPIs = {
     DEFAULT_FAUCET: __CB_BASE_URL__ || cbApiBase,
     TESTNET_FAUCET: __CB_BASE_URL__ || cbApiBase,
     RPC_URL: "https://openledger.info/api/"
-};
-
-export const gdexAPIs = {
-    BASE: "https://api.gdex.io",
-    ASSET_LIST: "/gateway/asset/assetList",
-    ASSET_DETAIL: "/gateway/asset/assetDetail",
-    GET_DEPOSIT_ADDRESS: "/gateway/address/getAddress",
-    CHECK_WITHDRAY_ADDRESS: "/gateway/address/checkAddress",
-    DEPOSIT_RECORD_LIST: "/gateway/deposit/recordList",
-    DEPOSIT_RECORD_DETAIL: "/gateway/deposit/recordDetail",
-    WITHDRAW_RECORD_LIST: "/gateway/withdraw/recordList",
-    WITHDRAW_RECORD_DETAIL: "/gateway/withdraw/recordDetail",
-    GET_USER_INFO: "/gateway/user/getUserInfo",
-    USER_AGREEMENT: "/gateway/user/isAgree",
-    WITHDRAW_RULE: "/gateway/withdraw/rule"
 };

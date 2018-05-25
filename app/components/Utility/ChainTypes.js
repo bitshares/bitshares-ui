@@ -9,6 +9,7 @@ const {object_type} = grapheneChainTypes;
 function createChainableTypeChecker(validate) {
     function checkType(isRequired, props, propName, componentName, location) {
         componentName = componentName || ANONYMOUS;
+
         if (props[propName] == null) {
             if (isRequired) {
                 return new Error(

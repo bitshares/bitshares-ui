@@ -5,7 +5,8 @@ install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # install modules
-  - npm i
+  - npm install -g npm@6
+  - npm ci
 build: off
 platform:
   - x64
