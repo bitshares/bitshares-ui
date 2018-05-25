@@ -11,8 +11,8 @@ import {List} from "immutable";
 class AccountVotingProxy extends React.Component {
     static propTypes = {
         existingProxy: ChainTypes.ChainAccount.isRequired,
-        account: React.PropTypes.object.isRequired,
-        onProxyAccountChanged: React.PropTypes.func.isRequired,
+        account: PropTypes.object.isRequired,
+        onProxyAccountChanged: PropTypes.func.isRequired,
         knownProxies: ChainTypes.ChainAccountsList
     };
 
@@ -37,7 +37,7 @@ class AccountVotingProxy extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -173,7 +173,9 @@ class AccountVotingProxy extends React.Component {
             .sort((a, b) => {
                 return a.get("name") > b.get("name")
                     ? 1
-                    : a.get("name") < b.get("name") ? -1 : 0;
+                    : a.get("name") < b.get("name")
+                        ? -1
+                        : 0;
             })
             .map(proxy => {
                 return (

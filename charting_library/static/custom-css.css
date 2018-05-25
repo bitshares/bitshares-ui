@@ -1,0 +1,35 @@
+.chart-page .chart-container {
+    border: none;
+}
+
+.header-chart-panel .group {
+    margin: 1px 0;
+}
+
+/*Header buttons background color */
+.header-chart-panel .button,
+.symbol-search-dialog .symbol-block input,
+input.symbol-edit,
+.favored-list-container span
+{
+    background: #9e9e9e21;
+    border: none;
+}
+
+.header-chart-panel .button.disabled {
+    background: #9e9e9e21;
+    border: none;
+    opacity: 50%;
+}
+
+/* Disabled features background color */
+.feature-no-touch .header-chart-panel .button.disabled:active,
+.feature-touch .header-chart-panel .button.disabled:active,
+.header-chart-panel .button.disabled,
+.header-chart-panel .button.disabled.active {
+    /*background: red;*/
+}
+
+/* Small close button */
+.tv-close-panel {
+}

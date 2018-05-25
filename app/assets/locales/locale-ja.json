@@ -1,192 +1,59 @@
 {
-    "page404": {
-        "page_not_found_title": "ページが見つかりません。",
-        "page_not_found_subtitle": "このページは存在しません",
-        "home": "ホーム"
-    },
-    "counterpart": {
-        "formats": {
-            "date": {
-                "short_custom": "%e %b '%y",
-                "market_history": "%e/%m %H:%M:%S",
-                "market_history_us": "%m/%e %H:%M:%S"
-            }
-        }
-    },
-    "languages": {
-        "en": "English",
-        "zh": "简体中文",
-        "fr": "Français",
-        "ko": "한국어",
-        "de": "Deutsch",
-        "es": "Español",
-        "it": "Italiano",
-        "tr": "Türkçe",
-        "ru": "Русский",
-        "ja": "日本語"
-    },
-    "incognito": {
-        "no_support":
-            "このBitShares Walletは、ローカルストレージとIndexedDBに依存しています。シークレットブラウジングモードを使用した場合、持続的ではありません。通常のブラウザーセッションを使用することをおすすめします。",
-        "ignore": "理解しました。"
-    },
-    "sync_fail": {
-        "title": "APIサーバとの同期に失敗しました",
-        "sub_text_1": "コンピュータの時計が正しいか確認してください。",
-        "sub_text_2":
-            "時計を同期させたらこのページを更新してください。<br/><br/>既に時計が正しい場合は、使用しているAPIサーバーが同期していません。その場合は下のリストから他のサーバーを選んで再試行してください。"
-    },
-    "header": {
-        "title": "BitShares UI",
-        "account": "アカウント",
-        "dashboard": "ダッシュボード",
-        "deposit-withdraw": "入金/出金",
-        "explorer": "エクスプローラー",
-        "exchange": "取引所",
-        "payments": "送金",
-        "payments_beta": "送金 (ベータ)",
-        "payments_legacy": "送金 (レガシー)",
-        "logout": "ログアウト",
-        "settings": "設定",
-        "current": "現在のアカウント",
-        "create_account": "アカウント作成",
-        "create_asset": "アセット作成",
-        "collateral_ratio": "担保の比率",
-        "update_asset": "アセット更新",
-        "lock": "ログアウト (ウォレットをロック)",
-        "unlock": "ログイン (ウォレットをアンロック)",
-        "unlock_password": "パスワードでログイン",
-        "unlock_short": "ログイン",
-        "lock_short": "ログアウト",
-        "help": "ヘルプ",
-        "locked_tip":
-            "<br/>クリックすると、ウォレットをアンロックしログインします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
-        "unlocked_tip":
-            "<br/>クリックすると、ウォレットをロックしログアウトします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
-        "account_notify": "現在のアクティブアカウントは%(account)sです。",
-        "account_value": "アカウント値"
-    },
-    "browser_notification_messages": {
-        "money_received_title": "%(from)sからの転送",
-        "money_received_body": "%(amount)s %(symbol)s受け取りました"
-    },
-    "tooltip": {
-        "call_limit":
-            "これは市場における最低限の担保付マージンポジションのコール価格です。",
-        "margin_price":
-            "これはマージンコールがかかったポジションが支払う必要のある最大価格です。スクイーズ価格とも言います。",
-        "settle_price": "これは決済注文を実行する価格です。",
-        "feed_price": "This is the current external feed price",
-        "sign_owner":
-            "あなたがこのアカウントの所有者の場合は、取引が正しく署名されているか確認してください。これはオーナーアカウントを使用していて、アカウントがアクティブ権限を持っていないときに限り必要です。",
-        "latest_price": "これはこの市場における最新の価格です。",
-        "no_price":
-            "このアセットには推定価格を算出するために使用可能な最新の価格がありません。",
-        "hide_asset":
-            "このリストからこのアセットを非表示にするにはここをクリックしてください。",
-        "show_asset":
-            "メインリストにこのアセットを表示するにはここをクリックしてください。",
-        "settle":
-            "精算により、保有する%(asset)sを24時間の遅延後にBTSにその時点のフィード価格で変換できます。",
-        "filter_ops":
-            "このドロップダウンリストで履歴を操作の種類別にフィルタリングできます。",
-        "show_block":
-            "この取引が発生したブロック#%(block)sを見るにはここをクリックしてください。",
-        "coll_ratio": "ポジションの担保比率は 担保* フィード価格 / 賃借 です。",
-        "call_price":
-            "これはポジションのコール価格です。フィード価格がコール価格を下回った場合、ポジションにマージンコールが発生します。",
-        "close_position":
-            "ポジションを閉じるにはここをクリックしてください。そのためには、最低%(amount)s %(asset)sが必要です。",
-        "update_position":
-            "ポジションを更新するにはここをクリックしてください。いつでもポジションの賃借や担保比率を変更できます。",
-        "cr_danger":
-            "現在、このポジションにはマージンコールがかかっています。担保を追加して担保比率を%(mr)s以上にするか、ポジションをクローズすることを検討してください。",
-        "cr_warning":
-            "このポジションは担保レベルが低く、担保比率が%(mr)sを下回った場合はマージンコールがかかります。担保を追加するかポジションをクローズすることを検討してください。",
-        "propose_scam":
-            "この提案は有名な詐欺師によるものです。応じないでください！",
-        "login":
-            "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
-        "buy_min":
-            "最低でもこの金額を受け取れます。あなたが指定した価格よりも低い価格でマッチする注文があった場合、あなたはこれ以上の金額を受け取れます。",
-        "borrow":
-            "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
-        "transfer_actions":
-            "転送または、サポートするアセットを入出金するにはここをクリックしてください。",
-        "deposit_tip":
-            "入金を完了するには、%(asset)sウォレットに行き、このページに記載されているアドレスに転送してください。確認後、すぐに入金されます。メモが表示されている場合は、転送にこのメモを含めなければなりません。",
-        "copy_tip": "テキストをコピーするにはここをクリックしてください。",
-        "withdraw_full": "全額を出金するにはここをクリックしてください。",
-        "withdraw_address":
-            "まだ%(asset)sのアドレスをお持ちでない場合は、出金する前にウォレットプロバイダーを探して作成する必要があります。",
-        "memo_tip":
-            "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
-        "generate":
-            "生成パスワードはローカルでブラウザによって作成されたものです。 <br /><br /><strong> あなただけがアクセスできます。</strong><br /><br /> 以下の欄に貼り付けて、安全な場所にコピーを保存してください。",
-        "copy_password":
-            "パスワードをクリップボードにコピーするには、ここをクリックしてください",
-        "sync_yes": "現在のノードはブロックチェーンと同期しています。",
-        "sync_no":
-            "現在のノードはブロックチェーンと同期していません。別のノードに切り替えてみてください。",
-        "disconnected":
-            "APIノードに接続していません。リロードするか、設定ページで新しいアクセスポイントを設定してください。",
-        "market_fee":
-            "%(asset)sのオーナーは買い注文に対して%(percent)s%%の取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
-        "bridge_TRADE":
-            "BlockTradesはアセットの即時取引をサポートするブリッジです。詳細と利用規約はhttps://blocktrades.usから。",
-        "over_limit":
-            "ブリッジにはこの買い注文に必要なアセットが不足しています。",
-        "propose_tip": "別のユーザーからトランザクションを提案する",
-        "follow_user": "このユーザーをフォローしています",
-        "follow_user_add": "このユーザーをフォローするにはクリックしてください",
-        "gateway":
-            "ゲートウェイはデポジットを100%の実際のアセットでバッキングしています"
-    },
-    "walkthrough": {
-        "language_flag": "DEXで利用する言語を9種類の中から選択してください。",
-        "restore_account": "バックアップファイルからウォレットをリストアする。",
-        "create_cloud_wallet":
-            "アカウント名とパスワードを使用してアクセスする。",
-        "create_local_wallet":
-            "ローカルウォレットを作成してローカルにプライベートキーをダウンロードする。",
-        "switch_button": "このボタンを使用してトレーディングペアを切り替える。",
-        "favourite_button":
-            "このペアをあなたのマーケットリストのお気に入りとしてマークする。",
-        "depth_chart": "市場深度チャートを使用して買いと売りを表示する。",
-        "price_chart":
-            "価格チャートを使用してアセットの価格アクションを表示する。",
-        "chart_tool_zoom":
-            "価格チャートを調整して価格の履歴の表示数を変更する。",
-        "chart_tool_duration": "別の間隔を使用して取引データをグループ化する。",
-        "chart_tool_indicators":
-            "テクニカル・インジケータを価格チャートに追加する。",
-        "buy_form": "このフォームを使用して買い注文を出します。",
-        "sell_form": "このフォームを使用して売り注文を出します。",
-        "buy_orders": "この市場のすべての買い注文を表示する。",
-        "sell_orders": "この市場のすべての売り注文を表示する。",
-        "my_markets_tab": "このタブには、よく利用する市場が表示されます。",
-        "find_markets_tab":
-            "このタブでは、マーケットを検索して「マイマーケット」タブに追加することができます。",
-        "next_label": "次へ",
-        "prev_label": "戻る",
-        "skip_label": "スキップ",
-        "done_label": "完了"
-    },
-    "propose": "提案",
-    "cancel": "キャンセル",
     "account": {
-        "optional": {
-            "formatter":
-                "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
-            "restore_link": "アカウントのリストア",
-            "restore_form": "高度設定フォーム"
-        },
-        "search": "アカウントを検索する",
-        "new_user": "はじめてですか？",
-        "existing_user": "既存ユーザー",
-        "restore": "リストア",
+        "accounts": "アカウント",
+        "activity": "アクティビティ",
         "advanced": "高度な設定",
-        "intro_text_title": "BitShares分散型取引所へようこそ",
+        "as_collateral": "担保",
+        "asset": "アセット",
+        "asset_details": "アセット詳細",
+        "bittrex_scam":
+            "このアカウントは実際のBittrexアカウントではありません。このアカウントに送信してください: bittrex-deposit",
+        "bts_market": "マーケット",
+        "collaterals": "マージンポジション",
+        "confirm_asset_modal": {
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?",
+            "header": "Confirm multiple changes"
+        },
+        "connections": {
+            "black": "ブラックリスト登録者",
+            "known": "知り合い"
+        },
+        "contacts": "連絡先",
+        "create_account": "アカウント作成",
+        "create_new": "新しいアカウントを作成する",
+        "deposit": "BTSをデポジットする",
+        "deposit_address":
+            "あなたのデポジットアドレスはあなたのアカウント名です。",
+        "deposit_withdraw": "入金 / 出金",
+        "eq_value": "相当額",
+        "eq_value_header": "Value ({asset})",
+        "errors": {
+            "invalid": "無効なアカウント名",
+            "memo_missing":
+                "このアカウントのメモキーは管理できません。メモを使用するには、権限ページにてアカウントメモキーを管理できるキーに設定してください。",
+            "not_found":
+                "アカウント %(name)sは存在しません。スペルが正しいか確認してください。",
+            "not_yours": "あなたのアカウントではありません",
+            "unknown": "不明なアカウント"
+        },
+        "estimate_value": "推定アカウント価格",
+        "existing_accounts": "既存のアカウント",
+        "existing_user": "既存ユーザー",
+        "filter_orders": "フィルター",
+        "follow": "フォロー",
+        "hidden_accounts_row": "非表示のアカウント",
+        "hide_hidden": "非表示のアセットを隠す",
+        "hide_ignored": "非表示のアカウントを隠す",
+        "history": "履歴",
+        "home": "ホーム",
+        "hour_24": "24時間の変化",
+        "hour_24_short": "24時間",
+        "id": "アカウントID",
+        "identicon": "アイデンティコン",
+        "ignore": "非表示",
+        "in_open": "これは注文中の%(asset)sの金額です。",
+        "in_open_value": "これは注文中の%(asset)sの相当額です。",
         "intro_text_1": "あなたのための分散型取引所",
         "intro_text_2":
             "BitSharesは<b>DEX</b>として分散化されており、BitSharesのコアトークンであるBTSと、bitUSD、bitCNY、bitBTC、bitGoldなどのトラストレスで価格安定性のあるアセット間のトレードを可能にします。これらの資産はすべてカウンターパーティリスク<b>ゼロ</b>で取引することができるため、あなた自身が資金を完全にコントロールすることができます。",
@@ -194,366 +61,47 @@
             "<b>DEX</b>では、ユーザー発行型アセット（UIA）の作成も可能です。ユーザー発行型アセットは、プラットフォーム上の他のユーザー発行型アセット、及びトラストレスアセット間のトレードが可能です。 DEX上でよく知られているアセット発行者である、<b>OpenLedger</b>、はBTC、ETH、STEEM、DASH、LTC、DOGE、その他多数のアセットをホスティングしています。",
         "intro_text_4":
             "これにより、仮想通貨トレーダーは使い慣れた取引インタフェースを通して、伝統的なトレーディングスタイルと分散型のトレーディングスタイルのユニークな融合を体験することができます。",
-        "in_open": "これは注文中の%(asset)sの金額です。",
-        "in_open_value": "これは注文中の%(asset)sの相当額です。",
-        "transfer_actions": "転送アクション",
+        "intro_text_title": "BitShares分散型取引所へようこそ",
+        "login_with": "Login with",
         "market_actions": "市場アクション",
-        "see_open": "未実行の注文を見る",
-        "total_estimate":
-            "これは非表示のもの、注文中のもの、賃借、担保を含むすべてのアセットの推定価格です。推定は現在のブロックチェーンデータのみを使用しており、正確とは限りません。",
-        "trade": "トレード",
-        "welcome": "BitSharesへようこそ",
-        "asset": "アセット",
         "market_value": "市場価格",
-        "hour_24": "24時間の変化",
-        "hour_24_short": "24時間",
-        "recent": "最近のアクティビティ",
-        "name": "アカウント名",
-        "id": "アカウントID",
-        "mine": "マイ・アカウント",
-        "more": "詳細を見る",
-        "deposit_withdraw": "入金 / 出金",
-        "as_collateral": "担保",
-        "open_orders": "注文中",
-        "filter_orders": "フィルター",
-        "submit_orders": "送信",
-        "reset_orders": "リセット",
-        "total_value": "合計額",
-        "show_hidden": "非表示のアセットを表示する",
-        "hide_hidden": "非表示のアセットを隠す",
-        "show_visual": "ビジュアル",
-        "ignore": "非表示",
-        "unignore": "表示",
-        "show_ignored": "非表示のアカウントを表示する",
-        "hide_ignored": "非表示のアカウントを隠す",
-        "hidden_accounts_row": "非表示のアカウント",
-        "accounts": "アカウント",
-        "contacts": "連絡先",
-        "estimate_value": "推定アカウント価格",
-        "polo_scam":
-            "このアカウントは実際のPoloniexアカウントではありません。このアカウントに送信してください: poloniexwallet",
-        "bittrex_scam":
-            "このアカウントは実際のBittrexアカウントではありません。このアカウントに送信してください: bittrex-deposit",
-        "other_scam":
-            "このアカウントは公式アカウントではありません。転送する前に宛先を確認してください。",
-        "whitelist": {
-            "title": "ホワイトリスト",
-            "black": "ブラックリスト",
-            "add": "ホワイトリストに追加する",
-            "add_black": "ブラックリストに追加する",
-            "empty":
-                "%(account)sはアカウントを1つもホワイトリストに登録していません。",
-            "empty_black":
-                "%(account)sはアカウントを1つもブラックリストに登録していません。",
-            "white_by": "ホワイトリスト登録者",
-            "black_by": "ブラックリスト登録者",
-            "empty_white_by":
-                "%(account)sをホワイトリストに登録したアカウントはありません。",
-            "empty_black_by":
-                "%(account)sをブラックリストに登録したアカウントはありません。",
-            "whitelist_authorities": "ホワイトリスト権限",
-            "blacklist_authorities": "ブラックリスト権限"
-        },
-        "transactions": {
-            "id": "ID",
-            "type": "種類",
-            "info": "情報",
-            "time": "時間"
-        },
-        "vesting": {
-            "title": "権利確定残高",
-            "balance_number": "残高 #%(id)s",
-            "no_balances": "このアカウントには権利確定残高はありません",
-            "explain":
-                "権利確定残高には紹介プログラムやワーカーへの支払いなどから得た手数料が含まれます。それらは一定の権利付与期間を有し、すべての資金が利用可能になるまでの間、段階的にアンロックされていきます。"
-        },
         "member": {
-            "stats": "会員",
-            "join": "参加: ",
-            "registrar": "レジストラ",
-            "referrer": "アフィリエイト紹介者",
-            "lifetime_referrer": "終身会員紹介者",
-            "network_percentage": "ネットワーク",
-            "fee_allocation": "手数料割り当て",
-            "membership": "会員",
-            "fees_paid": "累計支払い済み手数料",
-            "referrals": "紹介者",
-            "rewards": "キャッシュバック報酬",
-            "cashback": "権利確定残高",
-            "vested": "権利確定",
-            "unknown": "不明な会員",
-            "lifetime": "終身会員",
-            "basic": "ベーシック会員",
             "annual": "年間会員",
-            "upgrade_lifetime": "終身会員権を購入する",
-            "subscribe": "年間会員権を購入する",
-            "expires": "期限切れ",
-            "membership_expiration": "会員期限",
-            "fees_cashback": "手数料とキャッシュバック",
+            "available": "請求可能",
+            "basic": "ベーシック会員",
+            "cashback": "権利確定残高",
+            "claim": "今すぐ請求",
             "coindays": "コイン・日",
             "earned": "獲得したコイン・日",
-            "required": "必要なコイン・日",
-            "remaining": "権利付与期間の残り日数",
-            "claim": "今すぐ請求",
-            "available": "請求可能",
+            "expires": "期限切れ",
+            "fee_allocation": "手数料割り当て",
+            "fees_cashback": "手数料とキャッシュバック",
+            "fees_paid": "累計支払い済み手数料",
+            "join": "参加: ",
+            "lifetime": "終身会員",
+            "lifetime_referrer": "終身会員紹介者",
+            "membership": "会員",
+            "membership_expiration": "会員期限",
+            "network_percentage": "ネットワーク",
             "referral_link": "あなたの紹介リンク",
             "referral_text":
-                "BitSharesに紹介したい人にこのリンクを教えてください"
+                "BitSharesに紹介したい人にこのリンクを教えてください",
+            "referrals": "紹介者",
+            "referrer": "アフィリエイト紹介者",
+            "registrar": "レジストラ",
+            "remaining": "権利付与期間の残り日数",
+            "required": "必要なコイン・日",
+            "rewards": "キャッシュバック報酬",
+            "stats": "会員",
+            "subscribe": "年間会員権を購入する",
+            "suspected_scammer": "Suspected Scammer",
+            "unknown": "不明な会員",
+            "upgrade_lifetime": "終身会員権を購入する",
+            "vested": "権利確定"
         },
-        "user_issued_assets": {
-            "symbol": "シンボル",
-            "id": "ID",
-            "name": "アセット名",
-            "description": "説明",
-            "max_supply": "最大供給量",
-            "precision": "精度",
-            "to": "アカウントへ発行",
-            "market_fee": "取引手数料",
-            "max_market_fee": "最大取引手数料",
-            "details": "詳細",
-            "primary": "主要設定",
-            "optional": "オプション設定",
-            "approx_fee": "概算手数料",
-            "exists": "そのアセットは既に存在します",
-            "max_positive": "最大供給量は正の数でなければなりません",
-            "too_large":
-                "最大供給量が大きすぎます。より少ない数を選択してください。",
-            "core_exchange_rate": "中心為替レート",
-            "quote": "クオートアセット量",
-            "quote_name": "クオートアセット",
-            "base": "ベースアセット量",
-            "base_name": "ベースアセット",
-            "update_owner": "オーナーを更新",
-            "current_issuer": "現在のオーナーアカウント",
-            "new_issuer": "新しいオーナーアカウント",
-            "flags": "フラグ",
-            "charge_market_fee": "取引手数料を有効にする",
-            "override_authority": "発行者はアセットを回収できる",
-            "transfer_restricted": "発行者はすべての転送を承認する必要がある",
-            "disable_confidential": "秘密の取引を無効にする",
-            "white_list": "保有者はホワイトリストに登録されている必要がある",
-            "witness_fed_asset": "証人にフィード供給を許可する",
-            "committee_fed_asset": "委員にフィード供給を許可する",
-            "disable_force_settle": "強制決済を無効にする",
-            "global_settle": "発行者に強制グローバル決済を許可する",
-            "advanced": "高度な機能",
-            "need_asset":
-                "2つのアセットのうち少なくとも1つは%(name)sでなければなりません",
-            "perm_warning":
-                "警告: 権限は無効にすることのみ可能です。一度無効にすると再度有効にすることはできません!!",
-            "issued_assets": "発行済みアセット",
-            "short": "ショートネーム (最大32文字)",
-            "condition": "条件 (最大60文字)",
-            "expiry": "市場解決日",
-            "decimals": "小数点以下の桁数",
-            "mpa": "スマートコイン",
-            "pm": "バイナリ予測市場",
-            "bitasset_opts": "スマートコインオプション",
-            "feed_lifetime_sec": "フィード寿命 (分)",
-            "minimum_feeds": "最小フィード数",
-            "force_settlement_delay_sec": "強制決済の遅延 (分)",
-            "force_settlement_offset_percent": "強制決済のパーセントオフセット",
-            "maximum_force_settlement_volume":
-                "最大強制決済量 (1時間毎の総供給量のパーセント)",
-            "backing": "ショートバッキングアセット",
-            "error_precision": "そのアセットの精度は%(asset)sと異なります。",
-            "error_invalid": "そのアセットは使用できません",
-            "market": "優先取引ペア",
-            "precision_warning": "警告: 精度の数値は作成後には変更できません",
-            "visible": "検索と市場からアセットを非表示にする",
-            "cer_warning_1": "警告",
-            "cer_warning_2":
-                "コア為替レートが市場価格より高いことを確認してください。それ以外の場合は、ユーザーは市場からトークンを購入し、暗黙的なアービトラージを通して手数料プールが空にされてしまいます。コア為替レートは、アセットの市場価格を反映するために定期的に更新する必要があります。",
-            "feed_producers": "フィード作成者",
-            "add_feed": "新しいフィード作成者を追加",
-            "feed_not_allowed_1":
-                "Cannot set feed producers on a witness- or committee-fed asset",
-            "feed_not_allowed_2":
-                "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
-            "too_many_feed":
-                "Number of feed producers exceeded the max allowed (%(max)s).",
-            "conflict_feed":
-                "Cannot allow witnesses and committee members to provide feeds simultaneously"
-        },
-        "connections": {
-            "known": "知り合い",
-            "black": "ブラックリスト登録者"
-        },
-        "perm": {
-            "active": "アクティブ権限",
-            "owner": "オーナー権限",
-            "memo_key": "メモキー",
-            "publish": "変更を公開",
-            "reset": "変更をリセット",
-            "add": "権限を追加",
-            "type": "タイプ",
-            "key": "キー/名前",
-            "weight": "ウェイト",
-            "threshold": "閾値",
-            "confirm_add": "追加",
-            "cancel": "キャンセル",
-            "add_permission_label":
-                "アカウント名/キーとウェイトを入力してください",
-            "account_name_or_key": "アカウント名またはキー",
-            "memo_public_key": "公開メモキー",
-            "warning1":
-                "アクティブ権限のウェイトの合計%(weights_total)sが閾値%(threshold)sと等しいかまたは超えている必要があります。",
-            "warning2":
-                "オーナー権限のウェイトの合計%(weights_total)sが閾値%(threshold)sと等しいかまたは超えている必要があります。",
-            "warning3": "アカウントは既にリストに入っています。",
-            "warning4": "キーは既にリストに入っています。",
-            "action": "操作",
-            "acct_or_key": "アカウント / キー / アドレス",
-            "key_viewer": "秘密キービューア",
-            "public": "公開キー",
-            "private": "秘密キー (WIF - Wallet Import Format)",
-            "show": "表示",
-            "brain": "ブレインキーの位置",
-            "from": "アカウントからインポート",
-            "sign_owner": "オーナーとして署名",
-            "password_model": "アカウントモデル",
-            "password_model_1":
-                "パスワードとアカウント名だけでどこからでもログインできるようにするには、このページで権限に新しいキーを追加します。元のキーも削除したい場合は、アクティブ/オーナー権限タブで削除できます。",
-            "password_model_2": "生成したキーのパスワードを追加",
-            "new_active": "新しいアクティブキー",
-            "new_owner": "新しいオーナーキー",
-            "new_memo": "新しいメモキー",
-            "memo_warning":
-                "警告: メモキーを置き換えると、パスワードでログインしたときに古いメモを読むことができなくなります。また、古いウォレットに新しいメモキーをインポートしない限り新しいメモをデコードすることはできません。",
-            "use_text": "使用",
-            "remove_text": "削除",
-            "valid_pub": "有効な公開キー"
-        },
-        "signedmessages": {
-            "menuitem": "Signed Messages",
-            "invalidkey":
-                "Private key could not be obtained, is the public key valid?",
-            "title": "Signed Messages",
-            "signmessage": "Sign Message",
-            "verifymessage": "Verify Message",
-            "signing": "Signing, please wait ...",
-            "verifying": "Verifying, please wait ...",
-            "invalidformat": "Signed message format can't be recognized",
-            "invaliduser": "Account of the message sender is invalid",
-            "invalidsignature":
-                "The content of the message could not be validated against the signature",
-            "errorverifying": "An error occured while verifying the message",
-            "keymismatch":
-                "Given public key of the sender doesn't to the one stored in the senders account",
-            "sign": "Sign",
-            "verify": "Verify",
-            "automaticcreation": "Signed message will be created automatically",
-            "entermessage": "Enter message here",
-            "copysuccessful": "Signed message copied to clipboard",
-            "copyunsuccessful": "Failed to copy message",
-            "verifyonchange": "Verify while typing"
-        },
-        "votes": {
-            "proxy_current": "現在の代理人: ",
-            "proxy_short": "代理人",
-            "workers_short": "ワーカー",
-            "proxy": "代理人にするアカウントを手動で入力",
-            "no_proxy": "代理人はいません",
-            "clear_proxy": "代理人を削除",
-            "go_proxy": "進む:",
-            "name": "名前",
-            "info": "情報",
-            "votes": "投票数",
-            "url": "ウェブページ",
-            "support": "サポート",
-            "workers": "予算項目",
-            "publish": "変更を公開する",
-            "add_witness": "追加",
-            "remove_witness": "削除",
-            "remove_committee": "削除",
-            "add_committee": "追加",
-            "add_committee_label": "委員",
-            "add_witness_label": "証人",
-            "approve_worker": "承認",
-            "reject_worker": "拒否",
-            "worker_account": "ワーカーアカウント",
-            "total_votes": "得票",
-            "votes_against": "反対投票",
-            "daily_pay": "支払い",
-            "daily": "1日",
-            "max_pay": "最大総支払い額",
-            "unclaimed": "未請求の支払い",
-            "status": {
-                "title": "ステータス",
-                "supported": "支持",
-                "rejected": "拒否",
-                "neutral": "中立"
-            },
-            "start": "開始日",
-            "end": "終了日",
-            "creator": "作成者",
-            "recycled": "リサイクル",
-            "funding": "資金調達",
-            "total_budget": "有効な1日の合計ワーカー予算",
-            "unused_budget": "未使用の1日のワーカー予算",
-            "new": "Proposed(%(count)s)",
-            "active": "Active(%(count)s)",
-            "w_approved_by": "%(account)sによって承認された証人",
-            "w_not_approved_by": "%(account)sによって承認されていない証人",
-            "cm_approved_by": "%(account)sによって承認された委員",
-            "cm_not_approved_by": "%(account)sによって承認されていない委員",
-            "already": "アカウントは既にリストに入っています",
-            "proxy_known": "または代理人アカウントを選択してください",
-            "expired": "期限切れのワーカー",
-            "witness": "証人名",
-            "committee": "委員名",
-            "toggle": "Toggle vote",
-            "supported": "Supported",
-            "active_short": "アクティブ",
-            "inactive": "バックアップ",
-            "about": "About",
-            "create_worker": "新しいワーカーを作成する",
-            "line": "Line",
-            "save_finish": "Click save to finish",
-            "threshold": "Votes required to activate",
-            "missing": "Needed"
-        },
-        "options": {
-            "num_witnesses": "希望する証人",
-            "num_committee": "希望する委員",
-            "memo_key": "メモキー"
-        },
-        "upgrade": "アカウントをアップグレード",
-        "unfollow": "フォロー解除",
-        "follow": "フォロー",
-        "pay": "送金",
-        "deposit": "BTSをデポジットする",
-        "deposit_address":
-            "あなたのデポジットアドレスはあなたのアカウント名です。",
-        "overview": "概要",
-        "home": "ホーム",
-        "bts_market": "マーケット",
-        "history": "履歴",
-        "payees": "受取人",
-        "permissions": "権限",
-        "voting": "投票",
-        "orders": "注文",
-        "select_placeholder": "アカウントを選択...",
-        "errors": {
-            "not_found":
-                "アカウント %(name)sは存在しません。スペルが正しいか確認してください。",
-            "invalid": "無効なアカウント名",
-            "unknown": "不明なアカウント",
-            "not_yours": "あなたのアカウントではありません",
-            "memo_missing":
-                "このアカウントのメモキーは管理できません。メモを使用するには、権限ページにてアカウントメモキーを管理できるキーに設定してください。"
-        },
-        "collaterals": "マージンポジション",
-        "eq_value": "相当額",
-        "no_price": "不明な値",
-        "percent": "総供給量に対する割合",
-        "please_create_account": "アカウントを作成してください",
-        "create_account": "アカウント作成",
-        "create_new": "新しいアカウントを作成する",
-        "password_login": "パスワードでログイン",
-        "identicon": "アイデンティコン",
-        "pay_from": "アカウントで支払う",
-        "existing_accounts": "既存のアカウント",
+        "mine": "マイ・アカウント",
+        "more": "詳細を見る",
+        "name": "アカウント名",
         "name_input": {
             "name_is_taken": "アカウント名は既に使用されています。",
             "not_found": "アカウントが存在しません。",
@@ -562,1160 +110,765 @@
             "premium_name_warning":
                 "これはダッシュ (-) または数字を含む名前よりも高価なプレミアム名です。"
         },
-        "propose_from": "提案元",
-        "settle": "決済",
+        "new_user": "はじめてですか？",
         "no_orders": "未処理の注文はありません",
-        "asset_details": "アセット詳細",
+        "no_price": "不明な値",
+        "open_orders": "注文中",
+        "optional": {
+            "formatter":
+                "ここから{restore_link}、または{restore_form}を使ってアカウントを作成することができます。",
+            "restore_form": "高度設定フォーム",
+            "restore_link": "アカウントのリストア"
+        },
+        "options": {
+            "memo_key": "メモキー",
+            "num_committee": "希望する委員",
+            "num_witnesses": "希望する証人"
+        },
+        "orders": "注文",
+        "other_scam":
+            "このアカウントは公式アカウントではありません。転送する前に宛先を確認してください。",
+        "overview": "概要",
+        "password_login": "パスワードでログイン",
+        "pay": "送金",
+        "pay_from": "アカウントで支払う",
+        "payees": "受取人",
+        "percent": "総供給量に対する割合",
+        "perm": {
+            "account_name_or_key": "アカウント名またはキー",
+            "acct_or_key": "アカウント / キー / アドレス",
+            "action": "操作",
+            "active": "アクティブ権限",
+            "add": "権限を追加",
+            "add_permission_label":
+                "アカウント名/キーとウェイトを入力してください",
+            "brain": "ブレインキーの位置",
+            "cancel": "キャンセル",
+            "confirm_add": "追加",
+            "from": "アカウントからインポート",
+            "key": "キー/名前",
+            "key_viewer": "秘密キービューア",
+            "memo_key": "メモキー",
+            "memo_public_key": "公開メモキー",
+            "memo_warning":
+                "警告: メモキーを置き換えると、パスワードでログインしたときに古いメモを読むことができなくなります。また、古いウォレットに新しいメモキーをインポートしない限り新しいメモをデコードすることはできません。",
+            "new_active": "新しいアクティブキー",
+            "new_memo": "新しいメモキー",
+            "new_owner": "新しいオーナーキー",
+            "owner": "オーナー権限",
+            "password_model": "アカウントモデル",
+            "password_model_1":
+                "パスワードとアカウント名だけでどこからでもログインできるようにするには、このページで権限に新しいキーを追加します。元のキーも削除したい場合は、アクティブ/オーナー権限タブで削除できます。",
+            "password_model_2": "生成したキーのパスワードを追加",
+            "private": "秘密キー (WIF - Wallet Import Format)",
+            "public": "公開キー",
+            "publish": "変更を公開",
+            "remove_text": "削除",
+            "reset": "変更をリセット",
+            "save": "Save Changes",
+            "save_all": "Save All Changes",
+            "show": "表示",
+            "sign_owner": "オーナーとして署名",
+            "threshold": "閾値",
+            "type": "タイプ",
+            "use_text": "使用",
+            "valid_pub": "有効な公開キー",
+            "warning1":
+                "アクティブ権限のウェイトの合計%(weights_total)sが閾値%(threshold)sと等しいかまたは超えている必要があります。",
+            "warning2":
+                "オーナー権限のウェイトの合計%(weights_total)sが閾値%(threshold)sと等しいかまたは超えている必要があります。",
+            "warning3": "アカウントは既にリストに入っています。",
+            "warning4": "キーは既にリストに入っています。",
+            "weight": "ウェイト"
+        },
+        "permissions": "権限",
+        "please_create_account": "アカウントを作成してください",
+        "polo_scam":
+            "このアカウントは実際のPoloniexアカウントではありません。このアカウントに送信してください: poloniexwallet",
         "portfolio": "残高",
-        "activity": "アクティビティ",
-        "eq_value_header": "Value ({asset})",
+        "propose_from": "提案元",
         "qty": "数量",
         "quote": "Quote",
-        "total": "合計 ({asset})"
-    },
-    "pagination": {
-        "newer": "新しい",
-        "older": "古い"
-    },
-    "transfer": {
-        "header": "転送の詳細設定",
-        "header_subheader":
-            "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
-        "from": "From",
-        "pay_from": "送信元",
-        "amount": "金額",
-        "to": "To",
-        "memo": "メモ",
-        "warn_name_unable_read_memo":
-            "警告: %(name)sはこのメモを読むことができません。",
-        "fee": "手数料",
-        "send": "送信",
-        "final": "最終残高",
-        "balances": "残高",
-        "available": "利用可能額",
-        "errors": {
-            "noFunds": "資金がありません",
-            "req": "必須",
-            "pos": "金額は正の数でなければなりません",
-            "valid": "有効な正の数を入力してください。",
-            "balance": "最終残高は0より大きくなければなりません",
-            "insufficient": "残高不足",
-            "noFeeBalance":
-                "このアセットの残高は手数料に足りません。他のアセットを支払い用に選択してください。",
-            "noPoolBalance":
-                "そのアセットの手数料プール残高が足りません。アセットオーナーに知らせるか、他のアセットを手数料支払い用に選択してください。",
-            "minimum_amount": "最低出金数量: %(amount)s %(symbol)s",
-            "memo_error": "転送メモの解析エラーです。後でやり直してください。",
-            "precision": "最小出金精度値: %(precision)s"
+        "recent": "最近のアクティビティ",
+        "reset_orders": "リセット",
+        "restore": "リストア",
+        "search": "アカウントを検索する",
+        "see_open": "未実行の注文を見る",
+        "select_placeholder": "アカウントを選択...",
+        "settle": "決済",
+        "show_hidden": "非表示のアセットを表示する",
+        "show_ignored": "非表示のアカウントを表示する",
+        "show_visual": "ビジュアル",
+        "signedmessages": {
+            "automaticcreation": "Signed message will be created automatically",
+            "copysuccessful": "Signed message copied to clipboard",
+            "copyunsuccessful": "Failed to copy message",
+            "entermessage": "Enter message here",
+            "errorverifying": "An error occured while verifying the message",
+            "invalidformat": "Signed message format can't be recognized",
+            "invalidkey":
+                "Private key could not be obtained, is the public key valid?",
+            "invalidsignature":
+                "The content of the message could not be validated against the signature",
+            "invaliduser": "Account of the message sender is invalid",
+            "keymismatch":
+                "Given public key of the sender doesn't to the one stored in the senders account",
+            "menuitem": "Signed Messages",
+            "sign": "Sign",
+            "signing": "Signing, please wait ...",
+            "signmessage": "Sign Message",
+            "title": "Signed Messages",
+            "verify": "Verify",
+            "verifying": "Verifying, please wait ...",
+            "verifymessage": "Verify Message",
+            "verifyonchange": "Verify while typing"
         },
-        "back": "戻る",
-        "confirm": "確認",
-        "broadcasting": "送信中...",
-        "broadcast": "あなたの転送はネットワークに送信されました",
-        "again": "他の転送をする",
-        "see": "自身の転送を見る",
-        "close": "閉じる",
-        "cancel": "キャンセル",
-        "copy_address": "アドレスをコピー",
-        "copy_memo": "メモをコピー",
-        "memo_unlock": "このメモを見るにはウォレットをアンロックしてください",
-        "optional": "オプション"
-    },
-    "operation": {
-        "pending": "保留中... %(blocks)sブロック",
-        "no_recent": "最近の取引がありません",
-        "reg_account": "{registrar}は{new_account}のアカウントを登録しました",
-        "transfer": "{from}は{amount}を{to}に送りました",
-        "proposal_create": "{account}は取引提案を作成しました",
-        "proposal_update": "{account}は取引提案を更新しました",
-        "proposal_delete": "{account}は取引提案を削除しました",
-        "fill_order_buy": "{account}は{price}で{amount}を購入しました",
-        "fill_order_sell": "{account}は{price}で{amount}を売却しました",
-        "vesting_balance_withdraw":
-            "{account}は{amount}の権利確定残高を引き出しました",
-        "balance_claim": "{account}は{amount}を請求しました",
-        "publish_feed": "{account}はフィード価格 {price}を公開しました",
-        "set_proxy": "{account}は投票代理人に{proxy}を設定しました",
-        "update_account": "{account}はアカウント情報を更新しました",
-        "limit_order_sell":
-            "{account}は{price}で{amount}の売り注文を出しました",
-        "limit_order_buy": "{account}は{price}で{amount}の買い注文を出しました",
-        "limit_order_cancel": "{account}は注文#%(order)sをキャンセルしました",
-        "call_order_update":
-            "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
-        "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
-        "asset_issue": "{account}は{amount}を{to}に発行しました",
-        "asset_fund_fee_pool":
-            "{account}は{asset}の手数料プールに{amount}を充填しました",
-        "asset_create": "{account}はアセット{asset}を作成しました",
-        "asset_update": "{account}はアセット{asset}を更新しました",
-        "lifetime_upgrade_account":
-            "{account}は終身会員にアップグレードしました",
-        "annual_upgrade_account": "{account}は年間会員にアップグレードしました",
-        "unlisted_by": "{lister}は{listee}をリストから外しました",
-        "whitelisted_by": "{lister}は{listee}をホワイトリストに登録しました",
-        "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
-        "transfer_account": "{account}の所有権を{to}に移転しました",
-        "asset_update_feed_producers":
-            "{account}はアセット{asset}のフィード作成者を更新しました",
-        "asset_settle": "{account}は{amount}の決済を依頼しました",
-        "asset_global_settle":
-            "{account}は{asset}のグローバル決済を{price}で依頼しました",
-        "witness_create": "{account}は証人になるためのアップグレードをしました",
-        "witness_update": "{account}は証人情報を更新しました",
-        "witness_pay": "アカウントに証人報酬を引き出しました",
-        "witness_receive": "証人から証人を受け取りました",
-        "committee_member_update_global_parameters":
-            "{account}はグローバル委員会のパラメータを更新しました",
-        "worker_create": "{account}は日当{pay}でワーカー提案を作成しました",
-        "override_transfer": "{issuer}は{amount}を{from}から{to}に転送しました"
-    },
-    "proposal": {
-        "transfer": "{amount}を{from}から{to}に転送します",
-        "limit_order_create":
-            "%(buy_amount)sを%(account)sが%(sell_amount)sで買い注文を出します",
-        "limit_order_sell": "{amount}を{price}で{account}が売り注文を出します",
-        "limit_order_buy": "{amount}を{price}で{account}が買い注文を出します",
-        "committee_member_update_global_parameters":
-            "{account}による委員会グローバルパラメータを更新します",
-        "action": "操作",
-        "expires": "有効期限",
-        "update_account": "{account}のアカウントデータを更新します",
-        "status": "ステータス",
-        "asset_create": "{account}アカウントでアセット%(asset)sを作成します",
-        "asset_update": "{account}アカウントでアセット{asset}を更新します",
-        "asset_settle": "決済依頼",
-        "update": {
-            "active_approvals_to_add": "アクティブ承認の追加",
-            "active_approvals_to_remove": "アクティブ承認の削除",
-            "owner_approvals_to_add": "オーナー承認の追加",
-            "owner_approvals_to_remove": "オーナー承認の削除",
-            "key_approvals_to_add": "キー承認の追加",
-            "key_approvals_to_remove": "キー承認の削除"
-        },
-        "approve": "承認",
-        "reject": "拒否",
-        "override_transfer":
-            "{issuer}の権限で{amount}を{from}から{to}へ転送します",
-        "asset_issue": "{account}で{amount}を{to}に発行します",
-        "asset_reserve": "account}で{amount}を消却 (バーン) します",
-        "vesting_balance_withdraw":
-            "{account}の権利確定残高から{amount}を引き出します",
-        "feed_producer":
-            "{account}で アセット{asset}のフィード作成者を更新します",
-        "call_order_update":
-            "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。"
-    },
-    "transaction": {
-        "confirm": "取引を確認してください",
-        "broadcast_success": "取引が送信されました",
-        "transaction_confirmed": "取引を確認しました",
-        "broadcast_fail": "取引の送信に失敗しました: %(message)s",
-        "broadcasting": "取引を送信しています..",
-        "broadcasting_short": "送信中..",
-        "waiting": "確認を待っています..",
-        "sent": "送信:",
-        "to": "相手:",
-        "received": "受信:",
-        "from": "相手:",
-        "amount_sell": "Amount to sell",
-        "expiration": "有効期限",
-        "fill_or": "Fill or kill",
-        "min_receive": "受け取れる最小金額",
-        "seller": "売り手",
-        "collateral": "担保",
-        "coll_ratio": "初期担保比率",
-        "coll_maint": "担保維持率",
-        "create_key": "公開キーを作成しました",
-        "at": "at",
-        "coll_of": "担保: ",
-        "feed_producer": "アセットのフィード作成者になりました",
-        "feed_price": "フィード価格",
-        "by": "by",
-        "burn_asset": "消却（バーン）",
-        "fund_pool": "%(asset)sを手数料プールに充填",
-        "committee_member_create": "委員を作成する",
-        "withdraw_permission_create": "残高引き出し権限を取得",
-        "withdraw_permission_update": "残高引き出し権限を更新",
-        "withdraw_permission_claim": "残高引き出し権限を請求",
-        "withdraw_permission_delete": "残高引き出し権限を削除",
-        "paid": "支払",
-        "obtain": "取得",
-        "global_parameters_update": "グローバルパラメータを更新しました",
-        "file_write": "ファイルを作成しました",
-        "vesting_balance_create": "作成済み権利確定残高:",
-        "for": "for",
-        "bond_create_offer": "作成済み債権提案",
-        "bond_cancel_offer": "キャンセルされた債権提案",
-        "bond_accept_offer": "承認された債権提案",
-        "bond_claim_collateral": "請求された担保",
-        "bond_pay_collateral": "支払い済み担保",
-        "custom": "作成済みカスタム操作",
-        "order_id": "注文 ID",
-        "asset_claim_fees":
-            "%(balance_amount)sのアセット手数料を%(asset)sの手数料プールから請求しました",
-        "balance_owner": "残高オーナーキー",
-        "balance_id": "残高ID",
-        "deposit_to": "アカウントに入金しました",
-        "claimed": "合計請求金額",
-        "borrow_amount": "賃借",
-        "borrower": "Borrower",
-        "funding_account": "資金調達アカウント",
-        "delta_collateral": "担保変更",
-        "delta_debt": "賃借変更",
-        "new_url": "ウェブサイト",
-        "publisher": "発行者",
-        "market_fee": "取引手数料",
-        "max_market_fee": "最大取引手数料",
-        "blinding_factor": "Blinding factor",
-        "outputs": "アウトプット",
-        "inputs": "インプット",
-        "settlement_date": "決済日",
-        "asset_reserve": "消却済みアセット数量",
-        "trxTypes": {
-            "all": "すべて表示",
-            "transfer": "転送",
-            "limit_order_create": "注文を出す",
-            "limit_order_cancel": "注文をキャンセル",
-            "call_order_update": "マージンを更新",
-            "account_create": "アカウントを作成",
-            "account_update": "アカウントを更新",
-            "account_whitelist": "アカウントホワイトリスト",
-            "account_upgrade": "アカウントのアップグレード",
-            "account_transfer": "アカウント譲渡",
-            "asset_create": "アセットを作成",
-            "asset_update": "アセットを更新",
-            "asset_update_bitasset": "スマートコインを更新",
-            "asset_update_feed_producers": "アセットのフィード作成者を更新",
-            "asset_issue": "アセットを発行",
-            "asset_reserve": "アセットを消却",
-            "asset_fund_fee_pool": "アセットの手数料プールを充填",
-            "asset_settle": "アセット決済",
-            "asset_global_settle": "グローバルアセット決済",
-            "asset_publish_feed": "フィードを公開",
-            "committee_member_create": "委員を作成",
-            "committee_member_update": "委員を更新",
-            "witness_create": "証人を作成",
-            "witness_update": "証人を更新",
-            "witness_withdraw_pay": "証人報酬を引き出し",
-            "proposal_create": "提案を作成",
-            "proposal_update": "提案を更新",
-            "proposal_delete": "提案を削除",
-            "withdraw_permission_create": "引き出し権限を作成",
-            "withdraw_permission_update": "引き出し権限を更新",
-            "withdraw_permission_claim": "引き出し権限を請求",
-            "withdraw_permission_delete": "引き出し権限を削除",
-            "fill_order": "注文約定",
-            "committee_member_update_global_parameters":
-                "グローバルパラメータ更新",
-            "vesting_balance_create": "権利確定残高を作成",
-            "vesting_balance_withdraw": "権利確定残高を引き出し",
-            "worker_create": "ワーカーを作成",
-            "custom": "カスタム",
-            "assert": "アサート操作",
-            "balance_claim": "残高請求",
-            "override_transfer": "オーバーライド転送",
-            "transfer_to_blind": "匿名アカウントに転送",
-            "blind_transfer": "匿名転送",
-            "transfer_from_blind": "匿名アカウントからの転送",
-            "asset_claim_fees": "アセット手数料を請求"
-        },
-        "feeGroups": {
-            "general": "一般",
-            "asset": "アセット固有",
-            "market": "マーケット固有",
-            "account": "アカウント固有",
-            "business": "ビジネス管理"
-        },
-        "feeTypes": {
-            "_none": "無料",
-            "fee": "通常の取引手数料",
-            "price_per_kbyte": "トランザクションサイズ (KByte) あたりの価格",
-            "basic_fee": "基本料金",
-            "premium_fee": "プレミアム名の料金",
-            "membership_annual_fee": "年間会員",
-            "membership_lifetime_fee": "終身会員",
-            "symbol3": "3文字のシンボル",
-            "symbol4": "4文字のシンボル",
-            "long_symbol": "長いシンボル"
-        },
-        "whitelist_states": {
-            "no_listing": "未登録",
-            "white_listed": "ホワイトリストに登録",
-            "black_listed": "ブラックリストに登録",
-            "white_and_black_listed": "ホワイトリストとブラックリストに登録"
-        },
-        "csv": ".csvを出力",
-        "csv_tip": "履歴をカンマ区切りcsvファイルでダウンロード"
-    },
-    "explorer": {
-        "accounts": {
-            "title": "アカウント",
-            "filter": "アカウントのフィルタリング",
-            "filter_contacts": "連絡先のフィルタリング"
-        },
-        "blocks": {
-            "title": "ブロックチェーン",
-            "globals": "グローバルパラメータ",
-            "recent": "最近のブロック",
-            "trx": "トランザクション",
-            "block_times": "ブロックタイム",
-            "block_time": "ブロックタイム",
-            "transactions": "トランザクション数",
-            "recently_missed_blocks": "最近の喪失ブロック",
-            "trx_per_block": "Trx/block",
-            "active_committee_members": "アクティブな委員",
-            "active_witnesses": "アクティブな証人",
-            "avg_conf_time": "平均確認時間",
-            "trx_per_sec": "Trx/s",
-            "last_block": "最新のブロック",
-            "current_block": "現在のブロック"
-        },
-        "block": {
-            "title": "ブロック",
-            "id": "ブロック ID",
-            "witness": "証人",
-            "count": "トランザクション数",
-            "date": "日時",
-            "time": "時間",
-            "previous": "前",
-            "previous_secret": "前の秘密ハッシュ",
-            "next_secret": "次の秘密ハッシュ",
-            "op": "操作",
-            "trx": "トランザクション",
-            "op_type": "操作種別",
-            "fee_payer": "手数料支払いアカウント",
-            "key": "公開キー",
-            "transactions": "トランザクション数",
-            "account_upgrade": "アップグレードするアカウント",
-            "lifetime": "終身会員にアップグレードする",
-            "authorizing_account": "承認するアカウント",
-            "listed_account": "リストに登録されたアカウント",
-            "new_listing": "新規登録",
-            "asset_update": "アップデートするアセット",
-            "common_options": "共通オプション",
-            "new_options": "新しいオプション",
-            "new_producers": "新しいフィード作成者",
-            "asset_issue": "発行する数量",
-            "max_margin_period_sec": "最大マージン期間 (秒)",
-            "call_limit": "コール制限",
-            "short_limit": "ショート制限",
-            "feed_price": "フィード価格",
-            "settlement_price": "決済金額",
-            "go_to": "Go to block"
-        },
-        "assets": {
-            "title": "アセット",
-            "market": "スマートコイン",
-            "user": "ユーザー発行アセット",
-            "prediction": "予測市場アセット",
-            "symbol": "シンボル",
+        "submit_orders": "送信",
+        "total": "合計 ({asset})",
+        "total_estimate":
+            "これは非表示のもの、注文中のもの、賃借、担保を含むすべてのアセットの推定価格です。推定は現在のブロックチェーンデータのみを使用しており、正確とは限りません。",
+        "total_value": "合計額",
+        "trade": "トレード",
+        "transactions": {
             "id": "ID",
-            "issuer": "発行者",
+            "info": "情報",
+            "time": "時間",
+            "type": "種類"
+        },
+        "transfer_actions": "転送アクション",
+        "unfollow": "フォロー解除",
+        "unignore": "表示",
+        "upgrade": "アカウントをアップグレード",
+        "user_issued_assets": {
+            "add_feed": "新しいフィード作成者を追加",
+            "advanced": "高度な機能",
+            "approx_fee": "概算手数料",
+            "backing": "ショートバッキングアセット",
+            "base": "ベースアセット量",
+            "base_name": "ベースアセット",
+            "bitasset_opts": "スマートコインオプション",
+            "cer_warning_1": "警告",
+            "cer_warning_2":
+                "コア為替レートが市場価格より高いことを確認してください。それ以外の場合は、ユーザーは市場からトークンを購入し、暗黙的なアービトラージを通して手数料プールが空にされてしまいます。コア為替レートは、アセットの市場価格を反映するために定期的に更新する必要があります。",
+            "charge_market_fee": "取引手数料を有効にする",
+            "committee_fed_asset": "委員にフィード供給を許可する",
+            "condition": "条件 (最大60文字)",
+            "conflict_feed":
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "core_exchange_rate": "中心為替レート",
+            "current_issuer": "現在のオーナーアカウント",
+            "decimals": "小数点以下の桁数",
+            "description": "説明",
+            "details": "詳細",
+            "disable_confidential": "秘密の取引を無効にする",
+            "disable_force_settle": "強制決済を無効にする",
+            "error_invalid": "そのアセットは使用できません",
+            "error_precision": "そのアセットの精度は%(asset)sと異なります。",
+            "exists": "そのアセットは既に存在します",
+            "expiry": "市場解決日",
+            "feed_lifetime_sec": "フィード寿命 (分)",
+            "feed_not_allowed_1":
+                "Cannot set feed producers on a witness- or committee-fed asset",
+            "feed_not_allowed_2":
+                "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
+            "feed_producers": "フィード作成者",
+            "flags": "フラグ",
+            "force_settlement_delay_sec": "強制決済の遅延 (分)",
+            "force_settlement_offset_percent": "強制決済のパーセントオフセット",
+            "global_settle": "発行者に強制グローバル決済を許可する",
+            "id": "ID",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market",
+            "issued_assets": "発行済みアセット",
+            "market": "優先取引ペア",
+            "market_fee": "取引手数料",
+            "max_market_fee": "最大取引手数料",
+            "max_positive": "最大供給量は正の数でなければなりません",
+            "max_supply": "最大供給量",
+            "maximum_force_settlement_volume":
+                "最大強制決済量 (1時間毎の総供給量のパーセント)",
+            "minimum_feeds": "最小フィード数",
+            "mpa": "スマートコイン",
+            "name": "アセット名",
+            "need_asset":
+                "2つのアセットのうち少なくとも1つは%(name)sでなければなりません",
+            "new_issuer": "新しいオーナーアカウント",
+            "optional": "オプション設定",
+            "override_authority": "発行者はアセットを回収できる",
+            "perm_warning":
+                "警告: 権限は無効にすることのみ可能です。一度無効にすると再度有効にすることはできません!!",
+            "pm": "バイナリ予測市場",
             "precision": "精度",
-            "units": "単位"
+            "precision_warning": "警告: 精度の数値は作成後には変更できません",
+            "primary": "主要設定",
+            "quote": "クオートアセット量",
+            "quote_name": "クオートアセット",
+            "short": "ショートネーム (最大32文字)",
+            "symbol": "シンボル",
+            "to": "アカウントへ発行",
+            "too_large":
+                "最大供給量が大きすぎます。より少ない数を選択してください。",
+            "too_many_feed":
+                "Number of feed producers exceeded the max allowed (%(max)s).",
+            "transfer_restricted": "発行者はすべての転送を承認する必要がある",
+            "update_owner": "オーナーを更新",
+            "visible": "検索と市場からアセットを非表示にする",
+            "white_list": "保有者はホワイトリストに登録されている必要がある",
+            "witness_fed_asset": "証人にフィード供給を許可する"
         },
-        "asset": {
-            "title": "アセット",
-            "not_found": "アセット%(name)sは存在しません",
-            "invalid": "アセット名%(name)sは無効です",
-            "summary": {
-                "asset_type": "アセット種別",
-                "issuer": "発行者",
-                "current_supply": "現在の供給量",
-                "stealth_supply": "隠れた供給量",
-                "market_fee": "取引手数料",
-                "max_market_fee": "最大取引手数料"
+        "vesting": {
+            "balance_number": "残高 #%(id)s",
+            "explain":
+                "権利確定残高には紹介プログラムやワーカーへの支払いなどから得た手数料が含まれます。それらは一定の権利付与期間を有し、すべての資金が利用可能になるまでの間、段階的にアンロックされていきます。",
+            "no_balances": "このアカウントには権利確定残高はありません",
+            "title": "権利確定残高"
+        },
+        "votes": {
+            "about": "About",
+            "active": "Active(%(count)s)",
+            "active_short": "アクティブ",
+            "add_committee": "追加",
+            "add_committee_label": "委員",
+            "add_witness": "追加",
+            "add_witness_label": "証人",
+            "already": "アカウントは既にリストに入っています",
+            "approve_worker": "承認",
+            "clear_proxy": "代理人を削除",
+            "cm_approved_by": "%(account)sによって承認された委員",
+            "cm_not_approved_by": "%(account)sによって承認されていない委員",
+            "committee": "委員名",
+            "create_worker": "新しいワーカーを作成する",
+            "creator": "作成者",
+            "daily": "1日",
+            "daily_pay": "支払い",
+            "end": "終了日",
+            "expired": "期限切れのワーカー",
+            "funding": "資金調達",
+            "go_proxy": "進む:",
+            "inactive": "バックアップ",
+            "info": "情報",
+            "line": "Line",
+            "max_pay": "最大総支払い額",
+            "missing": "Needed",
+            "name": "名前",
+            "new": "Proposed(%(count)s)",
+            "no_proxy": "代理人はいません",
+            "proxy": "代理人にするアカウントを手動で入力",
+            "proxy_current": "現在の代理人: ",
+            "proxy_known": "または代理人アカウントを選択してください",
+            "proxy_short": "代理人",
+            "publish": "変更を公開する",
+            "recycled": "リサイクル",
+            "reject_worker": "拒否",
+            "remove_committee": "削除",
+            "remove_witness": "削除",
+            "save_finish": "Click save to finish",
+            "start": "開始日",
+            "status": {
+                "neutral": "中立",
+                "rejected": "拒否",
+                "supported": "支持",
+                "title": "ステータス"
             },
-            "price_feed": {
-                "title": "価格フィード",
-                "settlement_price": "決済価格",
-                "maintenance_collateral_ratio": "維持担保率 (MCR)",
-                "maximum_short_squeeze_ratio":
-                    "最大ショート・スクイーズ比率 (MSSR)",
-                "global_settlement_price": "グローバル決済価格",
-                "settlement_delay": "決済遅延",
-                "force_settlement_offset": "強制決済オフセット"
-            },
-            "fee_pool": {
-                "title": "手数料プール",
-                "core_exchange_rate": "中心取引レート (CER)",
-                "pool_balance": "プール残高",
-                "unclaimed_issuer_income": "未請求の発行者収入",
-                "claim_fees": "手数料を請求",
-                "fund_text":
-                    "手数料プールは%(asset)sの手数料を%(core)sに換算することによって%(core)sの手数料を支払うために使用されます。手数料プールの資金が尽きた場合、手数料を%(asset)sで払うことはできなくなり、既定値は%(core)sになります。",
-                "claim_text":
-                    "アセット発行者はここに蓄積された手数料を請求することができます。"
-            },
-            "permissions": {
-                "title": "権限",
-                "max_market_fee": "最大取引手数料",
-                "max_supply": "最大供給量",
-                "blacklist_authorities": "ブラックリスト権限",
-                "blacklist_markets": "ブラックリストマーケット",
-                "whitelist_authorities": "ホワイトリスト権限",
-                "whitelist_markets": "ホワイトリストマーケット"
-            },
-            "price_feed_data": {
-                "title": "価格フィードデータ",
-                "settlement_price": "決済価格",
-                "core_exchange_rate": "CER",
-                "maintenance_collateral_ratio": "MCR",
-                "maximum_short_squeeze_ratio": "MSSR",
-                "publisher": "公開者",
-                "published": "公開しました"
-            },
-            "margin_positions": {
-                "title": "マージンポジション"
-            },
-            "whitelist": {
-                "whitelist_authorities": "ホワイトリスト権限",
-                "blacklist_authorities": "ブラックリスト権限",
-                "whitelist_markets": "マーケットホワイトリスト",
-                "blacklist_markets": "マーケットブラックリスト",
-                "enable_flag":
-                    "ホワイトリスト権限を設定するには、ホワイトリストのフラグを有効にする必要があります。"
-            }
+            "support": "サポート",
+            "supported": "Supported",
+            "threshold": "Votes required to activate",
+            "toggle": "Toggle vote",
+            "total_budget": "有効な1日の合計ワーカー予算",
+            "total_votes": "得票",
+            "unclaimed": "未請求の支払い",
+            "unused_budget": "未使用の1日のワーカー予算",
+            "url": "ウェブページ",
+            "votes": "投票数",
+            "votes_against": "反対投票",
+            "w_approved_by": "%(account)sによって承認された証人",
+            "w_not_approved_by": "%(account)sによって承認されていない証人",
+            "witness": "証人名",
+            "worker_account": "ワーカーアカウント",
+            "workers": "予算項目",
+            "workers_short": "ワーカー"
         },
-        "witnesses": {
-            "title": "証人",
-            "current": "現在の証人",
-            "participation": "参加率",
-            "pay": "1ブロックあたりの報酬",
-            "budget": "残余予算",
-            "next_vote": "次回の投票更新",
-            "card": "カードビュー",
-            "table": "テーブルビュー",
-            "rank": "ランク",
-            "last_confirmed": "最新の確認",
-            "missed": "ブロック喪失"
-        },
-        "committee_members": {
-            "title": "委員",
-            "active": "アクティブな委員の総数"
-        },
-        "committee_member": {
-            "title": "委員"
-        },
-        "workers": {
-            "title": "ワーカー名",
-            "period": "ワーカー期間",
-            "daily_pay": "日当 (BTS)",
-            "website": "ウェブサイト",
-            "vesting_pay": "給与の権利付与期間 (日)",
-            "create": "新しいワーカー提案を作成する",
-            "create_text_1":
-                "新しいワーカーを作成するには、以下のフォームに記入してください。ワーカーはあなたの現在アクティブなアカウントで作成されます。アカウントは終身会員である必要があります。",
-            "create_text_2":
-                "ワーカー公開後に変更できないパラメーターの選択は慎重に検討してください。",
-            "name_text":
-                "ワーカーの名前は簡潔でなければなりません。: 'ワーカーの目的 - アカウント名'",
-            "date_text":
-                "開始日は、人々があなたのワーカーを見つけ、評価し、投票するために時間がかかるため、少なくとも1週間後にする必要があります。",
-            "pay_text":
-                "日当は、希望する1日の支払額をBTSで定義します。現在のベストプラクティスはUSD/CNYで給料を定義し、BTSの価格上昇によって生じた余剰分をバーンすると約束することです。あなたのワーカーがアクティブで、払い戻すワーカーより上にいるために十分な投票を得ている場合、この日当を受け取ることができます。",
-            "url_text":
-                "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
-            "vesting_text":
-                "権利付与期間はワーカーが収入をすべて請求できるようになる権利が確定するまでの日数で定義されます。"
-        },
-        "proposals": {
-            "title": "提案された取引"
-        },
-        "account": {
-            "title": "アカウント"
-        },
-        "fees": {
-            "type": "手数料種別",
-            "fee": "基本手数料",
-            "feeeq": "(同じ)",
-            "feeltm": "終身 / 年間会員料金",
-            "feeltmeq": "(同じ)"
+        "voting": "投票",
+        "welcome": "BitSharesへようこそ",
+        "whitelist": {
+            "add": "ホワイトリストに追加する",
+            "add_black": "ブラックリストに追加する",
+            "black": "ブラックリスト",
+            "black_by": "ブラックリスト登録者",
+            "blacklist_authorities": "ブラックリスト権限",
+            "empty":
+                "%(account)sはアカウントを1つもホワイトリストに登録していません。",
+            "empty_black":
+                "%(account)sはアカウントを1つもブラックリストに登録していません。",
+            "empty_black_by":
+                "%(account)sをブラックリストに登録したアカウントはありません。",
+            "empty_white_by":
+                "%(account)sをホワイトリストに登録したアカウントはありません。",
+            "title": "ホワイトリスト",
+            "white_by": "ホワイトリスト登録者",
+            "whitelist_authorities": "ホワイトリスト権限"
         }
     },
-    "settings": {
-        "passwordLogin": "ログインモード",
-        "cloud_login": "アカウントモデルでログイン",
-        "local_wallet": "ウォレットモデルでログイン",
-        "inverseMarket": "市場志向の選択",
-        "unit": "アカウントの単位選択",
-        "confirmMarketOrder": "マーケットに注文を出す時に確認する",
-        "locale": "言語切替",
-        "confirm_yes": "常時",
-        "confirm_no": "しない",
-        "always_confirm": "常に確認する",
-        "wallets": "ウォレット",
-        "apiServer": "フルノードAPIサーバー",
-        "add_ws": "ノードを追加",
-        "remove_ws": "ノードを削除",
-        "faucet_address": "フォーセット",
-        "faucet_address_text":
-            "フォーセットアドレスは新規ユーザーの登録手数料の支払いに使用されます。",
-        "showSettles": "決済注文をデプスチャートで表示する",
-        "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
-        "yes": "はい",
-        "no": "いいえ",
-        "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
-        "themes": "テーマ",
-        "darkTheme": "ダークテーマ",
-        "lightTheme": "ライトテーマ",
-        "midnightTheme": "ミッドナイトテーマ",
-        "olDarkTheme": "Openledgerダーク",
-        "reset": "設定をリセット",
-        "browser_notifications": "ブラウザ通知",
-        "browser_notifications_allow": "通知を有効にする",
-        "browser_notifications_additional_transfer_to_me":
-            "マイ・アカウントへの転送について通知する",
-        "browser_notifications_disabled_by_browser_notify":
-            "ブラウザが通知を無効にしました。クリックしてブラウザの通知を有効にする方法を確認する。",
-        "general": "全般",
-        "wallet": "ウォレット",
-        "accounts": "アカウント",
-        "no_accounts": "このウォレットにはアカウントがありません。",
-        "password": "パスワード",
-        "backup": "バックアップ",
-        "restore": "リストア/インポート",
-        "access": "アクセス",
-        "reset_text": "設定を元のデフォルトに戻します。",
-        "reset_text_description":
-            "これにより、%(generalName)s、%(accessName)s、%(faucetName)sの設定が全てリセットされます。",
-        "general_text": "基本設定を調整する。",
-        "wallet_text": "ウォレットの詳細を制御する。",
-        "accounts_text": "あなたのアカウントリスト。",
-        "password_text": "パスワードを変更する。",
-        "backup_text": "ここでバックアップを作成する。",
-        "restore_text": "バックアップまたはインポートキーからリストアする。",
-        "access_text": "",
-        "view_keys": "キーを見る",
-        "backup_backup": "バックアップファイル (.bin) からリストアする",
-        "backup_key": "秘密キーをインポートする",
-        "backup_legacy":
-            "BTS 0.9.3cキーエクスポートファイル (.json) をインポートする。",
-        "backup_brainkey": "ウォレットブレインキーでリストアする",
-        "backup_favorites": "jsonファイルを使ってお気に入りをリストアする",
-        "backup_favorites_error": "JSONを解析できませんでした。",
-        "backup_favorites_finish": "お気に入りをインポート",
-        "backup_favorites_success": "お気に入りのマーケットをリストアしました",
-        "backupcreate_backup": "ウォレットのバックアップを作成する",
-        "backupcreate_brainkey": "ブレインキーバックアップを作成する",
-        "backupcreate_favorites": "お気に入りのバックアップを作成",
-        "backup_favoritesbtn": "お気に入りのバックアップ",
-        "backup_favoritestext":
-            "アップデート後に復元するために、お気に入りをバックアップする。",
-        "lookup_text":
-            "BTS 1.0から請求されていない残高を確認するには、以下のボタンをクリックしてください。",
-        "delete_select": "削除するウォレットを選択してください",
-        "restore_brainkey_text":
-            "ブレインキーからリストアするためには、新しいウォレットを作成する必要があります。新しいウォレットのパスワードと名前を以下に入力してから、ブレインキーを入力してください。",
-        "restore_key_count": "キー数",
-        "restore_default_success": "設定が正常にリセットされました",
-        "api_closest": "最近のものを自動的に選択する",
-        "wallet_required": "ウォレットモデルが必要です",
-        "wallet_required_text":
-            "バックアップをリストアするには、まずウォレットモデルに切り替える必要があります。下のボタンをクリックしてください。",
-        "enable_wallet": "ウォレットモデルを有効にする",
-        "active_node": "有効なノード",
-        "node_up": "UP",
-        "node_down": "DOWN",
-        "available_nodes": "利用可能なノード",
-        "hidden_nodes": "非表示のノード",
-        "show": "表示",
-        "hide": "非表示",
-        "add_api": "ノードを追加",
-        "remove_api": "ノードを削除",
-        "remove": "削除",
-        "activate": "有効化",
-        "confirm_remove":
-            "利用可能なノードから%(name)sを削除してもよろしいですか？",
-        "valid_node_url":
-            "ノードURLは ws:// または wss://で始まる必要があります。",
-        "connection_error":
-            "APIノード%(url)sに接続できません。接続可能のノードに戻ります。",
-        "low_latency": "レイテンシー低",
-        "medium_latency": "レイテンシー中",
-        "high_latency": "レイテンシー高"
-    },
-    "footer": {
-        "title": "BitShares",
-        "block": "ブロック",
-        "loading": "ロード中...",
-        "backup": "バックアップが必要です",
-        "nosync":
-            "ブロックチェーンは同期していません。同期が完了するまでお待ち下さい..",
-        "connection": "ブロックチェーンへの接続がありません",
-        "brainkey": "ブレインキーのバックアップを推奨します",
-        "update_available": "更新があります",
-        "synced": "同期しました",
-        "unsynced": "同期していません",
-        "disconnected": "接続していません",
-        "connected": "接続しました",
-        "latency": "レイテンシ"
-    },
-    "exchange": {
-        "buysell_formatter": "{asset} {direction}",
-        "trading_pair": "トレーディングペア",
-        "chart_options": {
-            "tools": "ツール",
-            "title": "インジケータ",
-            "sma": "SMA",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "smaVolume": "SMA",
-            "macd": "MACDチャート",
-            "bb": "ボリンジャーバンド",
-            "fib": "フィボナッチ・リトレースメントを引く",
-            "trendline": "トレンドラインを引く",
-            "volume": "出来高チャートを表示",
-            "clamp_chart": "Clamp chart edge",
-            "period": "期間",
-            "height": "チャート高さ",
-            "price_title": "価格インジケーター",
-            "volume_title": "出来高インジケーター"
-        },
-        "market": "マーケット",
-        "feed_price": "フィード価格",
-        "price_history": "価格チャート",
-        "order_depth": "マーケットデプス",
-        "history": "マーケット履歴",
-        "my_history": "自分の履歴",
-        "balance": "残高",
-        "lowest_ask": "最低アスク価格",
-        "highest_bid": "最高ビッド価格",
-        "total": "合計",
-        "value": "値",
-        "price": "価格",
-        "latest": "最新",
-        "call": "コール価格",
-        "core_rate": "手数料率",
-        "settle": "決済",
-        "squeeze": "マージンコール価格",
-        "maintenance": "維持コール価格",
-        "your_price": "あなたのコール価格",
-        "volume": "出来高",
-        "vol_short": "出来高",
-        "spread": "スプレッド",
-        "quantity": "数量",
-        "buy": "買う",
-        "deposit": "入金",
-        "borrow": "借り入れ",
-        "borrow_short": "借り入れ",
-        "buy_min": "最低購入量",
-        "sell": "売る",
-        "receive": "取得",
-        "flip": "ひっくり返す",
-        "vertical": "垂直",
-        "horizontal": "水平",
-        "market_name": "マイ・マーケット",
-        "quote_supply": "クオート供給量",
-        "base_supply": "ベース供給量",
-        "more": "マーケットを探す",
-        "volume_24": "24時間出来高",
-        "change": "変化",
-        "confirm_buy":
-            "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",
-        "confirm_sell":
-            "あなたの注文は、最高ビッド価格より%(diff)s倍低いです。続行してもよろしいですか？",
-        "confirm_no_orders_buy":
-            "未執行の売り注文がないマーケットに買い注文を出そうとしています。続行してもよろしいですか？",
-        "confirm_no_orders_sell":
-            "未執行の買い注文がないマーケットに売り注文を出そうとしています。続行してもよろしいですか？",
-        "indicators": "インジケータ",
-        "rsi": "相対力指数",
-        "ema": "指数平滑移動平均",
-        "sma": "単純移動平均",
-        "atr": "アベレージトゥルーレンジ",
-        "period": "期間 (日)",
-        "overbought": "買われすぎ",
-        "oversold": "売られすぎ",
-        "index": "指数",
-        "my_bids": "自分の買い注文",
-        "my_asks": "自分の売り注文",
-        "my_orders": "自分の未執行注文",
-        "settle_orders": "決済注文",
-        "asks": "売り注文",
-        "bids": "買い注文",
-        "no_data": "データなし",
-        "time": "ローソク足",
-        "zoom": "拡大",
-        "no_balance": "残高不足",
-        "invalid_amount": "数量が不正です",
-        "invalid_price": "価格が不正です",
-        "show_bids": "すべての買い注文を見る",
-        "show_asks": "すべての売り注文を見る",
-        "hide": "非表示",
-        "short": "ショート",
-        "others": "その他",
-        "invert": "価格を反転",
-        "to_market": "マーケットを見る",
-        "zoom_all": "すべて",
-        "settings": "チャートオプション",
-        "featured": "トップマーケット",
-        "new": "新しい",
-        "market_frozen":
-            "%(asset)s のオーナーがこのマーケットでの取引を無効にしています。",
-        "show_only_star_formatter": "{star_icon}のみ表示",
-        "filter": "フィルター",
-        "quote": "クオート通貨:",
-        "search": "他のマーケットを検索する",
-        "price_market": "マーケット価格",
-        "description": "説明",
-        "buy_description":
-            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "sell_description":
-            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s"
-    },
-    "dashboard": {
-        "starred_markets": "お気に入りのマーケット",
-        "top_markets": "トップマーケット",
-        "featured_markets": "おすすめのマーケット",
-        "table_empty": "表示できるマーケットがありません。"
-    },
-    "fees": {
-        "title": "手数料表"
-    },
-    "markets": {
-        "title": "マーケット",
-        "base": "ベースアセット",
-        "market_search": "マーケット検索",
-        "filter": "フィルター",
-        "core_rate": "中心レート",
-        "supply": "供給量",
-        "search": "検索",
-        "preferred": "お気に入りのマーケット"
-    },
-    "wallet": {
-        "title": "ウォレット",
-        "confirm": "ウォレットパスワード (確認)",
-        "password": "ウォレットパスワード",
-        "existing_password": "既存のパスワード",
-        "change_password": "パスワードの変更",
-        "change_wallet": "ウォレットの変更",
-        "wallet_created": "ウォレットを作成しました",
-        "create_wallet": "新しいウォレットを作成する",
-        "create_importkeys_text":
-            "キーをインポートするには、まずキーを格納するウォレットを作成する必要があります。以下の新しいウォレット作成のダイアログを完了させてください。",
-        "create_wallet_backup": "バックアップから新しいウォレットを作成する",
-        "import_bts1": "BitShares 0.9.3cからインポートする",
-        "setup_wallet": "ウォレットをセットアップする",
-        "delete_wallet": "ウォレットを削除する",
-        "delete_confirm_line1": "本当によろしいですか？",
-        "delete_confirm_line2":
-            "これを読まない場合、予期しない問題が発生する可能性があります！",
-        "delete_confirm_line3":
-            "この操作は元に戻すことができません。バックアップをお持ちでない場合、このウォレットはなくなります。",
-        "delete_confirm_line4": "はい、%(name)sのウォレットを削除します",
-        "delete_wallet_name": "ウォレット (%(name)s) を削除する",
-        "balance_claims": "残高請求",
-        "download": "ダウンロード",
-        "name": "ウォレット名",
-        "create": "作成",
-        "console": "ウォレット管理コンソール",
-        "create_backup": "バックアップの作成",
-        "backup_brainkey": "ブレインキーのバックアップ",
-        "create_backup_of": "今すぐバックアップを作成する",
-        "import_backup":
-            "BitShares 2.0バックアップ (.bin ファイル) をインポートする",
-        "import_backup_choose":
-            "以下のダイアログでバックアップファイルを選択してください。ファイルはどこにもアップロードされず、ブラウザから離れないため、この操作は安全です。",
-        "restore_backup": "バックアップのリストア",
-        "import_keys": "キーのインポート",
-        "import_keys_tool": "キーのインポートツール",
-        "brainkey": "ブレインキー",
-        "new_wallet": "新しいウォレット",
-        "active_wallet": "アクティブウォレット",
-        "verified": "検証済み",
-        "verify_prior_backup": "事前バックアップの検証",
-        "brainkey_not_verified": "このブレインキーは検証されていません",
-        "cancel": "キャンセル",
-        "back": "戻る",
-        "reset": "リセット",
-        "done": "完了",
-        "verify": "書き留めました。",
-        "invalid_format": "無効なフォーマット",
-        "enter_password": "パスワードを入力してください",
-        "confirm_password": "パスワードを確認してください",
-        "pass_incorrect": "不正なパスワード",
-        "confirm_error": "パスワードの確認入力が一致しません",
-        "new_wallet_name": "新しいウォレット名",
-        "wallet_exist":
-            "その名前のウォレットは既に存在しています。新しい名前を選択してください。",
-        "wallet_exist_with_name":
-            "ウォレット(%(name)s)は存在しています。名前を変更してください。",
-        "accept": "承認",
-        "ready_to_restore": "リストアできます",
-        "restore_wallet_of": "リストア(%(name)sのウォレット)",
-        "restore_success": "(%(name)s)のウォレットを正常にリストアしました。",
-        "change": "%(name)sに変更する",
-        "import_20_notice1": "BTS 2.0+ バックアップを最初にインポートする",
-        "import_20_notice2": "(お持ちの場合)",
-        "loading_balances": "未請求残高を探しています",
-        "no_balance": "未請求残高はありませんでした",
-        "claim_balance": "残高を請求する",
-        "claim_balances": "残高を請求する",
-        "balance_claim_lookup": "残高を検索",
-        "unclaimed": "これらのキーに付属する未請求残高",
-        "unclaimed_vesting": "未請求 (権利確定)",
-        "reenter_brainkey": "ブレインキーを再入力してください",
-        "pwd4brainkey":
-            "ブレインキーを表示するにはパスワードを入力してください",
-        "show_brainkey": "ブレインキーを表示",
-        "brainkey_w1":
-            "バックアップを完了するには、これを印刷するか書き留めてください。",
-        "brainkey_w2": "あなたのリカバリーキーにアクセスできる人は誰でも",
-        "brainkey_w3": "このウォレットの資金にアクセスできます。",
-        "custom_brainkey": "カスタムブレインキーを使用する (上級者向け)",
-        "last_backup": "最新のバックアップ",
-        "never_backed_up":
-            "このウォレットのバックアップを作成していません。今すぐバックアップを作成してください！",
-        "need_backup": "このウォレットのバックアップが必要です",
-        "noneed_backup": "バックアップは必要ありません",
-        "restore": "バックアップからウォレットをリストアする",
-        "create_text":
-            "BitSharesウォレットはブラウザに保存され、クラウドには保存されません。ウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
-        "account_create_wallet_text":
-            "このパスワードは新しいBitSharesウォレットの作成に使用されます。ウォレットはブラウザにのみローカルで格納されます。BitSharesウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
-        "create_account_text":
-            "選択するアカウント名はブロックチェーン上で公開登録され、あなたが作成したすべての取引が特定されるため、ユニークである必要があります。",
-        "first_account_paid":
-            "これが最初のアカウントであるため、登録料はフォーセットが払います。",
-        "not_first_account":
-            "既にアカウントを持っているため、新アカウントの料金を自身で支払う必要があります。そのためにはアカウントが終身会員である必要があります。これはアカウントページで購入できます。",
-        "must_be_ltm":
-            "その操作を行って手数料を支払うアカウントは終身会員でなければなりません。",
-        "backup_explain":
-            "下のボタンをクリックすると、拡張子 .bin のバックアップファイルが生成されます。このファイルはウォレットのパスワードで暗号化されており、アカウントのすべての秘密キーを含んでいます。ウォレットのリストアや他のコンピュータ / ブラウザへの移動に使用することができます。",
-        "backup_new_account":
-            "おめでとうございます。新しいアカウントを作成しました。今すぐウォレットのバックアップを作成することを強く推奨します。バックアップがない場合、コンピュータに何か問題が発生した場合にリストアすることはできません。",
-        "brainkey_not_backed_up":
-            "このブレインキーはバックアップされていません。",
-        "brainkey_backed_up": "このブレインキーを最後にバックアップしました",
-        "new_password": "新しいパスワード",
-        "new_confirm": "新しいパスワードを確認してください",
-        "change_success": "パスワードは正常に変更されました！",
-        "change_backup":
-            "パスワードを変更したため、新しいバックアップを作成することを強く推奨します。",
-        "paste_private":
-            "秘密キーをここに貼り付けてください (Wallet Import Format - WIF)",
-        "totals": "アセット合計",
-        "claim_later":
-            "キーをインポートしたら、選択したアカウントにこれらの残高を請求することができます。",
-        "bts_09_export": "BTS 0.9.3cキーエクスポートファイル (.json)",
-        "import_password": "インポートファイルのパスワードを入力してください",
-        "import_pass_match":
-            "パスワードが一致しました。バックアップを復号化しています...",
-        "submit": "送信",
-        "import_balance": "残高をインポートする",
-        "no_accounts": "アカウントが見つかりません",
-        "import_bts": "BTS 0.9.3c キーエクスポートをインポートする",
-        "import_private_key": "秘密キーをインポートする",
-        "wallet_browser": "あなたのWebブラウザがあなたのウォレットです",
-        "has_wallet":
-            "最初のBitSharesアカウントを作成すると、自動的にBitSharesウォレットも作成され、ブラウザに格納されます。このウォレットはあなたのパスワードで暗号化されており、アカウントに付属する秘密キーを含んでいます。このウォレットのバックアップを作成することが大切です！",
-        "go_get_started": "開始時のヒントを見る",
-        "wallet_crucial":
-            "あなたのウォレットは<strong>ブラウザにのみ</strong>格納されており、ブラウザのデータをクリアした場合、ウォレットをリストアするためにバックアップから復元する必要があるため、バックアップを作成しておくことがとても重要です！<strong>バックアップをなくした場合、誰にもアカウントをリストアすることはできなくなります。</strong>",
-        "wallet_move":
-            "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
-        "wallet_lose_warning":
-            "<strong>重要: ウォレットまたはパスワードをなくした場合、二度とあなたの資金にアクセスすることはできません。バックアップを安全な場所に保管し、パスワードを記憶するか書き留めてください！</strong>",
-        "tips_deposit": "入金する",
-        "link_deposit": "入金",
-        "tips_dashboard": "ダッシュボードを見る",
-        "tips_transfer": "転送する",
-        "link_transfer": "転送",
-        "tips_settings": "設定を変更する",
-        "tips_account": "新しいアカウントを見る",
-        "link_account": "アカウント",
-        "wallet_new": "新しいBitSharesアカウント",
-        "create_w_a": "ウォレットとアカウントを作成する",
-        "create_a": "新しいアカウントを作成する",
-        "create_success": "ウォレットを作成しました",
-        "all_set": "準備ができました！",
-        "step_1": "ウォレットを作成",
-        "step_2": "バックアップを作成",
-        "step_3": "開始",
-        "congrat": "おめでとうございます。準備ができました！",
-        "tips_explore":
-            "アカウントの作成とバックアップのダウンロードが終わったら、開始しましょう。左のリンクをクリックして探検を初めてください。",
-        "tips_header":
-            "これらのリンクはトップメニューとアカウント名の横のドロップダウンメニューにもあります。",
-        "tips_login":
-            "重要: ログイン / ログアウト機能はありません。取引を行う時にウォレットをアンロックするだけです。",
-        "import_key_success": "%(count)s のキーが正常にインポートされました。",
-        "brainkey_seq_reset": "ブレインキーの配列をリセットする",
-        "brainkey_seq_reset_text":
-            "ウォレットのブレインキーから生成する秘密キーの生成回数をリセットします。<br />これはウォレットの秘密キーを最初のものに戻します。",
-        "brainkey_seq_reset_button": "今すぐリセット",
-        "brainkey_reset_success":
-            "配列をリセットします。 秘密キーの更新を開始するには、ブラウザをリフレッシュしてからウォレットをアンロックしてください。",
-        "wallet_password": "パスワードを使用してどこでもログイン",
-        "password_lose_warning":
-            "<strong>重要: パスワードを忘れた場合、アカウントにアクセスすることができなくなります。私たちはパスワードをリセットまたはリストアすることができません！パスワードを記憶するか書き留めてください！</strong>",
-        "password_crucial":
-            "まだやっていない場合は、紙やパスワードマネージャー、その他のどこかに今すぐパスワードを書き留めておくことが極めて重要です。パスワードを紛失したり忘れた場合はアカウントは失われます。<strong>私たちはそれを取り戻してあげることができません。</strong>",
-        "password_show": "パスワードを表示する",
-        "tips_explore_pass":
-            "アカウントを作成しパスワードをバックアップしたら、今すぐ始めましょう。左のリンクをクリックして探検を初めてください。",
-        "create_account_password_text":
-            "新しいアカウントのキーはパスワードから生成されます。<strong>ブラウザまたは中央サーバーには保存されないため、このパスワードを確実に覚えておく必要があります！！</strong> パスワードマネージャーに保存するか、手で書き留めてください。",
-        "create_password": "パスワードを使用して新しいアカウントを作成する",
-        "login_type": "ログインタイプ選択",
-        "wallet_model": "ウォレットモデル",
-        "password_model": "アカウントモデル",
-        "wallet_model_1":
-            "ウォレットモデルはブラウザにウォレットを格納します。ウォレットはあなたが選択したパスワードで暗号化され、ブレインキーまたはすべての秘密キーを含む暗号化されたバイナリファイルによってバックアップできます。ウォレットモデルでは同時に複数のアカウントを使用可能です。",
-        "wallet_model_2":
-            "ウォレットモデルは最高のセキュリティを備えていますが、現在のブラウザとコンピュータに制限されます。ウォレットを他のブラウザやコンピュータに移行するには、バックアップまたはブレインキーを使用します。",
-        "wallet_model_3":
-            "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
-        "password_model_1":
-            "アカウントモデルはパスワードとアカウント名の組み合わせによってその場で秘密キーを生成します。これは使い勝手と利便性の代わりに、同時に1つのアカウントにしかログインできない制限がかかります。",
-        "password_model_2":
-            "アカウントモデルはアカウント名とパスワードだけでどこからでもログインすることが可能ですが、<strong> パスワードはブルートフォース攻撃に対して脆弱です。そのため、長いパスワードであることが重要です。理想的には20文字以上！</strong>",
-        "password_model_3":
-            "<li>シングルアカウント</li><li>簡単ログイン</li><li>中程度のセキュリティ</li>",
-        "use_wallet": "ウォレットモデルを使用する",
-        "use_password": "アカウントモデルを使用する",
-        "pass_length":
-            "パスワードは少なくとも %(minLength)s 文字以上が必要です。理想的には20文字以上、数字、特殊文字、文字の組み合わせであるべきです。",
-        "switch_model_wallet": "ウォレットモデルに切り替える",
-        "switch_model_password": "アカウントモデルに切り替える",
-        "account_public": "アカウント名 (公開)",
-        "current_pass": "現在のパスワード",
-        "no_wallet": "まだウォレットを持っていません",
-        "generated": "生成したパスワード",
-        "account_exp":
-            "このアカウントはブロックチェーン上に作成され、アセット転送用のアドレスになります！ <strong>BitSharesにはBitcoinスタイルの長いアドレスはありません！</strong>",
-        "understand_1":
-            "パスワードを紛失または忘れた場合、回復することができないことを理解しました",
-        "understand_2":
-            "パスワードを書き留めました、または他の方法で保存しました",
-        "understand_3":
-            "パスワードを紛失した場合、資金にアクセスできなくなることを理解しました",
-        "bts_rules":
-            "BitSharesの第1のルールは: パスワードをなくさないこと。<br/>BitSharesの第2のルールは: パスワードをなくさないでください。<br/>BitSharesの第3のルールは: 我々はあなたのパスワードを回復することができません。<br />第4のルールは：覚えられるパスワードは安全ではありません。<br />第5のルールは：ランダムに生成したパスワードのみを使用してください。<br />第6のルールは：誰にもパスワードを教えないでください。<br/>第7のルールは：いつもパスワードをバックアップしてください。",
-        "ok_done": "OKです。ダッシュボードに連れて行ってください",
-        "local_switch":
-            "ウォレットと指定されたパスワードが一致したため、ウォレットモデルに切り替わりました"
-    },
     "borrow": {
-        "title": "%(asset_symbol)sマージン",
-        "no_valid": "%(asset_symbol)sの有効なフィードがありません",
-        "coll_ratio": "担保比率",
-        "call_limit": "マーケットコールリミット",
         "adjust": "ポジションを更新",
         "adjust_short": "調整",
+        "call_limit": "マーケットコールリミット",
         "close": "ポジションを閉じる",
-        "update": "更新",
+        "coll_ratio": "担保比率",
         "errors": {
             "below": "あなたの担保比率は%(mr)s未満であり、許可されません。",
             "close":
                 "あなたの担保比率は%(mr)sに近いです。そのため、価格が下落した場合、このポジションにマージンコールがかかる危険性があります。",
             "collateral": "担保残高が不足しています"
+        },
+        "maximize_debt_set_ratio_slider":
+            "You must set a collateral ratio before being able to maximize debt",
+        "no_valid": "%(asset_symbol)sの有効なフィードがありません",
+        "pay_max_debt": "Pay Max Debt",
+        "title": "%(asset_symbol)sマージン",
+        "update": "更新",
+        "use_max": "Use Max"
+    },
+    "browser_notification_messages": {
+        "money_received_body": "%(amount)s %(symbol)s受け取りました",
+        "money_received_title": "%(from)sからの転送"
+    },
+    "cancel": "キャンセル",
+    "counterpart": {
+        "formats": {
+            "date": {
+                "full": "%F %T %Z",
+                "market_history": "%e/%m %H:%M:%S",
+                "market_history_us": "%m/%e %H:%M:%S",
+                "short_custom": "%e %b '%y"
+            }
         }
     },
-    "modal": {
-        "send": {
-            "header": "<span class=\"send-name\">%(fromName)s</span>から送信",
-            "header_propose":
-                "<span class=\"send-name\">%(fromName)s</span>から送信を提案"
+    "dashboard": {
+        "featured_markets": "おすすめのマーケット",
+        "starred_markets": "お気に入りのマーケット",
+        "table_empty": "表示できるマーケットがありません。",
+        "top_markets": "トップマーケット"
+    },
+    "exchange": {
+        "asks": "売り注文",
+        "atr": "アベレージトゥルーレンジ",
+        "balance": "残高",
+        "base_supply": "ベース供給量",
+        "bids": "買い注文",
+        "borrow": "借り入れ",
+        "borrow_short": "借り入れ",
+        "buy": "買う",
+        "buy_description":
+            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_min": "最低購入量",
+        "buysell_formatter": "{asset} {direction}",
+        "call": "コール価格",
+        "change": "変化",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
+        "confirm_buy":
+            "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",
+        "confirm_no_orders_buy":
+            "未執行の売り注文がないマーケットに買い注文を出そうとしています。続行してもよろしいですか？",
+        "confirm_no_orders_sell":
+            "未執行の買い注文がないマーケットに売り注文を出そうとしています。続行してもよろしいですか？",
+        "confirm_sell":
+            "あなたの注文は、最高ビッド価格より%(diff)s倍低いです。続行してもよろしいですか？",
+        "core_rate": "手数料率",
+        "deposit": "入金",
+        "description": "説明",
+        "ema": "指数平滑移動平均",
+        "featured": "トップマーケット",
+        "feed_price": "フィード価格",
+        "filter": "フィルター",
+        "flip": "ひっくり返す",
+        "hide": "非表示",
+        "highest_bid": "最高ビッド価格",
+        "history": "マーケット履歴",
+        "horizontal": "水平",
+        "index": "指数",
+        "invalid_amount": "数量が不正です",
+        "invalid_price": "価格が不正です",
+        "invert": "価格を反転",
+        "latest": "最新",
+        "lowest_ask": "最低アスク価格",
+        "maintenance": "維持コール価格",
+        "market": "マーケット",
+        "market_frozen":
+            "%(asset)s のオーナーがこのマーケットでの取引を無効にしています。",
+        "market_name": "マイ・マーケット",
+        "market_picker": {
+            "filter_by_issuer": "Filter by issuer",
+            "find_by_asset": "Find by asset",
+            "results": "Results (%(total_assets)s)",
+            "search": "Asset name",
+            "search_for_asset": "Search for asset",
+            "search_mode": "Mode",
+            "show_all": "Show All",
+            "sub_title": "Find an asset to replace",
+            "title": "Market Picker",
+            "use": "Use"
         },
-        "issue": {
-            "to": "発行先",
-            "amount": "発行数量",
-            "submit": "発行アセット"
+        "more": "マーケットを探す",
+        "my_asks": "自分の売り注文",
+        "my_bids": "自分の買い注文",
+        "my_history": "自分の履歴",
+        "my_orders": "自分の未執行注文",
+        "native": "Native",
+        "new": "新しい",
+        "no_balance": "残高不足",
+        "no_data": "データなし",
+        "order_depth": "マーケットデプス",
+        "others": "その他",
+        "overbought": "買われすぎ",
+        "oversold": "売られすぎ",
+        "period": "期間 (日)",
+        "price": "価格",
+        "price_history": "価格チャート",
+        "price_market": "マーケット価格",
+        "quantity": "数量",
+        "quote": "クオート通貨:",
+        "quote_supply": "クオート供給量",
+        "receive": "取得",
+        "rsi": "相対力指数",
+        "search": "他のマーケットを検索する",
+        "sell": "売る",
+        "sell_description":
+            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settings": "チャートオプション",
+        "settle": "決済",
+        "settle_orders": "決済注文",
+        "short": "ショート",
+        "show_asks": "すべての売り注文を見る",
+        "show_bids": "すべての買い注文を見る",
+        "show_only_star_formatter": "{star_icon}のみ表示",
+        "sma": "単純移動平均",
+        "spread": "スプレッド",
+        "squeeze": "マージンコール価格",
+        "time": "ローソク足",
+        "to_market": "マーケットを見る",
+        "total": "合計",
+        "trading_pair": "トレーディングペア",
+        "value": "値",
+        "vertical": "垂直",
+        "vol_short": "出来高",
+        "volume": "出来高",
+        "volume_24": "24時間出来高",
+        "your_price": "あなたのコール価格",
+        "zoom": "拡大",
+        "zoom_all": "すべて"
+    },
+    "explorer": {
+        "account": {
+            "title": "アカウント"
         },
-        "withdraw": {
-            "amount": "出金数量",
-            "address": "出金先アドレス",
-            "bitshares_account": "Send to Bitshares Account",
-            "submit": "出金",
-            "quantity": "数量",
-            "estimated_value": "推定価格",
-            "memo": "メモ",
-            "fee": "手数料",
-            "gateway_fee": "ゲートウェイ手数料",
-            "withdraw": "出金",
-            "cancel": "キャンセル",
-            "available": "利用可能: ",
-            "submit_beta": "出金 (ベータ)",
-            "no_estimate": "No estimate available for this object",
-            "header": "出金 (ベータ)",
-            "no_gateways":
-                "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
-            "address_not_valid": "無効なアドレス",
-            "cannot_cover": "この出金をするのに十分な資金がありません"
+        "accounts": {
+            "filter": "アカウントのフィルタリング",
+            "filter_contacts": "連絡先のフィルタリング",
+            "title": "アカウント"
         },
-        "deposit": {
-            "header": "%(account_name)sに入金",
-            "header_short": "入金",
-            "asset": "アセット",
-            "gateway": "ゲートウェイ",
-            "disabled": "ゲートウェイサービスが無効",
-            "wallet_error": "ゲートウェイウォレットが無効",
-            "no_gateway_available": "利用可能なゲートウェイがありません",
-            "select_gateway": "ゲートウェイオペレータを選択してください",
-            "address_generation_error": "アドレスを生成できません",
-            "bts_transfer_description":
-                "BTSを受け取るのは簡単です。BTSをあなたのアカウント名に対して送れば、あなたのウォレットに届きます。このQRコードにも、あなたのアカウント名が含まれています。",
-            "close": "閉じる",
-            "cancel": "キャンセル",
-            "amount": "入金する数量",
-            "submit": "入金",
-            "submit_beta": "入金 (ベータ)"
+        "asset": {
+            "fee_pool": {
+                "claim_fees": "手数料を請求",
+                "claim_text":
+                    "アセット発行者はここに蓄積された手数料を請求することができます。",
+                "core_exchange_rate": "中心取引レート (CER)",
+                "fund_text":
+                    "手数料プールは%(asset)sの手数料を%(core)sに換算することによって%(core)sの手数料を支払うために使用されます。手数料プールの資金が尽きた場合、手数料を%(asset)sで払うことはできなくなり、既定値は%(core)sになります。",
+                "pool_balance": "プール残高",
+                "title": "手数料プール",
+                "unclaimed_issuer_income": "未請求の発行者収入"
+            },
+            "invalid": "アセット名%(name)sは無効です",
+            "margin_positions": {
+                "title": "マージンポジション"
+            },
+            "not_found": "アセット%(name)sは存在しません",
+            "permissions": {
+                "blacklist_authorities": "ブラックリスト権限",
+                "blacklist_markets": "ブラックリストマーケット",
+                "max_market_fee": "最大取引手数料",
+                "max_supply": "最大供給量",
+                "title": "権限",
+                "whitelist_authorities": "ホワイトリスト権限",
+                "whitelist_markets": "ホワイトリストマーケット"
+            },
+            "price_feed": {
+                "force_settlement_offset": "強制決済オフセット",
+                "global_settlement_price": "グローバル決済価格",
+                "maintenance_collateral_ratio": "維持担保率 (MCR)",
+                "maximum_short_squeeze_ratio":
+                    "最大ショート・スクイーズ比率 (MSSR)",
+                "settlement_delay": "決済遅延",
+                "settlement_price": "決済価格",
+                "title": "価格フィード"
+            },
+            "price_feed_data": {
+                "core_exchange_rate": "CER",
+                "maintenance_collateral_ratio": "MCR",
+                "maximum_short_squeeze_ratio": "MSSR",
+                "published": "公開しました",
+                "publisher": "公開者",
+                "settlement_price": "決済価格",
+                "title": "価格フィードデータ"
+            },
+            "summary": {
+                "asset_type": "アセット種別",
+                "current_supply": "現在の供給量",
+                "issuer": "発行者",
+                "market_fee": "取引手数料",
+                "max_market_fee": "最大取引手数料",
+                "stealth_supply": "隠れた供給量"
+            },
+            "title": "アセット",
+            "whitelist": {
+                "blacklist_authorities": "ブラックリスト権限",
+                "blacklist_markets": "マーケットブラックリスト",
+                "enable_flag":
+                    "ホワイトリスト権限を設定するには、ホワイトリストのフラグを有効にする必要があります。",
+                "whitelist_authorities": "ホワイトリスト権限",
+                "whitelist_markets": "マーケットホワイトリスト"
+            }
         },
-        "deposit_withdraw": {
-            "gateway": "ゲートウェイ",
-            "disabled": "ゲートウェイサービスが無効",
-            "wallet_error": "ゲートウェイウォレットが無効",
-            "no_gateway_available": "利用可能なゲートウェイがありません",
-            "select_gateway": "ゲートウェイオペレータを選択してください"
+        "assets": {
+            "id": "ID",
+            "issuer": "発行者",
+            "market": "スマートコイン",
+            "precision": "精度",
+            "prediction": "予測市場アセット",
+            "symbol": "シンボル",
+            "title": "アセット",
+            "units": "単位",
+            "user": "ユーザー発行アセット"
         },
-        "convert": {
-            "amount": "変換数量",
-            "submit": "OK"
+        "block": {
+            "account_upgrade": "アップグレードするアカウント",
+            "asset_issue": "発行する数量",
+            "asset_update": "アップデートするアセット",
+            "authorizing_account": "承認するアカウント",
+            "call_limit": "コール制限",
+            "common_options": "共通オプション",
+            "count": "トランザクション数",
+            "date": "日時",
+            "fee_payer": "手数料支払いアカウント",
+            "feed_price": "フィード価格",
+            "go_to": "Go to block",
+            "id": "ブロック ID",
+            "key": "公開キー",
+            "lifetime": "終身会員にアップグレードする",
+            "listed_account": "リストに登録されたアカウント",
+            "max_margin_period_sec": "最大マージン期間 (秒)",
+            "new_listing": "新規登録",
+            "new_options": "新しいオプション",
+            "new_producers": "新しいフィード作成者",
+            "next_secret": "次の秘密ハッシュ",
+            "op": "操作",
+            "op_type": "操作種別",
+            "previous": "前",
+            "previous_secret": "前の秘密ハッシュ",
+            "settlement_price": "決済金額",
+            "short_limit": "ショート制限",
+            "time": "時間",
+            "title": "ブロック",
+            "transactions": "トランザクション数",
+            "trx": "トランザクション",
+            "witness": "証人"
         },
-        "settle": {
-            "title": "%(asset)sの決済を依頼する",
-            "amount": "決済数量",
-            "submit": "決済アセット"
+        "blocks": {
+            "active_committee_members": "アクティブな委員",
+            "active_witnesses": "アクティブな証人",
+            "avg_conf_time": "平均確認時間",
+            "block_time": "ブロックタイム",
+            "block_times": "ブロックタイム",
+            "current_block": "現在のブロック",
+            "globals": "グローバルパラメータ",
+            "last_block": "最新のブロック",
+            "recent": "最近のブロック",
+            "recently_missed_blocks": "最近の喪失ブロック",
+            "title": "ブロックチェーン",
+            "transactions": "トランザクション数",
+            "trx": "トランザクション",
+            "trx_per_block": "Trx/block",
+            "trx_per_sec": "Trx/s"
         },
-        "reserve": {
-            "title": "アセットを消却 (バーン) する",
-            "amount": "消却数量",
-            "from": "消却するアカウント",
-            "submit": "消却（バーン）"
+        "committee_member": {
+            "title": "委員"
         },
-        "confirmation": {
-            "title":
-                "入力したアドレスは有効ではないようです。本当に出金しますか？",
-            "accept": "はい",
-            "cancel": "いいえ"
+        "committee_members": {
+            "active": "アクティブな委員の総数",
+            "title": "委員"
+        },
+        "fees": {
+            "fee": "基本手数料",
+            "feeeq": "(同じ)",
+            "feeltm": "終身 / 年間会員料金",
+            "feeltmeq": "(同じ)",
+            "type": "手数料種別"
         },
         "proposals": {
-            "pay_with": "アカウントで支払い",
-            "approval_add": "承認を追加",
-            "approval_remove": "承認を削除",
-            "key_approval_add": "キー承認を追加",
-            "key_approval_remove": "キー承認を削除"
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
+            "title": "提案された取引"
         },
-        "ok": "OK",
-        "qrcode": {
-            "label": "QRコード",
-            "title": "秘密キーのQR code",
-            "input_message":
-                "QRコードの暗号化に使用するパスワードを入力してください。<br />空のパスワードは、暗号化されていないQRコードを表示します。"
+        "witnesses": {
+            "budget": "残余予算",
+            "card": "カードビュー",
+            "current": "現在の証人",
+            "last_confirmed": "最新の確認",
+            "missed": "ブロック喪失",
+            "next_vote": "次回の投票更新",
+            "participation": "参加率",
+            "pay": "1ブロックあたりの報酬",
+            "rank": "ランク",
+            "table": "テーブルビュー",
+            "title": "証人"
+        },
+        "workers": {
+            "create": "新しいワーカー提案を作成する",
+            "create_text_1":
+                "新しいワーカーを作成するには、以下のフォームに記入してください。ワーカーはあなたの現在アクティブなアカウントで作成されます。アカウントは終身会員である必要があります。",
+            "create_text_2":
+                "ワーカー公開後に変更できないパラメーターの選択は慎重に検討してください。",
+            "daily_pay": "日当 (BTS)",
+            "date_text":
+                "開始日は、人々があなたのワーカーを見つけ、評価し、投票するために時間がかかるため、少なくとも1週間後にする必要があります。",
+            "name_text":
+                "ワーカーの名前は簡潔でなければなりません。: 'ワーカーの目的 - アカウント名'",
+            "pay_text":
+                "日当は、希望する1日の支払額をBTSで定義します。現在のベストプラクティスはUSD/CNYで給料を定義し、BTSの価格上昇によって生じた余剰分をバーンすると約束することです。あなたのワーカーがアクティブで、払い戻すワーカーより上にいるために十分な投票を得ている場合、この日当を受け取ることができます。",
+            "period": "ワーカー期間",
+            "title": "ワーカー名",
+            "url_text":
+                "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
+            "vesting_pay": "給与の権利付与期間 (日)",
+            "vesting_text":
+                "権利付与期間はワーカーが収入をすべて請求できるようになる権利が確定するまでの日数で定義されます。",
+            "website": "ウェブサイト"
         }
     },
-    "init_error": {
-        "title": "アプリケーション初期化エラー",
-        "ws_status": "フルノード接続状態",
-        "retry": "再試行",
+    "fees": {
+        "title": "手数料表"
+    },
+    "footer": {
+        "advanced_settings": "Advanced settings",
+        "backup": "バックアップが必要です",
+        "block": "ブロック",
+        "brainkey": "ブレインキーのバックアップを推奨します",
         "connected": "接続しました",
-        "not_connected": "接続していません",
-        "browser": "サポートされていないブラウザ",
-        "browser_text":
-            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
-        "understand": "理解しました。"
-    },
-    "refcode": {
-        "claim": "請求する",
-        "claim_refcode": "紹介コードを請求する",
-        "refcode_optional": "紹介コード (任意)",
-        "enter_refcode": "紹介コードを入力してください"
-    },
-    "proposal_create": {
-        "review_period": "レビュー期間開始",
-        "expiration_time": "有効期限",
-        "proposed_operations": "提案された操作",
-        "fee_paying_account": "手数料支払いアカウント",
-        "id": "Proposal object id"
+        "connection": "ブロックチェーンへの接続がありません",
+        "disconnected": "接続していません",
+        "latency": "レイテンシ",
+        "loading": "ロード中...",
+        "nosync":
+            "ブロックチェーンは同期していません。同期が完了するまでお待ち下さい..",
+        "synced": "同期しました",
+        "title": "BitShares",
+        "unsynced": "同期していません",
+        "update_available": "更新があります"
     },
     "gateway": {
+        "add_funds":
+            "あなたのBitSharesアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されています。",
+        "address": "Address",
+        "address_with_memo":
+            "%(address)s <span class=\"blocktrades-with-memo\">とメモ</span> %(memo)s",
+        "agreement": {
+            "hint": "I have read and agreed to",
+            "name": "《利用規約》",
+            "notice": "続行するには規約を確認してください",
+            "register": "同意する"
+        },
+        "asset": "アセット",
+        "asset_search_deposit": "入金するアセットを検索する",
+        "asset_search_withdraw": "出金するアセットを検索する",
+        "asset_to_deposit": "入金するアセット:",
+        "asset_to_receive": "入金額:",
+        "asset_to_withdraw": "出金するアセット:",
+        "asset_unavailable": "%(asset)sのゲートウェイはサービス外です。",
+        "assets": {
+            "bit":
+                "<br/><br/>%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
+            "bitcny":
+                "<br/><br/>bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
+            "open":
+                "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "trade":
+                "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。"
+        },
+        "balance": "現在の残高",
+        "balance_asset": "現在の%(asset)s残高",
+        "bitkapital_receive": "入金額",
+        "bitkapital_text": "入出金するアセットを選択してください:",
+        "bitkapital_withdraw": "出金額",
+        "bridge": "ブリッジ",
+        "bridge_text":
+            "ブリッジはアセットを他のものに交換します。例: BTCをBTSに。",
+        "calc": "計算中",
+        "choose_deposit": "入金したいコインを選択してください",
+        "choose_withdraw": "出金したいコインを選択してください",
+        "contact_TRADE": "Blocktradesに連絡する",
+        "convert": "内部変換",
+        "convert_coin": "%(coin)s (%(symbol)s) に変換",
+        "convert_now": "今すぐ変換",
+        "copy_address": "アドレスをコピー",
+        "copy_memo": "メモをコピー",
+        "deposit": "入金",
+        "deposit_address": "入金アドレス",
+        "deposit_history_status": {
+            "confirming": "デポジット確認中",
+            "fail": "失敗",
+            "success": "成功",
+            "transfering": "転送中",
+            "waiting": "入金待ち"
+        },
+        "deposit_inst": "入金指示",
+        "deposit_limit": "入金制限",
         "deposit_notice_delay": "(新しいアドレスは５分に一度生成できます。)",
+        "deposit_summary": "入金概要",
+        "deposit_to": "%(asset)sを以下のアドレスに送ってください",
+        "deposit_warning":
+            "他の通貨を%(asset)sアドレスに送信すると、デポジットが失われます",
+        "deposit_warning_memo":
+            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
+        "fee": "ゲートウェイ手数料",
+        "fiat": "法定通貨",
+        "fiat_text":
+            "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
+        "frozen": "The user account %(account)s was frozen",
+        "gateway": "ゲートウェイ",
+        "gateway_text": "ここで入金または出金を選択してください",
+        "generate": "生成",
+        "generate_new": "新しいアドレスを取得",
+        "generate_new_memo": "新しいメモを取得",
+        "iban": "IBAN",
+        "info": "情報",
+        "intermediate": "中間アカウント",
+        "inventory": "一覧表",
+        "limit": "リミット: %(amount)s %(symbol)s",
+        "limit_withdraw_asset": "Min: %(min)s, Max: %(max)s",
+        "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_none": "None",
+        "memo": "Memo",
+        "meta": {
+            "open_website": "ウェブサイトを開く"
+        },
         "min_deposit_warning_amount":
             "最低入金額は%(minDeposit)s %(coin)sです。",
         "min_deposit_warning_asset":
             "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
-        "copy_memo": "メモをコピー",
+        "over_limit": "制限に達しました",
         "please_generate_address": "新しいアドレスを取得",
-        "copy_address": "アドレスをコピー",
-        "use_copy_button":
-            "アドレス、またはメモをコピーするにはコピーボタンを使用してください。",
-        "fee": "ゲートウェイ手数料",
-        "title": "入金 & 出金",
-        "assets": {
-            "open":
-                "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
-            "trade":
-                "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
-            "bit":
-                "<br/><br/>%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
-            "bitcny":
-                "<br/><br/>bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/"
-        },
-        "your_account": "あなたのアカウント",
-        "bitkapital_text": "入出金するアセットを選択してください:",
-        "bitkapital_withdraw": "出金額",
-        "bitkapital_receive": "入金額",
-        "iban": "IBAN",
-        "service": "転送サービス",
-        "bridge": "ブリッジ",
-        "gateway": "ゲートウェイ",
-        "fiat": "法定通貨",
-        "symbol": "シンボル",
-        "asset": "アセット",
-        "website": "ウェブサイトに行く",
-        "deposit_to": "%(asset)sを以下のアドレスに送ってください",
-        "deposit_address": "入金アドレス",
-        "add_funds":
-            "あなたのBitSharesアカウント<strong>%(account)s</strong>に素早く簡単に資金を追加します。 このサービスはOpenledgerによって提供されています。",
-        "withdraw_funds":
-            "BitSharesアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
-        "balance_asset": "現在の%(asset)s残高",
-        "withdraw_placeholder": "%(asset)sアドレスを入力してください",
-        "balance": "現在の残高",
-        "generate": "生成",
-        "generate_new": "新しいアドレスを取得",
-        "generate_new_memo": "新しいメモを取得",
-        "deposit": "入金",
-        "withdraw": "出金",
-        "convert": "内部変換",
-        "withdraw_now": "今すぐ出金",
-        "convert_now": "今すぐ変換",
-        "inventory": "一覧表",
-        "scan_qr": "QRをスキャン",
-        "calc": "計算中",
-        "choose_deposit": "入金したいコインを選択してください",
-        "choose_withdraw": "出金したいコインを選択してください",
-        "asset_to_deposit": "入金するアセット:",
-        "asset_to_receive": "入金額:",
-        "receive_account": "受け取りアカウント:",
-        "deposit_summary": "入金概要",
-        "deposit_inst": "入金指示",
-        "recent_deposit": "最近の入金",
-        "recent_withdraw": "最近の出金",
-        "withdraw_summary": "出金概要",
-        "withdraw_inst": "出金指示",
-        "withdraw_to":
-            "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
-        "intermediate": "中間アカウント",
-        "asset_to_withdraw": "出金するアセット:",
-        "support_block":
-            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください（英語のみ）:",
-        "valid_address": "有効な%(coin_type)sのアドレスを入力してください",
-        "withdraw_coin": "%(coin)s (%(symbol)s) を出金",
-        "convert_coin": "%(coin)s (%(symbol)s) に変換",
-        "limit": "リミット: %(amount)s %(symbol)s",
-        "bridge_text":
-            "ブリッジはアセットを他のものに交換します。例: BTCをBTSに。",
-        "gateway_text": "ここで入金または出金を選択してください",
-        "fiat_text":
-            "注意：法定通貨のゲートウェイは当面の間、利用不可となります。最新情報は<a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>から確認してください。",
-        "meta": {
-            "open_website": "ウェブサイトを開く"
-        },
         "purchase": "%(asset)sを買う",
         "purchase_1":
             "外部ウォレットの%(inputAsset)sで%(outputAsset)sを素早く簡単に買います。このサービスは<a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>によって提供されます。",
@@ -1723,118 +876,1145 @@
             "このアドレスに送信された%(inputAsset)sは%(outputAsset)sとして表示されます。",
         "purchase_notice_memo":
             "Memo <b>required</b> for proper routing to your account",
-        "deposit_limit": "入金制限",
-        "address_with_memo":
-            "%(address)s <span class=\"blocktrades-with-memo\">とメモ</span> %(memo)s",
+        "receive_account": "受け取りアカウント:",
+        "recent_deposit": "最近の入金",
+        "recent_withdraw": "最近の出金",
         "rudex": {
-            "support_block": "サポートについては、RuDEXまでご連絡ください。:",
+            "coming_soon": "近日公開",
             "min_amount": "最低数量: %(minAmount)s %(symbol)s",
             "min_amount_error": "数字を入力してください >= minimum",
-            "coming_soon": "近日公開",
+            "support_block": "サポートについては、RuDEXまでご連絡ください。:",
             "under_construction": "工事中"
         },
+        "scan_qr": "QRをスキャン",
+        "service": "転送サービス",
+        "status": "ステータス",
+        "support_block":
+            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください（英語のみ）:",
+        "support_gdex": "サポートについては、GDEXまでお問い合わせください",
+        "symbol": "シンボル",
+        "time": "時間",
+        "title": "入金 & 出金",
+        "transaction_history_info":
+            " %(amount)s %(assetName)s with trancation id: %(txid)s ",
         "unavailable":
             "このアセットのゲートウェイサービスが現在停止しています。後でやり直してください",
-        "unavailable_bridge":
-            "このアセットのブリッジサービスは現在停止しています。後でやり直してください",
         "unavailable_OPEN":
             "OpenLedgerゲートウェイがダウンしているか、応答していません",
         "unavailable_RUDEX":
             "RuDEXゲートウェイがダウンしているか、応答していません",
         "unavailable_TRADE":
             "Blocktradesブリッジがダウンしているか、応答していません",
-        "contact_TRADE": "Blocktradesに連絡する",
-        "over_limit": "制限に達しました",
-        "agreement": {
-            "hint": "I have read and agreed to",
-            "name": "《利用規約》",
-            "register": "同意する",
-            "notice": "続行するには規約を確認してください"
-        },
-        "deposit_warning":
-            "他の通貨を%(asset)sアドレスに送信すると、デポジットが失われます",
-        "time": "時間",
-        "info": "情報",
-        "status": "ステータス",
-        "asset_unavailable": "%(asset)sのゲートウェイはサービス外です。",
+        "unavailable_bridge":
+            "このアセットのブリッジサービスは現在停止しています。後でやり直してください",
+        "use_copy_button":
+            "アドレス、またはメモをコピーするにはコピーボタンを使用してください。",
         "user_unavailable":
             "ユーザー情報は現在利用できません。後でやり直してください",
-        "frozen": "The user account %(account)s was frozen",
-        "transaction_history_info":
-            " %(amount)s %(assetName)s with trancation id: %(txid)s ",
-        "support_gdex": "サポートについては、GDEXまでお問い合わせください",
+        "valid_address": "有効な%(coin_type)sのアドレスを入力してください",
+        "website": "ウェブサイトに行く",
+        "withdraw": "出金",
+        "withdraw_coin": "%(coin)s (%(symbol)s) を出金",
+        "withdraw_funds":
+            "BitSharesアカウントから外部の%(asset)sアカウントへ出金しようとしています。",
         "withdraw_history_status": {
-            "confirming": "確認中",
-            "auditing": "withdraw auditing",
             "audited": "auditting completed",
+            "auditing": "withdraw auditing",
+            "confirming": "確認中",
+            "fail": "失敗",
             "refused": "auditting failed",
-            "transfering": "転送中",
             "success": "成功",
-            "fail": "失敗"
+            "transfering": "転送中"
         },
-        "deposit_history_status": {
-            "confirming": "デポジット確認中",
-            "waiting": "入金待ち",
-            "transfering": "転送中",
-            "success": "成功",
-            "fail": "失敗"
-        },
-        "asset_search_deposit": "入金するアセットを検索する",
-        "asset_search_withdraw": "出金するアセットを検索する"
+        "withdraw_inst": "出金指示",
+        "withdraw_now": "今すぐ出金",
+        "withdraw_placeholder": "%(asset)sアドレスを入力してください",
+        "withdraw_summary": "出金概要",
+        "withdraw_to":
+            "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
+        "your_account": "あなたのアカウント"
     },
-    "trx_error": {
-        "expire":
-            "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
+    "global": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
+    },
+    "header": {
+        "account": "アカウント",
+        "account_notify": "現在のアクティブアカウントは%(account)sです。",
+        "account_value": "アカウント値",
+        "collateral_ratio": "担保の比率",
+        "create_account": "アカウント作成",
+        "create_asset": "アセット作成",
+        "current": "現在のアカウント",
+        "dashboard": "ダッシュボード",
+        "deposit-withdraw": "入金/出金",
+        "exchange": "取引所",
+        "explorer": "エクスプローラー",
+        "help": "ヘルプ",
+        "lock": "ログアウト (ウォレットをロック)",
+        "lock_short": "ログアウト",
+        "locked_tip":
+            "<br/>クリックすると、ウォレットをアンロックしログインします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
+        "logout": "ログアウト",
+        "payments": "送金",
+        "payments_beta": "送金 (ベータ)",
+        "payments_legacy": "送金 (レガシー)",
+        "settings": "設定",
+        "title": "BitShares UI",
+        "unlock": "ログイン (ウォレットをアンロック)",
+        "unlock_password": "パスワードでログイン",
+        "unlock_short": "ログイン",
+        "unlocked_tip":
+            "<br/>クリックすると、ウォレットをロックしログアウトします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
+        "update_asset": "アセット更新"
+    },
+    "icons": {
+        "adjust": "Adjust margin position",
+        "assets": "Assets",
+        "checkmark_circle": {
+            "approved": "Approved",
+            "operation_succeed": "Operation succeed",
+            "yes": "Yes"
+        },
+        "chevron_down": {
+            "gateways": "Show more gateways",
+            "other": "Show more items",
+            "transactions": "Show more transactions"
+        },
+        "clippy": {
+            "copy": "Copy to clipboard",
+            "withdraw_full": "Withdraw the full balance"
+        },
+        "clock": "Please check your computer's clock",
+        "cog": "Settings",
+        "cogs": "Settings",
+        "connect": "Connect to this API Node",
+        "connected": "API Node is connected",
+        "cross_circle": {
+            "cancel_order": "Cancel order",
+            "close_position": "Close position",
+            "hide_asset": "Hide asset",
+            "hide_market": "Hide market",
+            "operation_failed": "Operation failed",
+            "remove": "Remove"
+        },
+        "dashboard": "Dashboard",
+        "deposit": {
+            "deposit": "Deposit",
+            "deposit_withdraw": "Deposit/Withdraw"
+        },
+        "disconnected": "API Node is disconnected",
+        "dollar": {
+            "borrow": "Borrow",
+            "buy": "Buy"
+        },
+        "download": "Download new version of BitShares UI",
+        "excel": "Download .csv file",
+        "eye": "Hide Node",
+        "eye-striked": "Show Node",
+        "fees": "Fees",
+        "fi_star": {
+            "account": "Add/remove account from favorites",
+            "market": "Add/remove market from favorites",
+            "sort_accounts": "Sort by favorites",
+            "symbol": "Add/remove symbol from favorites"
+        },
+        "filter": "Filter",
+        "folder": "Accounts",
+        "hamburger": "Open menu",
+        "hamburger_x": "Close menu",
+        "hourglass": "Vesting balances",
+        "info_circle_o": "Info",
+        "key": "Key",
+        "list": "Whitelist",
+        "locked": {
+            "action": "Click to unlock your account to perform this action",
+            "common": "Click to unlock your account",
+            "enable_auto_scroll": "Enable auto scroll"
+        },
+        "minus_circle": {
+            "disapproved": "Disapproved",
+            "no": "No",
+            "remove_contact": "Remove contact from the list",
+            "wrong_address": "Unable to generate address"
+        },
+        "news": "News",
+        "plus_circle": {
+            "add_contact": "Add contact to the list",
+            "show_asset": "Show asset",
+            "show_market": "Show market"
+        },
+        "power": "Login",
+        "question_circle": "Help",
+        "server": "Explore",
+        "settle": "Settle",
+        "share": "About",
+        "shuffle": "Switch trading pair",
+        "text": {
+            "membership_stats": "Membership stats",
+            "signed_messages": "Signed messages"
+        },
+        "thumb_tack": "Pin panel to the left side",
+        "thumb_untack": "Unpin panel",
+        "thumbs_up": "Voting",
+        "times": "Remove API Node",
+        "trade": {
+            "exchange": "Exchange",
+            "trade": "Trade"
+        },
+        "transfer": "Send",
+        "unlocked": {
+            "common": "Click to lock your account",
+            "disable_auto_scroll": "Disable auto scroll"
+        },
+        "user": {
+            "account": "Account",
+            "create_account": "Create account",
+            "following": "You are following this user"
+        },
+        "warning": "Permissions",
+        "withdraw": "Withdraw",
+        "zoom": "Search"
+    },
+    "incognito": {
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
+    },
+    "init_error": {
+        "browser": "サポートされていないブラウザ",
+        "browser_text":
+            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
+        "connected": "接続しました",
+        "not_connected": "接続していません",
+        "retry": "再試行",
+        "title": "アプリケーション初期化エラー",
+        "understand": "理解しました。",
+        "ws_status": "フルノード接続状態"
+    },
+    "languages": {
+        "de": "Deutsch",
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "it": "Italiano",
+        "ja": "日本語",
+        "ko": "한국어",
+        "ru": "Русский",
+        "tr": "Türkçe",
+        "zh": "简体中文"
+    },
+    "markets": {
+        "base": "ベースアセット",
+        "core_rate": "中心レート",
+        "filter": "フィルター",
+        "market_search": "マーケット検索",
+        "preferred": "お気に入りのマーケット",
+        "search": "検索",
+        "supply": "供給量",
+        "title": "マーケット"
     },
     "migration": {
-        "title": "Notice",
         "announcement_1":
             "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
         "text_1": "Local wallet detected",
         "text_2":
             "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
         "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well."
+            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
+        "title": "Notice"
     },
-    "news": {
-        "news": "ニュース",
-        "author": "著者",
-        "subject": "タイトル",
-        "errors": {
-            "fetch": "Ops... Something went wrong fetching the news"
+    "modal": {
+        "buy": {
+            "asset": "Asset",
+            "bridge": "Brdige",
+            "title": "Buy"
+        },
+        "confirmation": {
+            "accept": "はい",
+            "cancel": "いいえ",
+            "title":
+                "入力したアドレスは有効ではないようです。本当に出金しますか？"
+        },
+        "convert": {
+            "amount": "変換数量",
+            "submit": "OK"
+        },
+        "deposit": {
+            "address_generation_error": "アドレスを生成できません",
+            "amount": "入金する数量",
+            "asset": "アセット",
+            "bts_transfer_description":
+                "BTSを受け取るのは簡単です。BTSをあなたのアカウント名に対して送れば、あなたのウォレットに届きます。このQRコードにも、あなたのアカウント名が含まれています。",
+            "cancel": "キャンセル",
+            "close": "閉じる",
+            "header": "%(account_name)sに入金",
+            "header_short": "入金",
+            "submit": "入金",
+            "submit_beta": "入金 (ベータ)"
+        },
+        "deposit_withdraw": {
+            "disabled": "ゲートウェイサービスが無効",
+            "gateway": "ゲートウェイ",
+            "no_gateway_available": "利用可能なゲートウェイがありません",
+            "select_gateway": "ゲートウェイオペレータを選択してください",
+            "wallet_error": "ゲートウェイウォレットが無効"
+        },
+        "issue": {
+            "amount": "発行数量",
+            "submit": "発行アセット",
+            "to": "発行先"
+        },
+        "ok": "OK",
+        "proposals": {
+            "approval_add": "承認を追加",
+            "approval_remove": "承認を削除",
+            "key_approval_add": "キー承認を追加",
+            "key_approval_remove": "キー承認を削除",
+            "pay_with": "アカウントで支払い"
+        },
+        "qrcode": {
+            "input_message":
+                "QRコードの暗号化に使用するパスワードを入力してください。<br />空のパスワードは、暗号化されていないQRコードを表示します。",
+            "label": "QRコード",
+            "title": "秘密キーのQR code"
+        },
+        "reserve": {
+            "amount": "消却数量",
+            "from": "消却するアカウント",
+            "submit": "消却（バーン）",
+            "title": "アセットを消却 (バーン) する"
+        },
+        "send": {
+            "header": "<span class=\"send-name\">%(fromName)s</span>から送信",
+            "header_propose":
+                "<span class=\"send-name\">%(fromName)s</span>から送信を提案"
+        },
+        "settle": {
+            "amount": "決済数量",
+            "submit": "決済アセット",
+            "title": "%(asset)sの決済を依頼する"
+        },
+        "withdraw": {
+            "address": "出金先アドレス",
+            "address_not_valid": "無効なアドレス",
+            "amount": "出金数量",
+            "available": "利用可能: ",
+            "bitshares_account": "Send to Bitshares Account",
+            "cancel": "キャンセル",
+            "cannot_cover": "この出金をするのに十分な資金がありません",
+            "estimated_value": "推定価格",
+            "fee": "手数料",
+            "gateway_fee": "ゲートウェイ手数料",
+            "header": "出金 (ベータ)",
+            "memo": "メモ",
+            "no_estimate": "No estimate available for this object",
+            "no_gateways":
+                "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
+            "quantity": "数量",
+            "submit": "出金",
+            "submit_beta": "出金 (ベータ)",
+            "withdraw": "出金"
         }
     },
+    "news": {
+        "author": "著者",
+        "errors": {
+            "fetch": "Ops... Something went wrong fetching the news"
+        },
+        "news": "ニュース",
+        "subject": "タイトル"
+    },
     "openledger": {
-        "header_fiat": "法定通貨",
-        "status": "ステータス",
-        "retry": "再試行",
-        "loading": "ロード中...",
-        "refresh_transaction_history": "更新",
-        "header_transaction_history": "取引履歴",
-        "show_transaction_history": "取引履歴を表示する",
-        "withdraw_amount": "出金額",
-        "withdraw_none": "出金なし",
         "deposit_amount": "入金額",
         "deposit_details": "詳細",
-        "deposit_none": "入金なし"
+        "deposit_none": "入金なし",
+        "header_fiat": "法定通貨",
+        "header_transaction_history": "取引履歴",
+        "loading": "ロード中...",
+        "refresh_transaction_history": "更新",
+        "retry": "再試行",
+        "show_transaction_history": "取引履歴を表示する",
+        "status": "ステータス",
+        "withdraw_amount": "出金額",
+        "withdraw_none": "出金なし"
+    },
+    "operation": {
+        "annual_upgrade_account": "{account}は年間会員にアップグレードしました",
+        "asset_create": "{account}はアセット{asset}を作成しました",
+        "asset_fund_fee_pool":
+            "{account}は{asset}の手数料プールに{amount}を充填しました",
+        "asset_global_settle":
+            "{account}は{asset}のグローバル決済を{price}で依頼しました",
+        "asset_issue": "{account}は{amount}を{to}に発行しました",
+        "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
+        "asset_settle": "{account}は{amount}の決済を依頼しました",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_update": "{account}はアセット{asset}を更新しました",
+        "asset_update_feed_producers":
+            "{account}はアセット{asset}のフィード作成者を更新しました",
+        "balance_claim": "{account}は{amount}を請求しました",
+        "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
+        "call_order_update":
+            "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
+        "committee_member_update_global_parameters":
+            "{account}はグローバル委員会のパラメータを更新しました",
+        "fill_order_buy": "{account}は{price}で{amount}を購入しました",
+        "fill_order_sell": "{account}は{price}で{amount}を売却しました",
+        "lifetime_upgrade_account":
+            "{account}は終身会員にアップグレードしました",
+        "limit_order_buy": "{account}は{price}で{amount}の買い注文を出しました",
+        "limit_order_cancel": "{account}は注文#%(order)sをキャンセルしました",
+        "limit_order_sell":
+            "{account}は{price}で{amount}の売り注文を出しました",
+        "no_recent": "最近の取引がありません",
+        "override_transfer": "{issuer}は{amount}を{from}から{to}に転送しました",
+        "pending": "保留中... %(blocks)sブロック",
+        "proposal_create": "{account}は取引提案を作成しました",
+        "proposal_delete": "{account}は取引提案を削除しました",
+        "proposal_update": "{account}は取引提案を更新しました",
+        "publish_feed": "{account}はフィード価格 {price}を公開しました",
+        "reg_account": "{registrar}は{new_account}のアカウントを登録しました",
+        "set_proxy": "{account}は投票代理人に{proxy}を設定しました",
+        "transfer": "{from}は{amount}を{to}に送りました",
+        "transfer_account": "{account}の所有権を{to}に移転しました",
+        "unlisted_by": "{lister}は{listee}をリストから外しました",
+        "update_account": "{account}はアカウント情報を更新しました",
+        "vesting_balance_withdraw":
+            "{account}は{amount}の権利確定残高を引き出しました",
+        "whitelisted_by": "{lister}は{listee}をホワイトリストに登録しました",
+        "witness_create": "{account}は証人になるためのアップグレードをしました",
+        "witness_pay": "アカウントに証人報酬を引き出しました",
+        "witness_receive": "証人から証人を受け取りました",
+        "witness_update": "{account}は証人情報を更新しました",
+        "worker_create": "{account}は日当{pay}でワーカー提案を作成しました"
+    },
+    "page404": {
+        "asset_not_found_subtitle": "That asset does not exist",
+        "home": "ホーム",
+        "market_not_found_subtitle": "That market does not exist",
+        "page_not_found_subtitle": "このページは存在しません",
+        "page_not_found_title": "ページが見つかりません。"
+    },
+    "pagination": {
+        "newer": "新しい",
+        "older": "古い"
+    },
+    "proposal": {
+        "action": "操作",
+        "approve": "承認",
+        "approvers": "Approver(s)",
+        "asset_create": "{account}アカウントでアセット%(asset)sを作成します",
+        "asset_issue": "{account}で{amount}を{to}に発行します",
+        "asset_reserve": "account}で{amount}を消却 (バーン) します",
+        "asset_settle": "決済依頼",
+        "asset_update": "{account}アカウントでアセット{asset}を更新します",
+        "call_order_update":
+            "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
+        "committee_member_update_global_parameters":
+            "{account}による委員会グローバルパラメータを更新します",
+        "expires": "有効期限",
+        "feed_producer":
+            "{account}で アセット{asset}のフィード作成者を更新します",
+        "limit_order_buy": "{amount}を{price}で{account}が買い注文を出します",
+        "limit_order_create":
+            "%(buy_amount)sを%(account)sが%(sell_amount)sで買い注文を出します",
+        "limit_order_sell": "{amount}を{price}で{account}が売り注文を出します",
+        "override_transfer":
+            "{issuer}の権限で{amount}を{from}から{to}へ転送します",
+        "proposals": "Proposals",
+        "reject": "拒否",
+        "status": "ステータス",
+        "transfer": "{amount}を{from}から{to}に転送します",
+        "update": {
+            "active_approvals_to_add": "アクティブ承認の追加",
+            "active_approvals_to_remove": "アクティブ承認の削除",
+            "key_approvals_to_add": "キー承認の追加",
+            "key_approvals_to_remove": "キー承認の削除",
+            "owner_approvals_to_add": "オーナー承認の追加",
+            "owner_approvals_to_remove": "オーナー承認の削除"
+        },
+        "update_account": "{account}のアカウントデータを更新します",
+        "vesting_balance_withdraw":
+            "{account}の権利確定残高から{amount}を引き出します"
+    },
+    "proposal_create": {
+        "expiration_time": "有効期限",
+        "fee_paying_account": "手数料支払いアカウント",
+        "id": "Proposal object id",
+        "proposed_operations": "提案された操作",
+        "review_period": "レビュー期間開始"
+    },
+    "propose": "提案",
+    "qr_address_scanner": {
+        "address_found": "住所が見つかりました",
+        "amount": "量",
+        "retry": "リトライ",
+        "use_address": "住所を使用する"
+    },
+    "refcode": {
+        "claim": "請求する",
+        "claim_refcode": "紹介コードを請求する",
+        "enter_refcode": "紹介コードを入力してください",
+        "refcode_optional": "紹介コード (任意)"
+    },
+    "settings": {
+        "access": "アクセス",
+        "access_text": "",
+        "accounts": "アカウント",
+        "accounts_text": "あなたのアカウントリスト。",
+        "activate": "有効化",
+        "active_node": "有効なノード",
+        "add_api": "ノードを追加",
+        "add_ws": "ノードを追加",
+        "always_confirm": "常に確認する",
+        "apiServer": "フルノードAPIサーバー",
+        "api_closest": "最近のものを自動的に選択する",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "automatic_short": "Automatic Switching",
+        "available_nodes": "利用可能なノード",
+        "backup": "バックアップ",
+        "backup_backup": "バックアップファイル (.bin) からリストアする",
+        "backup_backup_short": "Restore from a backup",
+        "backup_brainkey": "ウォレットブレインキーでリストアする",
+        "backup_favorites": "jsonファイルを使ってお気に入りをリストアする",
+        "backup_favorites_error": "JSONを解析できませんでした。",
+        "backup_favorites_finish": "お気に入りをインポート",
+        "backup_favorites_success": "お気に入りのマーケットをリストアしました",
+        "backup_favoritesbtn": "お気に入りのバックアップ",
+        "backup_favoritestext":
+            "アップデート後に復元するために、お気に入りをバックアップする。",
+        "backup_key": "秘密キーをインポートする",
+        "backup_legacy":
+            "BTS 0.9.3cキーエクスポートファイル (.json) をインポートする。",
+        "backup_text": "ここでバックアップを作成する。",
+        "backupcreate_backup": "ウォレットのバックアップを作成する",
+        "backupcreate_brainkey": "ブレインキーバックアップを作成する",
+        "backupcreate_favorites": "お気に入りのバックアップを作成",
+        "browser_notifications": "ブラウザ通知",
+        "browser_notifications_additional_transfer_to_me":
+            "マイ・アカウントへの転送について通知する",
+        "browser_notifications_allow": "通知を有効にする",
+        "browser_notifications_disabled_by_browser_notify":
+            "ブラウザが通知を無効にしました。クリックしてブラウザの通知を有効にする方法を確認する。",
+        "cloud_login": "アカウントモデルでログイン",
+        "confirmMarketOrder": "マーケットに注文を出す時に確認する",
+        "confirm_no": "しない",
+        "confirm_remove":
+            "利用可能なノードから%(name)sを削除してもよろしいですか？",
+        "confirm_yes": "常時",
+        "connection_error":
+            "APIノード%(url)sに接続できません。接続可能のノードに戻ります。",
+        "darkTheme": "ダークテーマ",
+        "delete_select": "削除するウォレットを選択してください",
+        "enable_wallet": "ウォレットモデルを有効にする",
+        "faucet_address": "フォーセット",
+        "faucet_address_text":
+            "フォーセットアドレスは新規ユーザーの登録手数料の支払いに使用されます。",
+        "general": "全般",
+        "general_text": "基本設定を調整する。",
+        "hidden_nodes": "非表示のノード",
+        "hide": "非表示",
+        "high_latency": "レイテンシー高",
+        "inverseMarket": "市場志向の選択",
+        "lightTheme": "ライトテーマ",
+        "local_wallet": "ウォレットモデルでログイン",
+        "locale": "言語切替",
+        "lookup_text":
+            "BTS 1.0から請求されていない残高を確認するには、以下のボタンをクリックしてください。",
+        "low_latency": "レイテンシー低",
+        "medium_latency": "レイテンシー中",
+        "midnightTheme": "ミッドナイトテーマ",
+        "my_nodes": "Personal",
+        "no": "いいえ",
+        "no_accounts": "このウォレットにはアカウントがありません。",
+        "node_already_exists": "Node with such URL already exists",
+        "node_down": "DOWN",
+        "node_up": "UP",
+        "olDarkTheme": "Openledgerダーク",
+        "password": "パスワード",
+        "passwordLogin": "ログインモード",
+        "password_text": "パスワードを変更する。",
+        "ping": "Ping Nodes",
+        "remove": "削除",
+        "remove_api": "ノードを削除",
+        "remove_ws": "ノードを削除",
+        "reset": "設定をリセット",
+        "reset_text": "設定を元のデフォルトに戻します。",
+        "reset_text_description":
+            "これにより、%(generalName)s、%(accessName)s、%(faucetName)sの設定が全てリセットされます。",
+        "restore": "リストア/インポート",
+        "restore_brainkey_text":
+            "ブレインキーからリストアするためには、新しいウォレットを作成する必要があります。新しいウォレットのパスワードと名前を以下に入力してから、ブレインキーを入力してください。",
+        "restore_default_success": "設定が正常にリセットされました",
+        "restore_key_count": "キー数",
+        "restore_text": "バックアップまたはインポートキーからリストアする。",
+        "show": "表示",
+        "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
+        "showSettles": "決済注文をデプスチャートで表示する",
+        "switch": "Switch Node",
+        "themes": "テーマ",
+        "unit": "アカウントの単位選択",
+        "valid_node_url":
+            "ノードURLは ws:// または wss://で始まる必要があります。",
+        "view_keys": "キーを見る",
+        "wallet": "ウォレット",
+        "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
+        "wallet_required": "ウォレットモデルが必要です",
+        "wallet_required_text":
+            "バックアップをリストアするには、まずウォレットモデルに切り替える必要があります。下のボタンをクリックしてください。",
+        "wallet_text": "ウォレットの詳細を制御する。",
+        "wallets": "ウォレット",
+        "yes": "はい"
+    },
+    "sync_fail": {
+        "sub_text_1": "コンピュータの時計が正しいか確認してください。",
+        "sub_text_2":
+            "時計を同期させたらこのページを更新してください。<br/><br/>既に時計が正しい場合は、使用しているAPIサーバーが同期していません。その場合は下のリストから他のサーバーを選んで再試行してください。",
+        "title": "APIサーバとの同期に失敗しました"
+    },
+    "tooltip": {
+        "borrow":
+            "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
+        "bridge_TRADE":
+            "BlockTradesはアセットの即時取引をサポートするブリッジです。詳細と利用規約はhttps://blocktrades.usから。",
+        "buy_min":
+            "最低でもこの金額を受け取れます。あなたが指定した価格よりも低い価格でマッチする注文があった場合、あなたはこれ以上の金額を受け取れます。",
+        "call_limit":
+            "これは市場における最低限の担保付マージンポジションのコール価格です。",
+        "call_price":
+            "これはポジションのコール価格です。フィード価格がコール価格を下回った場合、ポジションにマージンコールが発生します。",
+        "close_position":
+            "ポジションを閉じるにはここをクリックしてください。そのためには、最低%(amount)s %(asset)sが必要です。",
+        "coll_ratio": "ポジションの担保比率は 担保* フィード価格 / 賃借 です。",
+        "copy_password":
+            "パスワードをクリップボードにコピーするには、ここをクリックしてください",
+        "copy_tip": "テキストをコピーするにはここをクリックしてください。",
+        "cr_danger":
+            "現在、このポジションにはマージンコールがかかっています。担保を追加して担保比率を%(mr)s以上にするか、ポジションをクローズすることを検討してください。",
+        "cr_warning":
+            "このポジションは担保レベルが低く、担保比率が%(mr)sを下回った場合はマージンコールがかかります。担保を追加するかポジションをクローズすることを検討してください。",
+        "deposit_tip":
+            "入金を完了するには、%(asset)sウォレットに行き、このページに記載されているアドレスに転送してください。確認後、すぐに入金されます。メモが表示されている場合は、転送にこのメモを含めなければなりません。",
+        "disconnected":
+            "APIノードに接続していません。リロードするか、設定ページで新しいアクセスポイントを設定してください。",
+        "feed_price": "This is the current external feed price",
+        "filter_ops":
+            "このドロップダウンリストで履歴を操作の種類別にフィルタリングできます。",
+        "follow_user": "このユーザーをフォローしています",
+        "follow_user_add": "このユーザーをフォローするにはクリックしてください",
+        "gateway":
+            "ゲートウェイはデポジットを100%の実際のアセットでバッキングしています",
+        "generate":
+            "生成パスワードはローカルでブラウザによって作成されたものです。 <br /><br /><strong> あなただけがアクセスできます。</strong><br /><br /> 以下の欄に貼り付けて、安全な場所にコピーを保存してください。",
+        "hide_asset":
+            "このリストからこのアセットを非表示にするにはここをクリックしてください。",
+        "latest_price": "これはこの市場における最新の価格です。",
+        "login":
+            "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+        "margin_price":
+            "これはマージンコールがかかったポジションが支払う必要のある最大価格です。スクイーズ価格とも言います。",
+        "market_fee":
+            "%(asset)sのオーナーは買い注文に対して%(percent)s%%の取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
+        "memo_tip":
+            "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
+        "no_price":
+            "このアセットには推定価格を算出するために使用可能な最新の価格がありません。",
+        "over_limit":
+            "ブリッジにはこの買い注文に必要なアセットが不足しています。",
+        "propose_scam":
+            "この提案は有名な詐欺師によるものです。応じないでください！",
+        "propose_tip": "別のユーザーからトランザクションを提案する",
+        "settle":
+            "精算により、保有する%(asset)sを24時間の遅延後にBTSにその時点のフィード価格で変換できます。",
+        "settle_price": "これは決済注文を実行する価格です。",
+        "show_asset":
+            "メインリストにこのアセットを表示するにはここをクリックしてください。",
+        "show_block":
+            "この取引が発生したブロック#%(block)sを見るにはここをクリックしてください。",
+        "sign_owner":
+            "あなたがこのアカウントの所有者の場合は、取引が正しく署名されているか確認してください。これはオーナーアカウントを使用していて、アカウントがアクティブ権限を持っていないときに限り必要です。",
+        "sync_no":
+            "現在のノードはブロックチェーンと同期していません。別のノードに切り替えてみてください。",
+        "sync_yes": "現在のノードはブロックチェーンと同期しています。",
+        "transfer_actions":
+            "転送または、サポートするアセットを入出金するにはここをクリックしてください。",
+        "update_position":
+            "ポジションを更新するにはここをクリックしてください。いつでもポジションの賃借や担保比率を変更できます。",
+        "withdraw_address":
+            "まだ%(asset)sのアドレスをお持ちでない場合は、出金する前にウォレットプロバイダーを探して作成する必要があります。",
+        "withdraw_full": "全額を出金するにはここをクリックしてください。"
+    },
+    "transaction": {
+        "amount_sell": "Amount to sell",
+        "asset_claim_fees":
+            "%(balance_amount)sのアセット手数料を%(asset)sの手数料プールから請求しました",
+        "asset_reserve": "消却済みアセット数量",
+        "at": "at",
+        "balance_id": "残高ID",
+        "balance_owner": "残高オーナーキー",
+        "blinding_factor": "Blinding factor",
+        "bond_accept_offer": "承認された債権提案",
+        "bond_cancel_offer": "キャンセルされた債権提案",
+        "bond_claim_collateral": "請求された担保",
+        "bond_create_offer": "作成済み債権提案",
+        "bond_pay_collateral": "支払い済み担保",
+        "borrow_amount": "賃借",
+        "borrower": "Borrower",
+        "broadcast_fail": "取引の送信に失敗しました: %(message)s",
+        "broadcast_success": "取引が送信されました",
+        "broadcasting": "取引を送信しています..",
+        "broadcasting_short": "送信中..",
+        "burn_asset": "消却（バーン）",
+        "by": "by",
+        "claimed": "合計請求金額",
+        "coll_maint": "担保維持率",
+        "coll_of": "担保: ",
+        "coll_ratio": "初期担保比率",
+        "collateral": "担保",
+        "committee_member_create": "委員を作成する",
+        "confirm": "取引を確認してください",
+        "create_key": "公開キーを作成しました",
+        "csv": ".csvを出力",
+        "csv_tip": "履歴をカンマ区切りcsvファイルでダウンロード",
+        "custom": "作成済みカスタム操作",
+        "delta_collateral": "担保変更",
+        "delta_debt": "賃借変更",
+        "deposit_to": "アカウントに入金しました",
+        "expiration": "有効期限",
+        "feeGroups": {
+            "account": "アカウント固有",
+            "asset": "アセット固有",
+            "business": "ビジネス管理",
+            "general": "一般",
+            "market": "マーケット固有"
+        },
+        "feeTypes": {
+            "_none": "無料",
+            "basic_fee": "基本料金",
+            "fee": "通常の取引手数料",
+            "long_symbol": "長いシンボル",
+            "membership_annual_fee": "年間会員",
+            "membership_lifetime_fee": "終身会員",
+            "premium_fee": "プレミアム名の料金",
+            "price_per_kbyte": "トランザクションサイズ (KByte) あたりの価格",
+            "symbol3": "3文字のシンボル",
+            "symbol4": "4文字のシンボル"
+        },
+        "feed_price": "フィード価格",
+        "feed_producer": "アセットのフィード作成者になりました",
+        "file_write": "ファイルを作成しました",
+        "fill_or": "Fill or kill",
+        "for": "for",
+        "from": "相手:",
+        "fund_pool": "%(asset)sを手数料プールに充填",
+        "funding_account": "資金調達アカウント",
+        "global_parameters_update": "グローバルパラメータを更新しました",
+        "inputs": "インプット",
+        "market_fee": "取引手数料",
+        "max_market_fee": "最大取引手数料",
+        "min_receive": "受け取れる最小金額",
+        "new_url": "ウェブサイト",
+        "obtain": "取得",
+        "order_id": "注文 ID",
+        "outputs": "アウトプット",
+        "paid": "支払",
+        "publisher": "発行者",
+        "received": "受信:",
+        "seller": "売り手",
+        "sent": "送信:",
+        "settlement_date": "決済日",
+        "to": "相手:",
+        "transaction_confirmed": "取引を確認しました",
+        "trxTypes": {
+            "account_create": "アカウントを作成",
+            "account_transfer": "アカウント譲渡",
+            "account_update": "アカウントを更新",
+            "account_upgrade": "アカウントのアップグレード",
+            "account_whitelist": "アカウントホワイトリスト",
+            "all": "すべて表示",
+            "assert": "アサート操作",
+            "asset_claim_fees": "アセット手数料を請求",
+            "asset_create": "アセットを作成",
+            "asset_fund_fee_pool": "アセットの手数料プールを充填",
+            "asset_global_settle": "グローバルアセット決済",
+            "asset_issue": "アセットを発行",
+            "asset_publish_feed": "フィードを公開",
+            "asset_reserve": "アセットを消却",
+            "asset_settle": "アセット決済",
+            "asset_settle_cancel": "Cancel asset settlement",
+            "asset_update": "アセットを更新",
+            "asset_update_bitasset": "スマートコインを更新",
+            "asset_update_feed_producers": "アセットのフィード作成者を更新",
+            "balance_claim": "残高請求",
+            "blind_transfer": "匿名転送",
+            "call_order_update": "マージンを更新",
+            "committee_member_create": "委員を作成",
+            "committee_member_update": "委員を更新",
+            "committee_member_update_global_parameters":
+                "グローバルパラメータ更新",
+            "custom": "カスタム",
+            "fill_order": "注文約定",
+            "limit_order_cancel": "注文をキャンセル",
+            "limit_order_create": "注文を出す",
+            "override_transfer": "オーバーライド転送",
+            "proposal_create": "提案を作成",
+            "proposal_delete": "提案を削除",
+            "proposal_update": "提案を更新",
+            "transfer": "転送",
+            "transfer_from_blind": "匿名アカウントからの転送",
+            "transfer_to_blind": "匿名アカウントに転送",
+            "vesting_balance_create": "権利確定残高を作成",
+            "vesting_balance_withdraw": "権利確定残高を引き出し",
+            "withdraw_permission_claim": "引き出し権限を請求",
+            "withdraw_permission_create": "引き出し権限を作成",
+            "withdraw_permission_delete": "引き出し権限を削除",
+            "withdraw_permission_update": "引き出し権限を更新",
+            "witness_create": "証人を作成",
+            "witness_update": "証人を更新",
+            "witness_withdraw_pay": "証人報酬を引き出し",
+            "worker_create": "ワーカーを作成"
+        },
+        "vesting_balance_create": "作成済み権利確定残高:",
+        "waiting": "確認を待っています..",
+        "whitelist_states": {
+            "black_listed": "ブラックリストに登録",
+            "no_listing": "未登録",
+            "white_and_black_listed": "ホワイトリストとブラックリストに登録",
+            "white_listed": "ホワイトリストに登録"
+        },
+        "withdraw_permission_claim": "残高引き出し権限を請求",
+        "withdraw_permission_create": "残高引き出し権限を取得",
+        "withdraw_permission_delete": "残高引き出し権限を削除",
+        "withdraw_permission_update": "残高引き出し権限を更新"
+    },
+    "transfer": {
+        "again": "他の転送をする",
+        "amount": "金額",
+        "available": "利用可能額",
+        "back": "戻る",
+        "balances": "残高",
+        "broadcast": "あなたの転送はネットワークに送信されました",
+        "broadcasting": "送信中...",
+        "cancel": "キャンセル",
+        "close": "閉じる",
+        "confirm": "確認",
+        "copy_address": "アドレスをコピー",
+        "copy_memo": "メモをコピー",
+        "errors": {
+            "balance": "最終残高は0より大きくなければなりません",
+            "insufficient": "残高不足",
+            "memo_error": "転送メモの解析エラーです。後でやり直してください。",
+            "memo_length_error":
+                "The transfer memo length exceed, please check",
+            "minimum_amount": "最低出金数量: %(amount)s %(symbol)s",
+            "noFeeBalance":
+                "このアセットの残高は手数料に足りません。他のアセットを支払い用に選択してください。",
+            "noFunds": "資金がありません",
+            "noPoolBalance":
+                "そのアセットの手数料プール残高が足りません。アセットオーナーに知らせるか、他のアセットを手数料支払い用に選択してください。",
+            "pos": "金額は正の数でなければなりません",
+            "precision": "最小出金精度値: %(precision)s",
+            "req": "必須",
+            "valid": "有効な正の数を入力してください。"
+        },
+        "fee": "手数料",
+        "final": "最終残高",
+        "from": "From",
+        "header": "転送の詳細設定",
+        "header_subheader":
+            "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
+        "memo": "メモ",
+        "memo_unlock": "このメモを見るにはウォレットをアンロックしてください",
+        "optional": "オプション",
+        "pay_from": "送信元",
+        "see": "自身の転送を見る",
+        "send": "送信",
+        "to": "To",
+        "warn_name_unable_read_memo":
+            "警告: %(name)sはこのメモを読むことができません。"
+    },
+    "trx_error": {
+        "expire":
+            "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
+    },
+    "walkthrough": {
+        "buy_form": "このフォームを使用して買い注文を出します。",
+        "buy_orders": "この市場のすべての買い注文を表示する。",
+        "chart_tool_duration": "別の間隔を使用して取引データをグループ化する。",
+        "chart_tool_indicators":
+            "テクニカル・インジケータを価格チャートに追加する。",
+        "chart_tool_zoom":
+            "価格チャートを調整して価格の履歴の表示数を変更する。",
+        "create_cloud_wallet":
+            "アカウント名とパスワードを使用してアクセスする。",
+        "create_local_wallet":
+            "ローカルウォレットを作成してローカルにプライベートキーをダウンロードする。",
+        "depth_chart": "市場深度チャートを使用して買いと売りを表示する。",
+        "done_label": "完了",
+        "favourite_button":
+            "このペアをあなたのマーケットリストのお気に入りとしてマークする。",
+        "find_markets_tab":
+            "このタブでは、マーケットを検索して「マイマーケット」タブに追加することができます。",
+        "language_flag": "DEXで利用する言語を9種類の中から選択してください。",
+        "my_markets_tab": "このタブには、よく利用する市場が表示されます。",
+        "next_label": "次へ",
+        "prev_label": "戻る",
+        "price_chart":
+            "価格チャートを使用してアセットの価格アクションを表示する。",
+        "restore_account": "バックアップファイルからウォレットをリストアする。",
+        "sell_form": "このフォームを使用して売り注文を出します。",
+        "sell_orders": "この市場のすべての売り注文を表示する。",
+        "skip_label": "スキップ",
+        "switch_button": "このボタンを使用してトレーディングペアを切り替える。"
+    },
+    "wallet": {
+        "accept": "承認",
+        "account_create_wallet_text":
+            "このパスワードは新しいBitSharesウォレットの作成に使用されます。ウォレットはブラウザにのみローカルで格納されます。BitSharesウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
+        "account_exp":
+            "このアカウントはブロックチェーン上に作成され、アセット転送用のアドレスになります！ <strong>BitSharesにはBitcoinスタイルの長いアドレスはありません！</strong>",
+        "account_public": "アカウント名 (公開)",
+        "active_wallet": "アクティブウォレット",
+        "all_set": "準備ができました！",
+        "ask_to_select_wallet": "Please select a key file",
+        "back": "戻る",
+        "backup_brainkey": "ブレインキーのバックアップ",
+        "backup_explain":
+            "下のボタンをクリックすると、拡張子 .bin のバックアップファイルが生成されます。このファイルはウォレットのパスワードで暗号化されており、アカウントのすべての秘密キーを含んでいます。ウォレットのリストアや他のコンピュータ / ブラウザへの移動に使用することができます。",
+        "backup_login": "Backup & login",
+        "backup_new_account":
+            "おめでとうございます。新しいアカウントを作成しました。今すぐウォレットのバックアップを作成することを強く推奨します。バックアップがない場合、コンピュータに何か問題が発生した場合にリストアすることはできません。",
+        "backup_warning":
+            "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
+        "balance_claim_lookup": "残高を検索",
+        "balance_claims": "残高請求",
+        "brainkey": "ブレインキー",
+        "brainkey_backed_up": "このブレインキーを最後にバックアップしました",
+        "brainkey_not_backed_up":
+            "このブレインキーはバックアップされていません。",
+        "brainkey_not_verified": "このブレインキーは検証されていません",
+        "brainkey_reset_success":
+            "配列をリセットします。 秘密キーの更新を開始するには、ブラウザをリフレッシュしてからウォレットをアンロックしてください。",
+        "brainkey_seq_reset": "ブレインキーの配列をリセットする",
+        "brainkey_seq_reset_button": "今すぐリセット",
+        "brainkey_seq_reset_text":
+            "ウォレットのブレインキーから生成する秘密キーの生成回数をリセットします。<br />これはウォレットの秘密キーを最初のものに戻します。",
+        "brainkey_w1":
+            "バックアップを完了するには、これを印刷するか書き留めてください。",
+        "brainkey_w2": "あなたのリカバリーキーにアクセスできる人は誰でも",
+        "brainkey_w3": "このウォレットの資金にアクセスできます。",
+        "bts_09_export": "BTS 0.9.3cキーエクスポートファイル (.json)",
+        "bts_rules":
+            "BitSharesの第1のルールは: パスワードをなくさないこと。<br/>BitSharesの第2のルールは: パスワードをなくさないでください。<br/>BitSharesの第3のルールは: 我々はあなたのパスワードを回復することができません。<br />第4のルールは：覚えられるパスワードは安全ではありません。<br />第5のルールは：ランダムに生成したパスワードのみを使用してください。<br />第6のルールは：誰にもパスワードを教えないでください。<br/>第7のルールは：いつもパスワードをバックアップしてください。",
+        "cancel": "キャンセル",
+        "change": "%(name)sに変更する",
+        "change_backup":
+            "パスワードを変更したため、新しいバックアップを作成することを強く推奨します。",
+        "change_password": "パスワードの変更",
+        "change_success": "パスワードは正常に変更されました！",
+        "change_wallet": "ウォレットの変更",
+        "claim_balance": "残高を請求する",
+        "claim_balances": "残高を請求する",
+        "claim_later":
+            "キーをインポートしたら、選択したアカウントにこれらの残高を請求することができます。",
+        "confirm": "ウォレットパスワード (確認)",
+        "confirm_error": "パスワードの確認入力が一致しません",
+        "confirm_password": "パスワードを確認してください",
+        "congrat": "おめでとうございます。準備ができました！",
+        "console": "ウォレット管理コンソール",
+        "create": "作成",
+        "create_a": "新しいアカウントを作成する",
+        "create_account_password_text":
+            "新しいアカウントのキーはパスワードから生成されます。<strong>ブラウザまたは中央サーバーには保存されないため、このパスワードを確実に覚えておく必要があります！！</strong> パスワードマネージャーに保存するか、手で書き留めてください。",
+        "create_account_text":
+            "選択するアカウント名はブロックチェーン上で公開登録され、あなたが作成したすべての取引が特定されるため、ユニークである必要があります。",
+        "create_backup": "バックアップの作成",
+        "create_backup_of": "今すぐバックアップを作成する",
+        "create_importkeys_text":
+            "キーをインポートするには、まずキーを格納するウォレットを作成する必要があります。以下の新しいウォレット作成のダイアログを完了させてください。",
+        "create_password": "パスワードを使用して新しいアカウントを作成する",
+        "create_success": "ウォレットを作成しました",
+        "create_text":
+            "BitSharesウォレットはブラウザに保存され、クラウドには保存されません。ウォレットには複数のアカウントを含めることができ、バックアップファイルを使用してブラウザやコンピュータ間で簡単に移動することができます。",
+        "create_w_a": "ウォレットとアカウントを作成する",
+        "create_wallet": "新しいウォレットを作成する",
+        "create_wallet_backup": "バックアップから新しいウォレットを作成する",
+        "current_pass": "現在のパスワード",
+        "custom_brainkey": "カスタムブレインキーを使用する (上級者向け)",
+        "delete_confirm_line1": "本当によろしいですか？",
+        "delete_confirm_line2":
+            "これを読まない場合、予期しない問題が発生する可能性があります！",
+        "delete_confirm_line3":
+            "この操作は元に戻すことができません。バックアップをお持ちでない場合、このウォレットはなくなります。",
+        "delete_confirm_line4": "はい、%(name)sのウォレットを削除します",
+        "delete_wallet": "ウォレットを削除する",
+        "delete_wallet_name": "ウォレット (%(name)s) を削除する",
+        "different_file_type": "Have a different file type?",
+        "done": "完了",
+        "dont_ask_for_backup": "Don't ask me to back up again",
+        "download": "ダウンロード",
+        "enter_password": "パスワードを入力してください",
+        "existing_password": "既存のパスワード",
+        "first_account_paid":
+            "これが最初のアカウントであるため、登録料はフォーセットが払います。",
+        "generated": "生成したパスワード",
+        "go_get_started": "開始時のヒントを見る",
+        "has_wallet":
+            "最初のBitSharesアカウントを作成すると、自動的にBitSharesウォレットも作成され、ブラウザに格納されます。このウォレットはあなたのパスワードで暗号化されており、アカウントに付属する秘密キーを含んでいます。このウォレットのバックアップを作成することが大切です！",
+        "import_20_notice1": "BTS 2.0+ バックアップを最初にインポートする",
+        "import_20_notice2": "(お持ちの場合)",
+        "import_backup":
+            "BitShares 2.0バックアップ (.bin ファイル) をインポートする",
+        "import_backup_choose":
+            "以下のダイアログでバックアップファイルを選択してください。ファイルはどこにもアップロードされず、ブラウザから離れないため、この操作は安全です。",
+        "import_balance": "残高をインポートする",
+        "import_bts": "BTS 0.9.3c キーエクスポートをインポートする",
+        "import_bts1": "BitShares 0.9.3cからインポートする",
+        "import_key_success": "%(count)s のキーが正常にインポートされました。",
+        "import_keys": "キーのインポート",
+        "import_keys_tool": "キーのインポートツール",
+        "import_pass_match":
+            "パスワードが一致しました。バックアップを復号化しています...",
+        "import_password": "インポートファイルのパスワードを入力してください",
+        "import_private_key": "秘密キーをインポートする",
+        "invalid_format": "無効なフォーマット",
+        "key_file": "Key file",
+        "key_file_bin": "Key file (.bin)",
+        "last_backup": "最新のバックアップ",
+        "link_account": "アカウント",
+        "link_deposit": "入金",
+        "link_transfer": "転送",
+        "loading_balances": "未請求残高を探しています",
+        "local_switch":
+            "ウォレットと指定されたパスワードが一致したため、ウォレットモデルに切り替わりました",
+        "login_type": "ログインタイプ選択",
+        "must_be_ltm":
+            "その操作を行って手数料を支払うアカウントは終身会員でなければなりません。",
+        "name": "ウォレット名",
+        "need_backup": "このウォレットのバックアップが必要です",
+        "never_backed_up":
+            "このウォレットのバックアップを作成していません。今すぐバックアップを作成してください！",
+        "new_confirm": "新しいパスワードを確認してください",
+        "new_password": "新しいパスワード",
+        "new_wallet": "新しいウォレット",
+        "new_wallet_name": "新しいウォレット名",
+        "no_accounts": "アカウントが見つかりません",
+        "no_balance": "未請求残高はありませんでした",
+        "no_wallet": "まだウォレットを持っていません",
+        "noneed_backup": "バックアップは必要ありません",
+        "not_first_account":
+            "既にアカウントを持っているため、新アカウントの料金を自身で支払う必要があります。そのためにはアカウントが終身会員である必要があります。これはアカウントページで購入できます。",
+        "ok_done": "OKです。ダッシュボードに連れて行ってください",
+        "pass_incorrect": "不正なパスワード",
+        "pass_length":
+            "パスワードは少なくとも %(minLength)s 文字以上が必要です。理想的には20文字以上、数字、特殊文字、文字の組み合わせであるべきです。",
+        "password": "ウォレットパスワード",
+        "password_crucial":
+            "まだやっていない場合は、紙やパスワードマネージャー、その他のどこかに今すぐパスワードを書き留めておくことが極めて重要です。パスワードを紛失したり忘れた場合はアカウントは失われます。<strong>私たちはそれを取り戻してあげることができません。</strong>",
+        "password_lose_warning":
+            "<strong>重要: パスワードを忘れた場合、アカウントにアクセスすることができなくなります。私たちはパスワードをリセットまたはリストアすることができません！パスワードを記憶するか書き留めてください！</strong>",
+        "password_model": "アカウントモデル",
+        "password_model_1":
+            "アカウントモデルはパスワードとアカウント名の組み合わせによってその場で秘密キーを生成します。これは使い勝手と利便性の代わりに、同時に1つのアカウントにしかログインできない制限がかかります。",
+        "password_model_2":
+            "アカウントモデルはアカウント名とパスワードだけでどこからでもログインすることが可能ですが、<strong> パスワードはブルートフォース攻撃に対して脆弱です。そのため、長いパスワードであることが重要です。理想的には20文字以上！</strong>",
+        "password_model_3":
+            "<li>シングルアカウント</li><li>簡単ログイン</li><li>中程度のセキュリティ</li>",
+        "password_show": "パスワードを表示する",
+        "paste_private":
+            "秘密キーをここに貼り付けてください (Wallet Import Format - WIF)",
+        "pwd4brainkey":
+            "ブレインキーを表示するにはパスワードを入力してください",
+        "ready_to_restore": "リストアできます",
+        "reenter_brainkey": "ブレインキーを再入力してください",
+        "reset": "リセット",
+        "restore": "バックアップからウォレットをリストアする",
+        "restore_backup": "バックアップのリストア",
+        "restore_it_here": "Restore it here",
+        "restore_key_file": "Restore key file..",
+        "restore_success": "(%(name)s)のウォレットを正常にリストアしました。",
+        "restore_wallet_of": "リストア(%(name)sのウォレット)",
+        "select_wallet": "Select key file",
+        "setup_wallet": "ウォレットをセットアップする",
+        "show_brainkey": "ブレインキーを表示",
+        "step_1": "ウォレットを作成",
+        "step_2": "バックアップを作成",
+        "step_3": "開始",
+        "submit": "送信",
+        "switch_model_password": "アカウントモデルに切り替える",
+        "switch_model_wallet": "ウォレットモデルに切り替える",
+        "tips_account": "新しいアカウントを見る",
+        "tips_dashboard": "ダッシュボードを見る",
+        "tips_deposit": "入金する",
+        "tips_explore":
+            "アカウントの作成とバックアップのダウンロードが終わったら、開始しましょう。左のリンクをクリックして探検を初めてください。",
+        "tips_explore_pass":
+            "アカウントを作成しパスワードをバックアップしたら、今すぐ始めましょう。左のリンクをクリックして探検を初めてください。",
+        "tips_header":
+            "これらのリンクはトップメニューとアカウント名の横のドロップダウンメニューにもあります。",
+        "tips_login":
+            "重要: ログイン / ログアウト機能はありません。取引を行う時にウォレットをアンロックするだけです。",
+        "tips_settings": "設定を変更する",
+        "tips_transfer": "転送する",
+        "title": "ウォレット",
+        "totals": "アセット合計",
+        "unclaimed": "これらのキーに付属する未請求残高",
+        "unclaimed_vesting": "未請求 (権利確定)",
+        "understand_1":
+            "パスワードを紛失または忘れた場合、回復することができないことを理解しました",
+        "understand_2":
+            "パスワードを書き留めました、または他の方法で保存しました",
+        "understand_3":
+            "パスワードを紛失した場合、資金にアクセスできなくなることを理解しました",
+        "use_different": "Use different file",
+        "use_password": "アカウントモデルを使用する",
+        "use_wallet": "ウォレットモデルを使用する",
+        "using": "Using:",
+        "verified": "検証済み",
+        "verify": "書き留めました。",
+        "verify_prior_backup": "事前バックアップの検証",
+        "wallet_browser": "あなたのWebブラウザがあなたのウォレットです",
+        "wallet_created": "ウォレットを作成しました",
+        "wallet_crucial":
+            "あなたのウォレットは<strong>ブラウザにのみ</strong>格納されており、ブラウザのデータをクリアした場合、ウォレットをリストアするためにバックアップから復元する必要があるため、バックアップを作成しておくことがとても重要です！<strong>バックアップをなくした場合、誰にもアカウントをリストアすることはできなくなります。</strong>",
+        "wallet_exist":
+            "その名前のウォレットは既に存在しています。新しい名前を選択してください。",
+        "wallet_exist_with_name":
+            "ウォレット(%(name)s)は存在しています。名前を変更してください。",
+        "wallet_lose_warning":
+            "<strong>重要: ウォレットまたはパスワードをなくした場合、二度とあなたの資金にアクセスすることはできません。バックアップを安全な場所に保管し、パスワードを記憶するか書き留めてください！</strong>",
+        "wallet_model": "ウォレットモデル",
+        "wallet_model_1":
+            "ウォレットモデルはブラウザにウォレットを格納します。ウォレットはあなたが選択したパスワードで暗号化され、ブレインキーまたはすべての秘密キーを含む暗号化されたバイナリファイルによってバックアップできます。ウォレットモデルでは同時に複数のアカウントを使用可能です。",
+        "wallet_model_2":
+            "ウォレットモデルは最高のセキュリティを備えていますが、現在のブラウザとコンピュータに制限されます。ウォレットを他のブラウザやコンピュータに移行するには、バックアップまたはブレインキーを使用します。",
+        "wallet_model_3":
+            "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
+        "wallet_move":
+            "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
+        "wallet_new": "新しいBitSharesアカウント",
+        "wallet_password": "パスワードを使用してどこでもログイン"
     },
     "winex": {
         "gateway": {
-            "support_block": "サポートについては、Winexまでご連絡ください。:",
-            "fee": "ゲートウェイ手数料",
+            "click_getaddress": "Please get deposit address",
             "deposit_warning":
                 "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "click_getaddress": "Please get deposit address",
-            "get_deposit_address": "get deposit address"
-        },
-        "withdraw": {
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s",
-            "finalNumber": "Actual amount ：%(final_number)s"
+            "fee": "ゲートウェイ手数料",
+            "get_deposit_address": "get deposit address",
+            "support_block": "サポートについては、Winexまでご連絡ください。:"
         },
         "transfer": {
             "errors": {
                 "minWithdraw": "Minimum amount：%(min_amount)s"
             }
+        },
+        "withdraw": {
+            "finalNumber": "Actual amount ：%(final_number)s",
+            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
     }
 }

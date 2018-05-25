@@ -4,13 +4,14 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import Translate from "react-translate-component";
 import QRCode from "qrcode.react";
+import PropTypes from "prop-types";
 
 class AccountInfo extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        title: React.PropTypes.string,
-        image_size: React.PropTypes.object.isRequired,
-        my_account: React.PropTypes.bool
+        title: PropTypes.string,
+        image_size: PropTypes.object.isRequired,
+        my_account: PropTypes.bool
     };
 
     static defaultProps = {

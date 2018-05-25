@@ -81,7 +81,6 @@ export const settingsAPIs = {
         {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
-        {url: "wss://bitshares.apasia.tech/ws", location: "Bangkok, Thailand"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
         {url: "wss://bitshares.dacplay.org/ws", location: "Hangzhou, China"},
         {url: "wss://bitshares-api.wancloud.io/ws", location: "China"},
@@ -134,6 +133,7 @@ export const settingsAPIs = {
         {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
         {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         {url: "wss://wss.ioex.top", location: "USA"},
+        {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -142,6 +142,10 @@ export const settingsAPIs = {
         {
             url: "wss://testnet.nodes.bitshares.ws",
             location: "TESTNET - BitShares Infrastructure Program"
+        },
+        {
+            url: "wss://testnet.bitshares.apasia.tech/ws",
+            location: "TESTNET - APT BitShares (Dallas, USA)"
         }
     ],
     DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal

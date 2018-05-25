@@ -5,6 +5,7 @@ import TimeAgo from "../Utility/TimeAgo";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import getLocale from "browser-locale";
+import PropTypes from "prop-types";
 
 /**
  * @brief displays block's date and time based on block number
@@ -15,7 +16,7 @@ import getLocale from "browser-locale";
 
 class BlockTime extends React.Component {
     static propTypes = {
-        block_number: React.PropTypes.number.isRequired,
+        block_number: PropTypes.number.isRequired,
         globalObject: ChainTypes.ChainObject.isRequired,
         dynGlobalObject: ChainTypes.ChainObject.isRequired
     };
@@ -74,6 +75,6 @@ class BlockTime extends React.Component {
         );
     }
 }
-BlockTime = BindToChainState(BlockTime, {keep_updating: true});
+BlockTime = BindToChainState(BlockTime);
 
 export default BlockTime;

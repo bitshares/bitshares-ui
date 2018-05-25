@@ -13,21 +13,22 @@ import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
 import {ChainStore} from "bitsharesjs/es";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {Price, Asset} from "common/MarketClasses";
+import PropTypes from "prop-types";
 
 class WithdrawModalBlocktrades extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
-        output_coin_name: React.PropTypes.string.isRequired,
-        output_coin_symbol: React.PropTypes.string.isRequired,
-        output_coin_type: React.PropTypes.string.isRequired,
-        url: React.PropTypes.string,
-        output_wallet_type: React.PropTypes.string,
-        output_supports_memos: React.PropTypes.bool.isRequired,
-        amount_to_withdraw: React.PropTypes.string,
+        output_coin_name: PropTypes.string.isRequired,
+        output_coin_symbol: PropTypes.string.isRequired,
+        output_coin_type: PropTypes.string.isRequired,
+        url: PropTypes.string,
+        output_wallet_type: PropTypes.string,
+        output_supports_memos: PropTypes.bool.isRequired,
+        amount_to_withdraw: PropTypes.string,
         balance: ChainTypes.ChainObject
     };
 
@@ -618,7 +619,7 @@ class WithdrawModalBlocktrades extends React.Component {
                                 )}
                             />
                             <Trigger close={withdrawModalId}>
-                                <a href className="secondary button">
+                                <a className="secondary button">
                                     <Translate content="modal.confirmation.cancel" />
                                 </a>
                             </Trigger>
@@ -627,9 +628,9 @@ class WithdrawModalBlocktrades extends React.Component {
                 );
             }
             // if (this.state.withdraw_address_is_valid)
-            //   invalid_address_message = <Icon name="checkmark-circle" className="success" />;
+            //   invalid_address_message = <Icon name="checkmark-circle" title="icons.checkmark_circle.operation_succeed" className="success" />;
             // else
-            //   invalid_address_message = <Icon name="cross-circle" className="alert" />;
+            //   invalid_address_message = <Icon name="cross-circle" title="icons.cross_circle.operation_failed" className="alert" />;
         }
 
         let tabIndex = 1;
@@ -851,6 +852,4 @@ class WithdrawModalBlocktrades extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawModalBlocktrades, {
-    keep_updating: true
-});
+export default BindToChainState(WithdrawModalBlocktrades);

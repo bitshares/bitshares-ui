@@ -8,6 +8,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 function getWitnessOrCommittee(type, acct) {
     let url = "",
@@ -30,8 +31,8 @@ function getWitnessOrCommittee(type, acct) {
 
 class AccountItemRow extends React.Component {
     static propTypes = {
-        account: React.PropTypes.object.isRequired,
-        onAction: React.PropTypes.func.isRequired
+        account: PropTypes.object.isRequired,
+        onAction: PropTypes.func.isRequired
     };
 
     shouldComponentUpdate(nextProps) {
@@ -73,7 +74,7 @@ class AccountItemRow extends React.Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon name="share" />
+                            <Icon name="share" title="icons.share" />
                         </a>
                     ) : null}
                 </td>
@@ -112,9 +113,14 @@ class AccountItemRow extends React.Component {
                                     ? "checkmark-circle"
                                     : "minus-circle"
                             }
+                            title={
+                                isSupported
+                                    ? "icons.checkmark_circle.yes"
+                                    : "icons.minus_circle.no"
+                            }
                         />
                     ) : (
-                        <Icon name="locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>
@@ -125,14 +131,14 @@ class AccountItemRow extends React.Component {
 class VotingAccountsList extends React.Component {
     static propTypes = {
         items: ChainTypes.ChainObjectsList,
-        onAddItem: React.PropTypes.func.isRequired,
-        onRemoveItem: React.PropTypes.func.isRequired,
-        validateAccount: React.PropTypes.func,
-        label: React.PropTypes.string.isRequired, // a translation key for the label,
-        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
-        tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        action: React.PropTypes.string,
-        withSelector: React.PropTypes.bool
+        onAddItem: PropTypes.func.isRequired,
+        onRemoveItem: PropTypes.func.isRequired,
+        validateAccount: PropTypes.func,
+        label: PropTypes.string.isRequired, // a translation key for the label,
+        placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        tabIndex: PropTypes.number, // tabindex property to be passed to input tag
+        action: PropTypes.string,
+        withSelector: PropTypes.bool
     };
 
     static defaultProps = {
@@ -300,4 +306,4 @@ class VotingAccountsList extends React.Component {
     }
 }
 
-export default BindToChainState(VotingAccountsList, {keep_updating: true});
+export default BindToChainState(VotingAccountsList);

@@ -18,6 +18,7 @@ import ProposedOperation from "./ProposedOperation";
 import marketUtils from "common/market_utils";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
+import PropTypes from "prop-types";
 
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
@@ -43,7 +44,7 @@ class TransactionLabel extends React.Component {
 
 class Row extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     static propTypes = {
@@ -157,7 +158,7 @@ class Row extends React.Component {
         );
     }
 }
-Row = BindToChainState(Row, {keep_updating: true});
+Row = BindToChainState(Row);
 
 class Operation extends React.Component {
     static defaultProps = {
@@ -169,10 +170,10 @@ class Operation extends React.Component {
     };
 
     static propTypes = {
-        op: React.PropTypes.array.isRequired,
-        current: React.PropTypes.string,
-        block: React.PropTypes.number,
-        csvExportMode: React.PropTypes.bool
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string,
+        block: PropTypes.number,
+        csvExportMode: PropTypes.bool
     };
 
     componentWillReceiveProps(np) {
@@ -216,7 +217,9 @@ class Operation extends React.Component {
             color = "info";
         let memoComponent = null;
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 if (op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />;
@@ -1189,14 +1192,20 @@ class Operation extends React.Component {
                             asset={op[1].amount_to_claim.asset_id}
                         >
                             {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="transaction.asset_claim_fees"
-                                    balance_amount={utils.format_asset(
-                                        op[1].amount_to_claim.amount,
-                                        asset
-                                    )}
-                                    asset={asset.get("symbol")}
+                                <TranslateWithLinks
+                                    string="transaction.asset_claim_fees"
+                                    keys={[
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount_to_claim,
+                                            arg: "balance_amount"
+                                        },
+                                        {
+                                            type: "asset",
+                                            value: asset.get("id"),
+                                            arg: "asset"
+                                        }
+                                    ]}
                                 />
                             )}
                         </BindToChainState.Wrapper>
@@ -1270,6 +1279,22 @@ class Operation extends React.Component {
                             },
                             {type: "account", value: op[1].from, arg: "from"},
                             {type: "account", value: op[1].to, arg: "to"},
+                            {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
+                );
+                break;
+
+            case "asset_settle_cancel":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_settle_cancel"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].account,
+                                arg: "account"
+                            },
                             {type: "amount", value: op[1].amount, arg: "amount"}
                         ]}
                     />

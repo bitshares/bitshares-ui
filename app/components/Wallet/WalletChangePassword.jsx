@@ -6,6 +6,7 @@ import cname from "classnames";
 import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -98,7 +99,7 @@ export default class WalletChangePassword extends Component {
 
 class WalletPassword extends Component {
     static propTypes = {
-        onValid: React.PropTypes.func.isRequired
+        onValid: PropTypes.func.isRequired
     };
 
     constructor() {

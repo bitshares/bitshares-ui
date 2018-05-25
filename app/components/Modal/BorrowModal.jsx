@@ -1,5 +1,6 @@
-import React, {PropTypes} from "react";
-import {isFinite} from "lodash";
+import React from "react";
+import PropTypes from "prop-types";
+import {isFinite} from "lodash-es";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -542,12 +543,12 @@ class BorrowModalContent extends React.Component {
                         />
                     )}
                 </span>
-                <a href onClick={this._payDebt.bind(this)}>
+                <a onClick={this._payDebt.bind(this)}>
                     <Translate content="borrow.pay_max_debt" />
                 </a>
                 |
                 {collateral_ratio != 0 ? (
-                    <a href onClick={this._maximizeDebt.bind(this)}>
+                    <a onClick={this._maximizeDebt.bind(this)}>
                         <Translate content="borrow.use_max" />
                     </a>
                 ) : (
@@ -579,7 +580,7 @@ class BorrowModalContent extends React.Component {
                         />
                     )}
                 </span>
-                <a href onClick={this._maximizeCollateral.bind(this)}>
+                <a onClick={this._maximizeCollateral.bind(this)}>
                     <Translate content="borrow.use_max" />
                 </a>
             </span>
@@ -860,9 +861,7 @@ class BorrowModalContent extends React.Component {
         );
     }
 }
-BorrowModalContent = BindToChainState(BorrowModalContent, {
-    keep_updating: true
-});
+BorrowModalContent = BindToChainState(BorrowModalContent);
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {

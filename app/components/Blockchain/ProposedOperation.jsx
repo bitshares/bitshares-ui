@@ -15,11 +15,26 @@ import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
+import PropTypes from "prop-types";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
+
+export const TransactionIDAndExpiry = ({id, expiration, style}) => {
+    const endDate = counterpart.localize(new Date(expiration), {
+        format: "short"
+    });
+    return (
+        <b style={style}>
+            <span>#{id} | </span>
+            <span>
+                <Translate content="proposal.expires" />: {endDate}
+            </span>
+        </b>
+    );
+};
 
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -39,7 +54,7 @@ class TransactionLabel extends React.Component {
 
 class Row extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -54,25 +69,25 @@ class Row extends React.Component {
 
     render() {
         let {
+            id,
             block,
             fee,
             color,
             type,
             hideDate,
             hideFee,
-            hideOpLabel
+            hideOpLabel,
+            hideExpiration,
+            expiration
         } = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
-        let endDate = counterpart.localize(new Date(this.props.expiration), {
-            format: "short"
-        });
 
         return (
             <div style={{padding: "5px 0", textAlign: "left"}}>
                 {hideOpLabel ? null : (
                     <span className="left-td">
-                        <a href onClick={this.showDetails}>
+                        <a onClick={this.showDetails}>
                             <TransactionLabel color={color} type={type} />
                         </a>
                     </span>
@@ -89,14 +104,19 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {this.props.expiration ? (
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
-                        <span>#{this.props.id} | </span>
-                        <span>
-                            <Translate content="proposal.expires" />: {endDate}
-                        </span>
-                    </div>
-                ) : null}
+                {!hideExpiration &&
+                    this.props.expiration && (
+                        <TransactionIDAndExpiry
+                            id={id}
+                            expiration={expiration}
+                            style={{
+                                paddingTop: 5,
+                                fontSize: "0.85rem",
+                                paddingBottom: "0.5rem",
+                                display: "block"
+                            }}
+                        />
+                    )}
             </div>
         );
     }
@@ -114,12 +134,12 @@ class ProposedOperation extends React.Component {
     };
 
     static propTypes = {
-        op: React.PropTypes.array.isRequired,
-        current: React.PropTypes.string,
-        block: React.PropTypes.number,
-        hideDate: React.PropTypes.bool,
-        hideFee: React.PropTypes.bool,
-        csvExportMode: React.PropTypes.bool
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string,
+        block: PropTypes.number,
+        hideDate: PropTypes.bool,
+        hideFee: PropTypes.bool,
+        csvExportMode: PropTypes.bool
     };
 
     // shouldComponentUpdate(nextProps) {
@@ -145,12 +165,14 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, hideExpiration} = this.props;
         let line = null,
             column = null,
             color = "info";
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 let memoComponent = null;
 
@@ -576,14 +598,20 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate
-                            component="span"
-                            content="proposal.asset_settle"
-                        />
-                        &nbsp;<FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
+                        <TranslateWithLinks
+                            string="proposal.asset_settle"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].account,
+                                    arg: "account"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                }
+                            ]}
                         />
                     </span>
                 );
@@ -1098,14 +1126,20 @@ class ProposedOperation extends React.Component {
                             asset={op[1].amount_to_claim.asset_id}
                         >
                             {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="proposal.asset_claim_fees"
-                                    balance_amount={utils.format_asset(
-                                        op[1].amount_to_claim.amount,
-                                        asset
-                                    )}
-                                    asset={asset.get("symbol")}
+                                <TranslateWithLinks
+                                    string="transaction.asset_claim_fees"
+                                    keys={[
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount_to_claim,
+                                            arg: "balance_amount"
+                                        },
+                                        {
+                                            type: "asset",
+                                            value: asset.get("id"),
+                                            arg: "asset"
+                                        }
+                                    ]}
                                 />
                             )}
                         </BindToChainState.Wrapper>
@@ -1201,6 +1235,7 @@ class ProposedOperation extends React.Component {
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
                 expiration={this.props.expiration}
+                hideExpiration={hideExpiration}
             />
         ) : null;
 

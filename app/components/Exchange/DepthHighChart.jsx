@@ -1,9 +1,9 @@
 import React from "react";
-import {PropTypes} from "react";
-import ReactHighstock from "react-highcharts/dist/ReactHighstock";
+import PropTypes from "prop-types";
+import ReactHighchart from "react-highcharts";
 import utils from "common/utils";
 import counterpart from "counterpart";
-import {cloneDeep} from "lodash";
+import {cloneDeep} from "lodash-es";
 import Translate from "react-translate-component";
 import colors from "assets/colors";
 import AssetName from "../Utility/AssetName";
@@ -101,47 +101,6 @@ class DepthHighChart extends React.Component {
             flatCalls = cloneDeep(flat_calls),
             flatSettles = cloneDeep(flat_settles);
 
-        function findNormalizationPower(power, array) {
-            while (array[array.length - 1][0] * power < 1) {
-                power *= 10;
-            }
-            return power;
-        }
-
-        function normalizeValues(array) {
-            if (array.length) {
-                array.forEach(entry => {
-                    entry[0] *= power;
-                });
-            }
-        }
-
-        /*
-		* Because Highstock does not deal with X axis values below 1, we need to
-		* normalize the values and use the normalizing factor when displaying the
-		* values on the chart
-		*/
-        let power = 1;
-        if (flat_bids.length) {
-            power = findNormalizationPower(power, flat_bids);
-        } else if (flat_asks.length) {
-            power = findNormalizationPower(power, flat_asks);
-        } else if (flat_calls && flat_calls.length) {
-            power = findNormalizationPower(power, flat_calls);
-        } else if (flat_settles && flat_settles.length) {
-            power = findNormalizationPower(power, flat_settles);
-        }
-
-        // Add one more factor of 10 to make sure it's enough
-        power *= 10;
-
-        if (power !== 1) {
-            normalizeValues(flatBids);
-            normalizeValues(flatAsks);
-            normalizeValues(flatCalls);
-            normalizeValues(flatSettles);
-        }
-
         let config = {
             chart: {
                 type: "area",
@@ -179,7 +138,7 @@ class DepthHighChart extends React.Component {
 						<tr>
 							<td>${counterpart.translate("exchange.price")}:</td>
 							<td style="text-align: right">${utils.format_number(
-                                this.x / power,
+                                this.x,
                                 base.get("precision")
                             )} ${baseSymbol}/${quoteSymbol}</td>
 						</tr>
@@ -232,10 +191,10 @@ class DepthHighChart extends React.Component {
                 labels: {
                     style: {
                         color: primaryText
-                    },
-                    formatter: function() {
-                        return this.value / power;
                     }
+                    // formatter: function() {
+                    //     return this.value / power;
+                    // }
                 },
                 ordinal: false,
                 lineColor: "#000000",
@@ -297,8 +256,8 @@ class DepthHighChart extends React.Component {
         }
 
         if (this.props.hasPrediction) {
-            config.xAxis.min = -0.05 * power;
-            config.xAxis.max = 1.05 * power;
+            config.xAxis.min = -0.05;
+            config.xAxis.max = 1.05;
         }
 
         // Add plotlines if defined
@@ -319,7 +278,7 @@ class DepthHighChart extends React.Component {
                 color: axisLineColor,
                 id: "plot_line",
                 dashStyle: "longdash",
-                value: this.props.LCP * power,
+                value: this.props.LCP,
                 label: {
                     text: counterpart.translate("explorer.block.call_limit"),
                     style: {
@@ -356,7 +315,7 @@ class DepthHighChart extends React.Component {
                 color: settlementColor,
                 id: "plot_line",
                 dashStyle: "solid",
-                value: feedPrice * power,
+                value: feedPrice,
                 label: {
                     text: counterpart.translate("explorer.block.feed_price"),
                     style: {
@@ -380,10 +339,6 @@ class DepthHighChart extends React.Component {
 
         // Add settle orders
         if (feedPrice && (flatSettles && flatSettles.length)) {
-            // flat_settles.forEach(settle => {
-            //	 settle[0] *= power;
-            // });
-
             config.series.push({
                 name: `Settle ${quoteSymbol}`,
                 data: flatSettles,
@@ -423,7 +378,7 @@ class DepthHighChart extends React.Component {
         // Add onClick event listener if defined
         if (this.props.onClick) {
             config.chart.events = {
-                click: this.props.onClick.bind(this, power)
+                click: this.props.onClick.bind(this)
             };
         }
 
@@ -456,7 +411,7 @@ class DepthHighChart extends React.Component {
                         </p>
                     )}
                     {flatBids || flatAsks || flatCalls ? (
-                        <ReactHighstock config={config} />
+                        <ReactHighchart config={config} />
                     ) : null}
                 </div>
             );
@@ -492,7 +447,7 @@ class DepthHighChart extends React.Component {
                             </span>
                         ) : null}
                         {flatBids || flatAsks || flatCalls ? (
-                            <ReactHighstock ref="depthChart" config={config} />
+                            <ReactHighchart ref="depthChart" config={config} />
                         ) : null}
                     </div>
                 </div>

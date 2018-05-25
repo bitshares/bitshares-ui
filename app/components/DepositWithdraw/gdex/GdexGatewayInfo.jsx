@@ -1,29 +1,28 @@
 import React from "react";
 import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
-import LoadingIndicator from "../../LoadingIndicator";
 import AssetName from "../../Utility/AssetName";
 import LinkToAccountById from "../../Utility/LinkToAccountById";
 import AccountBalance from "../../Account/AccountBalance";
 import BaseModal from "../../Modal/BaseModal";
 import ChainTypes from "../../Utility/ChainTypes";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BalanceComponent from "../../Utility/BalanceComponent";
 import GdexCache from "../../../lib/common/GdexCache";
 import {requestDepositAddress} from "../../../lib/common/gdexMethods";
 import QRCode from "qrcode.react";
 import GdexWithdrawModal from "./GdexWithdrawModal";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 class GdexGatewayInfo extends React.Component {
     static propTypes = {
-        // inner_asset_name:               React.PropTypes.string,
-        // outer_asset_name:           React.PropTypes.string,
+        // inner_asset_name:               PropTypes.string,
+        // outer_asset_name:           PropTypes.string,
         account: ChainTypes.ChainAccount,
         issuer_account: ChainTypes.ChainAccount,
-        gateway: React.PropTypes.string,
+        gateway: PropTypes.string,
         btsCoin: ChainTypes.ChainAsset,
-        memo_rule: React.PropTypes.string
+        memo_rule: PropTypes.string
     };
 
     static defaultProps = {
@@ -562,4 +561,4 @@ class DepositQrCodeModal extends React.Component {
     }
 }
 
-export default BindToChainState(GdexGatewayInfo, {keep_updating: true});
+export default BindToChainState(GdexGatewayInfo);

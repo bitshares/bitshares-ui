@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 import utils from "common/utils";
 import Translate from "react-translate-component";
@@ -192,6 +192,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question_circle"
                         />
                     </span>
                 </div>
@@ -240,6 +241,7 @@ class BuySell extends React.Component {
                         &nbsp;<Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
+                            title="icons.question-circle"
                         />
                     </span>
                 </div>
@@ -262,7 +264,9 @@ class BuySell extends React.Component {
         let marketFee =
             isBid && quoteMarketFee
                 ? quoteMarketFee
-                : !isBid && baseMarketFee ? baseMarketFee : null;
+                : !isBid && baseMarketFee
+                    ? baseMarketFee
+                    : null;
         let hasBalance = isBid
             ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
             : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
@@ -862,4 +866,4 @@ class BuySell extends React.Component {
     }
 }
 
-export default BindToChainState(BuySell, {keep_updating: true});
+export default BindToChainState(BuySell);

@@ -616,9 +616,7 @@ class AccountAssetUpdate extends React.Component {
 
         amount.amount = utils.limitByPrecision(
             amount.amount,
-            type === "quote"
-                ? this.props.asset.get("precision")
-                : this.props.core.get("precision")
+            amount.asset.get("precision")
         );
 
         let {core_exchange_rate} = this.state;
@@ -823,7 +821,9 @@ class AccountAssetUpdate extends React.Component {
                 this._onUpdateDescription.bind(this, "visible"),
                 update.description.visible
                     ? false
-                    : update.description.visible === false ? true : false
+                    : update.description.visible === false
+                        ? true
+                        : false
             )
         );
 
@@ -1676,7 +1676,7 @@ class ConfirmModal extends React.Component {
                 id={this.props.modalId}
                 overlay={true}
                 modalHeader="account.confirm_asset_modal.header"
-                noLoggo
+                noLogo
             >
                 <Translate
                     content="account.confirm_asset_modal.are_you_sure"

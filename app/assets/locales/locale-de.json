@@ -1,369 +1,107 @@
 {
-    "page404": {
-        "page_not_found_title": "404 Seite nicht gefunden",
-        "page_not_found_subtitle": "Diese Seite existiert nicht",
-        "home": "Zuhause"
-    },
-    "languages": {
-        "en": "English",
-        "zh": "简体中文",
-        "fr": "Français",
-        "ko": "한국어",
-        "de": "Deutsch",
-        "es": "Español",
-        "it": "Italiano",
-        "tr": "Türkçe",
-        "ru": "Русский",
-        "ja": "日本語"
-    },
-    "header": {
-        "title": "BitShares UI",
-        "account": "Konto",
-        "dashboard": "Übersicht",
-        "explorer": "Explorer",
-        "exchange": "Börse",
-        "payments": "Transaktionen",
-        "logout": "Abmeldung",
-        "settings": "Einstellungen",
-        "current": "Aktives Konto",
-        "create_account": "Konto erstellen",
-        "create_asset": "Asset erstellen",
-        "update_asset": "Asset ändern",
-        "lock": "Sperren",
-        "unlock": "Entsperren",
-        "unlock_password": "Log in using a password",
-        "unlock_short": "Login",
-        "help": "Hilfe",
-        "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
-        "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
-        "account_notify": "The active account is now %(account)s",
-        "account_value": "Kontowert"
-    },
-    "browser_notification_messages": {
-        "money_received_title": "Übertragen von %(from)s",
-        "money_received_body": "Hat dich geschickt %(amount)s %(symbol)s"
-    },
-    "tooltip": {
-        "call_limit":
-            "This is the call price of the least collateralized margin position in the market.",
-        "margin_price":
-            "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
-        "settle_price":
-            "This is the price at which settle orders will execute.",
-        "sign_owner":
-            "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
-        "latest_price": "This is the latest price seen in this market.",
-        "no_price":
-            "There's no recent price available for this asset that can be used to estimate its value.",
-        "hide_asset": "Click here to hide this asset from this list.",
-        "show_asset": "Click here to show this asset in the main list.",
-        "settle":
-            "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
-        "filter_ops": "Use this list to filter your history by operation type.",
-        "show_block":
-            "Click here to show block #%(block)s where this transaction occured.",
-        "coll_ratio":
-            "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
-        "call_price":
-            "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
-        "close_position":
-            "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
-        "update_position":
-            "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
-        "cr_danger":
-            "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
-        "cr_warning":
-            "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
-        "propose_scam":
-            "This proposal was created by a known scammer, do not approve it!",
-        "login":
-            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
-        "buy_min":
-            "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
-        "borrow":
-            "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
-        "memo_tip":
-            "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
-    },
-    "walkthrough": {
-        "language_flag":
-            "Wählen Sie aus 9 verschiedenen Sprachen für die Verwendung in DEX.",
-        "restore_account":
-            "Stellen Sie eine Brieftasche mithilfe Ihrer Sicherungsdatei wieder her.",
-        "create_cloud_wallet":
-            "Greifen Sie über einen Kontonamen und ein Passwort auf die Cloud Wallet zu.",
-        "create_local_wallet":
-            "Erstellen Sie eine lokale Brieftasche und laden Sie alle zugehörigen privaten Schlüssel herunter.",
-        "switch_button":
-            "Wechseln Sie die Handelspaare mit dieser Schaltfläche.",
-        "favourite_button":
-            "Markieren Sie dieses Paar als Favorit in Ihrer Marktliste.",
-        "depth_chart":
-            "Verwenden Sie eine Markttiefe-Grafik, um Angebot und Nachfrage zu unterschiedlichen Preisen darzustellen.",
-        "price_chart":
-            "Anzeigen der Preisaktion eines Vermögenswerts mithilfe des Preistabellenfelds",
-        "chart_tool_zoom":
-            "Passen Sie das Preischart an, um mehr oder weniger Preisverlauf anzuzeigen.",
-        "chart_tool_duration":
-            "Gruppieren Sie Handelsdaten in verschiedenen Intervallen.",
-        "chart_tool_indicators":
-            "Fügen Sie der Preistabelle technische Indikatoren hinzu, um Handelsmöglichkeiten zu identifizieren.",
-        "buy_form": "Platzieren Sie Kaufaufträge über dieses Formular.",
-        "sell_form": "Platzieren Sie Verkaufsaufträge mit diesem Formular.",
-        "buy_orders": "Sehen Sie alle Kaufaufträge für diesen Markt an.",
-        "sell_orders": "Alle Verkaufsaufträge für diesen Markt anzeigen.",
-        "my_markets_tab":
-            "Diese Registerkarte listet häufig verwendete Märkte auf.",
-        "find_markets_tab":
-            "Über diese Registerkarte können Sie den Tab Meine Märkte durchsuchen und zusätzliche Märkte hinzufügen.",
-        "next_label": "Weiter",
-        "prev_label": "Zurück",
-        "skip_label": "Überspringen",
-        "done_label": "Fertig"
-    },
-    "propose": "vorschlagen",
-    "cancel": "abbrechen",
     "account": {
-        "transactions": {
-            "id": "ID"
+        "accounts": "Accounts",
+        "activity": "Activity",
+        "advanced": "Advanced",
+        "as_collateral": "Kollateral",
+        "asset": "Asset",
+        "asset_details": "Asset-Details",
+        "bittrex_scam":
+            "This account is not the real Bittrex account, please send to this account: bittrex-deposit.",
+        "bts_market": "Markt",
+        "collaterals": "Kollateral-Positionen",
+        "confirm_asset_modal": {
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?",
+            "header": "Confirm multiple changes"
         },
-        "search": "Search for an account",
+        "connections": {
+            "black": "Schwarzgelistet von",
+            "known": "Bekannt von"
+        },
         "contacts": "Kontakte",
+        "create_account": "Konto erstellen",
+        "create_new": "Create A New Account",
+        "deposit": "Deposit BTS",
+        "deposit_address": "Your deposit address is your account name",
+        "deposit_withdraw": "Aufladen/Abheben",
+        "eq_value": "entspricht",
+        "eq_value_header": "Value ({asset})",
+        "errors": {
+            "invalid": "Ungültiger Kontoname",
+            "memo_missing":
+                "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page.",
+            "not_found":
+                "Das Konto %(name)s existiert nicht. Bitte prüfen Sie die Schreibweise!",
+            "not_yours": "Nicht Ihr Konto",
+            "unknown": "Unbekannter Kontoname"
+        },
+        "estimate_value": "Estimated Account value",
+        "existing_accounts": "Existierendes Konto",
+        "existing_user": "Existing user",
+        "filter_orders": "Filter",
+        "follow": "Kontakt hinzufügen",
+        "hidden_accounts_row": "Hidden Accounts",
+        "hide_hidden": "Active",
+        "hide_ignored": "Hide hidden accounts",
+        "history": "Historie",
+        "home": "Home",
+        "hour_24": "24h-Wechsel",
+        "hour_24_short": "24h",
+        "id": "Konto ID",
+        "identicon": "Identicon",
+        "ignore": "Hide",
         "in_open": "This is the amount of %(asset)s you have in open orders.",
         "in_open_value":
             "This is the estimated value of the %(asset)s you have in open orders.",
-        "transfer_actions": "Transfer actions",
+        "intro_text_1": "Your Decentralized Exchange",
+        "intro_text_2":
+            "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged assets such as bitUSD, bitCNY, bitBTC, bitGold and more. These assets can all be traded with <b>zero</b> counter-party risk, putting you in total control of your funds.",
+        "intro_text_3":
+            "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
+        "intro_text_4":
+            "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
+        "intro_text_title": "Welcome to BitShares",
+        "login_with": "Login with",
         "market_actions": "Market actions",
-        "total_estimate":
-            "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
-        "trade": "Trade",
-        "welcome": "Willkommen",
-        "asset": "Asset",
         "market_value": "Marktwert",
-        "hour_24": "24h-Wechsel",
-        "hour_24_short": "24h",
-        "recent": "Letzte Aktivität",
-        "name": "Konto-Name",
-        "id": "Konto ID",
-        "more": "mehr",
-        "deposit_withdraw": "Aufladen/Abheben",
-        "as_collateral": "Kollateral",
-        "open_orders": "Offene Order",
-        "total_value": "Gesamtwert",
-        "whitelist": {
-            "title": "Weißliste",
-            "black": "Schwarzliste",
-            "add": "Zur Weißliste hinzufügen",
-            "add_black": "Zur Schwarzliste hinzufügen",
-            "empty": "%(account)s hat keine Konten in seiner Weißliste.",
-            "empty_black":
-                "%(account)s hat keine Konten in seiner Schwarzliste.",
-            "white_by": "Weißgelistet durch",
-            "black_by": "Schwarzgelistet durch",
-            "empty_white_by": "Keine Konten haben %(account)s weißgelistet.",
-            "empty_black_by": "Keine Konten haben %(account)s schwarzgelistet."
-        },
-        "vesting": {
-            "title": "Zusicherungen",
-            "balance_number": "Guthaben #%(id)s",
-            "no_balances": "Dieses Konto hat kein zugesichertes Guthaben"
-        },
         "member": {
-            "stats": "Mitgliederstatistiken",
-            "join": "Beitritt am",
-            "registrar": "Registriert von",
-            "referrer": "Empfohlen von",
-            "lifetime_referrer": "Lifetime-Referrer",
-            "network_percentage": "Netzwerk",
-            "fee_allocation": "Gebührenverteilung",
-            "membership": "Mitgliedschaft",
-            "fees_paid": "Lifetime bezahlte Gebühren",
-            "referrals": "Empfehlungen",
-            "rewards": "Belohnungen",
-            "cashback": "Skonto",
-            "vested": "Zugesichert",
-            "unknown": "unbekanntes Mitglied",
-            "lifetime": "Lifetime-Mitglied",
-            "basic": "Grundmitglied",
             "annual": "Jahresabonent",
-            "upgrade_lifetime": "Lifetime-Mitgliedschaft erwerben",
-            "subscribe": "Jährliche Mitgliedschaft erwerben",
-            "expires": "endet",
-            "membership_expiration": "Ablauf der Mitgliedschaft",
-            "fees_cashback": "Gebühren und Rückerstattung",
+            "available": "Zur Beanspruchung verfügbar",
+            "basic": "Grundmitglied",
+            "cashback": "Skonto",
+            "claim": "Guthaben beanspruchen",
             "coindays": "Coin-days",
             "earned": "Erworbene coin-days",
-            "required": "Benötigte coin-days",
+            "expires": "endet",
+            "fee_allocation": "Gebührenverteilung",
+            "fees_cashback": "Gebühren und Rückerstattung",
+            "fees_paid": "Lifetime bezahlte Gebühren",
+            "join": "Beitritt am",
+            "lifetime": "Lifetime-Mitglied",
+            "lifetime_referrer": "Lifetime-Referrer",
+            "membership": "Mitgliedschaft",
+            "membership_expiration": "Ablauf der Mitgliedschaft",
+            "network_percentage": "Netzwerk",
+            "referral_link": "Your referral link",
+            "referral_text":
+                "Give this to link to people you want to refer to BitShares",
+            "referrals": "Empfehlungen",
+            "referrer": "Empfohlen von",
+            "registrar": "Registriert von",
             "remaining": "Übrige Zusicherungswartezeit",
-            "claim": "Guthaben beanspruchen",
-            "available": "Zur Beanspruchung verfügbar"
+            "required": "Benötigte coin-days",
+            "rewards": "Belohnungen",
+            "stats": "Mitgliederstatistiken",
+            "subscribe": "Jährliche Mitgliedschaft erwerben",
+            "suspected_scammer": "Suspected Scammer",
+            "unknown": "unbekanntes Mitglied",
+            "upgrade_lifetime": "Lifetime-Mitgliedschaft erwerben",
+            "vested": "Zugesichert"
         },
-        "user_issued_assets": {
-            "symbol": "Symbol",
-            "name": "Asset-Name",
-            "description": "Beschreibung",
-            "max_supply": "Maximale Verfügbarkeit",
-            "precision": "Genauigkeit",
-            "to": "An Konto emittieren",
-            "market_fee": "Marktgebühr",
-            "max_market_fee": "Max. Marktgebühr",
-            "details": "Details",
-            "primary": "Primäreinstellungen",
-            "optional": "Optionales",
-            "approx_fee": "Geschätze Gebühr",
-            "exists": "Dieses Asset existiert bereits",
-            "max_positive":
-                "Maximale Verfügbarkeit muss eine positive Zahl sein!",
-            "core_exchange_rate": "Kernwechselrate",
-            "quote": "Quote-Menge",
-            "quote_name": "Quote-Asset",
-            "base": "Base-Menge",
-            "base_name": "Base-Asset",
-            "update_owner": "Eigentümer aktualisieren",
-            "current_issuer": "Aktueller Eigentümer",
-            "new_issuer": "Neues Eigentümerkonto",
-            "flags": "Schalter",
-            "charge_market_fee": "Marktgebühren aktivieren",
-            "override_authority": "Herausgeber darf Anteile zurückholen",
-            "transfer_restricted": "Herauseber muss alle Transfers genehmigen",
-            "disable_confidential": "Verbiete vertrauliche Transfers",
-            "white_list": "Setze Whitelisting eines Eigentümers voraus",
-            "witness_fed_asset":
-                "Erlaube Witnesses einen Feed bereit zustellen",
-            "committee_fed_asset":
-                "Erlaube Kommittee einen Feed bereit zustellen",
-            "disable_force_settle": "Deaktiviere Zwangs-Settlements",
-            "global_settle":
-                "Erlaube Herausgeber ein Globales Settlement zu erzwingen",
-            "advanced": "Fortgeschrittene",
-            "need_asset": "Zumindest eines der Assets muss %(name)s sein",
-            "perm_warning":
-                "WARNUNG: Rechte können nur abgeschalten werden. Einmal abgeschalten, lassen Sie sich nicht reaktivieren!",
-            "issued_assets": "Herausgegebene Assets"
-        },
-        "connections": {
-            "known": "Bekannt von",
-            "black": "Schwarzgelistet von"
-        },
-        "perm": {
-            "active": "Aktive Berechtigungen",
-            "owner": "Eigentümer-Berechtigungen",
-            "memo_key": "Memo-Schlüssel",
-            "publish": "Änderungen veröffentlichen",
-            "reset": "Zurücksetzen",
-            "add": "Berechtigung hinzufügen",
-            "type": "Typ",
-            "key": "Schlüssel/Name",
-            "weight": "Gewicht",
-            "threshold": "Schwellwert",
-            "confirm_add": "Hinzufügen",
-            "cancel": "Abbrechen",
-            "add_permission_label":
-                "Geben Sie den Kontoname/Schlüssel und eine Gewichtung an",
-            "account_name_or_key": "Kontoname oder Schlüssel",
-            "memo_public_key": "Öffentlicher Schlüssel für Memos",
-            "warning1":
-                "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
-            "warning2":
-                "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
-            "warning3": "Account is already in the list",
-            "warning4": "Der Schlüssel befindet sich schon in der Liste",
-            "action": "Action",
-            "acct_or_key": " Konto/Schlüssel",
-            "sign_owner": "Sign as owner",
-            "password_model": "Account model",
-            "password_model_1":
-                "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
-            "password_model_2": "Add password generated keys",
-            "new_active": "New active key",
-            "new_owner": "New owner key",
-            "new_memo": "New memo key",
-            "memo_warning":
-                "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
-            "use_text": "Use",
-            "remove_text": "Entfernen"
-        },
-        "votes": {
-            "proxy_current": "Your current proxy is",
-            "proxy_short": "Proxy",
-            "workers_short": "Worker",
-            "proxy": "Proxy-Konto",
-            "no_proxy": "Keine Vermittlung",
-            "clear_proxy": "Proxy entfernen",
-            "name": "Name",
-            "info": "Info",
-            "votes": "Stimmen",
-            "url": "Webseite",
-            "support": "Support",
-            "workers": "Budgetpunkte",
-            "publish": "Änderungen bekanntgeben",
-            "add_witness": "Hinzufügen",
-            "remove_witness": "Entfernen",
-            "remove_committee": "Entfernen",
-            "add_committee": "Hinzufügen",
-            "add_committee_label": "Mitglied des Komitees",
-            "add_witness_label": "Witness",
-            "approve_worker": "Budgetpunkt bestätigen",
-            "reject_worker": "Budgetpunkt ablehnen",
-            "worker_account": "Worker-Konto",
-            "total_votes": "Gesamtstimmen",
-            "votes_against": "Gegenstimmen",
-            "daily_pay": "Tagessold",
-            "daily": "täglich",
-            "max_pay": "Maximaler Tagessold",
-            "unclaimed": "nicht ausbezahlter Sold",
-            "status": {
-                "title": "Status",
-                "supported": "Pro",
-                "rejected": "Kontra",
-                "neutral": "Neutral"
-            },
-            "start": "Start Datum",
-            "end": "End Datum",
-            "creator": "Besitzer",
-            "recycled": "Recycelt",
-            "funding": "Auszahlend",
-            "total_budget": "Gesamtes Worker-Budget",
-            "unused_budget": "Ungenutztes Worker-Budget",
-            "witness": "Witness name",
-            "committee": "Committee member name",
-            "toggle": "Toggle vote",
-            "supported": "Supported",
-            "active_short": "Aktiv",
-            "inactive": "Inaktiv"
-        },
-        "options": {
-            "num_witnesses": "Gewünschte Anzahl Witnesses",
-            "num_committee": "Gewünschte Größe des Komitees",
-            "memo_key": "Memo-Schlüssel"
-        },
-        "upgrade": "Konto erweitern",
-        "unfollow": "Entfolgen",
-        "follow": "Kontakt hinzufügen",
-        "pay": "Bezahlen",
-        "overview": "Übersicht",
-        "bts_market": "Markt",
-        "history": "Historie",
-        "payees": "Empfänger",
-        "permissions": "Berechtigungen",
-        "voting": "Abstimmung",
-        "orders": "Anweisungen",
-        "select_placeholder": "Konto auswählen...",
-        "errors": {
-            "not_found":
-                "Das Konto %(name)s existiert nicht. Bitte prüfen Sie die Schreibweise!",
-            "invalid": "Ungültiger Kontoname",
-            "unknown": "Unbekannter Kontoname",
-            "not_yours": "Nicht Ihr Konto"
-        },
-        "collaterals": "Kollateral-Positionen",
-        "eq_value": "entspricht",
-        "percent": "Prozent der Gesamtmenge",
-        "please_create_account": "Bitte erstellen Sie ein Konto",
-        "create_account": "Konto erstellen",
-        "identicon": "Identicon",
-        "pay_from": "Bezahlen von",
-        "existing_accounts": "Existierendes Konto",
+        "mine": "My account",
+        "more": "mehr",
+        "name": "Konto-Name",
         "name_input": {
             "name_is_taken": "Kontoname bereits vergeben.",
             "not_found": "Konto nicht gefunden.",
@@ -372,754 +110,1919 @@
             "premium_name_warning":
                 "Es handelt sich um einen Premiumnamen. Premiumnamen sind teurer. Günstige Namen enthalten mindestens einen Bindestrich, eine Zahl, oder keine Vokal enthält."
         },
-        "propose_from": "Vorschlagen von",
-        "settle": "Settle",
+        "new_user": "New user?",
         "no_orders": "Keine offenen Order",
-        "asset_details": "Asset-Details",
+        "no_price": "--",
+        "open_orders": "Offene Order",
+        "optional": {
+            "formatter":
+                "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_form": "advanced form",
+            "restore_link": "restore your account"
+        },
+        "options": {
+            "memo_key": "Memo-Schlüssel",
+            "num_committee": "Gewünschte Größe des Komitees",
+            "num_witnesses": "Gewünschte Anzahl Witnesses"
+        },
+        "orders": "Anweisungen",
         "other_scam":
-            "This account is not known to be an official account, please verify the destination before transferring"
-    },
-    "pagination": {
-        "newer": "Jüngere",
-        "older": "Ältere"
-    },
-    "transfer": {
-        "from": "Von",
+            "This account is not known to be an official account, please verify the destination before transferring",
+        "overview": "Übersicht",
+        "password_login": "Login with password",
+        "pay": "Bezahlen",
         "pay_from": "Bezahlen von",
-        "amount": "Betrag",
-        "to": "Zu",
-        "memo": "Memo",
-        "fee": "Gebühr",
-        "send": "Senden",
-        "final": "Abschließendes Guthaben",
-        "balances": "Guthaben",
-        "available": "Verfügbar: ",
-        "errors": {
-            "req": "Pfichtfeld",
-            "pos": "Betrag darf nicht negativ sein",
-            "valid": "Bitte geben Sie einen positiven Betrag ein",
-            "balance": "Ihr abschließendes Guthaben kann nicht negativ sein!",
-            "insufficient": "Ungenügende Bilanz",
-            "noFeeBalance":
-                "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-            "noPoolBalance":
-                "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
+        "payees": "Empfänger",
+        "percent": "Prozent der Gesamtmenge",
+        "perm": {
+            "account_name_or_key": "Kontoname oder Schlüssel",
+            "acct_or_key": " Konto/Schlüssel",
+            "action": "Action",
+            "active": "Aktive Berechtigungen",
+            "add": "Berechtigung hinzufügen",
+            "add_permission_label":
+                "Geben Sie den Kontoname/Schlüssel und eine Gewichtung an",
+            "brain": "Brainkey position",
+            "cancel": "Abbrechen",
+            "confirm_add": "Hinzufügen",
+            "from": "Imported from account",
+            "key": "Schlüssel/Name",
+            "key_viewer": "Private key viewer",
+            "memo_key": "Memo-Schlüssel",
+            "memo_public_key": "Öffentlicher Schlüssel für Memos",
+            "memo_warning":
+                "WARNING: If you replace the memo key you will be unable to read old memos when logging in with your password, and unless you import the new memo private key into your old wallet that wallet will be unable to decode new memos",
+            "new_active": "New active key",
+            "new_memo": "New memo key",
+            "new_owner": "New owner key",
+            "owner": "Eigentümer-Berechtigungen",
+            "password_model": "Account model",
+            "password_model_1":
+                "If you want to be able to login from anywhere using only your password, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
+            "password_model_2": "Add password generated keys",
+            "private": "Private key (WIF - Wallet Import Format)",
+            "public": "Public key",
+            "publish": "Änderungen veröffentlichen",
+            "remove_text": "Entfernen",
+            "reset": "Zurücksetzen",
+            "save": "Save Changes",
+            "save_all": "Save All Changes",
+            "show": "Show",
+            "sign_owner": "Sign as owner",
+            "threshold": "Schwellwert",
+            "type": "Typ",
+            "use_text": "Use",
+            "valid_pub": "Valid Public Key",
+            "warning1":
+                "Active permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            "warning2":
+                "Owner permissions weights total of %(weights_total)s should be equal or exceed threshold of %(threshold)s",
+            "warning3": "Account is already in the list",
+            "warning4": "Der Schlüssel befindet sich schon in der Liste",
+            "weight": "Gewicht"
         },
-        "back": "ZURÜCK",
-        "confirm": "BESTÄTIGEN",
-        "broadcasting": "Übermittle...",
-        "broadcast": "Ihre Überweisung wurde gesendet",
-        "again": "WEITERE ÜBERWEISUNG",
-        "see": "ÜBERWEISUNGSÜBERSICHT",
-        "close": "SCHLIEßEN",
-        "memo_unlock": "Entsperren um Memo zu lesen"
-    },
-    "operation": {
-        "pending": "schwebend %(blocks)s Blöcke",
-        "no_recent": "keine kürzlichen Transaktionen",
-        "reg_account": "{registrar} hat das Konto {newaccount} registriert",
-        "transfer": "{from} hat {amount} an {to} gesendet",
-        "proposal_create": "{account} hat Transaktion vorgeschlagen",
-        "proposal_update": "{account} hat Transaktionsvorschlag geändert",
-        "proposal_delete": "{account} hat Transaktionsvorschlag gelöscht",
-        "fill_order": "{account} kaufte {received} für {price}",
-        "vesting_balance_withdraw":
-            "{account} hat zugesichertes Guthaben {amount} beansprucht",
-        "balance_claim": "{account} hat Guthaben von {amount} beansprucht",
-        "publish_feed": "{account} hat Preis-Feed von {price} veröffentlicht",
-        "set_proxy": "{account} hat {proxy} als seinen Proxy eingestellt",
-        "update_account": "{account} hat seine Kontodetails aktualisiert",
-        "limit_order_sell":
-            "{account} hat eine Verkaufsorder für {amount} bei {price} eingestellt",
-        "limit_order_buy":
-            "{account} hat eine Kaufsorder für {amount} bei {price} eingestellt",
-        "limit_order_cancel": "{account} hat order #%(order)s zurückgezogen",
-        "call_order_update":
-            "{account} hat nun {debt} {debtSymbol} Schulden bei einem Kollateral von {collateral}",
-        "asset_reserve": "{account} hat {amount} zurückgelegt",
-        "asset_issue": "{account} hat {amount} an {to} herausgegeben",
-        "asset_create": "{account} hat das Asset {asset} erzeugt",
-        "asset_update": "{account} hat das Asset {asset} aktualisiert",
-        "lifetime_upgrade_account":
-            "{account} hat eine lebenslange Mitgliedschaft gekauft",
-        "annual_upgrade_account": "{account} hat ein Jahresabo gekauft",
-        "unlisted_by": "{lister} hat {listee} von der Liste gestrichen",
-        "whitelisted_by": "{lister} hat Konto {listee} weißgelistet",
-        "blacklisted_by": "{lister} hat Konto {listee} schwarzgelistet",
-        "transfer_account": "Konto {account} wurde an {to} übertragen",
-        "asset_update_feed_producers":
-            "{account} hat die Feed-Erzeuger für {asset} aktualisiert",
-        "asset_fund_fee_pool":
-            "{account} hat {amount} in den Gebührenpool von  {asset} transferiert",
-        "asset_settle": "{account} hat ein Settlement von {amount} beantragt",
-        "asset_global_settle":
-            "{account} hat ein globales Settlement von {asset} bei {price} beantragt",
-        "witness_create": "{account} ist jetzt ein Witness",
-        "witness_update": "{account} hat seine Witness aktualisiert",
-        "witness_pay": "{account} hat Witness-Guthaben eingezogen.",
-        "witness_receive": "Received witness from {witness}"
-    },
-    "transaction": {
-        "confirm": "Bitte bestätigen Sie die Transaktion",
-        "broadcast_success": "Transaktion wurde übermittelt",
-        "transaction_confirmed": "Transaktion bestätigt",
-        "broadcast_fail":
-            "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
-        "broadcasting": "Übermittle Transaction..",
-        "broadcasting_short": "Übermittle..",
-        "sent": "Gesendet",
-        "to": "an",
-        "received": "Empfangen",
-        "from": "von",
-        "amount_sell": "Betrag",
-        "expiration": "Frist",
-        "fill_or": "sofortige Ausführung oder Annullierung",
-        "min_receive": "Mindestbetrag",
-        "seller": "Verkäufer",
-        "collateral": "Sicherheit/Pfand",
-        "coll_ratio": "Anfängliche Sicherheit (Verhältnis)",
-        "coll_maint": "Unterhalt der Sicherheit (Verhältnis)",
-        "create_key": "Ein öffentlicher Schlüssel wurde erzeugt",
-        "at": "für",
-        "coll_of": "mit einer Sicherheit bestehend aus",
-        "feed_producer": "Werde Feed-Erzeuger für ein Asset",
-        "feed_price": "Feed Preis",
-        "by": "von",
-        "burn_asset": "Vernichtet",
-        "fund_pool": "Asset-Gebührenpool finanziert mit",
-        "committee_member_create": "Komitee-Mitglied erstellen",
-        "withdraw_permission_create":
-            "Einzugsermächtigung wurde verliehen an Konto",
-        "withdraw_permission_update":
-            "Einzugsermächtigung wurde aktualisiert für Konto",
-        "withdraw_permission_claim":
-            "Einzugsermächtigung wurde eingefordert für Konto",
-        "withdraw_permission_delete":
-            "Einzugsermächtigung wurde aufgehoben für Konto",
-        "paid": "Bezahlt",
-        "obtain": "zu erhalten",
-        "global_parameters_update": "Globale Parameter aktualisiert",
-        "file_write": "Eine Datei wurde geschrieben",
-        "vesting_balance_create": "Ein Sperrfristguthaben wurde erzeugt",
-        "for": "für",
-        "bond_create_offer": "Ein Bondangebot wurde erstellt",
-        "bond_cancel_offer": "Ein Bondangebot wurde abgebrochen",
-        "bond_accept_offer": "Ein Bondangebot wurde akzeptiert",
-        "bond_claim_collateral": "Eine Sicherheit wurde eingefordert",
-        "bond_pay_collateral": "Eine Sicherheit wurde bezahlt",
-        "create_worker": "Ein Budgetpunkt wurde erzeugt. Bezahlung",
-        "custom": "Eine benutzerdefinierte Operation wurde definiert",
-        "order_id": "Anweisungskennung (ID)",
-        "asset_claim_fees":
-            "Assetgebühren von %(balance_amount)s aus %(asset)s Gebührenpool entnommen.",
-        "balance_owner": "Guthabeneigentümer",
-        "balance_id": "Guthaben ID",
-        "deposit_to": "In Konto einzahlen",
-        "claimed": "Insgesamt beansprucht",
-        "borrow_amount": "Schuld",
-        "funding_account": "Bezahlendes Konto",
-        "delta_collateral": "Änderung des Kollateral",
-        "delta_debt": "Änderung der Schuld",
-        "new_url": "Webseite",
-        "publisher": "Publisher",
-        "market_fee": "Marktgebühr",
-        "max_market_fee": "Maximale Marktgebühr",
-        "blinding_factor": "Blinding-Faktor",
-        "outputs": "Ausgänge",
-        "inputs": "Eingänge",
-        "settlement_date": "Settlement-Datum",
-        "asset_reserve": "Rücklagen",
-        "trxTypes": {
-            "transfer": "Überweisung",
-            "limit_order_create": "Limit-Order",
-            "limit_order_cancel": "Limit-Order abbrechen",
-            "call_order_update": "Call-Order aktualisieren",
-            "account_create": "Konto erstellen",
-            "account_update": "Kontoaktualisierung",
-            "account_whitelist": "Konto-Positivliste",
-            "account_upgrade": "Konto-Upgrade",
-            "account_transfer": "Konto-Überweisung",
-            "asset_create": "Asset erstellen",
-            "asset_update": "Asset aktualisieren",
-            "asset_update_bitasset": "SmartCoin aktualisieren",
-            "asset_update_feed_producers": "Asset-Feederzeuger aktualisieren",
-            "asset_issue": "Asset emittieren",
-            "asset_reserve": "Assetanteile vernichten",
-            "asset_fund_fee_pool": "Asset-Gebührenpool finanzieren",
-            "asset_settle": "Asset-Settlement",
-            "asset_global_settle": "Globales Asset-Settlement",
-            "asset_publish_feed": "Asset-Feed publiszieren",
-            "committee_member_create": "Komiteemitglied erstellen",
-            "committee_member_update": "Komiteemitglied editieren",
-            "witness_create": "Witness erstellen",
-            "witness_update": "Witness ändern",
-            "witness_withdraw_pay": "Witnesslohn ausbezahlen",
-            "proposal_create": "Proposal erstellen",
-            "proposal_update": "Proposal aktualisieren",
-            "proposal_delete": "Proposal löschen",
-            "withdraw_permission_create": "Einzugsermächtigung erstellen",
-            "withdraw_permission_update": "Einzugsermächtigung aktualisiert",
-            "withdraw_permission_claim": "Einzugsermächtigung eingefordert",
-            "withdraw_permission_delete": "Einzugsermächtigung aufgehoben",
-            "fill_order": "Order ausgeführt",
-            "committee_member_update_global_parameters":
-                "Globale Parameter aktualisiert",
-            "vesting_balance_create": "Sperrfristguthaben erstellt",
-            "vesting_balance_withdraw": "Sperrfristguthaben eingefordert",
-            "worker_create": "Budgetpunkt erstellt",
-            "custom": "benutzerdefiniert",
-            "assert": "Operation bestätigen",
-            "balance_claim": "Guthaben eingefordert",
-            "override_transfer": "Transaktion überschreiben",
-            "transfer_to_blind": "Transfer zu blinden Konten",
-            "blind_transfer": "Blind-Transfer",
-            "transfer_from_blind": "Transfer von blindem Konto",
-            "asset_claim_fees": "Gebühr für 'Asset beanspruchen'"
+        "permissions": "Berechtigungen",
+        "please_create_account": "Bitte erstellen Sie ein Konto",
+        "polo_scam":
+            "This account is not the real Poloniex account, please send to this account: poloniexwallet.",
+        "portfolio": "Portfolio",
+        "propose_from": "Vorschlagen von",
+        "qty": "Qty",
+        "quote": "Quote",
+        "recent": "Letzte Aktivität",
+        "reset_orders": "Reset",
+        "restore": "Restore",
+        "search": "Search for an account",
+        "see_open": "See open orders",
+        "select_placeholder": "Konto auswählen...",
+        "settle": "Settle",
+        "show_hidden": "Hidden",
+        "show_ignored": "Show hidden accounts",
+        "show_visual": "Visual",
+        "signedmessages": {
+            "automaticcreation": "Signed message will be created automatically",
+            "copysuccessful": "Signed message copied to clipboard",
+            "copyunsuccessful": "Failed to copy message",
+            "entermessage": "Enter message here",
+            "errorverifying": "An error occured while verifying the message",
+            "invalidformat": "Signed message format can't be recognized",
+            "invalidkey":
+                "Private key could not be obtained, is the public key valid?",
+            "invalidsignature":
+                "The content of the message could not be validated against the signature",
+            "invaliduser": "Account of the message sender is invalid",
+            "keymismatch":
+                "Given public key of the sender doesn't to the one stored in the senders account",
+            "menuitem": "Signed Messages",
+            "sign": "Sign",
+            "signing": "Signing, please wait ...",
+            "signmessage": "Sign Message",
+            "title": "Signed Messages",
+            "verify": "Verify",
+            "verifying": "Verifying, please wait ...",
+            "verifymessage": "Verify Message",
+            "verifyonchange": "Verify while typing"
         },
-        "feeGroups": {
-            "general": "Allgemein",
-            "asset": "Asset-spezifisch",
-            "market": "Markt-spezifisch",
-            "account": "Konto-spezifisch",
-            "business": "Unternehmensführung"
+        "submit_orders": "Submit",
+        "total": "Total ({asset})",
+        "total_estimate":
+            "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+        "total_value": "Gesamtwert",
+        "trade": "Trade",
+        "transactions": {
+            "id": "ID",
+            "info": "Info",
+            "time": "Time",
+            "type": "Type"
         },
-        "feeTypes": {
-            "_none": "gratis",
-            "fee": "Reguläre Gebühr",
-            "price_per_kbyte": "Preis pro KByte Transaktionsgröße",
-            "basic_fee": "Grundgebühr",
-            "premium_fee": "Premiumname",
-            "membership_annual_fee": "Jahresabonement",
-            "membership_lifetime_fee": "Lebenslanges Abonement",
-            "symbol3": "Symbol mit 3 Zeichen",
-            "symbol4": "Sybmol mit 4 Zeichen",
-            "long_symbol": "Längeres Symbol"
+        "transfer_actions": "Transfer actions",
+        "unfollow": "Entfolgen",
+        "unignore": "Unhide",
+        "upgrade": "Konto erweitern",
+        "user_issued_assets": {
+            "add_feed": "Add new feed producer",
+            "advanced": "Fortgeschrittene",
+            "approx_fee": "Geschätze Gebühr",
+            "backing": "Short backing asset",
+            "base": "Base-Menge",
+            "base_name": "Base-Asset",
+            "bitasset_opts": "SmartCoin options",
+            "cer_warning_1": "Warning",
+            "cer_warning_2":
+                "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset.",
+            "charge_market_fee": "Marktgebühren aktivieren",
+            "committee_fed_asset":
+                "Erlaube Kommittee einen Feed bereit zustellen",
+            "condition": "Condition (max 60 characters)",
+            "conflict_feed":
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "core_exchange_rate": "Kernwechselrate",
+            "current_issuer": "Aktueller Eigentümer",
+            "decimals": "Number of decimal points",
+            "description": "Beschreibung",
+            "details": "Details",
+            "disable_confidential": "Verbiete vertrauliche Transfers",
+            "disable_force_settle": "Deaktiviere Zwangs-Settlements",
+            "error_invalid": "That asset may not be used",
+            "error_precision":
+                "That asset does not have the same precision as %(asset)s",
+            "exists": "Dieses Asset existiert bereits",
+            "expiry": "Market resolution date",
+            "feed_lifetime_sec": "Feed lifetime in minutes",
+            "feed_not_allowed_1":
+                "Cannot set feed producers on a witness- or committee-fed asset",
+            "feed_not_allowed_2":
+                "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
+            "feed_producers": "Feed producers",
+            "flags": "Schalter",
+            "force_settlement_delay_sec":
+                "Delay for forced settlements (minutes)",
+            "force_settlement_offset_percent":
+                "Percent offset of forced settlements",
+            "global_settle":
+                "Erlaube Herausgeber ein Globales Settlement zu erzwingen",
+            "id": "ID",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market",
+            "issued_assets": "Herausgegebene Assets",
+            "market": "Preferred market pairing",
+            "market_fee": "Marktgebühr",
+            "max_market_fee": "Max. Marktgebühr",
+            "max_positive":
+                "Maximale Verfügbarkeit muss eine positive Zahl sein!",
+            "max_supply": "Maximale Verfügbarkeit",
+            "maximum_force_settlement_volume":
+                "Max force settle volume (percent of total supply per hour)",
+            "minimum_feeds": "Minimum number of feeds",
+            "mpa": "SmartCoin",
+            "name": "Asset-Name",
+            "need_asset": "Zumindest eines der Assets muss %(name)s sein",
+            "new_issuer": "Neues Eigentümerkonto",
+            "optional": "Optionales",
+            "override_authority": "Herausgeber darf Anteile zurückholen",
+            "perm_warning":
+                "WARNUNG: Rechte können nur abgeschalten werden. Einmal abgeschalten, lassen Sie sich nicht reaktivieren!",
+            "pm": "Binary prediction market",
+            "precision": "Genauigkeit",
+            "precision_warning":
+                "Warning: The number of decimals may not be changed after creation",
+            "primary": "Primäreinstellungen",
+            "quote": "Quote-Menge",
+            "quote_name": "Quote-Asset",
+            "short": "Short name (max 32 characters)",
+            "symbol": "Symbol",
+            "to": "An Konto emittieren",
+            "too_large":
+                "That max supply is too big, please choose a smaller number",
+            "too_many_feed":
+                "Number of feed producers exceeded the max allowed (%(max)s).",
+            "transfer_restricted": "Herauseber muss alle Transfers genehmigen",
+            "update_owner": "Eigentümer aktualisieren",
+            "visible": "Hide asset from search and markets",
+            "white_list": "Setze Whitelisting eines Eigentümers voraus",
+            "witness_fed_asset": "Erlaube Witnesses einen Feed bereit zustellen"
         },
-        "whitelist_states": {
-            "no_listing": "Nicht gelistet",
-            "white_listed": "weißgelistet",
-            "black_listed": "schwarzgelistet",
-            "white_and_black_listed": "schwarz- und weißgelistet"
+        "vesting": {
+            "balance_number": "Guthaben #%(id)s",
+            "explain":
+                "Vesting balances contain any fees earned through the referral program or from worker pay, for example. They have a certain vesting period and are continually unlocked during that vesting period until all of the balances are available",
+            "no_balances": "Dieses Konto hat kein zugesichertes Guthaben",
+            "title": "Zusicherungen"
+        },
+        "votes": {
+            "about": "About",
+            "active": "Active(%(count)s)",
+            "active_short": "Aktiv",
+            "add_committee": "Hinzufügen",
+            "add_committee_label": "Mitglied des Komitees",
+            "add_witness": "Hinzufügen",
+            "add_witness_label": "Witness",
+            "already": "Account is already in the list",
+            "approve_worker": "Budgetpunkt bestätigen",
+            "clear_proxy": "Proxy entfernen",
+            "cm_approved_by": "Committee members approved by %(account)s",
+            "cm_not_approved_by":
+                "Committee members not approved by %(account)s",
+            "committee": "Committee member name",
+            "create_worker": "Create a new worker",
+            "creator": "Besitzer",
+            "daily": "täglich",
+            "daily_pay": "Tagessold",
+            "end": "End Datum",
+            "expired": "Expired",
+            "funding": "Auszahlend",
+            "go_proxy": "Go to",
+            "inactive": "Inaktiv",
+            "info": "Info",
+            "line": "Line",
+            "max_pay": "Maximaler Tagessold",
+            "missing": "Needed",
+            "name": "Name",
+            "new": "Proposed(%(count)s)",
+            "no_proxy": "Keine Vermittlung",
+            "proxy": "Proxy-Konto",
+            "proxy_current": "Your current proxy is",
+            "proxy_known": "Or choose an account as your proxy",
+            "proxy_short": "Proxy",
+            "publish": "Änderungen bekanntgeben",
+            "recycled": "Recycelt",
+            "reject_worker": "Budgetpunkt ablehnen",
+            "remove_committee": "Entfernen",
+            "remove_witness": "Entfernen",
+            "save_finish": "Click save to finish",
+            "start": "Start Datum",
+            "status": {
+                "neutral": "Neutral",
+                "rejected": "Kontra",
+                "supported": "Pro",
+                "title": "Status"
+            },
+            "support": "Support",
+            "supported": "Supported",
+            "threshold": "Votes required to activate",
+            "toggle": "Toggle vote",
+            "total_budget": "Gesamtes Worker-Budget",
+            "total_votes": "Gesamtstimmen",
+            "unclaimed": "nicht ausbezahlter Sold",
+            "unused_budget": "Ungenutztes Worker-Budget",
+            "url": "Webseite",
+            "votes": "Stimmen",
+            "votes_against": "Gegenstimmen",
+            "w_approved_by": "Witnesses approved by %(account)s",
+            "w_not_approved_by": "Witnesses not approved by %(account)s",
+            "witness": "Witness name",
+            "worker_account": "Worker-Konto",
+            "workers": "Budgetpunkte",
+            "workers_short": "Worker"
+        },
+        "voting": "Abstimmung",
+        "welcome": "Willkommen",
+        "whitelist": {
+            "add": "Zur Weißliste hinzufügen",
+            "add_black": "Zur Schwarzliste hinzufügen",
+            "black": "Schwarzliste",
+            "black_by": "Schwarzgelistet durch",
+            "blacklist_authorities": "Blacklist authority",
+            "empty": "%(account)s hat keine Konten in seiner Weißliste.",
+            "empty_black":
+                "%(account)s hat keine Konten in seiner Schwarzliste.",
+            "empty_black_by": "Keine Konten haben %(account)s schwarzgelistet.",
+            "empty_white_by": "Keine Konten haben %(account)s weißgelistet.",
+            "title": "Weißliste",
+            "white_by": "Weißgelistet durch",
+            "whitelist_authorities": "Whitelist authority"
         }
     },
+    "borrow": {
+        "adjust": "Position anpassen",
+        "adjust_short": "Adjust",
+        "call_limit": "Markt Call Limit",
+        "close": "Position schlißen",
+        "coll_ratio": "Kollateral-Ratio",
+        "errors": {
+            "below": "Kollateral-Ratio unter Aufrechterhaltungslevel",
+            "close":
+                "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
+            "collateral": "Unzureichendes Kollateral"
+        },
+        "maximize_debt_set_ratio_slider":
+            "You must set a collateral ratio before being able to maximize debt",
+        "no_valid": "Kein gültiger Feed-Preis für %(asset_symbol)s",
+        "pay_max_debt": "Pay Max Debt",
+        "title": "Kollateral Position für %(asset_symbol)s",
+        "update": "Aktualisieren",
+        "use_max": "Use Max"
+    },
+    "browser_notification_messages": {
+        "money_received_body": "Hat dich geschickt %(amount)s %(symbol)s",
+        "money_received_title": "Übertragen von %(from)s"
+    },
+    "cancel": "abbrechen",
+    "counterpart": {
+        "formats": {
+            "date": {
+                "full": "%F %T %Z",
+                "market_history": "%e/%m %H:%M:%S",
+                "market_history_us": "%m/%e %H:%M:%S",
+                "short_custom": "%e %b '%y"
+            }
+        }
+    },
+    "dashboard": {
+        "featured_markets": "Featured Markets",
+        "starred_markets": "Starred Markets",
+        "table_empty": "No market matched",
+        "top_markets": "Top Markets"
+    },
+    "exchange": {
+        "asks": "Asks",
+        "atr": "Average True Range",
+        "balance": "Guthaben",
+        "base_supply": "Base Verfügbarkeit",
+        "bids": "Bids",
+        "borrow": "Leihen",
+        "borrow_short": "Borrow",
+        "buy": "Kaufen",
+        "buy_description":
+            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_min": "Buy at least",
+        "buysell_formatter": "{direction} {asset}",
+        "call": "Call Preis",
+        "change": "Änderung",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
+        "confirm_buy":
+            "Your order is %(diff)s times higher than the lowest ask, are you sure?",
+        "confirm_no_orders_buy":
+            "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+        "confirm_no_orders_sell":
+            "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
+        "confirm_sell":
+            "Your order is %(diff)s times lower than the highest bid, are you sure?",
+        "core_rate": "Gebührenrate",
+        "deposit": "Deposit",
+        "description": "Description",
+        "ema": "Exponential Moving Average",
+        "featured": "Top Markets",
+        "feed_price": "Feed Price",
+        "filter": "Filter...",
+        "flip": "Flip",
+        "hide": "Hide",
+        "highest_bid": "Höchstes Bid",
+        "history": "Marktverlauf",
+        "horizontal": "Horizontal",
+        "index": "Index",
+        "invalid_amount": "Ungültiger Betrag",
+        "invalid_price": "Ungültiger Preis",
+        "invert": "Invert the price",
+        "latest": "Letzer Preis",
+        "lowest_ask": "Günstigstes Ask",
+        "maintenance": "Maintenance-Call-Preis",
+        "market": "Markt",
+        "market_frozen":
+            "The owner of %(asset)s has disabled trading in this market.",
+        "market_name": "Meine Märkte",
+        "market_picker": {
+            "filter_by_issuer": "Filter by issuer",
+            "find_by_asset": "Find by asset",
+            "results": "Results (%(total_assets)s)",
+            "search": "Asset name",
+            "search_for_asset": "Search for asset",
+            "search_mode": "Mode",
+            "show_all": "Show All",
+            "sub_title": "Find an asset to replace",
+            "title": "Market Picker",
+            "use": "Use"
+        },
+        "more": "Alle Märkte",
+        "my_asks": "Meine Asks",
+        "my_bids": "Meine Bids",
+        "my_history": "Meine Historie",
+        "my_orders": "My open orders",
+        "native": "Native",
+        "new": "New",
+        "no_balance": "Ungenügendes Guthaben",
+        "no_data": "Keine Daten",
+        "order_depth": "Ordertiefe",
+        "others": "Others",
+        "overbought": "Overbought",
+        "oversold": "Oversold",
+        "period": "Periode (Tage)",
+        "price": "Preis",
+        "price_history": "Preisverlauf",
+        "price_market": "Market Price",
+        "quantity": "Quantität",
+        "quote": "Quote currency:",
+        "quote_supply": "Quote Verfügbarkeit",
+        "receive": "Empfangen",
+        "rsi": "Relative Strength Index",
+        "search": "Search for more markets here",
+        "sell": "Verkaufen",
+        "sell_description":
+            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settings": "Chart options",
+        "settle": "Settlement-Preis",
+        "settle_orders": "Settlement-Order",
+        "short": "Short",
+        "show_asks": "Show all asks",
+        "show_bids": "Show all bids",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "sma": "Simple Moving Average",
+        "spread": "Spread",
+        "squeeze": "Margin-Call-Preis",
+        "time": "Zeitintervall",
+        "to_market": "Go to market",
+        "total": "Gesamt",
+        "trading_pair": "Trading pair",
+        "value": "Wert",
+        "vertical": "Vertical",
+        "vol_short": "Vol",
+        "volume": "Volumen",
+        "volume_24": "24h-Volumen",
+        "your_price": "Ihr Call-Preis",
+        "zoom": "Zoom",
+        "zoom_all": "All"
+    },
     "explorer": {
+        "account": {
+            "title": "Konto"
+        },
         "accounts": {
-            "title": "Konten",
             "filter": "Konten filtern",
-            "filter_contacts": "Kontakte filtern"
-        },
-        "blocks": {
-            "title": "Blockchain",
-            "globals": "Globale Einstellungen",
-            "recent": "Letzte Blöcke",
-            "trx": "Transaktion",
-            "block_times": "Block-Zeiten",
-            "block_time": "Block-Zeit",
-            "transactions": "# an Transaktionen",
-            "recently_missed_blocks": "kürzlich verpasste Transaktionen",
-            "trx_per_block": "Trx/block",
-            "active_committee_members": "Aktive Kommittee-Mitglieder",
-            "active_witnesses": "Aktive Witnesses",
-            "avg_conf_time": "mittlere Bestätigungszeit",
-            "trx_per_sec": "Trx/s",
-            "last_block": "Letzter Block",
-            "current_block": "Aktueller Block"
-        },
-        "block": {
-            "title": "Block",
-            "id": "Block ID",
-            "witness": "Witness",
-            "count": "Transaktionszähler",
-            "date": "Datum",
-            "time": "Zeit",
-            "previous": "Vorherige",
-            "previous_secret": "Vorheriges Geheimnis",
-            "next_secret": "Hash des nächsten Geheimnisses",
-            "op": "Aktion",
-            "trx": "Transaktion",
-            "op_type": "Aktionstyp",
-            "fee_payer": "Gebührenkonto",
-            "key": "Öffentlicher Schlüssel",
-            "transactions": "Anzahl der Transaktionen",
-            "account_upgrade": "Kontoerweiterung",
-            "lifetime": "Lebenslanges Mitglied werden",
-            "authorizing_account": "Kontovollmacht",
-            "listed_account": "Kontenübersicht",
-            "new_listing": "Neuer Eintrag",
-            "asset_update": "zu aktualisierendes Asset",
-            "common_options": "Common Optionen",
-            "new_options": "Neue Option",
-            "new_producers": "Neue Feederzeuger",
-            "asset_issue": "Zu emittierender Betrag",
-            "max_margin_period_sec": "Max Margin Periode (s)",
-            "call_limit": "Call-Limit",
-            "short_limit": "Short-Limit",
-            "settlement_price": "Settlement-Preis",
-            "go_to": "Go to block"
-        },
-        "assets": {
-            "title": "Assets",
-            "market": "SmartCoins",
-            "user": "User Issued Assets",
-            "symbol": "Symbol",
-            "id": "ID",
-            "issuer": "Herausgeber",
-            "precision": "Genauigkeit"
+            "filter_contacts": "Kontakte filtern",
+            "title": "Konten"
         },
         "asset": {
-            "title": "Asset",
-            "not_found": "Das Asset %(name)s existiert nicht",
-            "invalid": "The asset name %(name)s is invalid",
-            "summary": {
-                "asset_type": "Asset-Typ",
-                "issuer": "Herausgeber",
-                "current_supply": "Aktuelle Verfügbarkeit",
-                "stealth_supply": "Versteckte Verfügbarkeit",
-                "market_fee": "Marktgebühr",
-                "max_market_fee": "Maximale Marktgebühr"
-            },
-            "price_feed": {
-                "price_feed": "Preis-Feed",
-                "settlement_price": "Settlement-Preis",
-                "maintenance_collateral_ratio":
-                    "Maintenance Kollateral-Verhältnis",
-                "maximum_short_squeeze_ratio":
-                    "Maximum short squeeze Verhältnis"
-            },
             "fee_pool": {
-                "fee_pool": "Gebührenpool",
-                "core_exchange_rate": "Kernhandelsrate",
-                "pool_balance": "Pool-Guthaben",
-                "unclaimed_issuer_income":
-                    "Nicht ausgezahlte Herausgeberanteile",
                 "claim_fees": "Gebühren beanspruchen",
+                "claim_text":
+                    "Der Asset-Herausgeber kann die zusammengetragenen Anteile hier beanspruchen",
+                "core_exchange_rate": "Kernhandelsrate",
                 "fund_text":
                     "Der Gebührenpool wird dazu genutzt Gebühren in %(core)s durch einen impliziten Wechsel von %(asset)s zu %(core)s zu finanzieren. Sollte der Gebührenpool trocken liegen, können Gebühren nicht länger in %(asset)s bezahlt werden sondern nur noch in %(core)s",
-                "claim_text":
-                    "Der Asset-Herausgeber kann die zusammengetragenen Anteile hier beanspruchen"
+                "pool_balance": "Pool-Guthaben",
+                "title": "Fee Pool",
+                "unclaimed_issuer_income":
+                    "Nicht ausgezahlte Herausgeberanteile"
             },
+            "invalid": "The asset name %(name)s is invalid",
+            "margin_positions": {
+                "title": "Margin positions"
+            },
+            "not_found": "Das Asset %(name)s existiert nicht",
             "permissions": {
-                "title": "Befugnisse",
-                "max_market_fee": "Maximale Marktgebühr",
-                "max_supply": "Maximale Verfügbarkeit",
                 "blacklist_authorities": "Authoritäten der Schwarzliste",
                 "blacklist_markets": "Schwarzgelistete Märkte",
+                "max_market_fee": "Maximale Marktgebühr",
+                "max_supply": "Maximale Verfügbarkeit",
+                "title": "Befugnisse",
                 "whitelist_authorities": "Authoritäten der Weißliste",
                 "whitelist_markets": "Weißgelistete Märkte"
             },
-            "price_feed_data": {
-                "title": "Price-Feed-Daten",
+            "price_feed": {
+                "force_settlement_offset": "Force settlement offset",
+                "global_settlement_price": "Global settlement price",
+                "maintenance_collateral_ratio":
+                    "Maintenance Kollateral-Verhältnis",
+                "maximum_short_squeeze_ratio":
+                    "Maximum short squeeze Verhältnis",
+                "settlement_delay": "Settlement delay",
                 "settlement_price": "Settlement-Preis",
+                "title": "Price Feed"
+            },
+            "price_feed_data": {
                 "core_exchange_rate": "CER",
                 "maintenance_collateral_ratio": "MCR",
                 "maximum_short_squeeze_ratio": "MSSR",
+                "published": "Published",
                 "publisher": "Publisher",
-                "published": "Published"
+                "settlement_price": "Settlement-Preis",
+                "title": "Price-Feed-Daten"
+            },
+            "summary": {
+                "asset_type": "Asset-Typ",
+                "current_supply": "Aktuelle Verfügbarkeit",
+                "issuer": "Herausgeber",
+                "market_fee": "Marktgebühr",
+                "max_market_fee": "Maximale Marktgebühr",
+                "stealth_supply": "Versteckte Verfügbarkeit"
+            },
+            "title": "Asset",
+            "whitelist": {
+                "blacklist_authorities": "Blacklist authorities",
+                "blacklist_markets": "Market blacklist",
+                "enable_flag":
+                    "The whitelist flag must be enabled in order to set whitelist authorities",
+                "whitelist_authorities": "Whitelist authorities",
+                "whitelist_markets": "Market whitelist"
             }
         },
-        "witnesses": {
-            "title": "Witnesses",
-            "current": "Aktueller Witness",
-            "participation": "Beteiligungsrate",
-            "pay": "Bezahlung pro Block",
-            "budget": "Übriges Budget",
-            "next_vote": "Aktualisierung der Stimmen",
-            "card": "Kartenansicht",
-            "table": "Tabellenansicht",
-            "rank": "Rang",
-            "last_confirmed": "Zuletzt bestätigt",
-            "missed": "verpasste Blöcke"
+        "assets": {
+            "id": "ID",
+            "issuer": "Herausgeber",
+            "market": "SmartCoins",
+            "precision": "Genauigkeit",
+            "prediction": "Prediction market assets",
+            "symbol": "Symbol",
+            "title": "Assets",
+            "units": "Units",
+            "user": "User Issued Assets"
         },
-        "committee_members": {
-            "title": "Komiteemitglied",
-            "active": "Gesamtzahl aktiver Komiteemitglieder"
+        "block": {
+            "account_upgrade": "Kontoerweiterung",
+            "asset_issue": "Zu emittierender Betrag",
+            "asset_update": "zu aktualisierendes Asset",
+            "authorizing_account": "Kontovollmacht",
+            "call_limit": "Call-Limit",
+            "common_options": "Common Optionen",
+            "count": "Transaktionszähler",
+            "date": "Datum",
+            "fee_payer": "Gebührenkonto",
+            "feed_price": "Feed price",
+            "go_to": "Go to block",
+            "id": "Block ID",
+            "key": "Öffentlicher Schlüssel",
+            "lifetime": "Lebenslanges Mitglied werden",
+            "listed_account": "Kontenübersicht",
+            "max_margin_period_sec": "Max Margin Periode (s)",
+            "new_listing": "Neuer Eintrag",
+            "new_options": "Neue Option",
+            "new_producers": "Neue Feederzeuger",
+            "next_secret": "Hash des nächsten Geheimnisses",
+            "op": "Aktion",
+            "op_type": "Aktionstyp",
+            "previous": "Vorherige",
+            "previous_secret": "Vorheriges Geheimnis",
+            "settlement_price": "Settlement-Preis",
+            "short_limit": "Short-Limit",
+            "time": "Zeit",
+            "title": "Block",
+            "transactions": "Anzahl der Transaktionen",
+            "trx": "Transaktion",
+            "witness": "Witness"
+        },
+        "blocks": {
+            "active_committee_members": "Aktive Kommittee-Mitglieder",
+            "active_witnesses": "Aktive Witnesses",
+            "avg_conf_time": "mittlere Bestätigungszeit",
+            "block_time": "Block-Zeit",
+            "block_times": "Block-Zeiten",
+            "current_block": "Aktueller Block",
+            "globals": "Globale Einstellungen",
+            "last_block": "Letzter Block",
+            "recent": "Letzte Blöcke",
+            "recently_missed_blocks": "kürzlich verpasste Transaktionen",
+            "title": "Blockchain",
+            "transactions": "# an Transaktionen",
+            "trx": "Transaktion",
+            "trx_per_block": "Trx/block",
+            "trx_per_sec": "Trx/s"
         },
         "committee_member": {
             "title": "Kommitteemitglied"
         },
+        "committee_members": {
+            "active": "Gesamtzahl aktiver Komiteemitglieder",
+            "title": "Komiteemitglied"
+        },
+        "fees": {
+            "fee": "Standartgebühr",
+            "feeeq": "(äquivalent)",
+            "feeltm": "Gebühr bei lebenslangem bzw. Jahresabo",
+            "feeltmeq": "(äquivalent)",
+            "type": "Gebührentyp"
+        },
+        "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
+            "title": "Vorschlag"
+        },
+        "witnesses": {
+            "budget": "Übriges Budget",
+            "card": "Kartenansicht",
+            "current": "Aktueller Witness",
+            "last_confirmed": "Zuletzt bestätigt",
+            "missed": "verpasste Blöcke",
+            "next_vote": "Aktualisierung der Stimmen",
+            "participation": "Beteiligungsrate",
+            "pay": "Bezahlung pro Block",
+            "rank": "Rang",
+            "table": "Tabellenansicht",
+            "title": "Witnesses"
+        },
         "workers": {
-            "title": "Budgetpunkte",
-            "period": "Worker duration",
-            "daily_pay": "Daily pay (BTS)",
-            "website": "Website",
-            "vesting_pay": "Salary vesting period (days)",
             "create": "Create a new worker proposal",
             "create_text_1":
                 "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
             "create_text_2":
                 "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
-            "name_text":
-                "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
+            "daily_pay": "Daily pay (BTS)",
             "date_text":
                 "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
+            "name_text":
+                "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
             "pay_text":
                 "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
+            "period": "Worker duration",
+            "title": "Budgetpunkte",
             "url_text":
                 "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
+            "vesting_pay": "Salary vesting period (days)",
             "vesting_text":
-                "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
-        },
-        "proposals": {
-            "title": "Vorschlag"
-        },
-        "account": {
-            "title": "Konto"
-        },
-        "fees": {
-            "type": "Gebührentyp",
-            "fee": "Standartgebühr",
-            "feeeq": "(äquivalent)",
-            "feeltm": "Gebühr bei lebenslangem bzw. Jahresabo",
-            "feeltmeq": "(äquivalent)"
+                "The vesting period defines the number of days that worker earnings will vest before being fully claimable.",
+            "website": "Website"
         }
-    },
-    "settings": {
-        "browser_notifications": "Browserbenachrichtigungen",
-        "browser_notifications_allow": "Benachrichtigungen aktivieren",
-        "browser_notifications_additional_transfer_to_me":
-            "Über Überweisungen an mein Konto benachrichtigen",
-        "passwordLogin": "Login using the account model",
-        "inverseMarket": "Bevorzugte Marktorientierung",
-        "unit": "Bevorzugte Rechnungseinheit",
-        "confirmMarketOrder": "Nach Bestätigung für Marktanweisungen fragen",
-        "locale": "Sprache wechseln",
-        "confirm_yes": "Immer",
-        "confirm_no": "Nie",
-        "always_confirm": "Für jede Transaction nach Bestätigung fragen",
-        "wallets": "Geldbörsen",
-        "apiServer": "API Anbindung",
-        "add_ws": "Websocket API hinzufügen",
-        "remove_ws": "Websocket API entfernen",
-        "faucet_address": "Faucet Address",
-        "showSettles": "Settlements in der Depth-Chart anzeigen",
-        "yes": "Ja",
-        "no": "Nein",
-        "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
-        "restore_default_success": "Settings have been reset successfully",
-        "api_closest": "Choose closest automatically",
-        "wallet_required": "Wallet model required",
-        "wallet_required_text":
-            "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-        "enable_wallet": "Enable wallet model",
-        "connection_error":
-            "Unable to connect to API node %(url)s, falling back to known working nodes"
-    },
-    "footer": {
-        "title": "BitShares",
-        "block": "Spitzenblock",
-        "loading": "Lade..."
-    },
-    "exchange": {
-        "chart_options": {
-            "tools": "Tools",
-            "title": "Indicators",
-            "sma": "SMA",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "smaVolume": "SMA",
-            "macd": "MACD chart",
-            "bb": "Bollinger Bands",
-            "fib": "Draw Fibonacci retracement",
-            "trendline": "Draw trend line",
-            "volume": "Show volume chart",
-            "period": "Period",
-            "height": "Chart height",
-            "price_title": "Price indicators",
-            "volume_title": "Volume indicators"
-        },
-        "market": "Markt",
-        "price_history": "Preisverlauf",
-        "order_depth": "Ordertiefe",
-        "history": "Marktverlauf",
-        "my_history": "Meine Historie",
-        "balance": "Guthaben",
-        "lowest_ask": "Günstigstes Ask",
-        "highest_bid": "Höchstes Bid",
-        "total": "Gesamt",
-        "value": "Wert",
-        "price": "Preis",
-        "latest": "Letzer Preis",
-        "call": "Call Preis",
-        "core_rate": "Gebührenrate",
-        "settle": "Settlement-Preis",
-        "squeeze": "Margin-Call-Preis",
-        "maintenance": "Maintenance-Call-Preis",
-        "your_price": "Ihr Call-Preis",
-        "volume": "Volumen",
-        "vol_short": "Vol",
-        "spread": "Spread",
-        "quantity": "Quantität",
-        "buy": "Kaufen",
-        "buy_min": "Buy at least",
-        "sell": "Verkaufen",
-        "receive": "Empfangen",
-        "vertical": "Vertical",
-        "horizontal": "Horizontal",
-        "confirm_buy":
-            "Your order is %(diff)s times higher than the lowest ask, are you sure?",
-        "confirm_sell":
-            "Your order is %(diff)s times lower than the highest bid, are you sure?",
-        "confirm_no_orders_buy":
-            "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
-        "confirm_no_orders_sell":
-            "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
-        "market_name": "Meine Märkte",
-        "quote_supply": "Quote Verfügbarkeit",
-        "base_supply": "Base Verfügbarkeit",
-        "more": "Alle Märkte",
-        "volume_24": "24h-Volumen",
-        "change": "Änderung",
-        "confirm":
-            "Ihre Order ist %(diff)s% vom aktuellen Preis entfernt. Sind Sie sicher?",
-        "indicators": "Indikatoren",
-        "rsi": "Relative Strength Index",
-        "ema": "Exponential Moving Average",
-        "sma": "Simple Moving Average",
-        "atr": "Average True Range",
-        "period": "Periode (Tage)",
-        "overbought": "Overbought",
-        "oversold": "Oversold",
-        "index": "Index",
-        "my_bids": "Meine Bids",
-        "my_asks": "Meine Asks",
-        "settle_orders": "Settlement-Order",
-        "asks": "Asks",
-        "bids": "Bids",
-        "no_data": "Keine Daten",
-        "time": "Zeitintervall",
-        "borrow": "Leihen",
-        "no_balance": "Ungenügendes Guthaben",
-        "invalid_amount": "Ungültiger Betrag",
-        "invalid_price": "Ungültiger Preis",
-        "market_frozen":
-            "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
-        "quote": "Quote currency:",
-        "search": "Search for more markets here"
     },
     "fees": {
         "title": "Gebühren"
     },
-    "markets": {
-        "title": "Märkte",
-        "base": "Base Asset",
-        "market_search": "Markt Suche",
+    "footer": {
+        "advanced_settings": "Advanced settings",
+        "backup": "A Backup is Required",
+        "block": "Spitzenblock",
+        "brainkey": "Backup brainkey recommended",
+        "connected": "Connected",
+        "connection": "No Blockchain connection",
+        "disconnected": "Disconnected",
+        "latency": "Latency",
+        "loading": "Lade...",
+        "nosync": "Your active node is out of sync",
+        "synced": "Synced",
+        "title": "BitShares",
+        "unsynced": "Out of sync",
+        "update_available": "UPDATE AVAILABLE"
+    },
+    "gateway": {
+        "add_funds":
+            "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
+        "address": "Address",
+        "address_with_memo":
+            "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
+        "agreement": {
+            "hint": "I have read and agreed to",
+            "name": "《Service Agreement》",
+            "notice": "Please check the agreement to continue",
+            "register": "Agree"
+        },
+        "asset": "Asset",
+        "asset_search_deposit": "Search for an asset to deposit",
+        "asset_search_withdraw": "Search for an asset to withdraw",
+        "asset_to_deposit": "Asset to deposit:",
+        "asset_to_receive": "You will receive:",
+        "asset_to_withdraw": "Asset to withdraw:",
+        "asset_unavailable": "The gateway for %(asset)s is not in service",
+        "assets": {
+            "bit":
+                "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+            "bitcny":
+                "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
+            "open":
+                "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
+            "trade":
+                "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades."
+        },
+        "balance": "Guthaben",
+        "balance_asset": "Current %(asset)s balance",
+        "bitkapital_receive": "You will receive",
+        "bitkapital_text": "Choose an asset to deposit or withdraw:",
+        "bitkapital_withdraw": "You are withdrawing",
+        "bridge": "Bridge",
+        "bridge_text":
+            "A bridge lets you exchange an asset into another one, for example BTC to BTS.",
+        "calc": "Calculating",
+        "choose_deposit": "Please select the coin you would like to deposit",
+        "choose_withdraw": "Please select the coin you would like to withdraw",
+        "contact_TRADE": "Contact Blocktrades",
+        "convert": "Internal conversion",
+        "convert_coin": "Convert to %(coin)s (%(symbol)s)",
+        "convert_now": "Convert now",
+        "copy_address": "Copy address",
+        "copy_memo": "Copy memo",
+        "deposit": "Einzahlung",
+        "deposit_address": "Deposit address",
+        "deposit_history_status": {
+            "confirming": "deposit confirming",
+            "fail": "fail",
+            "success": "success",
+            "transfering": "transfering",
+            "waiting": "waiting for deposit"
+        },
+        "deposit_inst": "Deposit instructions",
+        "deposit_limit": "Deposit limit",
+        "deposit_notice_delay":
+            "(new address can be generated once per 5 minutes)",
+        "deposit_summary": "Deposit summary",
+        "deposit_to": "Einzahlen auf",
+        "deposit_warning":
+            "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+        "deposit_warning_memo":
+            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
+        "fee": "Gateway-Gebühr",
+        "fiat": "Fiat",
+        "fiat_text":
+            "Note: Fiat gateways are closed till further notice. Sorry for the inconvenience! Please follow our latest news and updates here <a target='_blank' href='https://blog.openledger.info/'>blog.openledger.info</a>",
+        "frozen": "The user account %(account)s was frozen",
+        "gateway": "Gateway",
+        "gateway_text":
+            "Choose whether you want to make a deposit or withdrawal here",
+        "generate": "Generieren",
+        "generate_new": "Get new address",
+        "generate_new_memo": "Get new memo",
+        "iban": "IBAN",
+        "info": "Info",
+        "intermediate": "Intermediate account",
+        "inventory": "Inventar",
+        "limit": "Limit: %(amount)s %(symbol)s",
+        "limit_withdraw_asset": "Min: %(min)s, Max: %(max)s",
+        "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_none": "None",
+        "memo": "Memo",
+        "meta": {
+            "open_website": "Webseite öffnen"
+        },
+        "min_deposit_warning_amount":
+            "Minimum Deposit: %(minDeposit)s %(coin)s",
+        "min_deposit_warning_asset":
+            "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "over_limit": "Limit Reached",
+        "please_generate_address": "Please, get new address ",
+        "purchase": "Purchase %(asset)s",
+        "purchase_1":
+            "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+        "purchase_notice":
+            "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+        "purchase_notice_memo":
+            "Memo <b>required</b> for proper routing to your account",
+        "receive_account": "Receiving account:",
+        "recent_deposit": "Recent deposits",
+        "recent_withdraw": "Recent withdrawals",
+        "rudex": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact RuDEX at:",
+            "under_construction": "Under Construction"
+        },
+        "scan_qr": "Scan QR",
+        "service": "Transfer Service",
+        "status": "Status",
+        "support_block":
+            "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
+        "support_gdex": "For support, please contact GDEX",
+        "symbol": "Symbol",
+        "time": "Time",
+        "title": "Deposit & Withdraw",
+        "transaction_history_info":
+            " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+        "unavailable":
+            "The gateway service for this asset is currently down, please try again later",
+        "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
+        "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
+        "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+        "unavailable_bridge":
+            "The bridge service for this asset is currently down, please try again later",
+        "use_copy_button":
+            "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
+        "user_unavailable":
+            "User informaction is current unavailable, please try again later",
+        "valid_address": "Please enter a valid %(coin_type)s address",
+        "website": "Visit the website",
+        "withdraw": "Abhebung",
+        "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
+        "withdraw_funds":
+            "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+        "withdraw_history_status": {
+            "audited": "auditting completed",
+            "auditing": "withdraw auditing",
+            "confirming": "confirming",
+            "fail": "fail",
+            "refused": "auditting failed",
+            "success": "success",
+            "transfering": "transfering"
+        },
+        "withdraw_inst": "Withdrawal instructions",
+        "withdraw_now": "Withdraw now",
+        "withdraw_placeholder": "Please enter your %(asset)s address",
+        "withdraw_summary": "Withdrawal summary",
+        "withdraw_to": "Click the button below to open a %(asset)s withdrawal",
+        "your_account": "Your account"
+    },
+    "global": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
+    },
+    "header": {
+        "account": "Konto",
+        "account_notify": "The active account is now %(account)s",
+        "account_value": "Kontowert",
+        "collateral_ratio": "Collateral ratio",
+        "create_account": "Konto erstellen",
+        "create_asset": "Asset erstellen",
+        "current": "Aktives Konto",
+        "dashboard": "Übersicht",
+        "deposit-withdraw": "Deposit/Withdraw",
+        "exchange": "Börse",
+        "explorer": "Explorer",
+        "help": "Hilfe",
+        "lock": "Sperren",
+        "lock_short": "Log out",
+        "locked_tip": "Geldbörse ist gesperrt. Klicken zum Entsperren.",
+        "logout": "Abmeldung",
+        "payments": "Transaktionen",
+        "payments_beta": "Send (Beta)",
+        "payments_legacy": "Send (legacy)",
+        "settings": "Einstellungen",
+        "title": "BitShares UI",
+        "unlock": "Entsperren",
+        "unlock_password": "Log in using a password",
+        "unlock_short": "Login",
+        "unlocked_tip": "Geldbörse ist entsperrt. Klicken zum Sperren.",
+        "update_asset": "Asset ändern"
+    },
+    "icons": {
+        "adjust": "Adjust margin position",
+        "assets": "Assets",
+        "checkmark_circle": {
+            "approved": "Approved",
+            "operation_succeed": "Operation succeed",
+            "yes": "Yes"
+        },
+        "chevron_down": {
+            "gateways": "Show more gateways",
+            "other": "Show more items",
+            "transactions": "Show more transactions"
+        },
+        "clippy": {
+            "copy": "Copy to clipboard",
+            "withdraw_full": "Withdraw the full balance"
+        },
+        "clock": "Please check your computer's clock",
+        "cog": "Settings",
+        "cogs": "Settings",
+        "connect": "Connect to this API Node",
+        "connected": "API Node is connected",
+        "cross_circle": {
+            "cancel_order": "Cancel order",
+            "close_position": "Close position",
+            "hide_asset": "Hide asset",
+            "hide_market": "Hide market",
+            "operation_failed": "Operation failed",
+            "remove": "Remove"
+        },
+        "dashboard": "Dashboard",
+        "deposit": {
+            "deposit": "Deposit",
+            "deposit_withdraw": "Deposit/Withdraw"
+        },
+        "disconnected": "API Node is disconnected",
+        "dollar": {
+            "borrow": "Borrow",
+            "buy": "Buy"
+        },
+        "download": "Download new version of BitShares UI",
+        "excel": "Download .csv file",
+        "eye": "Hide Node",
+        "eye-striked": "Show Node",
+        "fees": "Fees",
+        "fi_star": {
+            "account": "Add/remove account from favorites",
+            "market": "Add/remove market from favorites",
+            "sort_accounts": "Sort by favorites",
+            "symbol": "Add/remove symbol from favorites"
+        },
         "filter": "Filter",
+        "folder": "Accounts",
+        "hamburger": "Open menu",
+        "hamburger_x": "Close menu",
+        "hourglass": "Vesting balances",
+        "info_circle_o": "Info",
+        "key": "Key",
+        "list": "Whitelist",
+        "locked": {
+            "action": "Click to unlock your account to perform this action",
+            "common": "Click to unlock your account",
+            "enable_auto_scroll": "Enable auto scroll"
+        },
+        "minus_circle": {
+            "disapproved": "Disapproved",
+            "no": "No",
+            "remove_contact": "Remove contact from the list",
+            "wrong_address": "Unable to generate address"
+        },
+        "news": "News",
+        "plus_circle": {
+            "add_contact": "Add contact to the list",
+            "show_asset": "Show asset",
+            "show_market": "Show market"
+        },
+        "power": "Login",
+        "question_circle": "Help",
+        "server": "Explore",
+        "settle": "Settle",
+        "share": "About",
+        "shuffle": "Switch trading pair",
+        "text": {
+            "membership_stats": "Membership stats",
+            "signed_messages": "Signed messages"
+        },
+        "thumb_tack": "Pin panel to the left side",
+        "thumb_untack": "Unpin panel",
+        "thumbs_up": "Voting",
+        "times": "Remove API Node",
+        "trade": {
+            "exchange": "Exchange",
+            "trade": "Trade"
+        },
+        "transfer": "Send",
+        "unlocked": {
+            "common": "Click to lock your account",
+            "disable_auto_scroll": "Disable auto scroll"
+        },
+        "user": {
+            "account": "Account",
+            "create_account": "Create account",
+            "following": "You are following this user"
+        },
+        "warning": "Permissions",
+        "withdraw": "Withdraw",
+        "zoom": "Search"
+    },
+    "incognito": {
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
+    },
+    "init_error": {
+        "browser": "Nicht unterstützter Browser",
+        "browser_text":
+            "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+        "connected": "verbunden",
+        "not_connected": "Nicht verbunden",
+        "retry": "nocheinmal versuchen",
+        "title": "Initialisierungsfehler",
+        "understand": "Verstanden!",
+        "ws_status": "Websocket Verbindungsstatus"
+    },
+    "languages": {
+        "de": "Deutsch",
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "it": "Italiano",
+        "ja": "日本語",
+        "ko": "한국어",
+        "ru": "Русский",
+        "tr": "Türkçe",
+        "zh": "简体中文"
+    },
+    "markets": {
+        "base": "Base Asset",
         "core_rate": "Kernrate:",
-        "supply": "Verfügbarkeit",
+        "filter": "Filter",
+        "market_search": "Markt Suche",
+        "preferred": "Bevorzugte Märkte",
         "search": "Suche",
-        "preferred": "Bevorzugte Märkte"
+        "supply": "Verfügbarkeit",
+        "title": "Märkte"
+    },
+    "migration": {
+        "announcement_1":
+            "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+        "text_1": "Local wallet detected",
+        "text_2":
+            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+        "text_3":
+            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
+        "title": "Notice"
+    },
+    "modal": {
+        "buy": {
+            "asset": "Asset",
+            "bridge": "Brdige",
+            "title": "Buy"
+        },
+        "confirmation": {
+            "accept": "Yes",
+            "cancel": "No",
+            "title":
+                "The address you entered does not appear valid, are you sure you want to make the withdrawal?"
+        },
+        "convert": {
+            "amount": "Amount to Convert",
+            "submit": "Ok"
+        },
+        "deposit": {
+            "address_generation_error": "Unable to generate address",
+            "amount": "Einzahlungsbetrag",
+            "asset": "Asset",
+            "bts_transfer_description":
+                "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
+            "cancel": "Cancel",
+            "close": "Close",
+            "header": "Deposit to %(account_name)s",
+            "header_short": "Deposit",
+            "submit": "Einzahlen",
+            "submit_beta": "Deposit (beta)"
+        },
+        "deposit_withdraw": {
+            "disabled": "Gateway service disabled",
+            "gateway": "Gateway",
+            "no_gateway_available": "No gateway available",
+            "select_gateway": "Please select a gateway operator",
+            "wallet_error": "Gateway wallet disabled"
+        },
+        "issue": {
+            "amount": "Menge",
+            "submit": "Herausgeben",
+            "to": "Herausgeben an"
+        },
+        "ok": "OK",
+        "proposals": {
+            "approval_add": "Approval to add",
+            "approval_remove": "Approval to remove",
+            "key_approval_add": "Key approval to add",
+            "key_approval_remove": "Key approval to remove",
+            "pay_with": "Pay with account"
+        },
+        "qrcode": {
+            "input_message":
+                "Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code.",
+            "label": "qrcode",
+            "title": "Private key QR code"
+        },
+        "reserve": {
+            "amount": "Amount to burn",
+            "from": "Account to burn from",
+            "submit": "Burn",
+            "title": "Burn (reserve) asset"
+        },
+        "send": {
+            "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+            "header_propose":
+                "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+        },
+        "settle": {
+            "amount": "Menge für das Settlement",
+            "submit": "Settlement durchführen",
+            "title": "Settlement für %(asset)s durchführen"
+        },
+        "withdraw": {
+            "address": "Abheben zu Adresse",
+            "address_not_valid": "Invalid address",
+            "amount": "Abzuhebender Betrag",
+            "available": "Available: ",
+            "bitshares_account": "Send to Bitshares Account",
+            "cancel": "Cancel",
+            "cannot_cover": "Insufficient funds!",
+            "estimated_value": "Estimated Value",
+            "fee": "Fee",
+            "gateway_fee": "Gateway Fee",
+            "header": "Withdraw (beta)",
+            "memo": "Memo",
+            "no_estimate": "No estimate available for this object",
+            "no_gateways":
+                "Sorry, but there are no gateways available to handle this withdrawal",
+            "quantity": "Quantity",
+            "submit": "Abheben",
+            "submit_beta": "Withdraw (beta)",
+            "withdraw": "Withdraw"
+        }
+    },
+    "news": {
+        "author": "Author",
+        "errors": {
+            "fetch": "Ops... Something went wrong fetching the news"
+        },
+        "news": "News",
+        "subject": "Subject"
+    },
+    "openledger": {
+        "deposit_amount": "Deposit Amount",
+        "deposit_details": "Details",
+        "deposit_none": "No deposits",
+        "header_fiat": "Fiat",
+        "header_transaction_history": "Transaction history",
+        "loading": "Loading...",
+        "refresh_transaction_history": "Refresh",
+        "retry": "Retry",
+        "show_transaction_history": "Show transaction history",
+        "status": "Status",
+        "withdraw_amount": "Withdrawal Amount",
+        "withdraw_none": "No withdrawals"
+    },
+    "operation": {
+        "annual_upgrade_account": "{account} hat ein Jahresabo gekauft",
+        "asset_create": "{account} hat das Asset {asset} erzeugt",
+        "asset_fund_fee_pool":
+            "{account} hat {amount} in den Gebührenpool von  {asset} transferiert",
+        "asset_global_settle":
+            "{account} hat ein globales Settlement von {asset} bei {price} beantragt",
+        "asset_issue": "{account} hat {amount} an {to} herausgegeben",
+        "asset_reserve": "{account} hat {amount} zurückgelegt",
+        "asset_settle": "{account} hat ein Settlement von {amount} beantragt",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_update": "{account} hat das Asset {asset} aktualisiert",
+        "asset_update_feed_producers":
+            "{account} hat die Feed-Erzeuger für {asset} aktualisiert",
+        "balance_claim": "{account} hat Guthaben von {amount} beansprucht",
+        "blacklisted_by": "{lister} hat Konto {listee} schwarzgelistet",
+        "call_order_update":
+            "{account} hat nun {debt} {debtSymbol} Schulden bei einem Kollateral von {collateral}",
+        "committee_member_update_global_parameters":
+            "{account} updated the global committee parameters",
+        "fill_order_buy": "{account} bought {amount} at {price}",
+        "fill_order_sell": "{account} sold {amount} at {price}",
+        "lifetime_upgrade_account":
+            "{account} hat eine lebenslange Mitgliedschaft gekauft",
+        "limit_order_buy":
+            "{account} hat eine Kaufsorder für {amount} bei {price} eingestellt",
+        "limit_order_cancel": "{account} hat order #%(order)s zurückgezogen",
+        "limit_order_sell":
+            "{account} hat eine Verkaufsorder für {amount} bei {price} eingestellt",
+        "no_recent": "keine kürzlichen Transaktionen",
+        "override_transfer":
+            "{issuer} transferred {amount} from {from} to {to}",
+        "pending": "schwebend %(blocks)s Blöcke",
+        "proposal_create": "{account} hat Transaktion vorgeschlagen",
+        "proposal_delete": "{account} hat Transaktionsvorschlag gelöscht",
+        "proposal_update": "{account} hat Transaktionsvorschlag geändert",
+        "publish_feed": "{account} hat Preis-Feed von {price} veröffentlicht",
+        "reg_account": "{registrar} hat das Konto {newaccount} registriert",
+        "set_proxy": "{account} hat {proxy} als seinen Proxy eingestellt",
+        "transfer": "{from} hat {amount} an {to} gesendet",
+        "transfer_account": "Konto {account} wurde an {to} übertragen",
+        "unlisted_by": "{lister} hat {listee} von der Liste gestrichen",
+        "update_account": "{account} hat seine Kontodetails aktualisiert",
+        "vesting_balance_withdraw":
+            "{account} hat zugesichertes Guthaben {amount} beansprucht",
+        "whitelisted_by": "{lister} hat Konto {listee} weißgelistet",
+        "witness_create": "{account} ist jetzt ein Witness",
+        "witness_pay": "{account} hat Witness-Guthaben eingezogen.",
+        "witness_receive": "Received witness from {witness}",
+        "witness_update": "{account} hat seine Witness aktualisiert",
+        "worker_create":
+            "{account} created a worker proposal with daily pay of {pay}"
+    },
+    "page404": {
+        "asset_not_found_subtitle": "That asset does not exist",
+        "home": "Zuhause",
+        "market_not_found_subtitle": "That market does not exist",
+        "page_not_found_subtitle": "Diese Seite existiert nicht",
+        "page_not_found_title": "404 Seite nicht gefunden"
+    },
+    "pagination": {
+        "newer": "Jüngere",
+        "older": "Ältere"
+    },
+    "proposal": {
+        "action": "Actions",
+        "approve": "Approve",
+        "approvers": "Approver(s)",
+        "asset_create":
+            "Create the asset %(asset)s using the account {account}",
+        "asset_issue": "Issue {amount} to {to} using {account}",
+        "asset_reserve": "Burn (reserve) {amount} using {account}",
+        "asset_settle": "Request a settlement of",
+        "asset_update": "Update the asset {asset} using the account {account}",
+        "call_order_update":
+            "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "committee_member_update_global_parameters":
+            "Update committee global parameters by {account}",
+        "expires": "Expires",
+        "feed_producer":
+            "Update the feed producers for the asset {asset} using the account {account}",
+        "limit_order_buy":
+            "Place an order to buy {amount} at {price} for {account}",
+        "limit_order_create":
+            "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+        "limit_order_sell":
+            "Place an order to sell {amount} at {price} for {account}",
+        "override_transfer":
+            "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "proposals": "Proposals",
+        "reject": "Reject",
+        "status": "Status",
+        "transfer": "Transfer {amount} from {from} to {to}",
+        "update": {
+            "active_approvals_to_add": "Active approvals to add",
+            "active_approvals_to_remove": "Active approvals to remove",
+            "key_approvals_to_add": "Key approvals to add",
+            "key_approvals_to_remove": "Key approvals to remove",
+            "owner_approvals_to_add": "Owner approvals to add",
+            "owner_approvals_to_remove": "Owner approvals to remove"
+        },
+        "update_account": "Update account data for {account}",
+        "vesting_balance_withdraw":
+            "Withdraw {amount} from vesting balance of {account}"
+    },
+    "proposal_create": {
+        "expiration_time": "Expiration time",
+        "fee_paying_account": "Fee paying account",
+        "id": "Proposal object id",
+        "proposed_operations": "Proposed operations",
+        "review_period": "Review period begin"
+    },
+    "propose": "vorschlagen",
+    "qr_address_scanner": {
+        "address_found": "Adresse gefunden",
+        "amount": "Betrag",
+        "retry": "Wiederholen",
+        "use_address": "Adresse verwenden"
+    },
+    "refcode": {
+        "claim": "Beanspruchen",
+        "claim_refcode": "Referralcode einlösen",
+        "enter_refcode": "Geben Sie den Referralcode ein",
+        "refcode_optional": "Referralcode (optional)"
+    },
+    "settings": {
+        "access": "Nodes",
+        "access_text": "",
+        "accounts": "Accounts",
+        "accounts_text": "Your accounts list.",
+        "activate": "Activate",
+        "active_node": "Active Node",
+        "add_api": "Add Node",
+        "add_ws": "Websocket API hinzufügen",
+        "always_confirm": "Für jede Transaction nach Bestätigung fragen",
+        "apiServer": "API Anbindung",
+        "api_closest": "Choose closest automatically",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "automatic_short": "Automatic Switching",
+        "available_nodes": "Available",
+        "backup": "Backup",
+        "backup_backup": "Restore from a backup file (.bin)",
+        "backup_backup_short": "Restore from a backup",
+        "backup_brainkey": "Restore using a local wallet brainkey",
+        "backup_favorites": "Restore favorites using a json file",
+        "backup_favorites_error": "Could not parse JSON.",
+        "backup_favorites_finish": "Import favorites",
+        "backup_favorites_success": "Successfully restored market favorites",
+        "backup_favoritesbtn": "Backup favorites",
+        "backup_favoritestext":
+            "Back up your favorites to restore them later after updates.",
+        "backup_key": "Import a private key",
+        "backup_legacy": "Import a BTS 0.9.3c key export file (.json)",
+        "backup_text": "Create backups here.",
+        "backupcreate_backup": "Create local wallet backup",
+        "backupcreate_brainkey": "Create brainkey backup",
+        "backupcreate_favorites": "Create favorites backup",
+        "browser_notifications": "Browserbenachrichtigungen",
+        "browser_notifications_additional_transfer_to_me":
+            "Über Überweisungen an mein Konto benachrichtigen",
+        "browser_notifications_allow": "Benachrichtigungen aktivieren",
+        "browser_notifications_disabled_by_browser_notify":
+            "Your browser disabled notifications. Click to learn how enable browser notifications",
+        "cloud_login": "Cloud Wallet Login",
+        "confirmMarketOrder": "Nach Bestätigung für Marktanweisungen fragen",
+        "confirm_no": "Nie",
+        "confirm_remove":
+            "Are you sure you want to remove %(name)s from your available nodes?",
+        "confirm_yes": "Immer",
+        "connection_error":
+            "Unable to connect to API node %(url)s, falling back to known working nodes",
+        "darkTheme": "Dark",
+        "delete_select": "Select local wallet to delete",
+        "enable_wallet": "Enable wallet model",
+        "faucet_address": "Faucet Address",
+        "faucet_address_text":
+            "The faucet address is used to pay the registration fee for new users.",
+        "general": "General",
+        "general_text": "Adjust the basic settings.",
+        "hidden_nodes": "Hidden",
+        "hide": "Hide",
+        "high_latency": "High latency",
+        "inverseMarket": "Bevorzugte Marktorientierung",
+        "lightTheme": "Light",
+        "local_wallet": "Local Wallet Login",
+        "locale": "Sprache wechseln",
+        "lookup_text":
+            "Click the button below to check for unclaimed balances from BTS 1.0",
+        "low_latency": "Low latency",
+        "medium_latency": "Medium latency",
+        "midnightTheme": "Midnight",
+        "my_nodes": "Personal",
+        "no": "Nein",
+        "no_accounts": "This local wallet does not contain any accounts.",
+        "node_already_exists": "Node with such URL already exists",
+        "node_down": "Unreachable",
+        "node_up": "Available",
+        "olDarkTheme": "Openledger dark",
+        "password": "Password",
+        "passwordLogin": "Login using the account model",
+        "password_text": "Change your password.",
+        "ping": "Ping Nodes",
+        "remove": "Remove",
+        "remove_api": "Remove Node",
+        "remove_ws": "Websocket API entfernen",
+        "reset": "Reset settings",
+        "reset_text": "Restore settings to their original defaults.",
+        "reset_text_description":
+            "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
+        "restore": "Restore/Import",
+        "restore_brainkey_text":
+            "In order to restore from a brainkey, you will need to create a new local wallet. Please provide a password and name for your new local wallet below, then enter your brainkey.",
+        "restore_default_success": "Settings have been reset successfully",
+        "restore_key_count": "# of keys",
+        "restore_text": "Restore from a backup or import keys.",
+        "show": "Show",
+        "showAssetPercent": "Show asset percentages on the account page",
+        "showSettles": "Settlements in der Depth-Chart anzeigen",
+        "switch": "Switch Node",
+        "themes": "Theme",
+        "unit": "Bevorzugte Rechnungseinheit",
+        "valid_node_url": "Node URL must begin with ws:// or wss://",
+        "view_keys": "View keys",
+        "wallet": "Local Wallet",
+        "walletLockTimeout": "Geldbörse automatische sperren (Sekunden)",
+        "wallet_required": "Wallet model required",
+        "wallet_required_text":
+            "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+        "wallet_text": "Control the details of your local wallet.",
+        "wallets": "Geldbörsen",
+        "yes": "Ja"
+    },
+    "sync_fail": {
+        "sub_text_1": "Please verify that your computer clock is correct.",
+        "sub_text_2":
+            "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below.",
+        "title": "Failed to sync with the API server"
+    },
+    "tooltip": {
+        "borrow":
+            "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+        "bridge_TRADE":
+            "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+        "buy_min":
+            "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
+        "call_limit":
+            "This is the call price of the least collateralized margin position in the market.",
+        "call_price":
+            "This is the call price of the position. If the feed price goes below the call price, the position will be margin called.",
+        "close_position":
+            "Click here to close your position. You will need to have at least %(amount)s %(asset)s in order to do so.",
+        "coll_ratio":
+            "The collateral ratio of the position is COLLATERAL * FEED PRICE / DEBT.",
+        "copy_password": "Click here to copy the password to your clipboard",
+        "copy_tip": "Click here to copy the text to your clipboard",
+        "cr_danger":
+            "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
+        "cr_warning":
+            "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+        "deposit_tip":
+            "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
+        "disconnected":
+            "You are not connected to an API node, try reloading or setting a new access point in the Settings",
+        "feed_price": "This is the current external feed price",
+        "filter_ops": "Use this list to filter your history by operation type.",
+        "follow_user": "You are following this user",
+        "follow_user_add": "Click to Follow this user",
+        "gateway": "Gateways back desposits by 100% real assets",
+        "generate":
+            "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "hide_asset": "Click here to hide this asset from this list.",
+        "latest_price": "This is the latest price seen in this market.",
+        "login":
+            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+        "margin_price":
+            "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
+        "market_fee":
+            "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+        "memo_tip":
+            "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "no_price":
+            "There's no recent price available for this asset that can be used to estimate its value.",
+        "over_limit":
+            "The bridge does not have enough of the desired asset for this buy order",
+        "propose_scam":
+            "This proposal was created by a known scammer, do not approve it!",
+        "propose_tip": "Propose another user to initiate a transaction",
+        "settle":
+            "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
+        "settle_price":
+            "This is the price at which settle orders will execute.",
+        "show_asset": "Click here to show this asset in the main list.",
+        "show_block":
+            "Click here to show block #%(block)s where this transaction occured.",
+        "sign_owner":
+            "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
+        "sync_no":
+            "The current node is out of sync with the blockchain, try switching to another one",
+        "sync_yes": "The current node is in sync with the blockchain",
+        "transfer_actions":
+            "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
+        "update_position":
+            "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+        "withdraw_address":
+            "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
+        "withdraw_full": "Click to withdraw the full balance"
+    },
+    "transaction": {
+        "amount_sell": "Betrag",
+        "asset_claim_fees":
+            "Assetgebühren von %(balance_amount)s aus %(asset)s Gebührenpool entnommen.",
+        "asset_reserve": "Rücklagen",
+        "at": "für",
+        "balance_id": "Guthaben ID",
+        "balance_owner": "Guthabeneigentümer",
+        "blinding_factor": "Blinding-Faktor",
+        "bond_accept_offer": "Ein Bondangebot wurde akzeptiert",
+        "bond_cancel_offer": "Ein Bondangebot wurde abgebrochen",
+        "bond_claim_collateral": "Eine Sicherheit wurde eingefordert",
+        "bond_create_offer": "Ein Bondangebot wurde erstellt",
+        "bond_pay_collateral": "Eine Sicherheit wurde bezahlt",
+        "borrow_amount": "Schuld",
+        "borrower": "Borrower",
+        "broadcast_fail":
+            "Bei der Übermittlung der Transaction ist ein Fehler aufgetreten: %(message)s",
+        "broadcast_success": "Transaktion wurde übermittelt",
+        "broadcasting": "Übermittle Transaction..",
+        "broadcasting_short": "Übermittle..",
+        "burn_asset": "Vernichtet",
+        "by": "von",
+        "claimed": "Insgesamt beansprucht",
+        "coll_maint": "Unterhalt der Sicherheit (Verhältnis)",
+        "coll_of": "mit einer Sicherheit bestehend aus",
+        "coll_ratio": "Anfängliche Sicherheit (Verhältnis)",
+        "collateral": "Sicherheit/Pfand",
+        "committee_member_create": "Komitee-Mitglied erstellen",
+        "confirm": "Bitte bestätigen Sie die Transaktion",
+        "create_key": "Ein öffentlicher Schlüssel wurde erzeugt",
+        "csv": "Export to .csv",
+        "csv_tip": "Download history as comma separated .csv file",
+        "custom": "Eine benutzerdefinierte Operation wurde definiert",
+        "delta_collateral": "Änderung des Kollateral",
+        "delta_debt": "Änderung der Schuld",
+        "deposit_to": "In Konto einzahlen",
+        "expiration": "Frist",
+        "feeGroups": {
+            "account": "Konto-spezifisch",
+            "asset": "Asset-spezifisch",
+            "business": "Unternehmensführung",
+            "general": "Allgemein",
+            "market": "Markt-spezifisch"
+        },
+        "feeTypes": {
+            "_none": "gratis",
+            "basic_fee": "Grundgebühr",
+            "fee": "Reguläre Gebühr",
+            "long_symbol": "Längeres Symbol",
+            "membership_annual_fee": "Jahresabonement",
+            "membership_lifetime_fee": "Lebenslanges Abonement",
+            "premium_fee": "Premiumname",
+            "price_per_kbyte": "Preis pro KByte Transaktionsgröße",
+            "symbol3": "Symbol mit 3 Zeichen",
+            "symbol4": "Sybmol mit 4 Zeichen"
+        },
+        "feed_price": "Feed Preis",
+        "feed_producer": "Werde Feed-Erzeuger für ein Asset",
+        "file_write": "Eine Datei wurde geschrieben",
+        "fill_or": "sofortige Ausführung oder Annullierung",
+        "for": "für",
+        "from": "von",
+        "fund_pool": "Asset-Gebührenpool finanziert mit",
+        "funding_account": "Bezahlendes Konto",
+        "global_parameters_update": "Globale Parameter aktualisiert",
+        "inputs": "Eingänge",
+        "market_fee": "Marktgebühr",
+        "max_market_fee": "Maximale Marktgebühr",
+        "min_receive": "Mindestbetrag",
+        "new_url": "Webseite",
+        "obtain": "zu erhalten",
+        "order_id": "Anweisungskennung (ID)",
+        "outputs": "Ausgänge",
+        "paid": "Bezahlt",
+        "publisher": "Publisher",
+        "received": "Empfangen",
+        "seller": "Verkäufer",
+        "sent": "Gesendet",
+        "settlement_date": "Settlement-Datum",
+        "to": "an",
+        "transaction_confirmed": "Transaktion bestätigt",
+        "trxTypes": {
+            "account_create": "Konto erstellen",
+            "account_transfer": "Konto-Überweisung",
+            "account_update": "Kontoaktualisierung",
+            "account_upgrade": "Konto-Upgrade",
+            "account_whitelist": "Konto-Positivliste",
+            "all": "Show all",
+            "assert": "Operation bestätigen",
+            "asset_claim_fees": "Gebühr für 'Asset beanspruchen'",
+            "asset_create": "Asset erstellen",
+            "asset_fund_fee_pool": "Asset-Gebührenpool finanzieren",
+            "asset_global_settle": "Globales Asset-Settlement",
+            "asset_issue": "Asset emittieren",
+            "asset_publish_feed": "Asset-Feed publiszieren",
+            "asset_reserve": "Assetanteile vernichten",
+            "asset_settle": "Asset-Settlement",
+            "asset_settle_cancel": "Cancel asset settlement",
+            "asset_update": "Asset aktualisieren",
+            "asset_update_bitasset": "SmartCoin aktualisieren",
+            "asset_update_feed_producers": "Asset-Feederzeuger aktualisieren",
+            "balance_claim": "Guthaben eingefordert",
+            "blind_transfer": "Blind-Transfer",
+            "call_order_update": "Call-Order aktualisieren",
+            "committee_member_create": "Komiteemitglied erstellen",
+            "committee_member_update": "Komiteemitglied editieren",
+            "committee_member_update_global_parameters":
+                "Globale Parameter aktualisiert",
+            "custom": "benutzerdefiniert",
+            "fill_order": "Order ausgeführt",
+            "limit_order_cancel": "Limit-Order abbrechen",
+            "limit_order_create": "Limit-Order",
+            "override_transfer": "Transaktion überschreiben",
+            "proposal_create": "Proposal erstellen",
+            "proposal_delete": "Proposal löschen",
+            "proposal_update": "Proposal aktualisieren",
+            "transfer": "Überweisung",
+            "transfer_from_blind": "Transfer von blindem Konto",
+            "transfer_to_blind": "Transfer zu blinden Konten",
+            "vesting_balance_create": "Sperrfristguthaben erstellt",
+            "vesting_balance_withdraw": "Sperrfristguthaben eingefordert",
+            "withdraw_permission_claim": "Einzugsermächtigung eingefordert",
+            "withdraw_permission_create": "Einzugsermächtigung erstellen",
+            "withdraw_permission_delete": "Einzugsermächtigung aufgehoben",
+            "withdraw_permission_update": "Einzugsermächtigung aktualisiert",
+            "witness_create": "Witness erstellen",
+            "witness_update": "Witness ändern",
+            "witness_withdraw_pay": "Witnesslohn ausbezahlen",
+            "worker_create": "Budgetpunkt erstellt"
+        },
+        "vesting_balance_create": "Ein Sperrfristguthaben wurde erzeugt",
+        "waiting": "Waiting for confirmation..",
+        "whitelist_states": {
+            "black_listed": "schwarzgelistet",
+            "no_listing": "Nicht gelistet",
+            "white_and_black_listed": "schwarz- und weißgelistet",
+            "white_listed": "weißgelistet"
+        },
+        "withdraw_permission_claim":
+            "Einzugsermächtigung wurde eingefordert für Konto",
+        "withdraw_permission_create":
+            "Einzugsermächtigung wurde verliehen an Konto",
+        "withdraw_permission_delete":
+            "Einzugsermächtigung wurde aufgehoben für Konto",
+        "withdraw_permission_update":
+            "Einzugsermächtigung wurde aktualisiert für Konto"
+    },
+    "transfer": {
+        "again": "WEITERE ÜBERWEISUNG",
+        "amount": "Betrag",
+        "available": "Verfügbar: ",
+        "back": "ZURÜCK",
+        "balances": "Guthaben",
+        "broadcast": "Ihre Überweisung wurde gesendet",
+        "broadcasting": "Übermittle...",
+        "cancel": "Cancel",
+        "close": "SCHLIEßEN",
+        "confirm": "BESTÄTIGEN",
+        "copy_address": "Copy Address",
+        "copy_memo": "Copy Memo",
+        "errors": {
+            "balance": "Ihr abschließendes Guthaben kann nicht negativ sein!",
+            "insufficient": "Ungenügende Bilanz",
+            "memo_error":
+                "The transfer memo parsing error, please try again later.",
+            "memo_length_error":
+                "The transfer memo length exceed, please check",
+            "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
+            "noFeeBalance":
+                "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+            "noFunds": "No funds",
+            "noPoolBalance":
+                "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+            "pos": "Betrag darf nicht negativ sein",
+            "precision": "Minimum withdraw precision value: %(precision)s",
+            "req": "Pfichtfeld",
+            "valid": "Bitte geben Sie einen positiven Betrag ein"
+        },
+        "fee": "Gebühr",
+        "final": "Abschließendes Guthaben",
+        "from": "Von",
+        "header": "Transfer details",
+        "header_subheader":
+            "Transfers are used for sending funds to other BitShares Account Holders",
+        "memo": "Memo",
+        "memo_unlock": "Entsperren um Memo zu lesen",
+        "optional": "Optional",
+        "pay_from": "Bezahlen von",
+        "see": "ÜBERWEISUNGSÜBERSICHT",
+        "send": "Senden",
+        "to": "Zu",
+        "warn_name_unable_read_memo":
+            "Proposed sender will be unable to read this memo!"
+    },
+    "trx_error": {
+        "expire":
+            "Your transaction has expired without being confirmed, please try again later."
+    },
+    "walkthrough": {
+        "buy_form": "Platzieren Sie Kaufaufträge über dieses Formular.",
+        "buy_orders": "Sehen Sie alle Kaufaufträge für diesen Markt an.",
+        "chart_tool_duration":
+            "Gruppieren Sie Handelsdaten in verschiedenen Intervallen.",
+        "chart_tool_indicators":
+            "Fügen Sie der Preistabelle technische Indikatoren hinzu, um Handelsmöglichkeiten zu identifizieren.",
+        "chart_tool_zoom":
+            "Passen Sie das Preischart an, um mehr oder weniger Preisverlauf anzuzeigen.",
+        "create_cloud_wallet":
+            "Greifen Sie über einen Kontonamen und ein Passwort auf die Cloud Wallet zu.",
+        "create_local_wallet":
+            "Erstellen Sie eine lokale Brieftasche und laden Sie alle zugehörigen privaten Schlüssel herunter.",
+        "depth_chart":
+            "Verwenden Sie eine Markttiefe-Grafik, um Angebot und Nachfrage zu unterschiedlichen Preisen darzustellen.",
+        "done_label": "Fertig",
+        "favourite_button":
+            "Markieren Sie dieses Paar als Favorit in Ihrer Marktliste.",
+        "find_markets_tab":
+            "Über diese Registerkarte können Sie den Tab Meine Märkte durchsuchen und zusätzliche Märkte hinzufügen.",
+        "language_flag":
+            "Wählen Sie aus 9 verschiedenen Sprachen für die Verwendung in DEX.",
+        "my_markets_tab":
+            "Diese Registerkarte listet häufig verwendete Märkte auf.",
+        "next_label": "Weiter",
+        "prev_label": "Zurück",
+        "price_chart":
+            "Anzeigen der Preisaktion eines Vermögenswerts mithilfe des Preistabellenfelds",
+        "restore_account":
+            "Stellen Sie eine Brieftasche mithilfe Ihrer Sicherungsdatei wieder her.",
+        "sell_form": "Platzieren Sie Verkaufsaufträge mit diesem Formular.",
+        "sell_orders": "Alle Verkaufsaufträge für diesen Markt anzeigen.",
+        "skip_label": "Überspringen",
+        "switch_button":
+            "Wechseln Sie die Handelspaare mit dieser Schaltfläche."
     },
     "wallet": {
-        "title": "Geldbörse",
-        "confirm": "Passwort bestätigen",
-        "password": "Passwort",
-        "existing_password": "Existierendes Passwort",
+        "accept": "Zustimmen",
+        "account_create_wallet_text":
+            "This password will be used to create a new BitShares local wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+        "account_exp":
+            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
+        "account_public": "Account Name (Public)",
+        "active_wallet": "Active Geldbörse",
+        "all_set": "You're all set!",
+        "ask_to_select_wallet": "Please select a key file",
+        "back": "Back",
+        "backup_brainkey": "Brainkey sichern",
+        "backup_explain":
+            "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
+        "backup_login": "Backup & login",
+        "backup_new_account":
+            "Congratulations, you've just created a new account on the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+        "backup_warning":
+            "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
+        "balance_claim_lookup": "Lookup balances",
+        "balance_claims": "Balance einfordern",
+        "brainkey": "Brainkey",
+        "brainkey_backed_up": "This brainkey was last backed up",
+        "brainkey_not_backed_up": "This brainkey has never been backed up",
+        "brainkey_not_verified":
+            "Dieser Gedächtnisschlüssel ist nicht verifiziert",
+        "brainkey_reset_success":
+            "Sequence reset. In order to regenerate your private keys from the wallet brain key, refresh your browser then unlock the wallet.",
+        "brainkey_seq_reset": "Reset brainkey sequence",
+        "brainkey_seq_reset_button": "Reset now",
+        "brainkey_seq_reset_text":
+            "Use this to reset the sequence counter used to derive private keys from the wallet brainkey.<br />It can be used to force a regeneration of private keys from your wallet brain key.",
+        "brainkey_w1": "WARNUNG: Bitte ausdrucken oder aufschreiben",
+        "brainkey_w2": "Jeder mit Zugang zu diesem Schlüssel wird",
+        "brainkey_w3": "Zugang zu Ihren Finanzen in dieser Geldbörse erhalten",
+        "bts_09_export": "BTS 0.9.3c key export file (.json)",
+        "bts_rules":
+            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
+        "cancel": "Abbrechen",
+        "change": "Wechsele Geldbörse (%(name)s)",
+        "change_backup":
+            "Now that you've changed your password, we highly recommend making a new backup.",
         "change_password": "Passwort ändern",
+        "change_success": "Password successfully changed!",
         "change_wallet": "Geldbörse wechseln",
-        "wallet_created": "Geldbörse erstellt",
+        "claim_balance": "Kontostand einfordern",
+        "claim_balances": "Kontostände einfordern",
+        "claim_later":
+            "Once you've imported the keys, you can claim these balances to an account of your choosing.",
+        "confirm": "Passwort bestätigen",
+        "confirm_error": "The confirmation does not match the password",
+        "confirm_password": "Confirm Password",
+        "congrat": "Congratulations, you're ready!",
+        "console": "Geldbörsen-Management-Konsole",
+        "create": "Erstellen",
+        "create_a": "Create a new blockchain account",
+        "create_account_password_text":
+            "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
+        "create_account_text":
+            "The account name you choose needs to be unique, as it will be registered publicly on the blockchain and will be your identifer for any transactions you make.",
+        "create_backup": "Sicherung erstellen",
+        "create_backup_of": "Sichere Geldbörse (%(name)s)",
+        "create_importkeys_text":
+            "In order to import keys, you first need to create a local wallet to contain the keys. Complete the dialog below to create a new local wallet.",
+        "create_password": "Create a new account using a password",
+        "create_success": "Your local wallet has been created",
+        "create_text":
+            "The BitShares local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+        "create_w_a": "Create a local wallet containing an account",
         "create_wallet": "Geldbörse erstellen",
-        "import_bts1": "Importieren aus BitShares 0.9.3c",
-        "setup_wallet": "Geldbörse einrichten",
+        "create_wallet_backup": "Create new wallet from backup",
+        "current_pass": "Current password",
+        "custom_brainkey": "Individueller Brainkey (Fortgeschritten)",
         "delete_confirm_line1": "Sind Sie ABSOLUT sicher?",
         "delete_confirm_line2":
             "Unerwartete schlechte Dinge werden passieren, sollten Sie das hier nicht lesen!",
         "delete_confirm_line3":
             "Diese Aktion kan NICHT rückgängig gemacht werden!",
+        "delete_confirm_line4": "Yes, delete wallet %(name)s",
+        "delete_wallet": "Delete Local Wallet",
         "delete_wallet_name": "Wallet (%(name)s) löschen",
-        "balance_claims": "Balance einfordern",
-        "download": "Download",
-        "name": "Name der Geldbörse",
-        "create": "Erstellen",
-        "console": "Geldbörsen-Management-Konsole",
-        "create_backup": "Sicherung erstellen",
-        "backup_brainkey": "Brainkey sichern",
-        "create_backup_of": "Sichere Geldbörse (%(name)s)",
-        "import_backup": "Sicherung importieren",
-        "restore_backup": "Sicherung wiederherstellen",
-        "import_keys": "Schlüssel importieren",
-        "import_keys_tool": "Schlüsselimport-Werkzeug",
-        "brainkey": "Brainkey",
-        "new_wallet": "Neue Geldbörse",
-        "active_wallet": "Active Geldbörse",
-        "verified": "Verifiziert",
-        "verify_prior_backup": "Prüfe vorherige Sicherung",
-        "brainkey_not_verified":
-            "Dieser Gedächtnisschlüssel ist nicht verifiziert",
-        "cancel": "Abbrechen",
-        "reset": "Zurücksetzen",
+        "different_file_type": "Have a different file type?",
         "done": "Erledigt",
-        "verify": "Prüfe",
-        "invalid_format": "Ungültiges Format",
+        "dont_ask_for_backup": "Don't ask me to back up again",
+        "download": "Download",
         "enter_password": "Passwordeingabe",
-        "new_wallet_name": "Name der neuen Geldbörse",
-        "wallet_exist":
-            "Geldbörse existiert bereits. Wählen Sie einen anderen Namen.",
-        "wallet_exist_with_name":
-            "Geldbörse (%(name)s) existiert bereits. Wählen Sie einen anderen Namen",
-        "accept": "Zustimmen",
-        "ready_to_restore": "Fertig für Wiederherstellung",
-        "restore_wallet_of": "Stelle Geldbörse (%(name)s) wieder her",
-        "restore_success":
-            "Geldbörse (%(name)s) erfolgreich wieder hergestellt",
-        "change": "Wechsele Geldbörse (%(name)s)",
+        "existing_password": "Existierendes Passwort",
+        "first_account_paid":
+            "Since this is your first account, a faucet will pay the registration fee for you.",
+        "generated": "Generated password",
+        "go_get_started": "Getting Started",
+        "has_wallet":
+            "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
         "import_20_notice1": "Importieren Sie Ihr BTS 2.0+ BACKUP zuerst",
         "import_20_notice2": "(falls vorhanden)",
-        "loading_balances": "Bestehende Kontostände werden geladen",
-        "no_balance": "keine Kontostände bekannt",
-        "claim_balance": "Kontostand einfordern",
-        "claim_balances": "Kontostände einfordern",
-        "unclaimed": "nicht eingefordert",
-        "unclaimed_vesting": "nicht eingefordert (vesting)",
-        "no_accounts": "Keine Konten",
-        "reenter_brainkey": "Brainkey bestätigen",
-        "pwd4brainkey": "Passwort eingeben, um Brainkey anzuzeigen",
-        "show_brainkey": "Brainkey anzeigen",
-        "brainkey_w1": "WARNUNG: Bitte ausdrucken oder aufschreiben",
-        "brainkey_w2": "Jeder mit Zugang zu diesem Schlüssel wird",
-        "brainkey_w3": "Zugang zu Ihren Finanzen in dieser Geldbörse erhalten",
-        "custom_brainkey": "Individueller Brainkey (Fortgeschritten)",
+        "import_backup": "Sicherung importieren",
+        "import_backup_choose":
+            "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
+        "import_balance": "Import balance(s)",
+        "import_bts": "Import a BTS 0.9.3c key export",
+        "import_bts1": "Importieren aus BitShares 0.9.3c",
+        "import_key_success": "Successfully imported %(count)s keys.",
+        "import_keys": "Schlüssel importieren",
+        "import_keys_tool": "Schlüsselimport-Werkzeug",
+        "import_pass_match": "Password matches. Decrypting the backup now...",
+        "import_password": "Enter import file password",
+        "import_private_key": "Import a private key",
+        "invalid_format": "Ungültiges Format",
+        "key_file": "Key file",
+        "key_file_bin": "Key file (.bin)",
         "last_backup": "letzte Sicherung",
-        "never_backed_up": "Diese Geldbörse wurde noch nie gesichert!",
+        "link_account": "Account",
+        "link_deposit": "Deposits",
+        "link_transfer": "Transfers",
+        "loading_balances": "Bestehende Kontostände werden geladen",
+        "local_switch":
+            "Local wallet detected matching the given password, switching to local wallet mode",
+        "login_type": "Login type selection",
+        "must_be_ltm":
+            "The fee paying account must be a lifetime member to perform that operation.",
+        "name": "Name der Geldbörse",
         "need_backup": "Diese Geldbörse sollte neu gesichert werden!",
+        "never_backed_up": "Diese Geldbörse wurde noch nie gesichert!",
+        "new_confirm": "Confirm new password",
+        "new_password": "New password",
+        "new_wallet": "Neue Geldbörse",
+        "new_wallet_name": "Name der neuen Geldbörse",
+        "no_accounts": "Keine Konten",
+        "no_balance": "keine Kontostände bekannt",
+        "no_wallet": "You do not have a local wallet yet?",
         "noneed_backup": "Kein Sicherung erforderlich",
-        "wallet_password": "Login anywhere using your password",
-        "password_lose_warning":
-            "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
+        "not_first_account":
+            "Since you already have an account, you will need to pay for this new account yourself. In order to do so, your account needs to have lifetime membership, which can be bought in the account page.",
+        "ok_done": "OK, take me to the dashboard",
+        "pass_incorrect": "Incorrect password",
+        "pass_length":
+            "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
+        "password": "Passwort",
         "password_crucial":
             "It is crucial that you take the time to write down your password now, whether it be on paper, a password manager, or somewhere else. If you lose or forget this password your account will be lost, <strong>we cannot help you get it back</strong>.",
-        "password_show": "Show me my password",
-        "tips_explore_pass":
-            "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
-        "create_account_password_text":
-            "The keys for this new account will be derived using your password. <strong>Nothing is stored in the browser or in a central server, so you will need to ensure you remember this password!!</strong>",
-        "create_password": "Create a new account using a password",
-        "login_type": "Login type selection",
-        "wallet_model": "Wallet model",
+        "password_lose_warning":
+            "<strong>IMPORTANT: If you forget your pass phrase you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password!</strong>",
         "password_model": "Account model",
-        "wallet_model_1":
-            "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
-        "wallet_model_2":
-            "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
-        "wallet_model_3":
-            "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "password_model_1":
             "The account model uses a password in combination with your account name to generate your private key on the fly.",
         "password_model_2":
             "This lets you login to your wallet from anywhere using only your account name and password, but it is vulnerable to brute-force attacks which means it is important to use a very long password!",
         "password_model_3":
             "<li>Single account</li><li>Easy login</li><li>Moderate security</li>",
-        "use_wallet": "Use the wallet model",
-        "use_password": "Use the account model",
-        "pass_length":
-            "The password must contain at least %(minLength)s characters. Ideally you should use 20 or more, and a combination of numbers, special characters and letters.",
-        "switch_model_wallet": "Switch to wallet model",
+        "password_show": "Show me my password",
+        "paste_private": "Paste private keys here (Wallet Import Format - WIF)",
+        "pwd4brainkey": "Passwort eingeben, um Brainkey anzuzeigen",
+        "ready_to_restore": "Fertig für Wiederherstellung",
+        "reenter_brainkey": "Brainkey bestätigen",
+        "reset": "Zurücksetzen",
+        "restore": "Restore Local Wallet from Backup",
+        "restore_backup": "Sicherung wiederherstellen",
+        "restore_it_here": "Restore it here",
+        "restore_key_file": "Restore key file..",
+        "restore_success":
+            "Geldbörse (%(name)s) erfolgreich wieder hergestellt",
+        "restore_wallet_of": "Stelle Geldbörse (%(name)s) wieder her",
+        "select_wallet": "Select key file",
+        "setup_wallet": "Geldbörse einrichten",
+        "show_brainkey": "Brainkey anzeigen",
+        "step_1": "Create a wallet",
+        "step_2": "Create a backup",
+        "step_3": "Getting Started",
+        "submit": "Submit",
         "switch_model_password": "Switch to account model",
-        "account_public": "Account Name (Public)",
-        "current_pass": "Current password",
-        "generated": "Generated password",
+        "switch_model_wallet": "Switch to wallet model",
+        "tips_account": "See your new account",
+        "tips_dashboard": "See your dashboard",
+        "tips_deposit": "Make a deposit",
+        "tips_explore":
+            "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links below to start exploring.",
+        "tips_explore_pass":
+            "Now that you've successfully created an account and backed up your password, it's time to get started. Click on one of the links on the left to start exploring.",
+        "tips_header":
+            "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
+        "tips_login":
+            "IMPORTANT: There is no login/logout functionality here, you merely unlock your wallet when you wish to make a transaction.",
+        "tips_settings": "Change the settings",
+        "tips_transfer": "Make a transfer",
+        "title": "Geldbörse",
+        "totals": "Asset Totals",
+        "unclaimed": "nicht eingefordert",
+        "unclaimed_vesting": "nicht eingefordert (vesting)",
         "understand_1":
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
-        "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+        "understand_3":
+            " I understand that I will lose access to my funds if I lose my password",
+        "use_different": "Use different file",
+        "use_password": "Use the account model",
+        "use_wallet": "Use the wallet model",
+        "using": "Using:",
+        "verified": "Verifiziert",
+        "verify": "Prüfe",
+        "verify_prior_backup": "Prüfe vorherige Sicherung",
+        "wallet_browser": "Your Web Browser is your Wallet",
+        "wallet_created": "Geldbörse erstellt",
+        "wallet_crucial":
+            "Your local wallet is <strong>only stored</strong> in your browser, so it is crucial that you create a backup that will enable you to recover your wallet if the data in your browser is lost! <strong>No one else can restore your account if you lose your backup.</strong>",
+        "wallet_exist":
+            "Geldbörse existiert bereits. Wählen Sie einen anderen Namen.",
+        "wallet_exist_with_name":
+            "Geldbörse (%(name)s) existiert bereits. Wählen Sie einen anderen Namen",
+        "wallet_lose_warning":
+            "<strong>IMPORTANT: If you lose your local wallet or your pass phrase you will be unable to access any of your funds again. Make sure you store the backup somewhere safe, and memorize or write down your password!</strong>",
+        "wallet_model": "Wallet model",
+        "wallet_model_1":
+            "The wallet model stores the wallet in your browser. It is encrypted with a password that you choose, and can be backed up using either a brainkey or an encrypted binary file that contains all the private keys.",
+        "wallet_model_2":
+            "The wallet model has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+        "wallet_model_3":
+            "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
+        "wallet_move":
+            "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
+        "wallet_new": "New BitShares account",
+        "wallet_password": "Login anywhere using your password"
     },
-    "borrow": {
-        "title": "Kollateral Position für %(asset_symbol)s",
-        "no_valid": "Kein gültiger Feed-Preis für %(asset_symbol)s",
-        "coll_ratio": "Kollateral-Ratio",
-        "call_limit": "Markt Call Limit",
-        "adjust": "Position anpassen",
-        "close": "Position schlißen",
-        "update": "Aktualisieren",
-        "errors": {
-            "below": "Kollateral-Ratio unter Aufrechterhaltungslevel",
-            "close":
-                "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Unzureichendes Kollateral"
-        }
-    },
-    "modal": {
-        "issue": {
-            "to": "Herausgeben an",
-            "amount": "Menge",
-            "submit": "Herausgeben"
+    "winex": {
+        "gateway": {
+            "click_getaddress": "Please get deposit address",
+            "deposit_warning":
+                "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+            "fee": "Gateway Fee",
+            "get_deposit_address": "get deposit address",
+            "support_block": "For support, please contact Winex at:"
+        },
+        "transfer": {
+            "errors": {
+                "minWithdraw": "Minimum amount：%(min_amount)s"
+            }
         },
         "withdraw": {
-            "amount": "Abzuhebender Betrag",
-            "address": "Abheben zu Adresse",
-            "submit": "Abheben"
-        },
-        "deposit": {
-            "amount": "Einzahlungsbetrag",
-            "submit": "Einzahlen"
-        },
-        "settle": {
-            "title": "Settlement für %(asset)s durchführen",
-            "amount": "Menge für das Settlement",
-            "submit": "Settlement durchführen"
-        },
-        "proposals": {
-            "pay_with": "Pay with account",
-            "approval_add": "Approval to add",
-            "approval_remove": "Approval to remove",
-            "key_approval_add": "Key approval to add",
-            "key_approval_remove": "Key approval to remove"
-        },
-        "ok": "OK"
-    },
-    "init_error": {
-        "title": "Initialisierungsfehler",
-        "ws_status": "Websocket Verbindungsstatus",
-        "retry": "nocheinmal versuchen",
-        "connected": "verbunden",
-        "not_connected": "Nicht verbunden",
-        "browser": "Nicht unterstützter Browser",
-        "browser_text":
-            "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
-        "understand": "Verstanden!"
-    },
-    "refcode": {
-        "claim": "Beanspruchen",
-        "claim_refcode": "Referralcode einlösen",
-        "refcode_optional": "Referralcode (optional)",
-        "enter_refcode": "Geben Sie den Referralcode ein"
-    },
-    "gateway": {
-        "fee": "Gateway-Gebühr",
-        "assets": {
-            "open":
-                "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-            "trade":
-                "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
-            "bit":
-                "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-            "bitcny":
-                "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/"
-        },
-        "your_account": "Your account",
-        "bridge": "Bridge",
-        "gateway": "Gateway",
-        "symbol": "Symbol",
-        "deposit_to": "Einzahlen auf",
-        "balance": "Guthaben",
-        "generate": "Generieren",
-        "deposit": "Einzahlung",
-        "withdraw": "Abhebung",
-        "inventory": "Inventar",
-        "scan_qr": "Scan QR",
-        "meta": {
-            "open_website": "Webseite öffnen"
-        },
-        "purchase": "Purchase %(asset)s",
-        "purchase_1":
-            "Quickly and easily purchase %(outputAsset)s using %(inputAsset)s from an external wallet. This service is provided by <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-        "deposit_limit": "Deposit limit",
-        "asset_search_deposit": "Search for an asset to deposit"
-    },
-    "trx_error": {
-        "expire":
-            "Your transaction has expired without being confirmed, please try again later."
+            "finalNumber": "Actual amount ：%(final_number)s",
+            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
+        }
     }
 }

@@ -1,135 +1,59 @@
 {
-    "page404": {
-        "page_not_found_title": "404 Sayfa Bulunamadı",
-        "page_not_found_subtitle": "Bu sayfa mevcut değil",
-        "home": "Ev"
-    },
-    "languages": {
-        "en": "English",
-        "zh": "简体中文",
-        "fr": "Français",
-        "ko": "한국어",
-        "de": "Deutsch",
-        "es": "Español",
-        "it": "Italiano",
-        "tr": "Türkçe",
-        "ru": "Русский",
-        "ja": "日本語"
-    },
-    "header": {
-        "title": "BitKapital",
-        "account": "Hesap",
-        "dashboard": "Ana Sayfa",
-        "explorer": "İncele",
-        "exchange": "Takas",
-        "payments": "Gönder",
-        "logout": "Çıkış",
-        "settings": "Ayarlar",
-        "current": "Kullanılan Hesap",
-        "create_account": "Hesap Oluştur",
-        "create_asset": "Dijital Varlık Oluştur",
-        "update_asset": "Dijital Varlık Güncelle",
-        "lock": "Kilitle",
-        "unlock": "Kilidi Aç",
-        "unlock_password": "Giriş yap",
-        "unlock_short": "Giriş",
-        "help": "Yardım",
-        "locked_tip": "Cüzdan kilitli.<br/>Açmak için tıkla.",
-        "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
-        "account_notify": "Aktif hesap: %(account)s",
-        "account_value": "Hesap değeri"
-    },
-    "browser_notification_messages": {
-        "money_received_title": "Şuradan transfer %(from)s",
-        "money_received_body": "Seni gönderdi %(amount)s %(symbol)s"
-    },
-    "tooltip": {
-        "call_limit":
-            "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
-        "margin_price":
-            "Teminat tamamlama çağrısı yapılmış pozisyonun ödemesi istenebilecek en yüksek değer",
-        "settle_price": "Sona erdirilen emirlerin gerçekleşeceği fiyat",
-        "sign_owner":
-            "Hesap sahibi anahtarı ile işlem yapıyorssanı ve bu anahtar hesabın aktif anahtarları arasında değilse, işlemin doğru imzalanması için lütfen burayı işaretleyin",
-        "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
-        "no_price":
-            "Bu dijital varlığın değerini tespit etmek için piyasada yeterli veri bulunmamaktadır.",
-        "hide_asset": "Bu dijital varlığı gizlemek için tıklayın.",
-        "show_asset": "Bu dijital varlığı ana listede göstermek için tıklayın.",
-        "settle":
-            "Sona erdirme işlemi dijital varlıklarınızı 24 saatlik bir gecikme ile o anki fiyat üzerinden BTS'ye dönüştürmenizi sağlar",
-        "filter_ops":
-            "İşlem türüne göre listeyi filtrelemek için burayı kullanabilirsiniz.",
-        "show_block":
-            "İşlemin gerçekleşmiş olduğu #%(block)s numaralı bloğa bakmak için buraya tıklayın.",
-        "coll_ratio":
-            "Pozisyonun teminat oranı = TEMİNAT * PİYASA FİYATI / BORÇ",
-        "call_price":
-            "Pozisyonun itfa fiyatı budur. Piyasa fiyatı bu fiyatın altına düştüğünde teminat tamamlama çağrısı yapılır.",
-        "close_position":
-            "Pozisyonu kapatmak için tıklayın. Bu işlem için en az %(amount)s %(asset)s bakiyeniz olmalıdır.",
-        "update_position":
-            "Pozisyonu güncellemek için tıklayın. İstediğiniz zaman pozisyona ait borç ve/veya teminat değerlerini değiştirebilirsiniz.",
-        "cr_danger":
-            "Pozisyonun teminat seviyesi itfa değerinin altındadır. Teminat oranını en az %(mr)s yapacak şekilde teminat yatırabilir ya da pozisyonu kapatabilirsiniz.",
-        "cr_warning":
-            "Pozisyonun teminat seviyesi düşük durumdadır ve %(mr)s seviyesinin altına düştüğünde teminat tamamlama çağrısı yapılacaktır.",
-        "propose_scam":
-            "Bu işlem teklifi bilinen bir dolandırıcı tarafından sunulmuştur, onaylamayın!",
-        "login":
-            "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
-        "buy_min":
-            "En az bu miktar kadar dijital varlık alacaksınız. Belirlediğiniz fiyattan daha iyi bir fiyat piyasada varsa, toplam alacağınız miktar bu miktarı geçebilir.",
-        "borrow":
-            "Blokzincirinden %(asset)s borç al. Bu işlem ile belirli bir miktar teminat belirleyerek Bitshares'in akıllı kontrat sistemi aracılığıyla dijital ürün borç alabilirsiniz. Borcu ödediğinizde teminat da serbest kalacaktır.",
-        "transfer_actions":
-            "Dijital ürün transferi ya da (eğer destekleniyorsa) yatırma-çekme işlemi yapmak için buraya tıklayın.",
-        "deposit_tip":
-            "Yatıma işlemini tamamlamak için aşağıdaki adrese %(asset)s gönderin. Transfer işleminiz onaylandığı zaman bakiyenizi yüklenecektir. Aşağıda bir işem açıklaması (memo) belirtilmişse transfere o açıklamayı eklemeniz ZORUNLUDUR.",
-        "copy_tip": "Metni kopyalamak için tıklayın",
-        "withdraw_full": "Bütün bakiyeyi çekmek için tıklayın",
-        "withdraw_address":
-            "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "memo_tip":
-            "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges."
-    },
-    "walkthrough": {
-        "language_flag": "DEX'de kullanmak için 9 farklı dilden birini seçin.",
-        "restore_account":
-            "Yedekleme dosyanızı kullanarak bir cüzdan geri yükleyin.",
-        "create_cloud_wallet":
-            "Bir hesap adı ve parola kullanarak bulut cüzdanına erişin.",
-        "create_local_wallet":
-            "Yerel bir cüzdan oluşturun ve ona ait özel anahtarları indirin.",
-        "switch_button": "Bu düğmeyi kullanarak ticaret çiftlerini değiştirin.",
-        "favourite_button":
-            "Bu çifti, pazarlar listenizde favori olarak işaretleyin.",
-        "depth_chart":
-            "Arz ve talebi farklı fiyatlarla göstermek için bir piyasa derinliği grafiği kullanın.",
-        "price_chart":
-            "Fiyat grafiğini kullanarak bir varlığın fiyat hareketini görüntüleyin.",
-        "chart_tool_zoom":
-            "Fiyat grafiğini az ya da çok fiyat geçmişini gösterecek şekilde ayarlayın.",
-        "chart_tool_duration": "Farklı aralıklarla ticaret verileri.",
-        "chart_tool_indicators":
-            "Ticaret fırsatlarını belirlemek için fiyat grafiklerine teknik göstergeler ekleyin.",
-        "buy_form": "Bu formu kullanarak satın alma siparişleri verin.",
-        "sell_form": "Bu formu kullanarak satış siparişleri verin.",
-        "buy_orders": "Bu pazar için tüm satınalma siparişlerini görüntüleyin.",
-        "sell_orders": "Bu pazarın tüm satış siparişlerini görüntüleyin.",
-        "my_markets_tab": "Bu sekmede sık kullanılan pazarlar listelenir.",
-        "find_markets_tab":
-            "Bu sekme, 'pazarlarım' sekmesine arama yaparak ek pazarlar eklemenizi sağlar.",
-        "next_label": "sonraki",
-        "prev_label": "geri",
-        "skip_label": "atlamak",
-        "done_label": "tamam"
-    },
-    "propose": "Teklif Et",
-    "cancel": "İptal",
     "account": {
-        "search": "Search for an account",
-        "intro_text_title": "Bitshares'e Hoş Geldiniz",
+        "accounts": "Hesaplar",
+        "activity": "Activity",
+        "advanced": "Advanced",
+        "as_collateral": "Teminat",
+        "asset": "Dijital Varlık",
+        "asset_details": "Aktif detayları",
+        "bittrex_scam":
+            "Bu adres Bittrex'in gerçek adresi değildir. Lütfen alıcıyı bittrex-deposit olarak değiştirin.",
+        "bts_market": "Piyasa",
+        "collaterals": "Teminat Pozisyonları",
+        "confirm_asset_modal": {
+            "are_you_sure":
+                "Are you sure you want to save all changes to these tabs?",
+            "header": "Confirm multiple changes"
+        },
+        "connections": {
+            "black": "Tarafından Kara listelenmiş",
+            "known": "Tarafından Tanınıyor"
+        },
+        "contacts": "Kontaklar",
+        "create_account": "Hesap oluştur",
+        "create_new": "Yeni Hesap Oluştur",
+        "deposit": "Deposit BTS",
+        "deposit_address": "Your deposit address is your account name",
+        "deposit_withdraw": "Yatır/Çek",
+        "eq_value": "Eş Değeri",
+        "eq_value_header": "Value ({asset})",
+        "errors": {
+            "invalid": "Geçersiz hesap adı",
+            "memo_missing":
+                "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page.",
+            "not_found":
+                "%(name)s adında bir hesap yok, doğru yazdığınıza emin misiniz?",
+            "not_yours": "Hesap sizin değil",
+            "unknown": "Hesap kayıtlı değil"
+        },
+        "estimate_value": "Toplam hesap değeri (yaklaşık)",
+        "existing_accounts": "Mevcut hesaplar",
+        "existing_user": "Existing user",
+        "filter_orders": "Filter",
+        "follow": "Kişi ekle",
+        "hidden_accounts_row": "Hidden Accounts",
+        "hide_hidden": "Gizle",
+        "hide_ignored": "Gizle",
+        "history": "Geçmiş",
+        "home": "Başa dön",
+        "hour_24": "24 Saat",
+        "hour_24_short": "24 Saat",
+        "id": "Hesap No",
+        "identicon": "Hesap logosu",
+        "ignore": "Yok say",
+        "in_open": "Bekleyen emirlerinizdeki %(asset)s miktarı: ",
+        "in_open_value":
+            "%(asset)s piyasasındaki bekleyen emirlerin büyüklüğü (anlık değere göre): ",
         "intro_text_1":
             "<b>Bitshares Merkezsiz Kriptopara Borsası</b> (BMKB) kripto para al-sat deneyiminizi kökten değiştirecek, yeni nesil bir borsa platformudur.",
         "intro_text_2":
@@ -138,304 +62,47 @@
             "Platform üzerinde kullanıcılar kendi hesaplarının tam kontrolüne sahiptir - hiçbir aracı kurum işlemlerinize müdahale edemez!",
         "intro_text_4":
             "Platformda BTC, ETH, STEEM, DASH, LTC, DOGE gibi coin'lerle işlem yapabileceğiniz gibi aynı zamanda kendi coin'inizi oluşturabilir ve hemen ticaretine başlayabilirsiniz.",
-        "in_open": "Bekleyen emirlerinizdeki %(asset)s miktarı: ",
-        "in_open_value":
-            "%(asset)s piyasasındaki bekleyen emirlerin büyüklüğü (anlık değere göre): ",
-        "password_login": "Giriş yap",
-        "transfer_actions": "Transfer işlemleri",
+        "intro_text_title": "Bitshares'e Hoş Geldiniz",
+        "login_with": "Login with",
         "market_actions": "Takas işlemleri",
-        "see_open": "Bekleyen emirler",
-        "trade": "Takas",
-        "api_server": "API Sunucusu",
-        "bittrex_scam":
-            "Bu adres Bittrex'in gerçek adresi değildir. Lütfen alıcıyı bittrex-deposit olarak değiştirin.",
-        "estimate_value": "Toplam hesap değeri (yaklaşık)",
-        "welcome": "Bitshares'e Hoşgeldiniz",
-        "asset": "Dijital Varlık",
         "market_value": "Piyasa Değeri",
-        "hour_24": "24 Saat",
-        "hour_24_short": "24 Saat",
-        "recent": "Son Hareketler",
-        "name": "Hesap Adı",
-        "id": "Hesap No",
-        "mine": "Hesabım",
-        "more": "fazlası",
-        "deposit_withdraw": "Yatır/Çek",
-        "as_collateral": "Teminat",
-        "open_orders": "Açık Emirler",
-        "total_value": "Toplam değeri",
-        "show_hidden": "Göster",
-        "hide_hidden": "Gizle",
-        "ignore": "Yok say",
-        "unignore": "Geri getir",
-        "show_ignored": "Göster",
-        "hide_ignored": "Gizle",
-        "accounts": "Hesaplar",
-        "contacts": "Kontaklar",
-        "whitelist": {
-            "title": "İzin Listesi",
-            "black": "Kara Liste",
-            "add": "İzin listesine ekle",
-            "add_black": "Kara listeye ekle",
-            "empty": "%(account)s herhangi bir hesabı izin listesine eklemedi.",
-            "empty_black":
-                "%(account)s herhangi bir hesabı kara listeye eklemedi.",
-            "white_by": "İzin listesine alan",
-            "black_by": "Kara listeye alan",
-            "empty_white_by":
-                "%(account)s adlı hesap hiçbir izin listesinde değil.",
-            "empty_black_by":
-                "%(account)s adlı hesap hiçbir kara listede değil."
-        },
-        "vesting": {
-            "title": "Tutulan Bakiyeler",
-            "balance_number": "Bakiye #%(id)s",
-            "no_balances": "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
-            "explain":
-                "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır."
-        },
         "member": {
-            "stats": "Üyelik Bilgileri",
-            "join": "Katılma tarihi",
-            "registrar": "Kaydı yapan",
-            "referrer": "Tavsiye eden",
-            "lifetime_referrer": "Ana tavsiyeci",
-            "network_percentage": "Ağ yüzdesi",
-            "fee_allocation": "Ücret Tahsisi",
-            "membership": "Üyelik",
-            "fees_paid": "Ödenmiş ücretler",
-            "referrals": "Tavsiye edenler",
-            "rewards": "Nakit-İade Ödülleri",
-            "cashback": "Tutulan bakiye miktarı",
-            "vested": "Hak edilmiş",
-            "unknown": "Bilinmeyen üye",
-            "lifetime": "Asil üye",
-            "basic": "Normal üye",
             "annual": "Yıllık abone",
-            "upgrade_lifetime": "Asil Üyelik Satın Al",
-            "subscribe": "Yıllık Abone ol",
-            "expires": "bitiş tarihi",
-            "membership_expiration": "Üyelik Bitiş Tarihi",
-            "fees_cashback": "Ücretler ve nakit paraüstleri",
+            "available": "Sahip olunabilecek",
+            "basic": "Normal üye",
+            "cashback": "Tutulan bakiye miktarı",
+            "claim": "Şimdi iste",
             "coindays": "koin günler",
             "earned": "Kazanılmış koin günü",
-            "required": "Gerekli koin günü",
-            "remaining": "Bekletilecek günler",
-            "claim": "Şimdi iste",
-            "available": "Sahip olunabilecek",
+            "expires": "bitiş tarihi",
+            "fee_allocation": "Ücret Tahsisi",
+            "fees_cashback": "Ücretler ve nakit paraüstleri",
+            "fees_paid": "Ödenmiş ücretler",
+            "join": "Katılma tarihi",
+            "lifetime": "Asil üye",
+            "lifetime_referrer": "Ana tavsiyeci",
+            "membership": "Üyelik",
+            "membership_expiration": "Üyelik Bitiş Tarihi",
+            "network_percentage": "Ağ yüzdesi",
             "referral_link": "Davet bağlantınız",
             "referral_text":
-                "Bu bağlantıyı BitShares'e davet etmek istediğiniz kişilere gönderin"
+                "Bu bağlantıyı BitShares'e davet etmek istediğiniz kişilere gönderin",
+            "referrals": "Tavsiye edenler",
+            "referrer": "Tavsiye eden",
+            "registrar": "Kaydı yapan",
+            "remaining": "Bekletilecek günler",
+            "required": "Gerekli koin günü",
+            "rewards": "Nakit-İade Ödülleri",
+            "stats": "Üyelik Bilgileri",
+            "subscribe": "Yıllık Abone ol",
+            "suspected_scammer": "Suspected Scammer",
+            "unknown": "Bilinmeyen üye",
+            "upgrade_lifetime": "Asil Üyelik Satın Al",
+            "vested": "Hak edilmiş"
         },
-        "user_issued_assets": {
-            "symbol": "Sembol",
-            "name": "Dijital Varlık Adı",
-            "description": "Tanım",
-            "max_supply": "Azami arz",
-            "precision": "Ondalık sayısı",
-            "to": "Hesaba çıkar",
-            "market_fee": "Piyasa ücreti",
-            "max_market_fee": "Azami piyasa ücreti",
-            "details": "Detaylar",
-            "primary": "Ana ayarlar",
-            "optional": "Opsiyonel ayarlar",
-            "approx_fee": "Yaklaşık ücret",
-            "exists": "O dijital varlık zaten mevcut",
-            "max_positive": "Azami değer pozitif bir sayı olmalıdır",
-            "core_exchange_rate": "Esas kur oranı",
-            "quote": "Miktar",
-            "quote_name": "Dijital Varlık",
-            "base": "Taban miktarı",
-            "base_name": "Taban Varlık",
-            "update_owner": "Sahibi güncelle",
-            "current_issuer": "Şu anki sahip hesabı",
-            "new_issuer": "Yeni sahip hesabı",
-            "flags": "Özellikler",
-            "charge_market_fee": "Takas komisyonunu etkinkeştir",
-            "override_authority": "Kontrol edebilir dijital varlık",
-            "transfer_restricted":
-                "İhrac eden tüm transferleri onlaylamak zorunda",
-            "disable_confidential": "Gizli işlemler etkisiz",
-            "white_list": "İzin listesi gerektiren dijital varlık",
-            "witness_fed_asset":
-                "Tanık hesapların fiyat beslemelerine müsade et",
-            "committee_fed_asset":
-                "Kurul üyelerinin fiyat beslemelerine müsade et",
-            "disable_force_settle": "Zorla kapamayı etkisizleştir",
-            "global_settle": "İhrac edene genel kapama izni ver",
-            "advanced": "Gelişmiş",
-            "need_asset": " İki aktiften biri an azından %(name)s olmalıdır",
-            "perm_warning":
-                "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!",
-            "issued_assets": "Piyasa Sürülmüş Aktifler",
-            "short": "Kısa ad (maksimum 32 harf)",
-            "condition": "Durum (maksimum 60 harf)",
-            "expiry": "Piyasa çözülüm tarihi",
-            "decimals": "Ondalık hane sayısı",
-            "mpa": "Akıllı Para",
-            "pm": "İkili tahmin piyasası",
-            "bitasset_opts": "Akıllı Para tercihleri",
-            "feed_lifetime_sec": "Dakika olarak yayın ömrü",
-            "minimum_feeds": "En az yayın sayısı",
-            "force_settlement_delay_sec": "Zorunlu onay gecikmesi (dakika)",
-            "force_settlement_offset_percent":
-                "Zorunlu onayın yüzdelik sapması",
-            "maximum_force_settlement_volume":
-                "Maksimum ödeme hacmi (saatlik toplam arzın yüzdesi olarak)",
-            "backing": "Kısa pozisyonun taban dijital varlığı",
-            "error_precision":
-                "Dijital varlık, %(asset)s ile aynı hassasiyete sahip değil",
-            "error_invalid": "Bu dijital varlık kullanılmayabilir",
-            "market": "Tercih edilen piyasa çifti",
-            "precision_warning":
-                "Uyarı: Oluşturduktan sonra ondalık hane sayısı değiştirilemeyebilir."
-        },
-        "connections": {
-            "known": "Tarafından Tanınıyor",
-            "black": "Tarafından Kara listelenmiş"
-        },
-        "perm": {
-            "active": "Etkin İzinler",
-            "owner": "Sahip İzinleri ",
-            "memo_key": "Memo anahtarı",
-            "publish": "Değişimleri Duyur",
-            "reset": "Değişiklikleri Sıfırla",
-            "add": "Yetki Ekle",
-            "type": "Tür",
-            "key": "Anahtar/İsim",
-            "weight": "Ağırlık",
-            "threshold": "Eşik",
-            "confirm_add": "Ekle",
-            "cancel": "İptal",
-            "add_permission_label": "Hesap adı/anahtarını ve ağırlığını girin",
-            "account_name_or_key": "Hesap adı yada anahtar",
-            "memo_public_key": "Memo Açık Anahtarı",
-            "warning1":
-                "Etkin izinleri ağırlık toplamı %(weights_total)s, alt sınır olarak belirlenen %(threshold)s miktarına eşit yada üzerinde olması gerklidir",
-            "warning2":
-                "Sahip izinleri ağırlık toplamı %(weights_total)s, alt sınır olarak belirlenen %(threshold)s miktarına eşit yada üzerinde olması gerklidir",
-            "warning3": "Hesap zaten listede",
-            "warning4": "Anahtar zaten listede",
-            "action": "İşlem",
-            "acct_or_key": " Hesap/Anahtar/Adres",
-            "key_viewer": "Özel anahtar görüntüleyicisi",
-            "public": "Açık anahtar",
-            "private": "Özel Anahtar (WIF - Cüzdan İçine Aktarma Formatı)",
-            "show": "Göster",
-            "brain": "TekAnahtar konumu",
-            "from": "Hesaptan içeri aktarıldı",
-            "sign_owner": "İşlemi hesap sahibi olarak imzala",
-            "password_model": "Hesap Sistemi",
-            "password_model_1":
-                "Eğer hesabınıza yalnızca kullanıcı adınız şifrenizi kullanarak erişmek istiyorsanız bu sayfayı kullanarak Hesap Sistemi'ne geçiş için gerekli değişiklikleri yapabilirsiniz. Cüzdan Sistemi'nden kalma özel anahtarlarınızı tamamen yok etmek için (isteğe bağlı) lütfen İzinler kısmını kontrol edin.",
-            "password_model_2": "Hesap Sistemi'ne geçiş yap",
-            "new_active": "Yeni aktif anahtar",
-            "new_owner": "Yeni hesap sahibi anahtarı",
-            "new_memo": "Yeni memo anahtarı",
-            "memo_warning":
-                "UYARI: Memo anahtarını değiştirirseniz bu hesaba eskiden gönderilmiş olan işlem açıklamalarını okuyamazsınız. Aynı şekilde, eski memo anahtarınızla da yeni yapılan işlemlere ait açıklamalar görünmez olacaktır.",
-            "use_text": "Kullan",
-            "remove_text": "Kaldır"
-        },
-        "votes": {
-            "proxy_short": "Vekil",
-            "workers_short": "Geliştiriciler",
-            "proxy": "Vekil Oy Hesabı",
-            "no_proxy": "Vekil Yok",
-            "clear_proxy": "Vekili kaldır",
-            "go_proxy": "Git",
-            "name": "Ad",
-            "info": "Bilgi",
-            "votes": "Oylar",
-            "url": "Web Sayfası",
-            "support": "Destek",
-            "workers": "Bütçe Ögeleri",
-            "publish": "Değişimleri Duyur",
-            "add_witness": "Ekle",
-            "remove_witness": "Kaldır",
-            "remove_committee": "Kaldır",
-            "add_committee": "Ekle",
-            "add_committee_label": "Kurul Üyesi",
-            "add_witness_label": "Tanık",
-            "approve_worker": "Kabul",
-            "reject_worker": "Reddet",
-            "worker_account": "Emekçi hesabı",
-            "total_votes": "Net oylar",
-            "votes_against": "Aleyhine oylar",
-            "daily_pay": "Ödeme",
-            "daily": "günlük",
-            "max_pay": "Maksimum toplam ödeme",
-            "unclaimed": "Talep edilmemiş ödeme",
-            "status": {
-                "title": "Durum",
-                "supported": "Destekleniyor",
-                "rejected": "Reddedildi",
-                "neutral": "Tarafsız"
-            },
-            "start": "Başlangıç tarihi",
-            "end": "Bitiş günü",
-            "creator": "Oluşturan",
-            "recycled": "Geri Dönüştürülen",
-            "funding": "Fonlama",
-            "total_budget": "Toplam mevcut geliştiric bütçesi",
-            "unused_budget": "Kullanılmamış geliştirici bütçesi",
-            "new": "Teklif edilen geliştirmeler",
-            "active": "Etkin geliştirmeler",
-            "w_approved_by": "Tanık %(account)s tarafından onaylandı",
-            "w_not_approved_by": "Tanık %(account)s tarafından onaylanmadı",
-            "cm_approved_by": "Kurul üyeleri %(account)s tarafından onaylandı",
-            "cm_not_approved_by":
-                "Kurul üyeleri %(account)s tarafından onaylanmadı",
-            "already": "Hesap zaten listede",
-            "proxy_known": "Bilinen proksiler",
-            "expired": "Süresi bitmiş geliştirmeler",
-            "witness": "Witness name",
-            "committee": "Committee member name",
-            "toggle": "Toggle vote",
-            "supported": "Supported",
-            "active_short": "Active",
-            "inactive": "Inactive"
-        },
-        "options": {
-            "num_witnesses": "Gerekli Tanıklar",
-            "num_committee": "Gerekli Kurul Üyeleri",
-            "memo_key": "Memo Anahtarı"
-        },
-        "upgrade": "Hesabı yükselt",
-        "unfollow": "Takibi bırak",
-        "follow": "Kişi ekle",
-        "pay": "Ödeme Yap",
-        "overview": "Genel Bakış",
-        "home": "Başa dön",
-        "bts_market": "Piyasa",
-        "history": "Geçmiş",
-        "payees": "Alıcılar",
-        "permissions": "İzinler",
-        "voting": "Seçimler",
-        "wallet_options": "Cüzdan Ayarları",
-        "orders": "Emirler",
-        "select_placeholder": "Hesap Seç...",
-        "errors": {
-            "not_found":
-                "%(name)s adında bir hesap yok, doğru yazdığınıza emin misiniz?",
-            "invalid": "Geçersiz hesap adı",
-            "unknown": "Hesap kayıtlı değil",
-            "not_yours": "Hesap sizin değil"
-        },
-        "collaterals": "Teminat Pozisyonları",
-        "eq_value": "Eş Değeri",
-        "no_price": "Fiyat mevcut değil",
-        "percent": "Toplam arzın yüzdesi",
-        "please_create_account": "Lütfen bir hesap oluşturun",
-        "polo_scam":
-            "Bu hesap Poloniex'e ait değildir. Lütfen alıcıyı poloniexwallet olarak değiştirin.",
-        "other_scam":
-            "Bu hesap resmi olarak doğrulanmış değildir. Transfer işlemini gerçekleştirmeden önce lütfen alıcının kimliğinden emin olunuz.",
-        "create_account": "Hesap oluştur",
-        "create_new": "Yeni Hesap Oluştur",
-        "identicon": "Hesap logosu",
-        "pay_from": "Bu hesaptan öde",
-        "existing_accounts": "Mevcut hesaplar",
+        "mine": "Hesabım",
+        "more": "fazlası",
+        "name": "Hesap Adı",
         "name_input": {
             "name_is_taken": "Hesap adı zaten alınmış.",
             "not_found": "Hesap bulunamadı.",
@@ -444,132 +111,1377 @@
             "premium_name_warning":
                 "Premium hesap adı girdiniz. Normal adların içerinde en azından bir tire ya da rakam bulunur, veya hiç sesli harf yoktur."
         },
-        "propose_from": "Teklifi sunan",
-        "settle": "Öde",
+        "new_user": "New user?",
         "no_orders": "Açık emir yok",
-        "asset_details": "Aktif detayları"
+        "no_price": "Fiyat mevcut değil",
+        "open_orders": "Açık Emirler",
+        "optional": {
+            "formatter":
+                "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "restore_form": "advanced form",
+            "restore_link": "restore your account"
+        },
+        "options": {
+            "memo_key": "Memo Anahtarı",
+            "num_committee": "Gerekli Kurul Üyeleri",
+            "num_witnesses": "Gerekli Tanıklar"
+        },
+        "orders": "Emirler",
+        "other_scam":
+            "Bu hesap resmi olarak doğrulanmış değildir. Transfer işlemini gerçekleştirmeden önce lütfen alıcının kimliğinden emin olunuz.",
+        "overview": "Genel Bakış",
+        "password_login": "Giriş yap",
+        "pay": "Ödeme Yap",
+        "pay_from": "Bu hesaptan öde",
+        "payees": "Alıcılar",
+        "percent": "Toplam arzın yüzdesi",
+        "perm": {
+            "account_name_or_key": "Hesap adı yada anahtar",
+            "acct_or_key": " Hesap/Anahtar/Adres",
+            "action": "İşlem",
+            "active": "Etkin İzinler",
+            "add": "Yetki Ekle",
+            "add_permission_label": "Hesap adı/anahtarını ve ağırlığını girin",
+            "brain": "TekAnahtar konumu",
+            "cancel": "İptal",
+            "confirm_add": "Ekle",
+            "from": "Hesaptan içeri aktarıldı",
+            "key": "Anahtar/İsim",
+            "key_viewer": "Özel anahtar görüntüleyicisi",
+            "memo_key": "Memo anahtarı",
+            "memo_public_key": "Memo Açık Anahtarı",
+            "memo_warning":
+                "UYARI: Memo anahtarını değiştirirseniz bu hesaba eskiden gönderilmiş olan işlem açıklamalarını okuyamazsınız. Aynı şekilde, eski memo anahtarınızla da yeni yapılan işlemlere ait açıklamalar görünmez olacaktır.",
+            "new_active": "Yeni aktif anahtar",
+            "new_memo": "Yeni memo anahtarı",
+            "new_owner": "Yeni hesap sahibi anahtarı",
+            "owner": "Sahip İzinleri ",
+            "password_model": "Hesap Sistemi",
+            "password_model_1":
+                "Eğer hesabınıza yalnızca kullanıcı adınız şifrenizi kullanarak erişmek istiyorsanız bu sayfayı kullanarak Hesap Sistemi'ne geçiş için gerekli değişiklikleri yapabilirsiniz. Cüzdan Sistemi'nden kalma özel anahtarlarınızı tamamen yok etmek için (isteğe bağlı) lütfen İzinler kısmını kontrol edin.",
+            "password_model_2": "Hesap Sistemi'ne geçiş yap",
+            "private": "Özel Anahtar (WIF - Cüzdan İçine Aktarma Formatı)",
+            "public": "Açık anahtar",
+            "publish": "Değişimleri Duyur",
+            "remove_text": "Kaldır",
+            "reset": "Değişiklikleri Sıfırla",
+            "save": "Save Changes",
+            "save_all": "Save All Changes",
+            "show": "Göster",
+            "sign_owner": "İşlemi hesap sahibi olarak imzala",
+            "threshold": "Eşik",
+            "type": "Tür",
+            "use_text": "Kullan",
+            "valid_pub": "Valid Public Key",
+            "warning1":
+                "Etkin izinleri ağırlık toplamı %(weights_total)s, alt sınır olarak belirlenen %(threshold)s miktarına eşit yada üzerinde olması gerklidir",
+            "warning2":
+                "Sahip izinleri ağırlık toplamı %(weights_total)s, alt sınır olarak belirlenen %(threshold)s miktarına eşit yada üzerinde olması gerklidir",
+            "warning3": "Hesap zaten listede",
+            "warning4": "Anahtar zaten listede",
+            "weight": "Ağırlık"
+        },
+        "permissions": "İzinler",
+        "please_create_account": "Lütfen bir hesap oluşturun",
+        "polo_scam":
+            "Bu hesap Poloniex'e ait değildir. Lütfen alıcıyı poloniexwallet olarak değiştirin.",
+        "portfolio": "Portfolio",
+        "propose_from": "Teklifi sunan",
+        "qty": "Qty",
+        "quote": "Quote",
+        "recent": "Son Hareketler",
+        "reset_orders": "Reset",
+        "restore": "Restore",
+        "search": "Search for an account",
+        "see_open": "Bekleyen emirler",
+        "select_placeholder": "Hesap Seç...",
+        "settle": "Öde",
+        "show_hidden": "Göster",
+        "show_ignored": "Göster",
+        "show_visual": "Visual",
+        "signedmessages": {
+            "automaticcreation": "Signed message will be created automatically",
+            "copysuccessful": "Signed message copied to clipboard",
+            "copyunsuccessful": "Failed to copy message",
+            "entermessage": "Enter message here",
+            "errorverifying": "An error occured while verifying the message",
+            "invalidformat": "Signed message format can't be recognized",
+            "invalidkey":
+                "Private key could not be obtained, is the public key valid?",
+            "invalidsignature":
+                "The content of the message could not be validated against the signature",
+            "invaliduser": "Account of the message sender is invalid",
+            "keymismatch":
+                "Given public key of the sender doesn't to the one stored in the senders account",
+            "menuitem": "Signed Messages",
+            "sign": "Sign",
+            "signing": "Signing, please wait ...",
+            "signmessage": "Sign Message",
+            "title": "Signed Messages",
+            "verify": "Verify",
+            "verifying": "Verifying, please wait ...",
+            "verifymessage": "Verify Message",
+            "verifyonchange": "Verify while typing"
+        },
+        "submit_orders": "Submit",
+        "total": "Total ({asset})",
+        "total_estimate":
+            "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
+        "total_value": "Toplam değeri",
+        "trade": "Takas",
+        "transactions": {
+            "id": "ID",
+            "info": "Info",
+            "time": "Time",
+            "type": "Type"
+        },
+        "transfer_actions": "Transfer işlemleri",
+        "unfollow": "Takibi bırak",
+        "unignore": "Geri getir",
+        "upgrade": "Hesabı yükselt",
+        "user_issued_assets": {
+            "add_feed": "Add new feed producer",
+            "advanced": "Gelişmiş",
+            "approx_fee": "Yaklaşık ücret",
+            "backing": "Kısa pozisyonun taban dijital varlığı",
+            "base": "Taban miktarı",
+            "base_name": "Taban Varlık",
+            "bitasset_opts": "Akıllı Para tercihleri",
+            "cer_warning_1": "Warning",
+            "cer_warning_2":
+                "Make sure your core exchange rate is higher than the market price, otherwise people will buy your token from the market and drain your fee pool via implicit arbitrage. The core exchange rate should be updated regularly to reflect market pricing of your asset.",
+            "charge_market_fee": "Takas komisyonunu etkinkeştir",
+            "committee_fed_asset":
+                "Kurul üyelerinin fiyat beslemelerine müsade et",
+            "condition": "Durum (maksimum 60 harf)",
+            "conflict_feed":
+                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "core_exchange_rate": "Esas kur oranı",
+            "current_issuer": "Şu anki sahip hesabı",
+            "decimals": "Ondalık hane sayısı",
+            "description": "Tanım",
+            "details": "Detaylar",
+            "disable_confidential": "Gizli işlemler etkisiz",
+            "disable_force_settle": "Zorla kapamayı etkisizleştir",
+            "error_invalid": "Bu dijital varlık kullanılmayabilir",
+            "error_precision":
+                "Dijital varlık, %(asset)s ile aynı hassasiyete sahip değil",
+            "exists": "O dijital varlık zaten mevcut",
+            "expiry": "Piyasa çözülüm tarihi",
+            "feed_lifetime_sec": "Dakika olarak yayın ömrü",
+            "feed_not_allowed_1":
+                "Cannot set feed producers on a witness- or committee-fed asset",
+            "feed_not_allowed_2":
+                "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
+            "feed_producers": "Feed producers",
+            "flags": "Özellikler",
+            "force_settlement_delay_sec": "Zorunlu onay gecikmesi (dakika)",
+            "force_settlement_offset_percent":
+                "Zorunlu onayın yüzdelik sapması",
+            "global_settle": "İhrac edene genel kapama izni ver",
+            "id": "ID",
+            "invalid_market_pair":
+                "Preferred market pairing can not be the same market",
+            "issued_assets": "Piyasa Sürülmüş Aktifler",
+            "market": "Tercih edilen piyasa çifti",
+            "market_fee": "Piyasa ücreti",
+            "max_market_fee": "Azami piyasa ücreti",
+            "max_positive": "Azami değer pozitif bir sayı olmalıdır",
+            "max_supply": "Azami arz",
+            "maximum_force_settlement_volume":
+                "Maksimum ödeme hacmi (saatlik toplam arzın yüzdesi olarak)",
+            "minimum_feeds": "En az yayın sayısı",
+            "mpa": "Akıllı Para",
+            "name": "Dijital Varlık Adı",
+            "need_asset": " İki aktiften biri an azından %(name)s olmalıdır",
+            "new_issuer": "Yeni sahip hesabı",
+            "optional": "Opsiyonel ayarlar",
+            "override_authority": "Kontrol edebilir dijital varlık",
+            "perm_warning":
+                "UYARI: İzinler yalnızca etkisiz hale getirilebilitler, bir kere etkisiziştiridiklerinde tekrar aktif hale getirilemezler!",
+            "pm": "İkili tahmin piyasası",
+            "precision": "Ondalık sayısı",
+            "precision_warning":
+                "Uyarı: Oluşturduktan sonra ondalık hane sayısı değiştirilemeyebilir.",
+            "primary": "Ana ayarlar",
+            "quote": "Miktar",
+            "quote_name": "Dijital Varlık",
+            "short": "Kısa ad (maksimum 32 harf)",
+            "symbol": "Sembol",
+            "to": "Hesaba çıkar",
+            "too_large":
+                "That max supply is too big, please choose a smaller number",
+            "too_many_feed":
+                "Number of feed producers exceeded the max allowed (%(max)s).",
+            "transfer_restricted":
+                "İhrac eden tüm transferleri onlaylamak zorunda",
+            "update_owner": "Sahibi güncelle",
+            "visible": "Hide asset from search and markets",
+            "white_list": "İzin listesi gerektiren dijital varlık",
+            "witness_fed_asset":
+                "Tanık hesapların fiyat beslemelerine müsade et"
+        },
+        "vesting": {
+            "balance_number": "Bakiye #%(id)s",
+            "explain":
+                "Bekletilen bakiyeler tavsiye programlarından yada geliştirici ödemelerinden elde edilen geilrleri kapsar. Bunların belli bir bekleme süreleri vardır, fonların tümü müsait olana kadar  belli aralıklarla bu bakiyelerin bir kısmı serbest bırakılır.",
+            "no_balances": "Bu hesaba ait bekletilen bakiye bulunmamaktadır.",
+            "title": "Tutulan Bakiyeler"
+        },
+        "votes": {
+            "about": "About",
+            "active": "Etkin geliştirmeler",
+            "active_short": "Active",
+            "add_committee": "Ekle",
+            "add_committee_label": "Kurul Üyesi",
+            "add_witness": "Ekle",
+            "add_witness_label": "Tanık",
+            "already": "Hesap zaten listede",
+            "approve_worker": "Kabul",
+            "clear_proxy": "Vekili kaldır",
+            "cm_approved_by": "Kurul üyeleri %(account)s tarafından onaylandı",
+            "cm_not_approved_by":
+                "Kurul üyeleri %(account)s tarafından onaylanmadı",
+            "committee": "Committee member name",
+            "create_worker": "Create a new worker",
+            "creator": "Oluşturan",
+            "daily": "günlük",
+            "daily_pay": "Ödeme",
+            "end": "Bitiş günü",
+            "expired": "Süresi bitmiş geliştirmeler",
+            "funding": "Fonlama",
+            "go_proxy": "Git",
+            "inactive": "Inactive",
+            "info": "Bilgi",
+            "line": "Line",
+            "max_pay": "Maksimum toplam ödeme",
+            "missing": "Needed",
+            "name": "Ad",
+            "new": "Teklif edilen geliştirmeler",
+            "no_proxy": "Vekil Yok",
+            "proxy": "Vekil Oy Hesabı",
+            "proxy_current": "Your current proxy is",
+            "proxy_known": "Bilinen proksiler",
+            "proxy_short": "Vekil",
+            "publish": "Değişimleri Duyur",
+            "recycled": "Geri Dönüştürülen",
+            "reject_worker": "Reddet",
+            "remove_committee": "Kaldır",
+            "remove_witness": "Kaldır",
+            "save_finish": "Click save to finish",
+            "start": "Başlangıç tarihi",
+            "status": {
+                "neutral": "Tarafsız",
+                "rejected": "Reddedildi",
+                "supported": "Destekleniyor",
+                "title": "Durum"
+            },
+            "support": "Destek",
+            "supported": "Supported",
+            "threshold": "Votes required to activate",
+            "toggle": "Toggle vote",
+            "total_budget": "Toplam mevcut geliştiric bütçesi",
+            "total_votes": "Net oylar",
+            "unclaimed": "Talep edilmemiş ödeme",
+            "unused_budget": "Kullanılmamış geliştirici bütçesi",
+            "url": "Web Sayfası",
+            "votes": "Oylar",
+            "votes_against": "Aleyhine oylar",
+            "w_approved_by": "Tanık %(account)s tarafından onaylandı",
+            "w_not_approved_by": "Tanık %(account)s tarafından onaylanmadı",
+            "witness": "Witness name",
+            "worker_account": "Emekçi hesabı",
+            "workers": "Bütçe Ögeleri",
+            "workers_short": "Geliştiriciler"
+        },
+        "voting": "Seçimler",
+        "welcome": "Bitshares'e Hoşgeldiniz",
+        "whitelist": {
+            "add": "İzin listesine ekle",
+            "add_black": "Kara listeye ekle",
+            "black": "Kara Liste",
+            "black_by": "Kara listeye alan",
+            "blacklist_authorities": "Blacklist authority",
+            "empty": "%(account)s herhangi bir hesabı izin listesine eklemedi.",
+            "empty_black":
+                "%(account)s herhangi bir hesabı kara listeye eklemedi.",
+            "empty_black_by":
+                "%(account)s adlı hesap hiçbir kara listede değil.",
+            "empty_white_by":
+                "%(account)s adlı hesap hiçbir izin listesinde değil.",
+            "title": "İzin Listesi",
+            "white_by": "İzin listesine alan",
+            "whitelist_authorities": "Whitelist authority"
+        }
+    },
+    "borrow": {
+        "adjust": "Pozisyonu Güncelle",
+        "adjust_short": "Adjust",
+        "call_limit": "Piyasa Çağrı Limiti",
+        "close": "Pozisyonu Kapat",
+        "coll_ratio": "Teminat oranı",
+        "errors": {
+            "below":
+                "Teminat oranı çok düşük, bu pozisyon anında marjin-çağrılır",
+            "close":
+                "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
+            "collateral": "Yetersiz teminat seviyesi"
+        },
+        "maximize_debt_set_ratio_slider":
+            "You must set a collateral ratio before being able to maximize debt",
+        "no_valid": "%(asset_symbol)s için geçerli yayın mevcut değil",
+        "pay_max_debt": "Pay Max Debt",
+        "title": "%(asset_symbol)s Marjin",
+        "update": "Güncelle",
+        "use_max": "Use Max"
+    },
+    "browser_notification_messages": {
+        "money_received_body": "Seni gönderdi %(amount)s %(symbol)s",
+        "money_received_title": "Şuradan transfer %(from)s"
+    },
+    "cancel": "İptal",
+    "counterpart": {
+        "formats": {
+            "date": {
+                "full": "%F %T %Z",
+                "market_history": "%e/%m %H:%M:%S",
+                "market_history_us": "%m/%e %H:%M:%S",
+                "short_custom": "%e %b '%y"
+            }
+        }
+    },
+    "dashboard": {
+        "featured_markets": "Featured Markets",
+        "starred_markets": "Starred Markets",
+        "table_empty": "No market matched",
+        "top_markets": "Top Markets"
+    },
+    "exchange": {
+        "asks": "Satış emirleri",
+        "atr": "Ortalama Gerçek Fiyat Aralığı",
+        "balance": "Bakiye",
+        "base_supply": "Taban arzı",
+        "bids": "Alış emirleri",
+        "borrow": "Ödünç Al",
+        "borrow_short": "Borrow",
+        "buy": "Alış -",
+        "buy_description":
+            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_min": "Hesaba geçecek",
+        "buysell_formatter": "{direction} {asset}",
+        "call": "Çağrı Fiyatı",
+        "change": "Değişim",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
+        "confirm_buy":
+            "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
+        "confirm_no_orders_buy":
+            "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
+        "confirm_no_orders_sell":
+            "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
+        "confirm_sell":
+            "Emri teyit et: Sat %(sell_amount)s %(sell_symbol)s fiyat %(price_amount)s %(price_symbol)s",
+        "core_rate": "Ücret Oranı",
+        "deposit": "Deposit",
+        "description": "Description",
+        "ema": "Üssel Hareketli Ortalama",
+        "featured": "Öne Çıkan Piyasalar",
+        "feed_price": "Feed Price",
+        "filter": "Filter...",
+        "flip": "Flip",
+        "hide": "Gizle",
+        "highest_bid": "En yüksek",
+        "history": "Son İşlemler",
+        "horizontal": "Yatay",
+        "index": "Indeks",
+        "invalid_amount": "Geçersiz miktar",
+        "invalid_price": "Geçersiz fiyat",
+        "invert": "Fiyatı ters çevir",
+        "latest": "En Son",
+        "lowest_ask": "En düşük",
+        "maintenance": "Sürdürme Çağrı Fiyatı",
+        "market": "Piyasa",
+        "market_frozen":
+            "The owner of %(asset)s has disabled trading in this market.",
+        "market_name": "Piyasalarım",
+        "market_picker": {
+            "filter_by_issuer": "Filter by issuer",
+            "find_by_asset": "Find by asset",
+            "results": "Results (%(total_assets)s)",
+            "search": "Asset name",
+            "search_for_asset": "Search for asset",
+            "search_mode": "Mode",
+            "show_all": "Show All",
+            "sub_title": "Find an asset to replace",
+            "title": "Market Picker",
+            "use": "Use"
+        },
+        "more": "Piyasa bul",
+        "my_asks": "Satış Fiyatlarım",
+        "my_bids": "Alış Fiyatlarım",
+        "my_history": "Önceki İşlemlerim",
+        "my_orders": "Açık emirlerim",
+        "native": "Native",
+        "new": "Yeni",
+        "no_balance": "Yetersiz bakiye",
+        "no_data": "Veri yok",
+        "order_depth": "Piyasa Derinliği",
+        "others": "Diğerleri",
+        "overbought": "Aşırı Talep",
+        "oversold": "Aşırı Arz",
+        "period": "Süre (gün)",
+        "price": "Fiyat",
+        "price_history": "Fiyat Tablosu",
+        "price_market": "Market Price",
+        "quantity": "Miktar",
+        "quote": "Quote currency:",
+        "quote_supply": "Karşıt arzı",
+        "receive": "Tahsil",
+        "rsi": "Relatif Güç İndeksi",
+        "search": "Search for more markets here",
+        "sell": "Satış -",
+        "sell_description":
+            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settings": "Çizelge tercihleri",
+        "settle": "Ödeme",
+        "settle_orders": "Emirleri öde",
+        "short": "Kısa pozisyon",
+        "show_asks": "Tümünü göster",
+        "show_bids": "Tüm alışları göster",
+        "show_only_star_formatter": "Show {star_icon} only",
+        "sma": "Basit Hareketli Ortalama",
+        "spread": "Makas",
+        "squeeze": "Teminat Tamamlama Çağrısı Fiyatı",
+        "time": "Mum Biçimi",
+        "to_market": "Piyasaya git",
+        "total": "Toplam",
+        "trading_pair": "Trading pair",
+        "value": "Değer",
+        "vertical": "Dikey",
+        "vol_short": "Hacim",
+        "volume": "Hacim",
+        "volume_24": "24 Saat",
+        "your_price": "Sizin Çağrı Fiyatınız",
+        "zoom": "Yakınlaştır",
+        "zoom_all": "Tümü"
+    },
+    "explorer": {
+        "account": {
+            "title": "Hesap"
+        },
+        "accounts": {
+            "filter": "Ara",
+            "filter_contacts": "Süzgeç kontakları",
+            "title": "Hesaplar"
+        },
+        "asset": {
+            "fee_pool": {
+                "claim_fees": "Ücretleri talep et",
+                "claim_text":
+                    "Dijital varlık sahibi burada biriken ücretleri talep edebilir.",
+                "core_exchange_rate": "Esas Kur (CER)",
+                "fund_text":
+                    "Ücret havuzu %(asset)s olarak ödenen işlem ücretlerini %(core)s'e çevirerek   ödemek için kullanılır. Eğer ücret havuzunda para kalmazsa, ücretler artık %(asset)s olarak ödenemez ve %(core)s kullanılır ",
+                "pool_balance": "Havuz bakiyesi",
+                "title": "Ücret Havuzu",
+                "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri"
+            },
+            "invalid": "The asset name %(name)s is invalid",
+            "margin_positions": {
+                "title": "Margin positions"
+            },
+            "not_found": "%(name)s diye bir dijital varlık mevcut değil",
+            "permissions": {
+                "blacklist_authorities": "Kara liste yetkilileri",
+                "blacklist_markets": "Kara listeli piyasalar",
+                "max_market_fee": "Maksimum piyasa ücreti",
+                "max_supply": "Maksimum arz",
+                "title": "İzinler",
+                "whitelist_authorities": "İzin listesi yetkilileri",
+                "whitelist_markets": "İzin listesindeki piyasalar"
+            },
+            "price_feed": {
+                "force_settlement_offset": "Force settlement offset",
+                "global_settlement_price": "Global settlement price",
+                "maintenance_collateral_ratio": "Sürdürme Teminat Oranı (MCR)",
+                "maximum_short_squeeze_ratio":
+                    "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)",
+                "settlement_delay": "Settlement delay",
+                "settlement_price": "Uzlaşma",
+                "title": "Fiyat Yayını"
+            },
+            "price_feed_data": {
+                "core_exchange_rate": "CER",
+                "maintenance_collateral_ratio": "MCR",
+                "maximum_short_squeeze_ratio": "MSSR",
+                "published": "Duyurdu",
+                "publisher": "Duyuran",
+                "settlement_price": "Uzlaşma",
+                "title": "Fiyat Yayın Verileri"
+            },
+            "summary": {
+                "asset_type": "Dijital varlık türü",
+                "current_supply": "Mevcut Arz",
+                "issuer": "İhraç Eden",
+                "market_fee": "Piyasa ücreti",
+                "max_market_fee": "Maksimum piyasa ücreti",
+                "stealth_supply": "Gizli arz"
+            },
+            "title": "Aktif",
+            "whitelist": {
+                "blacklist_authorities": "Blacklist authorities",
+                "blacklist_markets": "Market blacklist",
+                "enable_flag":
+                    "The whitelist flag must be enabled in order to set whitelist authorities",
+                "whitelist_authorities": "Whitelist authorities",
+                "whitelist_markets": "Market whitelist"
+            }
+        },
+        "assets": {
+            "id": "ID",
+            "issuer": "İhraç Eden",
+            "market": "Akıllı Paralar",
+            "precision": "Ondalık Sayısı",
+            "prediction": "Tahmin piyasası",
+            "symbol": "Sembol",
+            "title": "Dijital Varlıklar",
+            "units": "Units",
+            "user": "Kullanıcı-Tanımlı Dijital Varlıklar"
+        },
+        "block": {
+            "account_upgrade": "Yükseltilecek hesap",
+            "asset_issue": "Düzenlenecek miktar",
+            "asset_update": "Güncellenecek Dijital Varlık",
+            "authorizing_account": "Yetki veren hesap ",
+            "call_limit": "Çağrı Sınırı",
+            "common_options": "Yaygın seçenekler",
+            "count": "İşlem Sayısı",
+            "date": "Tarih",
+            "fee_payer": "Ücret ödeyen hesap",
+            "feed_price": "Feed price",
+            "go_to": "Go to block",
+            "id": "Blok Kimlik",
+            "key": "Açık anahtar",
+            "lifetime": "Asil üyeliğe yükselt",
+            "listed_account": "Kaydedilmiş hesap",
+            "max_margin_period_sec": "Maksimum marjin periodları (s)",
+            "new_listing": "Yeni kayıt",
+            "new_options": "Yeni seçenekler",
+            "new_producers": "Yeni yayın üreticileri",
+            "next_secret": "Bir sonraki gizli hash",
+            "op": "İşlem",
+            "op_type": "İşlem türü",
+            "previous": "Bir önceki",
+            "previous_secret": "Bir önceki gizli hash",
+            "settlement_price": "Uzlaşma",
+            "short_limit": "Kısa pozisyon limit",
+            "time": "Zaman",
+            "title": "Blok",
+            "transactions": "İşlem Sayısı",
+            "trx": "İşlem",
+            "witness": "Tanık"
+        },
+        "blocks": {
+            "active_committee_members": "Etkin kurul üyeleri",
+            "active_witnesses": "Etkin Tanık",
+            "avg_conf_time": "Ortalama teyit süresi",
+            "block_time": "Blok süresi",
+            "block_times": "Blok süreleri",
+            "current_block": "Şimdiki Blok",
+            "globals": "Genel parametreler",
+            "last_block": "Son blok",
+            "recent": "Son bloklar",
+            "recently_missed_blocks": "Son kaçırılan bloklar",
+            "title": "Blokzinciri",
+            "transactions": "işlem sayısı",
+            "trx": "İşlem",
+            "trx_per_block": "İşlem/blok",
+            "trx_per_sec": "İşlem/s"
+        },
+        "committee_member": {
+            "title": "Kurul üyesi"
+        },
+        "committee_members": {
+            "active": "Toplam etkin kurul üyesi",
+            "title": "Kurul Üyeleri"
+        },
+        "fees": {
+            "fee": "Standart Ücret",
+            "feeeq": "(eşdeğer)",
+            "feeltm": "Asil/Yıllık Üye Ücreti",
+            "feeltmeq": "(eşdeğer)",
+            "type": "Ücret Türü"
+        },
+        "proposals": {
+            "authority_depth_warning":
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning":
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
+            "title": "Teklif edilmiş işlemler"
+        },
+        "witnesses": {
+            "budget": "Kalan bütçe",
+            "card": "Kart görünümü",
+            "current": "Şimdiki tanık",
+            "last_confirmed": "Son teyit edilen",
+            "missed": "Kaçırılan bloklar",
+            "next_vote": "Sıradaki oy güncellemesi",
+            "participation": "Katılım oranı",
+            "pay": "Blok başına ödeme",
+            "rank": "Sıralama",
+            "table": "Tablo görünümü",
+            "title": "Tanıklar"
+        },
+        "workers": {
+            "create": "Create a new worker proposal",
+            "create_text_1":
+                "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
+            "create_text_2":
+                "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
+            "daily_pay": "Daily pay (BTS)",
+            "date_text":
+                "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
+            "name_text":
+                "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
+            "pay_text":
+                "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
+            "period": "Worker duration",
+            "title": "Bütçe Öğeleri",
+            "url_text":
+                "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
+            "vesting_pay": "Salary vesting period (days)",
+            "vesting_text":
+                "The vesting period defines the number of days that worker earnings will vest before being fully claimable.",
+            "website": "Website"
+        }
+    },
+    "fees": {
+        "title": "Ücret Tarifesi"
+    },
+    "footer": {
+        "advanced_settings": "Advanced settings",
+        "backup": "Cüzdanınızı yedekleyin",
+        "block": "İşlenen son blok",
+        "brainkey": "TekAnahtar yedeklemesi tavsiye edilir.",
+        "connected": "Connected",
+        "connection": "Blokzinciri bağlantısı yok.",
+        "disconnected": "Disconnected",
+        "latency": "Latency",
+        "loading": "Yükleniyor...",
+        "nosync":
+            "Blokzinciri ile eşzamanlı değil, lütfen senkronize olana kadar bekleyin...",
+        "synced": "Synced",
+        "title": "Bitshares",
+        "unsynced": "Out of sync",
+        "update_available": "UPDATE AVAILABLE"
+    },
+    "gateway": {
+        "add_funds":
+            "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
+        "address": "Address",
+        "address_with_memo":
+            "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
+        "agreement": {
+            "hint": "I have read and agreed to",
+            "name": "《Service Agreement》",
+            "notice": "Please check the agreement to continue",
+            "register": "Agree"
+        },
+        "asset": "Asset",
+        "asset_search_deposit": "Search for an asset to deposit",
+        "asset_search_withdraw": "Search for an asset to withdraw",
+        "asset_to_deposit": "Yatırılacak dijital varlık:",
+        "asset_to_receive": "Alacağınız:",
+        "asset_to_withdraw": "Çekilecek dijital varlık:",
+        "asset_unavailable": "The gateway for %(asset)s is not in service",
+        "assets": {
+            "bit":
+                "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
+            "bitcny":
+                "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/",
+            "open":
+                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "trade":
+                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz."
+        },
+        "balance": "Mevcut Bakiye",
+        "balance_asset": "Current %(asset)s balance",
+        "bitkapital_receive":
+            "Vermiş olduğunuz banka hesabınıza yatacak miktar",
+        "bitkapital_text":
+            "Lütfen yatırmak ya da çekmek istediğiniz enstrümanı seçin.",
+        "bitkapital_withdraw": "Satılan miktar",
+        "bridge": "Köprü",
+        "bridge_text":
+            " Köprüler bir dijital varlıktan bir diğerine geçiş yapmanızı sağlar, örn. BTC'yi BTS'ye.",
+        "calc": "Hesaplanıyor...",
+        "choose_deposit": "Lütfen yatırmak istediğiniz dijital varlığı seçin",
+        "choose_withdraw": "Lütfen çekmek istediğiniz dijital varlığı seçin",
+        "contact_TRADE": "Contact Blocktrades",
+        "convert": "Internal conversion",
+        "convert_coin": "Convert to %(coin)s (%(symbol)s)",
+        "convert_now": "Convert now",
+        "copy_address": "Copy address",
+        "copy_memo": "Copy memo",
+        "deposit": "Yatır",
+        "deposit_address": "Deposit address",
+        "deposit_history_status": {
+            "confirming": "deposit confirming",
+            "fail": "fail",
+            "success": "success",
+            "transfering": "transfering",
+            "waiting": "waiting for deposit"
+        },
+        "deposit_inst": "Nasıl yatırırım?",
+        "deposit_limit": "Yatırma limiti",
+        "deposit_notice_delay":
+            "(new address can be generated once per 5 minutes)",
+        "deposit_summary": "İşlem özeti",
+        "deposit_to":
+            "Yükleme işlemi için lütfen aşağıdaki adrese %(asset)s transferi yapın",
+        "deposit_warning":
+            "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+        "deposit_warning_memo":
+            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
+        "fee": "Gateway fee",
+        "fiat": "Fiat",
+        "fiat_text":
+            "Buradaki kripto para yatırma işlemleri CCEDK tarafından sağlanan bir hizmettir. Bu hizmetten faydalanmanız için öncelikle CCEDK kaydınız olmalıdır. Kayıt işleminden sonra aşağıdaki dönüşümleri yapabilirsiniz:",
+        "frozen": "The user account %(account)s was frozen",
+        "gateway": "Geçit",
+        "gateway_text":
+            "Geçitler BitShares'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
+        "generate": "Yeni Oluştur",
+        "generate_new": "Yeni adres al",
+        "generate_new_memo": "Get new memo",
+        "iban": "IBAN",
+        "info": "Info",
+        "intermediate": "Aracı hesap",
+        "inventory": "Envanter",
+        "limit": "Sınır: %(amount)s %(symbol)s",
+        "limit_withdraw_asset": "Min: %(min)s, Max: %(max)s",
+        "limit_withdraw_asset_max": "Maximum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_min": "Minimum withdraw: %(min)s %(coin)s",
+        "limit_withdraw_asset_none": "None",
+        "memo": "Memo",
+        "meta": {
+            "open_website": ""
+        },
+        "min_deposit_warning_amount":
+            "Minimum Deposit: %(minDeposit)s %(coin)s",
+        "min_deposit_warning_asset":
+            "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "over_limit": "Limit Reached",
+        "please_generate_address": "Please, get new address ",
+        "purchase": "%(asset)s satın al",
+        "purchase_1":
+            "%(inputAsset)s kullanarak hızlı ve kolayca %(outputAsset)s satın almak için burayı kullanabilirsiniz. Bu hizmet <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> tarafından sağlanmaktadır.",
+        "purchase_notice":
+            "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+        "purchase_notice_memo":
+            "Memo <b>required</b> for proper routing to your account",
+        "receive_account": "Alacak hesap:",
+        "recent_deposit": "Son işlemler",
+        "recent_withdraw": "Son işlemler",
+        "rudex": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact RuDEX at:",
+            "under_construction": "Under Construction"
+        },
+        "scan_qr": "Karekod Tara",
+        "service": "Transfer Hizmet Sağlayıcısı",
+        "status": "Status",
+        "support_block": "Destek için, lütfen Blocktrades'e şuradan ulaşın:",
+        "support_gdex": "For support, please contact GDEX",
+        "symbol": "Sembol",
+        "time": "Time",
+        "title": "Yatır & Çek",
+        "transaction_history_info":
+            " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+        "unavailable":
+            "The gateway service for this asset is currently down, please try again later",
+        "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
+        "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
+        "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+        "unavailable_bridge":
+            "The bridge service for this asset is currently down, please try again later",
+        "use_copy_button":
+            "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
+        "user_unavailable":
+            "User informaction is current unavailable, please try again later",
+        "valid_address": "Lütfen geçerli bir  %(coin_type)s adresi giriniz",
+        "website": "Websitesini ziyaret edin",
+        "withdraw": "Çek",
+        "withdraw_coin": " %(coin)s (%(symbol)s) Çekme Talebi",
+        "withdraw_funds":
+            "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+        "withdraw_history_status": {
+            "audited": "auditting completed",
+            "auditing": "withdraw auditing",
+            "confirming": "confirming",
+            "fail": "fail",
+            "refused": "auditting failed",
+            "success": "success",
+            "transfering": "transfering"
+        },
+        "withdraw_inst": "Nasıl çekerim?",
+        "withdraw_now": "Şimdi Çek",
+        "withdraw_placeholder": "Please enter your %(asset)s address",
+        "withdraw_summary": "İşlem özeti",
+        "withdraw_to":
+            "Aşağıdaki butona tıklayarak %(asset)s adlı dijital varlık çekme işlemine başlayın",
+        "your_account": "Kullanıcı adınız"
+    },
+    "global": {
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "help": "Help",
+        "scan_qr_code": "Scan QR code"
+    },
+    "header": {
+        "account": "Hesap",
+        "account_notify": "Aktif hesap: %(account)s",
+        "account_value": "Hesap değeri",
+        "collateral_ratio": "Collateral ratio",
+        "create_account": "Hesap Oluştur",
+        "create_asset": "Dijital Varlık Oluştur",
+        "current": "Kullanılan Hesap",
+        "dashboard": "Ana Sayfa",
+        "deposit-withdraw": "Deposit/Withdraw",
+        "exchange": "Takas",
+        "explorer": "İncele",
+        "help": "Yardım",
+        "lock": "Kilitle",
+        "lock_short": "Log out",
+        "locked_tip": "Cüzdan kilitli.<br/>Açmak için tıkla.",
+        "logout": "Çıkış",
+        "payments": "Gönder",
+        "payments_beta": "Send (Beta)",
+        "payments_legacy": "Send (legacy)",
+        "settings": "Ayarlar",
+        "title": "BitKapital",
+        "unlock": "Kilidi Aç",
+        "unlock_password": "Giriş yap",
+        "unlock_short": "Giriş",
+        "unlocked_tip": "Cüzdan kilidi açık .<br/>Kilitlemek için tıkla.",
+        "update_asset": "Dijital Varlık Güncelle"
+    },
+    "icons": {
+        "adjust": "Adjust margin position",
+        "assets": "Assets",
+        "checkmark_circle": {
+            "approved": "Approved",
+            "operation_succeed": "Operation succeed",
+            "yes": "Yes"
+        },
+        "chevron_down": {
+            "gateways": "Show more gateways",
+            "other": "Show more items",
+            "transactions": "Show more transactions"
+        },
+        "clippy": {
+            "copy": "Copy to clipboard",
+            "withdraw_full": "Withdraw the full balance"
+        },
+        "clock": "Please check your computer's clock",
+        "cog": "Settings",
+        "cogs": "Settings",
+        "connect": "Connect to this API Node",
+        "connected": "API Node is connected",
+        "cross_circle": {
+            "cancel_order": "Cancel order",
+            "close_position": "Close position",
+            "hide_asset": "Hide asset",
+            "hide_market": "Hide market",
+            "operation_failed": "Operation failed",
+            "remove": "Remove"
+        },
+        "dashboard": "Dashboard",
+        "deposit": {
+            "deposit": "Deposit",
+            "deposit_withdraw": "Deposit/Withdraw"
+        },
+        "disconnected": "API Node is disconnected",
+        "dollar": {
+            "borrow": "Borrow",
+            "buy": "Buy"
+        },
+        "download": "Download new version of BitShares UI",
+        "excel": "Download .csv file",
+        "eye": "Hide Node",
+        "eye-striked": "Show Node",
+        "fees": "Fees",
+        "fi_star": {
+            "account": "Add/remove account from favorites",
+            "market": "Add/remove market from favorites",
+            "sort_accounts": "Sort by favorites",
+            "symbol": "Add/remove symbol from favorites"
+        },
+        "filter": "Filter",
+        "folder": "Accounts",
+        "hamburger": "Open menu",
+        "hamburger_x": "Close menu",
+        "hourglass": "Vesting balances",
+        "info_circle_o": "Info",
+        "key": "Key",
+        "list": "Whitelist",
+        "locked": {
+            "action": "Click to unlock your account to perform this action",
+            "common": "Click to unlock your account",
+            "enable_auto_scroll": "Enable auto scroll"
+        },
+        "minus_circle": {
+            "disapproved": "Disapproved",
+            "no": "No",
+            "remove_contact": "Remove contact from the list",
+            "wrong_address": "Unable to generate address"
+        },
+        "news": "News",
+        "plus_circle": {
+            "add_contact": "Add contact to the list",
+            "show_asset": "Show asset",
+            "show_market": "Show market"
+        },
+        "power": "Login",
+        "question_circle": "Help",
+        "server": "Explore",
+        "settle": "Settle",
+        "share": "About",
+        "shuffle": "Switch trading pair",
+        "text": {
+            "membership_stats": "Membership stats",
+            "signed_messages": "Signed messages"
+        },
+        "thumb_tack": "Pin panel to the left side",
+        "thumb_untack": "Unpin panel",
+        "thumbs_up": "Voting",
+        "times": "Remove API Node",
+        "trade": {
+            "exchange": "Exchange",
+            "trade": "Trade"
+        },
+        "transfer": "Send",
+        "unlocked": {
+            "common": "Click to lock your account",
+            "disable_auto_scroll": "Disable auto scroll"
+        },
+        "user": {
+            "account": "Account",
+            "create_account": "Create account",
+            "following": "You are following this user"
+        },
+        "warning": "Permissions",
+        "withdraw": "Withdraw",
+        "zoom": "Search"
+    },
+    "incognito": {
+        "mode": "Private/Incognito:",
+        "warning":
+            "If you close your browser without backing up your wallet, you will lose this account permanently."
+    },
+    "init_error": {
+        "browser": "Desteklenmeyen tarayıcı",
+        "browser_text":
+            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
+        "connected": "Bağlandı",
+        "not_connected": "Bağlı değil",
+        "retry": "Yeniden dene",
+        "title": "Uygulama başlatma problemleri",
+        "understand": "Anladım ve onaylıyorum.",
+        "ws_status": "Websocket Bağlantı Durumu"
+    },
+    "languages": {
+        "de": "Deutsch",
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "it": "Italiano",
+        "ja": "日本語",
+        "ko": "한국어",
+        "ru": "Русский",
+        "tr": "Türkçe",
+        "zh": "简体中文"
+    },
+    "markets": {
+        "base": "Taban Aktif",
+        "core_rate": "Esas oran",
+        "filter": "Filtrele",
+        "market_search": "Piyasa Arama",
+        "preferred": "Piyasalarım",
+        "search": "Ara",
+        "supply": "Arz",
+        "title": "Piyasalar"
+    },
+    "migration": {
+        "announcement_1":
+            "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+        "text_1": "Local wallet detected",
+        "text_2":
+            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+        "text_3":
+            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
+        "title": "Notice"
+    },
+    "modal": {
+        "buy": {
+            "asset": "Asset",
+            "bridge": "Brdige",
+            "title": "Buy"
+        },
+        "confirmation": {
+            "accept": "Onayla",
+            "cancel": "İptal",
+            "title":
+                "Geçerli bir adres girmediniz. Yine de devam etmek isterseniz bakiyenizi kaybetme riskiniz bulunmaktadır."
+        },
+        "convert": {
+            "amount": "Amount to Convert",
+            "submit": "Ok"
+        },
+        "deposit": {
+            "address_generation_error": "Unable to generate address",
+            "amount": "Yatıralacak Miktar",
+            "asset": "Asset",
+            "bts_transfer_description":
+                "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
+            "cancel": "Cancel",
+            "close": "Close",
+            "header": "Deposit to %(account_name)s",
+            "header_short": "Deposit",
+            "submit": "Yatır",
+            "submit_beta": "Deposit (beta)"
+        },
+        "deposit_withdraw": {
+            "disabled": "Gateway service disabled",
+            "gateway": "Gateway",
+            "no_gateway_available": "No gateway available",
+            "select_gateway": "Please select a gateway operator",
+            "wallet_error": "Gateway wallet disabled"
+        },
+        "issue": {
+            "amount": "Çıkarılacak miktar",
+            "submit": "Varlık İhraç Et",
+            "to": "Bu hesaba ihraç"
+        },
+        "ok": "Uygula",
+        "proposals": {
+            "approval_add": "Approval to add",
+            "approval_remove": "Approval to remove",
+            "key_approval_add": "Key approval to add",
+            "key_approval_remove": "Key approval to remove",
+            "pay_with": "Pay with account"
+        },
+        "qrcode": {
+            "input_message":
+                "Please enter a password used to encrypt the QR code.<br />An empty password will show an unencrypted QR code.",
+            "label": "qrcode",
+            "title": "Private key QR code"
+        },
+        "reserve": {
+            "amount": "Rezerv miktarı",
+            "from": "Rezerve yapılacak hesap",
+            "submit": "Rezerve",
+            "title": "Rezerve (yakılan) dijital varlık"
+        },
+        "send": {
+            "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
+            "header_propose":
+                "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+        },
+        "settle": {
+            "amount": "Ödenecek miktar",
+            "submit": "Öde",
+            "title": "%(asset)s ödenmesini talep et"
+        },
+        "withdraw": {
+            "address": "Kripto paranın gönderileceği adres",
+            "address_not_valid": "Invalid address",
+            "amount": "Çekilecek Miktar",
+            "available": "Available: ",
+            "bitshares_account": "Send to Bitshares Account",
+            "cancel": "Cancel",
+            "cannot_cover": "Insufficient funds!",
+            "estimated_value": "Estimated Value",
+            "fee": "Fee",
+            "gateway_fee": "Gateway Fee",
+            "header": "Withdraw (beta)",
+            "memo": "Memo",
+            "no_estimate": "No estimate available for this object",
+            "no_gateways":
+                "Sorry, but there are no gateways available to handle this withdrawal",
+            "quantity": "Quantity",
+            "submit": "Çek",
+            "submit_beta": "Withdraw (beta)",
+            "withdraw": "Withdraw"
+        }
+    },
+    "news": {
+        "author": "Author",
+        "errors": {
+            "fetch": "Ops... Something went wrong fetching the news"
+        },
+        "news": "News",
+        "subject": "Subject"
+    },
+    "openledger": {
+        "deposit_amount": "Deposit Amount",
+        "deposit_details": "Details",
+        "deposit_none": "No deposits",
+        "header_fiat": "Fiat",
+        "header_transaction_history": "Transaction history",
+        "loading": "Loading...",
+        "refresh_transaction_history": "Refresh",
+        "retry": "Retry",
+        "show_transaction_history": "Show transaction history",
+        "status": "Status",
+        "withdraw_amount": "Withdrawal Amount",
+        "withdraw_none": "No withdrawals"
+    },
+    "operation": {
+        "annual_upgrade_account": "{account} yıllık üyeliğe yükseltildi.",
+        "asset_create": "{account} şu dijital varlığı oluşturdu: {asset}",
+        "asset_fund_fee_pool":
+            "{account} tarafından {asset} ücret havuzuna {amount} eklendi.",
+        "asset_global_settle":
+            "{account} genel ödeme talep etti - aktif: {asset} fiyat: {price}",
+        "asset_issue":
+            "{account} tarafından {amount}, {to} adlı hesaba düzenlendi.",
+        "asset_reserve": "{account} {amount} kadar miktarı rezerve etti.",
+        "asset_settle": "{account} ödeme talep etti - Miktar: {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_update": "{account} şu dijital varlığı güncelledi: {asset}",
+        "asset_update_feed_producers":
+            "{account} şu dijital varlığın fiyat kaynaklarını güncelledi: {asset}",
+        "balance_claim":
+            "{account} bakiye güncelleme işlemi - Miktar: {amount}",
+        "blacklisted_by": "{lister} kara listeye {listee} adlı hesabı ekledi.",
+        "call_order_update":
+            "{account} {debtSymbol} borcunu {debt} olarak, teminatı {collateral} olarak değiştirdi.",
+        "committee_member_update_global_parameters":
+            "{account} evrensel kurul parametrelerini güncelledi.",
+        "fill_order_buy": "{account} bought {amount} at {price}",
+        "fill_order_sell": "{account} sold {amount} at {price}",
+        "lifetime_upgrade_account": "{account} asil üyeliğe yükseltildi.",
+        "limit_order_buy":
+            "{account} {amount} alış emri verdi - Fiyat: {price} ",
+        "limit_order_cancel": "{account} emir iptal etti: #%(order)s",
+        "limit_order_sell":
+            "{account} {amount} satış emri verdi - Fiyat: {price} ",
+        "no_recent": "Yeni işlem yok",
+        "override_transfer":
+            "{issuer}, {amount} miktarda dijital varlığı {from} adresinden {to} adresine aktardı.",
+        "pending": "%(blocks)s blok sonra tam onaylı.",
+        "proposal_create": "{account} bir işlem teklifi oluşturdu",
+        "proposal_delete": "{account} bir işlem teklifi sildi",
+        "proposal_update": "{account} bir teklif işlemi güncelledi",
+        "publish_feed": "{account} fiyat duyurdu: {price}",
+        "reg_account": "{registrar} kayıt yaptırdı - Hesap adı: {new_account}",
+        "set_proxy":
+            "{account} oy kullanması için {proxy} adlı hesabı vekil tayin etti",
+        "transfer": "{from} {amount} gönderdi - Alıcı: {to}",
+        "transfer_account":
+            "{account} adlı hesabın mülkiyeti {to} adlı hesaba devredildi.",
+        "unlisted_by":
+            "{lister} izin listesinden {listee} adlı hesabı çıkardı.",
+        "update_account": "{account} hesap verilerini güncelledi",
+        "vesting_balance_withdraw":
+            "{account} bekleyen bakiyeyi çekti - Miktar: {amount}",
+        "whitelisted_by":
+            "{lister} izin listesine {listee} adlı hesabı ekledi.",
+        "witness_create": "{account} tanık olmaya terfi edildi.",
+        "witness_pay": "Tanık ödemesi çekildi.",
+        "witness_receive": "Tanık alındı.",
+        "witness_update": "{account} tanık bilgilerini güncelledi.",
+        "worker_create":
+            "{account} günlük {pay} ödemeli bir geliştirme teklifi sundu."
+    },
+    "page404": {
+        "asset_not_found_subtitle": "That asset does not exist",
+        "home": "Ev",
+        "market_not_found_subtitle": "That market does not exist",
+        "page_not_found_subtitle": "Bu sayfa mevcut değil",
+        "page_not_found_title": "404 Sayfa Bulunamadı"
     },
     "pagination": {
         "newer": "Daha yeni",
         "older": "Daha eski"
     },
-    "transfer": {
-        "from": "Gönderen",
-        "pay_from": "Ödeyen hesap",
-        "amount": "Miktar",
-        "to": "Alıcı",
-        "header": "Transfer detayları",
-        "memo": "Açıklama",
-        "warn_name_unable_read_memo":
-            "Uyarı: %(name)s bu memoyu okuyamayacaktır",
-        "fee": "Ücret",
-        "send": "Gönder",
-        "final": "Kalan bakiye",
-        "balances": "Bakiyeler",
-        "available": "Bakiye",
-        "errors": {
-            "req": "Mecburi alan",
-            "pos": "Miktar pozitif olmak zorundadır.",
-            "valid": "Lütfen geçerli bir değer giriniz.",
-            "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
-            "insufficient": "Yetersiz bakiye",
-            "noFeeBalance":
-                "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
-            "noPoolBalance":
-                "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees."
-        },
-        "back": "GERİ",
-        "confirm": "ONAYLA",
-        "broadcasting": "Yayınlanıyor...",
-        "broadcast": "Transfer işleminiz yayınlandı!",
-        "again": "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
-        "see": "TRANSFER İŞLEMLERİMİ GÖR",
-        "close": "Kapat",
-        "memo_unlock": "Açıklamayı görmek için cüzdan kilidini açın.",
-        "optional": "Tercihe bağlı"
-    },
-    "operation": {
-        "pending": "%(blocks)s blok sonra tam onaylı.",
-        "no_recent": "Yeni işlem yok",
-        "override_transfer":
-            "{issuer}, {amount} miktarda dijital varlığı {from} adresinden {to} adresine aktardı.",
-        "reg_account": "{registrar} kayıt yaptırdı - Hesap adı: {new_account}",
-        "transfer": "{from} {amount} gönderdi - Alıcı: {to}",
-        "proposal_create": "{account} bir işlem teklifi oluşturdu",
-        "proposal_update": "{account} bir teklif işlemi güncelledi",
-        "proposal_delete": "{account} bir işlem teklifi sildi",
-        "fill_order": "{account} {received} satın aldı - Fiyat: {price} ",
-        "vesting_balance_withdraw":
-            "{account} bekleyen bakiyeyi çekti - Miktar: {amount}",
-        "balance_claim":
-            "{account} bakiye güncelleme işlemi - Miktar: {amount}",
-        "publish_feed": "{account} fiyat duyurdu: {price}",
-        "set_proxy":
-            "{account} oy kullanması için {proxy} adlı hesabı vekil tayin etti",
-        "update_account": "{account} hesap verilerini güncelledi",
-        "limit_order_sell":
-            "{account} {amount} satış emri verdi - Fiyat: {price} ",
-        "limit_order_buy":
-            "{account} {amount} alış emri verdi - Fiyat: {price} ",
-        "limit_order_cancel": "{account} emir iptal etti: #%(order)s",
-        "call_order_update":
-            "{account} {debtSymbol} borcunu {debt} olarak, teminatı {collateral} olarak değiştirdi.",
-        "asset_reserve": "{account} {amount} kadar miktarı rezerve etti.",
-        "asset_issue":
-            "{account} tarafından {amount}, {to} adlı hesaba düzenlendi.",
-        "asset_fund_fee_pool":
-            "{account} tarafından {asset} ücret havuzuna {amount} eklendi.",
-        "asset_create": "{account} şu dijital varlığı oluşturdu: {asset}",
-        "asset_update": "{account} şu dijital varlığı güncelledi: {asset}",
-        "lifetime_upgrade_account": "{account} asil üyeliğe yükseltildi.",
-        "annual_upgrade_account": "{account} yıllık üyeliğe yükseltildi.",
-        "unlisted_by":
-            "{lister} izin listesinden {listee} adlı hesabı çıkardı.",
-        "whitelisted_by":
-            "{lister} izin listesine {listee} adlı hesabı ekledi.",
-        "blacklisted_by": "{lister} kara listeye {listee} adlı hesabı ekledi.",
-        "transfer_account":
-            "{account} adlı hesabın mülkiyeti {to} adlı hesaba devredildi.",
-        "asset_update_feed_producers":
-            "{account} şu dijital varlığın fiyat kaynaklarını güncelledi: {asset}",
-        "asset_settle": "{account} ödeme talep etti - Miktar: {amount}",
-        "asset_global_settle":
-            "{account} genel ödeme talep etti - aktif: {asset} fiyat: {price}",
-        "witness_create": "{account} tanık olmaya terfi edildi.",
-        "witness_update": "{account} tanık bilgilerini güncelledi.",
-        "witness_pay": "Tanık ödemesi çekildi.",
-        "witness_receive": "Tanık alındı.",
-        "committee_member_update_global_parameters":
-            "{account} evrensel kurul parametrelerini güncelledi.",
-        "worker_create":
-            "{account} günlük {pay} ödemeli bir geliştirme teklifi sundu."
-    },
     "proposal": {
-        "transfer": "Transfer miktarı: {amount}, gönderen: {from}, alıcı: {to}",
+        "action": "Hareketler",
+        "approve": "Onayla",
+        "approvers": "Approver(s)",
+        "asset_create":
+            "%(asset)s dijital varlığını {account} hesabından oluştur.",
+        "asset_issue": "Issue {amount} to {to} using {account}",
+        "asset_reserve": "Burn (reserve) {amount} using {account}",
+        "asset_settle": "Request a settlement of",
+        "asset_update": "Update the asset {asset} using the account {account}",
+        "call_order_update":
+            "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
+        "committee_member_update_global_parameters":
+            "{account} tarafından kurul genel parametreleri güncellemesi",
+        "expires": "Bitiş süresi",
+        "feed_producer":
+            "Update the feed producers for the asset {asset} using the account {account}",
+        "limit_order_buy":
+            "{account} adlı hesaptan {price} fiyatı üzerinden {amount} almak için bir emir ver",
         "limit_order_create":
             "%(account)s adlı hesaptan %(sell_amount)s fiyatı üzerinden %(buy_amount)s almak için emir ver",
         "limit_order_sell":
             "{account} adlı hesaptan {price} fiyatı üzerinden {amount} satmak için bir emir ver",
-        "limit_order_buy":
-            "{account} adlı hesaptan {price} fiyatı üzerinden {amount} almak için bir emir ver",
-        "committee_member_update_global_parameters":
-            "{account} tarafından kurul genel parametreleri güncellemesi",
-        "action": "Hareketler",
-        "expires": "Bitiş süresi",
-        "update_account": "{account} için hesap verilerini güncelle.",
+        "override_transfer":
+            "Transfer {amount} from {from} to {to} by authority of {issuer}",
+        "proposals": "Proposals",
+        "reject": "Reddet",
         "status": "Durum",
-        "asset_create":
-            "%(asset)s dijital varlığını {account} hesabından oluştur.",
+        "transfer": "Transfer miktarı: {amount}, gönderen: {from}, alıcı: {to}",
         "update": {
             "active_approvals_to_add": "Eklenecek etkin onaylar",
             "active_approvals_to_remove": "Kaldırılacak etkin onaylar",
-            "owner_approvals_to_add": "Eklenecek sahip onayları",
-            "owner_approvals_to_remove": "Kaldırılacak sahip onayları",
             "key_approvals_to_add": "Eklenecek anahtar onayları",
-            "key_approvals_to_remove": "Kaldırılacak anahtar onayları"
+            "key_approvals_to_remove": "Kaldırılacak anahtar onayları",
+            "owner_approvals_to_add": "Eklenecek sahip onayları",
+            "owner_approvals_to_remove": "Kaldırılacak sahip onayları"
         },
-        "approve": "Onayla",
-        "reject": "Reddet"
+        "update_account": "{account} için hesap verilerini güncelle.",
+        "vesting_balance_withdraw":
+            "Withdraw {amount} from vesting balance of {account}"
+    },
+    "proposal_create": {
+        "expiration_time": "Bitiş süresi",
+        "fee_paying_account": "Ücreti ödeyen hesap",
+        "id": "Proposal object id",
+        "proposed_operations": "Teklif edilen işlemler",
+        "review_period": "İnceleme süresi başlangıcı"
+    },
+    "propose": "Teklif Et",
+    "qr_address_scanner": {
+        "address_found": "Adres bulundu",
+        "amount": "Miktar",
+        "retry": "Tekrar dene",
+        "use_address": "Adres kullan"
+    },
+    "refcode": {
+        "claim": "Talep",
+        "claim_refcode": "Tavsiye Kodu Talep Et",
+        "enter_refcode": "Tavsiye Kodunu Gir",
+        "refcode_optional": "Tavsiye Kodu (opsiyonel)"
+    },
+    "settings": {
+        "access": "Erişim",
+        "access_text":
+            "Hangi tam noda bağlanacağınızı seçin.<br/><br/>Kayıt ücretini ödemek için ücretsiz bir servis kullanılacaktır.",
+        "accounts": "Hesaplar",
+        "accounts_text": "Hesap listesi",
+        "activate": "Activate",
+        "active_node": "Active Node",
+        "add_api": "API ekle",
+        "add_ws": "Yeni websocket API ekle",
+        "always_confirm": "Onay için her zaman sor",
+        "apiServer": "API Bağlantısı",
+        "api_closest": "En yakın API'yi otomatik seç.",
+        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "automatic_short": "Automatic Switching",
+        "available_nodes": "Available",
+        "backup": "Yedekle",
+        "backup_backup": ".bin dosyasında yedekli cüzdanı aktar.",
+        "backup_backup_short": "Restore from a backup",
+        "backup_brainkey": "TekAnahtar yedeği ile cüzdan oluştur",
+        "backup_favorites": "Restore favorites using a json file",
+        "backup_favorites_error": "Could not parse JSON.",
+        "backup_favorites_finish": "Import favorites",
+        "backup_favorites_success": "Successfully restored market favorites",
+        "backup_favoritesbtn": "Backup favorites",
+        "backup_favoritestext":
+            "Back up your favorites to restore them later after updates.",
+        "backup_key": "Özel anahtar aktar",
+        "backup_legacy": "BTS 0.9.3c .json dosyası ile cüzdan kurtar",
+        "backup_text": "Cüzdan yedekleme",
+        "backupcreate_backup": "Cüzdanı yedekle",
+        "backupcreate_brainkey": "TekAnahtar yedeği oluştur",
+        "backupcreate_favorites": "Create favorites backup",
+        "browser_notifications": "Tarayıcı Bildirimleri",
+        "browser_notifications_additional_transfer_to_me":
+            "Hesabıma yapılan aktarmalar hakkında bilgi ver",
+        "browser_notifications_allow": "Bildirimleri etkinleştir",
+        "browser_notifications_disabled_by_browser_notify":
+            "Your browser disabled notifications. Click to learn how enable browser notifications",
+        "cloud_login": "Cloud Wallet Login",
+        "confirmMarketOrder": "Piyasa emirleri için teyit iste",
+        "confirm_no": "Hiçbir zaman",
+        "confirm_remove":
+            "Are you sure you want to remove %(name)s from your available nodes?",
+        "confirm_yes": "Her zaman",
+        "connection_error":
+            "Unable to connect to API node %(url)s, falling back to known working nodes",
+        "darkTheme": "Koyu tema",
+        "delete_select": "Silinecek cüzdanı seçin",
+        "enable_wallet": "Enable wallet model",
+        "faucet_address": "Musluk Adresi",
+        "faucet_address_text":
+            "The faucet address is used to pay the registration fee for new users.",
+        "general": "Genel",
+        "general_text": "Genel ayarlar",
+        "hidden_nodes": "Hidden",
+        "hide": "Hide",
+        "high_latency": "High latency",
+        "inverseMarket": "Piyasa eğilim tercihi",
+        "lightTheme": "Açık tema",
+        "local_wallet": "Local Wallet Login",
+        "locale": "Dili değiştir",
+        "lookup_text": "BTS 1.0'den kalan bakiyelerinizi almak için tıklayın.",
+        "low_latency": "Low latency",
+        "medium_latency": "Medium latency",
+        "midnightTheme": "Midnight",
+        "my_nodes": "Personal",
+        "no": "Hayır",
+        "no_accounts": "Bu cüzdanda hiçbir hesap bulunmuyor.",
+        "node_already_exists": "Node with such URL already exists",
+        "node_down": "Unreachable",
+        "node_up": "Available",
+        "olDarkTheme": "OpenLedger koyu",
+        "password": "Şifre",
+        "passwordLogin": "Login mode",
+        "password_text": "Şifre değiştirme",
+        "ping": "Ping Nodes",
+        "remove": "Remove",
+        "remove_api": "API kaldır",
+        "remove_ws": "Websocket API'sini kaldır",
+        "reset": "Ayarları sıfırla",
+        "reset_text": "Restore settings to their original defaults.",
+        "reset_text_description":
+            "This will reset all your %(generalName)s, %(accessName)s and %(faucetName)s Settings",
+        "restore": "Cüzdan kurtarma",
+        "restore_brainkey_text":
+            "Hesabınıza TekAnahtar ile erişim sağlamak için öncelikle yeni, boş bir cüzdan oluşturmalısınız. Cüzdanı oluşturmak için lütfen bir cüzdan ismi (herhangi bir şey olabilir, hatırlamanız içindir, sisteme kaydedilmez) ve şifre belirleyin, ve sonra TekAnahtarınızı girin. Bu işlemle yeni bir cüzdan oluşturulup içerisine hesabınız eklenecektir.",
+        "restore_default_success": "Ayarlar başarıyla sıfırlanmıştır.",
+        "restore_key_count": "Anahtar sayısı",
+        "restore_text": "TekAnahtar ya da .bin dosyası ile cüzdan kurtarma",
+        "show": "Show",
+        "showAssetPercent": "Bakiyeleri yüzde olarak da göster",
+        "showSettles": "Derinlik tablosunda settle order'ları göster",
+        "switch": "Switch Node",
+        "themes": "Tema",
+        "unit": "Tercih edilen hesap birimi",
+        "valid_node_url": "Node URL must begin with ws:// or wss://",
+        "view_keys": "Anahtarları göster",
+        "wallet": "Cüzdan",
+        "walletLockTimeout": "Otomatik cüzdan kilitlenme süresi (saniye)",
+        "wallet_required": "Wallet model required",
+        "wallet_required_text":
+            "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
+        "wallet_text": "Cüzdan detayları",
+        "wallets": "Cüzdanlar",
+        "yes": "Evet"
     },
     "sync_fail": {
         "sub_text_1": "Lütfen bilgisayarınızın saat ayarını kontrol edin.",
@@ -577,820 +1489,537 @@
             "Saat ayarının doğru olduğuna emin olduktan sonra bu sayfayı yenileyebilirsiniz. Türkiye'nin kış saati uygulamasını kaldırması nedeniyle bu uyarıyı alıyor olabilirsiniz. Lütfen bilgisayarınızın saat dilimini \"GMT+3 (UTC+3) Nairobi\" ya da \"GMT+3 (UTC+3) İstanbul\" olarak değiştirin. Bilgisayar saati doğru olduğu halde bu uyarıyı alıyorsanız, saati 5 dakika ileri ve geri almayı deneyin, ve bu sayfayı yenileyin. Cüzdanınıza erişimi sağladıktan sonra saati tekrar normale alabilirsiniz. Eğer hala bu uyarıyı alıyorsanız lütfen destek birimimizle irtibata geçin.",
         "title": "API sunucusu bağlantısı yok."
     },
+    "tooltip": {
+        "borrow":
+            "Blokzincirinden %(asset)s borç al. Bu işlem ile belirli bir miktar teminat belirleyerek Bitshares'in akıllı kontrat sistemi aracılığıyla dijital ürün borç alabilirsiniz. Borcu ödediğinizde teminat da serbest kalacaktır.",
+        "bridge_TRADE":
+            "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+        "buy_min":
+            "En az bu miktar kadar dijital varlık alacaksınız. Belirlediğiniz fiyattan daha iyi bir fiyat piyasada varsa, toplam alacağınız miktar bu miktarı geçebilir.",
+        "call_limit":
+            "Piyasadaki en az teminatlı marjin pozisyonunun itfa fiyatı",
+        "call_price":
+            "Pozisyonun itfa fiyatı budur. Piyasa fiyatı bu fiyatın altına düştüğünde teminat tamamlama çağrısı yapılır.",
+        "close_position":
+            "Pozisyonu kapatmak için tıklayın. Bu işlem için en az %(amount)s %(asset)s bakiyeniz olmalıdır.",
+        "coll_ratio":
+            "Pozisyonun teminat oranı = TEMİNAT * PİYASA FİYATI / BORÇ",
+        "copy_password": "Click here to copy the password to your clipboard",
+        "copy_tip": "Metni kopyalamak için tıklayın",
+        "cr_danger":
+            "Pozisyonun teminat seviyesi itfa değerinin altındadır. Teminat oranını en az %(mr)s yapacak şekilde teminat yatırabilir ya da pozisyonu kapatabilirsiniz.",
+        "cr_warning":
+            "Pozisyonun teminat seviyesi düşük durumdadır ve %(mr)s seviyesinin altına düştüğünde teminat tamamlama çağrısı yapılacaktır.",
+        "deposit_tip":
+            "Yatıma işlemini tamamlamak için aşağıdaki adrese %(asset)s gönderin. Transfer işleminiz onaylandığı zaman bakiyenizi yüklenecektir. Aşağıda bir işem açıklaması (memo) belirtilmişse transfere o açıklamayı eklemeniz ZORUNLUDUR.",
+        "disconnected":
+            "You are not connected to an API node, try reloading or setting a new access point in the Settings",
+        "feed_price": "This is the current external feed price",
+        "filter_ops":
+            "İşlem türüne göre listeyi filtrelemek için burayı kullanabilirsiniz.",
+        "follow_user": "You are following this user",
+        "follow_user_add": "Click to Follow this user",
+        "gateway": "Gateways back desposits by 100% real assets",
+        "generate":
+            "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "hide_asset": "Bu dijital varlığı gizlemek için tıklayın.",
+        "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
+        "login":
+            "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+        "margin_price":
+            "Teminat tamamlama çağrısı yapılmış pozisyonun ödemesi istenebilecek en yüksek değer",
+        "market_fee":
+            "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
+        "memo_tip":
+            "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "no_price":
+            "Bu dijital varlığın değerini tespit etmek için piyasada yeterli veri bulunmamaktadır.",
+        "over_limit":
+            "The bridge does not have enough of the desired asset for this buy order",
+        "propose_scam":
+            "Bu işlem teklifi bilinen bir dolandırıcı tarafından sunulmuştur, onaylamayın!",
+        "propose_tip": "Propose another user to initiate a transaction",
+        "settle":
+            "Sona erdirme işlemi dijital varlıklarınızı 24 saatlik bir gecikme ile o anki fiyat üzerinden BTS'ye dönüştürmenizi sağlar",
+        "settle_price": "Sona erdirilen emirlerin gerçekleşeceği fiyat",
+        "show_asset": "Bu dijital varlığı ana listede göstermek için tıklayın.",
+        "show_block":
+            "İşlemin gerçekleşmiş olduğu #%(block)s numaralı bloğa bakmak için buraya tıklayın.",
+        "sign_owner":
+            "Hesap sahibi anahtarı ile işlem yapıyorssanı ve bu anahtar hesabın aktif anahtarları arasında değilse, işlemin doğru imzalanması için lütfen burayı işaretleyin",
+        "sync_no":
+            "The current node is out of sync with the blockchain, try switching to another one",
+        "sync_yes": "The current node is in sync with the blockchain",
+        "transfer_actions":
+            "Dijital ürün transferi ya da (eğer destekleniyorsa) yatırma-çekme işlemi yapmak için buraya tıklayın.",
+        "update_position":
+            "Pozisyonu güncellemek için tıklayın. İstediğiniz zaman pozisyona ait borç ve/veya teminat değerlerini değiştirebilirsiniz.",
+        "withdraw_address":
+            "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
+        "withdraw_full": "Bütün bakiyeyi çekmek için tıklayın"
+    },
     "transaction": {
-        "confirm": "Lütfen işlemi teyit et",
-        "broadcast_success": "İşlem yayınlandı",
-        "transaction_confirmed": "İşlem teyit edildi",
-        "broadcast_fail": "İşlemin yayınlanması başarısız: %(message)",
-        "broadcasting": "İşlem yayınlanıyor...",
-        "broadcasting_short": "Yayınlanıyor...",
-        "sent": "gönderdi, miktar: ",
-        "to": "alan: ",
-        "received": "miktar: ",
-        "from": "gönderen: ",
         "amount_sell": "Satılacak miktar: ",
-        "expiration": "Bitiş tarihi: ",
-        "fill_or": "Ya hemen ya iptal",
-        "min_receive": "Alınacak minimum miktar",
-        "seller": "Satıcı",
-        "collateral": "Teminat",
-        "coll_ratio": "Başlangıç teminat oranı",
-        "coll_maint": "Teminat sürdürme oranı",
-        "create_key": "Açık anahtar oluşturuldu",
-        "at": "için şu kurdan:",
-        "coll_of": "teminatıyla",
-        "feed_producer": "Aktif için bir yayın üreticisi oldu.",
-        "feed_price": "Yayın fiyatı",
-        "by": "tarafından",
-        "burn_asset": "Yakıldı.",
-        "fund_pool": "%(asset)s ücret havuzunu şununla finanse etti:",
-        "committee_member_create": "Kurul üyesi oluşturuldu.",
-        "withdraw_permission_create": "Hesaptan çekme izni verildi.",
-        "withdraw_permission_update": "Hesaptan çekme iznini güncellendi.",
-        "withdraw_permission_claim": "Çekme izni onaylandı.",
-        "withdraw_permission_delete": "Hesaptan çekme izni silindi.",
-        "paid": "tarafından",
-        "obtain": "ödendi, ",
-        "global_parameters_update": "Evrensel parametrelerini güncelledi.",
-        "file_write": "Dosya oluşturuldu.",
-        "vesting_balance_create": "Bekletilen bakiyesi oluşturulan hesap:",
-        "for": "için",
-        "waiting": "Onay bekleniyor...",
-        "bond_create_offer": "Senet teklifi oluştur.",
-        "bond_cancel_offer": "Senet teklifini iptal etti.",
-        "bond_accept_offer": "Kabul edilen senet teklifi:",
-        "bond_claim_collateral": "Teminatı onayladı:",
-        "bond_pay_collateral": "Teminatını ödedi:",
-        "custom": "Özel işlem oluşturuldu.",
-        "order_id": "Talimat No.",
         "asset_claim_fees":
             "%(asset)s ücret havuzundan %(balance_amount)s aldı",
-        "balance_owner": "Bakiye sahibinin anahtarı",
+        "asset_reserve": "rezerve edilmiş miktar",
+        "at": "için şu kurdan:",
         "balance_id": "Bakiye No",
-        "deposit_to": "Hesaba oluşturuldu",
-        "claimed": "Toplam sahiplenilen",
+        "balance_owner": "Bakiye sahibinin anahtarı",
+        "blinding_factor": "Eşik faktörü",
+        "bond_accept_offer": "Kabul edilen senet teklifi:",
+        "bond_cancel_offer": "Senet teklifini iptal etti.",
+        "bond_claim_collateral": "Teminatı onayladı:",
+        "bond_create_offer": "Senet teklifi oluştur.",
+        "bond_pay_collateral": "Teminatını ödedi:",
         "borrow_amount": "Borç",
-        "funding_account": "Kaynak Hesap",
+        "borrower": "Borrower",
+        "broadcast_fail": "İşlemin yayınlanması başarısız: %(message)",
+        "broadcast_success": "İşlem yayınlandı",
+        "broadcasting": "İşlem yayınlanıyor...",
+        "broadcasting_short": "Yayınlanıyor...",
+        "burn_asset": "Yakıldı.",
+        "by": "tarafından",
+        "claimed": "Toplam sahiplenilen",
+        "coll_maint": "Teminat sürdürme oranı",
+        "coll_of": "teminatıyla",
+        "coll_ratio": "Başlangıç teminat oranı",
+        "collateral": "Teminat",
+        "committee_member_create": "Kurul üyesi oluşturuldu.",
+        "confirm": "Lütfen işlemi teyit et",
+        "create_key": "Açık anahtar oluşturuldu",
+        "csv": ".csv olarak dışa aktar.",
+        "csv_tip":
+            "Geçmiş işlemleri virgülle ayrılmış .csv dosyası olarak indir.",
+        "custom": "Özel işlem oluşturuldu.",
         "delta_collateral": "Teminat değişimi",
         "delta_debt": "Borç değişimi",
-        "new_url": "Web sitesi",
-        "publisher": "Duyuran",
-        "market_fee": "Piyasa ücreti",
-        "max_market_fee": "Maksimum piyasa ücreti",
-        "blinding_factor": "Eşik faktörü",
-        "outputs": "Çıkanlar",
-        "inputs": "Girdiler",
-        "settlement_date": "Uzlaşma tarihi",
-        "asset_reserve": "rezerve edilmiş miktar",
-        "trxTypes": {
-            "all": "Tümünü göster",
-            "transfer": "Gönder",
-            "limit_order_create": "Emir girişi",
-            "limit_order_cancel": "İptal edilen emir",
-            "call_order_update": "Marjin güncelleme",
-            "account_create": "Yeni Hesap Açılışı",
-            "account_update": "Hesap güncelleme",
-            "account_whitelist": "İzin Listesine Alma",
-            "account_upgrade": "Hesap yükseltme",
-            "account_transfer": "Hesap transferi",
-            "asset_create": "Yeni Oluştur",
-            "asset_update": "Güncelle",
-            "asset_update_bitasset": "Akıllıpara güncelleme",
-            "asset_update_feed_producers": "Fiyat kaynağı hesabı güncelleme",
-            "asset_issue": "Düzenle",
-            "asset_reserve": "Rezerve et",
-            "asset_fund_fee_pool": "Aktif ücret havuzu finansı",
-            "asset_settle": "Aktif ödemesi",
-            "asset_global_settle": "Genel Aktif Ödemesi",
-            "asset_publish_feed": "Yayın Duyurma",
-            "committee_member_create": "Kurul üyesi oluşturma",
-            "committee_member_update": "Kurul üyesini güncelle",
-            "witness_create": "Tanık oluşturma",
-            "witness_update": "Tanık güncelleme",
-            "witness_withdraw_pay": "Tanık maaş çekimi",
-            "proposal_create": "Teklif oluşturma",
-            "proposal_update": "Teklif güncelleme",
-            "proposal_delete": "Teklif silme",
-            "withdraw_permission_create": "Hesaptan çekme izni oluşturma",
-            "withdraw_permission_update": "Hesaptan çekme izni güncelleme",
-            "withdraw_permission_claim": "Çekme izin talebi",
-            "withdraw_permission_delete": "Çekme izni silme",
-            "fill_order": "Gerçekleşen emir",
-            "committee_member_update_global_parameters":
-                "Genel değişkenleri güncelleme",
-            "vesting_balance_create": "Bekletilen bakiye oluşturma",
-            "vesting_balance_withdraw": "Bekletilen bakiyeyi çekme",
-            "worker_create": "Bütçe ögesi oluşturma",
-            "custom": "Kişiye özel",
-            "assert": "İşlem beyanı",
-            "balance_claim": "Bakiye talebi",
-            "override_transfer": "Transferi yenileme",
-            "transfer_to_blind": "Kör hesaba transfer",
-            "blind_transfer": "Kör transfer",
-            "transfer_from_blind": "Kör hesaptan transfer et",
-            "asset_claim_fees": "Aktif ücretlerini talep et"
-        },
+        "deposit_to": "Hesaba oluşturuldu",
+        "expiration": "Bitiş tarihi: ",
         "feeGroups": {
-            "general": "Genel",
-            "asset": "Aktife Özel",
-            "market": "Piyasaya Özel",
             "account": "Hesaba Özel",
-            "business": "İş İdaresi"
+            "asset": "Aktife Özel",
+            "business": "İş İdaresi",
+            "general": "Genel",
+            "market": "Piyasaya Özel"
         },
         "feeTypes": {
             "_none": "Ücretsiz",
-            "fee": "Normal İşlem Ücreti",
-            "price_per_kbyte": "KByte'lık İşlem Başına Fiyat",
             "basic_fee": "Temel Ücret",
-            "premium_fee": "Paralı Adlar İçin Ücret",
+            "fee": "Normal İşlem Ücreti",
+            "long_symbol": "Uzun Semboller",
             "membership_annual_fee": "Yıllık Üyelik",
             "membership_lifetime_fee": "Asil Üyelik",
+            "premium_fee": "Paralı Adlar İçin Ücret",
+            "price_per_kbyte": "KByte'lık İşlem Başına Fiyat",
             "symbol3": "3 Haneli Semboller",
-            "symbol4": "4 Haneli Semboller",
-            "long_symbol": "Uzun Semboller"
+            "symbol4": "4 Haneli Semboller"
         },
+        "feed_price": "Yayın fiyatı",
+        "feed_producer": "Aktif için bir yayın üreticisi oldu.",
+        "file_write": "Dosya oluşturuldu.",
+        "fill_or": "Ya hemen ya iptal",
+        "for": "için",
+        "from": "gönderen: ",
+        "fund_pool": "%(asset)s ücret havuzunu şununla finanse etti:",
+        "funding_account": "Kaynak Hesap",
+        "global_parameters_update": "Evrensel parametrelerini güncelledi.",
+        "inputs": "Girdiler",
+        "market_fee": "Piyasa ücreti",
+        "max_market_fee": "Maksimum piyasa ücreti",
+        "min_receive": "Alınacak minimum miktar",
+        "new_url": "Web sitesi",
+        "obtain": "ödendi, ",
+        "order_id": "Talimat No.",
+        "outputs": "Çıkanlar",
+        "paid": "tarafından",
+        "publisher": "Duyuran",
+        "received": "miktar: ",
+        "seller": "Satıcı",
+        "sent": "gönderdi, miktar: ",
+        "settlement_date": "Uzlaşma tarihi",
+        "to": "alan: ",
+        "transaction_confirmed": "İşlem teyit edildi",
+        "trxTypes": {
+            "account_create": "Yeni Hesap Açılışı",
+            "account_transfer": "Hesap transferi",
+            "account_update": "Hesap güncelleme",
+            "account_upgrade": "Hesap yükseltme",
+            "account_whitelist": "İzin Listesine Alma",
+            "all": "Tümünü göster",
+            "assert": "İşlem beyanı",
+            "asset_claim_fees": "Aktif ücretlerini talep et",
+            "asset_create": "Yeni Oluştur",
+            "asset_fund_fee_pool": "Aktif ücret havuzu finansı",
+            "asset_global_settle": "Genel Aktif Ödemesi",
+            "asset_issue": "Düzenle",
+            "asset_publish_feed": "Yayın Duyurma",
+            "asset_reserve": "Rezerve et",
+            "asset_settle": "Aktif ödemesi",
+            "asset_settle_cancel": "Cancel asset settlement",
+            "asset_update": "Güncelle",
+            "asset_update_bitasset": "Akıllıpara güncelleme",
+            "asset_update_feed_producers": "Fiyat kaynağı hesabı güncelleme",
+            "balance_claim": "Bakiye talebi",
+            "blind_transfer": "Kör transfer",
+            "call_order_update": "Marjin güncelleme",
+            "committee_member_create": "Kurul üyesi oluşturma",
+            "committee_member_update": "Kurul üyesini güncelle",
+            "committee_member_update_global_parameters":
+                "Genel değişkenleri güncelleme",
+            "custom": "Kişiye özel",
+            "fill_order": "Gerçekleşen emir",
+            "limit_order_cancel": "İptal edilen emir",
+            "limit_order_create": "Emir girişi",
+            "override_transfer": "Transferi yenileme",
+            "proposal_create": "Teklif oluşturma",
+            "proposal_delete": "Teklif silme",
+            "proposal_update": "Teklif güncelleme",
+            "transfer": "Gönder",
+            "transfer_from_blind": "Kör hesaptan transfer et",
+            "transfer_to_blind": "Kör hesaba transfer",
+            "vesting_balance_create": "Bekletilen bakiye oluşturma",
+            "vesting_balance_withdraw": "Bekletilen bakiyeyi çekme",
+            "withdraw_permission_claim": "Çekme izin talebi",
+            "withdraw_permission_create": "Hesaptan çekme izni oluşturma",
+            "withdraw_permission_delete": "Çekme izni silme",
+            "withdraw_permission_update": "Hesaptan çekme izni güncelleme",
+            "witness_create": "Tanık oluşturma",
+            "witness_update": "Tanık güncelleme",
+            "witness_withdraw_pay": "Tanık maaş çekimi",
+            "worker_create": "Bütçe ögesi oluşturma"
+        },
+        "vesting_balance_create": "Bekletilen bakiyesi oluşturulan hesap:",
+        "waiting": "Onay bekleniyor...",
         "whitelist_states": {
-            "no_listing": "Listeleye alınmamış",
-            "white_listed": "İzin listesine alınmış",
             "black_listed": "Kara listeye alınmış",
-            "white_and_black_listed": "İzin listesine ve kara listeye alınmış"
+            "no_listing": "Listeleye alınmamış",
+            "white_and_black_listed": "İzin listesine ve kara listeye alınmış",
+            "white_listed": "İzin listesine alınmış"
         },
-        "csv": ".csv olarak dışa aktar.",
-        "csv_tip":
-            "Geçmiş işlemleri virgülle ayrılmış .csv dosyası olarak indir."
+        "withdraw_permission_claim": "Çekme izni onaylandı.",
+        "withdraw_permission_create": "Hesaptan çekme izni verildi.",
+        "withdraw_permission_delete": "Hesaptan çekme izni silindi.",
+        "withdraw_permission_update": "Hesaptan çekme iznini güncellendi."
     },
-    "explorer": {
-        "accounts": {
-            "title": "Hesaplar",
-            "filter": "Ara",
-            "filter_contacts": "Süzgeç kontakları"
+    "transfer": {
+        "again": "BAŞKA BİR TRANSFER GERÇEKLEŞTİR",
+        "amount": "Miktar",
+        "available": "Bakiye",
+        "back": "GERİ",
+        "balances": "Bakiyeler",
+        "broadcast": "Transfer işleminiz yayınlandı!",
+        "broadcasting": "Yayınlanıyor...",
+        "cancel": "Cancel",
+        "close": "Kapat",
+        "confirm": "ONAYLA",
+        "copy_address": "Copy Address",
+        "copy_memo": "Copy Memo",
+        "errors": {
+            "balance": "Kalan bakiye 0'dan büyük olmalıdır.",
+            "insufficient": "Yetersiz bakiye",
+            "memo_error":
+                "The transfer memo parsing error, please try again later.",
+            "memo_length_error":
+                "The transfer memo length exceed, please check",
+            "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
+            "noFeeBalance":
+                "Your balance is insufficient to pay fees using this asset, please choose another asset to pay your fees with",
+            "noFunds": "No funds",
+            "noPoolBalance":
+                "That asset has an insufficient fee pool balance to pay the fees with. Please inform the asset owner or select another asset for paying fees.",
+            "pos": "Miktar pozitif olmak zorundadır.",
+            "precision": "Minimum withdraw precision value: %(precision)s",
+            "req": "Mecburi alan",
+            "valid": "Lütfen geçerli bir değer giriniz."
         },
-        "blocks": {
-            "title": "Blokzinciri",
-            "globals": "Genel parametreler",
-            "recent": "Son bloklar",
-            "trx": "İşlem",
-            "block_times": "Blok süreleri",
-            "block_time": "Blok süresi",
-            "transactions": "işlem sayısı",
-            "recently_missed_blocks": "Son kaçırılan bloklar",
-            "trx_per_block": "İşlem/blok",
-            "active_committee_members": "Etkin kurul üyeleri",
-            "active_witnesses": "Etkin Tanık",
-            "avg_conf_time": "Ortalama teyit süresi",
-            "trx_per_sec": "İşlem/s",
-            "last_block": "Son blok",
-            "current_block": "Şimdiki Blok"
-        },
-        "block": {
-            "title": "Blok",
-            "id": "Blok Kimlik",
-            "witness": "Tanık",
-            "count": "İşlem Sayısı",
-            "date": "Tarih",
-            "time": "Zaman",
-            "previous": "Bir önceki",
-            "previous_secret": "Bir önceki gizli hash",
-            "next_secret": "Bir sonraki gizli hash",
-            "op": "İşlem",
-            "trx": "İşlem",
-            "op_type": "İşlem türü",
-            "fee_payer": "Ücret ödeyen hesap",
-            "key": "Açık anahtar",
-            "transactions": "İşlem Sayısı",
-            "account_upgrade": "Yükseltilecek hesap",
-            "lifetime": "Asil üyeliğe yükselt",
-            "authorizing_account": "Yetki veren hesap ",
-            "listed_account": "Kaydedilmiş hesap",
-            "new_listing": "Yeni kayıt",
-            "asset_update": "Güncellenecek Dijital Varlık",
-            "common_options": "Yaygın seçenekler",
-            "new_options": "Yeni seçenekler",
-            "new_producers": "Yeni yayın üreticileri",
-            "asset_issue": "Düzenlenecek miktar",
-            "max_margin_period_sec": "Maksimum marjin periodları (s)",
-            "call_limit": "Çağrı Sınırı",
-            "short_limit": "Kısa pozisyon limit",
-            "settlement_price": "Uzlaşma",
-            "go_to": "Go to block"
-        },
-        "assets": {
-            "title": "Dijital Varlıklar",
-            "market": "Akıllı Paralar",
-            "user": "Kullanıcı-Tanımlı Dijital Varlıklar",
-            "prediction": "Tahmin piyasası",
-            "symbol": "Sembol",
-            "id": "ID",
-            "issuer": "İhraç Eden",
-            "precision": "Ondalık Sayısı"
-        },
-        "asset": {
-            "title": "Aktif",
-            "not_found": "%(name)s diye bir dijital varlık mevcut değil",
-            "invalid": "The asset name %(name)s is invalid",
-            "summary": {
-                "asset_type": "Dijital varlık türü",
-                "issuer": "İhraç Eden",
-                "current_supply": "Mevcut Arz",
-                "stealth_supply": "Gizli arz",
-                "market_fee": "Piyasa ücreti",
-                "max_market_fee": "Maksimum piyasa ücreti"
-            },
-            "price_feed": {
-                "title": "Fiyat Yayını",
-                "settlement_price": "Uzlaşma",
-                "maintenance_collateral_ratio": "Sürdürme Teminat Oranı (MCR)",
-                "maximum_short_squeeze_ratio":
-                    "Maksimum kısa pozisyon sıkıştırma oranı (MSSR)"
-            },
-            "fee_pool": {
-                "title": "Ücret Havuzu",
-                "core_exchange_rate": "Esas Kur (CER)",
-                "pool_balance": "Havuz bakiyesi",
-                "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri",
-                "claim_fees": "Ücretleri talep et",
-                "fund_text":
-                    "Ücret havuzu %(asset)s olarak ödenen işlem ücretlerini %(core)s'e çevirerek   ödemek için kullanılır. Eğer ücret havuzunda para kalmazsa, ücretler artık %(asset)s olarak ödenemez ve %(core)s kullanılır ",
-                "claim_text":
-                    "Dijital varlık sahibi burada biriken ücretleri talep edebilir."
-            },
-            "permissions": {
-                "title": "İzinler",
-                "max_market_fee": "Maksimum piyasa ücreti",
-                "max_supply": "Maksimum arz",
-                "blacklist_authorities": "Kara liste yetkilileri",
-                "blacklist_markets": "Kara listeli piyasalar",
-                "whitelist_authorities": "İzin listesi yetkilileri",
-                "whitelist_markets": "İzin listesindeki piyasalar"
-            },
-            "price_feed_data": {
-                "title": "Fiyat Yayın Verileri",
-                "settlement_price": "Uzlaşma",
-                "core_exchange_rate": "CER",
-                "maintenance_collateral_ratio": "MCR",
-                "maximum_short_squeeze_ratio": "MSSR",
-                "publisher": "Duyuran",
-                "published": "Duyurdu"
-            }
-        },
-        "witnesses": {
-            "title": "Tanıklar",
-            "current": "Şimdiki tanık",
-            "participation": "Katılım oranı",
-            "pay": "Blok başına ödeme",
-            "budget": "Kalan bütçe",
-            "next_vote": "Sıradaki oy güncellemesi",
-            "card": "Kart görünümü",
-            "table": "Tablo görünümü",
-            "rank": "Sıralama",
-            "last_confirmed": "Son teyit edilen",
-            "missed": "Kaçırılan bloklar"
-        },
-        "committee_members": {
-            "title": "Kurul Üyeleri",
-            "active": "Toplam etkin kurul üyesi"
-        },
-        "committee_member": {
-            "title": "Kurul üyesi"
-        },
-        "workers": {
-            "title": "Bütçe Öğeleri",
-            "period": "Worker duration",
-            "daily_pay": "Daily pay (BTS)",
-            "website": "Website",
-            "vesting_pay": "Salary vesting period (days)",
-            "create": "Create a new worker proposal",
-            "create_text_1":
-                "In order to create your new worker, please fill in the form below. The worker will be created using your currently active account, which must already be a lifetime member.",
-            "create_text_2":
-                "Consider carefully the parameters you choose as they can not be changed once you've published your worker.",
-            "name_text":
-                "The name of your worker should be short and descriptive, something like this: 'Worker Purpose - Account Name'",
-            "date_text":
-                "The start date should be at least a week into the future in order to allow people the time to discover, evaluate and vote for your worker.",
-            "pay_text":
-                "The daily pay defines how much you want to be paid per day and is defined in BTS. The current best practice is to define a salary in USD/CNY, and commit to burning whatever surplus you receive as a result of the BTS price increasing. As long as your worker is active and has sufficient votes to be above the refund worker, you will receive this daily salary.",
-            "url_text":
-                "You should supply a website, github document or google doc that describes in more detail the purpose of the worker and how you intend to use the worker pay.",
-            "vesting_text":
-                "The vesting period defines the number of days that worker earnings will vest before being fully claimable."
-        },
-        "proposals": {
-            "title": "Teklif edilmiş işlemler"
-        },
-        "account": {
-            "title": "Hesap"
-        },
-        "fees": {
-            "type": "Ücret Türü",
-            "fee": "Standart Ücret",
-            "feeeq": "(eşdeğer)",
-            "feeltm": "Asil/Yıllık Üye Ücreti",
-            "feeltmeq": "(eşdeğer)"
-        }
+        "fee": "Ücret",
+        "final": "Kalan bakiye",
+        "from": "Gönderen",
+        "header": "Transfer detayları",
+        "header_subheader":
+            "Transfers are used for sending funds to other BitShares Account Holders",
+        "memo": "Açıklama",
+        "memo_unlock": "Açıklamayı görmek için cüzdan kilidini açın.",
+        "optional": "Tercihe bağlı",
+        "pay_from": "Ödeyen hesap",
+        "see": "TRANSFER İŞLEMLERİMİ GÖR",
+        "send": "Gönder",
+        "to": "Alıcı",
+        "warn_name_unable_read_memo":
+            "Uyarı: %(name)s bu memoyu okuyamayacaktır"
     },
-    "settings": {
-        "browser_notifications": "Tarayıcı Bildirimleri",
-        "browser_notifications_allow": "Bildirimleri etkinleştir",
-        "browser_notifications_additional_transfer_to_me":
-            "Hesabıma yapılan aktarmalar hakkında bilgi ver",
-        "inverseMarket": "Piyasa eğilim tercihi",
-        "unit": "Tercih edilen hesap birimi",
-        "confirmMarketOrder": "Piyasa emirleri için teyit iste",
-        "locale": "Dili değiştir",
-        "confirm_yes": "Her zaman",
-        "confirm_no": "Hiçbir zaman",
-        "always_confirm": "Onay için her zaman sor",
-        "wallets": "Cüzdanlar",
-        "apiServer": "API Bağlantısı",
-        "add_ws": "Yeni websocket API ekle",
-        "remove_ws": "Websocket API'sini kaldır",
-        "faucet_address": "Musluk Adresi",
-        "showSettles": "Derinlik tablosunda settle order'ları göster",
-        "showAssetPercent": "Bakiyeleri yüzde olarak da göster",
-        "yes": "Evet",
-        "no": "Hayır",
-        "walletLockTimeout": "Otomatik cüzdan kilitlenme süresi (saniye)",
-        "themes": "Tema",
-        "darkTheme": "Koyu tema",
-        "lightTheme": "Açık tema",
-        "olDarkTheme": "OpenLedger koyu",
-        "reset": "Ayarları sıfırla",
-        "general": "Genel",
-        "wallet": "Cüzdan",
-        "accounts": "Hesaplar",
-        "no_accounts": "Bu cüzdanda hiçbir hesap bulunmuyor.",
-        "password": "Şifre",
-        "backup": "Yedekle",
-        "restore": "Cüzdan kurtarma",
-        "access": "Erişim",
-        "general_text": "Genel ayarlar",
-        "wallet_text": "Cüzdan detayları",
-        "accounts_text": "Hesap listesi",
-        "password_text": "Şifre değiştirme",
-        "backup_text": "Cüzdan yedekleme",
-        "restore_text": "TekAnahtar ya da .bin dosyası ile cüzdan kurtarma",
-        "access_text":
-            "Hangi tam noda bağlanacağınızı seçin.<br/><br/>Kayıt ücretini ödemek için ücretsiz bir servis kullanılacaktır.",
-        "view_keys": "Anahtarları göster",
-        "add_api": "API ekle",
-        "remove_api": "API kaldır",
-        "backup_backup": ".bin dosyasında yedekli cüzdanı aktar.",
-        "backup_key": "Özel anahtar aktar",
-        "backup_legacy": "BTS 0.9.3c .json dosyası ile cüzdan kurtar",
-        "backupcreate_backup": "Cüzdanı yedekle",
-        "backup_brainkey": "TekAnahtar yedeği ile cüzdan oluştur",
-        "backupcreate_brainkey": "TekAnahtar yedeği oluştur",
-        "restore_brainkey_text":
-            "Hesabınıza TekAnahtar ile erişim sağlamak için öncelikle yeni, boş bir cüzdan oluşturmalısınız. Cüzdanı oluşturmak için lütfen bir cüzdan ismi (herhangi bir şey olabilir, hatırlamanız içindir, sisteme kaydedilmez) ve şifre belirleyin, ve sonra TekAnahtarınızı girin. Bu işlemle yeni bir cüzdan oluşturulup içerisine hesabınız eklenecektir.",
-        "restore_bin_success": "Hesabıma git",
-        "lookup_text": "BTS 1.0'den kalan bakiyelerinizi almak için tıklayın.",
-        "delete_select": "Silinecek cüzdanı seçin",
-        "restore_key_count": "Anahtar sayısı",
-        "restore_default_success": "Ayarlar başarıyla sıfırlanmıştır.",
-        "api_closest": "En yakın API'yi otomatik seç.",
-        "wallet_required": "Wallet model required",
-        "wallet_required_text":
-            "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
-        "enable_wallet": "Enable wallet model",
-        "connection_error":
-            "Unable to connect to API node %(url)s, falling back to known working nodes"
+    "trx_error": {
+        "expire":
+            "Your transaction has expired without being confirmed, please try again later."
     },
-    "footer": {
-        "title": "Bitshares",
-        "block": "İşlenen son blok",
-        "loading": "Yükleniyor...",
-        "backup": "Cüzdanınızı yedekleyin",
-        "nosync":
-            "Blokzinciri ile eşzamanlı değil, lütfen senkronize olana kadar bekleyin...",
-        "connection": "Blokzinciri bağlantısı yok.",
-        "brainkey": "TekAnahtar yedeklemesi tavsiye edilir."
-    },
-    "exchange": {
-        "market": "Piyasa",
-        "price_history": "Fiyat Tablosu",
-        "order_depth": "Piyasa Derinliği",
-        "history": "Son İşlemler",
-        "my_history": "Önceki İşlemlerim",
-        "balance": "Bakiye",
-        "lowest_ask": "En düşük",
-        "highest_bid": "En yüksek",
-        "total": "Toplam",
-        "value": "Değer",
-        "price": "Fiyat",
-        "latest": "En Son",
-        "call": "Çağrı Fiyatı",
-        "core_rate": "Ücret Oranı",
-        "settle": "Ödeme",
-        "squeeze": "Teminat Tamamlama Çağrısı Fiyatı",
-        "maintenance": "Sürdürme Çağrı Fiyatı",
-        "your_price": "Sizin Çağrı Fiyatınız",
-        "volume": "Hacim",
-        "vol_short": "Hacim",
-        "spread": "Makas",
-        "quantity": "Miktar",
-        "buy": "Alış -",
-        "buy_min": "Hesaba geçecek",
-        "sell": "Satış -",
-        "receive": "Tahsil",
-        "vertical": "Dikey",
-        "horizontal": "Yatay",
-        "confirm_buy":
-            "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
-        "confirm_sell":
-            "Emri teyit et: Sat %(sell_amount)s %(sell_symbol)s fiyat %(price_amount)s %(price_symbol)s",
-        "confirm_no_orders_buy":
-            "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
-        "confirm_no_orders_sell":
-            "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
-        "market_name": "Piyasalarım",
-        "quote_supply": "Karşıt arzı",
-        "base_supply": "Taban arzı",
-        "more": "Piyasa bul",
-        "volume_24": "24 Saat",
-        "change": "Değişim",
-        "confirm":
-            "Verdiğiniz emir şimdiki fiyattan %(diff)s% kadar farklı, emin misiniz?",
-        "indicators": "Göstergeler",
-        "rsi": "Relatif Güç İndeksi",
-        "ema": "Üssel Hareketli Ortalama",
-        "sma": "Basit Hareketli Ortalama",
-        "atr": "Ortalama Gerçek Fiyat Aralığı",
-        "period": "Süre (gün)",
-        "overbought": "Aşırı Talep",
-        "oversold": "Aşırı Arz",
-        "index": "Indeks",
-        "my_bids": "Alış Fiyatlarım",
-        "my_asks": "Satış Fiyatlarım",
-        "my_orders": "Açık emirlerim",
-        "settle_orders": "Emirleri öde",
-        "asks": "Satış emirleri",
-        "bids": "Alış emirleri",
-        "no_data": "Veri yok",
-        "time": "Mum Biçimi",
-        "zoom": "Yakınlaştır",
-        "borrow": "Ödünç Al",
-        "no_balance": "Yetersiz bakiye",
-        "invalid_amount": "Geçersiz miktar",
-        "invalid_price": "Geçersiz fiyat",
-        "show_bids": "Tüm alışları göster",
-        "show_asks": "Tümünü göster",
-        "hide": "Gizle",
-        "short": "Kısa pozisyon",
-        "others": "Diğerleri",
-        "invert": "Fiyatı ters çevir",
-        "to_market": "Piyasaya git",
-        "zoom_all": "Tümü",
-        "settings": "Çizelge tercihleri",
-        "featured": "Öne Çıkan Piyasalar",
-        "new": "Yeni",
-        "market_frozen":
-            "The owner of %(asset)s has disabled trading in this market.",
-        "show_star_1": "Show",
-        "show_star_2": "only",
-        "quote": "Quote currency:",
-        "search": "Search for more markets here"
-    },
-    "fees": {
-        "title": "Ücret Tarifesi"
-    },
-    "markets": {
-        "title": "Piyasalar",
-        "base": "Taban Aktif",
-        "market_search": "Piyasa Arama",
-        "filter": "Filtrele",
-        "core_rate": "Esas oran",
-        "supply": "Arz",
-        "search": "Ara",
-        "preferred": "Piyasalarım"
+    "walkthrough": {
+        "buy_form": "Bu formu kullanarak satın alma siparişleri verin.",
+        "buy_orders": "Bu pazar için tüm satınalma siparişlerini görüntüleyin.",
+        "chart_tool_duration": "Farklı aralıklarla ticaret verileri.",
+        "chart_tool_indicators":
+            "Ticaret fırsatlarını belirlemek için fiyat grafiklerine teknik göstergeler ekleyin.",
+        "chart_tool_zoom":
+            "Fiyat grafiğini az ya da çok fiyat geçmişini gösterecek şekilde ayarlayın.",
+        "create_cloud_wallet":
+            "Bir hesap adı ve parola kullanarak bulut cüzdanına erişin.",
+        "create_local_wallet":
+            "Yerel bir cüzdan oluşturun ve ona ait özel anahtarları indirin.",
+        "depth_chart":
+            "Arz ve talebi farklı fiyatlarla göstermek için bir piyasa derinliği grafiği kullanın.",
+        "done_label": "tamam",
+        "favourite_button":
+            "Bu çifti, pazarlar listenizde favori olarak işaretleyin.",
+        "find_markets_tab":
+            "Bu sekme, 'pazarlarım' sekmesine arama yaparak ek pazarlar eklemenizi sağlar.",
+        "language_flag": "DEX'de kullanmak için 9 farklı dilden birini seçin.",
+        "my_markets_tab": "Bu sekmede sık kullanılan pazarlar listelenir.",
+        "next_label": "sonraki",
+        "prev_label": "geri",
+        "price_chart":
+            "Fiyat grafiğini kullanarak bir varlığın fiyat hareketini görüntüleyin.",
+        "restore_account":
+            "Yedekleme dosyanızı kullanarak bir cüzdan geri yükleyin.",
+        "sell_form": "Bu formu kullanarak satış siparişleri verin.",
+        "sell_orders": "Bu pazarın tüm satış siparişlerini görüntüleyin.",
+        "skip_label": "atlamak",
+        "switch_button": "Bu düğmeyi kullanarak ticaret çiftlerini değiştirin."
     },
     "wallet": {
+        "accept": "Kabul",
         "account_create_wallet_text":
             "Bu şifre yeni bir Bitshares cüzdanı oluşturmak için kullanılacak ve tarayıcınızda saklanacaktır. Cüzdanınızı yedeklerseniz, bu şifre ile birlikte başka bilgisayarlardan ve tarayıcılardan cüzdanınıza ulaşabilirsiniz.",
+        "account_exp":
+            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
+        "account_public": "Kullanıcı adı (herkese açık)",
+        "active_wallet": "Etkin Cüzdan",
         "all_set": "İşleminiz başarıyla tamamlandı!",
+        "ask_to_select_wallet": "Please select a key file",
+        "back": "Back",
+        "backup_brainkey": "TekAnahtarı yedekle",
         "backup_explain":
             "Aşağıdaki butona tıkladığınızda .bin uzantılı bir yedekleme dosyası oluşturulacaktır. Bu dosya, cüzdan şifreniz ile şifrelenmiştir, ve kendi şifreniz ile birlikte kullanıldığında cüzdanınıza tam erişim sağlar. Yedekleme dosyasını cüzdanınızı başka bir tarayıcı ya da bilgisayara taşımak için de kullanabilirsiniz.",
+        "backup_login": "Backup & login",
         "backup_new_account":
             "Tebrikler, yeni hesabınız oluşturuldu. Lütfen cüzdanınızı yedekleyin. Cüzdanınıza ya da bilgisayarınıza erişiminizi kaybetseniz bile TekAnahtar ile, ya da .bin dosyası ve şifrenizle hesabınıza tekrar erişebilirsiniz.",
+        "backup_warning":
+            "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
+        "balance_claim_lookup": "Bakiye Arama",
+        "balance_claims": "Bakiye Talepleri",
+        "brainkey": "TekAnahtar",
         "brainkey_backed_up": "TekAnahtar son yedeklenme tarihi",
         "brainkey_not_backed_up": "TekAnahtar daha önce hiç yedeklenmemiş.",
+        "brainkey_not_verified": "Bu TekAnahtar doğrulanmamış",
+        "brainkey_reset_success":
+            "TekAnahtarınız sıfırlanmıştır. Özel anahtarlarınızı yenilemek için Ctrl+Shift+R tuşlarına basın ve sonra cüzdan kilidini açın.",
+        "brainkey_seq_reset": "TekAnahtarı sıfırla",
+        "brainkey_seq_reset_button": "Sıfırla",
+        "brainkey_seq_reset_text":
+            "Cüzdanınıza ait TekAnahtarı sıfırlayarak özel anahtarlarınızı yeniden üretmek için burayı kullanabilirsiniz.",
+        "brainkey_w1": "UYARI : Bunu bir kağıda yazın yada çıktı alın.",
+        "brainkey_w2": "Kurtarma anahtarınıza ulaşan herhangi bir kimse",
+        "brainkey_w3": "bu cüzdan içindeki fonlara ulaşabilir.",
         "bts_09_export": "BTS 0.9.3c yedek anahtar dosyası (.json)",
+        "bts_rules":
+            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
+        "cancel": "İptal",
+        "change": "Değiştir (%(name)s Cüzdan)",
         "change_backup":
             "Şifrenizi değiştirdiğiniz için cüzdanınızı yeniden yedeklemeniz gerekmektedir.",
+        "change_password": "Şifreyi Değiştir",
         "change_success": "Şifre değiştirildi!",
+        "change_wallet": "Cüzdanı Değiştir",
+        "claim_balance": "Bakiye Talebi",
+        "claim_balances": "Bakiyelerı Sahiplen",
         "claim_later":
             "Yedeklenmiş cüzdanınızı aktardıktan sonra bu bakiyeler kullanılabilir olacaktır.",
+        "confirm": "Şifre (teyit)",
+        "confirm_error": "The confirmation does not match the password",
+        "confirm_password": "Confirm Password",
         "congrat": "Tebrikler!",
+        "console": "Cüzdan Yönetim Paneli",
+        "create": "Oluştur",
         "create_a": "Yeni bir hesap oluşturun",
+        "create_account_password_text":
+            "Yeni hesabınız için gereken özel anahtarlar şifreniz kullanılarak üretilecektir. <strong>Şifreniz bilgisayarınızda ya da herhangi bir yerde otomatik olarak kayıtlı TUTULMAZ. Şifrenizi not etmek ya da ezberlemek ve sonrasında hatırlamak tamamen ve yalnızca sizin sorumluluğunuzdur.</strong>",
+        "create_account_text":
+            "Hesabınıza ait .bin dosyasını kaybetmeniz, veya TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, bir sonraki adımda cüzdanınızı yedeklemeli ve .bin dosyanızı, şifrenizi ve TekAnahtarınızı kesinlikle kaybetmemelisiniz.",
+        "create_backup": "Yedek Oluştur",
+        "create_backup_of": "%(name)s adlı cüzdanı yedekle",
         "create_importkeys_text":
             "Özel anahtarınızı aktarmak için öncelikle bir cüzdan oluşturmalısınız, bunun için lütfen aşağıdaki formu doldurun.",
+        "create_password": "Şifre kullanarak yeni bir hesap oluştur.",
         "create_success": "Tebrikler! Hesabınız oluşturuldu.",
         "create_text":
             "Bitshares cüzdanınız tamamen kendi bilgisayarınızda tutulur ve cüzdan bilgileriniz ya da şifreniz siz paylaşmadığınız sürece kimseyle paylaşılmaz.",
         "create_w_a": "Ücretsiz hesap oluşturun",
+        "create_wallet": "Cüzdan Oluştur",
         "create_wallet_backup": "Yedeklenmiş cüzdanı aktar.",
+        "current_pass": "Şimdiki şifreniz",
+        "custom_brainkey": "Kişiye Özel TekAnahtar (gelişmiş)",
+        "delete_confirm_line1": "KESİNLİKLE emin misiniz?",
+        "delete_confirm_line2": "Bunu okumazsanız beklenmedik şeyler olabilir!",
+        "delete_confirm_line3": "Bu işlem geri alınamaz.",
         "delete_confirm_line4": "Evet, şu cüzdanı silmek istiyorum: %(name)s",
-        "has_wallet":
-            "Bitshares hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
-        "create_account_text":
-            "Hesabınıza ait .bin dosyasını kaybetmeniz, veya TekAnahtarı ya da şifrenizi unutmanız durumunda hesabınıza erişmenin hiçbir yolu yoktur. Bu yüzden, bir sonraki adımda cüzdanınızı yedeklemeli ve .bin dosyanızı, şifrenizi ve TekAnahtarınızı kesinlikle kaybetmemelisiniz.",
+        "delete_wallet": "Cüzdanı Sil",
+        "delete_wallet_name": "%(name)s Adlı Cüzdanı Sil",
+        "different_file_type": "Have a different file type?",
+        "done": "Tamam",
+        "dont_ask_for_backup": "Don't ask me to back up again",
+        "download": "İndir",
+        "enter_password": "Şifrenizi girin",
+        "existing_password": "Mevcut şifre",
         "first_account_paid":
             "TekAnahtarınızı, şifrenizi veya .bin dosyasını güvende tutmazsanız, bilgisayarınızda oluşacak herhangi bir sorun ya da güncelleme nedeniyle cüzdanınıza erişimi kaybedebilirsiniz. Bu durumda cüzdanınızdaki dijital varlıkları geri getirmenin hiçbir yolu yoktur.",
-        "not_first_account":
-            "Zaten bir Bitshares hesabı ile giriş yapılmış, bu yüzden yeni oluşturacağınız her hesap için ağ ücreti ödemeniz gerekmektedir.",
+        "generated": "Generated password",
+        "go_get_started": "Getting Started",
+        "has_wallet":
+            "Bitshares hesabı açtığınızda cüzdanınızın kontrolü tamamen size aittir. Bir başka kişi sizin cüzdanınızı kontrol edemez. Cüzdana erişim için gerekli olan TekAnahtar bilgisayarınızda şifreli olarak saklanır.",
+        "import_20_notice1": "İlk önce BTS 2.0+ YEDEĞİNİZİ içeri aktarın ",
+        "import_20_notice2": "(eğer varsa)",
+        "import_backup": "Yedekten geri yükle",
         "import_backup_choose":
             "Lütfen yedekleme dosyasını seçin. Bu işlem esnasında dosya kendi bilgisayarınızdan dışarıya asla aktarılmaz, bütün işlem bilgisayarınızda gerçekleşir.",
         "import_balance": "Bakiyeyi aktar.",
+        "import_bts": "BTS 0.9.3c anahtar aktarma",
+        "import_bts1": "BitShares 0.9.3c den aktarım",
         "import_key_success": "İşleminiz başarıyla tamamlandı!",
+        "import_keys": "İçeri Anahtar Aktar",
+        "import_keys_tool": "Anahtar Aktarım Aracı",
         "import_pass_match":
             "Şifreler uyuşuyor. Cüzdanınız açılırken lütfen bekleyin...",
         "import_password": "Lütfen şifrenizi girin",
         "import_private_key": "Özel anahtar aktarma",
+        "invalid_format": "Geçersiz format",
+        "key_file": "Key file",
+        "key_file_bin": "Key file (.bin)",
+        "last_backup": "Son yedekleme",
         "link_account": "Hesabım",
         "link_deposit": "Yatır/Çek",
         "link_transfer": "Gönder",
+        "loading_balances": "Bakiye istemleri yükleniyor",
+        "local_switch":
+            "Local wallet detected matching the given password, switching to local wallet mode",
+        "login_type": "Hesaba erişim şeklini seçin:",
         "must_be_ltm": "Bu işlem için ücreti ödeyen hesap asil üye olmalıdır.",
+        "name": "Cüzdan Adı",
+        "need_backup": "Lütfen cüzdanınızı yedekleyin!",
+        "never_backed_up": "Bu cüzdan hiç yedeklenmedi.",
         "new_confirm": "Yeni şifreyi onayla",
         "new_password": "Yeni şifre",
-        "paste_private": "Özel anahtarı buraya kopyalayın (WIF formatında)",
-        "restore": "Yedeklenmiş cüzdanı aktar",
-        "step_1": "1. Adım - Kayıt",
-        "step_2": "2. Adım - Güvenlik",
-        "step_3": "3. Adım - Artık hazırsınız!",
-        "submit": "Gönder",
-        "totals": "Dijital ürünlerin toplam değeri",
-        "tips_transfer": "Transfer işlemi",
-        "wallet_browser": "Kendi cüzdanınız, kendi hesabınız",
-        "wallet_crucial":
-            "Kural 1: Cüzdanınızın/hesabınızın tek sahibi sizsizniz.<br/>Kural 2: Cüzdanınıza/hesabınıza ait bilgileri kaybederseniz hesabınıza asla ulaşamazsınız.<br/>Kural 3: Cüzdanınıza/hesabınıza ait bilgiler siz hariç hiçkimse tarafından kaydedilmez; sorumluluk tamamen size aittir.<br/>Kural 4: Cüzdanınızı/hesabınızı yedeklemeli ve şifrenizi ya da yedekleme dosyalarını kesinlikle güvende tutmalısınız.<br/>Kural 5: Bu kurallara uymazsanız cüzdanınızdaki/hesabınızdaki bütün dijital varlıkları kaybedebilirsiniz.",
-        "wallet_lose_warning": "",
-        "wallet_move":
-            "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_new": "Bitshares'e Hoş Geldiniz",
-        "import_bts": "BTS 0.9.3c anahtar aktarma",
-        "title": "Cüzdan",
-        "confirm": "Şifre (teyit)",
-        "password": "Şifre",
-        "existing_password": "Mevcut şifre",
-        "change_password": "Şifreyi Değiştir",
-        "change_wallet": "Cüzdanı Değiştir",
-        "wallet_created": "Cüzdan Oluşturuldu",
-        "create_wallet": "Cüzdan Oluştur",
-        "import_bts1": "BitShares 0.9.3c den aktarım",
-        "setup_wallet": "Cüzdanınızı Oluşturun",
-        "delete_wallet": "Cüzdanı Sil",
-        "delete_confirm_line1": "KESİNLİKLE emin misiniz?",
-        "delete_confirm_line2": "Bunu okumazsanız beklenmedik şeyler olabilir!",
-        "delete_confirm_line3": "Bu işlem geri alınamaz.",
-        "delete_wallet_name": "%(name)s Adlı Cüzdanı Sil",
-        "balance_claims": "Bakiye Talepleri",
-        "download": "İndir",
-        "name": "Cüzdan Adı",
-        "create": "Oluştur",
-        "console": "Cüzdan Yönetim Paneli",
-        "create_backup": "Yedek Oluştur",
-        "backup_brainkey": "TekAnahtarı yedekle",
-        "create_backup_of": "%(name)s adlı cüzdanı yedekle",
-        "import_backup": "Yedekten geri yükle",
-        "restore_backup": "Yedekten Geri Yükle",
-        "import_keys": "İçeri Anahtar Aktar",
-        "import_keys_tool": "Anahtar Aktarım Aracı",
-        "brainkey": "TekAnahtar",
         "new_wallet": "Yeni Cüzdan",
-        "active_wallet": "Etkin Cüzdan",
-        "verified": "Doğrulanmış",
-        "verify_prior_backup": "Yedeklemeden Önce Doğrula",
-        "brainkey_not_verified": "Bu TekAnahtar doğrulanmamış",
-        "cancel": "İptal",
-        "reset": "Sıfırla",
-        "done": "Tamam",
-        "verify": "Doğrula",
-        "invalid_format": "Geçersiz format",
-        "enter_password": "Şifrenizi girin",
         "new_wallet_name": "Yeni Cüzdan Adı",
-        "wallet_exist": "Zaten mevcut , yeni bir ad seçin",
-        "wallet_exist_with_name":
-            "%(name)s adında bir cüzdan zaten mevcut, lütfen adını değiştirin",
-        "accept": "Kabul",
-        "ready_to_restore": "Eski Haline Dönmeye Hazır",
-        "restore_wallet_of": "%(name)s Adlı Cüzdanı Eski Haline Getir",
-        "restore_success":
-            "%(name)s Adlı cüzdan başarıyla eski haline döndürüldü",
-        "change": "Değiştir (%(name)s Cüzdan)",
-        "import_20_notice1": "İlk önce BTS 2.0+ YEDEĞİNİZİ içeri aktarın ",
-        "import_20_notice2": "(eğer varsa)",
-        "loading_balances": "Bakiye istemleri yükleniyor",
-        "no_balance": "Bakiye talebi yok",
-        "claim_balance": "Bakiye Talebi",
-        "claim_balances": "Bakiyelerı Sahiplen",
-        "balance_claim_lookup": "Bakiye Arama",
-        "unclaimed": "Sahiplenilmemiş",
-        "unclaimed_vesting": "Çekilebilecek miktar",
         "no_accounts": "Hesap Yok",
-        "brainkey_no_match": "TekAnahtar uyuşmuyor, devam et",
-        "reenter_brainkey": "TekAnahtarı tekrar gir",
-        "pwd4brainkey": "TekAnahtarı göstermek için şifrenizi girin.",
-        "show_brainkey": "TekAnahtarı Göster",
-        "brainkey_w1": "UYARI : Bunu bir kağıda yazın yada çıktı alın.",
-        "brainkey_w2": "Kurtarma anahtarınıza ulaşan herhangi bir kimse",
-        "brainkey_w3": "bu cüzdan içindeki fonlara ulaşabilir.",
-        "custom_brainkey": "Kişiye Özel TekAnahtar (gelişmiş)",
-        "last_backup": "Son yedekleme",
-        "never_backed_up": "Bu cüzdan hiç yedeklenmedi.",
-        "need_backup": "Lütfen cüzdanınızı yedekleyin!",
+        "no_balance": "Bakiye talebi yok",
+        "no_wallet": "Cüzdanınız bulunmamaktadır.",
         "noneed_backup": "Cüzdanınız daha önceden yedeklenmiş görünüyor.",
-        "brainkey_seq_reset": "TekAnahtarı sıfırla",
-        "brainkey_seq_reset_text":
-            "Cüzdanınıza ait TekAnahtarı sıfırlayarak özel anahtarlarınızı yeniden üretmek için burayı kullanabilirsiniz.",
-        "brainkey_seq_reset_button": "Sıfırla",
-        "brainkey_reset_success":
-            "TekAnahtarınız sıfırlanmıştır. Özel anahtarlarınızı yenilemek için Ctrl+Shift+R tuşlarına basın ve sonra cüzdan kilidini açın.",
-        "wallet_password":
-            "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz.",
-        "password_lose_warning":
-            "<strong>UYARI: Şifrenizi kaybederseniz hesabınıza erişimi tamamen kaybedersiniz. Bu yüzden şifrenizi kesinlikle yedeklemeniz gerekmektedir. Bu tamamen ve yalnızca sizin sorumluluğunuzdadır.</strong>",
+        "not_first_account":
+            "Zaten bir Bitshares hesabı ile giriş yapılmış, bu yüzden yeni oluşturacağınız her hesap için ağ ücreti ödemeniz gerekmektedir.",
+        "ok_done": "OK, take me to the dashboard",
+        "pass_incorrect": "Incorrect password",
+        "pass_length":
+            "Şifreniz en az %(minLength)s karakter uzunluğunda olmalıdır. İdeal olarak minimum 20 karakterlik bir şifre kullanmalı, ve harf-rakam-sembol kombinasyonlarını içeren bir şifre seçmelisiniz.",
+        "password": "Şifre",
         "password_crucial":
             "Lütfen şifrenizi kaybetmeyeceğiniz şekilde bir yere yazın ve güvende tutun. Şifrenizi kaybederseniz hesabınıza erişmenin HİÇBİR YOLU YOKTUR. <strong>Şifrenizi hatırlamak yalnızca ve tamamen sizin sorumluluğunuzdur.</strong>.",
-        "password_show": "Şifreyi göster",
-        "tips_explore_pass":
-            "Hesabınız başarıyla oluşturulmuştur. Soldaki bağlantılardan birine tıklayarak Bitshares Merkezsiz Kriptopara Borsası'nı keşfedin!",
-        "create_account_password_text":
-            "Yeni hesabınız için gereken özel anahtarlar şifreniz kullanılarak üretilecektir. <strong>Şifreniz bilgisayarınızda ya da herhangi bir yerde otomatik olarak kayıtlı TUTULMAZ. Şifrenizi not etmek ya da ezberlemek ve sonrasında hatırlamak tamamen ve yalnızca sizin sorumluluğunuzdur.</strong>",
-        "create_password": "Şifre kullanarak yeni bir hesap oluştur.",
-        "login_type": "Hesaba erişim şeklini seçin:",
-        "wallet_model": "Cüzdan Sistemi",
+        "password_lose_warning":
+            "<strong>UYARI: Şifrenizi kaybederseniz hesabınıza erişimi tamamen kaybedersiniz. Bu yüzden şifrenizi kesinlikle yedeklemeniz gerekmektedir. Bu tamamen ve yalnızca sizin sorumluluğunuzdadır.</strong>",
         "password_model": "Hesap Sistemi",
-        "wallet_model_1":
-            "Cüzdan Sistemi'nde cüzdanınız tarayınızın belleğinde sizin seçtiğiniz şifre ile şifrelenmiş olarak kayıtlı tutulur. Cüzdanı yedeklemek için TekAnahtar ya da .bin dosyası yöntemlerini kullanabilirsiniz.",
-        "wallet_model_2":
-            "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
-        "wallet_model_3":
-            "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "password_model_1":
             "Hesap Sistemi ile hesabınıza yalnızca kullanıcı adı ve şifrenizle istediğiniz yerden erişim sağlayabilirsinz.",
         "password_model_2":
             "Hesap Sistemi'nde ekstradan TekAnahtar ya da .bin dosyasını yedeklemenize gerek yoktur, ancak yalnızca şifreniz kullanılarak hesabınıza erişim elde edilebildiğinden, çok uzun ve güvenli bir şifre seçmeniz gerekmektedir.",
         "password_model_3":
             "<li>Tek hesap</li><li>Kolay giriş</li><li>Orta seviye güvenlik</li>",
-        "use_wallet": "Cüzdan Sistemi'yle devam et",
-        "use_password": "Hesap Sistemi'yle devam et",
-        "pass_length":
-            "Şifreniz en az %(minLength)s karakter uzunluğunda olmalıdır. İdeal olarak minimum 20 karakterlik bir şifre kullanmalı, ve harf-rakam-sembol kombinasyonlarını içeren bir şifre seçmelisiniz.",
-        "switch_model_wallet": "Cüzdan Sistemi'ne geçiş yap",
+        "password_show": "Şifreyi göster",
+        "paste_private": "Özel anahtarı buraya kopyalayın (WIF formatında)",
+        "pwd4brainkey": "TekAnahtarı göstermek için şifrenizi girin.",
+        "ready_to_restore": "Eski Haline Dönmeye Hazır",
+        "reenter_brainkey": "TekAnahtarı tekrar gir",
+        "reset": "Sıfırla",
+        "restore": "Yedeklenmiş cüzdanı aktar",
+        "restore_backup": "Yedekten Geri Yükle",
+        "restore_it_here": "Restore it here",
+        "restore_key_file": "Restore key file..",
+        "restore_success":
+            "%(name)s Adlı cüzdan başarıyla eski haline döndürüldü",
+        "restore_wallet_of": "%(name)s Adlı Cüzdanı Eski Haline Getir",
+        "select_wallet": "Select key file",
+        "setup_wallet": "Cüzdanınızı Oluşturun",
+        "show_brainkey": "TekAnahtarı Göster",
+        "step_1": "1. Adım - Kayıt",
+        "step_2": "2. Adım - Güvenlik",
+        "step_3": "3. Adım - Artık hazırsınız!",
+        "submit": "Gönder",
         "switch_model_password": "Hesap Sistemi'ne geçiş yap",
-        "account_public": "Kullanıcı adı (herkese açık)",
-        "current_pass": "Şimdiki şifreniz",
-        "no_wallet": "Cüzdanınız bulunmamaktadır.",
-        "generated": "Generated password",
+        "switch_model_wallet": "Cüzdan Sistemi'ne geçiş yap",
+        "tips_account": "See your new account",
+        "tips_dashboard": "See your dashboard",
+        "tips_deposit": "Make a deposit",
+        "tips_explore":
+            "Now that you've successfully created an account and downloaded the backup, it's time to get started. Click on one of the links below to start exploring.",
+        "tips_explore_pass":
+            "Hesabınız başarıyla oluşturulmuştur. Soldaki bağlantılardan birine tıklayarak Bitshares Merkezsiz Kriptopara Borsası'nı keşfedin!",
+        "tips_header":
+            "You can also find these same links in the top menu, and in the drop-down menu next to your account name.",
+        "tips_login":
+            "IMPORTANT: There is no login/logout functionality here, you merely unlock your wallet when you wish to make a transaction.",
+        "tips_settings": "Change the settings",
+        "tips_transfer": "Transfer işlemi",
+        "title": "Cüzdan",
+        "totals": "Dijital ürünlerin toplam değeri",
+        "unclaimed": "Sahiplenilmemiş",
+        "unclaimed_vesting": "Çekilebilecek miktar",
         "understand_1":
             "I understand that no one can recover my password if I lose or forget it",
         "understand_2": "I have written down or otherwise stored my password",
-        "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password."
+        "understand_3":
+            " I understand that I will lose access to my funds if I lose my password",
+        "use_different": "Use different file",
+        "use_password": "Hesap Sistemi'yle devam et",
+        "use_wallet": "Cüzdan Sistemi'yle devam et",
+        "using": "Using:",
+        "verified": "Doğrulanmış",
+        "verify": "Doğrula",
+        "verify_prior_backup": "Yedeklemeden Önce Doğrula",
+        "wallet_browser": "Kendi cüzdanınız, kendi hesabınız",
+        "wallet_created": "Cüzdan Oluşturuldu",
+        "wallet_crucial":
+            "Kural 1: Cüzdanınızın/hesabınızın tek sahibi sizsizniz.<br/>Kural 2: Cüzdanınıza/hesabınıza ait bilgileri kaybederseniz hesabınıza asla ulaşamazsınız.<br/>Kural 3: Cüzdanınıza/hesabınıza ait bilgiler siz hariç hiçkimse tarafından kaydedilmez; sorumluluk tamamen size aittir.<br/>Kural 4: Cüzdanınızı/hesabınızı yedeklemeli ve şifrenizi ya da yedekleme dosyalarını kesinlikle güvende tutmalısınız.<br/>Kural 5: Bu kurallara uymazsanız cüzdanınızdaki/hesabınızdaki bütün dijital varlıkları kaybedebilirsiniz.",
+        "wallet_exist": "Zaten mevcut , yeni bir ad seçin",
+        "wallet_exist_with_name":
+            "%(name)s adında bir cüzdan zaten mevcut, lütfen adını değiştirin",
+        "wallet_lose_warning": "",
+        "wallet_model": "Cüzdan Sistemi",
+        "wallet_model_1":
+            "Cüzdan Sistemi'nde cüzdanınız tarayınızın belleğinde sizin seçtiğiniz şifre ile şifrelenmiş olarak kayıtlı tutulur. Cüzdanı yedeklemek için TekAnahtar ya da .bin dosyası yöntemlerini kullanabilirsiniz.",
+        "wallet_model_2":
+            "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
+        "wallet_model_3":
+            "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
+        "wallet_move":
+            "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
+        "wallet_new": "Bitshares'e Hoş Geldiniz",
+        "wallet_password":
+            "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
     },
-    "borrow": {
-        "title": "%(asset_symbol)s Marjin",
-        "no_valid": "%(asset_symbol)s için geçerli yayın mevcut değil",
-        "coll_ratio": "Teminat oranı",
-        "call_limit": "Piyasa Çağrı Limiti",
-        "adjust": "Pozisyonu Güncelle",
-        "close": "Pozisyonu Kapat",
-        "update": "Güncelle",
-        "errors": {
-            "below":
-                "Teminat oranı çok düşük, bu pozisyon anında marjin-çağrılır",
-            "collateral": "Yetersiz teminat seviyesi"
-        }
-    },
-    "modal": {
-        "confirmation": {
-            "accept": "Onayla",
-            "cancel": "İptal",
-            "title":
-                "Geçerli bir adres girmediniz. Yine de devam etmek isterseniz bakiyenizi kaybetme riskiniz bulunmaktadır."
+    "winex": {
+        "gateway": {
+            "click_getaddress": "Please get deposit address",
+            "deposit_warning":
+                "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+            "fee": "Gateway Fee",
+            "get_deposit_address": "get deposit address",
+            "support_block": "For support, please contact Winex at:"
         },
-        "issue": {
-            "to": "Bu hesaba ihraç",
-            "amount": "Çıkarılacak miktar",
-            "submit": "Varlık İhraç Et"
+        "transfer": {
+            "errors": {
+                "minWithdraw": "Minimum amount：%(min_amount)s"
+            }
         },
         "withdraw": {
-            "amount": "Çekilecek Miktar",
-            "address": "Kripto paranın gönderileceği adres",
-            "submit": "Çek"
-        },
-        "deposit": {
-            "amount": "Yatıralacak Miktar",
-            "submit": "Yatır"
-        },
-        "settle": {
-            "title": "%(asset)s ödenmesini talep et",
-            "amount": "Ödenecek miktar",
-            "submit": "Öde"
-        },
-        "reserve": {
-            "title": "Rezerve (yakılan) dijital varlık",
-            "amount": "Rezerv miktarı",
-            "from": "Rezerve yapılacak hesap",
-            "submit": "Rezerve"
-        },
-        "ok": "Uygula"
-    },
-    "init_error": {
-        "title": "Uygulama başlatma problemleri",
-        "ws_status": "Websocket Bağlantı Durumu",
-        "retry": "Yeniden dene",
-        "connected": "Bağlandı",
-        "not_connected": "Bağlı değil",
-        "browser": "Desteklenmeyen tarayıcı",
-        "browser_text":
-            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
-        "understand": "Anladım ve onaylıyorum."
-    },
-    "refcode": {
-        "claim": "Talep",
-        "claim_refcode": "Tavsiye Kodu Talep Et",
-        "refcode_optional": "Tavsiye Kodu (opsiyonel)",
-        "enter_refcode": "Tavsiye Kodunu Gir"
-    },
-    "proposal_create": {
-        "review_period": "İnceleme süresi başlangıcı",
-        "expiration_time": "Bitiş süresi",
-        "proposed_operations": "Teklif edilen işlemler",
-        "fee_paying_account": "Ücreti ödeyen hesap"
-    },
-    "gateway": {
-        "fee": "Gateway fee",
-        "title": "Yatır & Çek",
-        "assets": {
-            "open":
-                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
-            "trade":
-                "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
-            "bit":
-                "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
-            "bitcny":
-                "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/"
-        },
-        "your_account": "Kullanıcı adınız",
-        "bitkapital_receive":
-            "Vermiş olduğunuz banka hesabınıza yatacak miktar",
-        "bitkapital_text":
-            "Lütfen yatırmak ya da çekmek istediğiniz enstrümanı seçin.",
-        "bitkapital_withdraw": "Satılan miktar",
-        "iban": "IBAN",
-        "bridge": "Köprü",
-        "gateway": "Geçit",
-        "symbol": "Sembol",
-        "website": "Websitesini ziyaret edin",
-        "deposit_to":
-            "Yükleme işlemi için lütfen aşağıdaki adrese %(asset)s transferi yapın",
-        "balance": "Mevcut Bakiye",
-        "generate": "Yeni Oluştur",
-        "generate_new": "Yeni adres al",
-        "deposit": "Yatır",
-        "withdraw": "Çek",
-        "withdraw_now": "Şimdi Çek",
-        "inventory": "Envanter",
-        "scan_qr": "Karekod Tara",
-        "calc": "Hesaplanıyor...",
-        "choose_deposit": "Lütfen yatırmak istediğiniz dijital varlığı seçin",
-        "choose_withdraw": "Lütfen çekmek istediğiniz dijital varlığı seçin",
-        "asset_to_deposit": "Yatırılacak dijital varlık:",
-        "asset_to_receive": "Alacağınız:",
-        "receive_account": "Alacak hesap:",
-        "deposit_summary": "İşlem özeti",
-        "deposit_inst": "Nasıl yatırırım?",
-        "recent_deposit": "Son işlemler",
-        "recent_withdraw": "Son işlemler",
-        "withdraw_summary": "İşlem özeti",
-        "withdraw_inst": "Nasıl çekerim?",
-        "withdraw_to":
-            "Aşağıdaki butona tıklayarak %(asset)s adlı dijital varlık çekme işlemine başlayın",
-        "intermediate": "Aracı hesap",
-        "asset_to_withdraw": "Çekilecek dijital varlık:",
-        "support_block": "Destek için, lütfen Blocktrades'e şuradan ulaşın:",
-        "service": "Transfer Hizmet Sağlayıcısı",
-        "valid_address": "Lütfen geçerli bir  %(coin_type)s adresi giriniz",
-        "withdraw_coin": " %(coin)s (%(symbol)s) Çekme Talebi",
-        "limit": "Sınır: %(amount)s %(symbol)s",
-        "bridge_text":
-            " Köprüler bir dijital varlıktan bir diğerine geçiş yapmanızı sağlar, örn. BTC'yi BTS'ye.",
-        "gateway_text":
-            "Geçitler BitShares'de tanımlı dijital varlıklardan gerçek enstrümanlara geçmenizi sağlar (ve tam tersi), örn. OPEN.BTC'den  BTC'ye.",
-        "fiat_text":
-            "Buradaki kripto para yatırma işlemleri CCEDK tarafından sağlanan bir hizmettir. Bu hizmetten faydalanmanız için öncelikle CCEDK kaydınız olmalıdır. Kayıt işleminden sonra aşağıdaki dönüşümleri yapabilirsiniz:",
-        "meta": {
-            "open_website": ""
-        },
-        "purchase": "%(asset)s satın al",
-        "purchase_1":
-            "%(inputAsset)s kullanarak hızlı ve kolayca %(outputAsset)s satın almak için burayı kullanabilirsiniz. Bu hizmet <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> tarafından sağlanmaktadır.",
-        "deposit_limit": "Yatırma limiti",
-        "asset_search_deposit": "Search for an asset to deposit"
-    },
-    "trx_error": {
-        "expire":
-            "Your transaction has expired without being confirmed, please try again later."
+            "finalNumber": "Actual amount ：%(final_number)s",
+            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
+        }
     }
 }

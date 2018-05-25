@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from "react";
+import React, {Component} from "react";
+import PropTypes from "prop-types";
 import {Link} from "react-router/es";
 import {FormattedDate} from "react-intl";
 import {connect} from "alt-react";
