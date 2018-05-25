@@ -333,7 +333,6 @@ class DataFeed {
 }
 
 const supportedTimeZones = [
-    "Africa/Johannesburg",
     "America/Argentina/Buenos_Aires",
     "America/Bogota",
     "America/Caracas",
@@ -381,24 +380,25 @@ const supportedTimeZones = [
 
 function getTVTimezone() {
     const current = moment.tz.guess();
+    const defaultZone = "Europe/London";
 
     let isSupported = supportedTimeZones.indexOf(current) !== -1;
     if (isSupported) return current;
     else {
         /* Try to find a matching timezone from the limited list supported by TradingView */
         const time = moment().toISOString();
-        const defaultZone = "Europe/London";
         const actual = moment.tz(time, current).format();
-        let continent = current.split("/")[0];
-        let possibleZones = supportedTimeZones.filter(
-            z => z.indexOf(continent) !== -1
-        );
-        if (!possibleZones.length) return defaultZone; // default
-        for (var i = 0; i < possibleZones.length; i++) {
-            let zoneTime = moment.tz(time, possibleZones[i]);
+        for (var i = 0; i < supportedTimeZones.length; i++) {
+            let zoneTime = moment.tz(time, supportedTimeZones[i]);
             if (zoneTime.format() === actual) {
+                if (__DEV__)
+                    console.log(
+                        `Found a match for ${current} timezone, using ${
+                            supportedTimeZones[i]
+                        }`
+                    );
                 // Found a match, return that zone
-                return possibleZones[i];
+                return supportedTimeZones[i];
             }
         }
     }
