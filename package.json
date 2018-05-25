@@ -132,7 +132,7 @@
         "alt-container": "^1.0.0",
         "alt-react": "git+https://github.com/bitshares/react.git",
         "bignumber.js": "^4.0.0",
-        "bitsharesjs": "^1.7.4",
+        "bitsharesjs": "^1.7.6",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",
