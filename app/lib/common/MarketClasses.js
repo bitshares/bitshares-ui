@@ -405,14 +405,17 @@ class FeedPrice extends Price {
     getSqueezePrice({real = false} = {}) {
         if (!this._squeeze_price) {
             this._squeeze_price = this.clone();
-            if (this.inverted)
+            if (this.inverted) {
                 this._squeeze_price.base.amount = Math.floor(
-                    this._squeeze_price.base.amount * this.sqr
+                    this._squeeze_price.base.amount * this.sqr * 1000
                 );
-            if (!this.inverted)
+                this._squeeze_price.quote.amount *= 1000;
+            } else if (!this.inverted) {
                 this._squeeze_price.quote.amount = Math.floor(
-                    this._squeeze_price.quote.amount * this.sqr
+                    this._squeeze_price.quote.amount * this.sqr * 1000
                 );
+                this._squeeze_price.base.amount *= 1000;
+            }
         }
 
         if (real) {

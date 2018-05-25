@@ -329,16 +329,16 @@ class Footer extends React.Component {
                             </span>
                         ) : null}
                         {block_height ? (
-                            <div
-                                onMouseEnter={() => {
-                                    this.setState({showNodesPopup: true});
-                                }}
-                                onMouseLeave={() => {
-                                    this.setState({showNodesPopup: false});
-                                }}
-                                className="grid-block shrink"
-                            >
-                                <div style={{position: "relative"}}>
+                            <div className="grid-block shrink">
+                                <div
+                                    onMouseEnter={() => {
+                                        this.setState({showNodesPopup: true});
+                                    }}
+                                    onMouseLeave={() => {
+                                        this.setState({showNodesPopup: false});
+                                    }}
+                                    style={{position: "relative"}}
+                                >
                                     <div className="footer-status">
                                         {!connected ? (
                                             <span className="warning">

@@ -235,7 +235,8 @@ class RouterTransitioner {
         this._connectionManager = new Manager({
             url: connectionString,
             urls: urls,
-            closeCb: this._onConnectionClose.bind(this)
+            closeCb: this._onConnectionClose.bind(this),
+            optionalApis: {enableOrders: true}
         });
     }
 
@@ -487,7 +488,8 @@ class RouterTransitioner {
      * @private
      */
     _onResetError(failingNodeUrl, nextState, replaceState, err) {
-        console.error("onResetError:", err);
+        console.error("onResetError:", err, failingNodeUrl);
+        this.willTransitionToInProgress = false;
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
@@ -515,7 +517,9 @@ class RouterTransitioner {
      */
     _attemptReconnect(nextState, replaceState) {
         this._oldChain = "old";
-        Apis.reset(this._connectionManager.url, true).then(instance => {
+        Apis.reset(this._connectionManager.url, true, undefined, {
+            enableOrders: true
+        }).then(instance => {
             instance.init_promise
                 .then(this._onConnect.bind(this, nextState, replaceState))
                 .catch(
@@ -542,6 +546,10 @@ class RouterTransitioner {
         if (this._connectInProgress) return this._callCallbacks();
         this._connectInProgress = true;
         if (Apis.instance()) {
+            if (!Apis.instance().orders_api())
+                console.log(
+                    `${Apis.instance().url} does not support the orders api`
+                );
             let currentUrl = Apis.instance().url;
             SettingsActions.changeSetting({
                 setting: "activeNode",
