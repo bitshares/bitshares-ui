@@ -57,7 +57,7 @@ const routes = (
         <Route
             path="/explorer/blocks"
             getComponent={(location, cb) => {
-                System.import("components/Explorer/BlocksContainer")
+                System.import("components/Explorer/Blocks")
                     .then(loadRoute(cb))
                     .catch(errorLoading);
             }}
@@ -73,7 +73,7 @@ const routes = (
         <Route
             path="/explorer/accounts"
             getComponent={(location, cb) => {
-                System.import("components/Explorer/AccountsContainer")
+                System.import("components/Explorer/Accounts")
                     .then(loadRoute(cb))
                     .catch(errorLoading);
             }}

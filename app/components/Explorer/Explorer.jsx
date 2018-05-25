@@ -31,17 +31,18 @@ class Explorer extends React.Component {
                     name: "accounts",
                     link: "/explorer/accounts",
                     translate: "explorer.accounts.title"
-                },
-                {
-                    name: "witnesses",
-                    link: "/explorer/witnesses",
-                    translate: "explorer.witnesses.title"
-                },
-                {
-                    name: "committee_members",
-                    link: "/explorer/committee-members",
-                    translate: "explorer.committee_members.title"
                 }
+                // ,
+                // {
+                //     name: "witnesses",
+                //     link: "/explorer/witnesses",
+                //     translate: "explorer.witnesses.title"
+                // },
+                // {
+                //     name: "committee_members",
+                //     link: "/explorer/committee-members",
+                //     translate: "explorer.committee_members.title"
+                // }
                 // ,
                 // {
                 //     name: "markets",

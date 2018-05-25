@@ -23,6 +23,7 @@ class BlocksContainer extends React.Component {
         );
 
         return <Explorer tab="blocks" content={content} />;
+        //return <Blocks />;
     }
 }
 
