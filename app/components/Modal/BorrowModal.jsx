@@ -834,7 +834,6 @@ class BorrowModalContent extends React.Component {
                         <div className="no-padding grid-content button-group no-overflow">
                             <div
                                 onClick={this._onSubmit.bind(this)}
-                                href
                                 className={buttonClass}
                             >
                                 <Translate content="borrow.adjust" />
@@ -846,7 +845,6 @@ class BorrowModalContent extends React.Component {
                                         this._initialState(this.props)
                                     );
                                 }}
-                                href
                                 className="button hollow primary"
                             >
                                 <Translate content="wallet.reset" />

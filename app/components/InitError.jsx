@@ -149,7 +149,6 @@ class InitError extends React.Component {
                         <div className="button-group">
                             <div
                                 className="button outline"
-                                href
                                 onClick={this.onReloadClick}
                             >
                                 <Translate content={`init_error.retry`} />

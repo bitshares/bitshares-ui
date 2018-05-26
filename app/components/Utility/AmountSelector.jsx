@@ -104,7 +104,6 @@ class AmountSelector extends React.Component {
             ? counterpart.translate(this.props.error)
             : this.formatAmount(this.props.amount);
 
-        console.log("tabIndex:", tabIndex);
         return (
             <div className="amount-selector" style={this.props.style}>
                 <label className="right-label">
