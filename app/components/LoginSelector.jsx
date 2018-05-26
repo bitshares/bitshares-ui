@@ -81,7 +81,6 @@ class LoginSelector extends React.Component {
                             return (
                                 <li key={locale}>
                                     <a
-                                        href
                                         onClick={e => {
                                             e.preventDefault();
                                             IntlActions.switchLocale(locale);
