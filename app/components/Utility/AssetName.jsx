@@ -54,19 +54,19 @@ class AssetName extends React.Component {
                 optional =
                     realPrefix || includeBitAssetDescription
                         ? counterpart.translate(
-                              "gateway.assets." +
-                                  (hasBitPrefix
-                                      ? "bit"
-                                      : realPrefix
-                                            .replace(".", "")
-                                            .toLowerCase()),
-                              {
-                                  asset: name,
-                                  backed: includeBitAssetDescription
-                                      ? desc.main
-                                      : replacedName
-                              }
-                          )
+                            "gateway.assets." +
+                                (hasBitPrefix
+                                    ? "bit"
+                                    : realPrefix
+                                        .replace(".", "")
+                                        .toLowerCase()),
+                            {
+                                asset: name,
+                                backed: includeBitAssetDescription
+                                    ? desc.main
+                                    : replacedName
+                            }
+                        )
                         : "";
             } catch (e) {}
             if (isBitAsset && name === "CNY") {
@@ -82,13 +82,13 @@ class AssetName extends React.Component {
                 ? null
                 : `<div><strong>${upperCasePrefix ||
                       ""}${replacedName.toUpperCase()}</strong><br />${
-                      includeBitAssetDescription
-                          ? ""
-                          : "<br />" +
+                    includeBitAssetDescription
+                        ? ""
+                        : "<br />" +
                             (desc.short ? desc.short : desc.main || "")
-                  }${
-                      !isBitAsset || includeBitAssetDescription ? optional : ""
-                  }</div>`;
+                }${
+                    !isBitAsset || includeBitAssetDescription ? optional : ""
+                }</div>`;
 
             return (
                 <div
@@ -111,7 +111,7 @@ class AssetName extends React.Component {
                     <span className={!noPrefix ? "asset-prefix-replaced" : ""}>
                         {!noPrefix ? prefix : null}
                     </span>
-                    {replacedName}
+                    <span>{replacedName}</span>
                 </span>
             );
         }
