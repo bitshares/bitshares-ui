@@ -264,7 +264,7 @@ class CreateAccountPassword extends React.Component {
                                 <input
                                     style={{
                                         maxWidth: "calc(30rem - 48px)",
-                                        fontSize: "80%"
+                                        fontSize: "73%"
                                     }}
                                     disabled
                                     value={this.state.generatedPassword}
