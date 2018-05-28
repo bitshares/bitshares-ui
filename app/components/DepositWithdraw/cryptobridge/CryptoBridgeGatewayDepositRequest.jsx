@@ -568,7 +568,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            {assetUtils(
+                                            {assetUtils.replaceAssetSymbol(
                                                 this.props.deposit_asset
                                             )}
                                         </td>
