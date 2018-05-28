@@ -142,7 +142,7 @@ class ModalContent extends React.Component {
         );
     }
 }
-ModalContent = BindToChainState(ModalContent, {keep_updating: true});
+ModalContent = BindToChainState(ModalContent);
 
 class SettleModal extends React.Component {
     constructor() {

@@ -2,11 +2,12 @@ import React from "react";
 import {Link} from "react-router/es";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
+import PropTypes from "prop-types";
 
 class LinkToAccountById extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccountName.isRequired,
-        subpage: React.PropTypes.string.isRequired
+        subpage: PropTypes.string.isRequired
     };
 
     static defaultProps = {

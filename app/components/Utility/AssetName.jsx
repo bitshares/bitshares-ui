@@ -3,11 +3,12 @@ import utils from "common/utils";
 import asset_utils from "common/asset_utils";
 import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 class AssetName extends React.Component {
     static propTypes = {
-        replace: React.PropTypes.bool.isRequired,
-        dataPlace: React.PropTypes.string.isRequired
+        replace: PropTypes.bool.isRequired,
+        dataPlace: PropTypes.string.isRequired
     };
 
     static defaultProps = {

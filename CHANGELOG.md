@@ -1,4 +1,36 @@
 ---------------------------------------------------------------------
+Release 2.0.180525
+---------------------------------------------------------------------
+New features
+--------
+- Push new staging builds to https://staging.bitshares.org using Travis
+- #905: Replace react-stockcharts with TradingView charts
+- #1512: Add QR scanner on withdraw (beta)
+- #1448: Display walkthrough when user opens exchange for the first time
+- #1447: Implement popup hint message for Icons all around the UI
+- #1482: Revamped and improved Proposed Transactions tab
+
+Bug fixes and improvements
+--------
+- List some open assets from Openledger (#1554)
+- #1184: React v16 upgrade
+- #1502: Remove HighStock imports as it is no longer needed
+- #1502: Update lodash to v4
+- #1502: Webpack v4 upgrade
+- Fix #1527: Sort orderbook asks properly
+- Fix #1533
+- #1534: Use correct asset precision for Core Exchange Rate update
+- #1535: Enable asset links in transactions
+- Fix #1528: Proposed transactions not updating properly in the ChainStore
+- #1507: Withdraw/Deposit Modal Fixes
+- Fix #1517: Remove hardcoded network fee percentage
+- Fix #1397: Order Expiration Date bug
+- Added DGB, SCR, HERTZ images
+- Update Russian locale file
+- Fix #1516: Exchange header tooltip issue
+- #1515: Add script to fix all locale files
+
+---------------------------------------------------------------------
 Release 2.0.180509
 ---------------------------------------------------------------------
 New features

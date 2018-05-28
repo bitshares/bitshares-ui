@@ -13,11 +13,12 @@ import Icon from "../Icon/Icon";
 import counterpart from "counterpart";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import PropTypes from "prop-types";
 
 class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        synced: React.PropTypes.bool.isRequired
+        synced: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -25,7 +26,7 @@ class Footer extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {
@@ -376,7 +377,7 @@ class Footer extends React.Component {
         this.context.router.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {

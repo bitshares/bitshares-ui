@@ -13,25 +13,26 @@ import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "common/utils";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 class RuDexGatewayDepositRequest extends React.Component {
     static propTypes = {
-        gateway: React.PropTypes.string,
-        deposit_coin_type: React.PropTypes.string,
-        deposit_asset_name: React.PropTypes.string,
-        deposit_account: React.PropTypes.string,
-        receive_coin_type: React.PropTypes.string,
+        gateway: PropTypes.string,
+        deposit_coin_type: PropTypes.string,
+        deposit_asset_name: PropTypes.string,
+        deposit_account: PropTypes.string,
+        receive_coin_type: PropTypes.string,
         account: ChainTypes.ChainAccount,
         issuer_account: ChainTypes.ChainAccount,
-        deposit_asset: React.PropTypes.string,
-        deposit_wallet_type: React.PropTypes.string,
+        deposit_asset: PropTypes.string,
+        deposit_wallet_type: PropTypes.string,
         receive_asset: ChainTypes.ChainAsset,
         deprecated_in_favor_of: ChainTypes.ChainAsset,
-        deprecated_message: React.PropTypes.string,
-        action: React.PropTypes.string,
-        supports_output_memos: React.PropTypes.bool.isRequired,
-        min_amount: React.PropTypes.number,
-        asset_precision: React.PropTypes.number
+        deprecated_message: PropTypes.string,
+        action: PropTypes.string,
+        supports_output_memos: PropTypes.bool.isRequired,
+        min_amount: PropTypes.number,
+        asset_precision: PropTypes.number
     };
 
     constructor(props) {
@@ -550,6 +551,4 @@ class RuDexGatewayDepositRequest extends React.Component {
     }
 }
 
-export default BindToChainState(RuDexGatewayDepositRequest, {
-    keep_updating: true
-});
+export default BindToChainState(RuDexGatewayDepositRequest);

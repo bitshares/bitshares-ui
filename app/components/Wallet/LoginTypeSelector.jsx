@@ -26,14 +26,14 @@ const LoginTypeSelectorView = ({value, onChange}) => (
     </div>
 );
 
-const LoginTypeSelector = () => (
+const LoginTypeSelector = props => (
     <AltContainer
         stores={[WalletUnlockStore]}
         inject={{
             value: () =>
                 WalletUnlockStore.getState().passwordLogin ? "cloud" : "local"
         }}
-        actions={props => ({
+        actions={() => ({
             onChange: event => {
                 const newType = event.target.value;
                 const validValues = ["cloud", "local"];
@@ -46,7 +46,7 @@ const LoginTypeSelector = () => (
             }
         })}
     >
-        <LoginTypeSelectorView {...this.props} />
+        <LoginTypeSelectorView {...props} />
     </AltContainer>
 );
 

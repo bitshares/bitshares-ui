@@ -104,13 +104,47 @@ class MarketsStore {
             onCancelLimitOrderSuccess: MarketsActions.cancelLimitOrderSuccess,
             onCloseCallOrderSuccess: MarketsActions.closeCallOrderSuccess,
             onCallOrderUpdate: MarketsActions.callOrderUpdate,
-            onClearMarket: MarketsActions.clearMarket,
+            // onClearMarket: MarketsActions.clearMarket,
             onGetMarketStats: MarketsActions.getMarketStats,
             onSettleOrderUpdate: MarketsActions.settleOrderUpdate,
             onSwitchMarket: MarketsActions.switchMarket,
             onFeedUpdate: MarketsActions.feedUpdate,
             onToggleStars: MarketsActions.toggleStars
         });
+
+        this.subscribers = new Map();
+
+        this.exportPublicMethods({
+            subscribe: this.subscribe.bind(this),
+            unsubscribe: this.unsubscribe.bind(this),
+            clearSubs: this.clearSubs.bind(this)
+        });
+    }
+
+    /**
+     *  Add a callback that will be called anytime any object in the cache is updated
+     */
+    subscribe(id, callback) {
+        if (this.subscribers.has(id) && this.subscribers.get(id) === callback)
+            return console.error("Subscribe callback already exists", callback);
+        this.subscribers.set(id, callback);
+    }
+
+    /**
+     *  Remove a callback that was previously added via subscribe
+     */
+    unsubscribe(id) {
+        if (this.subscribers.has(id)) {
+            this.subscribers.delete(id);
+        }
+    }
+
+    _notifySubscriber(id, data) {
+        if (this.subscribers.has(id)) this.subscribers.get(id)(data);
+    }
+
+    clearSubs() {
+        this.subscribers.clear();
     }
 
     onGetCollateralPositions(payload) {
@@ -150,6 +184,8 @@ class MarketsStore {
             // Unsub failed, restore activeMarket
             this.activeMarket = payload.market;
         }
+
+        if (payload.resolve) payload.resolve();
     }
 
     onSwitchMarket() {
@@ -212,6 +248,7 @@ class MarketsStore {
     }
 
     onSubscribeMarket(result) {
+        let newMarket = false;
         if (result.switchMarket) {
             this.marketReady = false;
             return this.emitChange();
@@ -236,9 +273,15 @@ class MarketsStore {
         };
 
         if (result.market && result.market !== this.activeMarket) {
-            // console.log("switch active market from", this.activeMarket, "to", result.market);
             this.onClearMarket();
             this.activeMarket = result.market;
+            newMarket = true;
+            /*
+            * To prevent the callback from DataFeed to be called with new data
+            * before subscribeBars in DataFeed has been updated, we clear the
+            * callback subscription here
+            */
+            this.unsubscribe("subscribeBars");
         }
 
         /* Set the feed price (null if not a bitasset market) */
@@ -433,6 +476,16 @@ class MarketsStore {
 
         this.marketReady = true;
         this.emitChange();
+
+        if (newMarket) {
+            this._notifySubscriber(
+                "market_change",
+                this.quoteAsset.get("symbol") +
+                    "_" +
+                    this.baseAsset.get("symbol")
+            );
+        }
+        if (result.resolve) result.resolve();
     }
 
     onCancelLimitOrderSuccess(cancellations) {
@@ -701,14 +754,14 @@ class MarketsStore {
     }
 
     _priceChart() {
-        let volumeData = [];
+        // let volumeData = [];
         let prices = [];
 
         let open, high, low, close, volume;
 
-        let addTime = (time, i, bucketSize) => {
-            return new Date(time.getTime() + i * bucketSize * 1000);
-        };
+        // let addTime = (time, i, bucketSize) => {
+        //     return time + i * bucketSize * 1000;
+        // };
 
         for (let i = 0; i < this.priceHistory.length; i++) {
             let current = this.priceHistory[i];
@@ -821,91 +874,91 @@ class MarketsStore {
                 low = findMin(open, close);
             }
 
-            prices.push({date, open, high, low, close, volume});
-            volumeData.push([date, volume]);
+            prices.push({time: date.getTime(), open, high, low, close, volume});
+            // volumeData.push([date.getTime(), volume]);
         }
 
         // max buckets returned is 200, if we get less, fill in the gaps starting at the first data point
-        let priceLength = prices.length;
-        if (priceLength > 0 && priceLength < 200) {
-            let now = new Date().getTime();
-            // let firstDate = prices[0].date;
-            // ensure there's a final entry close to the current time
-            let i = 1;
-            while (
-                addTime(prices[0].date, i, this.bucketSize).getTime() < now
-            ) {
-                i++;
-            }
-            let finalDate = addTime(prices[0].date, i - 1, this.bucketSize);
-            if (prices[priceLength - 1].date !== finalDate) {
-                if (priceLength === 1) {
-                    prices.push({
-                        date: addTime(finalDate, -1, this.bucketSize),
-                        open: prices[0].close,
-                        high: prices[0].close,
-                        low: prices[0].close,
-                        close: prices[0].close,
-                        volume: 0
-                    });
-                    prices.push({
-                        date: finalDate,
-                        open: prices[0].close,
-                        high: prices[0].close,
-                        low: prices[0].close,
-                        close: prices[0].close,
-                        volume: 0
-                    });
-                    volumeData.push([
-                        addTime(finalDate, -1, this.bucketSize),
-                        0
-                    ]);
-                } else {
-                    prices.push({
-                        date: finalDate,
-                        open: prices[priceLength - 1].close,
-                        high: prices[priceLength - 1].close,
-                        low: prices[priceLength - 1].close,
-                        close: prices[priceLength - 1].close,
-                        volume: 0
-                    });
-                }
-                volumeData.push([finalDate, 0]);
-            }
+        // let priceLength = prices.length;
+        // if (priceLength > 0 && priceLength < 200) {
+        //     let now = new Date();
+        // let firstDate = prices[0].date;
+        // ensure there's a final entry close to the current time
+        // let i = 1;
+        // while (addTime(prices[0].time, i, this.bucketSize) < now) {
+        //     i++;
+        // }
+        // let finalDate = addTime(prices[0].time, i - 1, this.bucketSize);
+        // if (prices[priceLength - 1].date !== finalDate) {
+        //     if (priceLength === 1) {
+        //         prices.push({
+        //             time: addTime(finalDate, -1, this.bucketSize),
+        //             open: prices[0].close,
+        //             high: prices[0].close,
+        //             low: prices[0].close,
+        //             close: prices[0].close,
+        //             volume: 0
+        //         });
+        //         prices.push({
+        //             time: finalDate,
+        //             open: prices[0].close,
+        //             high: prices[0].close,
+        //             low: prices[0].close,
+        //             close: prices[0].close,
+        //             volume: 0
+        //         });
+        //         volumeData.push([
+        //             addTime(finalDate, -1, this.bucketSize),
+        //             0
+        //         ]);
+        //     } else {
+        //         prices.push({
+        //             time: finalDate,
+        //             open: prices[priceLength - 1].close,
+        //             high: prices[priceLength - 1].close,
+        //             low: prices[priceLength - 1].close,
+        //             close: prices[priceLength - 1].close,
+        //             volume: 0
+        //         });
+        //     }
+        //     volumeData.push([finalDate, 0]);
+        // }
 
-            // Loop over the data and fill in any blank time periods
-            for (let ii = 0; ii < prices.length - 1; ii++) {
-                // If next date is beyond one bucket up
-                if (
-                    prices[ii + 1].date.getTime() !==
-                    addTime(prices[ii].date, 1, this.bucketSize).getTime()
-                ) {
-                    // Break if next date is beyond now
-                    if (
-                        addTime(prices[ii].date, 1, this.bucketSize).getTime() >
-                        now
-                    ) {
-                        break;
-                    }
-
-                    prices.splice(ii + 1, 0, {
-                        date: addTime(prices[ii].date, 1, this.bucketSize),
-                        open: prices[ii].close,
-                        high: prices[ii].close,
-                        low: prices[ii].close,
-                        close: prices[ii].close,
-                        volume: 0
-                    });
-                    volumeData.splice(ii + 1, 0, [
-                        addTime(prices[ii].date, 1, this.bucketSize),
-                        0
-                    ]);
-                }
-            }
-        }
+        // Loop over the data and fill in any blank time periods
+        // for (let ii = 0; ii < prices.length - 1; ii++) {
+        //     // If next date is beyond one bucket up
+        //     if (
+        //         prices[ii + 1].time !==
+        //         addTime(prices[ii].time, 1, this.bucketSize)
+        //     ) {
+        //         // Break if next date is beyond now
+        //         if (
+        //             addTime(prices[ii].time, 1, this.bucketSize) >
+        //             now
+        //         ) {
+        //             break;
+        //         }
+        //
+        //         prices.splice(ii + 1, 0, {
+        //             time: addTime(prices[ii].time, 1, this.bucketSize),
+        //             open: prices[ii].close,
+        //             high: prices[ii].close,
+        //             low: prices[ii].close,
+        //             close: prices[ii].close,
+        //             volume: 0
+        //         });
+        //         volumeData.splice(ii + 1, 0, [
+        //             addTime(prices[ii].time, 1, this.bucketSize),
+        //             0
+        //         ]);
+        //     }
+        // }
+        // }
 
         this.priceData = prices;
-        this.volumeData = volumeData;
+        // this.volumeData = volumeData;
+
+        this._notifySubscriber("subscribeBars");
     }
 
     _orderBook(limitsChanged = true, callsChanged = false) {

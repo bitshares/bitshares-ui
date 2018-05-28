@@ -15,6 +15,7 @@ import accountUtils from "common/account_utils";
 import FloatingDropdown from "../Utility/FloatingDropdown";
 import TypeAhead from "../Utility/TypeAhead";
 import cnames from "classnames";
+import PropTypes from "prop-types";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -26,18 +27,18 @@ import cnames from "classnames";
 
 class AccountSelector extends React.Component {
     static propTypes = {
-        label: React.PropTypes.string, // a translation key for the label
-        error: React.PropTypes.element, // the error message override
-        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
-        onChange: React.PropTypes.func, // a method to be called any time user input changes
-        onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
-        onAction: React.PropTypes.func, // a method called when Add button is clicked
-        accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
+        label: PropTypes.string, // a translation key for the label
+        error: PropTypes.element, // the error message override
+        placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        onChange: PropTypes.func, // a method to be called any time user input changes
+        onAccountChanged: PropTypes.func, // a method to be called when existing account is selected
+        onAction: PropTypes.func, // a method called when Add button is clicked
+        accountName: PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
-        tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
-        allowUppercase: React.PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: React.PropTypes.bool
+        tabIndex: PropTypes.number, // tabindex property to be passed to input tag
+        disableActionButton: PropTypes.bool, // use it if you need to disable action button,
+        allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
+        typeahead: PropTypes.array
     };
 
     static defaultProps = {
@@ -205,7 +206,9 @@ class AccountSelector extends React.Component {
             displayText =
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
-                    : account.accountType === "id" ? account.get("name") : null;
+                    : account.accountType === "id"
+                        ? account.get("name")
+                        : null;
         }
 
         // Without Typeahead Error Handling
@@ -490,7 +493,7 @@ class AccountSelector extends React.Component {
     }
 }
 
-AccountSelector = BindToChainState(AccountSelector, {keep_updating: true});
+AccountSelector = BindToChainState(AccountSelector);
 
 AccountSelector = connect(AccountSelector, {
     listenTo() {

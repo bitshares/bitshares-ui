@@ -9,10 +9,11 @@ import WalletActions from "actions/WalletActions";
 import {connect} from "alt-react";
 import cname from "classnames";
 import SettingsActions from "actions/SettingsActions";
+import PropTypes from "prop-types";
 
 class CreateNewWallet extends Component {
     static propTypes = {
-        hideTitle: React.PropTypes.bool
+        hideTitle: PropTypes.bool
     };
 
     constructor(props) {

@@ -27,6 +27,7 @@ import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
+import PropTypes from "prop-types";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -40,8 +41,8 @@ const SUBMENUS = {
 
 class Header extends React.Component {
     static contextTypes = {
-        location: React.PropTypes.object.isRequired,
-        router: React.PropTypes.object.isRequired
+        location: PropTypes.object.isRequired,
+        router: PropTypes.object.isRequired
     };
 
     constructor(props, context) {

@@ -19,10 +19,11 @@ import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
+import PropTypes from "prop-types";
 
 class CreateAccountPassword extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor() {

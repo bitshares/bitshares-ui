@@ -131,6 +131,7 @@ class ApiNode extends React.Component {
                             id="automatic_node_switcher"
                             type="checkbox"
                             checked={autoActive}
+                            onChange={() => {}}
                         />
                         <label />
                     </span>
@@ -178,6 +179,7 @@ class ApiNode extends React.Component {
                                 id="automatic_node_switcher"
                                 type="checkbox"
                                 checked={autoActive}
+                                onChange={() => {}}
                             />
                             <label />
                         </span>

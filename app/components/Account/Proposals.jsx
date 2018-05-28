@@ -305,4 +305,4 @@ class Proposals extends Component {
     }
 }
 
-export default BindToChainState(Proposals, {keep_updating: true});
+export default BindToChainState(Proposals);

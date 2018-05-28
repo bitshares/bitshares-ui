@@ -1,10 +1,11 @@
 import React from "react";
 import {Tabs, Tab} from "../Utility/Tabs";
+import PropTypes from "prop-types";
 
 class Explorer extends React.Component {
     static propTypes = {
-        tab: React.PropTypes.string,
-        content: React.PropTypes.object
+        tab: PropTypes.string,
+        content: PropTypes.object
     };
 
     static defaultProps = {

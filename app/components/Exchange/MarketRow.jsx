@@ -6,6 +6,7 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import PropTypes from "prop-types";
 
 class MarketRow extends React.Component {
     static defaultProps = {
@@ -13,7 +14,7 @@ class MarketRow extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor() {
