@@ -1,23 +1,39 @@
 import {Apis} from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
-import availableGateways from "common/gateways";
+import availableGateways, {gatewayPrefixes} from "common/gateways";
 import counterpart from "counterpart";
-
-const gatewayPrefixes = Object.keys(availableGateways);
 
 export function getGatewayName(asset) {
     if (asset.get("issuer") === "1.2.0") {
         return counterpart.translate("exchange.native");
     }
 
-    const prefix =
+    let prefix =
         asset.get("symbol") === "PPY"
             ? "RUDEX"
             : asset.get("symbol").split(".")[0];
-    if (gatewayPrefixes.indexOf(prefix) !== -1) {
+
+    let assetName =
+        asset.get("symbol") === "PPY" ? "RUDEX.PPY" : asset.get("symbol");
+
+    if (hasGatewayPrefix(assetName)) {
         return availableGateways[prefix].name;
     }
     return null;
+}
+
+export function hasGatewayPrefix(name) {
+    let prefix = "";
+    if (name === "PPY") {
+        prefix = "RUDEX";
+    } else {
+        prefix = name.split(".")[0];
+    }
+
+    if (gatewayPrefixes.indexOf(prefix) !== -1) {
+        return true;
+    }
+    return false;
 }
 
 export function getGatewayStatusByAsset(
