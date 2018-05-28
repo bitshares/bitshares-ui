@@ -185,6 +185,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             quoteSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isQuoteSelected
@@ -204,6 +205,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             baseSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isBaseSelected
