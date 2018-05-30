@@ -482,7 +482,10 @@ class MarketsStore {
             this._priceChart();
         }
 
-        if (result.groupedOrdersBids && result.groupedOrdersAsks) {
+        if (
+            result.groupedOrdersBids.length > 0 ||
+            result.groupedOrdersAsks.length > 0
+        ) {
             const groupedOrdersBids = [];
             const groupedOrdersAsks = [];
             result.groupedOrdersBids.forEach((order, index) => {
@@ -1083,21 +1086,21 @@ class MarketsStore {
                     return b.getPrice() - a.getPrice();
                 })
                 .forEach(a => {
-                    totalToReceive.plus(a.amountToReceive(true));
                     totalForSale.plus(a.amountForSale());
+                    totalToReceive.plus(a.amountToReceive(true));
 
                     a.setTotalForSale(totalForSale.clone());
                     a.setTotalToReceive(totalToReceive.clone());
                 });
 
             totalToReceive = new Asset({
-                asset_id: this.quoteAsset.get("id"),
-                precision: this.quoteAsset.get("precision")
+                asset_id: this.baseAsset.get("id"),
+                precision: this.baseAsset.get("precision")
             });
 
             totalForSale = new Asset({
-                asset_id: this.baseAsset.get("id"),
-                precision: this.baseAsset.get("precision")
+                asset_id: this.quoteAsset.get("id"),
+                precision: this.quoteAsset.get("precision")
             });
 
             groupedOrdersAsks

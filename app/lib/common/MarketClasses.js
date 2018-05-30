@@ -898,12 +898,7 @@ class GroupedOrder {
         this.is_bid = is_bid;
         this.max_price = order.max_price;
         this.min_price = order.min_price;
-        this.total_for_sale = parseInt(order.total_for_sale, 10);
-
-        this._price = {
-            min: null,
-            max: null
-        };
+        this.for_sale = parseInt(order.total_for_sale, 10);
         this._for_sale = null;
         this._to_receive = null;
 
@@ -914,9 +909,9 @@ class GroupedOrder {
                   precision: assets[order.min_price.base.asset_id].precision
               })
             : new Asset({
-                  asset_id: order.max_price.quote.asset_id,
-                  amount: parseInt(order.max_price.quote.amount, 10),
-                  precision: assets[order.max_price.quote.asset_id].precision
+                  asset_id: order.max_price.base.asset_id,
+                  amount: parseInt(order.max_price.base.amount, 10),
+                  precision: assets[order.max_price.base.asset_id].precision
               });
         const quote = this.is_bid
             ? new Asset({
@@ -925,9 +920,9 @@ class GroupedOrder {
                   precision: assets[order.min_price.quote.asset_id].precision
               })
             : new Asset({
-                  asset_id: order.max_price.base.asset_id,
-                  amount: parseInt(order.max_price.base.amount, 10),
-                  precision: assets[order.max_price.base.asset_id].precision
+                  asset_id: order.max_price.quote.asset_id,
+                  amount: parseInt(order.max_price.quote.amount, 10),
+                  precision: assets[order.max_price.quote.asset_id].precision
               });
 
         this.sell_price = new Price({
@@ -938,9 +933,14 @@ class GroupedOrder {
         this.base = base;
         this.quote = quote;
 
-        this.sum_for_sale = this.amountForSale().getAmount({real: true});
-        this.sum_to_receive = this.amountToReceive().getAmount({real: true});
-        this.market_base = this.quote.asset_id;
+        this.total_for_sale = this.amountForSale().getAmount({real: true});
+        this.total_to_receive = this.amountToReceive().getAmount({real: true});
+        this._total_for_sale = null;
+        this._total_to_receive = null;
+
+        this.market_base = this.is_bid
+            ? this.base.asset_id
+            : this.quote.asset_id;
     }
 
     isBid() {
@@ -955,74 +955,16 @@ class GroupedOrder {
         if (this._real_price) {
             return this._real_price;
         }
-        return (this._real_price = p.toReal());
-    }
-
-    getOriginalPrice(priceType = "min") {
-        if (this._price[priceType]) return this._price[priceType];
-        if (priceType === "min") {
-            const base = this.is_bid
-                ? new Asset({
-                      asset_id: order.min_price.base.asset_id,
-                      amount: parseInt(order.min_price.base.amount, 10),
-                      precision: assets[order.min_price.base.asset_id].precision
-                  })
-                : new Asset({
-                      asset_id: order.min_price.quote.asset_id,
-                      amount: parseInt(order.min_price.quote.amount, 10),
-                      precision:
-                          assets[order.min_price.quote.asset_id].precision
-                  });
-            const quote = this.is_bid
-                ? new Asset({
-                      asset_id: order.min_price.quote.asset_id,
-                      amount: parseInt(order.min_price.quote.amount, 10),
-                      precision:
-                          assets[order.min_price.quote.asset_id].precision
-                  })
-                : new Asset({
-                      asset_id: order.min_price.base.asset_id,
-                      amount: parseInt(order.min_price.base.amount, 10),
-                      precision: assets[order.min_price.base.asset_id].precision
-                  });
-        } else {
-            const base = this.is_bid
-                ? new Asset({
-                      asset_id: order.max_price.base.asset_id,
-                      amount: parseInt(order.max_price.base.amount, 10),
-                      precision: assets[order.max_price.base.asset_id].precision
-                  })
-                : new Asset({
-                      asset_id: order.max_price.quote.asset_id,
-                      amount: parseInt(order.max_price.quote.amount, 10),
-                      precision:
-                          assets[order.max_price.quote.asset_id].precision
-                  });
-            const quote = this.is_bid
-                ? new Asset({
-                      asset_id: order.max_price.quote.asset_id,
-                      amount: parseInt(order.max_price.quote.amount, 10),
-                      precision:
-                          assets[order.max_price.quote.asset_id].precision
-                  })
-                : new Asset({
-                      asset_id: order.max_price.base.asset_id,
-                      amount: parseInt(order.max_price.base.amount, 10),
-                      precision: assets[order.max_price.base.asset_id].precision
-                  });
-        }
-
-        return (this._price[priceType] = new Price({
-            base,
-            quote
-        }));
+        return (this._real_price = p.toReal(
+            p.base.asset_id !== this.market_base
+        ));
     }
 
     amountForSale() {
         if (this._for_sale) return this._for_sale;
         return (this._for_sale = new Asset({
             asset_id: this.sell_price.base.asset_id,
-            amount: this.total_for_sale,
+            amount: this.for_sale,
             precision: this.assets[this.sell_price.base.asset_id].precision
         }));
     }
@@ -1041,10 +983,6 @@ class GroupedOrder {
     // }
 
     _clearCache() {
-        this._price = {
-            min: null,
-            max: null
-        };
         this._for_sale = null;
         this._to_receive = null;
         this._total_to_receive = null;
@@ -1055,9 +993,7 @@ class GroupedOrder {
     ne(order) {
         return (
             this.sell_price.ne(order.sell_price) ||
-            this.total_for_sale !== order.total_for_sale ||
-            this.totalToReceive() !== order.totalToReceive() ||
-            this.totalForSale() != order.totalForSale()
+            this.for_sale !== order.for_sale
         );
     }
 
@@ -1071,6 +1007,7 @@ class GroupedOrder {
 
     setTotalForSale(total) {
         this.total_for_sale = total;
+        this._total_to_receive = null;
     }
 
     totalToReceive({noCache = false} = {}) {
