@@ -114,7 +114,7 @@ class AssetName extends React.Component {
                     <span className={!noPrefix ? "asset-prefix-replaced" : ""}>
                         {!noPrefix ? prefix : null}
                     </span>
-                    {replacedName}
+                    <span>{replacedName}</span>
                 </span>
             );
         }

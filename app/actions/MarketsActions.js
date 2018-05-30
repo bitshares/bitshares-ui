@@ -187,7 +187,6 @@ class MarketsActions {
                         let startDate2 = new Date();
                         let startDate3 = new Date();
                         let endDate = new Date();
-                        let startDateShort = new Date();
                         startDate = new Date(
                             startDate.getTime() -
                                 bucketSize * bucketCount * 1000
@@ -201,9 +200,6 @@ class MarketsActions {
                                 bucketSize * bucketCount * 3000
                         );
                         endDate.setDate(endDate.getDate() + 1);
-                        startDateShort = new Date(
-                            startDateShort.getTime() - 3600 * 50 * 1000
-                        );
 
                         subBatchResults = subBatchResults.clear();
                         dispatchSubTimeout = null;
@@ -349,7 +345,6 @@ class MarketsActions {
                 let startDate2 = new Date();
                 let startDate3 = new Date();
                 let endDate = new Date();
-                let startDateShort = new Date();
                 startDate = new Date(
                     startDate.getTime() - bucketSize * bucketCount * 1000
                 );
@@ -358,9 +353,6 @@ class MarketsActions {
                 );
                 startDate3 = new Date(
                     startDate3.getTime() - bucketSize * bucketCount * 3000
-                );
-                startDateShort = new Date(
-                    startDateShort.getTime() - 3600 * 50 * 1000
                 );
                 endDate.setDate(endDate.getDate() + 1);
                 if (__DEV__) console.time("Fetch market data");

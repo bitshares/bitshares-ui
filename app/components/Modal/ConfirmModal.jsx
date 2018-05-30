@@ -75,7 +75,6 @@ class ConfirmModal extends React.Component {
                     <div className="grid-content button-group no-overflow">
                         <a
                             className="button primary"
-                            href
                             onClick={this.confirmClicked.bind(this)}
                         >
                             {this.state.confirmText}
