@@ -61,7 +61,7 @@ class AccountSelector extends React.Component {
         if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
 
-        if (!this.props.typeahead && !!accountName)
+        if (!this.props.typeahead && accountName)
             this.onInputChanged(accountName);
     }
 
@@ -119,7 +119,7 @@ class AccountSelector extends React.Component {
         // - Always returns account object
         if (!typeahead) {
             if (onChange) onChange(_accountName);
-            if (onAccountChanged) onAccountChanged(_account);
+            if (onAccountChanged && _account) onAccountChanged(_account);
         }
     }
 

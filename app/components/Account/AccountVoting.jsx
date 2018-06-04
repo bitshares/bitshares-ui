@@ -678,15 +678,14 @@ class AccountVoting extends React.Component {
 
         let proxyInput = (
             <AccountSelector
-                hideImage
-                style={{width: "50%", maxWidth: 350}}
+                style={{width: "50%", maxWidth: 250, marginBottom: 10}}
                 account={this.state.current_proxy_input}
                 accountName={this.state.current_proxy_input}
                 onChange={this.onProxyChange.bind(this)}
                 onAccountChanged={this.onProxyAccountFound}
-                typeahead={true}
                 tabIndex={1}
                 placeholder="Proxy not set"
+                hideImage
             >
                 <span
                     style={{
