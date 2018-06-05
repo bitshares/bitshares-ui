@@ -237,7 +237,7 @@ class App extends React.Component {
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height} />
-                    <div className="grid-block">
+                    <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             {this.props.children}
                         </div>

@@ -674,7 +674,7 @@
             "time": "Time",
             "title": "Block",
             "transactions": "Transaction count",
-            "trx": "Transaction",
+            "trx": "Tx",
             "witness": "Witness"
         },
         "blocks": {

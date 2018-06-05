@@ -122,6 +122,7 @@ const routes = (
         <Route path="settings" component={SettingsContainer} />
         <Route path="settings/:tab" component={SettingsContainer} />
         <Route path="block/:height" component={BlockContainer} />
+        <Route path="block/:height/:txIndex" component={BlockContainer} />
         <Route path="asset/:symbol" component={Asset} />
         <Route path="create-account" component={LoginSelector}>
             <Route path="wallet" component={CreateAccount} />

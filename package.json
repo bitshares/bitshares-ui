@@ -174,6 +174,7 @@
         "react-qr-reader": "^2.1.0",
         "react-responsive-mixin": "^0.4.0",
         "react-router": "^3.0.2",
+        "react-scroll": "^1.7.9",
         "react-stockcharts": "^0.6.1",
         "react-tooltip": "^3.2.2",
         "react-transition-group": "^1.2.0",
