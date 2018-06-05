@@ -2,11 +2,12 @@ import React from "react";
 import {connect} from "alt-react";
 import LazyImage from "./LazyImage";
 import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
+import PropTypes from "prop-types";
 
 class AssetImage extends React.Component {
     static propTypes = {
-        name: React.PropTypes.string,
-        marketId: React.PropTypes.string
+        name: PropTypes.string,
+        marketId: PropTypes.string
     };
 
     constructor(props) {

@@ -33,10 +33,11 @@ import {
     KeyFileLabel
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
+import PropTypes from "prop-types";
 
 class WalletUnlockModal extends React.Component {
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {

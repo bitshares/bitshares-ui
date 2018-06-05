@@ -11,14 +11,15 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import AddressIndex from "stores/AddressIndex";
 import PrivateKeyStore from "stores/PrivateKeyStore";
+import PropTypes from "prop-types";
 
 class AccountPermissionRow extends React.Component {
     static propTypes = {
-        account: React.PropTypes.object,
-        pubkey: React.PropTypes.string,
-        address: React.PropTypes.string,
-        onRemoveItem: React.PropTypes.func.isRequired,
-        weights: React.PropTypes.object
+        account: PropTypes.object,
+        pubkey: PropTypes.string,
+        address: PropTypes.string,
+        onRemoveItem: PropTypes.func.isRequired,
+        weights: PropTypes.object
     };
 
     shouldComponentUpdate(nextProps) {
@@ -76,7 +77,7 @@ class AccountPermissionRow extends React.Component {
                     ) : pubKey ? (
                         <div className="account-image">
                             <PrivateKeyView pubkey={pubKey}>
-                                <Icon name="key" size="4x" />
+                                <Icon name="key" title="icons.key" size="4x" />
                             </PrivateKeyView>
                         </div>
                     ) : null}
@@ -105,13 +106,13 @@ class AccountPermissionRow extends React.Component {
 class AccountPermissionsList extends React.Component {
     static propTypes = {
         accounts: ChainTypes.ChainObjectsList,
-        onAddItem: React.PropTypes.func.isRequired,
-        onRemoveItem: React.PropTypes.func.isRequired,
-        validateAccount: React.PropTypes.func,
-        label: React.PropTypes.string.isRequired, // a translation key for the label,
-        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
-        tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        weights: React.PropTypes.object // weights: hash of {account id -> weight}
+        onAddItem: PropTypes.func.isRequired,
+        onRemoveItem: PropTypes.func.isRequired,
+        validateAccount: PropTypes.func,
+        label: PropTypes.string.isRequired, // a translation key for the label,
+        placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        tabIndex: PropTypes.number, // tabindex property to be passed to input tag
+        weights: PropTypes.object // weights: hash of {account id -> weight}
     };
 
     constructor(props) {

@@ -21,7 +21,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs/es";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import {openledgerAPIs} from "api/apiConfig";
 
@@ -782,7 +782,7 @@ class DepositWithdrawContent extends DecimalChecker {
                         : parseInt(currentBalance.get("balance"), 10)
                 )}
             >
-                <Icon name="clippy" />
+                <Icon name="clippy" title="icons.clippy.withdraw_full" />
             </button>
         );
 

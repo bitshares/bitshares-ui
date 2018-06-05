@@ -1,7 +1,8 @@
-import React, {PropTypes, Component} from "react";
+import React, {Component} from "react";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import cname from "classnames";
+import PropTypes from "prop-types";
 
 export default class PasswordConfirm extends Component {
     static propTypes = {

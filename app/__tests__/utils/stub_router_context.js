@@ -1,40 +1,44 @@
-import React from "react"; 
+import React from "react";
 
 let stubRouterContext = (Component, props, stubs) => {
-    function RouterStub() { }
+    function RouterStub() {}
 
-    Object.assign(RouterStub, {
-      makePath () {},
-      makeHref () {},
-      transitionTo () {},
-      replaceWith () {},
-      goBack () {},
-      getCurrentPath () {},
-      getCurrentRoutes () {},
-      getCurrentPathname () {},
-      getCurrentParams () {},
-      getCurrentQuery () {},
-      isActive () {},
-      getRouteAtDepth() {},
-      setRouteComponentAtDepth() {}
-    }, stubs);
+    Object.assign(
+        RouterStub,
+        {
+            makePath() {},
+            makeHref() {},
+            transitionTo() {},
+            replaceWith() {},
+            goBack() {},
+            getCurrentPath() {},
+            getCurrentRoutes() {},
+            getCurrentPathname() {},
+            getCurrentParams() {},
+            getCurrentQuery() {},
+            isActive() {},
+            getRouteAtDepth() {},
+            setRouteComponentAtDepth() {}
+        },
+        stubs
+    );
 
     return React.createClass({
-      childContextTypes: {
-        router: React.PropTypes.func,
-        routeDepth: React.PropTypes.number
-      },
+        childContextTypes: {
+            router: PropTypes.func,
+            routeDepth: PropTypes.number
+        },
 
-      getChildContext () {
-          return {
-            router: RouterStub,
-            routeDepth: 0
-          };
-      },
+        getChildContext() {
+            return {
+                router: RouterStub,
+                routeDepth: 0
+            };
+        },
 
-      render () {
-          return <Component {...props} />;
-      }
+        render() {
+            return <Component {...props} />;
+        }
     });
 };
 

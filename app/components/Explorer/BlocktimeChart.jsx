@@ -1,6 +1,6 @@
 import React from "react";
-import ReactHighstock from "react-highcharts/dist/ReactHighstock";
-import {takeRight} from "lodash";
+import ReactHighchart from "react-highcharts";
+import {takeRight} from "lodash-es";
 import counterpart from "counterpart";
 
 class BlocktimeChart extends React.Component {
@@ -148,7 +148,7 @@ class BlocktimeChart extends React.Component {
         };
 
         return blockTimes.length ? (
-            <ReactHighstock ref="chart" config={config} />
+            <ReactHighchart ref="chart" config={config} />
         ) : null;
     }
 }
