@@ -3,6 +3,7 @@ var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {ChainTypes} from "bitsharesjs/es";
+import asset_utils from "./asset_utils";
 var {object_type} = ChainTypes;
 
 var Utils = {
@@ -422,13 +423,8 @@ var Utils = {
         }
 
         // rename specific CryptoBridge Coins
-        if (this.isBridgeCoinAsset(asset)) {
-            const realNames = {
-                BRIM: "BR1M",
-                SUBIX: "SUB1X",
-                DV: "DV7",
-                NLC: "NLC2"
-            };
+        if (asset_utils.isBridgeCoinAsset(asset)) {
+            const realNames = asset_utils.getRealAssetNames();
 
             if (realNames[name]) {
                 name = realNames[name];
@@ -444,11 +440,6 @@ var Utils = {
             prefix,
             isBitAsset: !!isBitAsset
         };
-    },
-
-    isBridgeCoinAsset(asset) {
-        if (!asset) return false;
-        return asset.get("symbol").indexOf("BRIDGE.") === 0;
     },
 
     timeStringToGrapheneDate(time_string) {

@@ -31,7 +31,7 @@ class AssetName extends React.Component {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
         const name = asset.get("symbol");
 
-        const isBridgeCoinAsset = utils.isBridgeCoinAsset(asset);
+        const isBridgeCoinAsset = asset_utils.isBridgeCoinAsset(asset);
         if (isBridgeCoinAsset) noPrefix = true;
 
         const isBitAsset = asset.has("bitasset");

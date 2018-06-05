@@ -85,8 +85,32 @@ export default class AssetUtils {
         return parsed ? parsed : {main: description};
     }
 
+    static getRealAssetNames() {
+        return {
+            BRIM: "BR1M",
+            SUBIX: "SUB1X",
+            DV: "DV7",
+            NLC: "NLC2",
+            XDOGE: "DOGE",
+            DOGE: "DOGE (DEPRECATED)"
+        };
+    }
+
+    static replaceAssetSymbol(symbol) {
+        const names = this.getRealAssetNames();
+        if (symbol && names[symbol]) {
+            return names[symbol];
+        }
+        return symbol;
+    }
+
     static getCleanAssetSymbol(symbol) {
         return symbol.toUpperCase().replace("BRIDGE.", "");
+    }
+
+    static isBridgeCoinAsset(asset) {
+        if (!asset) return false;
+        return asset.get("symbol").indexOf("BRIDGE.") === 0;
     }
 
     static addCryptoBridgeNameSpace(symbol) {

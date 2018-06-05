@@ -325,7 +325,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             content="gateway.asset_to_deposit"
                                         />
                                         <td style={depositRightCellStyle}>
-                                            {this.props.deposit_asset}
+                                            {assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
+                                            )}
                                         </td>
                                     </tr>
                                     <tr>
@@ -408,7 +410,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                         </label>
                         <AssetDepositFeeWarning
                             asset={{
-                                name: this.props.deposit_asset,
+                                name: assetUtils.replaceAssetSymbol(
+                                    this.props.deposit_asset
+                                ),
                                 depositFeeEnabled: this.props
                                     .deposit_fee_enabled,
                                 depositFeeTimeframe: this.props
@@ -448,7 +452,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                             component="label"
                             content="gateway.min_deposit_warning_asset"
                             minDeposit={min_deposit || gate_fee * 2}
-                            coin={this.props.deposit_asset}
+                            coin={assetUtils.replaceAssetSymbol(
+                                this.props.deposit_asset
+                            )}
                             style={labelStyle}
                         />
 
@@ -562,7 +568,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            {this.props.deposit_asset}
+                                            {assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
+                                            )}
                                         </td>
                                     </tr>
                                     <tr>
