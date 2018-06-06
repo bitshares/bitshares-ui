@@ -101,7 +101,7 @@ class Row extends React.Component {
             <tr>
                 {this.props.includeOperationId ? (
                     <td style={{textAlign: "left"}}>
-                        {this.props.block}#{this.props.txIndex}<br />
+                        {/* {this.props.block}#{this.props.txIndex}<br /> */}
                         {this.props.operationId}
                     </td>
                 ) : null}

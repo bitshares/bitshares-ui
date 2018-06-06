@@ -68,11 +68,11 @@ class Block extends React.Component {
         this._getBlock(this.props.height);
 
         Events.scrollEvent.register("begin", () => {
-            console.log("begin", arguments);
+            //console.log("begin", arguments);
         });
 
         Events.scrollEvent.register("end", () => {
-            console.log("end", arguments);
+            //console.log("end", arguments);
             this.setState({scrollEnded: true});
         });
     }
@@ -173,11 +173,11 @@ class Block extends React.Component {
         );
 
         if (this.props.scrollToIndex && !this.state.scrollEnded) {
-            console.log("Do Scroll!");
             scroller.scrollTo(`tx_${this.props.scrollToIndex}`, {
                 duration: 1500,
                 delay: 100,
                 smooth: true,
+                offset: -100,
                 containerId: "blockContainer"
             });
         }
@@ -244,7 +244,11 @@ class Block extends React.Component {
                                 </div>
                             </div>
                             {block ? <TransactionList block={block} /> : null}
-                            <a onClick={this.scrollToTop}>To the top!</a>
+                            <div style={{textAlign: "center", marginBottom: 20}}>
+                                <a onClick={this.scrollToTop}>
+                                    <Translate content="global.return_to_top" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
