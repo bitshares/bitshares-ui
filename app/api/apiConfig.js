@@ -1,5 +1,7 @@
-const cbApiBase =
+const CB_API_BASE =
+    __DEVNET_API__ ||
     "https://api." + (__TESTNET__ ? "testnet." : "") + "crypto-bridge.org";
+const CB_FAUCET = CB_API_BASE;
 
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
@@ -25,14 +27,6 @@ export const rudexAPIs = {
     BASE: "https://gateway.rudex.org/api/v0_1",
     COINS_LIST: "/coins",
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
-};
-
-export const cryptoBridgeAPIs = {
-    BASE: (__CB_BASE_URL__ || cbApiBase) + "/api/v1",
-    COINS_LIST: "/coins",
-    ACTIVE_WALLETS: "/wallets",
-    MARKETS: "/markets",
-    TRADING_PAIRS: "/trading-pairs"
 };
 
 export const widechainAPIs = {
@@ -68,23 +62,33 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const cryptoBridgeAPIs = {
+    BASE: CB_API_BASE + "/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/wallets",
+    MARKETS: "/markets",
+    TRADING_PAIRS: "/trading-pairs"
+};
+
+const WSS_DEV_NODES = [
+    {
+        url: "wss://fake.automatic-selection.com",
+        location: {translate: "settings.api_closest"}
+    },
+    {
+        url: "wss://bitshares.testnet.crypto-bridge.org",
+        location: "DEVNET - CryptoBridge"
+    }
+];
+
 const WSS_TEST_NODES = [
     {
         url: "wss://fake.automatic-selection.com",
         location: {translate: "settings.api_closest"}
     },
-    {url: "ws://127.0.0.1:8090", location: "Locally hosted"},
     {
-        url: "wss://bitshares.testnet.crypto-bridge.org",
+        url: "ws://dev1.gpi.li:8090",
         location: "TESTNET - CryptoBridge"
-    },
-    {
-        url: "wss://node.testnet.bitshares.eu",
-        location: "TESTNET - BitShares Europe (Frankfurt, Germany)"
-    },
-    {
-        url: "wss://testnet.nodes.bitshares.ws",
-        location: "TESTNET - BitShares Infrastructure Program"
     }
 ];
 
@@ -93,10 +97,6 @@ const WSS_PROD_NODES = [
         url: "wss://fake.automatic-selection.com",
         location: {translate: "settings.api_closest"}
     },
-
-    /* LOCAL */
-
-    {url: "ws://127.0.0.1:8090", location: "Locally hosted"},
 
     /* ASIA */
 
@@ -189,25 +189,19 @@ const WSS_PROD_NODES = [
     {
         url: "wss://ap-southeast-2.bts.crypto-bridge.org",
         location: "Sydney, Australia"
-    },
+    }
     // {url: "wss://ap-south-1.bts.crypto-bridge.org", location: "Mumbai, India"}, // DNS_PROBE_FINISHED_NXDOMAIN
     // {url: "wss://ca-central-1.bts.crypto-bridge.org", location: "Montreal, Canada"},
-
-    // Testnet
-    {
-        url: "wss://node.testnet.bitshares.eu",
-        location: "TESTNET - BitShares Europe (Frankfurt, Germany)"
-    },
-    {
-        url: "wss://testnet.nodes.bitshares.ws",
-        location: "TESTNET - BitShares Infrastructure Program"
-    }
 ];
 
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
-    WS_NODE_LIST: __TESTNET__ ? WSS_TEST_NODES : WSS_PROD_NODES,
-    DEFAULT_FAUCET: __CB_BASE_URL__ || cbApiBase,
-    TESTNET_FAUCET: __CB_BASE_URL__ || cbApiBase,
+    WS_NODE_LIST: __DEVNET__
+        ? WSS_DEV_NODES
+        : __TESTNET__
+            ? WSS_TEST_NODES
+            : WSS_PROD_NODES,
+    DEFAULT_FAUCET: CB_FAUCET,
+    TESTNET_FAUCET: CB_FAUCET,
     RPC_URL: "https://openledger.info/api/"
 };

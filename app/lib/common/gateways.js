@@ -68,7 +68,7 @@ export const availableGateways = {
         id: "GDEX",
         name: "GDEX",
         baseAPI: gdex2APIs,
-        isEnabled: true,
+        isEnabled: false,
         options: {
             enabled: false,
             selected: false
