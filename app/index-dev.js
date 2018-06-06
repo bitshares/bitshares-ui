@@ -1,6 +1,7 @@
 import React from "react";
 import {render as reactRender} from "react-dom";
 import {AppContainer} from "react-hot-loader";
+import {ChainConfig} from "bitsharesjs-ws";
 // import utils from "./dl_cli_index";
 // if (window) {
 //     window.$utils = utils;
@@ -13,6 +14,13 @@ import {AppContainer} from "react-hot-loader";
 import Routes from "./Routes-dev";
 
 require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
+
+/* ADD CRYPTOBRIDGE TEST TO CHAIN CONFIG */
+ChainConfig.networks.CryptoBridgeTest = {
+    core_asset: "BTS",
+    address_prefix: "BTS",
+    chain_id: "2821abbb9923c830cf8300136c431674756270d9019f56c00e80b296e3afc079"
+};
 
 const rootEl = document.getElementById("content");
 const render = () => {

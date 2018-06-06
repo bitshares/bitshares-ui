@@ -1,6 +1,7 @@
 import {Apis} from "bitsharesjs-ws";
 import GatewayActions from "actions/GatewayActions";
 import availableGateways from "common/gateways";
+import {ChainUtilities} from "chain/chainIds";
 
 export function getGatewayStatusByAsset(
     selectedAsset,
@@ -50,10 +51,10 @@ export function getAssetAndGateway(symbol) {
     return {selectedGateway, selectedAsset};
 }
 
-export function updateGatewayBackers(chain = "4018d784") {
+export function updateGatewayBackers() {
     // Only fetch this when on desired chain, default to main chain
     if (!Apis.instance().chain_id) return;
-    if (Apis.instance().chain_id.substr(0, 8) === chain) {
+    if (ChainUtilities.isValidChainId(Apis.instance().chain_id)) {
         // BlockTrades
         GatewayActions.fetchPairs.defer();
 

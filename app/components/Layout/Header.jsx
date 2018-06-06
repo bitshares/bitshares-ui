@@ -27,6 +27,7 @@ import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
+import {ChainUtilities} from "chain/chainIds";
 
 var logo = require("assets/logo-cryptobridge.png");
 
@@ -350,7 +351,7 @@ class Header extends React.Component {
         const enableDepositWithdraw =
             Apis.instance() &&
             Apis.instance().chain_id &&
-            Apis.instance().chain_id.substr(0, 8) === "4018d784";
+            ChainUtilities.isValidChainId(Apis.instance().chain_id);
 
         if (starredAccounts.size) {
             for (let i = tradingAccounts.length - 1; i >= 0; i--) {

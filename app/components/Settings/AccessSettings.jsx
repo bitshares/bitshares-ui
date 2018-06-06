@@ -105,7 +105,9 @@ class ApiNode extends React.Component {
         * so we force enable activation of it even though it shows as 'down'
         *
         */
-        const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
+        const isTestnet =
+            (url === testnetAPI && testnetAPI.url) ||
+            (url === testnetAPI2 && testnetAPI2.url);
 
         let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
 
@@ -443,7 +445,8 @@ class AccessSettings extends React.Component {
 
         nodes = nodes.sort(function(a, b) {
             let isTestnet =
-                a.url === testnetAPI.url || a.url === testnetAPI2.url;
+                (testnetAPI && a.url === testnetAPI.url) ||
+                (testnetAPI2 && a.url === testnetAPI2.url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {

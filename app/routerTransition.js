@@ -266,7 +266,7 @@ class RouterTransitioner {
     }
 
     _isTestNet(url) {
-        return !__TESTNET__ && url.indexOf("testnet") !== -1;
+        return url.indexOf("testnet") !== -1;
     }
 
     /**
@@ -295,7 +295,8 @@ class RouterTransitioner {
         latencies = true,
         hidden = false,
         unsuitableSecurity = false,
-        testNet = false
+        testNet = __TESTNET__,
+        devNet = __DEVNET__
     ) {
         if (latencies) {
             if (latenciesMap == null) {
@@ -308,8 +309,8 @@ class RouterTransitioner {
             // Skip hidden nodes
             if (!hidden && a.hidden) return false;
 
-            // do not automatically connect to TESTNET
-            if (!testNet && this._isTestNet(a.url)) return false;
+            // do not automatically connect to TESTNET OR DEVNET
+            if (!testNet && !devNet && this._isTestNet(a.url)) return false;
 
             // remove the automatic fallback dummy url
             if (a.url.indexOf("fake.automatic-selection") !== -1) return false;

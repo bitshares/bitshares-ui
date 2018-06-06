@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {Apis} from "bitsharesjs-ws";
+import {settingsAPIs} from "api/apiConfig";
 import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
@@ -325,6 +327,25 @@ class Footer extends React.Component {
                                         <Translate content="footer.brainkey" />
                                     </a>
                                     &nbsp;&nbsp;
+                                </div>
+                            </span>
+                        ) : null}
+                        {__DEVNET__ || __TESTNET__ ? (
+                            <span>
+                                <div className="grid-block">
+                                    <span
+                                        className="warning"
+                                        style={{marginRight: 10}}
+                                    >
+                                        {Apis.instance().url.replace(
+                                            /wss:\/\//,
+                                            ""
+                                        ) + " / "}
+                                        {settingsAPIs.DEFAULT_FAUCET.replace(
+                                            /http(s|):\/\//,
+                                            ""
+                                        )}
+                                    </span>
                                 </div>
                             </span>
                         ) : null}

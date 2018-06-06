@@ -325,7 +325,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             content="gateway.asset_to_deposit"
                                         />
                                         <td style={depositRightCellStyle}>
-                                            {this.props.deposit_asset}
+                                            <AssetName
+                                                name={this.props.deposit_asset}
+                                            />
                                         </td>
                                     </tr>
                                     <tr>

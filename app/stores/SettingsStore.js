@@ -232,9 +232,12 @@ class SettingsStore {
                     "RUDEX.DCT"
                 ],
                 markets_39f5e2ed: [
-                    // TESTNET
+                    // BITSHARES TESTNET
                     "PEG.FAKEUSD",
                     "BTWTY"
+                ],
+                markets_2821abbb: [
+                    // CRYPTOBRIDGE TESTNET
                 ]
             };
 
@@ -254,12 +257,17 @@ class SettingsStore {
                 markets_39f5e2ed: [
                     // TESTNET
                     "TEST"
+                ],
+                markets_2821abbb: [
+                    // CRYPTOBRIDGE TESTNET
+                    "BRIDGE.BTC"
                 ]
             };
 
             let coreAssets = {
                 markets_4018d784: "BTS",
-                markets_39f5e2ed: "TEST"
+                markets_39f5e2ed: "TEST",
+                markets_2821abbb: "BTS" // CRYPTOBRIDGE
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             this.defaults.unit[0] = coreAsset;
