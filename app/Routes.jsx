@@ -268,6 +268,14 @@ const routes = (
             }}
         />
         <Route
+            path="block/:height/:txIndex"
+            getComponent={(location, cb) => {
+                import("components/Blockchain/BlockContainer")
+                    .then(loadRoute(cb))
+                    .catch(errorLoading);
+            }}
+        />
+        <Route
             path="asset/:symbol"
             getComponent={(location, cb) => {
                 import("components/Blockchain/Asset")

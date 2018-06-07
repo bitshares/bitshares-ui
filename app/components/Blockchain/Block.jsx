@@ -8,6 +8,7 @@ import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import LinkToWitnessById from "../Utility/LinkToWitnessById";
+import {Element, Events, animateScroll as scroll, scroller} from "react-scroll";
 
 class TransactionList extends React.Component {
     shouldComponentUpdate(nextProps) {
@@ -25,7 +26,13 @@ class TransactionList extends React.Component {
 
             block.transactions.forEach((trx, index) => {
                 transactions.push(
-                    <Transaction key={index} trx={trx} index={index} />
+                    <Element
+                        key={index}
+                        id={`tx_${index}`}
+                        name={`tx_${index}`}
+                    >
+                        <Transaction key={index} trx={trx} index={index} />
+                    </Element>
                 );
             });
         }
@@ -53,10 +60,21 @@ class Block extends React.Component {
         this.state = {
             showInput: false
         };
+
+        this.scrollToTop = this.scrollToTop.bind(this);
     }
 
     componentDidMount() {
         this._getBlock(this.props.height);
+
+        Events.scrollEvent.register("begin", () => {
+            //console.log("begin", arguments);
+        });
+
+        Events.scrollEvent.register("end", () => {
+            //console.log("end", arguments);
+            this.setState({scrollEnded: true});
+        });
     }
 
     componentWillReceiveProps(np) {
@@ -72,6 +90,15 @@ class Block extends React.Component {
             np.dynGlobalObject !== this.props.dynGlobalObject ||
             ns.showInput !== this.state.showInput
         );
+    }
+
+    scrollToTop() {
+        scroll.scrollToTop({
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            containerId: "blockContainer"
+        });
     }
 
     _getBlock(height) {
@@ -117,6 +144,22 @@ class Block extends React.Component {
         }
     }
 
+    componentDidUpdate() {
+        let {blocks} = this.props;
+        let height = parseInt(this.props.height, 10);
+        let block = blocks.get(height);
+
+        if (this.props.scrollToIndex && !this.state.scrollEnded && block) {
+            scroller.scrollTo(`tx_${this.props.scrollToIndex}`, {
+                duration: 1500,
+                delay: 100,
+                smooth: true,
+                offset: -100,
+                containerId: "blockContainer"
+            });
+        }
+    }
+
     render() {
         const {showInput} = this.state;
         let {blocks} = this.props;
@@ -148,7 +191,7 @@ class Block extends React.Component {
         return (
             <div className="grid-block page-layout">
                 <div className="grid-block main-content">
-                    <div className="grid-content">
+                    <div className="grid-content" id="blockContainer">
                         <div className="grid-content no-overflow medium-offset-2 medium-8 large-offset-3 large-6 small-12">
                             <h4 className="text-center">{blockHeight}</h4>
                             <ul>
@@ -207,6 +250,13 @@ class Block extends React.Component {
                                 </div>
                             </div>
                             {block ? <TransactionList block={block} /> : null}
+                            <div
+                                style={{textAlign: "center", marginBottom: 20}}
+                            >
+                                <a onClick={this.scrollToTop}>
+                                    <Translate content="global.return_to_top" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

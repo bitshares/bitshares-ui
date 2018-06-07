@@ -674,7 +674,7 @@
             "time": "Time",
             "title": "Block",
             "transactions": "Transaction count",
-            "trx": "Transaction",
+            "trx": "Tx",
             "witness": "Witness"
         },
         "blocks": {
@@ -936,7 +936,8 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
-        "scan_qr_code": "Scan QR code"
+        "scan_qr_code": "Scan QR code",
+        "return_to_top": "Return to top"
     },
     "header": {
         "account": "Account",

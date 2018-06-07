@@ -20,6 +20,7 @@ import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
+import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from "react-scroll";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -40,7 +41,7 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]}
+                        {trxTypes[ops[this.props.type]]} (<Translate component="span" content="explorer.block.trx" /> #{this.props.txIndex})
                     </span>
                 </td>
                 <td />
@@ -80,6 +81,7 @@ class OperationTable extends React.Component {
                     <caption />
                     <tbody>
                         <OpType
+                            txIndex={this.props.txIndex}
                             type={this.props.type}
                             color={this.props.color}
                         />
@@ -1938,6 +1940,7 @@ class Transaction extends React.Component {
 
             info.push(
                 <OperationTable
+                    txIndex={this.props.index}
                     key={opIndex}
                     opCount={opCount}
                     index={opIndex}
@@ -1952,7 +1955,6 @@ class Transaction extends React.Component {
 
         return (
             <div>
-                {/*     <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5> */}
                 {info}
             </div>
         );

@@ -281,6 +281,7 @@ class RecentTransactions extends React.Component {
                           key={o.id}
                           op={o.op}
                           result={o.result}
+                          txIndex={o.trx_in_block}
                           block={o.block_num}
                           current={current_account_id}
                           hideFee

@@ -101,6 +101,7 @@ class Row extends React.Component {
             <tr>
                 {this.props.includeOperationId ? (
                     <td style={{textAlign: "left"}}>
+                        {/* {this.props.block}#{this.props.txIndex}<br /> */}
                         {this.props.operationId}
                     </td>
                 ) : null}
@@ -121,7 +122,7 @@ class Row extends React.Component {
                                     )
                                 }
                             )}
-                            to={`/block/${this.props.block}`}
+                            to={`/block/${this.props.block}/${this.props.txIndex}`}
                         >
                             <TransactionLabel color={color} type={type} />
                         </Link>
@@ -1336,6 +1337,7 @@ class Operation extends React.Component {
         line = column ? (
             <Row
                 operationId={this.props.operationId}
+                txIndex={this.props.txIndex}
                 includeOperationId={this.props.includeOperationId}
                 block={block}
                 type={op[0]}
