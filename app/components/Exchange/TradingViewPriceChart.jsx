@@ -41,7 +41,7 @@ export default class TradingViewPriceChart extends React.Component {
             }/charting_library/`,
             datafeed: dataFeed,
             container_id: "tv_chart",
-            charts_storage_url: "http://saveload.tradingview.com",
+            charts_storage_url: "https://saveload.tradingview.com",
             charts_storage_api_version: "1.1",
             client_id: "tradingview.com",
             user_id: "public_user_id",
