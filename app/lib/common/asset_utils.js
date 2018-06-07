@@ -106,12 +106,20 @@ export default class AssetUtils {
     }
 
     static getCleanAssetSymbol(symbol) {
-        return utils.replaceName(symbol.toUpperCase().replace("BRIDGE.", ""));
+        return symbol.toUpperCase().replace("BRIDGE.", "");
     }
 
     static isBridgeCoinAsset(asset) {
         if (!asset) return false;
         return asset.get("symbol").indexOf("BRIDGE.") === 0;
+    }
+
+    static removeCryptoBridgeNameSpace(symbol) {
+        if (symbol && symbol.match(/^BRIDGE\./i)) {
+            return symbol.toUpperCase().replace("BRIDGE.", "");
+        }
+
+        return symbol;
     }
 
     static addCryptoBridgeNameSpace(symbol) {

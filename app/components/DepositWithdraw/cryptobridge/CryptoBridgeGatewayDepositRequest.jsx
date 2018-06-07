@@ -326,9 +326,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             content="gateway.asset_to_deposit"
                                         />
                                         <td style={depositRightCellStyle}>
-                                            <AssetName
-                                                name={this.props.deposit_asset}
-                                            />
+                                            {assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
+                                            )}
                                         </td>
                                     </tr>
                                     <tr>
@@ -567,9 +567,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                                 textAlign: "right"
                                             }}
                                         >
-                                            <AssetName
-                                                name={this.props.deposit_asset}
-                                            />
+                                            {assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
+                                            )}
                                         </td>
                                     </tr>
                                     <tr>
