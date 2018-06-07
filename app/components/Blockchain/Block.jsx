@@ -144,6 +144,22 @@ class Block extends React.Component {
         }
     }
 
+    componentDidUpdate() {
+        let {blocks} = this.props;
+        let height = parseInt(this.props.height, 10);
+        let block = blocks.get(height);
+
+        if (this.props.scrollToIndex && !this.state.scrollEnded && block) {
+            scroller.scrollTo(`tx_${this.props.scrollToIndex}`, {
+                duration: 1500,
+                delay: 100,
+                smooth: true,
+                offset: -100,
+                containerId: "blockContainer"
+            });
+        }
+    }
+
     render() {
         const {showInput} = this.state;
         let {blocks} = this.props;
@@ -171,16 +187,6 @@ class Block extends React.Component {
                 <a onClick={this.toggleInput.bind(this)}>&nbsp;#{height}</a>
             </span>
         );
-
-        if (this.props.scrollToIndex && !this.state.scrollEnded) {
-            scroller.scrollTo(`tx_${this.props.scrollToIndex}`, {
-                duration: 1500,
-                delay: 100,
-                smooth: true,
-                offset: -100,
-                containerId: "blockContainer"
-            });
-        }
 
         return (
             <div className="grid-block page-layout">
@@ -244,7 +250,9 @@ class Block extends React.Component {
                                 </div>
                             </div>
                             {block ? <TransactionList block={block} /> : null}
-                            <div style={{textAlign: "center", marginBottom: 20}}>
+                            <div
+                                style={{textAlign: "center", marginBottom: 20}}
+                            >
                                 <a onClick={this.scrollToTop}>
                                     <Translate content="global.return_to_top" />
                                 </a>
