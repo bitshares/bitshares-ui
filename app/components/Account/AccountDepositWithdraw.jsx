@@ -21,12 +21,13 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
+import PropTypes from "prop-types";
 import CryptoBridgeGateway from "../DepositWithdraw/cryptobridge/CryptoBridgeGateway";
 
 class AccountDepositWithdraw extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
-        contained: React.PropTypes.bool
+        contained: PropTypes.bool
     };
 
     static defaultProps = {
@@ -409,7 +410,6 @@ class AccountDepositWithdraw extends React.Component {
             "TRADE",
             "BITKAPITAL"
         ];
-
         const currentServiceName = serviceNames[activeService];
         const currentServiceDown = servicesDown.get(currentServiceName);
 

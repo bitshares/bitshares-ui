@@ -3,7 +3,7 @@ import BaseStore from "stores/BaseStore";
 
 import iDB from "idb-instance";
 import idb_helper from "idb-helper";
-import {cloneDeep} from "lodash";
+import {cloneDeep} from "lodash-es";
 
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import SettingsStore from "stores/SettingsStore";
@@ -28,7 +28,7 @@ let TRACE = false;
 let dictJson, AesWorker;
 if (__ELECTRON__) {
     AesWorker = require("worker-loader?inline!workers/AesWorker");
-    dictJson = require("json-loader!common/dictionary_en.json");
+    dictJson = require("common/dictionary_en.json");
 }
 
 /** Represents a single wallet and related indexedDb database operations. */

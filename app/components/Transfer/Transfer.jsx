@@ -18,7 +18,7 @@ import {
     checkBalance,
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
-import {debounce, isNaN} from "lodash";
+import {debounce, isNaN} from "lodash-es";
 import classnames from "classnames";
 import {Asset} from "common/MarketClasses";
 

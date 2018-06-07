@@ -6,6 +6,7 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import PropTypes from "prop-types";
 
 const STATS_INTERVAL = 35 * 1000;
 
@@ -18,7 +19,7 @@ class MarketRow extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -125,7 +126,11 @@ class MarketRow extends React.Component {
                                 )}
                                 key={column.index}
                             >
-                                <Icon className={starClass} name="fi-star" />
+                                <Icon
+                                    className={starClass}
+                                    name="fi-star"
+                                    title="icons.fi_star.symbol"
+                                />
                             </td>
                         );
 

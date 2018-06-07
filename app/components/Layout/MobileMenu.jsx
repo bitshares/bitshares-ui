@@ -18,7 +18,7 @@ class MobileMenu extends React.Component {
     }
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     onClick() {

@@ -13,7 +13,7 @@ import {
     indicator,
     helper,
     interactive
-} from "react-stockcharts/es";
+} from "react-stockcharts";
 
 const {
     CandlestickSeries,

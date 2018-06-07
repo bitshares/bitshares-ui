@@ -13,12 +13,13 @@ import assetUtils from "common/asset_utils";
 import DepositWithdrawAssetSelector from "../DepositWithdrawAssetSelector";
 import Immutable from "immutable";
 import LoadingIndicator from "../../LoadingIndicator";
+import PropTypes from "prop-types";
 
 class CryptoBridgeGateway extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount,
-        coins: React.PropTypes.array,
-        provider: React.PropTypes.string
+        coins: PropTypes.array,
+        provider: PropTypes.string
     };
 
     static defaultProps = {

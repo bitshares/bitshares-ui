@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import AssetActions from "actions/AssetActions";
 import SettingsActions from "actions/SettingsActions";
 import {Link} from "react-router/es";

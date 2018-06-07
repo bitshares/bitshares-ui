@@ -171,6 +171,7 @@ function gatewaySelector(args) {
                             <span style={{cursor: "pointer"}}>
                                 &nbsp;<Icon
                                     name="question-circle"
+                                    title="icons.question_circle"
                                     onClick={_openGatewaySite.bind(this)}
                                 />
                             </span>
@@ -211,6 +212,7 @@ function gatewaySelector(args) {
                         </select>
                         <Icon
                             name="chevron-down"
+                            title="icons.chevron_down.gateways"
                             style={{
                                 position: "absolute",
                                 right: "10px",

@@ -14,6 +14,7 @@ import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import PropTypes from "prop-types";
 
 let connectedNode = null;
 let connectedNodePing = null;
@@ -23,7 +24,7 @@ let trackLatencyDate = null;
 class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        synced: React.PropTypes.bool.isRequired
+        synced: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -31,7 +32,7 @@ class Footer extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {
@@ -259,6 +260,7 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
+                                        title="icons.download"
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -458,7 +460,7 @@ class Footer extends React.Component {
         this.context.router.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {
