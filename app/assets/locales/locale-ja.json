@@ -200,28 +200,29 @@
         "show_ignored": "非表示のアカウントを表示する",
         "show_visual": "ビジュアル",
         "signedmessages": {
-            "automaticcreation": "Signed message will be created automatically",
-            "copysuccessful": "Signed message copied to clipboard",
-            "copyunsuccessful": "Failed to copy message",
-            "entermessage": "Enter message here",
-            "errorverifying": "An error occured while verifying the message",
-            "invalidformat": "Signed message format can't be recognized",
+            "automaticcreation": "署名付きメッセージは自動的に生成されます",
+            "copysuccessful":
+                "署名付きメッセージをクリップボードにコピーしました",
+            "copyunsuccessful": "メッセージのコピーに失敗しました",
+            "entermessage": "ここにメッセージを入力してください",
+            "errorverifying": "メッセージの確認でエラーが発生しました",
+            "invalidformat": "署名付きメッセージのフォーマットを認識できません",
             "invalidkey":
-                "Private key could not be obtained, is the public key valid?",
+                "秘密キーを入手できませんでした。公開キーは正しいですか？",
             "invalidsignature":
-                "The content of the message could not be validated against the signature",
-            "invaliduser": "Account of the message sender is invalid",
+                "メッセージ内容を署名に対して検証することができます",
+            "invaliduser": "メッセージ送信者のアカウントが無効です",
             "keymismatch":
-                "Given public key of the sender doesn't to the one stored in the senders account",
-            "menuitem": "Signed Messages",
-            "sign": "Sign",
-            "signing": "Signing, please wait ...",
-            "signmessage": "Sign Message",
-            "title": "Signed Messages",
-            "verify": "Verify",
-            "verifying": "Verifying, please wait ...",
-            "verifymessage": "Verify Message",
-            "verifyonchange": "Verify while typing"
+                "与えられた送信者公開キーは送信者アカウントに含まれていません",
+            "menuitem": "署名付きメッセージ",
+            "sign": "署名",
+            "signing": "署名しています、お待ち下さい ...",
+            "signmessage": "メッセージに署名",
+            "title": "署名付きメッセージ",
+            "verify": "確認",
+            "verifying": "確認しています、お待ち下さい ...",
+            "verifymessage": "メッセージを確認",
+            "verifyonchange": "入力時に確認します"
         },
         "submit_orders": "送信",
         "total": "合計 ({asset})",
@@ -654,7 +655,7 @@
             "date": "日時",
             "fee_payer": "手数料支払いアカウント",
             "feed_price": "フィード価格",
-            "go_to": "Go to block",
+            "go_to": "ブロックへ移動",
             "id": "ブロック ID",
             "key": "公開キー",
             "lifetime": "終身会員にアップグレードする",
@@ -890,7 +891,7 @@
         "service": "転送サービス",
         "status": "ステータス",
         "support_block":
-            "OpenLedgerが提供する転送サービスに関するサポートが必要な場合は、OpenLedgerにご連絡ください（英語のみ）:",
+            "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",
         "support_gdex": "サポートについては、GDEXまでお問い合わせください",
         "symbol": "シンボル",
         "time": "時間",
@@ -1079,9 +1080,9 @@
         "zoom": "Search"
     },
     "incognito": {
-        "mode": "Private/Incognito:",
-        "warning":
-            "If you close your browser without backing up your wallet, you will lose this account permanently."
+        "ignore": "理解しました。",
+        "no_support":
+            "このCryptoBridgeウォレットはローカルストレージとIndexedDBを使用しており、シークレットブラウザを使用した場合は維持されません。通常モードのブラウザを使用することをおすすめします。"
     },
     "init_error": {
         "browser": "サポートされていないブラウザ",
@@ -1118,13 +1119,13 @@
     },
     "migration": {
         "announcement_1":
-            "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
-        "text_1": "Local wallet detected",
+            "webベースウォレットのセキュリティを強化するために移行しています。すぐに以下のアドレスに移行してください。ブックマークしている場合は更新してください。",
+        "text_1": "ローカルウォレットが検出されました",
         "text_2":
-            "Please backup your wallet now and restore the backup file to <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+            "今すぐウォレットをバックアップし、webウォレットの新しいアドレス<a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>でバックアップファイルをリストアしてください。継続的な支援に感謝します。",
         "text_3":
-            "Please use <a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a> from now on, your existing credentials will let you login there as well.",
-        "title": "Notice"
+            "今後は<a href='https://wallet.crypto-bridge.org' target='blank' rel='noopener noreferrer'>https://wallet.crypto-bridge.org</a>を使用してください。既存の資格情報でそこにログインできます。",
+        "title": "お知らせ"
     },
     "modal": {
         "buy": {
