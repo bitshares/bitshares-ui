@@ -101,7 +101,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            this.context.router.push("/help/introduction/cryptobridge");
+            // this.context.router.push("/help/introduction/cryptobridge");
         } else {
             guide
                 .introJs()
@@ -391,7 +391,10 @@ class Footer extends React.Component {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="grid-block">
+                                <div
+                                    className="grid-block"
+                                    style={{visibility: "hidden"}}
+                                >
                                     <div
                                         className="introjs-launcher"
                                         onClick={() => {
@@ -434,6 +437,7 @@ class Footer extends React.Component {
                     onClick={() => {
                         this.launchIntroJS();
                     }}
+                    style={{visibility: "hidden"}}
                 >
                     <Translate content="global.help" />
                 </div>
