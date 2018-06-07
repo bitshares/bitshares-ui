@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {Apis} from "bitsharesjs-ws";
+import {settingsAPIs} from "api/apiConfig";
 import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
@@ -12,6 +14,7 @@ import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import PropTypes from "prop-types";
 
 let connectedNode = null;
 let connectedNodePing = null;
@@ -21,7 +24,7 @@ let trackLatencyDate = null;
 class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        synced: React.PropTypes.bool.isRequired
+        synced: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -29,7 +32,7 @@ class Footer extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     };
 
     constructor(props) {
@@ -98,7 +101,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            this.context.router.push("/help/introduction/cryptobridge");
+            // this.context.router.push("/help/introduction/cryptobridge");
         } else {
             guide
                 .introJs()
@@ -257,6 +260,7 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
+                                        title="icons.download"
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -328,6 +332,25 @@ class Footer extends React.Component {
                                 </div>
                             </span>
                         ) : null}
+                        {__DEVNET__ || __TESTNET__ ? (
+                            <span>
+                                <div className="grid-block">
+                                    <span
+                                        className="warning"
+                                        style={{marginRight: 10}}
+                                    >
+                                        {Apis.instance().url.replace(
+                                            /wss:\/\//,
+                                            ""
+                                        ) + " / "}
+                                        {settingsAPIs.DEFAULT_FAUCET.replace(
+                                            /http(s|):\/\//,
+                                            ""
+                                        )}
+                                    </span>
+                                </div>
+                            </span>
+                        ) : null}
                         {block_height ? (
                             <div className="grid-block shrink">
                                 <div
@@ -368,7 +391,10 @@ class Footer extends React.Component {
                                         </span>
                                     </div>
                                 </div>
-                                <div className="grid-block">
+                                <div
+                                    className="grid-block"
+                                    style={{visibility: "hidden"}}
+                                >
                                     <div
                                         className="introjs-launcher"
                                         onClick={() => {
@@ -411,6 +437,7 @@ class Footer extends React.Component {
                     onClick={() => {
                         this.launchIntroJS();
                     }}
+                    style={{visibility: "hidden"}}
                 >
                     <Translate content="global.help" />
                 </div>
@@ -437,7 +464,7 @@ class Footer extends React.Component {
         this.context.router.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {

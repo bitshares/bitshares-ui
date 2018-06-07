@@ -105,7 +105,9 @@ class ApiNode extends React.Component {
         * so we force enable activation of it even though it shows as 'down'
         *
         */
-        const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
+        const isTestnet =
+            (url === testnetAPI && testnetAPI.url) ||
+            (url === testnetAPI2 && testnetAPI2.url);
 
         let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
 
@@ -145,20 +147,20 @@ class ApiNode extends React.Component {
                         <Icon
                             className={color + " default-icon"}
                             name={isActive ? "connected" : "disconnected"}
-                            size="1_5x"
-                            onClick={this.activate.bind(this, url)}
                             title={
                                 isActive
-                                    ? "settings.active_node"
-                                    : "settings.switch"
+                                    ? "icons.connected"
+                                    : "icons.disconnected"
                             }
+                            size="1_5x"
+                            onClick={this.activate.bind(this, url)}
                         />
                         <Icon
                             className={color + " hover-icon"}
                             name={"connect"}
+                            title="icons.connect"
                             size="1_5x"
                             onClick={this.activate.bind(this, url)}
-                            title="settings.switch"
                         />
                     </a>
                     {name}
@@ -237,8 +239,8 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={"shuffle"}
                                         name={"eye-striked"}
+                                        title="icons.eye_striked"
                                         size="1_5x"
-                                        title="settings.show"
                                     />
                                 </a>
                             )}
@@ -248,8 +250,8 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={"shuffle"}
                                         name={"eye"}
+                                        title="icons.eye"
                                         size="1_5x"
-                                        title="settings.hide"
                                     />
                                 </a>
                             )}
@@ -258,8 +260,8 @@ class ApiNode extends React.Component {
                                 <a onClick={this.remove.bind(this, url, name)}>
                                     <Icon
                                         name={"times"}
+                                        title="icons.times"
                                         size="1_5x"
-                                        title="settings.remove"
                                     />
                                 </a>
                             )}
@@ -272,20 +274,21 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
+                                        title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                     <Icon
                                         className={color + " hover-icon"}
                                         name={"connect"}
+                                        title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                 </a>
                             ) : (
                                 <Icon
                                     className={color}
                                     name={"connected"}
+                                    title="icons.connected"
                                     size="2x"
                                     title="settings.active_node"
                                 />
@@ -443,7 +446,8 @@ class AccessSettings extends React.Component {
 
         nodes = nodes.sort(function(a, b) {
             let isTestnet =
-                a.url === testnetAPI.url || a.url === testnetAPI2.url;
+                (testnetAPI && a.url === testnetAPI.url) ||
+                (testnetAPI2 && a.url === testnetAPI2.url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {

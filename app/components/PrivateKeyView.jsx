@@ -6,10 +6,11 @@ import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import QrcodeModal from "./Modal/QrcodeModal";
+import PropTypes from "prop-types";
 
 export default class PrivateKeyView extends Component {
     static propTypes = {
-        pubkey: React.PropTypes.string.isRequired
+        pubkey: PropTypes.string.isRequired
     };
 
     constructor() {

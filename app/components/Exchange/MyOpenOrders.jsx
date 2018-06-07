@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import {Link} from "react-router";
 import counterpart from "counterpart";
 import Ps from "perfect-scrollbar";
@@ -18,6 +18,7 @@ import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 const leftAlign = {textAlign: "left"};
+import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
@@ -199,7 +200,11 @@ class OrderRow extends React.Component {
                             className="order-cancel"
                             onClick={this.props.onCancel}
                         >
-                            <Icon name="cross-circle" className="icon-14px" />
+                            <Icon
+                                name="cross-circle"
+                                title="icons.cross_circle.cancel_order"
+                                className="icon-14px"
+                            />
                         </a>
                     )}
                 </td>
@@ -314,7 +319,11 @@ class OrderRow extends React.Component {
                             "symbol"
                         )}`}
                     >
-                        <Icon name="trade" className="icon-14px" />
+                        <Icon
+                            name="trade"
+                            title="icons.trade.trade"
+                            className="icon-14px"
+                        />
                     </Link>
                 </td>
                 {isMyAccount ? (

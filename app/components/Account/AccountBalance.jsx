@@ -43,4 +43,4 @@ class AccountBalance extends React.Component {
     }
 }
 
-export default BindToChainState(AccountBalance, {keep_updating: true});
+export default BindToChainState(AccountBalance);

@@ -5,9 +5,7 @@ import localeCodes from "assets/locales";
 var locales = {};
 if (__ELECTRON__) {
     localeCodes.forEach(locale => {
-        locales[
-            locale
-        ] = require(`json-loader!assets/locales/locale-${locale}.json`);
+        locales[locale] = require(`assets/locales/locale-${locale}.json`);
     });
 }
 

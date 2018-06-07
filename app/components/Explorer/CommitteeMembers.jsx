@@ -10,6 +10,7 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import Explorer from "./Explorer";
+import PropTypes from "prop-types";
 
 class CommitteeMemberCard extends React.Component {
     static propTypes = {
@@ -17,7 +18,7 @@ class CommitteeMemberCard extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     _onCardClick(e) {
@@ -72,9 +73,7 @@ class CommitteeMemberCard extends React.Component {
         );
     }
 }
-CommitteeMemberCard = BindToChainState(CommitteeMemberCard, {
-    keep_updating: true
-});
+CommitteeMemberCard = BindToChainState(CommitteeMemberCard);
 
 class CommitteeMemberRow extends React.Component {
     static propTypes = {
@@ -82,7 +81,7 @@ class CommitteeMemberRow extends React.Component {
     };
 
     static contextTypes = {
-        router: React.PropTypes.object.isRequired
+        router: PropTypes.object.isRequired
     };
 
     _onRowClick(e) {
@@ -126,9 +125,7 @@ class CommitteeMemberRow extends React.Component {
         );
     }
 }
-CommitteeMemberRow = BindToChainState(CommitteeMemberRow, {
-    keep_updating: true
-});
+CommitteeMemberRow = BindToChainState(CommitteeMemberRow);
 
 class CommitteeMemberList extends React.Component {
     static propTypes = {
@@ -307,7 +304,6 @@ class CommitteeMemberList extends React.Component {
     }
 }
 CommitteeMemberList = BindToChainState(CommitteeMemberList, {
-    keep_updating: true,
     show_loader: true
 });
 
@@ -429,7 +425,7 @@ class CommitteeMembers extends React.Component {
         return <Explorer tab="committee_members" content={content} />;
     }
 }
-CommitteeMembers = BindToChainState(CommitteeMembers, {keep_updating: true});
+CommitteeMembers = BindToChainState(CommitteeMembers);
 
 class CommitteeMembersStoreWrapper extends React.Component {
     render() {

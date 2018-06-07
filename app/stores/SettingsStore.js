@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import {merge} from "lodash";
+import {merge} from "lodash-es";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
@@ -25,6 +25,8 @@ class SettingsStore {
         this.bindListeners({
             onSetExchangeLastExpiration:
                 SettingsActions.setExchangeLastExpiration,
+            onSetExchangeTutorialShown:
+                SettingsActions.setExchangeTutorialShown,
             onChangeSetting: SettingsActions.changeSetting,
             onChangeViewSetting: SettingsActions.changeViewSetting,
             onChangeMarketDirection: SettingsActions.changeMarketDirection,
@@ -229,12 +231,22 @@ class SettingsStore {
                     "RUDEX.GBG",
                     "RUDEX.GOLOS",
                     "RUDEX.MUSE",
-                    "RUDEX.DCT"
+                    "RUDEX.DCT",
+                    "OPEN.DOGE",
+                    "OPEN.KRM",
+                    "OPEN.TUSD",
+                    "OPEN.ZEC",
+                    "OPEN.WAVES",
+                    "OPEN.ZRX",
+                    "OPEN.NEO"
                 ],
                 markets_39f5e2ed: [
-                    // TESTNET
+                    // BITSHARES TESTNET
                     "PEG.FAKEUSD",
                     "BTWTY"
+                ],
+                markets_2821abbb: [
+                    // CRYPTOBRIDGE TESTNET
                 ]
             };
 
@@ -254,12 +266,17 @@ class SettingsStore {
                 markets_39f5e2ed: [
                     // TESTNET
                     "TEST"
+                ],
+                markets_2821abbb: [
+                    // CRYPTOBRIDGE TESTNET
+                    "BRIDGE.BTC"
                 ]
             };
 
             let coreAssets = {
                 markets_4018d784: "BTS",
-                markets_39f5e2ed: "TEST"
+                markets_39f5e2ed: "TEST",
+                markets_2821abbb: "BTS" // CRYPTOBRIDGE
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             this.defaults.unit[0] = coreAsset;
@@ -504,6 +521,10 @@ class SettingsStore {
 
     onSetExchangeLastExpiration(value) {
         this.setExchangeSettings("lastExpiration", fromJS(value));
+    }
+
+    onSetExchangeTutorialShown(value) {
+        this.setExchangeSettings("tutorialShown", value);
     }
 
     getExhchangeLastExpiration() {

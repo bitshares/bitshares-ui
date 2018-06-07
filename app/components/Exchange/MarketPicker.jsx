@@ -3,7 +3,7 @@ import MarketsActions from "actions/MarketsActions";
 import {Link} from "react-router/es";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
@@ -240,6 +240,7 @@ export default class MarketPicker extends React.Component {
                                 "filter"
                             )}
                             name="filter"
+                            title="icons.filter"
                         />
                         <Icon
                             style={{marginLeft: 5, cursor: "pointer"}}
@@ -254,6 +255,7 @@ export default class MarketPicker extends React.Component {
                                 "search"
                             )}
                             name="zoom"
+                            title="icons.zoom"
                         />
                     </div>
                     <Translate
@@ -276,6 +278,7 @@ export default class MarketPicker extends React.Component {
                             className="blue-icon"
                             style={{marginLeft: 5}}
                             name="info-circle-o"
+                            title="icons.info_circle_o"
                         />
                     </Link>
                 </div>

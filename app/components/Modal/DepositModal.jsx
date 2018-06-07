@@ -262,7 +262,11 @@ class DepositModalContent extends DecimalChecker {
             </div>
         ) : (
             <div>
-                <Icon size="5x" name="minus-circle" />
+                <Icon
+                    size="5x"
+                    name="minus-circle"
+                    title="icons.minus_circle.wrong_address"
+                />
                 <p className="error-msg">
                     <Translate content="modal.deposit.address_generation_error" />
                 </p>
@@ -373,7 +377,10 @@ class DepositModalContent extends DecimalChecker {
                                             selectedAsset
                                         }
                                     />
-                                    <div className="modal__highlight">
+                                    <div
+                                        className="modal__highlight"
+                                        style={{fontSize: "0.9rem"}}
+                                    >
                                         {depositAddress.address}
                                     </div>
                                 </div>
