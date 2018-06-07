@@ -26,6 +26,7 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import titleUtils from "common/titleUtils";
+import {BodyClassName} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 
 class App extends React.Component {
@@ -258,31 +259,33 @@ class App extends React.Component {
                 style={{backgroundColor: !this.state.theme ? "#2a2a2a" : null}}
                 className={this.state.theme}
             >
-                {walletMode && incognito && !incognitoWarningDismissed ? (
-                    <Incognito
-                        onClickIgnore={this._onIgnoreIncognitoWarning.bind(
-                            this
-                        )}
-                    />
-                ) : null}
-                <div id="content-wrapper">
-                    {content}
-                    <NotificationSystem
-                        ref="notificationSystem"
-                        allowHTML={true}
-                        style={{
-                            Containers: {
-                                DefaultStyle: {
-                                    width: "425px"
+                <BodyClassName className={this.state.theme}>
+                    {walletMode && incognito && !incognitoWarningDismissed ? (
+                        <Incognito
+                            onClickIgnore={this._onIgnoreIncognitoWarning.bind(
+                                this
+                            )}
+                        />
+                    ) : null}
+                    <div id="content-wrapper">
+                        {content}
+                        <NotificationSystem
+                            ref="notificationSystem"
+                            allowHTML={true}
+                            style={{
+                                Containers: {
+                                    DefaultStyle: {
+                                        width: "425px"
+                                    }
                                 }
-                            }
-                        }}
-                    />
-                    <TransactionConfirm />
-                    <BrowserNotifications />
-                    <WalletUnlockModal />
-                    <BrowserSupportModal ref="browser_modal" />
-                </div>
+                            }}
+                        />
+                        <TransactionConfirm />
+                        <BrowserNotifications />
+                        <WalletUnlockModal />
+                        <BrowserSupportModal ref="browser_modal" />
+                    </div>
+                </BodyClassName>
             </div>
         );
     }
