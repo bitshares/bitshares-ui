@@ -8,7 +8,6 @@ import {ChainConfig} from "bitsharesjs-ws";
 * synchronized between the two files
 */
 import routes from "./Routes";
-import {ChainConfig} from "bitsharesjs-ws";
 
 // require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
