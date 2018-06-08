@@ -24,8 +24,6 @@ then
     git push
 fi
 
-echo $TRAVIS_BRANCH
-echo $TRAVIS_PULL_REQUEST
 if [ $unamestr = 'Linux' ] && [ $TRAVIS_BRANCH = 'staging' ] && [ -z $TRAVIS_PULL_REQUEST_BRANCH ]
 then
     ## wallet.bitshares.org subdomain (independent repo)
@@ -40,8 +38,16 @@ then
     git push
 fi
 
-
-if [[ "$unamestr" == 'Linux' && "$TRAVIS_BRANCH" === "staging"]]
+if [ $unamestr = 'Linux' ] && [ $TRAVIS_BRANCH = 'develop' ] && [ -z $TRAVIS_PULL_REQUEST_BRANCH ]
 then
-    echo "It works"
+    ## wallet.bitshares.org subdomain (independent repo)
+    echo "Pushing new develop subdomain repo"
+    git clone https://github.com:${GITHUB_TOKEN}@github.com/${DEVELOP_REPO} $TRAVIS_BUILD_DIR/develop.bitshares.org
+    cd $TRAVIS_BUILD_DIR/develop.bitshares.org
+    rm -rf ./*
+    git checkout ./CNAME
+    cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* .
+    git add -A
+    git commit -a -m "Update develop by Travis: v$TRAVIS_TAG"
+    git push
 fi
