@@ -1,18 +1,14 @@
 import React from "react";
 import {Tabs, Tab} from "../Utility/Tabs";
-import PropTypes from "prop-types";
+import Witnesses from "./Witnesses";
+import CommitteeMembers from "./CommitteeMembers";
+import FeesContainer from "../Blockchain/FeesContainer";
+import BlocksContainer from "./BlocksContainer";
+import AssetsContainer from "./AssetsContainer";
+import AccountsContainer from "./AccountsContainer";
+import MarketsContainer from "../Exchange/MarketsContainer";
 
 class Explorer extends React.Component {
-    static propTypes = {
-        tab: PropTypes.string,
-        content: PropTypes.object
-    };
-
-    static defaultProps = {
-        tab: "blocks",
-        content: null
-    };
-
     constructor(props) {
         super(props);
 
@@ -21,54 +17,64 @@ class Explorer extends React.Component {
                 {
                     name: "blocks",
                     link: "/explorer/blocks",
-                    translate: "explorer.blocks.title"
+                    translate: "explorer.blocks.title",
+                    content: BlocksContainer
                 },
                 {
                     name: "assets",
                     link: "/explorer/assets",
-                    translate: "explorer.assets.title"
+                    translate: "explorer.assets.title",
+                    content: AssetsContainer
                 },
                 {
                     name: "accounts",
                     link: "/explorer/accounts",
-                    translate: "explorer.accounts.title"
+                    translate: "explorer.accounts.title",
+                    content: AccountsContainer
                 },
                 {
                     name: "witnesses",
                     link: "/explorer/witnesses",
-                    translate: "explorer.witnesses.title"
+                    translate: "explorer.witnesses.title",
+                    content: Witnesses
                 },
                 {
                     name: "committee_members",
                     link: "/explorer/committee-members",
-                    translate: "explorer.committee_members.title"
+                    translate: "explorer.committee_members.title",
+                    content: CommitteeMembers
                 },
                 {
                     name: "markets",
                     link: "/explorer/markets",
-                    translate: "markets.title"
+                    translate: "markets.title",
+                    content: MarketsContainer
                 },
-                {name: "fees", link: "/explorer/fees", translate: "fees.title"}
+                {
+                    name: "fees",
+                    link: "/explorer/fees",
+                    translate: "fees.title",
+                    content: FeesContainer
+                }
             ]
         };
     }
 
     render() {
-        let defaultActiveTab = this.state.tabs.findIndex(
-            t => t.name === this.props.tab
-        );
+        let {tab} = this.props.match.params;
+        let defaultActiveTab = this.state.tabs.findIndex(t => t.name === tab);
 
         let tabs = [];
 
         for (var i = 0; i < this.state.tabs.length; i++) {
             let currentTab = this.state.tabs[i];
 
-            let tabContent = defaultActiveTab == i ? this.props.content : null;
+            let TabContent = currentTab.content;
             let isLinkTo = defaultActiveTab == i ? "" : currentTab.link;
 
             tabs.push(
                 <Tab key={i} title={currentTab.translate} isLinkTo={isLinkTo}>
-                    {tabContent}
+                    <TabContent />
                 </Tab>
             );
         }
@@ -77,7 +83,7 @@ class Explorer extends React.Component {
             <Tabs
                 defaultActiveTab={defaultActiveTab}
                 segmented={false}
-                setting="explorerTab-{this.props.tab}"
+                setting="explorer-tabs"
                 className="account-tabs"
                 tabsClass="account-overview bordered-header content-block"
                 contentClass="tab-content padding"

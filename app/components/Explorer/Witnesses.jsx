@@ -436,7 +436,7 @@ class Witnesses extends React.Component {
             );
         }
 
-        let content = (
+        return (
             <div className="grid-block">
                 <div className="grid-block">
                     <div className="grid-block vertical small-5 medium-3">
@@ -570,7 +570,6 @@ class Witnesses extends React.Component {
                 </div>
             </div>
         );
-        return <Explorer tab="witnesses" content={content} />;
     }
 }
 Witnesses = BindToChainState(Witnesses);

@@ -430,6 +430,7 @@ class AccountSelector extends React.Component {
                                     }}
                                     name="username"
                                     id="username"
+                                    autoComplete="username"
                                     type="text"
                                     value={this.props.accountName || ""}
                                     placeholder={

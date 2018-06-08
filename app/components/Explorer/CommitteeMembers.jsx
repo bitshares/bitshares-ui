@@ -9,7 +9,6 @@ import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import Explorer from "./Explorer";
 import PropTypes from "prop-types";
 
 class CommitteeMemberCard extends React.Component {
@@ -365,7 +364,7 @@ class CommitteeMembers extends React.Component {
             }
         }
 
-        let content = (
+        return (
             <div className="grid-block">
                 <div className="grid-block vertical medium-horizontal">
                     <div className="grid-block shrink">
@@ -421,8 +420,6 @@ class CommitteeMembers extends React.Component {
                 </div>
             </div>
         );
-
-        return <Explorer tab="committee_members" content={content} />;
     }
 }
 CommitteeMembers = BindToChainState(CommitteeMembers);

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Link} from "react-router";
+import {Link} from "react-router-dom";
 import counterpart from "counterpart";
 import Ps from "perfect-scrollbar";
 import OpenSettleOrders from "./OpenSettleOrders";
@@ -124,7 +124,9 @@ class OrderRow extends React.Component {
         const isCall = order.isCall();
         let tdClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let priceSymbol = showSymbols ? (
             <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span>

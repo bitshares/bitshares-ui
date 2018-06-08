@@ -9,13 +9,13 @@ import ReactDOM from "react-dom";
 * the async routes defined in Routes.jsx. Any changes to the routes must be kept
 * synchronized between the two files
 */
-import Routes from "./Routes-dev";
+import AppInit from "./AppInit";
 
 // require("./components/Utility/Prototypes"); // Adds a .equals method to Array for use in shouldComponentUpdate
 
 const rootEl = document.getElementById("content");
 const render = () => {
-    ReactDOM.render(<Routes />, rootEl);
+    ReactDOM.render(<AppInit />, rootEl);
 };
 render();
 

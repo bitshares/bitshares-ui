@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -122,7 +122,9 @@ class Row extends React.Component {
                                     )
                                 }
                             )}
-                            to={`/block/${this.props.block}/${this.props.txIndex}`}
+                            to={`/block/${this.props.block}/${
+                                this.props.txIndex
+                            }`}
                         >
                             <TransactionLabel color={color} type={type} />
                         </Link>

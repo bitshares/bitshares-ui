@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AccountSelector from "./AccountSelector";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -173,7 +173,9 @@ class AccountVotingProxy extends React.Component {
             .sort((a, b) => {
                 return a.get("name") > b.get("name")
                     ? 1
-                    : a.get("name") < b.get("name") ? -1 : 0;
+                    : a.get("name") < b.get("name")
+                        ? -1
+                        : 0;
             })
             .map(proxy => {
                 return (

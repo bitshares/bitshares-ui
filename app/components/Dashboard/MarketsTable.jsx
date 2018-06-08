@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "alt-react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import cnames from "classnames";
@@ -133,7 +133,9 @@ class MarketRow extends React.Component {
             ? ""
             : parseFloat(marketStats.change) > 0
                 ? "change-up"
-                : parseFloat(marketStats.change) < 0 ? "change-down" : "";
+                : parseFloat(marketStats.change) < 0
+                    ? "change-down"
+                    : "";
 
         let marketID = `${quote.get("symbol")}_${base.get("symbol")}`;
 

@@ -51,7 +51,7 @@ class Exchange extends React.Component {
 
     constructor(props) {
         super();
-
+        console.log("Exchange constructor", props);
         this.state = {
             ...this._initialState(props),
             expirationType: {
@@ -1833,6 +1833,8 @@ class Exchange extends React.Component {
                                     {name: "add", index: 4}
                                 ]}
                                 current={`${quoteSymbol}_${baseSymbol}`}
+                                location={this.props.location}
+                                history={this.props.history}
                             />
                         </div>
                         <div

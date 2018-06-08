@@ -2,11 +2,10 @@ import React from "react";
 import BlockchainStore from "stores/BlockchainStore";
 import AltContainer from "alt-container";
 import Blocks from "./Blocks";
-import Explorer from "./Explorer";
 
 class BlocksContainer extends React.Component {
     render() {
-        let content = (
+        return (
             <AltContainer
                 stores={[BlockchainStore]}
                 inject={{
@@ -21,8 +20,6 @@ class BlocksContainer extends React.Component {
                 <Blocks />
             </AltContainer>
         );
-
-        return <Explorer tab="blocks" content={content} />;
     }
 }
 
