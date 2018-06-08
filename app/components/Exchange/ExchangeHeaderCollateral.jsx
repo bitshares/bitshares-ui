@@ -115,7 +115,7 @@ class MarginPosition extends React.Component {
         );
     }
 }
-MarginPosition = BindToChainState(MarginPosition, {keep_updating: true});
+MarginPosition = BindToChainState(MarginPosition);
 
 class ExchangeHeaderCollateral extends React.Component {
     static propTypes = {
@@ -138,8 +138,6 @@ class ExchangeHeaderCollateral extends React.Component {
         );
     }
 }
-ExchangeHeaderCollateral = BindToChainState(ExchangeHeaderCollateral, {
-    keep_updating: true
-});
+ExchangeHeaderCollateral = BindToChainState(ExchangeHeaderCollateral);
 
 export default ExchangeHeaderCollateral;

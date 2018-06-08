@@ -2,11 +2,12 @@ import React from "react";
 import Translate from "react-translate-component";
 import BindToChainState from "components/Utility/BindToChainState";
 import {widechainAPIs} from "api/apiConfig";
+import PropTypes from "prop-types";
 
 class WinexRecentTransactions extends React.Component {
     static propTypes = {
-        account: React.PropTypes.string,
-        action: React.PropTypes.string
+        account: PropTypes.string,
+        action: PropTypes.string
     };
 
     constructor(props) {
@@ -157,4 +158,4 @@ class WinexRecentTransactions extends React.Component {
     }
 }
 
-export default BindToChainState(WinexRecentTransactions, {keep_updating: true});
+export default BindToChainState(WinexRecentTransactions);

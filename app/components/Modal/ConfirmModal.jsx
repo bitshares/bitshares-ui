@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -75,7 +75,6 @@ class ConfirmModal extends React.Component {
                     <div className="grid-content button-group no-overflow">
                         <a
                             className="button primary"
-                            href
                             onClick={this.confirmClicked.bind(this)}
                         >
                             {this.state.confirmText}

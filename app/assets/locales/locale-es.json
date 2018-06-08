@@ -421,6 +421,18 @@
             "whitelist_authorities": "Autoridad de lista blanca"
         }
     },
+    "app_init": {
+        "browser": "Navegador no soportado",
+        "browser_text":
+            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
+        "connected": "Conectado",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "No conectado",
+        "retry": "Reintentar",
+        "title": "Problemas de inicialización de la aplicación",
+        "understand": "entiendo",
+        "ws_status": "Estado de conexión de nodo completo"
+    },
     "borrow": {
         "adjust": "Actualizar posición",
         "adjust_short": "ajustar",
@@ -477,24 +489,9 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Precio de Rescate (Call Price)",
         "change": "cambio",
-        "chart_options": {
-            "bb": "Bandas de Bollinger",
-            "clamp_chart": "Clamp chart edge",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "fib": "Dibuja el retroceso de Fibonacci",
-            "height": "Altura de la carta",
-            "macd": "MACD chart",
-            "period": "Período",
-            "price_title": "Indicadores de precio",
-            "sma": "SMA",
-            "smaVolume": "SMA",
-            "title": "Indicators",
-            "tools": "Herramientas",
-            "trendline": "Dibujar línea de tendencia",
-            "volume": "Mostrar tabla de volúmenes",
-            "volume_title": "Indicadores de volumen"
-        },
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
         "confirm_buy":
             "Tu pedido es %(diff)s veces más alto que la demanda más baja, ¿estás seguro?",
         "confirm_no_orders_buy":
@@ -516,7 +513,6 @@
         "history": "Trades del mercado",
         "horizontal": "Horizontal",
         "index": "Index",
-        "indicators": "Indicadores",
         "invalid_amount": "Monto invalido",
         "invalid_price": "Precio inválido",
         "invert": "Invierta el precio",
@@ -544,11 +540,10 @@
         "my_bids": "Mis ofertas",
         "my_history": "Mis comercios",
         "my_orders": "Mis ordenes abiertos",
+        "native": "Native",
         "new": "Nuevo",
         "no_balance": "Saldo insuficiente",
-        "no_bids": "No bids",
         "no_data": "No data",
-        "no_orders": "No orders",
         "order_depth": "Profundidad de Mercado",
         "others": "Otros",
         "overbought": "Sobrecomprado",
@@ -968,7 +963,9 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "return_to_top": "Return to top",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Cuenta",
@@ -1110,17 +1107,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Navegador no soportado",
-        "browser_text":
-            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
-        "connected": "Conectado",
-        "not_connected": "No conectado",
-        "retry": "Reintentar",
-        "title": "Problemas de inicialización de la aplicación",
-        "understand": "entiendo",
-        "ws_status": "Estado de conexión de nodo completo"
     },
     "languages": {
         "de": "Deutsch",
@@ -1385,6 +1371,12 @@
         "review_period": "Comienza el período de revisión"
     },
     "propose": "Propose",
+    "qr_address_scanner": {
+        "address_found": "Dirección encontrada",
+        "amount": "Importe",
+        "retry": "Reintentar",
+        "use_address": "Usar dirección"
+    },
     "refcode": {
         "claim": "Reclamar",
         "claim_refcode": "Reclamar código de referencia",

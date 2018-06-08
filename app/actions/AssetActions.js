@@ -396,7 +396,7 @@ class AssetActions {
     //     });
     // }
 
-    getAssetList(start, count, gateAssets = false) {
+    getAssetList(start, count, includeGateways = false) {
         let id = start + "_" + count;
         return dispatch => {
             if (!inProgress[id]) {
@@ -427,8 +427,8 @@ class AssetActions {
                         let bitAssetPromise =
                             bitAssetIDS.length > 0
                                 ? Apis.instance()
-                                      .db_api()
-                                      .exec("get_objects", [bitAssetIDS])
+                                    .db_api()
+                                    .exec("get_objects", [bitAssetIDS])
                                 : null;
 
                         Promise.all([dynamicPromise, bitAssetPromise]).then(
@@ -454,15 +454,15 @@ class AssetActions {
                     });
 
                 // Fetch next 10 assets for each gateAsset on request
-                if (!!gateAssets) {
-                    let gatewayPrefies = [
+                if (includeGateways) {
+                    let gatewayPrefixes = [
                         "BRIDGE",
                         "GDEX",
                         "RUDEX",
                         "OPEN",
                         "WIN"
                     ];
-                    gatewayPrefies.forEach(a => {
+                    gatewayPrefixes.forEach(a => {
                         this.getAssetList(a + "." + start, 10);
                     });
                 }

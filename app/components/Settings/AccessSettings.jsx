@@ -5,7 +5,7 @@ import SettingsStore from "stores/SettingsStore";
 import {settingsAPIs} from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 // import {routerTransitioner} from "../../routerTransition";
-import {withRouter} from "react-router/es";
+import {withRouter} from "react-router-dom";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
@@ -39,12 +39,7 @@ class ApiNode extends React.Component {
         });
         setTimeout(
             function() {
-                willTransitionTo(
-                    this.props.router,
-                    this.props.router.replace,
-                    () => {},
-                    false
-                );
+                willTransitionTo(false);
             }.bind(this),
             50
         );
@@ -131,6 +126,7 @@ class ApiNode extends React.Component {
                             id="automatic_node_switcher"
                             type="checkbox"
                             checked={autoActive}
+                            onChange={() => {}}
                         />
                         <label />
                     </span>
@@ -178,6 +174,7 @@ class ApiNode extends React.Component {
                                 id="automatic_node_switcher"
                                 type="checkbox"
                                 checked={autoActive}
+                                onChange={() => {}}
                             />
                             <label />
                         </span>

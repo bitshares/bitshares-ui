@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import MarketsActions from "actions/MarketsActions";
@@ -9,14 +9,19 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs/es";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
+import BaseModal from "../Modal/BaseModal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 export default class ExchangeHeader extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         this.state = {
-            volumeShowQuote: true
+            volumeShowQuote: true,
+            chartHeight: props.chartHeight
         };
+
+        this.setChartHeight = this.setChartHeight.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -53,6 +58,10 @@ export default class ExchangeHeader extends React.Component {
         this.props.onToggleMarketPicker(selectedMarketPickerAsset);
     }
 
+    setChartHeight() {
+        this.props.onChangeChartHeight({value: this.state.chartHeight});
+    }
+
     render() {
         const {
             quoteAsset,
@@ -84,7 +93,9 @@ export default class ExchangeHeader extends React.Component {
         const dayChangeClass =
             parseFloat(dayChange) === 0
                 ? ""
-                : parseFloat(dayChange) < 0 ? "negative" : "positive";
+                : parseFloat(dayChange) < 0
+                    ? "negative"
+                    : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
         const dayChangeWithSign = dayChange > 0 ? "+" + dayChange : dayChange;
@@ -136,7 +147,9 @@ export default class ExchangeHeader extends React.Component {
             let settleAsset =
                 baseAsset.get("id") == "1.3.0"
                     ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0" ? baseAsset : null;
+                    : quoteAsset.get("id") == "1.3.0"
+                        ? baseAsset
+                        : null;
 
             if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
@@ -176,6 +189,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             quoteSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isQuoteSelected
@@ -195,6 +209,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             baseSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isBaseSelected
@@ -238,7 +253,7 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 </Link>
 
-                                <Link
+                                <a
                                     onClick={() => {
                                         this._addMarket(
                                             this.props.quoteAsset.get("symbol"),
@@ -254,7 +269,7 @@ export default class ExchangeHeader extends React.Component {
                                         name="fi-star"
                                         title="icons.fi_star.market"
                                     />
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -386,28 +401,92 @@ export default class ExchangeHeader extends React.Component {
                                 <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px"}}
-                                    onClick={this.props.onToggleCharts}
+                                    onClick={() => {
+                                        ZfApi.publish("chart_options", "open");
+                                    }}
                                 >
-                                    {!showDepthChart ? (
-                                        <Translate
-                                            content="exchange.order_depth"
-                                            data-intro={translator.translate(
-                                                "walkthrough.depth_chart"
-                                            )}
-                                        />
-                                    ) : (
-                                        <Translate
-                                            content="exchange.price_history"
-                                            data-intro={translator.translate(
-                                                "walkthrough.price_chart"
-                                            )}
-                                        />
-                                    )}
+                                    <Translate content="exchange.chart_modal" />
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
+
+                <BaseModal
+                    id="chart_options"
+                    overlay={true}
+                    modalHeader="exchange.chart_modal"
+                    noLogo
+                >
+                    <section className="block-list no-border-bottom">
+                        <header>
+                            <Translate content="exchange.chart_type" />:
+                        </header>
+                        <ul>
+                            <li className="with-dropdown">
+                                <select
+                                    value={
+                                        showDepthChart
+                                            ? "depth_chart"
+                                            : "price_chart"
+                                    }
+                                    className="settings-select"
+                                    onChange={e => {
+                                        if (
+                                            (showDepthChart &&
+                                                e.target.value ===
+                                                    "price_chart") ||
+                                            (!showDepthChart &&
+                                                e.target.value ===
+                                                    "market_depth")
+                                        ) {
+                                            this.props.onToggleCharts();
+                                        }
+                                    }}
+                                >
+                                    <option value="market_depth">
+                                        {counterpart.translate(
+                                            "exchange.order_depth"
+                                        )}
+                                    </option>
+                                    <option value="price_chart">
+                                        {counterpart.translate(
+                                            "exchange.price_history"
+                                        )}
+                                    </option>
+                                </select>
+                            </li>
+                        </ul>
+                    </section>
+                    <section className="block-list no-border-bottom">
+                        <header>
+                            <Translate content="exchange.chart_height" />:
+                        </header>
+                        <label>
+                            <span className="inline-label">
+                                <input
+                                    onKeyDown={e => {
+                                        if (e.keyCode === 13)
+                                            this.setChartHeight();
+                                    }}
+                                    type="number"
+                                    value={this.state.chartHeight}
+                                    onChange={e =>
+                                        this.setState({
+                                            chartHeight: e.target.value
+                                        })
+                                    }
+                                />
+                                <div
+                                    className="button no-margin"
+                                    onClick={this.setChartHeight}
+                                >
+                                    Set
+                                </div>
+                            </span>
+                        </label>
+                    </section>
+                </BaseModal>
             </div>
         );
     }

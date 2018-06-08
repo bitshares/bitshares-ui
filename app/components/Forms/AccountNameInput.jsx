@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
@@ -159,7 +159,7 @@ class AccountNameInput extends React.Component {
                         id="username"
                         type="text"
                         ref="input"
-                        autoComplete="off"
+                        autoComplete="username"
                         placeholder={null}
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}

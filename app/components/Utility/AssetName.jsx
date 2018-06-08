@@ -3,11 +3,12 @@ import utils from "common/utils";
 import asset_utils from "common/asset_utils";
 import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 class AssetName extends React.Component {
     static propTypes = {
-        replace: React.PropTypes.bool.isRequired,
-        dataPlace: React.PropTypes.string.isRequired
+        replace: PropTypes.bool.isRequired,
+        dataPlace: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -29,6 +30,7 @@ class AssetName extends React.Component {
 
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
+        if (!asset) return null;
         const name = asset.get("symbol");
         const isBitAsset = asset.has("bitasset");
         const isPredMarket =
@@ -77,7 +79,9 @@ class AssetName extends React.Component {
             const upperCasePrefix =
                 prefix && prefix === "bit"
                     ? prefix
-                    : !!prefix ? prefix.toUpperCase() : prefix;
+                    : !!prefix
+                        ? prefix.toUpperCase()
+                        : prefix;
             let tooltip = noTip
                 ? null
                 : `<div><strong>${upperCasePrefix ||
@@ -111,7 +115,7 @@ class AssetName extends React.Component {
                     <span className={!noPrefix ? "asset-prefix-replaced" : ""}>
                         {!noPrefix ? prefix : null}
                     </span>
-                    {replacedName}
+                    <span>{replacedName}</span>
                 </span>
             );
         }

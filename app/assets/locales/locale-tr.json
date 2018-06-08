@@ -414,6 +414,18 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "app_init": {
+        "browser": "Desteklenmeyen tarayıcı",
+        "browser_text":
+            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
+        "connected": "Bağlandı",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Bağlı değil",
+        "retry": "Yeniden dene",
+        "title": "Uygulama başlatma problemleri",
+        "understand": "Anladım ve onaylıyorum.",
+        "ws_status": "Websocket Bağlantı Durumu"
+    },
     "borrow": {
         "adjust": "Pozisyonu Güncelle",
         "adjust_short": "Adjust",
@@ -471,24 +483,9 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Çağrı Fiyatı",
         "change": "Değişim",
-        "chart_options": {
-            "bb": "Bollinger Bands",
-            "clamp_chart": "Clamp chart edge",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "fib": "Draw Fibonacci retracement",
-            "height": "Chart height",
-            "macd": "MACD chart",
-            "period": "Period",
-            "price_title": "Price indicators",
-            "sma": "SMA",
-            "smaVolume": "SMA",
-            "title": "Indicators",
-            "tools": "Tools",
-            "trendline": "Draw trend line",
-            "volume": "Show volume chart",
-            "volume_title": "Volume indicators"
-        },
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
         "confirm_buy":
             "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
         "confirm_no_orders_buy":
@@ -510,7 +507,6 @@
         "history": "Son İşlemler",
         "horizontal": "Yatay",
         "index": "Indeks",
-        "indicators": "Göstergeler",
         "invalid_amount": "Geçersiz miktar",
         "invalid_price": "Geçersiz fiyat",
         "invert": "Fiyatı ters çevir",
@@ -538,11 +534,10 @@
         "my_bids": "Alış Fiyatlarım",
         "my_history": "Önceki İşlemlerim",
         "my_orders": "Açık emirlerim",
+        "native": "Native",
         "new": "Yeni",
         "no_balance": "Yetersiz bakiye",
-        "no_bids": "No bids",
         "no_data": "Veri yok",
-        "no_orders": "No orders",
         "order_depth": "Piyasa Derinliği",
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",
@@ -961,7 +956,9 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "return_to_top": "Return to top",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Hesap",
@@ -1103,17 +1100,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Desteklenmeyen tarayıcı",
-        "browser_text":
-            "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
-        "connected": "Bağlandı",
-        "not_connected": "Bağlı değil",
-        "retry": "Yeniden dene",
-        "title": "Uygulama başlatma problemleri",
-        "understand": "Anladım ve onaylıyorum.",
-        "ws_status": "Websocket Bağlantı Durumu"
     },
     "languages": {
         "de": "Deutsch",
@@ -1380,6 +1366,12 @@
         "review_period": "İnceleme süresi başlangıcı"
     },
     "propose": "Teklif Et",
+    "qr_address_scanner": {
+        "address_found": "Adres bulundu",
+        "amount": "Miktar",
+        "retry": "Tekrar dene",
+        "use_address": "Adres kullan"
+    },
     "refcode": {
         "claim": "Talep",
         "claim_refcode": "Tavsiye Kodu Talep Et",

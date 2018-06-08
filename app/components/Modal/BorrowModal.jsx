@@ -1,5 +1,6 @@
-import React, {PropTypes} from "react";
-import {isFinite} from "lodash";
+import React from "react";
+import PropTypes from "prop-types";
+import {isFinite} from "lodash-es";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -19,6 +20,7 @@ import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs/es";
 import {List} from "immutable";
+import Icon from "../Icon/Icon";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -138,6 +140,11 @@ class BorrowModalContent extends React.Component {
         ZfApi.publish(this.props.modalId, "close");
     }
 
+    toggleLockedCR(e) {
+        e.preventDefault();
+        this.setState({lockedCR: !this.state.lockedCR ? true : false})
+    }
+
     _onBorrowChange(e) {
         let feed_price = this._getFeedPrice();
         let amount = e.amount.replace(/,/g, "");
@@ -190,18 +197,25 @@ class BorrowModalContent extends React.Component {
             target.value = target.value.replace(/[^0-9.]/g, "");
         }
 
-        // Catch initial decimal input
-        if (target.value.charAt(0) == ".") {
-            target.value = "0.";
+        let ratio = target.value;
+        let short_amount;
+        let collateral;
+
+        if(this.state.lockedCR) {
+            short_amount = (this.state.collateral * feed_price / ratio).toFixed(
+                this.props.backing_asset.get("precision")
+            );
+            collateral = this.state.collateral;
+        } else {
+            short_amount = this.state.short_amount;
+            collateral = (this.state.short_amount / feed_price * ratio).toFixed(
+                this.props.backing_asset.get("precision")
+            )
         }
 
-        let ratio = target.value;
-
         let newState = {
-            short_amount: this.state.short_amount,
-            collateral: (this.state.short_amount / feed_price * ratio).toFixed(
-                this.props.backing_asset.get("precision")
-            ),
+            short_amount: short_amount,
+            collateral: collateral,
             collateral_ratio: ratio
         };
 
@@ -542,12 +556,12 @@ class BorrowModalContent extends React.Component {
                         />
                     )}
                 </span>
-                <a href onClick={this._payDebt.bind(this)}>
+                <a onClick={this._payDebt.bind(this)}>
                     <Translate content="borrow.pay_max_debt" />
                 </a>
                 |
                 {collateral_ratio != 0 ? (
-                    <a href onClick={this._maximizeDebt.bind(this)}>
+                    <a onClick={this._maximizeDebt.bind(this)}>
                         <Translate content="borrow.use_max" />
                     </a>
                 ) : (
@@ -579,7 +593,7 @@ class BorrowModalContent extends React.Component {
                         />
                     )}
                 </span>
-                <a href onClick={this._maximizeCollateral.bind(this)}>
+                <a onClick={this._maximizeCollateral.bind(this)}>
                     <Translate content="borrow.use_max" />
                 </a>
             </span>
@@ -742,6 +756,9 @@ class BorrowModalContent extends React.Component {
                         ) : null}
 
                         <div className="form-group">
+                            <span style={{position: "absolute", left: 20}}>
+                                <Icon onClick={this.toggleLockedCR.bind(this)} name={!this.state.lockedCR ? "locked" : "unlocked"} size="1_5x" style={{position: "relative", top: -10}} />
+                            </span>
                             <AmountSelector
                                 label="transaction.borrow_amount"
                                 amount={short_amount.toString()}
@@ -754,6 +771,9 @@ class BorrowModalContent extends React.Component {
                             />
                         </div>
                         <div className={collateralClass}>
+                            <span style={{position: "absolute", left: 20}}>
+                                <Icon onClick={this.toggleLockedCR.bind(this)} name={this.state.lockedCR ? "locked" : "unlocked"} size="1_5x" style={{position: "relative", top: -10}} />
+                            </span>
                             <AmountSelector
                                 label="transaction.collateral"
                                 amount={collateral.toString()}
@@ -789,7 +809,7 @@ class BorrowModalContent extends React.Component {
                                         <input
                                             value={
                                                 collateral_ratio == 0
-                                                    ? null
+                                                    ? ""
                                                     : collateral_ratio
                                             }
                                             onChange={this._onRatioChange.bind(
@@ -833,7 +853,6 @@ class BorrowModalContent extends React.Component {
                         <div className="no-padding grid-content button-group no-overflow">
                             <div
                                 onClick={this._onSubmit.bind(this)}
-                                href
                                 className={buttonClass}
                             >
                                 <Translate content="borrow.adjust" />
@@ -845,7 +864,6 @@ class BorrowModalContent extends React.Component {
                                         this._initialState(this.props)
                                     );
                                 }}
-                                href
                                 className="button hollow primary"
                             >
                                 <Translate content="wallet.reset" />
@@ -860,9 +878,7 @@ class BorrowModalContent extends React.Component {
         );
     }
 }
-BorrowModalContent = BindToChainState(BorrowModalContent, {
-    keep_updating: true
-});
+BorrowModalContent = BindToChainState(BorrowModalContent);
 
 /* This wrapper class appears to be necessary because the decorator eats the show method from refs */
 export default class ModalWrapper extends React.Component {

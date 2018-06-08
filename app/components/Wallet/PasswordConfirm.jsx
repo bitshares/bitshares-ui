@@ -1,7 +1,8 @@
-import React, {PropTypes, Component} from "react";
+import React, {Component} from "react";
 import Translate from "react-translate-component";
 import Immutable from "immutable";
 import cname from "classnames";
+import PropTypes from "prop-types";
 
 export default class PasswordConfirm extends Component {
     static propTypes = {
@@ -27,7 +28,7 @@ export default class PasswordConfirm extends Component {
     }
 
     render() {
-        var {password, confirm, valid, errors} = this.state;
+        const {password, confirm, errors} = this.state;
         let {newPassword} = this.props;
         let tabIndex = 1;
 
@@ -42,10 +43,11 @@ export default class PasswordConfirm extends Component {
                 <section>
                     <input
                         type="password"
-                        id="password"
+                        id="current-password"
+                        autoComplete="current-password"
                         ref="firstPassword"
                         onChange={this.formChange.bind(this)}
-                        value={this.state.password}
+                        value={password}
                         tabIndex={tabIndex++}
                     />
                 </section>
@@ -59,9 +61,10 @@ export default class PasswordConfirm extends Component {
                 <section>
                     <input
                         type="password"
-                        id="confirm"
+                        id="new-password"
+                        autoComplete="new-password"
                         onChange={this.formChange.bind(this)}
-                        value={this.state.confirm}
+                        value={confirm}
                         tabIndex={tabIndex++}
                     />
                 </section>

@@ -418,6 +418,18 @@
             "whitelist_authorities": "Autorità whitelist"
         }
     },
+    "app_init": {
+        "browser": "Browser non supportato",
+        "browser_text":
+            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
+        "connected": "Connesso",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Non connesso",
+        "retry": "Riprova",
+        "title": "Problemi nell'inizializzazione dell'applicazione",
+        "understand": "Ho capito",
+        "ws_status": "Stato della connessione del full node"
+    },
     "borrow": {
         "adjust": "Aggiorna posizione",
         "adjust_short": "Aggiorna",
@@ -475,24 +487,9 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
         "change": "Variazione",
-        "chart_options": {
-            "bb": "Bollinger Bands",
-            "clamp_chart": "Fissa bordo del grafico",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "fib": "Disegna Fibonacci retracement",
-            "height": "Altezza del grafico",
-            "macd": "Grafico MACD",
-            "period": "Periodo",
-            "price_title": "Indicatori del prezzo",
-            "sma": "SMA",
-            "smaVolume": "SMA",
-            "title": "Indicatori",
-            "tools": "Strumenti",
-            "trendline": "Disegna trend line",
-            "volume": "Mostra grafico del volume",
-            "volume_title": "Indicatori del volume"
-        },
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
         "confirm_buy":
             "Il tuo ordine è %(diff)s volte più alto dell'offerta più bassa, sei sicuro?",
         "confirm_no_orders_buy":
@@ -514,7 +511,6 @@
         "history": "Storico del mercato",
         "horizontal": "Orizzontale",
         "index": "Indice",
-        "indicators": "Indicatori",
         "invalid_amount": "Quantità non valida",
         "invalid_price": "Prezzo non valido",
         "invert": "Inverti il prezzo",
@@ -542,11 +538,10 @@
         "my_bids": "Le mie bid",
         "my_history": "Il mio storico transazioni",
         "my_orders": "I miei ordini attivi",
+        "native": "Native",
         "new": "Nuovo",
         "no_balance": "Saldo insufficiente",
-        "no_bids": "No bids",
         "no_data": "Nessun dato",
-        "no_orders": "No orders",
         "order_depth": "Market Depth",
         "others": "Altri",
         "overbought": "Overbought",
@@ -968,7 +963,9 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "return_to_top": "Return to top",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Account",
@@ -1112,17 +1109,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Browser non supportato",
-        "browser_text":
-            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
-        "connected": "Connesso",
-        "not_connected": "Non connesso",
-        "retry": "Riprova",
-        "title": "Problemi nell'inizializzazione dell'applicazione",
-        "understand": "Ho capito",
-        "ws_status": "Stato della connessione del full node"
     },
     "languages": {
         "de": "Deutsch",
@@ -1386,6 +1372,12 @@
         "review_period": "Inizio periodo di revisione"
     },
     "propose": "Proponi",
+    "qr_address_scanner": {
+        "address_found": "Indirizzo trovato",
+        "amount": "Importo",
+        "retry": "Riprova",
+        "use_address": "Usa indirizzo"
+    },
     "refcode": {
         "claim": "Richesta",
         "claim_refcode": "Richiedi Referral Code",

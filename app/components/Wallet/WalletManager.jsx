@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {connect} from "alt-react";
 import WalletActions from "actions/WalletActions";
 import BackupActions from "actions/BackupActions";
@@ -7,6 +7,14 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import Translate from "react-translate-component";
 import cname from "classnames";
 import counterpart from "counterpart";
+import {Switch, Route} from "react-router-dom";
+import {ExistingAccountOptions} from "./ExistingAccount";
+import ImportKeys from "./ImportKeys";
+import BalanceClaimActive from "./BalanceClaimActive";
+import WalletChangePassword from "./WalletChangePassword";
+import {WalletCreate} from "./WalletCreate";
+import {BackupCreate, BackupRestore} from "./Backup";
+import BackupBrainkey from "./BackupBrainkey";
 
 const connectObject = {
     listenTo() {
@@ -66,7 +74,63 @@ class WalletManager extends Component {
                             />
                         </div>
                         <div className="content-block">
-                            {this.props.children}
+                            <Switch>
+                                <Route
+                                    exact
+                                    path="/wallet"
+                                    component={WalletOptions}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/change"
+                                    component={ChangeActiveWallet}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/change-password"
+                                    component={WalletChangePassword}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/import-keys"
+                                    component={ImportKeys}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/brainkey"
+                                    component={ExistingAccountOptions}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/create"
+                                    component={WalletCreate}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/delete"
+                                    component={WalletDelete}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/backup/restore"
+                                    component={BackupRestore}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/backup/create"
+                                    component={BackupCreate}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/backup/brainkey"
+                                    component={BackupBrainkey}
+                                />
+                                <Route
+                                    exact
+                                    path="/wallet/balance-claims"
+                                    component={BalanceClaimActive}
+                                />
+                            </Switch>
                         </div>
                     </div>
                 </div>

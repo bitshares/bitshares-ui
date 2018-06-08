@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import notify from "actions/NotificationActions";
 import cname from "classnames";
 import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -98,7 +99,7 @@ export default class WalletChangePassword extends Component {
 
 class WalletPassword extends Component {
     static propTypes = {
-        onValid: React.PropTypes.func.isRequired
+        onValid: PropTypes.func.isRequired
     };
 
     constructor() {
@@ -146,7 +147,8 @@ class WalletPassword extends Component {
                                 "wallet.current_pass"
                             )}
                             type="password"
-                            id="password"
+                            id="current-password"
+                            autoComplete="current-password"
                             onChange={this.formChange.bind(this)}
                             value={this.state.password}
                         />

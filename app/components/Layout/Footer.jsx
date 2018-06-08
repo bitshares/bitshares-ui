@@ -10,22 +10,18 @@ import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
-import counterpart from "counterpart";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import PropTypes from "prop-types";
 
 class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        synced: React.PropTypes.bool.isRequired
+        synced: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
         dynGlobalObject: "2.1.0"
-    };
-
-    static contextTypes = {
-        router: React.PropTypes.object
     };
 
     constructor(props) {
@@ -209,7 +205,20 @@ class Footer extends React.Component {
                                 )}
                                 <span style={updateStyles}>
                                     <Translate content="footer.title" />
-                                    <span className="version">{version}</span>
+                                    {__GIT_BRANCH__ === "staging" ? (
+                                        <a
+                                            href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}
+                                            className="version"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {version}
+                                        </a>
+                                    ) : (
+                                        <span className="version">
+                                            {version}
+                                        </span>
+                                    )}
                                 </span>
 
                                 {state.newVersion && (
@@ -358,11 +367,11 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.router.push("/wallet/backup/create");
+        this.props.history.push("/wallet/backup/create");
     }
 
     onBackupBrainkey() {
-        this.context.router.push("/wallet/backup/brainkey");
+        this.props.history.push("/wallet/backup/brainkey");
     }
 
     onPopup() {
@@ -373,10 +382,10 @@ class Footer extends React.Component {
 
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
-        this.context.router.push("/settings/access");
+        this.props.history.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {

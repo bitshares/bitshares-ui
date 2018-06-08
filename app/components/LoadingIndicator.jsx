@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 class LoadingIndicator extends React.Component {
     static propTypes = {
-        type: React.PropTypes.string,
-        loadingText: React.PropTypes.string
+        type: PropTypes.string,
+        loadingText: PropTypes.string
     };
 
     static defaultProps = {
@@ -77,7 +78,7 @@ class LoadingIndicator extends React.Component {
                             {this.props.loadingText && (
                                 <div
                                     className="text-center"
-                                    style={{paddingTop: "10px"}}
+                                    style={{paddingTop: "10px", color: "black"}}
                                 >
                                     {this.props.loadingText}
                                 </div>

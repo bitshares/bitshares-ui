@@ -15,7 +15,7 @@ import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import EquivalentPrice from "../Utility/EquivalentPrice";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
@@ -229,11 +229,6 @@ class AccountOverview extends React.Component {
         return render ? <span>&nbsp;|&nbsp;</span> : null;
     }
 
-    _onNavigate(route, e) {
-        e.preventDefault();
-        this.props.router.push(route);
-    }
-
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
             if (this.send_modal) this.send_modal.show();
@@ -391,10 +386,7 @@ class AccountOverview extends React.Component {
 
             /* Popover content */
             settleLink = (
-                <a
-                    href
-                    onClick={this._onSettleAsset.bind(this, asset.get("id"))}
-                >
+                <a onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
                     <Icon
                         name="settle"
                         title="icons.settle"
@@ -678,7 +670,9 @@ class AccountOverview extends React.Component {
                             market = "USD";
                         let preferredMarket = market
                             ? market
-                            : core_asset ? core_asset.get("symbol") : "BTS";
+                            : core_asset
+                                ? core_asset.get("symbol")
+                                : "BTS";
                         let directMarketLink = notCore ? (
                             <Link
                                 to={`/market/${asset.get(

@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -18,6 +18,7 @@ import ProposedOperation from "./ProposedOperation";
 import marketUtils from "common/market_utils";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
+import PropTypes from "prop-types";
 
 const {operations} = grapheneChainTypes;
 require("./operations.scss");
@@ -42,10 +43,6 @@ class TransactionLabel extends React.Component {
 }
 
 class Row extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
-    };
-
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired
     };
@@ -57,13 +54,7 @@ class Row extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.showDetails = this.showDetails.bind(this);
     }
-    //
-    // showDetails(e) {
-    //     e.preventDefault();
-    //     this.context.router.push(`/block/${this.props.block}`);
-    // }
 
     shouldComponentUpdate(nextProps) {
         let {block, dynGlobalObject} = this.props;
@@ -100,6 +91,7 @@ class Row extends React.Component {
             <tr>
                 {this.props.includeOperationId ? (
                     <td style={{textAlign: "left"}}>
+                        {/* {this.props.block}#{this.props.txIndex}<br /> */}
                         {this.props.operationId}
                     </td>
                 ) : null}
@@ -120,7 +112,9 @@ class Row extends React.Component {
                                     )
                                 }
                             )}
-                            to={`/block/${this.props.block}`}
+                            to={`/block/${this.props.block}/${
+                                this.props.txIndex
+                            }`}
                         >
                             <TransactionLabel color={color} type={type} />
                         </Link>
@@ -157,7 +151,7 @@ class Row extends React.Component {
         );
     }
 }
-Row = BindToChainState(Row, {keep_updating: true});
+Row = BindToChainState(Row);
 
 class Operation extends React.Component {
     static defaultProps = {
@@ -169,10 +163,10 @@ class Operation extends React.Component {
     };
 
     static propTypes = {
-        op: React.PropTypes.array.isRequired,
-        current: React.PropTypes.string,
-        block: React.PropTypes.number,
-        csvExportMode: React.PropTypes.bool
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string,
+        block: PropTypes.number,
+        csvExportMode: PropTypes.bool
     };
 
     componentWillReceiveProps(np) {
@@ -186,7 +180,7 @@ class Operation extends React.Component {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/account/${name_or_id}`}>{name_or_id}</Link>
         );
     }
 
@@ -216,7 +210,9 @@ class Operation extends React.Component {
             color = "info";
         let memoComponent = null;
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 if (op[1].memo) {
                     memoComponent = <MemoText memo={op[1].memo} />;
@@ -1333,6 +1329,7 @@ class Operation extends React.Component {
         line = column ? (
             <Row
                 operationId={this.props.operationId}
+                txIndex={this.props.txIndex}
                 includeOperationId={this.props.includeOperationId}
                 block={block}
                 type={op[0]}

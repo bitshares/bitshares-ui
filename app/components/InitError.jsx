@@ -83,10 +83,7 @@ class InitError extends React.Component {
                 <div className="grid-container">
                     <div className="grid-content no-overflow">
                         <br />
-                        <Translate
-                            component="h3"
-                            content={`init_error.title`}
-                        />
+                        <Translate component="h3" content={`app_init.title`} />
                         <br />
                         <section className="block-list">
                             <header>
@@ -124,20 +121,20 @@ class InitError extends React.Component {
                                 </li>
                                 <li className="key-value clearfix">
                                     <div className="float-left">
-                                        <Translate content="init_error.ws_status" />
+                                        <Translate content="app_init.ws_status" />
                                     </div>
                                     <div className="float-right">
                                         {this.props.rpc_connection_status ===
                                         "open" ? (
                                             <span className="txtlabel success">
                                                 <Translate
-                                                    content={`init_error.connected`}
+                                                    content={`app_init.connected`}
                                                 />
                                             </span>
                                         ) : (
                                             <span className="txtlabel warning">
                                                 <Translate
-                                                    content={`init_error.not_connected`}
+                                                    content={`app_init.not_connected`}
                                                 />
                                             </span>
                                         )}
@@ -149,10 +146,9 @@ class InitError extends React.Component {
                         <div className="button-group">
                             <div
                                 className="button outline"
-                                href
                                 onClick={this.onReloadClick}
                             >
-                                <Translate content={`init_error.retry`} />
+                                <Translate content={`app_init.retry`} />
                             </div>
 
                             <div

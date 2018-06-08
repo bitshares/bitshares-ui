@@ -14,6 +14,7 @@ import counterpart from "counterpart";
 import MarketStatsCheck from "./MarketStatsCheck";
 import AssetWrapper from "./AssetWrapper";
 import ReactTooltip from "react-tooltip";
+import PropTypes from "prop-types";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -29,8 +30,8 @@ class TotalValue extends MarketStatsCheck {
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
-        inHeader: React.PropTypes.bool,
-        label: React.PropTypes.string
+        inHeader: PropTypes.bool,
+        label: PropTypes.string
     };
 
     static defaultProps = {
@@ -309,7 +310,7 @@ class TotalValue extends MarketStatsCheck {
         }
     }
 }
-TotalValue = BindToChainState(TotalValue, {keep_updating: true});
+TotalValue = BindToChainState(TotalValue);
 TotalValue = AssetWrapper(TotalValue, {
     propNames: ["fromAssets"],
     asList: true
@@ -394,7 +395,7 @@ class TotalBalanceValue extends React.Component {
         );
     }
 }
-TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});
+TotalBalanceValue = BindToChainState(TotalBalanceValue);
 
 class AccountWrapper extends React.Component {
     static propTypes = {
@@ -524,7 +525,7 @@ class AccountWrapper extends React.Component {
         }
     }
 }
-AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});
+AccountWrapper = BindToChainState(AccountWrapper);
 
 TotalBalanceValue.AccountWrapper = AccountWrapper;
 export default TotalBalanceValue;

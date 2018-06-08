@@ -1,18 +1,17 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AccountSelector from "./AccountSelector";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import Translate from "react-translate-component";
 import AccountImage from "../Account/AccountImage";
-import LinkToAccountById from "../Utility/LinkToAccountById";
 import {List} from "immutable";
 
 class AccountVotingProxy extends React.Component {
     static propTypes = {
         existingProxy: ChainTypes.ChainAccount.isRequired,
-        account: React.PropTypes.object.isRequired,
-        onProxyAccountChanged: React.PropTypes.func.isRequired,
+        account: PropTypes.object.isRequired,
+        onProxyAccountChanged: PropTypes.func.isRequired,
         knownProxies: ChainTypes.ChainAccountsList
     };
 
@@ -34,10 +33,6 @@ class AccountVotingProxy extends React.Component {
         ]),
         existingProxy: "1.2.5", // proxy-to-self
         autosubscribe: false
-    };
-
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -133,11 +128,6 @@ class AccountVotingProxy extends React.Component {
         });
     }
 
-    _onNavigate(route) {
-        this.context.router.push(route);
-        // this._changeTab();
-    }
-
     // _changeTab() {
     //     SettingsActions.changeViewSetting({
     //         votingTab: 3
@@ -173,7 +163,9 @@ class AccountVotingProxy extends React.Component {
             .sort((a, b) => {
                 return a.get("name") > b.get("name")
                     ? 1
-                    : a.get("name") < b.get("name") ? -1 : 0;
+                    : a.get("name") < b.get("name")
+                        ? -1
+                        : 0;
             })
             .map(proxy => {
                 return (

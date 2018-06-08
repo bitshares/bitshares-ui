@@ -408,6 +408,18 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "app_init": {
+        "browser": "Unsupported browser",
+        "browser_text":
+            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+        "connected": "Connected",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Not connected",
+        "retry": "Retry",
+        "title": "Application initialization issues",
+        "understand": "I understand",
+        "ws_status": "Full node connection status"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -465,24 +477,9 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Prix de flux",
         "change": "Change",
-        "chart_options": {
-            "bb": "Bollinger Bands",
-            "clamp_chart": "Clamp chart edge",
-            "ema1": "EMA 1",
-            "ema2": "EMA 2",
-            "fib": "Draw Fibonacci retracement",
-            "height": "Chart height",
-            "macd": "MACD chart",
-            "period": "Period",
-            "price_title": "Price indicators",
-            "sma": "SMA",
-            "smaVolume": "SMA",
-            "title": "Indicators",
-            "tools": "Tools",
-            "trendline": "Draw trend line",
-            "volume": "Show volume chart",
-            "volume_title": "Volume indicators"
-        },
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
         "confirm_buy":
             "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy":
@@ -504,7 +501,6 @@
         "history": "Market trades",
         "horizontal": "Horizontal",
         "index": "Index",
-        "indicators": "Indicators",
         "invalid_amount": "Invalid amount",
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
@@ -532,11 +528,10 @@
         "my_bids": "My bids",
         "my_history": "My trades",
         "my_orders": "My open orders",
+        "native": "Native",
         "new": "New",
         "no_balance": "Insufficient balance",
-        "no_bids": "No bids",
         "no_data": "No data",
-        "no_orders": "No orders",
         "order_depth": "Carnet d'ordres",
         "others": "Others",
         "overbought": "Overbought",
@@ -952,7 +947,9 @@
     "global": {
         "cancel": "Cancel",
         "confirm": "Confirm",
-        "help": "Help"
+        "help": "Help",
+        "return_to_top": "Return to top",
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
         "account": "Account",
@@ -1096,17 +1093,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Unsupported browser",
-        "browser_text":
-            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "retry": "Retry",
-        "title": "Application initialization issues",
-        "understand": "I understand",
-        "ws_status": "Full node connection status"
     },
     "languages": {
         "de": "Deutsch",
@@ -1367,6 +1353,12 @@
         "review_period": "Review period begin"
     },
     "propose": "Propose",
+    "qr_address_scanner": {
+        "address_found": "Adresse trouvée",
+        "amount": "Montant",
+        "retry": "Réessayer",
+        "use_address": "Utiliser l'adresse"
+    },
     "refcode": {
         "claim": "Claim",
         "claim_refcode": "Claim Referral Code",
