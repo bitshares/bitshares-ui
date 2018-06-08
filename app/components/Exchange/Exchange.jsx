@@ -61,7 +61,8 @@ class Exchange extends React.Component {
             expirationCustomTime: {
                 bid: moment().add(1, "day"),
                 ask: moment().add(1, "day")
-            }
+            },
+            feeStatus: {}
         };
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
@@ -202,7 +203,6 @@ class Exchange extends React.Component {
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
-            feeStatus: {},
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
