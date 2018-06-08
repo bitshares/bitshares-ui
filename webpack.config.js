@@ -12,10 +12,10 @@ var locales = require("./app/assets/locales");
 * production set it to the package version
 */
 var __VERSION__ =
-    git.branch() === "staging"
+    git.branch() === "staging" || git.branch() === "develop"
         ? git.short()
         : require("./package.json").version;
-
+console.log("__VERSION__", __VERSION__, "git.branch()", git.branch());
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
 
