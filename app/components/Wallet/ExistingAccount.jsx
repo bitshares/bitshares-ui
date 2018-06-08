@@ -1,9 +1,13 @@
 import React, {Component} from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {connect} from "alt-react";
 import WalletManagerStore from "stores/WalletManagerStore";
-import BalanceClaimActive from "components/Wallet/BalanceClaimActive";
+import BalanceClaimActive from "./BalanceClaimActive";
 import Translate from "react-translate-component";
+import {Switch, Route} from "react-router-dom";
+import Brainkey from "./Brainkey";
+import ImportKeys from "./ImportKeys";
+import {BackupRestore} from "./Backup";
 
 const connectObject = {
     listenTo() {
@@ -37,6 +41,33 @@ class ExistingAccount extends Component {
                             )}
                         </div>
                         <div className="content-block">
+                            <Switch>
+                                <Route
+                                    exact
+                                    path="/existing-account"
+                                    component={BackupRestore}
+                                />
+                                <Route
+                                    exact
+                                    path="/existing-account/import-backup"
+                                    component={ExistingAccountOptions}
+                                />
+                                <Route
+                                    exact
+                                    path="/existing-account/import-keys"
+                                    component={ImportKeys}
+                                />
+                                <Route
+                                    exact
+                                    path="/existing-account/brainkey"
+                                    component={Brainkey}
+                                />
+                                <Route
+                                    exact
+                                    path="/existing-account/balance-claim"
+                                    component={BalanceClaimActive}
+                                />
+                            </Switch>
                             {this.props.children}
                         </div>
                     </div>

@@ -409,6 +409,18 @@
             "whitelist_authorities": "ホワイトリスト権限"
         }
     },
+    "app_init": {
+        "browser": "サポートされていないブラウザ",
+        "browser_text":
+            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
+        "connected": "接続しました",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "接続していません",
+        "retry": "再試行",
+        "title": "アプリケーション初期化エラー",
+        "understand": "理解しました。",
+        "ws_status": "フルノード接続状態"
+    },
     "borrow": {
         "adjust": "ポジションを更新",
         "adjust_short": "調整",
@@ -938,6 +950,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1082,17 +1095,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "サポートされていないブラウザ",
-        "browser_text":
-            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
-        "connected": "接続しました",
-        "not_connected": "接続していません",
-        "retry": "再試行",
-        "title": "アプリケーション初期化エラー",
-        "understand": "理解しました。",
-        "ws_status": "フルノード接続状態"
     },
     "languages": {
         "de": "Deutsch",

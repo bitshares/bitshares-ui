@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -36,27 +36,7 @@ export const TransactionIDAndExpiry = ({id, expiration, style}) => {
     );
 };
 
-class TransactionLabel extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.color !== this.props.color ||
-            nextProps.type !== this.props.type
-        );
-    }
-    render() {
-        let trxTypes = counterpart.translate("transaction.trxTypes");
-        let labelClass = classNames("label", this.props.color || "info");
-        return (
-            <span className={labelClass}>{trxTypes[ops[this.props.type]]}</span>
-        );
-    }
-}
-
 class Row extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     constructor(props) {
         super(props);
         this.showDetails = this.showDetails.bind(this);
@@ -64,34 +44,16 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.router.push(`/block/${this.props.block}`);
+        this.props.history.push(`/block/${this.props.block}`);
     }
 
     render() {
-        let {
-            id,
-            block,
-            fee,
-            color,
-            type,
-            hideDate,
-            hideFee,
-            hideOpLabel,
-            hideExpiration,
-            expiration
-        } = this.props;
+        let {id, fee, hideFee, hideExpiration, expiration} = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
 
         return (
             <div style={{padding: "5px 0", textAlign: "left"}}>
-                {hideOpLabel ? null : (
-                    <span className="left-td">
-                        <a onClick={this.showDetails}>
-                            <TransactionLabel color={color} type={type} />
-                        </a>
-                    </span>
-                )}
                 <span>
                     {this.props.info}&nbsp;
                     {hideFee ? null : (
@@ -170,7 +132,9 @@ class ProposedOperation extends React.Component {
             column = null,
             color = "info";
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 let memoComponent = null;
 

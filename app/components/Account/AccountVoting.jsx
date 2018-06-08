@@ -9,7 +9,7 @@ import cnames from "classnames";
 import {Tabs, Tab} from "../Utility/Tabs";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link as RealLink} from "react-router/es";
+import {Link as RealLink} from "react-router-dom";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -20,7 +20,15 @@ import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
-import { Link, DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from "react-scroll";
+import {
+    Link,
+    DirectLink,
+    Element,
+    Events,
+    animateScroll as scroll,
+    scrollSpy,
+    scroller
+} from "react-scroll";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -41,7 +49,11 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]} (<Translate component="span" content="explorer.block.trx" /> #{this.props.txIndex})
+                        {trxTypes[ops[this.props.type]]} (<Translate
+                            component="span"
+                            content="explorer.block.trx"
+                        />{" "}
+                        #{this.props.txIndex})
                     </span>
                 </td>
                 <td />
@@ -141,7 +153,9 @@ class Transaction extends React.Component {
             let key = 0;
 
             let color = "";
-            switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+            switch (
+                ops[op[0]] // For a list of trx types, see chain_types.coffee
+            ) {
                 case "transfer":
                     color = "success";
 
@@ -1953,11 +1967,7 @@ class Transaction extends React.Component {
             );
         });
 
-        return (
-            <div>
-                {info}
-            </div>
-        );
+        return <div>{info}</div>;
     }
 }
 

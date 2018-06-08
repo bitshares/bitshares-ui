@@ -13,21 +13,15 @@ import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 import {set} from "lodash-es";
-import PropTypes from "prop-types";
 
 class Settings extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     constructor(props) {
         super();
-
         let menuEntries = this._getMenuEntries(props);
         let activeSetting = 0;
 
-        let tabIndex = !!props.params.tab
-            ? menuEntries.indexOf(props.params.tab)
+        let tabIndex = !!props.match.params.tab
+            ? menuEntries.indexOf(props.match.params.tab)
             : props.viewSettings.get("activeSetting", 0);
         if (tabIndex >= 0) activeSetting = tabIndex;
 
@@ -57,8 +51,8 @@ class Settings extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.params.tab !== this.props.params.tab) {
-            this._onChangeMenu(this.props.params.tab);
+        if (prevProps.match.params.tab !== this.props.match.params.tab) {
+            this._onChangeMenu(this.props.match.params.tab);
         }
     }
 
@@ -239,7 +233,7 @@ class Settings extends React.Component {
     }
 
     _redirectToEntry(entry) {
-        this.context.router.push("/settings/" + entry);
+        this.props.history.push("/settings/" + entry);
     }
 
     _onChangeMenu(entry) {

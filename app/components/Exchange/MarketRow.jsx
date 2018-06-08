@@ -6,15 +6,10 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
-import PropTypes from "prop-types";
 
 class MarketRow extends React.Component {
     static defaultProps = {
         noSymbols: false
-    };
-
-    static contextTypes = {
-        router: PropTypes.object.isRequired
     };
 
     constructor() {
@@ -25,9 +20,9 @@ class MarketRow extends React.Component {
 
     _onClick(marketID) {
         const newPath = `/market/${marketID}`;
-        if (newPath !== this.context.router.location.pathname) {
+        if (newPath !== this.props.location.pathname) {
             MarketsActions.switchMarket();
-            this.context.router.push(`/market/${marketID}`);
+            this.props.history.push(`/market/${marketID}`);
         }
     }
 
@@ -138,7 +133,9 @@ class MarketRow extends React.Component {
                         let changeClass =
                             change === "0.00"
                                 ? ""
-                                : change > 0 ? "change-up" : "change-down";
+                                : change > 0
+                                    ? "change-up"
+                                    : "change-down";
 
                         return (
                             <td
@@ -223,7 +220,9 @@ class MarketRow extends React.Component {
                                     finalPrice,
                                     finalPrice > 1000
                                         ? 0
-                                        : finalPrice > 10 ? 2 : precision
+                                        : finalPrice > 10
+                                            ? 2
+                                            : precision
                                 )}
                             </td>
                         );
