@@ -233,11 +233,20 @@ class Exchange extends React.Component {
         });
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (!nextProps.marketReady && !this.props.marketReady) {
+    shouldComponentUpdate(np, ns) {
+        if (!np.marketReady && !this.props.marketReady) {
             return false;
         }
-        return true;
+        let propsChanged = false;
+        for (let key in np) {
+            if (np.hasOwnProperty(key)) {
+                propsChanged =
+                    propsChanged ||
+                    !utils.are_equal_shallow(np[key], this.props[key]);
+                if (propsChanged) break;
+            }
+        }
+        return propsChanged || !utils.are_equal_shallow(ns, this.state);
     }
 
     _checkFeeStatus(

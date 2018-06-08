@@ -52,12 +52,6 @@ class ExchangeContainer extends React.Component {
                     totals: () => {
                         return MarketsStore.getState().totals;
                     },
-                    priceData: () => {
-                        return MarketsStore.getState().priceData;
-                    },
-                    volumeData: () => {
-                        return MarketsStore.getState().volumeData;
-                    },
                     activeMarketHistory: () => {
                         return MarketsStore.getState().activeMarketHistory;
                     },

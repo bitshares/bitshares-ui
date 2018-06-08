@@ -445,10 +445,14 @@ export default class ExchangeHeader extends React.Component {
                                     }}
                                 >
                                     <option value="market_depth">
-                                        <Translate content="exchange.order_depth" />
+                                        {counterpart.translate(
+                                            "exchange.order_depth"
+                                        )}
                                     </option>
                                     <option value="price_chart">
-                                        <Translate content="exchange.price_history" />
+                                        {counterpart.translate(
+                                            "exchange.price_history"
+                                        )}
                                     </option>
                                 </select>
                             </li>
