@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import MarketsActions from "actions/MarketsActions";
@@ -253,7 +253,7 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 </Link>
 
-                                <Link
+                                <a
                                     onClick={() => {
                                         this._addMarket(
                                             this.props.quoteAsset.get("symbol"),
@@ -269,7 +269,7 @@ export default class ExchangeHeader extends React.Component {
                                         name="fi-star"
                                         title="icons.fi_star.market"
                                     />
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -445,10 +445,14 @@ export default class ExchangeHeader extends React.Component {
                                     }}
                                 >
                                     <option value="market_depth">
-                                        <Translate content="exchange.order_depth" />
+                                        {counterpart.translate(
+                                            "exchange.order_depth"
+                                        )}
                                     </option>
                                     <option value="price_chart">
-                                        <Translate content="exchange.price_history" />
+                                        {counterpart.translate(
+                                            "exchange.price_history"
+                                        )}
                                     </option>
                                 </select>
                             </li>

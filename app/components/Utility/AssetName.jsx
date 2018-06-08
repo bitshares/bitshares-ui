@@ -30,6 +30,7 @@ class AssetName extends React.Component {
 
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
+        if (!asset) return null;
         const name = asset.get("symbol");
         const isBitAsset = asset.has("bitasset");
         const isPredMarket =

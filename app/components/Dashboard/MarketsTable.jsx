@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "alt-react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import cnames from "classnames";

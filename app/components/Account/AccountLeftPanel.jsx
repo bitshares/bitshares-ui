@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import AccountInfo from "./AccountInfo";
 import Translate from "react-translate-component";

@@ -2,11 +2,20 @@ var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var Clean = require("clean-webpack-plugin");
+var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
-var __VERSION__ = require("./package.json").version;
 
+/*
+* For staging builds, set the version to the latest commit hash, for
+* production set it to the package version
+*/
+var __VERSION__ =
+    git.branch() === "staging" || git.branch() === "develop"
+        ? git.short()
+        : require("./package.json").version;
+console.log("__VERSION__", __VERSION__, "git.branch()", git.branch());
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
 
@@ -57,6 +66,7 @@ module.exports = function(env) {
         regexString = regexString + (l + (i < locales.length - 1 ? "|" : ""));
     });
     const localeRegex = new RegExp(regexString);
+
     var plugins = [
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.DefinePlugin({
@@ -69,7 +79,8 @@ module.exports = function(env) {
             ),
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
-            DEFAULT_SYMBOL: "BTS"
+            DEFAULT_SYMBOL: "BTS",
+            __GIT_BRANCH__: JSON.stringify(git.branch())
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
@@ -195,7 +206,7 @@ module.exports = function(env) {
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
         },
-        devtool: env.noUgly || !env.prod ? "eval" : "none",
+        devtool: env.noUgly || !env.prod ? "cheap-module-source-map" : "none",
         module: {
             rules: [
                 {

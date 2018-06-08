@@ -3,7 +3,7 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
