@@ -36,22 +36,17 @@ class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
         activeMarketHistory: PropTypes.object.isRequired,
-        viewSettings: PropTypes.object.isRequired,
-        priceData: PropTypes.array.isRequired,
-        volumeData: PropTypes.array.isRequired
+        viewSettings: PropTypes.object.isRequired
     };
 
     static defaultProps = {
         marketCallOrders: [],
         activeMarketHistory: {},
-        viewSettings: {},
-        priceData: [],
-        volumeData: []
+        viewSettings: {}
     };
 
     constructor(props) {
         super();
-        console.log("Exchange constructor", props);
         this.state = {
             ...this._initialState(props),
             expirationType: {
@@ -61,7 +56,8 @@ class Exchange extends React.Component {
             expirationCustomTime: {
                 bid: moment().add(1, "day"),
                 ask: moment().add(1, "day")
-            }
+            },
+            feeStatus: {}
         };
 
         this._getWindowSize = debounce(this._getWindowSize.bind(this), 150);
@@ -202,7 +198,6 @@ class Exchange extends React.Component {
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
-            feeStatus: {},
             height: window.innerHeight,
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
@@ -1224,10 +1219,6 @@ class Exchange extends React.Component {
 
         const showVolumeChart = this.props.viewSettings.get(
             "showVolumeChart",
-            true
-        );
-        const enableChartClamp = this.props.viewSettings.get(
-            "enableChartClamp",
             true
         );
 
