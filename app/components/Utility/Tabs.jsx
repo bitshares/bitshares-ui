@@ -5,7 +5,7 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import counterpart from "counterpart";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 
 /**
  *  Renders a tab layout, handling switching and optionally persists the currently open tab using the SettingsStore

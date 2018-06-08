@@ -180,7 +180,14 @@ class RouterTransitioner {
             url: connectionString,
             urls: urls,
             closeCb: this._onConnectionClose.bind(this),
-            optionalApis: {enableOrders: true}
+            optionalApis: {enableOrders: true},
+            urlChangeCallback: url => {
+                console.log("fallback to new url:", url);
+                SettingsActions.changeSetting({
+                    setting: "activeNode",
+                    value: url
+                });
+            }
         });
     }
 

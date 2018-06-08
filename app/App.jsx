@@ -2,7 +2,7 @@ import React from "react";
 import {ChainStore} from "bitsharesjs/es";
 import AccountStore from "stores/AccountStore";
 import NotificationStore from "stores/NotificationStore";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
@@ -33,7 +33,9 @@ import Transfer from "./components/Transfer/Transfer";
 import LoginSelector from "./components/LoginSelector";
 import News from "./components/News";
 import Help from "./components/Help";
-
+import Asset from "./components/Blockchain/Asset";
+import BlockContainer from "./components/Blockchain/BlockContainer";
+import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
 import {WalletManager} from "./components/Wallet/WalletManager";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 import {ExistingAccount} from "./components/Wallet/ExistingAccount";
@@ -235,6 +237,10 @@ class App extends React.Component {
                                     component={AccountPage}
                                 />
                                 <Route
+                                    path="/accounts"
+                                    component={DashboardAccountsOnly}
+                                />
+                                <Route
                                     path="/market/:marketID"
                                     component={ExchangeContainer}
                                 />
@@ -246,11 +252,7 @@ class App extends React.Component {
                                     path="/settings"
                                     component={SettingsContainer}
                                 />
-                                <Route
-                                    path="/explorer/:tab"
-                                    component={Explorer}
-                                />
-                                <Route path="/explorer" component={Explorer} />
+
                                 <Route
                                     path="/transfer"
                                     exact
@@ -266,6 +268,27 @@ class App extends React.Component {
                                     component={LoginSelector}
                                 />
                                 <Route path="/news" exact component={News} />
+
+                                {/* Explorer routes */}
+                                <Route
+                                    path="/explorer/:tab"
+                                    component={Explorer}
+                                />
+                                <Route path="/explorer" component={Explorer} />
+                                <Route
+                                    path="/asset/:symbol"
+                                    component={Asset}
+                                />
+                                <Route
+                                    exact
+                                    path="/block/:height"
+                                    component={BlockContainer}
+                                />
+                                <Route
+                                    exact
+                                    path="/block/:height/:txIndex"
+                                    component={BlockContainer}
+                                />
 
                                 {/* Wallet backup/restore routes */}
                                 <Route

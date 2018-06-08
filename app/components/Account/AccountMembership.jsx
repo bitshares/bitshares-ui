@@ -202,7 +202,7 @@ class AccountMembership extends React.Component {
                                                                 &nbsp; (<Link
                                                                     to={`account/${
                                                                         account.lifetime_referrer_name
-                                                                    }/overview`}
+                                                                    }`}
                                                                 >
                                                                     {
                                                                         account.lifetime_referrer_name
@@ -219,7 +219,7 @@ class AccountMembership extends React.Component {
                                                                 &nbsp; (<Link
                                                                     to={`account/${
                                                                         account.registrar_name
-                                                                    }/overview`}
+                                                                    }`}
                                                                 >
                                                                     {
                                                                         account.registrar_name
@@ -236,7 +236,7 @@ class AccountMembership extends React.Component {
                                                                 &nbsp; (<Link
                                                                     to={`account/${
                                                                         account.referrer_name
-                                                                    }/overview`}
+                                                                    }`}
                                                                 >
                                                                     {
                                                                         account.referrer_name

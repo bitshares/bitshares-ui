@@ -217,15 +217,7 @@ class Header extends React.Component {
             });
             this._closeDropdown();
         }
-        // this.onClickUser(account_name, e);
     }
-
-    // onClickUser(account, e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //
-    //     this.context.router.push(`/account/${account}/overview`);
-    // }
 
     _toggleAccountDropdownMenu() {
         // prevent state toggling if user cannot have multiple accounts

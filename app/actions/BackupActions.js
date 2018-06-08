@@ -35,7 +35,6 @@ export function backup(backup_pubkey) {
     return new Promise(resolve => {
         resolve(
             createWalletObject().then(wallet_object => {
-                console.log("create backup:", wallet_object);
                 let compression = 1;
                 return createWalletBackup(
                     backup_pubkey,
@@ -142,7 +141,6 @@ export function decryptWalletBackup(backup_wif, backup_buffer) {
             decompress(backup_buffer, wallet_string => {
                 try {
                     let wallet_object = JSON.parse(wallet_string);
-                    console.log("wallet_object:", wallet_object);
                     resolve(wallet_object);
                 } catch (error) {
                     if (!wallet_string) wallet_string = "";

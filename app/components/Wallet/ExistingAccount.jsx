@@ -49,22 +49,22 @@ class ExistingAccount extends Component {
                                 />
                                 <Route
                                     exact
-                                    path="import-backup"
+                                    path="/existing-account/import-backup"
                                     component={ExistingAccountOptions}
                                 />
                                 <Route
                                     exact
-                                    path="import-keys"
+                                    path="/existing-account/import-keys"
                                     component={ImportKeys}
                                 />
                                 <Route
                                     exact
-                                    path="brainkey"
+                                    path="/existing-account/brainkey"
                                     component={Brainkey}
                                 />
                                 <Route
                                     exact
-                                    path="balance-claim"
+                                    path="/existing-account/balance-claim"
                                     component={BalanceClaimActive}
                                 />
                             </Switch>

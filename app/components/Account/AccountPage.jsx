@@ -11,7 +11,7 @@ import {connect} from "alt-react";
 import accountUtils from "common/account_utils";
 import {List} from "immutable";
 import Page404 from "../Page404/Page404";
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, Redirect} from "react-router-dom";
 
 /* Nested routes */
 import AccountAssets from "./AccountAssets";
@@ -88,7 +88,8 @@ class AccountPage extends React.Component {
             bridgeCoins: this.props.bridgeCoins,
             gatewayDown: this.props.gatewayDown,
             viewSettings: this.props.viewSettings,
-            proxy: account.getIn(["options", "voting_account"])
+            proxy: account.getIn(["options", "voting_account"]),
+            history: this.props.history
         };
 
         return (
@@ -99,6 +100,10 @@ class AccountPage extends React.Component {
                             path={`/account/${account_name}`}
                             exact
                             render={() => <AccountOverview {...passOnProps} />}
+                        />
+                        <Redirect
+                            from={`/account/${account_name}/overview`}
+                            to={`/account/${account_name}`}
                         />
                         <Route
                             path={`/account/${account_name}/assets`}

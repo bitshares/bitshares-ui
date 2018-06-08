@@ -229,11 +229,6 @@ class AccountOverview extends React.Component {
         return render ? <span>&nbsp;|&nbsp;</span> : null;
     }
 
-    _onNavigate(route, e) {
-        e.preventDefault();
-        this.props.router.push(route);
-    }
-
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
             if (this.send_modal) this.send_modal.show();

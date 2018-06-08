@@ -170,7 +170,7 @@ class AccountAssets extends React.Component {
 
     _editButtonClick(symbol, account_name, e) {
         e.preventDefault();
-        this.props.router.push(
+        this.props.history.push(
             `/account/${account_name}/update-asset/${symbol}`
         );
     }

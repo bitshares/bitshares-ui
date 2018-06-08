@@ -1194,7 +1194,7 @@ AssetContainer = AssetWrapper(AssetContainer, {
 
 export default class AssetSymbolSplitter extends React.Component {
     render() {
-        let symbol = this.props.params.symbol.toUpperCase();
+        let symbol = this.props.match.params.symbol.toUpperCase();
         return <AssetContainer {...this.props} asset={symbol} />;
     }
 }

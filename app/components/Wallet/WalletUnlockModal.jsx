@@ -33,13 +33,9 @@ import {
     KeyFileLabel
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
-import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
 
 class WalletUnlockModal extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
     constructor(props) {
         super(props);
         this.state = this.initialState(props);
@@ -249,7 +245,7 @@ class WalletUnlockModal extends React.Component {
 
     closeRedirect = path => {
         WalletUnlockActions.cancel();
-        this.context.router.push(path);
+        this.props.history.push(path);
     };
 
     handleCreateWallet = () => this.closeRedirect("/create-account/wallet");
@@ -492,6 +488,8 @@ class WalletUnlockModal extends React.Component {
 WalletUnlockModal.defaultProps = {
     modalId: "unlock_wallet_modal2"
 };
+
+WalletUnlockModal = withRouter(WalletUnlockModal);
 
 class WalletUnlockModalContainer extends React.Component {
     render() {

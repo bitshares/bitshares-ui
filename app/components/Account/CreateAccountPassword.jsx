@@ -19,13 +19,9 @@ import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
-import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
 
 class CreateAccountPassword extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     constructor() {
         super();
         this.state = {
@@ -100,7 +96,9 @@ class CreateAccountPassword extends React.Component {
             FetchChain("getAccount", this.state.accountName, undefined, {
                 [this.state.accountName]: true
             }).then(() => {
-                this.props.router.push("/wallet/backup/create?newAccount=true");
+                this.props.history.push(
+                    "/wallet/backup/create?newAccount=true"
+                );
             });
         }
     }
@@ -532,7 +530,7 @@ class CreateAccountPassword extends React.Component {
                 <div
                     style={{width: "100%"}}
                     onClick={() => {
-                        this.context.router.push("/");
+                        this.props.history.push("/");
                     }}
                     className="button"
                 >
@@ -672,6 +670,8 @@ class CreateAccountPassword extends React.Component {
         );
     }
 }
+
+CreateAccountPassword = withRouter(CreateAccountPassword);
 
 export default connect(CreateAccountPassword, {
     listenTo() {

@@ -10,10 +10,16 @@ import alt from "alt-instance";
 import {connect, supplyFluxContext} from "alt-react";
 import {IntlProvider} from "react-intl";
 import willTransitionTo from "./routerTransition";
-import {HashRouter, BrowserRouter} from "react-router-dom";
 import LoadingIndicator from "./components/LoadingIndicator";
-const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 import InitError from "./components/InitError";
+import counterpart from "counterpart";
+
+/*
+* Electron does not support browserHistory, so we need to use hashHistory.
+* The same is true for servers without configuration options, such as Github Pages
+*/
+import {HashRouter, BrowserRouter} from "react-router-dom";
+const Router = __HASH_HISTORY__ ? HashRouter : BrowserRouter;
 
 class RootIntl extends React.Component {
     componentWillMount() {
@@ -77,9 +83,9 @@ class AppInit extends React.Component {
     }
 
     render() {
-        const {theme} = this.props;
+        const {theme, apiServer} = this.props;
         const {apiConnected, apiError} = this.state;
-        // let apiConnected = false, apiError = false;
+
         if (!apiConnected) {
             return (
                 <div
@@ -89,7 +95,12 @@ class AppInit extends React.Component {
                     <div id="content-wrapper">
                         <div className="grid-frame vertical">
                             {!apiError ? (
-                                <LoadingIndicator loadingText="Connecting to API...." />
+                                <LoadingIndicator
+                                    loadingText={counterpart.translate(
+                                        "app_init.connecting",
+                                        {server: apiServer}
+                                    )}
+                                />
                             ) : (
                                 <InitError />
                             )}
@@ -112,7 +123,8 @@ AppInit = connect(AppInit, {
             walletMode:
                 !SettingsStore.getState().settings.get("passwordLogin") ||
                 !!WalletManagerStore.getState().current_wallet,
-            theme: SettingsStore.getState().settings.get("themes")
+            theme: SettingsStore.getState().settings.get("themes"),
+            apiServer: SettingsStore.getState().settings.get("activeNode", "")
         };
     }
 });

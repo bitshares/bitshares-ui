@@ -5,7 +5,7 @@ import SettingsStore from "stores/SettingsStore";
 import {settingsAPIs} from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 // import {routerTransitioner} from "../../routerTransition";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";

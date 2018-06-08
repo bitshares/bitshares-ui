@@ -9,20 +9,16 @@ import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
 
 class CommitteeMemberCard extends React.Component {
     static propTypes = {
         committee_member: ChainTypes.ChainAccount.isRequired
     };
 
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     _onCardClick(e) {
         e.preventDefault();
-        this.context.router.push(
+        this.props.history.push(
             `/account/${this.props.committee_member.get("name")}`
         );
     }
@@ -79,13 +75,9 @@ class CommitteeMemberRow extends React.Component {
         committee_member: ChainTypes.ChainAccount.isRequired
     };
 
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     _onRowClick(e) {
         e.preventDefault();
-        this.context.router.push(
+        this.props.history.push(
             `/account/${this.props.committee_member.get("name")}`
         );
     }
@@ -125,6 +117,7 @@ class CommitteeMemberRow extends React.Component {
     }
 }
 CommitteeMemberRow = BindToChainState(CommitteeMemberRow);
+CommitteeMemberRow = withRouter(CommitteeMemberRow);
 
 class CommitteeMemberList extends React.Component {
     static propTypes = {

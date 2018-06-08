@@ -11,9 +11,7 @@ class Connections extends React.Component {
                       return (
                           <li key={account}>
                               X:{" "}
-                              <Link to={`/account/${account}/overview/`}>
-                                  {account}
-                              </Link>
+                              <Link to={`/account/${account}`}>{account}</Link>
                           </li>
                       );
                   }
@@ -26,9 +24,7 @@ class Connections extends React.Component {
                       return (
                           <li key={account}>
                               X:{" "}
-                              <Link to={`/account/${account}/overview/`}>
-                                  {account}
-                              </Link>
+                              <Link to={`/account/${account}`}>{account}</Link>
                           </li>
                       );
                   }

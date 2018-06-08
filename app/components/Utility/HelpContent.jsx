@@ -2,7 +2,7 @@ import React from "react";
 import {zipObject} from "lodash-es";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 
 let req = require.context("../../help", true, /\.md/);
