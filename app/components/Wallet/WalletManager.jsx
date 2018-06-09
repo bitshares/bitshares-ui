@@ -199,7 +199,7 @@ class WalletOptions extends Component {
                                         Dummy
                                     </div>
                                     <br />
-                                    <Link to="wallet/balance-claims">
+                                    <Link to="/wallet/balance-claims">
                                         <div className="button outline success">
                                             <Translate content="wallet.balance_claim_lookup" />
                                         </div>
@@ -217,7 +217,7 @@ class WalletOptions extends Component {
                 </div>
 
                 {has_wallet ? (
-                    <Link to="wallet/backup/create">
+                    <Link to="/wallet/backup/create">
                         <div className="button outline success">
                             <Translate content="wallet.create_backup" />
                         </div>
@@ -225,14 +225,14 @@ class WalletOptions extends Component {
                 ) : null}
 
                 {has_wallet ? (
-                    <Link to="wallet/backup/brainkey">
+                    <Link to="/wallet/backup/brainkey">
                         <div className="button outline success">
                             <Translate content="wallet.backup_brainkey" />
                         </div>
                     </Link>
                 ) : null}
 
-                <Link to="wallet/backup/restore">
+                <Link to="/wallet/backup/restore">
                     <div className="button outline success">
                         <Translate content="wallet.restore_backup" />
                     </div>
@@ -242,14 +242,14 @@ class WalletOptions extends Component {
 
                 {has_wallet ? <br /> : null}
 
-                <Link to="wallet/create">
+                <Link to="/wallet/create">
                     <div className="button outline success">
                         <Translate content="wallet.new_wallet" />
                     </div>
                 </Link>
 
                 {has_wallet ? (
-                    <Link to="wallet/delete">
+                    <Link to="/wallet/delete">
                         <div className="button outline success">
                             <Translate content="wallet.delete_wallet" />
                         </div>
@@ -257,7 +257,7 @@ class WalletOptions extends Component {
                 ) : null}
 
                 {has_wallet ? (
-                    <Link to="wallet/change-password">
+                    <Link to="/wallet/change-password">
                         <div className="button outline success">
                             <Translate content="wallet.change_password" />
                         </div>
@@ -333,7 +333,7 @@ class ChangeActiveWallet extends Component {
                     </ul>
                 </section>
 
-                <Link to="wallet/create">
+                <Link to="/wallet/create">
                     <div className="button outline">
                         <Translate content="wallet.new_wallet" />
                     </div>
