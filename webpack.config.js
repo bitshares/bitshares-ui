@@ -19,9 +19,9 @@ console.log(
     "git.short()",
     git.short()
 );
-let branch = !!process.env.BRANCH
-    ? JSON.stringify(process.env.BRANCH)
-    : git.branch();
+let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
+
+console.log("branch:", branch);
 var __VERSION__ =
     branch === "staging" || branch === "develop"
         ? git.short()
