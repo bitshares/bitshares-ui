@@ -152,7 +152,6 @@ class ExchangeSubscriber extends React.Component {
     };
 
     constructor(props) {
-        console.log("ExchangeSubscriber constructor", props);
         super();
         this.state = {sub: null};
 

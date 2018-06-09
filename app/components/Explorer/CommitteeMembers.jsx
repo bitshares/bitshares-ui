@@ -69,6 +69,7 @@ class CommitteeMemberCard extends React.Component {
     }
 }
 CommitteeMemberCard = BindToChainState(CommitteeMemberCard);
+CommitteeMemberCard = withRouter(CommitteeMemberCard);
 
 class CommitteeMemberRow extends React.Component {
     static propTypes = {
