@@ -27,6 +27,7 @@ fi
 if [ $unamestr = 'Linux' ] && [ $TRAVIS_BRANCH = 'staging' ] && [ -z $TRAVIS_PULL_REQUEST_BRANCH ]
 then
     ## wallet.bitshares.org subdomain (independent repo)
+    export BRANCH=$TRAVIS_BRANCH
     echo "Pushing new staging subdomain repo"
     git clone https://github.com:${GITHUB_TOKEN}@github.com/${STAGING_REPO} $TRAVIS_BUILD_DIR/staging.bitshares.org
     cd $TRAVIS_BUILD_DIR/staging.bitshares.org
@@ -34,13 +35,14 @@ then
     git checkout ./CNAME
     cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* .
     git add -A
-    git commit -a -m "Update staging by Travis: v$TRAVIS_TAG"
+    git commit -a -m "Update staging by Travis on new commit"
     git push
 fi
 
 if [ $unamestr = 'Linux' ] && [ $TRAVIS_BRANCH = 'develop' ] && [ -z $TRAVIS_PULL_REQUEST_BRANCH ]
 then
     ## wallet.bitshares.org subdomain (independent repo)
+    export BRANCH=$TRAVIS_BRANCH
     echo "Pushing new develop subdomain repo"
     git clone https://github.com:${GITHUB_TOKEN}@github.com/${DEVELOP_REPO} $TRAVIS_BUILD_DIR/develop.bitshares.org
     cd $TRAVIS_BUILD_DIR/develop.bitshares.org
@@ -48,6 +50,6 @@ then
     git checkout ./CNAME
     cp -Rv $TRAVIS_BUILD_DIR/build/hash-history/* .
     git add -A
-    git commit -a -m "Update develop by Travis: v$TRAVIS_TAG"
+    git commit -a -m "Update develop by Travis on new commit"
     git push
 fi

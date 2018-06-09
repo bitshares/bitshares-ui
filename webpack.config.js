@@ -11,11 +11,22 @@ var locales = require("./app/assets/locales");
 * For staging builds, set the version to the latest commit hash, for
 * production set it to the package version
 */
+console.log(
+    "$BRANCH=",
+    process.env.BRANCH,
+    "git.branch()",
+    git.branch(),
+    "git.short()",
+    git.short()
+);
+let branch = !!process.env.BRANCH
+    ? JSON.stringify(process.env.BRANCH)
+    : git.branch();
 var __VERSION__ =
-    git.branch() === "staging" || git.branch() === "develop"
+    branch === "staging" || branch === "develop"
         ? git.short()
         : require("./package.json").version;
-console.log("__VERSION__", __VERSION__, "git.branch()", git.branch());
+console.log("__VERSION__", __VERSION__);
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
 
