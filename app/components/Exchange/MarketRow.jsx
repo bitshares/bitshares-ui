@@ -6,6 +6,7 @@ import utils from "common/utils";
 import Icon from "../Icon/Icon";
 import MarketsActions from "actions/MarketsActions";
 import SettingsActions from "actions/SettingsActions";
+import {withRouter} from "react-router-dom";
 
 class MarketRow extends React.Component {
     static defaultProps = {
@@ -343,6 +344,7 @@ class MarketRow extends React.Component {
         );
     }
 }
+MarketRow = withRouter(MarketRow);
 
 export default AssetWrapper(MarketRow, {
     propNames: ["quote", "base"],
