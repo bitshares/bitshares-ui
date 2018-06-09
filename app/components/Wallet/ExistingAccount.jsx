@@ -128,4 +128,5 @@ class ExistingAccountOptions extends Component {
 }
 ExistingAccountOptions = connect(ExistingAccountOptions, connectObject);
 
-export {ExistingAccount, ExistingAccountOptions};
+export default ExistingAccount;
+export {ExistingAccountOptions};

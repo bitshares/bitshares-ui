@@ -18,27 +18,97 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import titleUtils from "common/titleUtils";
+import Loadable from "react-loadable";
 
 import {Route, Switch} from "react-router-dom";
 
 // Nested route components
 import Page404 from "./components/Page404/Page404";
-import ExchangeContainer from "./components/Exchange/ExchangeContainer";
-import Explorer from "components/Explorer/Explorer";
-import SettingsContainer from "./components/Settings/SettingsContainer";
-import DashboardPage from "./components/Dashboard/DashboardPage";
-import AccountPage from "./components/Account/AccountPage";
-import AccountDepositWithdraw from "./components/Account/AccountDepositWithdraw";
-import Transfer from "./components/Transfer/Transfer";
+
+const Exchange = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
+    loading: LoadingIndicator
+});
+
+const Explorer = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "explorer" */ "./components/Explorer/Explorer"),
+    loading: LoadingIndicator
+});
+
+const AccountPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "account" */ "./components/Account/AccountPage"),
+    loading: LoadingIndicator
+});
+
+const Transfer = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "transfer" */ "./components/Transfer/Transfer"),
+    loading: LoadingIndicator
+});
+
+const AccountDepositWithdraw = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "deposit-withdraw" */ "./components/Account/AccountDepositWithdraw"),
+    loading: LoadingIndicator
+});
+
+const News = Loadable({
+    loader: () => import(/* webpackChunkName: "news" */ "./components/News"),
+    loading: LoadingIndicator
+});
+
+const Settings = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "settings" */ "./components/Settings/SettingsContainer"),
+    loading: LoadingIndicator
+});
+
+const Help = Loadable({
+    loader: () => import(/* webpackChunkName: "help" */ "./components/Help"),
+    loading: LoadingIndicator
+});
+
+const Asset = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "asset" */ "./components/Blockchain/Asset"),
+    loading: LoadingIndicator
+});
+
+const Block = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "block" */ "./components/Blockchain/BlockContainer"),
+    loading: LoadingIndicator
+});
+
+const DashboardAccountsOnly = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "dashboard-accounts" */ "./components/Dashboard/DashboardAccountsOnly"),
+    loading: LoadingIndicator
+});
+
+const DashboardPage = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "dashboard" */ "./components/Dashboard/DashboardPage"),
+    loading: LoadingIndicator
+});
+
+const WalletManager = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "wallet" */ "./components/Wallet/WalletManager"),
+    loading: LoadingIndicator
+});
+
+const ExistingAccount = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "existing-account" */ "./components/Wallet/ExistingAccount"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
-import News from "./components/News";
-import Help from "./components/Help";
-import Asset from "./components/Blockchain/Asset";
-import BlockContainer from "./components/Blockchain/BlockContainer";
-import DashboardAccountsOnly from "./components/Dashboard/DashboardAccountsOnly";
-import {WalletManager} from "./components/Wallet/WalletManager";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
-import {ExistingAccount} from "./components/Wallet/ExistingAccount";
 
 class App extends React.Component {
     constructor() {
@@ -242,16 +312,13 @@ class App extends React.Component {
                                 />
                                 <Route
                                     path="/market/:marketID"
-                                    component={ExchangeContainer}
+                                    component={Exchange}
                                 />
                                 <Route
                                     path="/settings/:tab"
-                                    component={SettingsContainer}
+                                    component={Settings}
                                 />
-                                <Route
-                                    path="/settings"
-                                    component={SettingsContainer}
-                                />
+                                <Route path="/settings" component={Settings} />
 
                                 <Route
                                     path="/transfer"
@@ -282,12 +349,12 @@ class App extends React.Component {
                                 <Route
                                     exact
                                     path="/block/:height"
-                                    component={BlockContainer}
+                                    component={Block}
                                 />
                                 <Route
                                     exact
                                     path="/block/:height/:txIndex"
-                                    component={BlockContainer}
+                                    component={Block}
                                 />
 
                                 {/* Wallet backup/restore routes */}

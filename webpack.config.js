@@ -1,32 +1,23 @@
 var path = require("path");
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var Clean = require("clean-webpack-plugin");
 var git = require("git-rev-sync");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /*
 * For staging builds, set the version to the latest commit hash, for
 * production set it to the package version
 */
-console.log(
-    "$BRANCH=",
-    process.env.BRANCH,
-    "git.branch()",
-    git.branch(),
-    "git.short()",
-    git.short()
-);
 let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
-
-console.log("branch:", branch);
 var __VERSION__ =
     branch === "staging" || branch === "develop"
         ? git.short()
         : require("./package.json").version;
-console.log("__VERSION__", __VERSION__);
+
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
 
@@ -79,7 +70,15 @@ module.exports = function(env) {
     const localeRegex = new RegExp(regexString);
 
     var plugins = [
-        new webpack.optimize.OccurrenceOrderPlugin(),
+        new HtmlWebpackPlugin({
+            template: "!!handlebars-loader!app/assets/index.hbs",
+            templateParameters: {
+                title: "BitShares " + __VERSION__,
+                INCLUDE_BASE: !!env.prod && !env.hash,
+                PRODUCTION: !!env.prod,
+                ELECTRON: !!env.electron
+            }
+        }),
         new webpack.DefinePlugin({
             APP_VERSION: JSON.stringify(__VERSION__),
             __ELECTRON__: !!env.electron,
@@ -123,26 +122,29 @@ module.exports = function(env) {
         var cleanDirectories = [outputPath];
 
         // WRAP INTO CSS FILE
-        const extractCSS = new ExtractTextPlugin("app.css");
-        cssLoaders = ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [
-                {loader: "css-loader"},
-                {
-                    loader: "postcss-loader"
+        cssLoaders = [
+            {loader: MiniCssExtractPlugin.loader},
+            {loader: "css-loader"},
+            {
+                loader: "postcss-loader",
+                options: {
+                    minimize: true,
+                    debug: false
                 }
-            ]
-        });
-        scssLoaders = ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [
-                {loader: "css-loader"},
-                {
-                    loader: "postcss-loader"
-                },
-                {loader: "sass-loader", options: {outputStyle: "expanded"}}
-            ]
-        });
+            }
+        ];
+        scssLoaders = [
+            {loader: MiniCssExtractPlugin.loader},
+            {loader: "css-loader"},
+            {
+                loader: "postcss-loader",
+                options: {
+                    minimize: true,
+                    debug: false
+                }
+            },
+            {loader: "sass-loader", options: {outputStyle: "expanded"}}
+        ];
 
         // PROD PLUGINS
         plugins.push(new Clean(cleanDirectories, {root: root_dir}));
@@ -151,15 +153,12 @@ module.exports = function(env) {
                 __DEV__: false
             })
         );
-        plugins.push(extractCSS);
         plugins.push(
-            new webpack.LoaderOptionsPlugin({
-                minimize: true,
-                debug: false
+            new MiniCssExtractPlugin({
+                filename: "[name].[contenthash].css"
             })
         );
     } else {
-        // plugins.push(new webpack.optimize.OccurenceOrderPlugin());
         plugins.push(
             new webpack.DefinePlugin({
                 "process.env": {NODE_ENV: JSON.stringify("development")},
@@ -207,15 +206,34 @@ module.exports = function(env) {
                 : [
                       "webpack-hot-middleware/client",
                       "react-hot-loader/patch",
-                      path.resolve(root_dir, "app/Main-dev.js")
+                      path.resolve(root_dir, "app/Main.js")
                   ]
         },
         output: {
             publicPath: env.prod ? "" : "/",
             path: outputPath,
-            filename: "[name].js",
+            filename: env.prod ? "[name].[chunkhash].js" : "[name].js",
+            chunkFilename: env.prod ? "[name].[chunkhash].js" : "[name].js",
             pathinfo: !env.prod,
             sourceMapFilename: "[name].js.map"
+        },
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    styles: {
+                        name: "styles",
+                        test: /\.css$/,
+                        chunks: "all",
+                        enforce: true
+                    },
+                    vendor: {
+                        name: "vendor",
+                        test: /node_modules/,
+                        chunks: "initial",
+                        enforce: true
+                    }
+                }
+            }
         },
         devtool: env.noUgly || !env.prod ? "cheap-module-source-map" : "none",
         module: {

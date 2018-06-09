@@ -503,4 +503,5 @@ class WalletDelete extends Component {
 }
 WalletDelete = connect(WalletDelete, connectObject);
 
-export {WalletManager, WalletOptions, ChangeActiveWallet, WalletDelete};
+export default WalletManager;
+export {WalletOptions, ChangeActiveWallet, WalletDelete};
