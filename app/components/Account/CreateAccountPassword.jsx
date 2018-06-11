@@ -260,14 +260,15 @@ class CreateAccountPassword extends React.Component {
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">
-                                <textarea 
+                                <textarea
                                     style={{
                                         padding: "0px",
                                         marginBottom: "0px"
                                     }}
                                     rows="3"
-                                    readonly="readonly" 
-                                    disabled="disabled">
+                                    readOnly
+                                    disabled
+                                >
                                     {this.state.generatedPassword}
                                 </textarea>
                                 <CopyButton
