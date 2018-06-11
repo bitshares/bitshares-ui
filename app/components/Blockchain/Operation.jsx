@@ -204,7 +204,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, result} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -326,6 +326,9 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: result[1].substring(4)
+                                        }}
                                     />
                                 );
                             }}
@@ -1013,6 +1016,9 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: o.order_id.substring(4)
+                                        }}
                                     />
                                 );
                             }}

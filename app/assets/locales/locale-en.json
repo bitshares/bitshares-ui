@@ -1261,14 +1261,14 @@
             "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters":
             "{account} updated the global committee parameters",
-        "fill_order_buy": "{account} bought {amount} at {price}",
-        "fill_order_sell": "{account} sold {amount} at {price}",
+        "fill_order_buy": "{account} bought {amount} at {price} for order #%(order)s",
+        "fill_order_sell": "{account} sold {amount} at {price} for order #%(order)s",
         "lifetime_upgrade_account": "{account} was upgraded to lifetime member",
         "limit_order_buy":
-            "{account} placed an order to buy {amount} at {price}",
+            "{account} placed order #%(order)s to buy {amount} at {price}",
         "limit_order_cancel": "{account} cancelled order #%(order)s",
         "limit_order_sell":
-            "{account} placed an order to sell {amount} at {price}",
+            "{account} placed order #%(order)s to sell {amount} at {price}",
         "no_recent": "No recent transactions",
         "override_transfer":
             "{issuer} transferred {amount} from {from} to {to}",
@@ -1322,11 +1322,11 @@
         "feed_producer":
             "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy":
-            "Place an order to buy {amount} at {price} for {account}",
+            "Place order #%(order)s to buy {amount} at {price} for {account}",
         "limit_order_create":
-            "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+            "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell":
-            "Place an order to sell {amount} at {price} for {account}",
+            "Place order #%(order)s to sell {amount} at {price} for {account}",
         "override_transfer":
             "Transfer {amount} from {from} to {to} by authority of {issuer}",
         "proposals": "Proposals",
