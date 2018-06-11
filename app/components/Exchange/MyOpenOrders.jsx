@@ -307,12 +307,6 @@ class OrderRow extends React.Component {
                         />
                     )}
                 </td>
-                {/* <td>
-                    {isCall ? null : <FormattedDate
-                        value={order.expiration}
-                        format="short"
-                    />}
-                    </td> */}
                 <td>
                     <Link
                         to={`/market/${quote.get("symbol")}_${base.get(
