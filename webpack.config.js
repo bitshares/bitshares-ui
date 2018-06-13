@@ -216,8 +216,7 @@ module.exports = function(env) {
                         path.join(
                             root_dir,
                             "node_modules/react-foundation-apps"
-                        ),
-                        path.join(root_dir, "node_modules/react-stockcharts")
+                        )
                     ],
                     use: [
                         {
