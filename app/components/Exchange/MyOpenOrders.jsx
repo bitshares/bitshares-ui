@@ -447,7 +447,7 @@ class MyOpenOrders extends React.Component {
     }
 
     render() {
-        let {base, quote, quoteSymbol, baseSymbol, settleOrders} = this.props;
+        let {base, quote, quoteSymbol, baseSymbol, settleOrders, noHeader} = this.props;
         let {activeTab} = this.state;
 
         if (!base || !quote) return null;

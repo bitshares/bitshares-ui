@@ -75,7 +75,8 @@ export default class ExchangeHeader extends React.Component {
             latestPrice,
             marketStats,
             showDepthChart,
-            account
+            account,
+            exchangeLayout
         } = this.props;
 
         const baseSymbol = baseAsset.get("symbol");
@@ -419,6 +420,33 @@ export default class ExchangeHeader extends React.Component {
                     noLogo
                 >
                     <section className="block-list no-border-bottom">
+                        <header>
+                            <Translate content="exchange.layout.title" />:
+                        </header>
+                        <ul>
+                            <li className="with-dropdown">
+                                <select
+                                    value={exchangeLayout ? exchangeLayout : "exchange.layout.1"}
+                                    classBane="settings-select"
+                                    onChange={e => {
+                                        this.props.onChangeLayout(e.target.value);
+                                    }}
+                                >
+                                    <option value="1">
+                                        {counterpart.translate("exchange.layout.1")}
+                                    </option>
+                                    <option value="2">
+                                        {counterpart.translate("exchange.layout.2")}
+                                    </option>
+                                    <option value="3">
+                                        {counterpart.translate("exchange.layout.3")}
+                                    </option>
+                                    <option value="4">
+                                        {counterpart.translate("exchange.layout.4")}
+                                    </option>
+                                </select>
+                            </li>
+                        </ul>
                         <header>
                             <Translate content="exchange.chart_type" />:
                         </header>

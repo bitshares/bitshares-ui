@@ -100,7 +100,8 @@ class BuySell extends React.Component {
             feeAsset,
             feeAssets,
             hasFeeBalance,
-            backedCoin
+            backedCoin,
+            hideHeader
         } = this.props;
         let amount, price, total;
         let caret = this.props.isOpen ? (
@@ -375,8 +376,8 @@ class BuySell extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div className="exchange-bordered buy-sell-container">
-                    <div
+                <div className="buy-sell-container">
+                    {!hideHeader ? <div
                         className={"exchange-content-header " + type}
                         data-intro={dataIntro}
                     >
@@ -509,7 +510,7 @@ class BuySell extends React.Component {
                                 </a>
                             </div>
                         ) : null}
-                    </div>
+                    </div> : null}
 
                     <form
                         className={

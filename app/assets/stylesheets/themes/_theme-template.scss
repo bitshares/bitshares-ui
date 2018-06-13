@@ -368,6 +368,16 @@
     .page-layout {
         background-color: lighten($account-header, 4%);
 
+        .column-header {
+            > ul {
+                border-bottom: 1px solid $panel-bg-color;
+
+                > li.active, li:hover {
+                    border-bottom: 3px solid lightblue;
+                }
+            }
+        }
+
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -391,7 +401,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: darken($bg-color, 4%);
+            background-color: $panel-bg-color;
         }
     }
 
@@ -1634,6 +1644,12 @@
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
+
+    .table.no-stripes > tbody > tr {
+        background-color: transparent;
+        
+    }
+
     //bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);

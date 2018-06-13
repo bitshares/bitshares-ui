@@ -11,6 +11,33 @@ import AssetName from "../Utility/AssetName";
 import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
 
+class OrderRow extends React.Component {
+    render() {
+        let {orderRows, noOrders, isBid} = this.props;
+        return (
+            <TransitionWrapper
+                ref={isBid ? "bidTransition" : "askTransaction"}
+                className="transition-container clickable"
+                component="div"
+                transitionName="newrow"
+            >
+                {orderRows.length > 0
+                    ? orderRows
+                    : noOrders || (
+                        <div className="sticky-table-row">
+                            <td
+                                className="cell no-orders"
+                                colSpan="3"
+                            >
+                                {isBid ? "No bids" : "No asks"}
+                            </td>
+                        </div>
+                    )}
+            </TransitionWrapper>
+        );
+    }
+}
+
 class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(np) {
         if (np.order.market_base !== this.props.order.market_base) return false;
@@ -319,6 +346,13 @@ class OrderBook extends React.Component {
         else this.setState(newState);
     };
 
+    toggleOrderBook = () => {
+        const newState = {orderBookReversed: !this.state.orderBookReversed};
+        this.setState(newState, () => {
+            this.psUpdate();
+        });
+    }
+
     render() {
         let {
             combinedBids,
@@ -358,7 +392,15 @@ class OrderBook extends React.Component {
         let bidRows = null,
             askRows = null;
         if (base && quote) {
-            bidRows = combinedBids.map((order, index) => {
+            let tempBids = combinedBids;
+            if (!horizontal) {
+                tempBids.sort((a, b) => {
+                    if(this.state.orderBookReversed) { }
+                    return this.state.orderBookReversed ? 
+                        a.getPrice() - b.getPrice() : b.getPrice() - a.getPrice();
+                });
+            }
+            bidRows = tempBids.map((order, index) => {
                 return horizontal ? (
                     <OrderBookRowHorizontal
                         index={index}
@@ -385,13 +427,12 @@ class OrderBook extends React.Component {
             });
 
             let tempAsks = combinedAsks;
-            tempAsks.sort((a, b) => {
-                if (horizontal) {
-                    return a.getPrice() - b.getPrice();
-                } else {
-                    return b.getPrice() - a.getPrice();
-                }
-            });
+            if (!horizontal) {
+                tempAsks.sort((a, b) => {
+                    return this.state.orderBookReversed ? 
+                        a.getPrice() - b.getPrice() : b.getPrice() - a.getPrice();
+                });
+            }
             askRows = tempAsks.map((order, index) => {
                 return horizontal ? (
                     <OrderBookRowHorizontal
@@ -554,7 +595,7 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        <span
+                                        {/*<span
                                             className="order-book-button-v"
                                             onClick={this.props.moveOrderBook}
                                         >
@@ -563,7 +604,7 @@ class OrderBook extends React.Component {
                                                 title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
-                                        </span>
+                                        </span>*/}
                                     </div>
                                 ) : null}
                                 <div
@@ -668,7 +709,7 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        <span
+                                        {/*<span
                                             className="order-book-button-v"
                                             onClick={this.props.moveOrderBook}
                                         >
@@ -677,7 +718,7 @@ class OrderBook extends React.Component {
                                                 title="icons.thumb_tack"
                                                 className="icon-14px"
                                             />
-                                        </span>
+                                        </span>*/}
                                     </div>
                                 ) : null}
                                 <div
@@ -753,6 +794,7 @@ class OrderBook extends React.Component {
             // Vertical orderbook
             return (
                 <div className="left-order-book no-padding no-overflow">
+                    {this.props.tableHeader}
                     <div className="order-table-container">
                         <StickyTable
                             stickyColumnCount={0}
@@ -777,25 +819,10 @@ class OrderBook extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <TransitionWrapper
-                                ref="askTransition"
-                                className="transition-container clickable"
-                                component="div"
-                                transitionName="newrow"
-                            >
-                                {askRows.length > 0
-                                    ? askRows
-                                    : noOrders || (
-                                          <div className="sticky-table-row">
-                                              <td
-                                                  className="cell no-orders padtop"
-                                                  colSpan="3"
-                                              >
-                                                  No asks
-                                              </td>
-                                          </div>
-                                      )}
-                            </TransitionWrapper>
+                            {this.state.orderBookReversed ? 
+                                <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true}  /> :
+                                <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false}  />
+                            }
                             <div className="sticky-table-row" ref="center_text">
                                 {noOrders ? (
                                     <td
@@ -840,6 +867,14 @@ class OrderBook extends React.Component {
                                                             ? "icons.locked.enable_auto_scroll"
                                                             : "icons.unlocked.disable_auto_scroll"
                                                     }
+                                                />&nbsp;
+                                                <Icon 
+                                                    style={{marginRight: 10}}
+                                                    className="clickable"
+                                                    name="shuffle"
+                                                    onClick={
+                                                        this.toggleOrderBook
+                                                    } 
                                                 />
                                                 {!!this.props.latest && (
                                                     <span className="right">
@@ -864,28 +899,13 @@ class OrderBook extends React.Component {
                                     </td>
                                 )}
                             </div>
-                            <TransitionWrapper
-                                ref="bidTransition"
-                                className="transition-container clickable"
-                                component="div"
-                                transitionName="newrow"
-                            >
-                                {bidRows.length > 0
-                                    ? bidRows
-                                    : noOrders || (
-                                          <div className="sticky-table-row">
-                                              <td
-                                                  className="cell no-orders"
-                                                  colSpan="3"
-                                              >
-                                                  <Translate content="exchange.no_bids" />
-                                              </td>
-                                          </div>
-                                      )}
-                            </TransitionWrapper>
+                            {this.state.orderBookReversed ? 
+                                <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false} /> :
+                                <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true} />
+                            }
                         </StickyTable>
                     </div>
-                    <div className="v-align no-padding align-center grid-block footer shrink bottom-header">
+                    {/*<div className="v-align no-padding align-center grid-block footer shrink bottom-header">
                         <div onClick={this.props.moveOrderBook}>
                             <Icon
                                 name="thumb-untack"
@@ -893,7 +913,7 @@ class OrderBook extends React.Component {
                                 className="icon-14px order-book-button-h"
                             />
                         </div>
-                    </div>
+                        </div>*/}
                 </div>
             );
         }

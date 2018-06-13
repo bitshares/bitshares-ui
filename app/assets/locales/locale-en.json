@@ -505,6 +505,13 @@
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
         "latest": "Latest",
+        "layout": {
+            "title": "Layout",
+            "1": "Layout 1",
+            "2": "Layout 2",
+            "3": "Layout 3",
+            "4": "Layout 4"
+        },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",

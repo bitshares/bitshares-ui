@@ -1,6 +1,31 @@
 .market-layout {
-    > .grid-block {
-        // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+    .column-header {
+        width: 100%;
+        padding-right: 10px;
+
+        > ul {
+            list-style-type: none;
+            margin-left: 0px;
+            width: 100%;
+            margin-bottom: 0px;
+
+            > li {
+                font-size: 80%;
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 15px;
+                text-transform: uppercase;
+            }
+
+            > li.last {
+                margin-right: 0px;
+            }
+
+            li.active {
+                cursor: default;
+            }
+        }
+        
     }
 
     > .left-column {
@@ -200,7 +225,7 @@ form.order-form {
     }
     .order-table-container {
         width: 100%;
-        height: calc(100% - 32px);
+        height: calc(100% - 30px);
     }
     .top-header {
         text-align: right;
@@ -689,6 +714,28 @@ form.hide-container {
 
 tbody.orderbook > tr.my-order > td {
     font-weight: bold;
+}
+
+.vertical-panel {
+    .vp__header {
+        border-bottom: 1px solid white;
+        margin: 10px;
+        padding-bottom: 10px;
+
+        > span {
+            padding-bottom: 2px;
+            margin-right: 10px;
+        }
+
+        > span.selected,
+        > span:hover {
+            border-bottom: 5px solid cyan;
+        }
+    }
+
+    .vp__content {
+
+    }
 }
 
 .marketPicker {
