@@ -477,7 +477,7 @@ class AccountAssetCreate extends React.Component {
                 // Enforce uppercase
                 const symbol = target.value.toUpperCase();
                 // Enforce characters
-                let regexp = new RegExp("^[.A-Z]+$");
+                let regexp = new RegExp("^[.A-Z0-9]+$");
                 if (symbol !== "" && !regexp.test(symbol)) {
                     break;
                 }
