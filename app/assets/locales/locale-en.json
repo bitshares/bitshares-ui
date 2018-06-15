@@ -1252,9 +1252,11 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_claim_pool": "{account} claimed {amount} from asset {asset}'s fee pool", 
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
+        "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
         "call_order_update":
@@ -1637,6 +1639,7 @@
             "all": "Show all",
             "assert": "Assert operation",
             "asset_claim_fees": "Claim asset fees",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Create asset",
             "asset_fund_fee_pool": "Fund asset fee pool",
             "asset_global_settle": "Global asset settlement",
@@ -1648,6 +1651,7 @@
             "asset_update": "Update asset",
             "asset_update_bitasset": "Update SmartCoin",
             "asset_update_feed_producers": "Update asset feed producers",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Claim balance",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Update margin",

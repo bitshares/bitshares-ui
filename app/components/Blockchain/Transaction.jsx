@@ -1933,6 +1933,96 @@ class Transaction extends React.Component {
 
                     break;
 
+                case "asset_claim_pool":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="account.name"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById asset={op[1].asset_id} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.amount"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset 
+                                    amount={op[1].amount_to_claim.amount}
+                                    asset={op[1].amount_to_claim.asset_id} />
+                                </td>
+                        </tr>
+                    );
+                break;
+
+                case "asset_update_issuer":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.from"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.to"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].new_issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById asset={op[1].asset_to_update} />
+                            </td>
+                        </tr>
+                    );
+
+                    break;
+
                 default:
                     console.log("unimplemented op:", op);
 
