@@ -408,6 +408,18 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "app_init": {
+        "browser": "Unsupported browser",
+        "browser_text":
+            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+        "connected": "Connected",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Not connected",
+        "retry": "Retry",
+        "title": "Application initialization issues",
+        "understand": "I understand",
+        "ws_status": "Full node connection status"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -936,6 +948,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1080,17 +1093,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Unsupported browser",
-        "browser_text":
-            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "retry": "Retry",
-        "title": "Application initialization issues",
-        "understand": "I understand",
-        "ws_status": "Full node connection status"
     },
     "languages": {
         "de": "Deutsch",

@@ -3,11 +3,10 @@ import AssetStore from "stores/AssetStore";
 import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt-container";
 import Assets from "./Assets";
-import Explorer from "./Explorer";
 
 class AssetsContainer extends React.Component {
     render() {
-        let content = (
+        return (
             <AltContainer
                 stores={[AssetStore, SettingsStore]}
                 inject={{
@@ -29,8 +28,6 @@ class AssetsContainer extends React.Component {
                 <Assets />
             </AltContainer>
         );
-
-        return <Explorer tab="assets" content={content} />;
     }
 }
 

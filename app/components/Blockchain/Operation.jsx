@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -43,10 +43,6 @@ class TransactionLabel extends React.Component {
 }
 
 class Row extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired
     };
@@ -58,13 +54,7 @@ class Row extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.showDetails = this.showDetails.bind(this);
     }
-    //
-    // showDetails(e) {
-    //     e.preventDefault();
-    //     this.context.router.push(`/block/${this.props.block}`);
-    // }
 
     shouldComponentUpdate(nextProps) {
         let {block, dynGlobalObject} = this.props;
@@ -122,7 +112,9 @@ class Row extends React.Component {
                                     )
                                 }
                             )}
-                            to={`/block/${this.props.block}/${this.props.txIndex}`}
+                            to={`/block/${this.props.block}/${
+                                this.props.txIndex
+                            }`}
                         >
                             <TransactionLabel color={color} type={type} />
                         </Link>
@@ -188,7 +180,7 @@ class Operation extends React.Component {
         return utils.is_object_id(name_or_id) ? (
             <LinkToAccountById account={name_or_id} />
         ) : (
-            <Link to={`/account/${name_or_id}/overview`}>{name_or_id}</Link>
+            <Link to={`/account/${name_or_id}`}>{name_or_id}</Link>
         );
     }
 
@@ -212,7 +204,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, result} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -334,6 +326,9 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: result[1].substring(4)
+                                        }}
                                     />
                                 );
                             }}
@@ -1021,6 +1016,9 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: o.order_id.substring(4)
+                                        }}
                                     />
                                 );
                             }}
@@ -1297,6 +1295,56 @@ class Operation extends React.Component {
                                 arg: "account"
                             },
                             {type: "amount", value: op[1].amount, arg: "amount"}
+                        ]}
+                    />
+                );
+                break;
+
+            case "asset_claim_pool":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_claim_pool"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].issuer,
+                                arg: "account"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_id,
+                                arg: "asset"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].amount_to_claim,
+                                arg: "amount"
+                            }
+                        ]}
+                    />
+                );
+                break;
+
+            case "asset_update_issuer":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_update_issuer"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].issuer,
+                                arg: "from_account"
+                            },
+                            {
+                                type: "account",
+                                value: op[1].new_issuer,
+                                arg: "to_account"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_to_update,
+                                arg: "asset"
+                            }
                         ]}
                     />
                 );

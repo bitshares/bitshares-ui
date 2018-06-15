@@ -24,10 +24,6 @@ import classnames from "classnames";
 import PropTypes from "prop-types";
 
 class SendModal extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
@@ -507,11 +503,6 @@ class SendModal extends React.Component {
         this.setState({propose_account});
     }
 
-    onProposeTooltip() {
-        this.onClose();
-        this.context.router.push("/help/accounts/proposed");
-    }
-
     render() {
         let {
             propose,
@@ -798,16 +789,6 @@ class SendModal extends React.Component {
                                                     scroll_length={2}
                                                 />
                                             </div>
-                                            {/* <div className="small-6" style={{display: "inline-block", paddingLeft: "2rem"}}>
-                                            <span className="grid-block tooltip" data-place="top" data-tip={counterpart.translate("tooltip.propose_tip")} onClick={this.onProposeTooltip.bind(this)}>
-                                                <Translate className="left-label" component="label" content="propose"/>
-                                                <Icon style={{position: "relative", top: 0, marginLeft: "0.5rem"}} name="question-circle" title="icons.question_circle" />
-                                            </span>
-                                            <div className="switch" style={{marginBottom: "-6px"}} onClick={this.onPropose.bind(this)}>
-                                                <input type="checkbox" checked={this.state.propose} tabIndex={tabIndex++} />
-                                                <label />
-                                            </div>
-                                        </div> */}
                                         </div>
                                     </div>
 

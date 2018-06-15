@@ -418,6 +418,18 @@
             "whitelist_authorities": "Autorità whitelist"
         }
     },
+    "app_init": {
+        "browser": "Browser non supportato",
+        "browser_text":
+            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
+        "connected": "Connesso",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Non connesso",
+        "retry": "Riprova",
+        "title": "Problemi nell'inizializzazione dell'applicazione",
+        "understand": "Ho capito",
+        "ws_status": "Stato della connessione del full node"
+    },
     "borrow": {
         "adjust": "Aggiorna posizione",
         "adjust_short": "Aggiorna",
@@ -952,6 +964,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1096,17 +1109,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Browser non supportato",
-        "browser_text":
-            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
-        "connected": "Connesso",
-        "not_connected": "Non connesso",
-        "retry": "Riprova",
-        "title": "Problemi nell'inizializzazione dell'applicazione",
-        "understand": "Ho capito",
-        "ws_status": "Stato della connessione del full node"
     },
     "languages": {
         "de": "Deutsch",

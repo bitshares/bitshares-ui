@@ -395,6 +395,18 @@
             "whitelist_authorities": "资产白名单"
         }
     },
+    "app_init": {
+        "browser": "不支持的浏览器",
+        "browser_text":
+            "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+        "connected": "已连接",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "未连接",
+        "retry": "重试",
+        "title": "应用初始化错误",
+        "understand": "我理解",
+        "ws_status": "API 节点连接状态"
+    },
     "borrow": {
         "adjust": "调整债仓",
         "adjust_short": "调整",
@@ -908,6 +920,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1050,17 +1063,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "不支持的浏览器",
-        "browser_text":
-            "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
-        "connected": "已连接",
-        "not_connected": "未连接",
-        "retry": "重试",
-        "title": "应用初始化错误",
-        "understand": "我理解",
-        "ws_status": "API 节点连接状态"
     },
     "languages": {
         "de": "Deutsch",

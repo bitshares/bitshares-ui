@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Link} from "react-router";
+import {Link} from "react-router-dom";
 import counterpart from "counterpart";
 import Ps from "perfect-scrollbar";
 import OpenSettleOrders from "./OpenSettleOrders";
@@ -67,7 +67,10 @@ class TableHeader extends React.Component {
         ) : (
             <thead>
                 <tr>
-                    <th style={leftAlign} colSpan="5">
+                    <th style={leftAlign}>
+                        <Translate content="transaction.order_id" />
+                    </th>
+                    <th style={leftAlign} colSpan="4">
                         <Translate content="exchange.description" />
                     </th>
                     <th style={leftAlign}>
@@ -124,7 +127,9 @@ class OrderRow extends React.Component {
         const isCall = order.isCall();
         let tdClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let priceSymbol = showSymbols ? (
             <span>{` ${base.get("symbol")}/${quote.get("symbol")}`}</span>
@@ -193,7 +198,8 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id} className="clickable">
-                <td colSpan="5" style={leftAlign} onClick={this.props.onFlip}>
+                <td style={leftAlign}>#{order.id.substring(4)}</td>
+                <td colSpan="4" style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? (
                         <Translate
                             content="exchange.buy_description"

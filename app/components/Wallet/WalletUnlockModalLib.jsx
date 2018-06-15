@@ -41,6 +41,7 @@ export class StyledUpload extends React.Component {
                     onClick={stopPropagation}
                     onChange={this.props.onFileChosen}
                     ref="input"
+                    accept=".bin"
                 />
             </label>
         );
@@ -114,6 +115,7 @@ export class CustomPasswordInput extends React.Component {
                 name="password"
                 id="password"
                 type="password"
+                autoComplete="current-password"
             />
         </div>
     );

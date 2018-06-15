@@ -421,6 +421,18 @@
             "whitelist_authorities": "Autoridad de lista blanca"
         }
     },
+    "app_init": {
+        "browser": "Navegador no soportado",
+        "browser_text":
+            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
+        "connected": "Conectado",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "No conectado",
+        "retry": "Reintentar",
+        "title": "Problemas de inicialización de la aplicación",
+        "understand": "entiendo",
+        "ws_status": "Estado de conexión de nodo completo"
+    },
     "borrow": {
         "adjust": "Actualizar posición",
         "adjust_short": "ajustar",
@@ -952,6 +964,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1094,17 +1107,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Navegador no soportado",
-        "browser_text":
-            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
-        "connected": "Conectado",
-        "not_connected": "No conectado",
-        "retry": "Reintentar",
-        "title": "Problemas de inicialización de la aplicación",
-        "understand": "entiendo",
-        "ws_status": "Estado de conexión de nodo completo"
     },
     "languages": {
         "de": "Deutsch",

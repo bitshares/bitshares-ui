@@ -16,7 +16,7 @@ import Page404 from "../Page404/Page404";
 
 class ExchangeContainer extends React.Component {
     render() {
-        let symbols = this.props.params.marketID.toUpperCase().split("_");
+        let symbols = this.props.match.params.marketID.toUpperCase().split("_");
         if (symbols[0] === symbols[1]) {
             return <Page404 subtitle="market_not_found_subtitle" />;
         }
@@ -113,7 +113,8 @@ class ExchangeContainer extends React.Component {
                 }}
             >
                 <ExchangeSubscriber
-                    router={this.props.router}
+                    history={this.props.history}
+                    location={this.props.location}
                     quoteAsset={symbols[0]}
                     baseAsset={symbols[1]}
                 />
@@ -142,7 +143,7 @@ class ExchangeSubscriber extends React.Component {
         coreAsset: "1.3.0"
     };
 
-    constructor() {
+    constructor(props) {
         super();
         this.state = {sub: null};
 
@@ -213,7 +214,7 @@ class ExchangeSubscriber extends React.Component {
             nextProps.baseAsset &&
             nextProps.baseAsset.getIn(["bitasset", "is_prediction_market"])
         ) {
-            this.props.router.push(
+            this.props.history.push(
                 `/market/${nextProps.baseAsset.get(
                     "symbol"
                 )}_${nextProps.quoteAsset.get("symbol")}`

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import notify from "actions/NotificationActions";
 import cname from "classnames";
@@ -147,7 +147,8 @@ class WalletPassword extends Component {
                                 "wallet.current_pass"
                             )}
                             type="password"
-                            id="password"
+                            id="current-password"
+                            autoComplete="current-password"
                             onChange={this.formChange.bind(this)}
                             value={this.state.password}
                         />
