@@ -956,6 +956,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "Gérer les comptes",
         "account": "Account",
         "account_notify": "The active account is now %(account)s",
         "account_value": "Valeur de compte",
@@ -986,6 +987,7 @@
         "update_asset": "Update Asset"
     },
     "icons": {
+        "accounts_manage": "Gérer les comptes",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {

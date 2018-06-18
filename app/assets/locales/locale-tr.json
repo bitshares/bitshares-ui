@@ -965,6 +965,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "Hesapları yönet",
         "account": "Hesap",
         "account_notify": "Aktif hesap: %(account)s",
         "account_value": "Hesap değeri",
@@ -993,6 +994,7 @@
         "update_asset": "Dijital Varlık Güncelle"
     },
     "icons": {
+        "accounts_manage": "Hesapları yönet",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
