@@ -14,9 +14,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 */
 let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
 var __VERSION__ =
-    branch === "staging" || branch === "develop"
-        ? git.short()
-        : require("./package.json").version;
+    branch === "develop" ? git.short() : require("./package.json").version;
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);

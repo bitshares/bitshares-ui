@@ -11,7 +11,7 @@ echo $unamestr
 echo $TRAVIS_TAG
 echo $TRAVIS_BRANCH
 echo $TRAVIS_PULL_REQUEST_BRANCH
-if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG ]]
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH = 'master' ]]
 then
     ## wallet.bitshares.org subdomain (independent repo)
     echo "Pushing new wallet subdomain repo"
@@ -26,7 +26,7 @@ then
     git push
 fi
 
-if [ $unamestr = 'Linux' ] && [ $TRAVIS_BRANCH = 'staging' ] && [ -z $TRAVIS_PULL_REQUEST_BRANCH ]
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH = 'staging' ]]
 then
     ## staging.bitshares.org subdomain (independent repo)
     echo "Pushing new staging subdomain repo"
