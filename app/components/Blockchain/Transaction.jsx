@@ -49,11 +49,11 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]} (<Translate
-                            component="span"
-                            content="explorer.block.trx"
-                        />{" "}
-                        #{this.props.txIndex})
+                        {trxTypes[ops[this.props.type]]} 
+                        {this.props.txIndex > 0 
+                            ? <span><Translate content="explorer.block.trx" />{this.props.txIndex}</span> 
+                            : ""
+                        }
                     </span>
                 </td>
                 <td />
