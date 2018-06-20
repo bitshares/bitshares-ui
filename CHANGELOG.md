@@ -1,4 +1,32 @@
 ---------------------------------------------------------------------
+Release 2.0.180615
+---------------------------------------------------------------------
+New features
+--------
+- #1484 TradingView restyle
+- #1547: Support New OPs 47 + 48
+- #1591: Add code splitting, dynamic imports
+- #1557 - Use order ID consistently
+- #1292 - Autoscroll to transaction number
+- #1496: Locking CR / Debt values for ratio selection
+
+Bug fixes and improvements
+--------
+- #1538: Disable different precision error message when not creating PM
+- #1566: UI Update for BSIP-0037
+- Update TradingView lib
+- Fix #1556: Remove forced decimalOffset on Proposed Transaction
+- Fix #1532 - Generated password does not show completely
+- Fix an issue in PasswordConfirm making input imposible
+- #1584: Move to react router v4
+- #1560: Enable develop branch with automatic builds
+- #1569: Use unique memo keys when creating new accounts
+- Fix #1568: AssetName crash on non-existing asset
+- #1580 Integrate bitshares-ui-style-guide
+- #1525 - Clear Voting Proxy
+- #1555 - Market Picker fixes for improvements
+
+---------------------------------------------------------------------
 Release 2.0.180525
 ---------------------------------------------------------------------
 New features

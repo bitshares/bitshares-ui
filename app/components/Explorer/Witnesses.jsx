@@ -99,6 +99,7 @@ class WitnessCard extends React.Component {
     }
 }
 WitnessCard = BindToChainState(WitnessCard);
+WitnessCard = withRouter(WitnessCard);
 
 class WitnessRow extends React.Component {
     static propTypes = {

@@ -260,16 +260,17 @@ class CreateAccountPassword extends React.Component {
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">
-                                <input
+                                <textarea
                                     style={{
-                                        maxWidth: "calc(30rem - 48px)",
-                                        fontSize: "80%"
+                                        padding: "0px",
+                                        marginBottom: "0px"
                                     }}
+                                    rows="3"
+                                    readOnly
                                     disabled
-                                    value={this.state.generatedPassword}
-                                    type="text"
-                                    className="input-button"
-                                />
+                                >
+                                    {this.state.generatedPassword}
+                                </textarea>
                                 <CopyButton
                                     text={this.state.generatedPassword}
                                     tip="tooltip.copy_password"
