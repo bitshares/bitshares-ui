@@ -2,6 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import Icon from "../../components/Icon/Icon";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
+import {getWalletURL} from "../../branding";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -28,7 +29,8 @@ function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
 function _openGatewaySite() {
     let {selectedGateway, gatewayStatus} = this.state;
     let win = window.open(
-        "https://wallet.bitshares.org/#/help/gateways/" +
+        getWalletURL() +
+            "/#/help/gateways/" +
             gatewayStatus[selectedGateway].name.toLowerCase().replace("-", ""),
         "_blank"
     );

@@ -13,6 +13,7 @@ import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
 import PropTypes from "prop-types";
+import {getWalletName} from "branding";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -194,7 +195,10 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
-                                        title="icons.download"
+                                        title={counterpart.translate(
+                                            "icons.download",
+                                            {wallet_name: getWalletName()}
+                                        )}
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -204,7 +208,10 @@ class Footer extends React.Component {
                                     />
                                 )}
                                 <span style={updateStyles}>
-                                    <Translate content="footer.title" />
+                                    <Translate
+                                        content="footer.title"
+                                        wallet_name={getWalletName()}
+                                    />
                                     {__GIT_BRANCH__ === "staging" ? (
                                         <a
                                             href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}

@@ -18,6 +18,13 @@ const testnetAPI2 = settingsAPIs.WS_NODE_LIST.find(
     a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
 );
 
+function isTestNet(url) {
+    if (!!testnetAPI || !!testnetAPI2) {
+        return url === testnetAPI.url || url === testnetAPI2.url;
+    }
+    return false;
+}
+
 /**
  * This class renders a a single node within the nodes list in the settings overview.
  *
@@ -100,7 +107,7 @@ class ApiNode extends React.Component {
         * so we force enable activation of it even though it shows as 'down'
         *
         */
-        const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
+        const isTestnet = isTestNet(url);
 
         let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
 
@@ -438,8 +445,7 @@ class AccessSettings extends React.Component {
             });
 
         nodes = nodes.sort(function(a, b) {
-            let isTestnet =
-                a.url === testnetAPI.url || a.url === testnetAPI2.url;
+            let isTestnet = isTestNet(a.url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {
