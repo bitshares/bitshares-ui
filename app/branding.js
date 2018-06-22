@@ -7,7 +7,7 @@ export function getWalletURL() {
 }
 
 export function getLogo() {
-    return require("../assets/logo-ico-blue.png");
+    return require("assets/logo-ico-blue.png");
 }
 
 export function getDefaultTheme() {
@@ -120,6 +120,6 @@ export function allowedLogin(type) {
     return type == "password";
 }
 
-export function getAllowedGateways() {
-    // not yet supported
+export function allowedGateway(gateway) {
+    return gateway in ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"];
 }

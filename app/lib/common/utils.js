@@ -412,11 +412,6 @@ var Utils = {
             }
         }
 
-        let prefix = isBitAsset
-            ? "bit"
-            : toReplace[i]
-                ? toReplace[i].toLowerCase()
-                : null;
         let namespace = isBitAsset ? "bit" : toReplace[i];
         let prefix = null;
         if (!getAssetHideNamespaces().find(a => a.indexOf(namespace) !== -1)) {
