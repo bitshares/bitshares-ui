@@ -158,7 +158,7 @@ class ProposedOperation extends React.Component {
                                 {
                                     type: "amount",
                                     value: op[1].amount,
-                                    arg: "amount",
+                                    arg: "amount"
                                 },
                                 {type: "account", value: op[1].to, arg: "to"}
                             ]}

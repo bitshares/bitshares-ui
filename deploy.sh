@@ -1,17 +1,21 @@
 # This script clones an existing gh-pages repository and pushes updates
 # from the newly compiled version into github.
 # The GITHUB_TOKEN for authentication is stored in the encrypted
-# variable in .travis.yml
+# variable in .travis.yml.
 
-# Clone Repo
+# The script assumes final releases are tagged
+# using [2-9].[0-9].[0-9]{6} format, for example 2.0.180629
+# Staging releases should always end in -rcx, using the following format:
+# .+-rc[1-9]$
+
 ############
-#echo "Cloning wallet repo"
 unamestr=`uname`
-echo $unamestr
-echo $TRAVIS_TAG
-echo $TRAVIS_BRANCH
-echo $TRAVIS_PULL_REQUEST_BRANCH
-if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH = 'master' ]]
+echo unamestr=$unamestr
+echo TRAVIS_TAG=$TRAVIS_TAG
+echo TRAVIS_BRANCH=$TRAVIS_BRANCH
+echo TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
+
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH =~ [2-9]\.[0-9]\.[0-9]{6}$ ]]
 then
     ## wallet.bitshares.org subdomain (independent repo)
     echo "Pushing new wallet subdomain repo"
@@ -26,7 +30,7 @@ then
     git push
 fi
 
-if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH = 'staging' ]]
+if [[ "$unamestr" == 'Linux' && -n $TRAVIS_TAG && $TRAVIS_BRANCH =~ .+-rc[1-9]$ ]]
 then
     ## staging.bitshares.org subdomain (independent repo)
     echo "Pushing new staging subdomain repo"

@@ -198,9 +198,7 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id} className="clickable">
-                <td style={leftAlign}>
-                    #{order.id.substring(4)}
-                </td>
+                <td style={leftAlign}>#{order.id.substring(4)}</td>
                 <td colSpan="4" style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? (
                         <Translate
