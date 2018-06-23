@@ -141,6 +141,10 @@ class OrderRow extends React.Component {
         let baseColor = isBid ? "value negative" : "value positive";
 
         console.log("#1529.expiration.test.1: " + new Date(order.expiration));
+        console.log(
+            "#1529.expiration.test.2: " +
+                new Date(utils.format_time(order.expiration))
+        );
         return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass} style={{paddingLeft: 10}}>
@@ -172,7 +176,7 @@ class OrderRow extends React.Component {
                 <td
                     style={{width: "25%", textAlign: "right"}}
                     className="tooltip"
-                    data-tip={new Date(order.expiration)}
+                    data-tip={new Date(utils.format_time(order.expiration))}
                 >
                     {isCall
                         ? null
