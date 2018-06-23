@@ -140,6 +140,7 @@ class OrderRow extends React.Component {
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
 
+        console.log("#1529.expiration.test.1: " + new Date(order.expiration));
         return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass} style={{paddingLeft: 10}}>
@@ -198,9 +199,7 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id} className="clickable">
-                <td style={leftAlign}>
-                    #{order.id.substring(4)}
-                </td>
+                <td style={leftAlign}>#{order.id.substring(4)}</td>
                 <td colSpan="4" style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? (
                         <Translate
