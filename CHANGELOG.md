@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------
+Release 2.0.180629-rc2
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- #1605: White screen after order creation
+- #1611: Accessing withdraw modal with no account available
+- #1612: Add contact with no account selected
+
+---------------------------------------------------------------------
 Release 2.0.180629-rc1
 ---------------------------------------------------------------------
 New features
