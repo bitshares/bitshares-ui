@@ -326,6 +326,14 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: this.props.result
+                                                ? "#" +
+                                                  this.props.result[1].substring(
+                                                      4
+                                                  )
+                                                : ""
+                                        }}
                                     />
                                 );
                             }}
@@ -1013,6 +1021,9 @@ class Operation extends React.Component {
                                                 arg: "price"
                                             }
                                         ]}
+                                        params={{
+                                            order: o.order_id.substring(4)
+                                        }}
                                     />
                                 );
                             }}
@@ -1294,6 +1305,56 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "asset_claim_pool":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_claim_pool"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].issuer,
+                                arg: "account"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_id,
+                                arg: "asset"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].amount_to_claim,
+                                arg: "amount"
+                            }
+                        ]}
+                    />
+                );
+                break;
+
+            case "asset_update_issuer":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.asset_update_issuer"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].issuer,
+                                arg: "from_account"
+                            },
+                            {
+                                type: "account",
+                                value: op[1].new_issuer,
+                                arg: "to_account"
+                            },
+                            {
+                                type: "asset",
+                                value: op[1].asset_to_update,
+                                arg: "asset"
+                            }
+                        ]}
+                    />
+                );
+                break;
+
             default:
                 console.log("unimplemented op:", op);
                 column = (
@@ -1348,15 +1409,18 @@ class Operation extends React.Component {
     }
 }
 
-Operation = connect(Operation, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+Operation = connect(
+    Operation,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default Operation;
