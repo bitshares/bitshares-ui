@@ -500,6 +500,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "Gruppe",
         "hide": "Hide",
         "highest_bid": "Höchstes Bid",
         "history": "Marktverlauf",
@@ -1531,6 +1532,7 @@
             "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip":
             "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit":

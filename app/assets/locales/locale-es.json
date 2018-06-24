@@ -508,6 +508,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "Grupo",
         "hide": "Ocultar",
         "highest_bid": "Puja más alta",
         "history": "Trades del mercado",
@@ -1558,6 +1559,7 @@
             "El proprietario de %(asset)s cobra una comisiòn de mercado de %(percent)s%% para pedidos de compra. Esta comisìòn se deducirá de la cantidad que reciba cuando su pedido se ejecuta, no se paga al hacer un pedido.",
         "memo_tip":
             "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "No hay un precio reciente disponible para este activo que pueda usarse para estimar su valor.",
         "over_limit":

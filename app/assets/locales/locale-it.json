@@ -506,6 +506,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "Gruppo",
         "hide": "Nascondi",
         "highest_bid": "Domanda (bid) più alta",
         "history": "Storico del mercato",
@@ -1553,6 +1554,7 @@
             "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
         "memo_tip":
             "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",
         "over_limit":

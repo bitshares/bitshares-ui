@@ -480,6 +480,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "分组",
         "hide": "隐藏",
         "highest_bid": "最高买价",
         "history": "交易历史",
@@ -1479,6 +1480,7 @@
             "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "memo_tip":
             "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
+        "no_groups_available": "No groupings available using this API server",
         "no_price": "未找到该资产最近的成交价来评估价值",
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
