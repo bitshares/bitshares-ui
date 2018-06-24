@@ -530,10 +530,11 @@
         "my_orders": "My open orders",
         "native": "Native",
         "new": "New",
+        "no_asks": "No asks",
         "no_balance": "Insufficient balance",
+        "no_bids": "No bids",
         "no_data": "No data",
         "no_orders": "No orders",
-        "no_bids": "No bids",
         "order_depth": "Market Depth",
         "others": "Others",
         "overbought": "Overbought",
@@ -1245,6 +1246,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} was upgraded to annual member",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} created the asset {asset}",
         "asset_fund_fee_pool":
             "{account} funded {asset} fee pool with {amount}",
@@ -1254,8 +1257,6 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
-        "asset_claim_pool":
-            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",

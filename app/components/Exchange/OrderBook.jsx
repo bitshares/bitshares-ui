@@ -27,7 +27,9 @@ class OrderBookRowVertical extends React.Component {
         const isCall = order.isCall();
         let integerClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let price = (
             <PriceText price={order.getPrice()} quote={quote} base={base} />
@@ -82,7 +84,9 @@ class OrderBookRowHorizontal extends React.Component {
 
         let integerClass = isCall
             ? "orderHistoryCall"
-            : isBid ? "orderHistoryBid" : "orderHistoryAsk";
+            : isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
 
         let price = (
             <PriceText price={order.getPrice()} quote={quote} base={base} />
@@ -791,7 +795,7 @@ class OrderBook extends React.Component {
                                                   className="cell no-orders padtop"
                                                   colSpan="3"
                                               >
-                                                  No asks
+                                                  <Translate content="exchange.no_asks" />
                                               </td>
                                           </div>
                                       )}
