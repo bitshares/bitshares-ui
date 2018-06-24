@@ -573,7 +573,8 @@
         "volume_24": "24hr Volume",
         "your_price": "내 콜 가격",
         "zoom": "Zoom",
-        "zoom_all": "All"
+        "zoom_all": "All",
+        "group_order_limit": "그룹"
     },
     "explorer": {
         "account": {

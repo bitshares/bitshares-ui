@@ -556,7 +556,8 @@
         "volume_24": "日成交量",
         "your_price": "你的强平触发价",
         "zoom": "缩放",
-        "zoom_all": "显示全部"
+        "zoom_all": "显示全部",
+        "group_order_limit": "分组"
     },
     "explorer": {
         "account": {

@@ -147,6 +147,161 @@ class OrderBookRowHorizontal extends React.Component {
     }
 }
 
+class GroupedOrderBookRowVertical extends React.Component {
+    shouldComponentUpdate(np) {
+        if (np.order.market_base !== this.props.order.market_base) return false;
+        return (
+            np.order.ne(this.props.order) ||
+            np.index !== this.props.index ||
+            np.currentAccount !== this.props.currentAccount
+        );
+    }
+
+    render() {
+        let {order, quote, base, final} = this.props;
+        const isBid = order.isBid();
+        let integerClass = isBid ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let price = (
+            <PriceText price={order.getPrice()} quote={quote} base={base} />
+        );
+        return (
+            <div
+                onClick={this.props.onClick}
+                className={classnames("sticky-table-row order-row", {
+                    "final-row": final
+                })}
+            >
+                <div className="cell left">
+                    {utils.format_number(
+                        order[
+                            isBid ? "amountForSale" : "amountToReceive"
+                        ]().getAmount({real: true}),
+                        base.get("precision")
+                    )}
+                </div>
+                <div className="cell">
+                    {utils.format_number(
+                        order[
+                            isBid ? "amountToReceive" : "amountForSale"
+                        ]().getAmount({real: true}),
+                        quote.get("precision")
+                    )}
+                </div>
+                <div className={`cell ${integerClass} right`}>{price}</div>
+            </div>
+        );
+    }
+}
+
+class GroupedOrderBookRowHorizontal extends React.Component {
+    shouldComponentUpdate(np) {
+        return (
+            np.order.ne(this.props.order) ||
+            np.position !== this.props.position ||
+            np.index !== this.props.index ||
+            np.currentAccount !== this.props.currentAccount
+        );
+    }
+
+    render() {
+        let {order, quote, base, position} = this.props;
+        const isBid = order.isBid();
+
+        let integerClass = isBid ? "orderHistoryBid" : "orderHistoryAsk";
+
+        let price = (
+            <PriceText price={order.getPrice()} quote={quote} base={base} />
+        );
+        let amount = isBid
+            ? utils.format_number(
+                  order.amountToReceive().getAmount({real: true}),
+                  quote.get("precision")
+              )
+            : utils.format_number(
+                  order.amountForSale().getAmount({real: true}),
+                  quote.get("precision")
+              );
+        let value = isBid
+            ? utils.format_number(
+                  order.amountForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
+            : utils.format_number(
+                  order.amountToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
+        let total = isBid
+            ? utils.format_number(
+                  order.totalForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
+            : utils.format_number(
+                  order.totalToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
+
+        return (
+            <tr onClick={this.props.onClick}>
+                {position === "left" ? (
+                    <td>{total}</td>
+                ) : (
+                    <td style={{width: "25%"}} className={integerClass}>
+                        {price}
+                    </td>
+                )}
+                <td>{position === "left" ? value : amount}</td>
+                <td>{position === "left" ? amount : value}</td>
+                {position === "right" ? (
+                    <td>{total}</td>
+                ) : (
+                    <td style={{width: "25%"}} className={integerClass}>
+                        {price}
+                    </td>
+                )}
+            </tr>
+        );
+    }
+}
+
+class GroupOrderLimitSelector extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            groupLimit: ""
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({groupLimit: this.props.currentGroupOrderLimit});
+    }
+
+    render() {
+        const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
+            key => (
+                <option value={key} key={key}>
+                    {`${key / 100}%`}
+                </option>
+            )
+        );
+
+        return (
+            <select
+                dir="rtl"
+                value={this.state.groupLimit}
+                onChange={this.props.handleGroupOrderLimitChange}
+            >
+                <Translate
+                    content="exchange.group_order_limit"
+                    component="option"
+                    value="0"
+                />
+                {trackedGroupsOptionsList}
+            </select>
+        );
+    }
+}
+
 class OrderBook extends React.Component {
     constructor(props) {
         super();
@@ -335,7 +490,12 @@ class OrderBook extends React.Component {
             totalBids,
             quoteSymbol,
             baseSymbol,
-            horizontal
+            horizontal,
+            trackedGroupsConfig,
+            currentGroupOrderLimit,
+            handleGroupOrderLimitChange,
+            groupedBids,
+            groupedAsks
         } = this.props;
         let {
             showAllAsks,
@@ -362,67 +522,150 @@ class OrderBook extends React.Component {
         let bidRows = null,
             askRows = null;
         if (base && quote) {
-            bidRows = combinedBids.map((order, index) => {
-                return horizontal ? (
-                    <OrderBookRowHorizontal
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        position={!this.state.flip ? "left" : "right"}
-                        currentAccount={this.props.currentAccount}
-                    />
-                ) : (
-                    <OrderBookRowVertical
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        final={index === 0}
-                        currentAccount={this.props.currentAccount}
-                    />
-                );
-            });
+            // limit orders or grouped orders
+            if (this.props.currentGroupOrderLimit !== 0) {
+                bidRows = groupedBids.map((order, index) => {
+                    return horizontal ? (
+                        <GroupedOrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            position={!this.state.flip ? "left" : "right"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <GroupedOrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            final={index === 0}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
 
-            let tempAsks = combinedAsks;
-            tempAsks.sort((a, b) => {
-                if (horizontal) {
-                    return a.getPrice() - b.getPrice();
-                } else {
-                    return b.getPrice() - a.getPrice();
+                let tempAsks = groupedAsks;
+                if (!horizontal) {
+                    tempAsks.sort((a, b) => {
+                        return b.getPrice() - a.getPrice();
+                    });
                 }
-            });
-            askRows = tempAsks.map((order, index) => {
-                return horizontal ? (
-                    <OrderBookRowHorizontal
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        type={order.type}
-                        position={!this.state.flip ? "right" : "left"}
-                        currentAccount={this.props.currentAccount}
-                    />
-                ) : (
-                    <OrderBookRowVertical
-                        index={index}
-                        key={order.getPrice() + (order.isCall() ? "_call" : "")}
-                        order={order}
-                        onClick={this.props.onClick.bind(this, order)}
-                        base={base}
-                        quote={quote}
-                        type={order.type}
-                        final={0 === index}
-                        currentAccount={this.props.currentAccount}
-                    />
-                );
-            });
+                askRows = tempAsks.map((order, index) => {
+                    return horizontal ? (
+                        <GroupedOrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            position={!this.state.flip ? "right" : "left"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <GroupedOrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() + (order.isBid() ? "_bid" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            final={0 === index}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
+            } else {
+                bidRows = combinedBids.map((order, index) => {
+                    return horizontal ? (
+                        <OrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            position={!this.state.flip ? "left" : "right"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <OrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            final={index === 0}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
+
+                let tempAsks = combinedAsks;
+                tempAsks.sort((a, b) => {
+                    if (horizontal) {
+                        return a.getPrice() - b.getPrice();
+                    } else {
+                        return b.getPrice() - a.getPrice();
+                    }
+                });
+                askRows = tempAsks.map((order, index) => {
+                    return horizontal ? (
+                        <OrderBookRowHorizontal
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            position={!this.state.flip ? "right" : "left"}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    ) : (
+                        <OrderBookRowVertical
+                            index={index}
+                            key={
+                                order.getPrice() +
+                                (order.isCall() ? "_call" : "")
+                            }
+                            order={order}
+                            onClick={this.props.onClick.bind(this, order)}
+                            base={base}
+                            quote={quote}
+                            type={order.type}
+                            final={0 === index}
+                            currentAccount={this.props.currentAccount}
+                        />
+                    );
+                });
+            }
         }
 
         if (this.props.horizontal) {
@@ -570,6 +813,23 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
+                                {this.state.flip ? (
+                                    <div className="float-right header-sub-title grouped_order">
+                                        {trackedGroupsConfig ? (
+                                            <GroupOrderLimitSelector
+                                                trackedGroupsConfig={
+                                                    trackedGroupsConfig
+                                                }
+                                                handleGroupOrderLimitChange={
+                                                    handleGroupOrderLimitChange
+                                                }
+                                                currentGroupOrderLimit={
+                                                    currentGroupOrderLimit
+                                                }
+                                            />
+                                        ) : null}
+                                    </div>
+                                ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
@@ -682,6 +942,23 @@ class OrderBook extends React.Component {
                                                 className="icon-14px"
                                             />
                                         </span>
+                                    </div>
+                                ) : null}
+                                {!this.state.flip ? (
+                                    <div className="float-right header-sub-title grouped_order">
+                                        {trackedGroupsConfig ? (
+                                            <GroupOrderLimitSelector
+                                                trackedGroupsConfig={
+                                                    trackedGroupsConfig
+                                                }
+                                                handleGroupOrderLimitChange={
+                                                    handleGroupOrderLimitChange
+                                                }
+                                                currentGroupOrderLimit={
+                                                    currentGroupOrderLimit
+                                                }
+                                            />
+                                        ) : null}
                                     </div>
                                 ) : null}
                                 <div
@@ -890,12 +1167,30 @@ class OrderBook extends React.Component {
                         </StickyTable>
                     </div>
                     <div className="v-align no-padding align-center grid-block footer shrink bottom-header">
-                        <div onClick={this.props.moveOrderBook}>
+                        <div
+                            className="v-align grid-block align-center"
+                            style={{height: "2rem", overflow: "hidden"}}
+                        >
                             <Icon
                                 name="thumb-untack"
                                 title="icons.thumb_untack"
                                 className="icon-14px order-book-button-h"
+                                style={{top: "-0.5rem"}}
+                                onClick={this.props.moveOrderBook}
                             />
+                        </div>
+                        <div className="v-align grid-block align-center grouped_order">
+                            {trackedGroupsConfig ? (
+                                <GroupOrderLimitSelector
+                                    trackedGroupsConfig={trackedGroupsConfig}
+                                    handleGroupOrderLimitChange={
+                                        handleGroupOrderLimitChange
+                                    }
+                                    currentGroupOrderLimit={
+                                        currentGroupOrderLimit
+                                    }
+                                />
+                            ) : null}
                         </div>
                     </div>
                 </div>

@@ -586,7 +586,8 @@
         "volume_24": "Суточный объем",
         "your_price": "Ваша Цена досрочного погашения",
         "zoom": "Увеличить",
-        "zoom_all": "Все"
+        "zoom_all": "Все",
+        "group_order_limit": "группа"
     },
     "explorer": {
         "account": {

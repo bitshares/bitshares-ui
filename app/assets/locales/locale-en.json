@@ -573,7 +573,8 @@
         "volume_24": "24hr Volume",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
-        "zoom_all": "All"
+        "zoom_all": "All",
+        "group_order_limit": "Group"
     },
     "explorer": {
         "account": {

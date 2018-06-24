@@ -579,7 +579,8 @@
         "volume_24": "24 Saat",
         "your_price": "Sizin Çağrı Fiyatınız",
         "zoom": "Yakınlaştır",
-        "zoom_all": "Tümü"
+        "zoom_all": "Tümü",
+        "group_order_limit": "grup"
     },
     "explorer": {
         "account": {

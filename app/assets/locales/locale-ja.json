@@ -573,7 +573,8 @@
         "volume_24": "24時間出来高",
         "your_price": "あなたのコール価格",
         "zoom": "拡大",
-        "zoom_all": "すべて"
+        "zoom_all": "すべて",
+        "group_order_limit": "グループ"
     },
     "explorer": {
         "account": {
