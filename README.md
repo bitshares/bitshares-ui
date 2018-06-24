@@ -101,6 +101,7 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 ## Development process
 
+- New issues will, after enough discussion and clarification, be assigned an estimate time to complete, as well as assigned to the next unstarted milestone, by a project coordinator.
 - Milestones are numbered YYMMDD and refer to the **anticipated release date of the next Release Candidate**.
 - Release Candidates sits 1 milestone period (2 weeks) for evaluation by the public before release
 - Bugs are always worked before enhancements
