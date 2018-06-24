@@ -10,6 +10,7 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
+const counterpart = require("counterpart");
 
 class OrderBookRowVertical extends React.Component {
     shouldComponentUpdate(np) {
@@ -277,6 +278,7 @@ class GroupOrderLimitSelector extends React.Component {
     }
 
     render() {
+        const noGroupsAvailable = this.props.trackedGroupsConfig.length === 0;
         const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
             key => (
                 <option value={key} key={key}>
@@ -290,6 +292,12 @@ class GroupOrderLimitSelector extends React.Component {
                 dir="rtl"
                 value={this.state.groupLimit}
                 onChange={this.props.handleGroupOrderLimitChange}
+                data-tip={
+                    noGroupsAvailable
+                        ? counterpart.translate("tooltip.no_groups_available")
+                        : null
+                }
+                style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
             >
                 <Translate
                     content="exchange.group_order_limit"
@@ -760,8 +768,6 @@ class OrderBook extends React.Component {
                 </thead>
             );
 
-            const translator = require("counterpart");
-
             return (
                 <div
                     className={classnames(
@@ -778,7 +784,7 @@ class OrderBook extends React.Component {
                         <div className="exchange-bordered">
                             <div
                                 className="exchange-content-header ask"
-                                data-intro={translator.translate(
+                                data-intro={counterpart.translate(
                                     "walkthrough.sell_orders"
                                 )}
                             >
@@ -909,7 +915,7 @@ class OrderBook extends React.Component {
                         <div className="exchange-bordered">
                             <div
                                 className="exchange-content-header bid"
-                                data-intro={translator.translate(
+                                data-intro={counterpart.translate(
                                     "walkthrough.buy_orders"
                                 )}
                             >
