@@ -151,12 +151,10 @@ class BorrowModalContent extends React.Component {
     }
 
     toggleLockedCR(e) {
-        let {collateral, collateral_ratio, original_position} = this.state;
+        let {original_position} = this.state;
         e.preventDefault();
 
         let maintenanceRatio = this._getMaintenanceRatio();
-            
-        let isBelowMCR = collateral > 0 && collateral_ratio < maintenanceRatio;
         let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
 
         if(isBelowMCROrig) return;
