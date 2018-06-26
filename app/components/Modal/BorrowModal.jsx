@@ -359,6 +359,22 @@ class BorrowModalContent extends React.Component {
         let mcr = this._getMaintenanceRatio();
 
         if (
+            isBelowMCROrig 
+            && parseFloat(newState.collateral_ratio) < parseFloat(original_position.collateral_ratio)
+        ) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.below_ratio_mcr_update"
+            );
+            isValid = false;
+        } else if (
+            isBelowMCROrig
+            && newState.short_amount > original_position.debt
+        ) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.increased_debt_on_margin_call"
+            );
+            isValid = false;
+        } else if (
             parseFloat(newState.collateral_ratio) <
             (this._isPredictionMarket(this.props) ? 1 : mcr)
             && !isBelowMCROrig
@@ -366,14 +382,6 @@ class BorrowModalContent extends React.Component {
             errors.below_maintenance = counterpart.translate(
                 "borrow.errors.below",
                 {mr: mcr}
-            );
-            isValid = false;
-        } else if (
-            parseFloat(newState.collateral_ratio) < parseFloat(original_position.collateral_ratio)
-            && isBelowMCROrig
-        ) {
-            errors.below_maintenance = counterpart.translate(
-                "borrow.errors.below_ratio_mcr_update"
             );
             isValid = false;
         } else if (
