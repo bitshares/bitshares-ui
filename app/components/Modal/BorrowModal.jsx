@@ -66,7 +66,8 @@ class BorrowModalContent extends React.Component {
                 isValid: false,
                 original_position: {
                     debt: debt,
-                    collateral: collateral
+                    collateral: collateral,
+                    collateral_ratio: this._getCollateralRatio(debt, collateral)
                 }
             };
         } else {
@@ -78,7 +79,8 @@ class BorrowModalContent extends React.Component {
                 isValid: false,
                 original_position: {
                     debt: 0,
-                    collateral: 0
+                    collateral: 0,
+                    collateral_ratio: 0
                 }
             };
         }
@@ -135,13 +137,30 @@ class BorrowModalContent extends React.Component {
         };
     }
 
+    _getMaintenanceRatio() {
+        return this.props.quote_asset.getIn([
+            "bitasset",
+            "current_feed",
+            "maintenance_collateral_ratio"
+        ]) / 1000;
+    }
+
     confirmClicked(e) {
         e.preventDefault();
         ZfApi.publish(this.props.modalId, "close");
     }
 
     toggleLockedCR(e) {
+        let {collateral, collateral_ratio, original_position} = this.state;
         e.preventDefault();
+
+        let maintenanceRatio = this._getMaintenanceRatio();
+            
+        let isBelowMCR = collateral > 0 && collateral_ratio < maintenanceRatio;
+        let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
+
+        if(isBelowMCROrig) return;
+
         this.setState({lockedCR: !this.state.lockedCR ? true : false})
     }
 
@@ -320,10 +339,14 @@ class BorrowModalContent extends React.Component {
 
     _validateFields(newState) {
         let errors = this._getInitialErrors();
-        let {original_position} = this.state;
+        let {original_position, collateral, collateral_ratio} = this.state;
         let backing_balance = !this.props.backing_balance
             ? {balance: 0}
             : this.props.backing_balance.toJS();
+
+        let maintenanceRatio = this._getMaintenanceRatio();
+        let isBelowMCR = collateral > 0 && collateral_ratio < maintenanceRatio;
+        let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
 
         if (
             parseFloat(newState.collateral) - original_position.collateral >
@@ -343,19 +366,24 @@ class BorrowModalContent extends React.Component {
                 newState.collateral != original_position.collateral);
 
         // let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-        let mcr =
-            this.props.quote_asset.getIn([
-                "bitasset",
-                "current_feed",
-                "maintenance_collateral_ratio"
-            ]) / 1000;
+        let mcr = this._getMaintenanceRatio();
+
         if (
             parseFloat(newState.collateral_ratio) <
             (this._isPredictionMarket(this.props) ? 1 : mcr)
+            && !isBelowMCROrig
         ) {
             errors.below_maintenance = counterpart.translate(
                 "borrow.errors.below",
                 {mr: mcr}
+            );
+            isValid = false;
+        } else if (
+            parseFloat(newState.collateral_ratio) < parseFloat(original_position.collateral_ratio)
+            && isBelowMCROrig && isBelowMCR
+        ) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.below_ratio_mcr_update"
             );
             isValid = false;
         } else if (
@@ -601,12 +629,8 @@ class BorrowModalContent extends React.Component {
 
         let feed_price = this._getFeedPrice();
 
-        let maintenanceRatio =
-            this.props.quote_asset.getIn([
-                "bitasset",
-                "current_feed",
-                "maintenance_collateral_ratio"
-            ]) / 1000;
+        let maintenanceRatio = this._getMaintenanceRatio();
+
         let squeezeRatio =
             this.props.quote_asset.getIn([
                 "bitasset",
@@ -615,6 +639,8 @@ class BorrowModalContent extends React.Component {
             ]) / 1000;
 
         let isPredictionMarket = this._isPredictionMarket(this.props);
+
+        let isBelowMCROrig = this.state.original_position.debt > 0 && this.state.original_position.collateral_ratio < maintenanceRatio;
 
         if (!isPredictionMarket && isNaN(feed_price)) {
             return (
@@ -667,8 +693,12 @@ class BorrowModalContent extends React.Component {
                             />
                         )}
 
+                        {isBelowMCROrig ? 
+                            <Translate component="h6" className="has-warning" content="borrow.errors.below_info" />
+                        : null}
+
                         {!isPredictionMarket ? (
-                            <div style={{paddingBottom: "1rem"}}>
+                            <div style={{paddingTop: "1rem", paddingBottom: "1rem"}}>
                                 <div className="borrow-price-feeds">
                                     <span className="borrow-price-label">
                                         <Translate content="transaction.feed_price" />:&nbsp;
@@ -766,6 +796,7 @@ class BorrowModalContent extends React.Component {
                                 asset={quote_asset.get("id")}
                                 assets={[quote_asset.get("id")]}
                                 display_balance={bitAssetBalanceText}
+                                disabled={isBelowMCROrig}
                                 placeholder="0.0"
                                 tabIndex={1}
                             />

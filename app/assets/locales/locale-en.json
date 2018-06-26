@@ -429,9 +429,12 @@
         "errors": {
             "below":
                 "Your collateral ratio is below %(mr)s which is not allowed.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is below your current, which is not allowed when margin called",
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Insufficient collateral balance"
+            "collateral": "Insufficient collateral balance",
+            "below_info": "Your position is below the required maintenance collateral ratio. Below this ratio you can only change your collateral."
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
