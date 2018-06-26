@@ -151,14 +151,7 @@ class BorrowModalContent extends React.Component {
     }
 
     toggleLockedCR(e) {
-        let {original_position} = this.state;
         e.preventDefault();
-
-        let maintenanceRatio = this._getMaintenanceRatio();
-        let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
-
-        if(isBelowMCROrig) return;
-
         this.setState({lockedCR: !this.state.lockedCR ? true : false})
     }
 
@@ -337,13 +330,12 @@ class BorrowModalContent extends React.Component {
 
     _validateFields(newState) {
         let errors = this._getInitialErrors();
-        let {original_position, collateral, collateral_ratio} = this.state;
+        let {original_position} = this.state;
         let backing_balance = !this.props.backing_balance
             ? {balance: 0}
             : this.props.backing_balance.toJS();
 
         let maintenanceRatio = this._getMaintenanceRatio();
-        let isBelowMCR = collateral > 0 && collateral_ratio < maintenanceRatio;
         let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
 
         if (
@@ -378,7 +370,7 @@ class BorrowModalContent extends React.Component {
             isValid = false;
         } else if (
             parseFloat(newState.collateral_ratio) < parseFloat(original_position.collateral_ratio)
-            && isBelowMCROrig && isBelowMCR
+            && isBelowMCROrig
         ) {
             errors.below_maintenance = counterpart.translate(
                 "borrow.errors.below_ratio_mcr_update"
@@ -794,7 +786,6 @@ class BorrowModalContent extends React.Component {
                                 asset={quote_asset.get("id")}
                                 assets={[quote_asset.get("id")]}
                                 display_balance={bitAssetBalanceText}
-                                disabled={isBelowMCROrig}
                                 placeholder="0.0"
                                 tabIndex={1}
                             />
