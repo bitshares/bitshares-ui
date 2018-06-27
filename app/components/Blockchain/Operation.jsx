@@ -204,7 +204,7 @@ class Operation extends React.Component {
     }
 
     render() {
-        let {op, current, block, result} = this.props;
+        let {op, current, block} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -327,7 +327,12 @@ class Operation extends React.Component {
                                             }
                                         ]}
                                         params={{
-                                            order: result[1].substring(4)
+                                            order: this.props.result
+                                                ? "#" +
+                                                  this.props.result[1].substring(
+                                                      4
+                                                  )
+                                                : ""
                                         }}
                                     />
                                 );
@@ -1299,8 +1304,8 @@ class Operation extends React.Component {
                     />
                 );
                 break;
-            
-            case "asset_claim_pool": 
+
+            case "asset_claim_pool":
                 column = (
                     <TranslateWithLinks
                         string="operation.asset_claim_pool"

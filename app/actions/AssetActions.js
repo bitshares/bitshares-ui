@@ -427,8 +427,8 @@ class AssetActions {
                         let bitAssetPromise =
                             bitAssetIDS.length > 0
                                 ? Apis.instance()
-                                    .db_api()
-                                    .exec("get_objects", [bitAssetIDS])
+                                      .db_api()
+                                      .exec("get_objects", [bitAssetIDS])
                                 : null;
 
                         Promise.all([dynamicPromise, bitAssetPromise]).then(

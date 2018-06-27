@@ -79,6 +79,7 @@ class SyncError extends React.Component {
                     <p style={{marginBottom: 0}}>
                         <Translate content="sync_fail.sub_text_1" />
                     </p>
+
                     <Icon name="clock" title="icons.clock" size="5x" />
 
                     <p>

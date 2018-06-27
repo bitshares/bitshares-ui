@@ -298,12 +298,14 @@ class Header extends React.Component {
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
 
         const a = ChainStore.getAccount(currentAccount);
+        const showAccountLinks = !!a;
         const isMyAccount = !a
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
+            !!a &&
             Apis.instance() &&
             Apis.instance().chain_id &&
             Apis.instance().chain_id.substr(0, 8) === "4018d784";
@@ -1237,7 +1239,7 @@ class Header extends React.Component {
                                     </li>
                                 ) : null}
 
-                                {!isMyAccount ? (
+                                {!isMyAccount && showAccountLinks ? (
                                     <li
                                         className="divider"
                                         onClick={this[
@@ -1326,7 +1328,8 @@ class Header extends React.Component {
                                 <li
                                     className={cnames({
                                         active:
-                                            active.indexOf("/transfer") !== -1
+                                            active.indexOf("/transfer") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1569,7 +1572,9 @@ class Header extends React.Component {
 
                                 <li
                                     className={cnames({
-                                        active: active.indexOf("/voting") !== -1
+                                        active:
+                                            active.indexOf("/voting") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1592,7 +1597,8 @@ class Header extends React.Component {
                                     className={cnames({
                                         active:
                                             active.indexOf("/assets") !== -1 &&
-                                            active.indexOf("/account/") !== -1
+                                            active.indexOf("/account/") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1610,12 +1616,14 @@ class Header extends React.Component {
                                         <Translate content="explorer.assets.title" />
                                     </div>
                                 </li>
+
                                 <li
                                     className={cnames({
                                         active:
                                             active.indexOf(
                                                 "/signedmessages"
-                                            ) !== -1
+                                            ) !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1638,7 +1646,8 @@ class Header extends React.Component {
                                     className={cnames({
                                         active:
                                             active.indexOf("/member-stats") !==
-                                            -1
+                                            -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1685,7 +1694,8 @@ class Header extends React.Component {
                                 <li
                                     className={cnames({
                                         active:
-                                            active.indexOf("/whitelist") !== -1
+                                            active.indexOf("/whitelist") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1708,7 +1718,8 @@ class Header extends React.Component {
                                     className={cnames("divider", {
                                         active:
                                             active.indexOf("/permissions") !==
-                                            -1
+                                            -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1727,7 +1738,7 @@ class Header extends React.Component {
                                     </div>
                                 </li>
 
-                                {!hasLocalWallet && (
+                                {showAccountLinks ? (
                                     <li
                                         className={cnames(
                                             {
@@ -1754,7 +1765,7 @@ class Header extends React.Component {
                                             <Translate content="explorer.accounts.title" />
                                         </div>
                                     </li>
-                                )}
+                                ) : null}
                             </ul>
                         )}
                     </div>
