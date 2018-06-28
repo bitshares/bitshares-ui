@@ -3,12 +3,13 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {settingsAPIs} from "../../api/apiConfig";
-import willTransitionTo from "../../routerTransition";
+import willTransitionTo, {routerTransitioner} from "../../routerTransition";
 // import {routerTransitioner} from "../../routerTransition";
 import {withRouter} from "react-router-dom";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
+import LoadingButton from "../Utility/LoadingButton";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
 const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
@@ -37,12 +38,17 @@ class ApiNode extends React.Component {
             setting: "apiServer",
             value: url
         });
-        setTimeout(
-            function() {
-                willTransitionTo(false);
-            }.bind(this),
-            50
-        );
+        if (
+            SettingsStore.getSetting("activeNode") !=
+            SettingsStore.getSetting("apiServer")
+        ) {
+            setTimeout(
+                function() {
+                    willTransitionTo(false);
+                }.bind(this),
+                50
+            );
+        }
     }
 
     remove(url, name, e) {
@@ -284,7 +290,6 @@ class ApiNode extends React.Component {
                                     name={"connected"}
                                     title="icons.connected"
                                     size="2x"
-                                    title="settings.active_node"
                                 />
                             )}
                         </div>
@@ -403,6 +408,13 @@ class AccessSettings extends React.Component {
         });
     }*/
 
+    _recalculateLatency(event, feedback) {
+        feedback("settings.pinging");
+        routerTransitioner.doLatencyUpdate(true, 4).finally(() => {
+            feedback();
+        });
+    }
+
     render() {
         const {props} = this;
         let getNode = this.getNode.bind(this);
@@ -509,12 +521,12 @@ class AccessSettings extends React.Component {
             <div style={{paddingTop: "1em"}}>
                 {renderNode(autoNode, activeNode, false)}
                 <div className="active-node">
-                    {/*<LoadingButton
-                        style={{"float": "right"}}
-                        caption="Reload latency"
+                    <LoadingButton
+                        style={{float: "right"}}
+                        caption="settings.ping"
                         loadingType="inside-feedback-resize"
                         onClick={this._recalculateLatency.bind(this)}
-                    />*/}
+                    />
                     <Translate
                         component="h4"
                         style={{marginLeft: "1rem"}}
@@ -580,17 +592,20 @@ class AccessSettings extends React.Component {
     }
 }
 
-AccessSettings = connect(AccessSettings, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            currentNode: SettingsStore.getState().settings.get("apiServer"),
-            activeNode: SettingsStore.getState().settings.get("activeNode"),
-            apiLatencies: SettingsStore.getState().apiLatencies
-        };
+AccessSettings = connect(
+    AccessSettings,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                currentNode: SettingsStore.getState().settings.get("apiServer"),
+                activeNode: SettingsStore.getState().settings.get("activeNode"),
+                apiLatencies: SettingsStore.getState().apiLatencies
+            };
+        }
     }
-});
+);
 
 export default AccessSettings;

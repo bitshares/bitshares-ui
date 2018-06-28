@@ -1452,6 +1452,7 @@
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Remove",
         "remove_api": "Remove Node",
         "remove_ws": "Remove Node",

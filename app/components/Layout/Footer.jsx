@@ -13,6 +13,9 @@ import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
 import PropTypes from "prop-types";
+import {routerTransitioner} from "../../routerTransition";
+import LoadingIndicator from "../LoadingIndicator";
+import counterpart from "counterpart";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -138,6 +141,22 @@ class Footer extends React.Component {
         };
     }
 
+    _triggerReconnect() {
+        if (
+            routerTransitioner.isAutoSelection() &&
+            !routerTransitioner.isTransitionInProgress()
+        ) {
+            console.log("Trying to reconnect ...");
+
+            // reconnect to anythin
+            let promise = routerTransitioner.willTransitionTo(false);
+            if (!!promise)
+                promise.then(() => {
+                    console.log("... done trying to reconnect");
+                });
+        }
+    }
+
     render() {
         const autoSelectAPI = "wss://fake.automatic-selection.com";
         const {state, props} = this;
@@ -165,8 +184,30 @@ class Footer extends React.Component {
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
+        // if user has auto selection on we react on disconnects
+        if (!connected) {
+            this._triggerReconnect();
+        } else if (!synced) {
+            setTimeout(() => {
+                if (!this.props.synced) {
+                    this._triggerReconnect();
+                }
+            }, 30000);
+        }
+
         return (
             <div>
+                {!!routerTransitioner &&
+                    routerTransitioner.isTransitionInProgress() && (
+                        <LoadingIndicator
+                            loadingText={counterpart.translate(
+                                "app_init.connecting",
+                                {
+                                    server: routerTransitioner.getTransitionTarget()
+                                }
+                            )}
+                        />
+                    )}
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">
@@ -279,13 +320,16 @@ class Footer extends React.Component {
                         {block_height ? (
                             <div className="grid-block shrink">
                                 <div
-                                    onMouseEnter={() => {
-                                        this.setState({showNodesPopup: true});
+                                    onClick={() => {
+                                        this.setState({
+                                            showNodesPopup: !this.state
+                                                .showNodesPopup
+                                        });
                                     }}
-                                    onMouseLeave={() => {
-                                        this.setState({showNodesPopup: false});
+                                    style={{
+                                        position: "relative",
+                                        cursor: "pointer"
                                     }}
-                                    style={{position: "relative"}}
                                 >
                                     <div className="footer-status">
                                         {!connected ? (
@@ -335,9 +379,6 @@ class Footer extends React.Component {
                     </div>
                 </div>
                 <div
-                    onMouseEnter={() => {
-                        this.setState({showNodesPopup: true});
-                    }}
                     onMouseLeave={() => {
                         this.setState({showNodesPopup: false});
                     }}
