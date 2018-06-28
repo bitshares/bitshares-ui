@@ -430,7 +430,7 @@
             "below":
                 "Your collateral ratio is below %(mr)s which is not allowed.",
             "below_ratio_mcr_update":
-                "Your collateral ratio is below your current, which is not allowed when margin called",
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "increased_debt_on_margin_call":
                 "You increased your debt, which is not allowed when updating a margin called position",
             "close":

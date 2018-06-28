@@ -66,8 +66,7 @@ class BorrowModalContent extends React.Component {
                 isValid: false,
                 original_position: {
                     debt: debt,
-                    collateral: collateral,
-                    collateral_ratio: this._getCollateralRatio(debt, collateral)
+                    collateral: collateral
                 }
             };
         } else {
@@ -79,8 +78,7 @@ class BorrowModalContent extends React.Component {
                 isValid: false,
                 original_position: {
                     debt: 0,
-                    collateral: 0,
-                    collateral_ratio: 0
+                    collateral: 0
                 }
             };
         }
@@ -336,7 +334,8 @@ class BorrowModalContent extends React.Component {
             : this.props.backing_balance.toJS();
 
         let maintenanceRatio = this._getMaintenanceRatio();
-        let isBelowMCROrig = original_position.collateral > 0 && original_position.collateral_ratio < maintenanceRatio;
+        let originalCR = this._getCollateralRatio(original_position.debt, original_position.collateral);
+        let isOriginalBelowMCR = original_position.collateral > 0 && originalCR < maintenanceRatio;
 
         if (
             parseFloat(newState.collateral) - original_position.collateral >
@@ -349,53 +348,33 @@ class BorrowModalContent extends React.Component {
                 "borrow.errors.collateral"
             );
         }
-        let isValid =
-            newState.short_amount >= 0 &&
-            newState.collateral >= 0 &&
-            (newState.short_amount != original_position.debt ||
-                newState.collateral != original_position.collateral);
-
+        
         // let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-        let mcr = this._getMaintenanceRatio();
 
-        if (
-            isBelowMCROrig 
-            && parseFloat(newState.collateral_ratio) < parseFloat(original_position.collateral_ratio)
-        ) {
-            errors.below_maintenance = counterpart.translate(
-                "borrow.errors.below_ratio_mcr_update"
-            );
-            isValid = false;
-        } else if (
-            isBelowMCROrig
-            && newState.short_amount > original_position.debt
-        ) {
-            errors.below_maintenance = counterpart.translate(
-                "borrow.errors.increased_debt_on_margin_call"
-            );
-            isValid = false;
-        } else if (
-            parseFloat(newState.collateral_ratio) <
-            (this._isPredictionMarket(this.props) ? 1 : mcr)
-            && !isBelowMCROrig
-        ) {
-            errors.below_maintenance = counterpart.translate(
-                "borrow.errors.below",
-                {mr: mcr}
-            );
-            isValid = false;
-        } else if (
-            parseFloat(newState.collateral_ratio) <
-            (this._isPredictionMarket(this.props) ? 1 : mcr + 0.5)
-        ) {
-            errors.close_maintenance = counterpart.translate(
-                "borrow.errors.close",
-                {mr: mcr}
-            );
-            isValid = true;
+        if(isOriginalBelowMCR) {
+            if(newState.short_amount > original_position.debt) {
+                errors.below_maintenance = counterpart.translate(
+                    "borrow.errors.increased_debt_on_margin_call"
+                );
+            }
+            else if(parseFloat(newState.collateral_ratio) <= parseFloat(originalCR)) {
+                errors.below_maintenance = counterpart.translate(
+                    "borrow.errors.below_ratio_mcr_update", {ocr: originalCR.toFixed(4)}
+                );
+            }
+        } else {
+            if(parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio)) {
+                errors.below_maintenance = counterpart.translate(
+                    "borrow.errors.below", {mr: maintenanceRatio}
+                );
+            } else if(parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio + 0.5)) {
+                errors.close_maintenance = counterpart.translate(
+                    "borrow.errors.close",{mr: maintenanceRatio}
+                );
+            }
         }
 
-        this.setState({errors, isValid});
+        this.setState({errors});
     }
 
     _onSubmit(e) {
@@ -520,7 +499,7 @@ class BorrowModalContent extends React.Component {
             collateral,
             collateral_ratio,
             errors,
-            isValid
+            original_position
         } = this.state;
         let quotePrecision = utils.get_asset_precision(
             this.props.quote_asset.get("precision")
@@ -549,11 +528,6 @@ class BorrowModalContent extends React.Component {
             "form-group",
             {"has-error": errors.below_maintenance},
             {"has-warning": errors.close_maintenance}
-        );
-        let buttonClass = classNames(
-            "button",
-            {disabled: errors.collateral_balance || !isValid},
-            {success: isValid}
         );
 
         // Dynamically update user's remaining collateral
@@ -638,7 +612,7 @@ class BorrowModalContent extends React.Component {
 
         let isPredictionMarket = this._isPredictionMarket(this.props);
 
-        let isBelowMCROrig = this.state.original_position.debt > 0 && this.state.original_position.collateral_ratio < maintenanceRatio;
+        let isOriginalBelowMCR = original_position.collateral > 0 && this._getCollateralRatio(original_position.debt, original_position.collateral) < maintenanceRatio;
 
         if (!isPredictionMarket && isNaN(feed_price)) {
             return (
@@ -691,7 +665,7 @@ class BorrowModalContent extends React.Component {
                             />
                         )}
 
-                        {isBelowMCROrig ? 
+                        {isOriginalBelowMCR ? 
                             <Translate component="h6" className="has-warning" content="borrow.errors.below_info" />
                         : null}
 
@@ -881,7 +855,7 @@ class BorrowModalContent extends React.Component {
                         <div className="no-padding grid-content button-group no-overflow">
                             <div
                                 onClick={this._onSubmit.bind(this)}
-                                className={buttonClass}
+                                className={classNames("button")}
                             >
                                 <Translate content="borrow.adjust" />
                             </div>
