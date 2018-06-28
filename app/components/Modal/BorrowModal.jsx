@@ -351,27 +351,23 @@ class BorrowModalContent extends React.Component {
         
         // let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
 
-        if(isOriginalBelowMCR) {
-            if(newState.short_amount > original_position.debt) {
-                errors.below_maintenance = counterpart.translate(
-                    "borrow.errors.increased_debt_on_margin_call"
-                );
-            }
-            else if(parseFloat(newState.collateral_ratio) <= parseFloat(originalCR)) {
-                errors.below_maintenance = counterpart.translate(
-                    "borrow.errors.below_ratio_mcr_update", {ocr: originalCR.toFixed(4)}
-                );
-            }
-        } else {
-            if(parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio)) {
-                errors.below_maintenance = counterpart.translate(
-                    "borrow.errors.below", {mr: maintenanceRatio}
-                );
-            } else if(parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio + 0.5)) {
-                errors.close_maintenance = counterpart.translate(
-                    "borrow.errors.close",{mr: maintenanceRatio}
-                );
-            }
+        if(isOriginalBelowMCR && newState.short_amount > original_position.debt) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.increased_debt_on_margin_call"
+            );
+        }
+        else if(isOriginalBelowMCR && parseFloat(newState.collateral_ratio) <= parseFloat(originalCR)) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.below_ratio_mcr_update", {ocr: originalCR.toFixed(4)}
+            );
+        } else if(!isOriginalBelowMCR && parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio)) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.below", {mr: maintenanceRatio}
+            );
+        } else if(parseFloat(newState.collateral_ratio) < (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio + 0.5)) {
+            errors.close_maintenance = counterpart.translate(
+                "borrow.errors.close",{mr: maintenanceRatio}
+            );
         }
 
         this.setState({errors});
