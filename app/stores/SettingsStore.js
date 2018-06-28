@@ -246,7 +246,9 @@ class SettingsStore {
                     "OPEN.ZEC",
                     "OPEN.WAVES",
                     "OPEN.ZRX",
-                    "OPEN.NEO"
+                    "OPEN.NEO",
+                    "OPEN.XRP",
+                    "OPEN.XMR"
                 ],
                 markets_39f5e2ed: [
                     // TESTNET
