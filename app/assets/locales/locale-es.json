@@ -421,6 +421,18 @@
             "whitelist_authorities": "Autoridad de lista blanca"
         }
     },
+    "app_init": {
+        "browser": "Navegador no soportado",
+        "browser_text":
+            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
+        "connected": "Conectado",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "No conectado",
+        "retry": "Reintentar",
+        "title": "Problemas de inicialización de la aplicación",
+        "understand": "entiendo",
+        "ws_status": "Estado de conexión de nodo completo"
+    },
     "borrow": {
         "adjust": "Actualizar posición",
         "adjust_short": "ajustar",
@@ -952,6 +964,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1094,17 +1107,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Navegador no soportado",
-        "browser_text":
-            "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
-        "connected": "Conectado",
-        "not_connected": "No conectado",
-        "retry": "Reintentar",
-        "title": "Problemas de inicialización de la aplicación",
-        "understand": "entiendo",
-        "ws_status": "Estado de conexión de nodo completo"
     },
     "languages": {
         "de": "Deutsch",
@@ -1256,6 +1258,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} fue actualizado a miembro anual",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} creado el activo {asset}",
         "asset_fund_fee_pool":
             "{account} fundado {asset} grupo de tarifas con {amount}",
@@ -1268,6 +1272,8 @@
         "asset_update": "{account} actualizado el activo {asset}",
         "asset_update_feed_producers":
             "{account} actualizado los productores para el activo {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} reclamó un saldo de {amount}",
         "blacklisted_by": "{lister} puso en la lista negra la cuenta {listee}",
         "call_order_update":
@@ -1668,6 +1674,7 @@
             "all": "Mostrar todo",
             "assert": "Afirmar operación",
             "asset_claim_fees": "Reclamar comisiones de activos",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Crear activo",
             "asset_fund_fee_pool": "Financiar Fondo de Comisiones de un activo",
             "asset_global_settle": "Liquidación global de Activos",
@@ -1680,6 +1687,7 @@
             "asset_update_bitasset": "Actualizar SmartCoin",
             "asset_update_feed_producers":
                 "Actualizar productores de feed de activo",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Solicitar balance",
             "blind_transfer": "Transferencia cegada",
             "call_order_update": "Actualizar margen",

@@ -41,7 +41,7 @@ export default class TradingViewPriceChart extends React.Component {
             }/charting_library/`,
             datafeed: dataFeed,
             container_id: "tv_chart",
-            charts_storage_url: "http://saveload.tradingview.com",
+            charts_storage_url: "https://saveload.tradingview.com",
             charts_storage_api_version: "1.1",
             client_id: "tradingview.com",
             user_id: "public_user_id",
@@ -58,11 +58,12 @@ export default class TradingViewPriceChart extends React.Component {
                 "scalesProperties.lineColor": themeColors.axisLineColor,
                 "scalesProperties.textColor": themeColors.textColor
             },
-            theme: props.theme, // don't think this does anything yet
-            custom_css_url: "custom-css.css",
-            enabled_features: ["study_templates"],
+            custom_css_url: props.theme + ".css",
+            enabled_features: [
+                "study_templates",
+                "keep_left_toolbar_visible_on_small_screens"
+            ],
             disabled_features: [
-                "use_localstorage_for_settings",
                 "header_saveload",
                 "symbol_info",
                 "symbol_search_hot_key",

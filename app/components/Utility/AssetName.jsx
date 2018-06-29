@@ -30,6 +30,7 @@ class AssetName extends React.Component {
 
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
+        if (!asset) return null;
         const name = asset.get("symbol");
         const isBitAsset = asset.has("bitasset");
         const isPredMarket =
@@ -55,19 +56,19 @@ class AssetName extends React.Component {
                 optional =
                     realPrefix || includeBitAssetDescription
                         ? counterpart.translate(
-                            "gateway.assets." +
-                                (hasBitPrefix
-                                    ? "bit"
-                                    : realPrefix
-                                        .replace(".", "")
-                                        .toLowerCase()),
-                            {
-                                asset: name,
-                                backed: includeBitAssetDescription
-                                    ? desc.main
-                                    : replacedName
-                            }
-                        )
+                              "gateway.assets." +
+                                  (hasBitPrefix
+                                      ? "bit"
+                                      : realPrefix
+                                            .replace(".", "")
+                                            .toLowerCase()),
+                              {
+                                  asset: name,
+                                  backed: includeBitAssetDescription
+                                      ? desc.main
+                                      : replacedName
+                              }
+                          )
                         : "";
             } catch (e) {}
             if (isBitAsset && name === "CNY") {
@@ -85,13 +86,13 @@ class AssetName extends React.Component {
                 ? null
                 : `<div><strong>${upperCasePrefix ||
                       ""}${replacedName.toUpperCase()}</strong><br />${
-                    includeBitAssetDescription
-                        ? ""
-                        : "<br />" +
+                      includeBitAssetDescription
+                          ? ""
+                          : "<br />" +
                             (desc.short ? desc.short : desc.main || "")
-                }${
-                    !isBitAsset || includeBitAssetDescription ? optional : ""
-                }</div>`;
+                  }${
+                      !isBitAsset || includeBitAssetDescription ? optional : ""
+                  }</div>`;
 
             return (
                 <div

@@ -34,8 +34,20 @@ app.use(
 
 app.use(hotMiddleware(compiler));
 
-app.get("*", function(req, res) {
-    res.sendFile(path.join(__dirname, "app/assets/index-dev.html"));
+// app.get("*", function(req, res) {
+//     res.sendFile(path.join(__dirname, "app/assets/index.html"));
+// });
+
+app.use("*", function(req, res, next) {
+    var filename = path.join(compiler.outputPath, "index.html");
+    compiler.outputFileSystem.readFile(filename, function(err, result) {
+        if (err) {
+            return next(err);
+        }
+        res.set("content-type", "text/html");
+        res.send(result);
+        res.end();
+    });
 });
 
 var options = {

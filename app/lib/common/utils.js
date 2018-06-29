@@ -1,4 +1,5 @@
 var numeral = require("numeral");
+import {is} from "immutable";
 
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
@@ -212,24 +213,20 @@ var Utils = {
             }
         }
         if (typeof a === "string" && typeof b === "string") {
-            return a !== b;
+            return a === b;
         }
+        if (a && a.toJS && b && b.toJS) return a === b;
         for (var key in a) {
-            if (!(key in b) || a[key] !== b[key]) {
+            if ((a.hasOwnProperty(key) && !(key in b)) || a[key] !== b[key]) {
                 return false;
             }
         }
         for (var key in b) {
-            if (!(key in a) || a[key] !== b[key]) {
+            if ((b.hasOwnProperty(key) && !(key in a)) || a[key] !== b[key]) {
                 return false;
             }
         }
-        if (
-            (a === null && b === undefined) ||
-            (b === null && a === undefined)
-        ) {
-            return false;
-        }
+
         return true;
     },
 
@@ -423,7 +420,9 @@ var Utils = {
 
         let prefix = isBitAsset
             ? "bit"
-            : toReplace[i] ? toReplace[i].toLowerCase() : null;
+            : toReplace[i]
+                ? toReplace[i].toLowerCase()
+                : null;
 
         return {
             name,

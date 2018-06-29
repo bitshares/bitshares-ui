@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {connect} from "alt-react";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
@@ -27,7 +27,6 @@ import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
-import PropTypes from "prop-types";
 
 var logo = require("assets/logo-ico-blue.png");
 
@@ -40,15 +39,10 @@ const SUBMENUS = {
 };
 
 class Header extends React.Component {
-    static contextTypes = {
-        location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired
-    };
-
-    constructor(props, context) {
+    constructor(props) {
         super();
         this.state = {
-            active: context.location.pathname,
+            active: props.location.pathname,
             accountsListDropdownActive: false
         };
 
@@ -68,13 +62,11 @@ class Header extends React.Component {
     }
 
     componentWillMount() {
-        this.unlisten = this.context.router.listen((newState, err) => {
-            if (!err) {
-                if (this.unlisten && this.state.active !== newState.pathname) {
-                    this.setState({
-                        active: newState.pathname
-                    });
-                }
+        this.unlisten = this.props.history.listen(newState => {
+            if (this.unlisten && this.state.active !== newState.pathname) {
+                this.setState({
+                    active: newState.pathname
+                });
             }
         });
     }
@@ -167,7 +159,7 @@ class Header extends React.Component {
             });
         }
 
-        this.context.router.push(route);
+        this.props.history.push(route);
         this._closeDropdown();
     }
 
@@ -208,10 +200,10 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        if (this.context.location.pathname.indexOf("/account/") !== -1) {
-            let currentPath = this.context.location.pathname.split("/");
+        if (this.props.location.pathname.indexOf("/account/") !== -1) {
+            let currentPath = this.props.location.pathname.split("/");
             currentPath[2] = account_name;
-            this.context.router.push(currentPath.join("/"));
+            this.props.history.push(currentPath.join("/"));
         }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
@@ -225,15 +217,7 @@ class Header extends React.Component {
             });
             this._closeDropdown();
         }
-        // this.onClickUser(account_name, e);
     }
-
-    // onClickUser(account, e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //
-    //     this.context.router.push(`/account/${account}/overview`);
-    // }
 
     _toggleAccountDropdownMenu() {
         // prevent state toggling if user cannot have multiple accounts
@@ -314,12 +298,14 @@ class Header extends React.Component {
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
 
         const a = ChainStore.getAccount(currentAccount);
+        const showAccountLinks = !!a;
         const isMyAccount = !a
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
+            !!a &&
             Apis.instance() &&
             Apis.instance().chain_id &&
             Apis.instance().chain_id.substr(0, 8) === "4018d784";
@@ -1253,7 +1239,7 @@ class Header extends React.Component {
                                     </li>
                                 ) : null}
 
-                                {!isMyAccount ? (
+                                {!isMyAccount && showAccountLinks ? (
                                     <li
                                         className="divider"
                                         onClick={this[
@@ -1342,7 +1328,8 @@ class Header extends React.Component {
                                 <li
                                     className={cnames({
                                         active:
-                                            active.indexOf("/transfer") !== -1
+                                            active.indexOf("/transfer") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1585,7 +1572,9 @@ class Header extends React.Component {
 
                                 <li
                                     className={cnames({
-                                        active: active.indexOf("/voting") !== -1
+                                        active:
+                                            active.indexOf("/voting") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1608,7 +1597,8 @@ class Header extends React.Component {
                                     className={cnames({
                                         active:
                                             active.indexOf("/assets") !== -1 &&
-                                            active.indexOf("/account/") !== -1
+                                            active.indexOf("/account/") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1626,12 +1616,14 @@ class Header extends React.Component {
                                         <Translate content="explorer.assets.title" />
                                     </div>
                                 </li>
+
                                 <li
                                     className={cnames({
                                         active:
                                             active.indexOf(
                                                 "/signedmessages"
-                                            ) !== -1
+                                            ) !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1654,7 +1646,8 @@ class Header extends React.Component {
                                     className={cnames({
                                         active:
                                             active.indexOf("/member-stats") !==
-                                            -1
+                                            -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1701,7 +1694,8 @@ class Header extends React.Component {
                                 <li
                                     className={cnames({
                                         active:
-                                            active.indexOf("/whitelist") !== -1
+                                            active.indexOf("/whitelist") !== -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1724,7 +1718,8 @@ class Header extends React.Component {
                                     className={cnames("divider", {
                                         active:
                                             active.indexOf("/permissions") !==
-                                            -1
+                                            -1,
+                                        disabled: !showAccountLinks
                                     })}
                                     onClick={this._onNavigate.bind(
                                         this,
@@ -1743,7 +1738,7 @@ class Header extends React.Component {
                                     </div>
                                 </li>
 
-                                {!hasLocalWallet && (
+                                {showAccountLinks ? (
                                     <li
                                         className={cnames(
                                             {
@@ -1770,7 +1765,7 @@ class Header extends React.Component {
                                             <Translate content="explorer.accounts.title" />
                                         </div>
                                     </li>
-                                )}
+                                ) : null}
                             </ul>
                         )}
                     </div>

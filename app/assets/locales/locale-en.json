@@ -408,6 +408,18 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "app_init": {
+        "browser": "Unsupported browser",
+        "browser_text":
+            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+        "connected": "Connected",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Not connected",
+        "retry": "Retry",
+        "title": "Application initialization issues",
+        "understand": "I understand",
+        "ws_status": "Full node connection status"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -674,7 +686,7 @@
             "time": "Time",
             "title": "Block",
             "transactions": "Transaction count",
-            "trx": "Transaction",
+            "trx": "Tx",
             "witness": "Witness"
         },
         "blocks": {
@@ -936,6 +948,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1080,17 +1093,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Unsupported browser",
-        "browser_text":
-            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "connected": "Connected",
-        "not_connected": "Not connected",
-        "retry": "Retry",
-        "title": "Application initialization issues",
-        "understand": "I understand",
-        "ws_status": "Full node connection status"
     },
     "languages": {
         "de": "Deutsch",
@@ -1241,6 +1243,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} was upgraded to annual member",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} created the asset {asset}",
         "asset_fund_fee_pool":
             "{account} funded {asset} fee pool with {amount}",
@@ -1253,20 +1257,24 @@
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
         "call_order_update":
             "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters":
             "{account} updated the global committee parameters",
-        "fill_order_buy": "{account} bought {amount} at {price}",
-        "fill_order_sell": "{account} sold {amount} at {price}",
+        "fill_order_buy":
+            "{account} bought {amount} at {price} for order #%(order)s",
+        "fill_order_sell":
+            "{account} sold {amount} at {price} for order #%(order)s",
         "lifetime_upgrade_account": "{account} was upgraded to lifetime member",
         "limit_order_buy":
-            "{account} placed an order to buy {amount} at {price}",
+            "{account} placed order %(order)s to buy {amount} at {price}",
         "limit_order_cancel": "{account} cancelled order #%(order)s",
         "limit_order_sell":
-            "{account} placed an order to sell {amount} at {price}",
+            "{account} placed order %(order)s to sell {amount} at {price}",
         "no_recent": "No recent transactions",
         "override_transfer":
             "{issuer} transferred {amount} from {from} to {to}",
@@ -1322,7 +1330,7 @@
         "limit_order_buy":
             "Place an order to buy {amount} at {price} for {account}",
         "limit_order_create":
-            "Place order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
+            "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell":
             "Place an order to sell {amount} at {price} for {account}",
         "override_transfer":
@@ -1635,6 +1643,7 @@
             "all": "Show all",
             "assert": "Assert operation",
             "asset_claim_fees": "Claim asset fees",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Create asset",
             "asset_fund_fee_pool": "Fund asset fee pool",
             "asset_global_settle": "Global asset settlement",
@@ -1646,6 +1655,7 @@
             "asset_update": "Update asset",
             "asset_update_bitasset": "Update SmartCoin",
             "asset_update_feed_producers": "Update asset feed producers",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Claim balance",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Update margin",
