@@ -958,6 +958,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "アカウントの管理",
         "account": "アカウント",
         "account_notify": "現在のアクティブアカウントは%(account)sです。",
         "account_value": "アカウント値",
@@ -988,6 +989,7 @@
         "update_asset": "アセット更新"
     },
     "icons": {
+        "accounts_manage": "アカウントの管理",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {

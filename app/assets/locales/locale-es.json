@@ -972,6 +972,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "Cuentas de administración",
         "account": "Cuenta",
         "account_notify": "La cuenta activa es ahora %(account)s",
         "account_value": "Valor de la cuenta",
@@ -1000,6 +1001,7 @@
         "update_asset": "Actualizar activo"
     },
     "icons": {
+        "accounts_manage": "Cuentas de administración",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {

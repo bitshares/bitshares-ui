@@ -976,6 +976,7 @@
         "scan_qr_code": "Сканировать QR-код"
     },
     "header": {
+        "accounts_manage": "Учетные записи",
         "account": "Аккаунт",
         "account_notify": "Активный аккаунт в настоящее время %(account)s",
         "account_value": "Оценка",
@@ -1006,6 +1007,7 @@
         "update_asset": "Обновить актив"
     },
     "icons": {
+        "accounts_manage": "Учетные записи",
         "adjust": "Настроить маржинальную позицию",
         "assets": "Активы",
         "checkmark_circle": {
