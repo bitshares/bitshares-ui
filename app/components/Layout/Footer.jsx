@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
+let ifvisible = require("ifvisible");
 
 class Footer extends React.Component {
     static propTypes = {
@@ -39,6 +40,12 @@ class Footer extends React.Component {
         this.checkNewVersionAvailable.call(this);
 
         this.downloadLink = "https://bitshares.org/download";
+
+        let ensure = this._ensureConnectivity.bind(this);
+        ifvisible.on("wakeup", function() {
+            console.log("ensure connectivity on focus");
+            ensure();
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -141,6 +148,23 @@ class Footer extends React.Component {
         };
     }
 
+    _ensureConnectivity() {
+        if (!ifvisible.now("active")) return;
+
+        let connected = !(this.props.rpc_connection_status === "closed");
+
+        // if user has auto selection on we react on disconnects
+        if (!connected) {
+            this._triggerReconnect();
+        } else if (!this.props.synced) {
+            setTimeout(() => {
+                if (!this.props.synced) {
+                    this._triggerReconnect();
+                }
+            }, 30000);
+        }
+    }
+
     _triggerReconnect() {
         if (
             routerTransitioner.isAutoSelection() &&
@@ -184,16 +208,7 @@ class Footer extends React.Component {
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
-        // if user has auto selection on we react on disconnects
-        if (!connected) {
-            this._triggerReconnect();
-        } else if (!synced) {
-            setTimeout(() => {
-                if (!this.props.synced) {
-                    this._triggerReconnect();
-                }
-            }, 30000);
-        }
+        this._ensureConnectivity();
 
         return (
             <div>
