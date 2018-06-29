@@ -68,3 +68,5 @@ require("file-loader?name=asset-symbols/[name].png!./tusd.png");
 require("file-loader?name=asset-symbols/[name].png!./zec.png");
 require("file-loader?name=asset-symbols/[name].png!./waves.png");
 require("file-loader?name=asset-symbols/[name].png!./zrx.png");
+require("file-loader?name=asset-symbols/[name].png!./xrp.png");
+require("file-loader?name=asset-symbols/[name].png!./xmr.png");
