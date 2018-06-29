@@ -21,6 +21,19 @@ export function getWalletURL() {
 }
 
 /**
+ * Returns faucet information
+ *
+ * @returns {{url: string, show: boolean}}
+ */
+export function getFaucet() {
+    return {
+        url: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
+        show: true,
+        editable: true
+    };
+}
+
+/**
  * Logo that is used throughout the UI
  * @returns {*}
  */
@@ -144,6 +157,87 @@ export function getMyMarketsQuotes() {
 }
 
 /**
+ * The featured markets displayed on the landing page of the UI
+ *
+ * @returns {list of string tuples}
+ */
+export function getFeaturedMarkets() {
+    return [
+        ["USD", "BTS"],
+        ["USD", "OPEN.BTC"],
+        ["USD", "OPEN.USDT"],
+        ["USD", "OPEN.ETH"],
+        ["USD", "OPEN.DASH"],
+        ["USD", "GOLD"],
+        ["USD", "HERO"],
+        ["USD", "GDEX.BTC"],
+        ["USD", "GDEX.ETH"],
+        ["USD", "GDEX.EOS"],
+        ["USD", "GDEX.BTO"],
+        ["CNY", "BTS"],
+        ["CNY", "OPEN.BTC"],
+        ["CNY", "USD"],
+        ["CNY", "OPEN.ETH"],
+        ["CNY", "YOYOW"],
+        ["CNY", "OCT"],
+        ["CNY", "GDEX.BTC"],
+        ["CNY", "GDEX.ETH"],
+        ["CNY", "GDEX.EOS"],
+        ["CNY", "GDEX.BTO"],
+        ["CNY", "GDEX.BTM"],
+        ["OPEN.BTC", "BTS"],
+        ["OPEN.BTC", "OPEN.ETH"],
+        ["OPEN.BTC", "OPEN.DASH"],
+        ["OPEN.BTC", "BLOCKPAY"],
+        ["OPEN.BTC", "OPEN.DGD"],
+        ["OPEN.BTC", "OPEN.STEEM"],
+        ["BTS", "OPEN.ETH"],
+        ["BTS", "OPEN.EOS"],
+        ["BTS", "PPY"],
+        ["BTS", "OPEN.STEEM"],
+        ["BTS", "OBITS"],
+        ["BTS", "RUBLE"],
+        ["BTS", "HERO"],
+        ["BTS", "OCT"],
+        ["BTS", "SILVER"],
+        ["BTS", "GOLD"],
+        ["BTS", "BLOCKPAY"],
+        ["BTS", "BTWTY"],
+        ["BTS", "SMOKE"],
+        ["BTS", "GDEX.BTC"],
+        ["BTS", "GDEX.ETH"],
+        ["BTS", "GDEX.EOS"],
+        ["BTS", "GDEX.BTO"],
+        ["KAPITAL", "OPEN.BTC"],
+        ["USD", "OPEN.STEEM"],
+        ["USD", "OPEN.MAID"],
+        ["OPEN.USDT", "OPEN.BTC"],
+        ["OPEN.BTC", "OPEN.MAID"],
+        ["BTS", "OPEN.MAID"],
+        ["BTS", "OPEN.HEAT"],
+        ["BTS", "OPEN.INCENT"],
+        ["HEMPSWEET", "OPEN.BTC"],
+        ["KAPITAL", "BTS"],
+        ["BTS", "RUDEX.STEEM"],
+        ["USD", "RUDEX.STEEM"],
+        ["BTS", "RUDEX.SBD"],
+        ["BTS", "RUDEX.KRM"],
+        ["USD", "RUDEX.KRM"],
+        ["RUBLE", "RUDEX.GOLOS"],
+        ["CNY", "RUDEX.GOLOS"],
+        ["RUBLE", "RUDEX.GBG"],
+        ["CNY", "RUDEX.GBG"],
+        ["BTS", "RUDEX.MUSE"],
+        ["BTS", "RUDEX.TT"],
+        ["BTS", "RUDEX.SCR"],
+        ["BTS", "RUDEX.ETH"],
+        ["BTS", "RUDEX.DGB"],
+        ["BTS", "ZEPH"],
+        ["BTS", "HERTZ"]
+    ];
+}
+
+/**
  * Recognized namespaces of assets
  *
  * @returns {[string,string,string,string,string,string,string]}
@@ -174,9 +268,7 @@ export function getSupportedLanguages() {
     // not yet supported
 }
 
-export function allowedLogin(type) {
-    // not yet supported
-
+export function getAllowedLogins() {
     // possible: list containing any combination of ["password", "wallet"]
-    return type == "password";
+    return ["password", "wallet"];
 }

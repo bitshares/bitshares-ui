@@ -7,6 +7,7 @@ import SettingsStore from "stores/SettingsStore";
 // import SettingsActions from "actions/SettingsActions";
 import MarketsStore from "stores/MarketsStore";
 import MarketsTable from "./MarketsTable";
+import {getFeaturedMarkets} from "../../branding";
 
 class StarredMarkets extends React.Component {
     render() {
@@ -22,95 +23,26 @@ class StarredMarkets extends React.Component {
         return <MarketsTable markets={markets} forceDirection={true} />;
     }
 }
-StarredMarkets = connect(StarredMarkets, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            starredMarkets: SettingsStore.getState().starredMarkets
-        };
+StarredMarkets = connect(
+    StarredMarkets,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                starredMarkets: SettingsStore.getState().starredMarkets
+            };
+        }
     }
-});
+);
 
 class FeaturedMarkets extends React.Component {
     constructor() {
         super();
 
         this.marketsByChain = {
-            "4018d784": [
-                ["USD", "BTS"],
-                ["USD", "OPEN.BTC"],
-                ["USD", "OPEN.USDT"],
-                ["USD", "OPEN.ETH"],
-                ["USD", "OPEN.DASH"],
-                ["USD", "GOLD"],
-                ["USD", "HERO"],
-                ["USD", "GDEX.BTC"],
-                ["USD", "GDEX.ETH"],
-                ["USD", "GDEX.EOS"],
-                ["USD", "GDEX.BTO"],
-                ["CNY", "BTS"],
-                ["CNY", "OPEN.BTC"],
-                ["CNY", "USD"],
-                ["CNY", "OPEN.ETH"],
-                ["CNY", "YOYOW"],
-                ["CNY", "OCT"],
-                ["CNY", "GDEX.BTC"],
-                ["CNY", "GDEX.ETH"],
-                ["CNY", "GDEX.EOS"],
-                ["CNY", "GDEX.BTO"],
-                ["CNY", "GDEX.BTM"],
-                ["OPEN.BTC", "BTS"],
-                ["OPEN.BTC", "OPEN.ETH"],
-                ["OPEN.BTC", "OPEN.DASH"],
-                ["OPEN.BTC", "BLOCKPAY"],
-                ["OPEN.BTC", "OPEN.DGD"],
-                ["OPEN.BTC", "OPEN.STEEM"],
-                ["BTS", "OPEN.ETH"],
-                ["BTS", "OPEN.EOS"],
-                ["BTS", "PPY"],
-                ["BTS", "OPEN.STEEM"],
-                ["BTS", "OBITS"],
-                ["BTS", "RUBLE"],
-                ["BTS", "HERO"],
-                ["BTS", "OCT"],
-                ["BTS", "SILVER"],
-                ["BTS", "GOLD"],
-                ["BTS", "BLOCKPAY"],
-                ["BTS", "BTWTY"],
-                ["BTS", "SMOKE"],
-                ["BTS", "GDEX.BTC"],
-                ["BTS", "GDEX.ETH"],
-                ["BTS", "GDEX.EOS"],
-                ["BTS", "GDEX.BTO"],
-                ["KAPITAL", "OPEN.BTC"],
-                ["USD", "OPEN.STEEM"],
-                ["USD", "OPEN.MAID"],
-                ["OPEN.USDT", "OPEN.BTC"],
-                ["OPEN.BTC", "OPEN.MAID"],
-                ["BTS", "OPEN.MAID"],
-                ["BTS", "OPEN.HEAT"],
-                ["BTS", "OPEN.INCENT"],
-                ["HEMPSWEET", "OPEN.BTC"],
-                ["KAPITAL", "BTS"],
-                ["BTS", "RUDEX.STEEM"],
-                ["USD", "RUDEX.STEEM"],
-                ["BTS", "RUDEX.SBD"],
-                ["BTS", "RUDEX.KRM"],
-                ["USD", "RUDEX.KRM"],
-                ["RUBLE", "RUDEX.GOLOS"],
-                ["CNY", "RUDEX.GOLOS"],
-                ["RUBLE", "RUDEX.GBG"],
-                ["CNY", "RUDEX.GBG"],
-                ["BTS", "RUDEX.MUSE"],
-                ["BTS", "RUDEX.TT"],
-                ["BTS", "RUDEX.SCR"],
-                ["BTS", "RUDEX.ETH"],
-                ["BTS", "RUDEX.DGB"],
-                ["BTS", "ZEPH"],
-                ["BTS", "HERTZ"]
-            ],
+            "4018d784": getFeaturedMarkets(),
             "39f5e2ed": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
         };
 
@@ -159,16 +91,19 @@ class FeaturedMarkets extends React.Component {
     }
 }
 
-FeaturedMarkets = connect(FeaturedMarkets, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps() {
-        return {
-            lowVolumeMarkets: MarketsStore.getState().lowVolumeMarkets
-        };
+FeaturedMarkets = connect(
+    FeaturedMarkets,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps() {
+            return {
+                lowVolumeMarkets: MarketsStore.getState().lowVolumeMarkets
+            };
+        }
     }
-});
+);
 
 class TopMarkets extends React.Component {
     render() {
