@@ -1239,6 +1239,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} was upgraded to annual member",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} created the asset {asset}",
         "asset_fund_fee_pool":
             "{account} funded {asset} fee pool with {amount}",
@@ -1251,6 +1253,8 @@
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
         "call_order_update":
@@ -1633,6 +1637,7 @@
             "all": "Show all",
             "assert": "Assert operation",
             "asset_claim_fees": "Claim asset fees",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "자산 생성",
             "asset_fund_fee_pool": "자산 수수료 기금 충전",
             "asset_global_settle": "자산 전체 강제청산",
@@ -1644,6 +1649,7 @@
             "asset_update": "자산 업데이트",
             "asset_update_bitasset": "스마트코인 업데이트",
             "asset_update_feed_producers": "자산 피드 생성자 업데이트",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "잔고 청구",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Update call order",

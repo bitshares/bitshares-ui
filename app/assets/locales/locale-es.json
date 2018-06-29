@@ -1258,6 +1258,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} fue actualizado a miembro anual",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} creado el activo {asset}",
         "asset_fund_fee_pool":
             "{account} fundado {asset} grupo de tarifas con {amount}",
@@ -1270,6 +1272,8 @@
         "asset_update": "{account} actualizado el activo {asset}",
         "asset_update_feed_producers":
             "{account} actualizado los productores para el activo {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} reclamó un saldo de {amount}",
         "blacklisted_by": "{lister} puso en la lista negra la cuenta {listee}",
         "call_order_update":
@@ -1670,6 +1674,7 @@
             "all": "Mostrar todo",
             "assert": "Afirmar operación",
             "asset_claim_fees": "Reclamar comisiones de activos",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Crear activo",
             "asset_fund_fee_pool": "Financiar Fondo de Comisiones de un activo",
             "asset_global_settle": "Liquidación global de Activos",
@@ -1682,6 +1687,7 @@
             "asset_update_bitasset": "Actualizar SmartCoin",
             "asset_update_feed_producers":
                 "Actualizar productores de feed de activo",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Solicitar balance",
             "blind_transfer": "Transferencia cegada",
             "call_order_update": "Actualizar margen",

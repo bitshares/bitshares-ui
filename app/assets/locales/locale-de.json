@@ -1246,6 +1246,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} hat ein Jahresabo gekauft",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} hat das Asset {asset} erzeugt",
         "asset_fund_fee_pool":
             "{account} hat {amount} in den Gebührenpool von  {asset} transferiert",
@@ -1258,6 +1260,8 @@
         "asset_update": "{account} hat das Asset {asset} aktualisiert",
         "asset_update_feed_producers":
             "{account} hat die Feed-Erzeuger für {asset} aktualisiert",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} hat Guthaben von {amount} beansprucht",
         "blacklisted_by": "{lister} hat Konto {listee} schwarzgelistet",
         "call_order_update":
@@ -1642,6 +1646,7 @@
             "all": "Show all",
             "assert": "Operation bestätigen",
             "asset_claim_fees": "Gebühr für 'Asset beanspruchen'",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Asset erstellen",
             "asset_fund_fee_pool": "Asset-Gebührenpool finanzieren",
             "asset_global_settle": "Globales Asset-Settlement",
@@ -1653,6 +1658,7 @@
             "asset_update": "Asset aktualisieren",
             "asset_update_bitasset": "SmartCoin aktualisieren",
             "asset_update_feed_producers": "Asset-Feederzeuger aktualisieren",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Guthaben eingefordert",
             "blind_transfer": "Blind-Transfer",
             "call_order_update": "Call-Order aktualisieren",

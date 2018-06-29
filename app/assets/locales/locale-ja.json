@@ -1245,6 +1245,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account}は年間会員にアップグレードしました",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account}はアセット{asset}を作成しました",
         "asset_fund_fee_pool":
             "{account}は{asset}の手数料プールに{amount}を充填しました",
@@ -1257,6 +1259,8 @@
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers":
             "{account}はアセット{asset}のフィード作成者を更新しました",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account}は{amount}を請求しました",
         "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
         "call_order_update":
@@ -1639,6 +1643,7 @@
             "all": "すべて表示",
             "assert": "アサート操作",
             "asset_claim_fees": "アセット手数料を請求",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "アセットを作成",
             "asset_fund_fee_pool": "アセットの手数料プールを充填",
             "asset_global_settle": "グローバルアセット決済",
@@ -1650,6 +1655,7 @@
             "asset_update": "アセットを更新",
             "asset_update_bitasset": "スマートコインを更新",
             "asset_update_feed_producers": "アセットのフィード作成者を更新",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "残高請求",
             "blind_transfer": "匿名転送",
             "call_order_update": "マージンを更新",

@@ -1243,6 +1243,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} a été converti en membre annuel",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} a crée l'actif {asset}",
         "asset_fund_fee_pool":
             "{account} funded {asset} fee pool with {amount}",
@@ -1255,6 +1257,8 @@
         "asset_update": "{account} a mis à jour l'actif {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} a recuperé un solde de {amount}",
         "blacklisted_by": "{lister} a blacklisté {listee}",
         "call_order_update":
@@ -1639,6 +1643,7 @@
             "all": "Show all",
             "assert": "Assert operation",
             "asset_claim_fees": "Claim asset fees",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Creation d'actif",
             "asset_fund_fee_pool": "Financement de pot de frais",
             "asset_global_settle": "Couvrement global d'actif",
@@ -1650,6 +1655,7 @@
             "asset_update": "Mise à jour d'actif",
             "asset_update_bitasset": "Mise à jour d'actif de marché",
             "asset_update_feed_producers": "Mise à jour des flux",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Récuperation de solde",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Mise à jour d'ordre à découvert",

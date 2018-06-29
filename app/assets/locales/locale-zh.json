@@ -1212,6 +1212,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} 升级到年度会员",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} 创建了资产 {asset}",
         "asset_fund_fee_pool": "{account} 向 {asset} 的手续费池注资了 {amount}",
         "asset_global_settle":
@@ -1222,6 +1224,8 @@
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} 更新了资产 {asset}",
         "asset_update_feed_producers": "{account} 更新了资产 {asset} 的喂价者",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} 领取了余额 {amount}",
         "blacklisted_by": "{lister} 将 {listee} 加入黑名单",
         "call_order_update":
@@ -1580,6 +1584,7 @@
             "all": "显示全部",
             "assert": "断言操作",
             "asset_claim_fees": "领取资产手续费",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "创建资产",
             "asset_fund_fee_pool": "注资资产手续费池",
             "asset_global_settle": "全局资产清算",
@@ -1591,6 +1596,7 @@
             "asset_update": "更新资产",
             "asset_update_bitasset": "更新智能币",
             "asset_update_feed_producers": "更新资产喂价者",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "领取余额",
             "blind_transfer": "隐私转账",
             "call_order_update": "更新债仓",
