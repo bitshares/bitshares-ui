@@ -1,4 +1,5 @@
 import {Fraction} from "fractional";
+import utils from "common/utils";
 
 const GRAPHENE_100_PERCENT = 10000;
 
@@ -484,7 +485,9 @@ class LimitOrder {
         this.market_base = market_base;
         this.id = order.id;
         this.sellers = [order.seller];
-        this.expiration = order.expiration && new Date(order.expiration);
+        this.expiration =
+            order.expiration &&
+            new Date(utils.makeISODateString(order.expiration));
         this.seller = order.seller;
         this.for_sale = parseInt(order.for_sale, 10); // asset id is sell_price.base.asset_id
 
@@ -852,7 +855,9 @@ class SettleOrder extends LimitOrder {
         super(order, assets, market_base);
 
         this.offset_percent = bitasset_options.force_settlement_offset_percent;
-        this.settlement_date = new Date(order.settlement_date);
+        this.settlement_date = new Date(
+            utils.makeISODateString(order.settlement_date)
+        );
 
         this.for_sale = new Asset({
             amount: order.balance.amount,

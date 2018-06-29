@@ -230,18 +230,21 @@ var Utils = {
         return true;
     },
 
-    format_date: function(date_str) {
-        if (!/Z$/.test(date_str)) {
+    makeISODateString(date_str) {
+        if (typeof date_str === "string" && !/Z$/.test(date_str)) {
             date_str += "Z";
         }
+        return date_str;
+    },
+
+    format_date: function(date_str) {
+        date_str = this.makeISODateString(date_str);
         let date = new Date(date_str);
         return date.toLocaleDateString();
     },
 
     format_time: function(time_str) {
-        if (!/Z$/.test(time_str)) {
-            time_str += "Z";
-        }
+        time_str = this.makeISODateString(time_str);
         let date = new Date(time_str);
         return date.toLocaleString();
     },
