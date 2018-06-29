@@ -171,7 +171,7 @@ class OrderRow extends React.Component {
                 <td
                     style={{width: "25%", textAlign: "right"}}
                     className="tooltip"
-                    data-tip={new Date(order.expiration)}
+                    data-tip={new Date(utils.format_time(order.expiration))}
                 >
                     {isCall
                         ? null
@@ -198,9 +198,7 @@ class OrderRow extends React.Component {
             </tr>
         ) : (
             <tr key={order.id} className="clickable">
-                <td style={leftAlign}>
-                    #{order.id.substring(4)}
-                </td>
+                <td style={leftAlign}>#{order.id.substring(4)}</td>
                 <td colSpan="4" style={leftAlign} onClick={this.props.onFlip}>
                     {isBid ? (
                         <Translate

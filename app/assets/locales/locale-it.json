@@ -506,6 +506,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "Gruppo",
         "hide": "Nascondi",
         "highest_bid": "Domanda (bid) più alta",
         "history": "Storico del mercato",
@@ -540,8 +541,11 @@
         "my_orders": "I miei ordini attivi",
         "native": "Native",
         "new": "Nuovo",
+        "no_asks": "No asks",
         "no_balance": "Saldo insufficiente",
+        "no_bids": "No bids",
         "no_data": "Nessun dato",
+        "no_orders": "No orders",
         "order_depth": "Market Depth",
         "others": "Altri",
         "overbought": "Overbought",
@@ -1259,6 +1263,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} è stato promosso a membro annuale",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} ha creato l'asset {asset}",
         "asset_fund_fee_pool":
             "{account} ha finanziato il fee pool di {asset} con {amount}",
@@ -1271,6 +1277,8 @@
         "asset_update": "{account} ha aggiornato l'asset {asset}",
         "asset_update_feed_producers":
             "{account} ha aggiornato i produttori di feed per l'asset {asset}",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} ha riscosso un saldo di {amount}",
         "blacklisted_by": "{lister} ha messo in blacklist l'account {listee}",
         "call_order_update":
@@ -1546,6 +1554,7 @@
             "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
         "memo_tip":
             "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",
         "over_limit":
@@ -1666,6 +1675,7 @@
             "all": "Mostra tutti",
             "assert": "Assert operation",
             "asset_claim_fees": "Riscuoti le commissioni dell'asset",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Crea asset",
             "asset_fund_fee_pool": "Finanzia fee pool dell'asset",
             "asset_global_settle": "Settlement dell'asset globale",
@@ -1678,6 +1688,7 @@
             "asset_update_bitasset": "Aggiorna SmartCoin",
             "asset_update_feed_producers":
                 "Aggiorna produttori di feed per l'asset",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Riscuoti saldo",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Aggiorna margine",

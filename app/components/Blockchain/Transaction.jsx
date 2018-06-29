@@ -49,11 +49,15 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]} (<Translate
-                            component="span"
-                            content="explorer.block.trx"
-                        />{" "}
-                        #{this.props.txIndex})
+                        {trxTypes[ops[this.props.type]]}
+                        {this.props.txIndex > 0 ? (
+                            <span>
+                                <Translate content="explorer.block.trx" />
+                                {this.props.txIndex}
+                            </span>
+                        ) : (
+                            ""
+                        )}
                     </span>
                 </td>
                 <td />
@@ -1970,13 +1974,14 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td>
-                                <FormattedAsset 
+                                <FormattedAsset
                                     amount={op[1].amount_to_claim.amount}
-                                    asset={op[1].amount_to_claim.asset_id} />
-                                </td>
+                                    asset={op[1].amount_to_claim.asset_id}
+                                />
+                            </td>
                         </tr>
                     );
-                break;
+                    break;
 
                 case "asset_update_issuer":
                     rows.push(
@@ -2016,7 +2021,9 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td>
-                                <LinkToAssetById asset={op[1].asset_to_update} />
+                                <LinkToAssetById
+                                    asset={op[1].asset_to_update}
+                                />
                             </td>
                         </tr>
                     );

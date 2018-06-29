@@ -2379,6 +2379,25 @@
             margin: 0 auto;
         }
     }
+
+    .grouped_order {
+        select {
+            float: right;
+            width: auto;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            color: $primary-text-color;
+            border-bottom: 1px dotted rgb(160, 159, 159);
+            font-size: 0.7rem;
+            height: 17px;
+            margin: 0 0 1px 10px;
+
+            > option {
+                background-color: $light-panel-bg-color;
+            }
+        }
+    }
 }
 
 .rc-time-picker-panel {

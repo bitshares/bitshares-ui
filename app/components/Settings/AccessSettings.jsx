@@ -130,6 +130,7 @@ class ApiNode extends React.Component {
                         />
                         <label />
                     </span>
+
                     <p style={{fontSize: "80%"}}>
                         <Translate content="settings.automatic_short" />:
                     </p>
