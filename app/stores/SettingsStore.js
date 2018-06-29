@@ -248,7 +248,11 @@ class SettingsStore {
                     "OPEN.ZRX",
                     "OPEN.NEO",
                     "OPEN.XRP",
-                    "OPEN.XMR"
+                    "OPEN.XMR",
+                    "RUDEX.BTC",
+                    "RUDEX.ETH",
+                    "RUDEX.DGB",
+                    "RUDEX.EOS"
                 ],
                 markets_39f5e2ed: [
                     // TESTNET
