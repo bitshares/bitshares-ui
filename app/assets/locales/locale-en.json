@@ -1328,11 +1328,11 @@
         "feed_producer":
             "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy":
-            "Place order %(order)s to buy {amount} at {price} for {account}",
+            "Place an order to buy {amount} at {price} for {account}",
         "limit_order_create":
             "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell":
-            "Place order %(order)s to sell {amount} at {price} for {account}",
+            "Place an order to sell {amount} at {price} for {account}",
         "override_transfer":
             "Transfer {amount} from {from} to {to} by authority of {issuer}",
         "proposals": "Proposals",

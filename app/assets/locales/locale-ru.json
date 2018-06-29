@@ -1349,11 +1349,11 @@
         "feed_producer":
             "Обновить поставщиков котировок для актива {asset} используя аккаунт {account}",
         "limit_order_buy":
-            "Разместить ордер #%(order)s на покупку {amount} по {price} для {account}",
+            "Разместить ордер на покупку {amount} по {price} для {account}",
         "limit_order_create":
             "Разместить ордер на покупку %(buy_amount)s за %(sell_amount)s для %(account)s",
         "limit_order_sell":
-            "Разместить ордер #%(order)s на продажу {amount} по {price} для {account}",
+            "Разместить ордер на продажу {amount} по {price} для {account}",
         "override_transfer":
             "Перевести {amount} от {from} к {to} по поручению {issuer}",
         "proposals": "Предложения",
