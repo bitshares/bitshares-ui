@@ -471,6 +471,7 @@
         "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy": "Buy",
+        "buy_quick": "Quick Buy",
         "buy_description":
             "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",

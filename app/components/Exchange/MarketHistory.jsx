@@ -234,7 +234,7 @@ class MarketHistory extends React.Component {
                     </div>
                     }
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table style={{marginTop: 10}} className="table order-table text-left fixed-table market-right-padding">
+                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
                             <thead style={{backgroundColor: "#2c2e37"}}>
                                 <tr>
                                     <th style={{textAlign: "right"}}>
@@ -272,9 +272,9 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{maxHeight: 220, overflow: "hidden"}}
+                        style={{minHeight: 260, maxHeight: 260, overflow: "hidden"}}
                     >
-                        <table className="table order-table text-right fixed-table market-right-padding no-stripes">
+                        <table className="table table-no-padding table-highlight-hover order-table text-right fixed-table market-right-padding no-stripes">
                             <TransitionWrapper
                                 component="tbody"
                                 transitionName="newrow"

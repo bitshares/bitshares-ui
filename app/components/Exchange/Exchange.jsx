@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import MarketsActions from "actions/MarketsActions";
 import {MyOpenOrders} from "./MyOpenOrders";
-import OrderBook from "./OrderBook";
+import {OrderBook, GroupOrderLimitSelector} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
@@ -32,8 +32,9 @@ import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
 import guide from "intro.js";
 import translator from "counterpart";
-import {Tabs, Button} from 'bitshares-ui-style-guide'
+import {Tabs, Button, Icon as AntIcon} from 'bitshares-ui-style-guide'
 import Icon from "../Icon/Icon";
+import DynamicGrid from "./DynamicGrid";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -189,6 +190,10 @@ class Exchange extends React.Component {
 
         return {
             history: [],
+            
+            tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
+            tabTrades: ws.get("tabTrades", "history"),
+            tabBuySell: ws.get("tabBuySell", "buy"),
             buySellOpen: ws.get("buySellOpen", true),
             bid,
             ask,
@@ -975,41 +980,49 @@ class Exchange extends React.Component {
         );
     }
 
-    _setTabMarket(tab) {
-        this.setState({tabMarket: tab});
+    _setTabVerticalPanel(tab) {
+        this.setState({
+            tabVerticalPanel: tab
+        });
+        SettingsActions.changeViewSetting({
+            tabVerticalPanel: tab
+        })
     }
 
-    _setTabAction(tab) {
-        this.setState({tabAction: tab});
+    _setTabTrades(tab) {
+        this.setState({
+            tabTrades: tab
+        });
+        SettingsActions.changeViewSetting({
+            tabTrades: tab
+        })
     }
 
-    _setTab(tab, value) {
-        console.log("Setting " + tab + " to " + value);
-        if(tab == "market")
-            this.setState({tabMarket: value})
-        if(tab == "action")
-            this.setState({tabAction: value});
-        if(tab == "panel")
-            this.setState({tabPanel: value});
+    _setTabBuySell(tab) {
+        this.setState({
+            tabBuySell: tab
+        });
+        SettingsActions.changeViewSetting({
+            tabBuySell: tab
+        })
     }
 
-    onChangeFeeAsset(type, e) {
-        e.preventDefault();
+    onChangeFeeAsset(type, value) {
         if (type === "buy") {
             this.setState({
-                buyFeeAssetIdx: e.target.value
+                buyFeeAssetIdx: value
             });
 
             SettingsActions.changeViewSetting({
-                buyFeeAssetIdx: e.target.value
+                buyFeeAssetIdx: value
             });
         } else {
             this.setState({
-                sellFeeAssetIdx: e.target.value
+                sellFeeAssetIdx: value
             });
 
             SettingsActions.changeViewSetting({
-                sellFeeAssetIdx: e.target.value
+                sellFeeAssetIdx: value
             });
         }
     }
@@ -1254,9 +1267,10 @@ class Exchange extends React.Component {
             sellDiff,
             width,
             buySellTop,
-            tabPanel,
-            tabAction,
-            tabMarket
+            tabBuySell,
+            tabVerticalPanel,
+            tabTrades,
+            hideColumn
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
@@ -1399,12 +1413,12 @@ class Exchange extends React.Component {
         }
 
         let smallScreen = false;
-        if (width < 1210) {
+        if (width < 1000) {
             smallScreen = true;
-            exchangeLayout = exchangeLayout == 1 || exchangeLayout == 2 ? 3 : exchangeLayout;
+            exchangeLayout = exchangeLayout <= 2 ? 3 : exchangeLayout;
         }
 
-        let orderMultiplier = exchangeLayout == 1 || exchangeLayout == 2 ? 2 : 1;
+        let orderMultiplier = exchangeLayout <= 2 ? 2 : 1;
         const minChartHeight = 300;
         const height = Math.max(
             this.state.height > 1100 ? chartHeight : chartHeight - 125,
@@ -1590,14 +1604,29 @@ class Exchange extends React.Component {
             />
         );
 
-        let verticalHeader = exchangeLayout <= 2 ? (
-            <div className="column-header" style={{margin: 10, paddingLeft: 10}}>
-                <ul>
-                    <li className="active">Order Book</li>
-                    <li>My Markets</li>
-                </ul>
-            </div>
-        ) : null;
+        let myMarkets = (
+            <MyMarkets
+                className="left-order-book no-padding no-overflow"
+                style={{height: "100%"}}
+                headerStyle={{paddingTop: 0}}
+                columns={[
+                    {name: "star", index: 1},
+                    {name: "market", index: 2},
+                    {name: "vol", index: 3},
+                    {name: "price", index: 4},
+                    {name: "change", index: 5}
+                ]}
+                findColumns={[
+                    {name: "market", index: 1},
+                    {name: "issuer", index: 2},
+                    {name: "vol", index: 3},
+                    {name: "add", index: 4}
+                ]}
+                current={`${quoteSymbol}_${baseSymbol}`}
+                location={this.props.location}
+                history={this.props.history}
+            />
+        );
 
         let orderBook = (
             <OrderBook
@@ -1619,12 +1648,12 @@ class Exchange extends React.Component {
                 onClick={this._orderbookClick.bind(this)}
                 horizontal={exchangeLayout >= 3 ? true : false}
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
+                orderBookReversed={this.props.viewSettings.get("orderBookReversed")}
                 marketReady={marketReady}
                 wrapperClass={`order-${buySellTop ? 3 : 1} xlarge-order-${
                     buySellTop ? 4 : 1
                 }`}
                 currentAccount={this.props.currentAccount.get("id")}
-                tableHeader={verticalHeader}
                 handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
                     this
                 )}
@@ -1642,8 +1671,217 @@ class Exchange extends React.Component {
             "is_prediction_market"
         ]);
 
+        let buySellTab = 
+            <div className="small-12 medium-6 xlarge-6" style={{paddingLeft: 5, paddingRight: 5}}>
+                <Tabs defaultActiveKey="buy" activeKey={tabBuySell} onChange={this._setTabBuySell.bind(this)}>
+                    <Tabs.TabPane 
+                        tab={
+                            <TranslateWithLinks
+                                string="exchange.buysell_formatter"
+                                noLink
+                                noTip={false}
+                                keys={[
+                                    {
+                                        type: "asset",
+                                        value: quote.get("symbol"),
+                                        arg: "asset"
+                                    },
+                                    {
+                                        type: "translate",
+                                        value: isPredictionMarket
+                                            ? "exchange.short" : "exchange.buy",
+                                        arg: "direction"
+                                    }
+                                ]}
+                            />  
+                        }
+                        key="buy"
+                    >
+                        {buyForm}
+                    </Tabs.TabPane>
+                    <Tabs.TabPane 
+                        tab={
+                            <TranslateWithLinks
+                                string="exchange.buysell_formatter"
+                                noLink
+                                noTip={false}
+                                keys={[
+                                    {
+                                        type: "asset",
+                                        value: quote.get("symbol"),
+                                        arg: "asset"
+                                    },
+                                    {
+                                        type: "translate",
+                                        value: isPredictionMarket
+                                            ? "exchange.short" : "exchange.sell",
+                                        arg: "direction"
+                                    }
+                                ]}
+                            />
+                        }
+                        key="sell"
+                    >
+                        {sellForm}
+                    </Tabs.TabPane>
+                </Tabs>
+            </div>;
+
+        let verticalPanel;
+
+        if(exchangeLayout <= 2) {
+            verticalPanel =
+                <div className="left-order-book no-padding no-overflow">
+                    <div className="v-align no-padding align-center grid-block footer shrink column">
+                        <Tabs defaultActiveKey="order_book" activeKey={tabVerticalPanel} onChange={this._setTabVerticalPanel.bind(this)}>
+                            <Tabs.TabPane tab="Order Book" key="order_book" />
+                            <Tabs.TabPane tab="My Markets" key="my_markets" />
+                        </Tabs>
+                    </div>
+                    {tabVerticalPanel == "order_book" ? orderBook : null}
+                    {tabVerticalPanel == "order_book" ? 
+                        <div className="v-align no-padding align-center grid-block footer shrink column">
+                            <div className="v-align grid-block align-center grouped_order">
+                                {trackedGroupsConfig ? 
+                                    <GroupOrderLimitSelector
+                                        trackedGroupsConfig={trackedGroupsConfig}
+                                        handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(this)}
+                                        currentGroupOrderLimit={currentGroupOrderLimit}
+                                    /> : null}
+                            </div>
+                        </div> 
+                    : null}
+                    {tabVerticalPanel == "my_markets" ? myMarkets : null}
+                </div>;
+        } else if(exchangeLayout == 3) {
+            verticalPanel =
+                <div className="left-order-book no-padding no-overflow">
+                    <div className="v-align no-padding align-center grid-block footer shrink column">
+                        {buySellTab}
+                    </div>
+                </div>;
+        } else if(exchangeLayout == 4) {
+
+        }
+
+        let verticalPanelToggle =
+            <div style={{width: "auto", paddingTop: "calc(50vh - 120px)"}} onClick={this._toggleColumn.bind(this)} >
+                <AntIcon type={(exchangeLayout == 1 && !hideColumn) || (exchangeLayout == 2 && hideColumn) ? "caret-left" : "caret-right"} />
+            </div>
+        ;
+
+        let marketsTab = 
+            <div className="small-12 medium-6 xlarge-6" style={{paddingLeft: 5, paddingRight: 5}}>
+                <Tabs defaultActiveKey="history" activeKey={tabTrades} onChange={this._setTabTrades.bind(this)}>
+                    <Tabs.TabPane tab="Market Trades" key="history">
+                        <MarketHistory
+                            className={cnames(
+                                !smallScreen
+                                    ? "medium-12 xlarge-12"
+                                    : "",
+                                "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
+                            )}
+                            noHeader={true}
+                            headerStyle={{paddingTop: 0}}
+                            history={activeMarketHistory}
+                            currentAccount={currentAccount}
+                            myHistory={currentAccount.get("history")}
+                            base={base}
+                            quote={quote}
+                            baseSymbol={baseSymbol}
+                            quoteSymbol={quoteSymbol}
+                            activeTab={tabTrades}
+                        />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="My Trades" key="my_history">
+                        <MarketHistory
+                            className={cnames(
+                                !smallScreen
+                                    ? "medium-12 xlarge-12"
+                                    : "",
+                                "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
+                            )}
+                            noHeader={true}
+                            headerStyle={{paddingTop: 0}}
+                            history={activeMarketHistory}
+                            currentAccount={currentAccount}
+                            myHistory={currentAccount.get("history")}
+                            base={base}
+                            quote={quote}
+                            baseSymbol={baseSymbol}
+                            quoteSymbol={quoteSymbol}
+                            activeTab={tabTrades}
+                        />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="My Open Orders" key="my_orders">
+                        <MyOpenOrders
+                            smallScreen={this.props.smallScreen}
+                            className={cnames(
+                                !smallScreen
+                                    ? "medium-12 xlarge-12"
+                                    : "",
+                                `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
+                                    buySellTop ? 6 : 6
+                                }`
+                            )}
+                            key="my_orders"
+                            noHeader={true}
+                            orders={marketLimitOrders}
+                            settleOrders={marketSettleOrders}
+                            currentAccount={currentAccount}
+                            base={base}
+                            quote={quote}
+                            baseSymbol={baseSymbol}
+                            quoteSymbol={quoteSymbol}
+                            activeTab={tabTrades}
+                            onCancel={this._cancelLimitOrder.bind(
+                                this
+                            )}
+                            flipMyOrders={this.props.viewSettings.get(
+                                "flipMyOrders"
+                            )}
+                            feedPrice={this.props.feedPrice}
+                        />
+                    </Tabs.TabPane>
+                    {marketSettleOrders.size > 0 ? 
+                        <Tabs.TabPane tab="Settle Orders" key="open_settlement">
+                            <MyOpenOrders
+                                smallScreen={this.props.smallScreen}
+                                className={cnames(
+                                    !smallScreen
+                                        ? "medium-12 xlarge-12"
+                                        : "",
+                                    `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
+                                        buySellTop ? 6 : 6
+                                    }`
+                                )}
+                                key="my_orders"
+                                noHeader={true}
+                                orders={marketLimitOrders}
+                                settleOrders={marketSettleOrders}
+                                currentAccount={currentAccount}
+                                base={base}
+                                quote={quote}
+                                baseSymbol={baseSymbol}
+                                quoteSymbol={quoteSymbol}
+                                activeTab={tabTrades}
+                                onCancel={this._cancelLimitOrder.bind(
+                                    this
+                                )}
+                                flipMyOrders={this.props.viewSettings.get(
+                                    "flipMyOrders"
+                                )}
+                                feedPrice={this.props.feedPrice}
+                            />
+                        </Tabs.TabPane> 
+                    : null}
+                </Tabs>
+            </div>;
+
+
+
         //console.log(exchangeLayout + " - L:" + leftColumnActive + " R:" + rightColumnActive + " Hide:" + this.state.hideColumn);
-        console.log(tabMarket, tabAction, tabPanel);
+        //console.log(tabMarket, tabAction, tabPanel);
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
@@ -1685,14 +1923,12 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    {!leftColumnActive ? null : 
-                        <div className="grid-block left-column shrink no-overflow">
-                            {!this.state.hideColumn ? orderBook : null}
-                            {!smallScreen ? <div style={{width: "auto", paddingTop: "calc(50vh - 120px)"}}>
-                                <Icon name="chevron-down" onClick={this._toggleColumn.bind(this)} />
-                            </div> : null}
+                    {leftColumnActive ? 
+                        <div className="grid-block left-column shrink no-overflow" style={{height: "100%"}}>
+                            {!this.state.hideColumn ? verticalPanel : null}
+                            {!smallScreen ? verticalPanelToggle : null}
                         </div>
-                    }
+                    : null}
 
                     {/* Center Column */}
                     <div
@@ -1787,294 +2023,23 @@ class Exchange extends React.Component {
                                         />
                                     </div>
                                 )}
-
                             </div>
                             <div className="grid-block no-overflow wrap shrink">
-
-                                <div className="small-12 medium-6 xlarge-6" style={{paddingLeft: 5}}>
-                                    <Tabs defaultActiveKey={"history"} activeKey={tabMarket} onChange={this._setTabMarket.bind(this)}>
-                                        <Tabs.TabPane tab="Market Trades" key="history">
-                                            <MarketHistory
-                                                className={cnames(
-                                                    !smallScreen
-                                                        ? "medium-12 xlarge-12"
-                                                        : "",
-                                                    "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
-                                                )}
-                                                noHeader={true}
-                                                headerStyle={{paddingTop: 0}}
-                                                history={activeMarketHistory}
-                                                currentAccount={currentAccount}
-                                                myHistory={currentAccount.get("history")}
-                                                base={base}
-                                                quote={quote}
-                                                baseSymbol={baseSymbol}
-                                                quoteSymbol={quoteSymbol}
-                                                activeTab={tabMarket}
-                                            />
-                                        </Tabs.TabPane>
-                                        <Tabs.TabPane tab="My Trades" key="my_history">
-                                            <MarketHistory
-                                                className={cnames(
-                                                    !smallScreen
-                                                        ? "medium-12 xlarge-12"
-                                                        : "",
-                                                    "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
-                                                )}
-                                                noHeader={true}
-                                                headerStyle={{paddingTop: 0}}
-                                                history={activeMarketHistory}
-                                                currentAccount={currentAccount}
-                                                myHistory={currentAccount.get("history")}
-                                                base={base}
-                                                quote={quote}
-                                                baseSymbol={baseSymbol}
-                                                quoteSymbol={quoteSymbol}
-                                                activeTab={tabMarket}
-                                            />
-                                        </Tabs.TabPane>
-                                        <Tabs.TabPane tab="My Open Orders" key="open_orders">
-                                            <MyOpenOrders
-                                                smallScreen={this.props.smallScreen}
-                                                className={cnames(
-                                                    !smallScreen
-                                                        ? "medium-12 xlarge-12"
-                                                        : "",
-                                                    `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
-                                                        buySellTop ? 6 : 6
-                                                    }`
-                                                )}
-                                                key="open_orders"
-                                                noHeader={true}
-                                                orders={marketLimitOrders}
-                                                settleOrders={marketSettleOrders}
-                                                currentAccount={currentAccount}
-                                                base={base}
-                                                quote={quote}
-                                                baseSymbol={baseSymbol}
-                                                quoteSymbol={quoteSymbol}
-                                                activeTab={tabMarket}
-                                                onCancel={this._cancelLimitOrder.bind(
-                                                    this
-                                                )}
-                                                flipMyOrders={this.props.viewSettings.get(
-                                                    "flipMyOrders"
-                                                )}
-                                                feedPrice={this.props.feedPrice}
-                                            />
-                                        </Tabs.TabPane>
-                                        <Tabs.TabPane tab="Settle Orders" key="open_settlement">
-                                            <MyOpenOrders
-                                                smallScreen={this.props.smallScreen}
-                                                className={cnames(
-                                                    !smallScreen
-                                                        ? "medium-12 xlarge-12"
-                                                        : "",
-                                                    `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
-                                                        buySellTop ? 6 : 6
-                                                    }`
-                                                )}
-                                                key="open_orders"
-                                                noHeader={true}
-                                                orders={marketLimitOrders}
-                                                settleOrders={marketSettleOrders}
-                                                currentAccount={currentAccount}
-                                                base={base}
-                                                quote={quote}
-                                                baseSymbol={baseSymbol}
-                                                quoteSymbol={quoteSymbol}
-                                                activeTab={tabMarket}
-                                                onCancel={this._cancelLimitOrder.bind(
-                                                    this
-                                                )}
-                                                flipMyOrders={this.props.viewSettings.get(
-                                                    "flipMyOrders"
-                                                )}
-                                                feedPrice={this.props.feedPrice}
-                                            />
-                                        </Tabs.TabPane>
-                                    </Tabs>
-                                    
-                                    {/*
-                                    <div className="column-header">
-                                        <ul >
-                                            <li onClick={() => {this._setTab("market","history")}} className={!tabMarket || tabMarket == "history" ? "active" : null}>Market Trades</li>
-                                            <li onClick={() => {this._setTab("market","my_history")}} className={tabMarket == "my_history" ? "active" : null}>My Trades</li>
-                                            <li onClick={() => {this._setTab("market","open_orders")}} className={tabMarket == "open_orders" ? "active" : null}>My Open Orders</li>
-                                            <li onClick={() => {this._setTab("market","open_settlement")}} className={tabMarket == "open_settlement" ? "active" : null} className="last">Settle Orders</li>
-                                        </ul>
-                                    </div>
-                                    {!tabMarket || tabMarket == "history" || tabMarket == "my_history" ? 
-                                    <MarketHistory
-                                        className={cnames(
-                                            !smallScreen
-                                                ? "medium-12 xlarge-12"
-                                                : "",
-                                            "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
-                                        )}
-                                        noHeader={true}
-                                        headerStyle={{paddingTop: 0}}
-                                        history={activeMarketHistory}
-                                        currentAccount={currentAccount}
-                                        myHistory={currentAccount.get("history")}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        activeTab={tabMarket}
-                                    /> : null}
-                                    {tabMarket == "open_orders" || tabMarket == "open_settlement" ? 
-                                    
-                                    <MyOpenOrders
-                                        smallScreen={this.props.smallScreen}
-                                        className={cnames(
-                                            !smallScreen
-                                                ? "medium-12 xlarge-12"
-                                                : "",
-                                            `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
-                                                buySellTop ? 6 : 6
-                                            }`
-                                        )}
-                                        key="open_orders"
-                                        noHeader={true}
-                                        orders={marketLimitOrders}
-                                        settleOrders={marketSettleOrders}
-                                        currentAccount={currentAccount}
-                                        base={base}
-                                        quote={quote}
-                                        baseSymbol={baseSymbol}
-                                        quoteSymbol={quoteSymbol}
-                                        activeTab={tabMarket}
-                                        onCancel={this._cancelLimitOrder.bind(
-                                            this
-                                        )}
-                                        flipMyOrders={this.props.viewSettings.get(
-                                            "flipMyOrders"
-                                        )}
-                                        feedPrice={this.props.feedPrice}
-                                        /> : null}
-                                    */}
-                                </div>
-                                <div className="small-12 medium-6 xlarge-6">
-                                    <Tabs defaultActiveKey={"buy"} activeKey={tabAction} onChange={this._setTabAction.bind(this)}>
-                                        <Tabs.TabPane tab={
-                                            <TranslateWithLinks
-                                                string="exchange.buysell_formatter"
-                                                noLink
-                                                noTip={false}
-                                                keys={[
-                                                    {
-                                                        type: "asset",
-                                                        value: quote.get("symbol"),
-                                                        arg: "asset"
-                                                    },
-                                                    {
-                                                        type: "translate",
-                                                        value: isPredictionMarket
-                                                            ? "exchange.short" : "exchange.buy",
-                                                        arg: "direction"
-                                                    }
-                                                ]}
-                                            />  
-                                        }
-                                        key="buy">
-                                            {buyForm}
-                                        </Tabs.TabPane>
-                                        <Tabs.TabPane tab={
-                                            <TranslateWithLinks
-                                                string="exchange.buysell_formatter"
-                                                noLink
-                                                noTip={false}
-                                                keys={[
-                                                    {
-                                                        type: "asset",
-                                                        value: quote.get("symbol"),
-                                                        arg: "asset"
-                                                    },
-                                                    {
-                                                        type: "translate",
-                                                        value: isPredictionMarket
-                                                            ? "exchange.short" : "exchange.sell",
-                                                        arg: "direction"
-                                                    }
-                                                ]}
-                                            />
-                                        }
-                                        key="sell">
-                                            {sellForm}
-                                        </Tabs.TabPane>
-                                    </Tabs>
-                                    {/*
-                                    <div className="column-header">
-                                        <ul>
-                                            <li className={!tabAction || tabAction == "buy" ? "active" : null} onClick={() => {this._setTab("action", "buy")}}>
-                                                <TranslateWithLinks
-                                                    string="exchange.buysell_formatter"
-                                                    noLink
-                                                    noTip={false}
-                                                    keys={[
-                                                        {
-                                                            type: "asset",
-                                                            value: quote.get("symbol"),
-                                                            arg: "asset"
-                                                        },
-                                                        {
-                                                            type: "translate",
-                                                            value: isPredictionMarket
-                                                                ? "exchange.short" : "exchange.buy",
-                                                            arg: "direction"
-                                                        }
-                                                    ]}
-                                                />  
-                                            </li>
-                                            <li className={tabAction == "sell" ? "active" : null} onClick={() => {this._setTab("action", "sell")}}>
-                                                <TranslateWithLinks
-                                                    string="exchange.buysell_formatter"
-                                                    noLink
-                                                    noTip={false}
-                                                    keys={[
-                                                        {
-                                                            type: "asset",
-                                                            value: quote.get("symbol"),
-                                                            arg: "asset"
-                                                        },
-                                                        {
-                                                            type: "translate",
-                                                            value: isPredictionMarket
-                                                                ? "exchange.short" : "exchange.sell",
-                                                            arg: "direction"
-                                                        }
-                                                    ]}
-                                                />
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    {!tabAction || tabAction == "buy" ? buyForm : sellForm}
-                                    */} 
-                                </div>
-                                
+                                {marketsTab}
+                                {buySellTab}
                             </div>
-                            {exchangeLayout >= 3 ? 
-                                orderBook : null
-                            }
+                            {exchangeLayout >= 3 ? orderBook : null}
                         </div>
                     </div>
                     {/* End of Main Content Column */}
 
                     {/* Right Column */}
-                    {!rightColumnActive ? null :
+                    {rightColumnActive ? 
                         <div className="grid-block right-column shrink no-overflow">
-                            {!smallScreen ? <div style={{width: "auto", paddingTop: "calc(50vh - 120px)"}}>
-                                <Icon name="chevron-down" onClick={this._toggleColumn.bind(this)} />
-                            </div> : null}
-
-                            {!this.state.hideColumn ? 
-                                exchangeLayout == 2 ? 
-                                    orderBook : 
-                                    null : 
-                                null}
+                            {!smallScreen ? verticalPanelToggle : null}
+                            {!this.state.hideColumn ? verticalPanel : null}
                         </div>
-                    }
+                    : null}
                     
                     {/* End of Second Vertical Block */}
                 </div>

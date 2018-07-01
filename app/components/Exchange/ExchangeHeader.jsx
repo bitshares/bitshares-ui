@@ -427,7 +427,7 @@ export default class ExchangeHeader extends React.Component {
                             <li className="with-dropdown">
                                 <select
                                     value={exchangeLayout ? exchangeLayout : "exchange.layout.1"}
-                                    classBane="settings-select"
+                                    classNane="settings-select"
                                     onChange={e => {
                                         this.props.onChangeLayout(e.target.value);
                                     }}
@@ -438,12 +438,12 @@ export default class ExchangeHeader extends React.Component {
                                     <option value="2">
                                         {counterpart.translate("exchange.layout.2")}
                                     </option>
-                                    <option value="3">
+                                    {/*<option value="3">
                                         {counterpart.translate("exchange.layout.3")}
                                     </option>
                                     <option value="4">
                                         {counterpart.translate("exchange.layout.4")}
-                                    </option>
+                                    </option>*/}
                                 </select>
                             </li>
                         </ul>

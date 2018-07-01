@@ -18,44 +18,38 @@ import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
 import FormattedPrice from "../Utility/FormattedPrice";
 const leftAlign = {textAlign: "left"};
+const rightAlign = {textAlign: "right"};
+const centerAlign = {textAlign: "center"};
 import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
-        let {baseSymbol, quoteSymbol, dashboard, isMyAccount} = this.props;
+        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, leftAlign} = this.props;
 
         return !dashboard ? (
             <thead>
                 <tr>
-                    <th style={{textAlign: this.props.leftAlign ? "left" : ""}}>
+                    <th style={leftAlign ? leftAlign : rightAlign}>
                         <Translate
                             className="header-sub-title"
                             content="exchange.price"
                         />
                     </th>
-                    <th
-                        style={
-                            this.props.leftAlign ? {textAlign: "left"} : null
-                        }
-                    >
+                    <th style={leftAlign ? leftAlign : rightAlign}>
                         {baseSymbol ? (
                             <span className="header-sub-title">
                                 <AssetName dataPlace="top" name={quoteSymbol} />
                             </span>
                         ) : null}
                     </th>
-                    <th
-                        style={
-                            this.props.leftAlign ? {textAlign: "left"} : null
-                        }
-                    >
+                    <th style={leftAlign ? leftAlign : rightAlign}>
                         {baseSymbol ? (
                             <span className="header-sub-title">
                                 <AssetName dataPlace="top" name={baseSymbol} />
                             </span>
                         ) : null}
                     </th>
-                    <th style={{textAlign: this.props.leftAlign ? "left" : ""}}>
+                    <th style={leftAlign ? leftAlign : rightAlign}>
                         <Translate
                             className="header-sub-title"
                             content="transaction.expiration"
@@ -140,6 +134,8 @@ class OrderRow extends React.Component {
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
 
+        console.log(order.expiration);
+        
         return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass} style={{paddingLeft: 10}}>
@@ -171,7 +167,7 @@ class OrderRow extends React.Component {
                 <td
                     style={{width: "25%", textAlign: "right"}}
                     className="tooltip"
-                    data-tip={new Date(utils.format_time(order.expiration))}
+                    data-tip={new Date(order.expiration)}
                 >
                     {isCall
                         ? null
@@ -358,6 +354,21 @@ class MyOpenOrders extends React.Component {
         this._getOrders = this._getOrders.bind(this);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        if(nextProps.activeTab !== this.state.activeTab) {
+            this._changeTab(nextProps.activeTab);
+        }
+        
+        return (
+            nextProps.baseSymbol !== this.props.baseSymbol ||
+            nextProps.quoteSymbol !== this.props.quoteSymbol ||
+            nextProps.className !== this.props.className ||
+            nextProps.activeTab !== this.props.activeTab ||
+            nextState.activeTab !== this.state.activeTab ||
+            nextProps.currentAccount !== this.props.currentAccount
+        );
+    }
+
     componentDidMount() {
         let contentContainer = this.refs.container;
         if (contentContainer) Ps.initialize(contentContainer);
@@ -451,7 +462,7 @@ class MyOpenOrders extends React.Component {
     }
 
     render() {
-        let {base, quote, quoteSymbol, baseSymbol, settleOrders, noHeader} = this.props;
+        let {base, quote, quoteSymbol, baseSymbol, settleOrders} = this.props;
         let {activeTab} = this.state;
 
         if (!base || !quote) return null;
@@ -468,15 +479,8 @@ class MyOpenOrders extends React.Component {
                 ? true
                 : false;
 
-        // Default Tab
-        if (!activeTab || (!baseIsBitAsset && !quoteIsBitAsset)) {
-            activeTab = "my_orders";
-        }
-
-        {
-            /* Users Open Orders Tab (default) */
-        }
-        if (activeTab == "my_orders") {
+        {/* Users Open Orders Tab (default) */}
+        if (!activeTab || activeTab == "my_orders") {
             const orders = this._getOrders();
             let emptyRow = (
                 <tr>
@@ -549,10 +553,7 @@ class MyOpenOrders extends React.Component {
             );
         }
 
-        {
-            /* Open Settle Orders */
-        }
-
+        {/* Open Settle Orders */}
         if (activeTab && activeTab == "open_settlement") {
             contentContainer = (
                 <OpenSettleOrders
@@ -581,10 +582,8 @@ class MyOpenOrders extends React.Component {
                 key="open_orders"
                 className={this.props.className}
             >
-                <div
-                    className="exchange-bordered small-12"
-                    style={{height: 266}}
-                >
+                <div className="small-12">
+                    {this.props.noHeader ? null : 
                     <div className="grid-block shrink left-orderbook-header">
                         <div
                             style={{width: myOrdersWidth}}
@@ -603,12 +602,11 @@ class MyOpenOrders extends React.Component {
                         >
                             <Translate content="exchange.settle_orders" />
                         </div>
-                    </div>
+                    </div>}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table order-table text-right fixed-table market-right-padding">
+                        <table className="table table-no-padding order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
                                 <TableHeader
-                                    rightAlign
                                     type="sell"
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
@@ -653,9 +651,9 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", maxHeight: 200}}
+                        style={{overflow: "hidden", minHeight: 260, maxHeight: 260}}
                     >
-                        <table className="table order-table text-right fixed-table market-right-padding">
+                        <table className="table table-no-padding table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}
                         </table>
                     </div>

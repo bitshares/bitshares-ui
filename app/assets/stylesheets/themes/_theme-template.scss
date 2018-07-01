@@ -2280,7 +2280,7 @@
     }
 
     .expiration-datetime-picker {
-        width: 225px;
+        width: 100%;
         > div {
             float: right;
         }
@@ -2397,6 +2397,16 @@
                 background-color: $light-panel-bg-color;
             }
         }
+    }
+
+    .table-highlight-hover {
+        tr:hover {
+            background-color: $settings-select-bg !important;
+        }
+    }
+
+    .table thead {
+        background-color: $header-color !important;
     }
 }
 

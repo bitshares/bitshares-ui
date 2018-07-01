@@ -10,6 +10,7 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import {StickyTable} from "react-sticky-table";
 import Icon from "../Icon/Icon";
+import {Icon as AntIcon} from 'bitshares-ui-style-guide'
 const counterpart = require("counterpart");
 
 class OrderRow extends React.Component {
@@ -342,6 +343,7 @@ class OrderBook extends React.Component {
         super();
         this.state = {
             flip: props.flipOrderBook,
+            orderBookReversed: props.orderBookReversed,
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
@@ -514,8 +516,9 @@ class OrderBook extends React.Component {
     };
 
     toggleOrderBook = () => {
-        const newState = {orderBookReversed: !this.state.orderBookReversed};
-        this.setState(newState, () => {
+        const orderBookState = {orderBookReversed: !this.state.orderBookReversed};
+        SettingsActions.changeViewSetting(orderBookState);
+        this.setState(orderBookState, () => {
             this.psUpdate();
         });
     }
@@ -536,6 +539,7 @@ class OrderBook extends React.Component {
             trackedGroupsConfig,
             currentGroupOrderLimit,
             handleGroupOrderLimitChange,
+            orderBookReversed,
             groupedBids,
             groupedAsks
         } = this.props;
@@ -561,12 +565,32 @@ class OrderBook extends React.Component {
                     quote={quote}
                 />
             ));
-        let bidRows = null,
-            askRows = null;
+        let bidRows = null, askRows = null;
+
+        /* Sort */
+        let tempAsks = this.props.currentGroupOrderLimit !== 0 ? groupedAsks : combinedAsks; // RED
+        let tempBids = this.props.currentGroupOrderLimit !== 0 ? groupedBids : combinedBids; // GREEN
+
+        if(!horizontal && !orderBookReversed) {
+            tempBids.sort((a, b) => {
+                return b.getPrice() - a.getPrice();
+            });
+            tempAsks.sort((a, b) => {
+                return b.getPrice() - a.getPrice();
+            });
+        } else if(!horizontal && orderBookReversed) {
+            tempBids.sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            });
+            tempAsks.sort((a, b) => {
+                return a.getPrice() - b.getPrice();
+            });
+        } 
+
         if (base && quote) {
             // limit orders or grouped orders
             if (this.props.currentGroupOrderLimit !== 0) {
-                bidRows = groupedBids.map((order, index) => {
+                bidRows = tempBids.map((order, index) => {
                     return horizontal ? (
                         <GroupedOrderBookRowHorizontal
                             index={index}
@@ -596,12 +620,6 @@ class OrderBook extends React.Component {
                     );
                 });
 
-                let tempAsks = groupedAsks;
-                if (!horizontal) {
-                    tempAsks.sort((a, b) => {
-                        return b.getPrice() - a.getPrice();
-                    });
-                }
                 askRows = tempAsks.map((order, index) => {
                     return horizontal ? (
                         <GroupedOrderBookRowHorizontal
@@ -634,7 +652,7 @@ class OrderBook extends React.Component {
                     );
                 });
             } else {
-                bidRows = combinedBids.map((order, index) => {
+                bidRows = tempBids.map((order, index) => {
                     return horizontal ? (
                         <OrderBookRowHorizontal
                             index={index}
@@ -665,15 +683,7 @@ class OrderBook extends React.Component {
                         />
                     );
                 });
-
-                let tempAsks = combinedAsks;
-                tempAsks.sort((a, b) => {
-                    if (horizontal) {
-                        return a.getPrice() - b.getPrice();
-                    } else {
-                        return b.getPrice() - a.getPrice();
-                    }
-                });
+                
                 askRows = tempAsks.map((order, index) => {
                     return horizontal ? (
                         <OrderBookRowHorizontal
@@ -806,7 +816,7 @@ class OrderBook extends React.Component {
                 <div
                     className={classnames(
                         this.props.wrapperClass,
-                        "grid-block orderbook no-padding small-vertical medium-horizontal align-spaced no-overflow small-12 xlarge-8"
+                        "grid-block orderbook no-padding align-spaced no-overflow small-12 xlarge-8 wrap shrink"
                     )}
                 >
                     <div
@@ -1073,145 +1083,115 @@ class OrderBook extends React.Component {
         } else {
             // Vertical orderbook
             return (
-                <div className="left-order-book no-padding no-overflow">
-                    {this.props.tableHeader}
-                    <div className="order-table-container">
-                        <StickyTable
-                            stickyColumnCount={0}
-                            className="order-table table"
-                            ref="vertical_sticky_table"
-                        >
-                            <div className="sticky-table-row top-header">
-                                <div className="cell header-cell left">
-                                    <span className="header-sub-title">
-                                        <AssetName name={baseSymbol} />
-                                    </span>
-                                </div>
-                                <div className="cell header-cell">
-                                    <span className="header-sub-title">
-                                        <AssetName name={quoteSymbol} />
-                                    </span>
-                                </div>
-                                <div className="cell header-cell right">
-                                    <Translate
-                                        className="header-sub-title"
-                                        content="exchange.price"
-                                    />
-                                </div>
+                <div className="order-table-container">
+                    <StickyTable
+                        stickyColumnCount={0}
+                        className="order-table table"
+                        ref="vertical_sticky_table"
+                    >
+                        <div className="sticky-table-row top-header">
+                            <div className="cell header-cell left">
+                                <span className="header-sub-title">
+                                    <AssetName name={baseSymbol} />
+                                </span>
                             </div>
-                            {this.state.orderBookReversed ? 
-                                <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true}  /> :
-                                <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false}  />
-                            }
-                            <div className="sticky-table-row" ref="center_text">
-                                {noOrders ? (
-                                    <td
-                                        colSpan={3}
-                                        className="no-orders padtop"
-                                    >
-                                        <Translate content="exchange.no_orders" />
-                                    </td>
-                                ) : (
-                                    <td
-                                        className="cell center-cell"
-                                        colSpan="3"
-                                    >
-                                        <div className="orderbook-latest-price">
-                                            <div className="text-center spread">
-                                                {!!spread && (
+                            <div className="cell header-cell">
+                                <span className="header-sub-title">
+                                    <AssetName name={quoteSymbol} />
+                                </span>
+                            </div>
+                            <div className="cell header-cell right">
+                                <Translate
+                                    className="header-sub-title"
+                                    content="exchange.price"
+                                />
+                            </div>
+                        </div>
+                        {this.state.orderBookReversed ? 
+                            <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true} /> :
+                            <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false} />
+                        }
+                        <div className="sticky-table-row" ref="center_text">
+                            {noOrders ? (
+                                <td
+                                    colSpan={3}
+                                    className="no-orders padtop"
+                                >
+                                    <Translate content="exchange.no_orders" />
+                                </td>
+                            ) : (
+                                <td
+                                    className="cell center-cell"
+                                    colSpan="3"
+                                >
+                                    <div className="orderbook-latest-price">
+                                        <div className="text-center spread">
+                                            {!!spread && (
+                                                <span
+                                                    className="clickable left"
+                                                    onClick={
+                                                        this
+                                                            .toggleSpreadValue
+                                                    }
+                                                >
+                                                    <Translate content="exchange.spread" />{" "}
+                                                    <span className="spread-value">
+                                                        {spread}
+                                                    </span>
+                                                </span>
+                                            )}
+                                            <Icon
+                                                className="lock-unlock clickable"
+                                                onClick={
+                                                    this.toggleAutoScroll
+                                                }
+                                                name={
+                                                    this.state.autoScroll
+                                                        ? "locked"
+                                                        : "unlocked"
+                                                }
+                                                title={
+                                                    this.state.autoScroll
+                                                        ? "icons.locked.enable_auto_scroll"
+                                                        : "icons.unlocked.disable_auto_scroll"
+                                                }
+                                            />&nbsp;
+                                            <AntIcon 
+                                                style={{fontSize: 20, marginRight: 10}}
+                                                className="clickable"
+                                                type="retweet"
+                                                onClick={
+                                                    this.toggleOrderBook
+                                                } 
+                                            />
+                                            {!!this.props.latest && (
+                                                <span className="right">
+                                                    <Translate content="exchange.latest" />{" "}
                                                     <span
-                                                        className="clickable left"
-                                                        onClick={
-                                                            this
-                                                                .toggleSpreadValue
+                                                        className={
+                                                            this.props
+                                                                .changeClass
                                                         }
                                                     >
-                                                        <Translate content="exchange.spread" />{" "}
-                                                        <span className="spread-value">
-                                                            {spread}
-                                                        </span>
-                                                    </span>
-                                                )}
-                                                <Icon
-                                                    className="lock-unlock clickable"
-                                                    onClick={
-                                                        this.toggleAutoScroll
-                                                    }
-                                                    name={
-                                                        this.state.autoScroll
-                                                            ? "locked"
-                                                            : "unlocked"
-                                                    }
-                                                    title={
-                                                        this.state.autoScroll
-                                                            ? "icons.locked.enable_auto_scroll"
-                                                            : "icons.unlocked.disable_auto_scroll"
-                                                    }
-                                                />&nbsp;
-                                                <Icon 
-                                                    style={{marginRight: 10}}
-                                                    className="clickable"
-                                                    name="shuffle"
-                                                    onClick={
-                                                        this.toggleOrderBook
-                                                    } 
-                                                />
-                                                {!!this.props.latest && (
-                                                    <span className="right">
-                                                        <Translate content="exchange.latest" />{" "}
-                                                        <span
-                                                            className={
+                                                        <PriceText
+                                                            preFormattedPrice={
                                                                 this.props
-                                                                    .changeClass
+                                                                    .latest
                                                             }
-                                                        >
-                                                            <PriceText
-                                                                preFormattedPrice={
-                                                                    this.props
-                                                                        .latest
-                                                                }
-                                                            />
-                                                        </span>
+                                                        />
                                                     </span>
-                                                )}
-                                            </div>
+                                                </span>
+                                            )}
                                         </div>
-                                    </td>
-                                )}
-                            </div>
-                            {this.state.orderBookReversed ? 
-                                <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false} /> :
-                                <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true} />
-                            }
-                        </StickyTable>
-                    </div>
-                    {/*<div className="v-align no-padding align-center grid-block footer shrink bottom-header">
-                        <div
-                            className="v-align grid-block align-center"
-                            style={{height: "2rem", overflow: "hidden"}}
-                        >
-                            <Icon
-                                name="thumb-untack"
-                                title="icons.thumb_untack"
-                                className="icon-14px order-book-button-h"
-                                style={{top: "-0.5rem"}}
-                                onClick={this.props.moveOrderBook}
-                            />
+                                    </div>
+                                </td>
+                            )}
                         </div>
-                        <div className="v-align grid-block align-center grouped_order">
-                            {trackedGroupsConfig ? (
-                                <GroupOrderLimitSelector
-                                    trackedGroupsConfig={trackedGroupsConfig}
-                                    handleGroupOrderLimitChange={
-                                        handleGroupOrderLimitChange
-                                    }
-                                    currentGroupOrderLimit={
-                                        currentGroupOrderLimit
-                                    }
-                                />
-                            ) : null}
-                        </div>
-                    </div>*/}
+                        {this.state.orderBookReversed ? 
+                            <OrderRow noOrders={noOrders} orderRows={askRows} isBid={false} /> :
+                            <OrderRow noOrders={noOrders} orderRows={bidRows} isBid={true} />
+                        }
+                    </StickyTable>
                 </div>
             );
         }
@@ -1230,4 +1210,4 @@ OrderBook.propTypes = {
     orders: PropTypes.object.isRequired
 };
 
-export default OrderBook;
+export {OrderBook, GroupOrderLimitSelector};
