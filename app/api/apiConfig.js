@@ -96,6 +96,8 @@ export const settingsAPIs = {
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
         {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
         {url: "wss://node.market.rudex.org", location: "Germany"},
+        {url: "wss://api.bitsharesdex.com/ws", location: "Missouri, USA"},
+        {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
         {
             url: "wss://eu.nodes.bitshares.ws",
             location: "Central Europe - BitShares Infrastructure Program"
