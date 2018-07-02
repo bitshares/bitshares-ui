@@ -19,6 +19,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import ConfirmModal from "../Modal/ConfirmModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import {ChainStore} from "bitsharesjs/es";
 
 let ifvisible = require("ifvisible");
 
@@ -36,7 +37,8 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {
-            showNodesPopup: false
+            showNodesPopup: false,
+            showConnectingPopup: false
         };
 
         this.confirmOutOfSync = {
@@ -158,6 +160,42 @@ class Footer extends React.Component {
     }
 
     /**
+     * Returns the current blocktime, or exception if not yet available
+     * @returns {Date}
+     */
+    getBlockTime() {
+        let dynGlobalObject = ChainStore.getObject("2.1.0");
+        if (dynGlobalObject) {
+            let block_time = dynGlobalObject.get("time");
+            if (!/Z$/.test(block_time)) {
+                block_time += "Z";
+            }
+            return new Date(block_time);
+        } else {
+            throw new Error("Blocktime not available right now");
+        }
+    }
+
+    /**
+     * Returns the delta between the current time and the block time in seconds, or -1 if block time not available yet
+     *
+     * Note: Could be integrating properly with BlockchainStore to send out updates, but not necessary atp
+     */
+    getBlockTimeDelta() {
+        try {
+            let bt =
+                (this.getBlockTime().getTime() +
+                    ChainStore.getEstimatedChainTimeOffset()) /
+                1000;
+            let now = new Date().getTime() / 1000;
+            return Math.abs(now - bt);
+        } catch (err) {
+            console.log(err);
+            return -1;
+        }
+    }
+
+    /**
      * Closes the out of sync modal if closed
      *
      * @private
@@ -195,7 +233,7 @@ class Footer extends React.Component {
             this._triggerReconnect();
         } else if (!this.props.synced) {
             let forceReconnectAfterSeconds = 30;
-            let askToReconnectAfterSeconds = 10;
+            let askToReconnectAfterSeconds = 0;
             // trigger automatic reconnect
             setTimeout(() => {
                 if (!this.props.synced) {
@@ -203,11 +241,9 @@ class Footer extends React.Component {
                 }
             }, forceReconnectAfterSeconds * 1000);
             // if out of sync more than 10sec ask user
-            let out_of_sync_seconds = BlockchainActions.getBlockTimeDelta();
-            if (
-                BlockchainActions.getBlockTimeDelta() >
-                askToReconnectAfterSeconds
-            ) {
+            let out_of_sync_seconds = this.getBlockTimeDelta();
+            console.log(this.getBlockTimeDelta());
+            if (this.getBlockTimeDelta() > askToReconnectAfterSeconds) {
                 if (this.confirmOutOfSync.shownOnce == false) {
                     this.confirmOutOfSync.shownOnce = true;
                     setTimeout(() => {
@@ -249,9 +285,12 @@ class Footer extends React.Component {
             // reconnect to anythin
             let promise = routerTransitioner.willTransitionTo(false);
             if (!!promise)
-                promise.then(() => {
-                    console.log("... done trying to reconnect");
-                });
+                setTimeout(() => {
+                    this.forceUpdate();
+                }, 10);
+            promise.then(() => {
+                console.log("... done trying to reconnect");
+            });
         }
     }
 
