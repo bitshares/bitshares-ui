@@ -12,6 +12,7 @@ import ActionSheet from "react-foundation-apps/src/action-sheet";
 import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
 import Icon from "./Icon/Icon";
+import CheckUrlWarning from "./Utility/CheckUrlWarning";
 
 class LoginSelector extends React.Component {
     constructor(props) {
@@ -212,6 +213,12 @@ class LoginSelector extends React.Component {
                             </div>
                         )}
 
+                        {!!childCount ? (
+                            <div style={{padding: 10}}>
+                                <CheckUrlWarning />
+                            </div>
+                        ) : null}
+
                         {this.props.children}
                     </div>
                 </div>
@@ -220,15 +227,18 @@ class LoginSelector extends React.Component {
     }
 }
 
-export default connect(LoginSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+export default connect(
+    LoginSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);
