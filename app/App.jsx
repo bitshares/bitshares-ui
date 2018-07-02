@@ -110,6 +110,7 @@ const ExistingAccount = Loadable({
 
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import BlockchainActions from "./actions/BlockchainActions";
 
 class App extends React.Component {
     constructor() {
@@ -144,21 +145,7 @@ class App extends React.Component {
     }
 
     _syncStatus(setState = false) {
-        let synced = true;
-        let dynGlobalObject = ChainStore.getObject("2.1.0");
-        if (dynGlobalObject) {
-            let block_time = dynGlobalObject.get("time");
-            if (!/Z$/.test(block_time)) {
-                block_time += "Z";
-            }
-
-            let bt =
-                (new Date(block_time).getTime() +
-                    ChainStore.getEstimatedChainTimeOffset()) /
-                1000;
-            let now = new Date().getTime() / 1000;
-            synced = Math.abs(now - bt) < 5;
-        }
+        let synced = BlockchainActions.getBlockTimeDelta() < 5;
         if (setState && synced !== this.state.synced) {
             this.setState({synced});
         }
@@ -181,7 +168,10 @@ class App extends React.Component {
 
     componentDidMount() {
         this._setListeners();
-        this.syncCheckInterval = setInterval(this._syncStatus, 5000);
+        this.syncCheckInterval = setInterval(
+            this._syncStatus.bind(this, true),
+            5000
+        );
         const user_agent = navigator.userAgent.toLowerCase();
         if (
             !(

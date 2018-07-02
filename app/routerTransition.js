@@ -222,6 +222,7 @@ class RouterTransitioner {
         }
         // decide where to connect to first
         let connectionString = this._getFirstToTry(urls);
+        this._willTransitionToInProgress = connectionString;
 
         this._connectionManager = new Manager({
             url: connectionString,

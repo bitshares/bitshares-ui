@@ -5,6 +5,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import BlockchainStore from "stores/BlockchainStore";
+import BlockchainActions from "actions/BlockchainActions";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -16,6 +17,9 @@ import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
+import ConfirmModal from "../Modal/ConfirmModal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+
 let ifvisible = require("ifvisible");
 
 class Footer extends React.Component {
@@ -33,6 +37,11 @@ class Footer extends React.Component {
 
         this.state = {
             showNodesPopup: false
+        };
+
+        this.confirmOutOfSync = {
+            modal: null,
+            shownOnce: false
         };
     }
 
@@ -148,28 +157,93 @@ class Footer extends React.Component {
         };
     }
 
+    /**
+     * Closes the out of sync modal if closed
+     *
+     * @private
+     */
+    _closeOutOfSyncModal() {
+        if (
+            !!this.confirmOutOfSync.modal &&
+            this.confirmOutOfSync.modal.state.show
+        ) {
+            ZfApi.publish(this.confirmOutOfSync.modal.props.modalId, "close");
+        }
+    }
+
+    /**
+     * This method can be called whenever it is assumed that the connection is stale.
+     * It will check synced/connected state and notify the user or do automatic reconnect.
+     * In general the connection state can be "out of sync" and "disconnected".
+     *
+     * disconnected:
+     *      - dependent on rpc_connection_status of BlockchainStore
+     *
+     * out of sync:
+     *      - reported block time is more than X sec in the past, as reported in
+     *        App -> _syncStatus
+     *
+     * @private
+     */
     _ensureConnectivity() {
+        // user is not looking at the app, no reconnection effort necessary
         if (!ifvisible.now("active")) return;
 
         let connected = !(this.props.rpc_connection_status === "closed");
 
-        // if user has auto selection on we react on disconnects
         if (!connected) {
             this._triggerReconnect();
         } else if (!this.props.synced) {
+            let forceReconnectAfterSeconds = 30;
+            let askToReconnectAfterSeconds = 10;
+            // trigger automatic reconnect
             setTimeout(() => {
                 if (!this.props.synced) {
                     this._triggerReconnect();
                 }
-            }, 30000);
+            }, forceReconnectAfterSeconds * 1000);
+            // if out of sync more than 10sec ask user
+            let out_of_sync_seconds = BlockchainActions.getBlockTimeDelta();
+            if (
+                BlockchainActions.getBlockTimeDelta() >
+                askToReconnectAfterSeconds
+            ) {
+                if (this.confirmOutOfSync.shownOnce == false) {
+                    this.confirmOutOfSync.shownOnce = true;
+                    setTimeout(() => {
+                        this.confirmOutOfSync.modal.show(
+                            <div>
+                                <Translate
+                                    content={"connection.want_to_reconnect"}
+                                    out_of_sync_seconds={parseInt(
+                                        out_of_sync_seconds
+                                    )}
+                                    reconnect_in_seconds={parseInt(
+                                        forceReconnectAfterSeconds
+                                    )}
+                                />
+                                <br />
+                                <br />
+                            </div>,
+                            counterpart.translate("global.confirm"),
+                            () => {
+                                if (!this.props.synced) {
+                                    this._triggerReconnect();
+                                }
+                            }
+                        );
+                    }, 50);
+                }
+            }
+        } else {
+            this._closeOutOfSyncModal();
+            this.confirmOutOfSync.shownOnce = false;
         }
     }
 
     _triggerReconnect() {
-        if (
-            routerTransitioner.isAutoSelection() &&
-            !routerTransitioner.isTransitionInProgress()
-        ) {
+        if (!routerTransitioner.isTransitionInProgress()) {
+            this._closeOutOfSyncModal();
             console.log("Trying to reconnect ...");
 
             // reconnect to anythin
@@ -223,6 +297,12 @@ class Footer extends React.Component {
                             )}
                         />
                     )}
+                <ConfirmModal
+                    modalId="footer_out_of_sync"
+                    ref={thiz => {
+                        this.confirmOutOfSync.modal = thiz;
+                    }}
+                />
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">

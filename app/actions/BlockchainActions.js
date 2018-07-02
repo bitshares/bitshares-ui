@@ -1,5 +1,7 @@
 import alt from "alt-instance";
 import {Apis} from "bitsharesjs-ws";
+import BlockchainStore from "../stores/BlockchainStore";
+import {ChainStore} from "bitsharesjs/es";
 
 let latestBlocks = {};
 
@@ -48,6 +50,42 @@ class BlockchainActions {
                     console.log("Error in BlockchainActions.getBlock: ", error);
                 });
         };
+    }
+
+    /**
+     * Returns the current blocktime, or exception if not yet available
+     * @returns {Date}
+     */
+    getBlockTime() {
+        let dynGlobalObject = ChainStore.getObject("2.1.0");
+        if (dynGlobalObject) {
+            let block_time = dynGlobalObject.get("time");
+            if (!/Z$/.test(block_time)) {
+                block_time += "Z";
+            }
+            return new Date(block_time);
+        } else {
+            throw new Error("Blocktime not available right now");
+        }
+    }
+
+    /**
+     * Returns the delta between the current time and the block time in seconds, or -1 if block time not available yet
+     *
+     * Note: Could be integrating properly with BlockchainStore to send out updates, but not necessary atp
+     */
+    getBlockTimeDelta() {
+        try {
+            let bt =
+                (this.getBlockTime().getTime() +
+                    ChainStore.getEstimatedChainTimeOffset()) /
+                1000;
+            let now = new Date().getTime() / 1000;
+            return Math.abs(now - bt);
+        } catch (err) {
+            console.log(err);
+            return -1;
+        }
     }
 
     updateRpcConnectionStatus(status) {
