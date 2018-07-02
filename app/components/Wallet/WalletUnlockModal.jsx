@@ -16,6 +16,7 @@ import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
+import CheckUrlWarning from "../Utility/CheckUrlWarning";
 
 class WalletUnlockModal extends React.Component {
     static contextTypes = {
@@ -329,6 +330,7 @@ class WalletUnlockModal extends React.Component {
                 modalHeader={
                     "header.unlock" + (passwordLogin ? "_password" : "")
                 }
+                modalHeaderContent={<CheckUrlWarning />}
             >
                 {passwordLogin
                     ? this.renderPasswordLogin()
