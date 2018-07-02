@@ -21,6 +21,7 @@ import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import {withRouter} from "react-router-dom";
+import {scroller} from "react-scroll";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -38,6 +39,8 @@ class CreateAccount extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
         this.accountNameInput = null;
+
+        this.scrollToInput = this.scrollToInput.bind(this);
     }
 
     componentWillMount() {
@@ -49,6 +52,7 @@ class CreateAccount extends React.Component {
 
     componentDidMount() {
         ReactTooltip.rebuild();
+        this.scrollToInput();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -96,6 +100,15 @@ class CreateAccount extends React.Component {
                 );
             });
         }
+    }
+
+    scrollToInput() {
+        scroller.scrollTo(`scrollToInput`, {
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            containerId: "accountForm"
+        });
     }
 
     createAccount(name) {
@@ -529,7 +542,7 @@ class CreateAccount extends React.Component {
         let {step} = this.state;
 
         return (
-            <div className="sub-content">
+            <div className="sub-content" id="scrollToInput" name="scrollToInput">
                 <div style={{maxWidth: "95vw"}}>
                     {step !== 1 ? (
                         <p
