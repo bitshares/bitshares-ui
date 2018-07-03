@@ -19,6 +19,7 @@ import ProposedOperation from "./ProposedOperation";
 import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
+import {AccountStakingInfo} from "../Account/AccountStakeCreateNew";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -35,12 +36,15 @@ class OpType extends React.Component {
         let trxTypes = counterpart.translate("transaction.trxTypes");
         let labelClass = classNames("txtlabel", this.props.color || "info");
 
+        const trxType =
+            this.props.type === 32
+                ? counterpart.translate("cryptobridge.account.staking")
+                : trxTypes[ops[this.props.type]]; // 32 = vesting_balance_create
+
         return (
             <tr>
                 <td>
-                    <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]}
-                    </span>
+                    <span className={labelClass}>{trxType}</span>
                 </td>
                 <td />
             </tr>
@@ -138,7 +142,9 @@ class Transaction extends React.Component {
             let key = 0;
 
             let color = "";
-            switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+            switch (
+                ops[op[0]] // For a list of trx types, see chain_types.coffee
+            ) {
                 case "transfer":
                     color = "success";
 
@@ -1404,6 +1410,36 @@ class Transaction extends React.Component {
                             </td>
                         </tr>
                     );
+                    break;
+
+                case "vesting_balance_create":
+                    const stakingPeriod =
+                        AccountStakingInfo.getStakingPeriodByPeriodValue(
+                            op[1].policy[1].vesting_seconds
+                        ) || {};
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate content="cryptobridge.account.amount_bco" />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    amount={op[1].amount.amount}
+                                    asset={op[1].amount.asset_id}
+                                />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate content="cryptobridge.account.length" />
+                            </td>
+                            <td>{stakingPeriod.name}</td>
+                        </tr>
+                    );
+
                     break;
 
                 case "vesting_balance_withdraw":
