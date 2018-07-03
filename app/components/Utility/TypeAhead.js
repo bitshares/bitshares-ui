@@ -91,9 +91,13 @@ export default class TypeAhead extends React.Component {
                 renderInput={this.renderInput}
                 ref="autocomplete"
                 items={props.items || []}
-                shouldItemRender={({label}) =>
-                    label.toLowerCase().indexOf(filter.toLowerCase()) > -1
-                }
+                shouldItemRender={({label, labelSearch}) => {
+                    return (
+                        (labelSearch || label)
+                            .toLowerCase()
+                            .indexOf(filter.toLowerCase()) > -1
+                    );
+                }}
                 getItemValue={this.getValueFromItem}
                 renderItem={this.renderItem}
                 value={filter}
