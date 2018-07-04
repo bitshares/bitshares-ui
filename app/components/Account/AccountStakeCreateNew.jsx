@@ -14,6 +14,61 @@ import Translate from "react-translate-component";
 
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 
+export class AccountStakingInfo {
+    static stakingPeriods = [
+        {
+            name1: "cryptobridge.account.month_1",
+            bonus: "0%",
+            name: counterpart.translate("cryptobridge.account.month_1", {
+                bonus: "0%"
+            }),
+            monthName: counterpart.translate(
+                "cryptobridge.account.month_1_plural"
+            ),
+            value: 2678400
+        },
+        {
+            name1: "cryptobridge.account.month_3",
+            bonus: "20%",
+            name: counterpart.translate("cryptobridge.account.month_3", {
+                bonus: "20%"
+            }),
+            monthName: counterpart.translate(
+                "cryptobridge.account.month_3_plural"
+            ),
+            value: 7776000
+        },
+        {
+            name1: "cryptobridge.account.month_6",
+            bonus: "50%",
+            name: counterpart.translate("cryptobridge.account.month_6", {
+                bonus: "50%"
+            }),
+            monthName: counterpart.translate(
+                "cryptobridge.account.month_6_plural"
+            ),
+            value: 15552000
+        },
+        {
+            name1: "cryptobridge.account.month_12",
+            bonus: "100%",
+            name: counterpart.translate("cryptobridge.account.month_12", {
+                bonus: "100%"
+            }),
+            monthName: counterpart.translate(
+                "cryptobridge.account.month_12_plural"
+            ),
+            value: 31536000
+        }
+    ];
+
+    static getStakingPeriodByPeriodValue(value) {
+        return this.stakingPeriods.find(
+            period => period.value === parseInt(value)
+        );
+    }
+}
+
 class AccountStakeCreateNew extends React.Component {
     static propTypes = {};
 
@@ -256,56 +311,9 @@ class AccountStakeCreateNew extends React.Component {
             </span>
         );
 
-        const stakingPeriods = [
-            {
-                name1: "cryptobridge.account.month_1",
-                bonus: "0%",
-                name: counterpart.translate("cryptobridge.account.month_1", {
-                    bonus: "0%"
-                }),
-                monthName: counterpart.translate(
-                    "cryptobridge.account.month_1_plural"
-                ),
-                value: 2678400
-            },
-            {
-                name1: "cryptobridge.account.month_3",
-                bonus: "20%",
-                name: counterpart.translate("cryptobridge.account.month_3", {
-                    bonus: "20%"
-                }),
-                monthName: counterpart.translate(
-                    "cryptobridge.account.month_3_plural"
-                ),
-                value: 7776000
-            },
-            {
-                name1: "cryptobridge.account.month_6",
-                bonus: "50%",
-                name: counterpart.translate("cryptobridge.account.month_6", {
-                    bonus: "50%"
-                }),
-                monthName: counterpart.translate(
-                    "cryptobridge.account.month_6_plural"
-                ),
-                value: 15552000
-            },
-            {
-                name1: "cryptobridge.account.month_12",
-                bonus: "100%",
-                name: counterpart.translate("cryptobridge.account.month_12", {
-                    bonus: "100%"
-                }),
-                monthName: counterpart.translate(
-                    "cryptobridge.account.month_12_plural"
-                ),
-                value: 31536000
-            }
-        ];
-
-        const stakingPeriod = stakingPeriods.find(period => {
-            return period.value === stakingPeriodValue;
-        });
+        const stakingPeriod = AccountStakingInfo.getStakingPeriodByPeriodValue(
+            stakingPeriodValue
+        );
 
         return (
             <div>
@@ -365,7 +373,7 @@ class AccountStakeCreateNew extends React.Component {
                         onChange={this._setStakingPeriod}
                         value={stakingPeriodValue}
                     >
-                        {stakingPeriods.map((p, i) => {
+                        {AccountStakingInfo.stakingPeriods.map((p, i) => {
                             return (
                                 <option
                                     key={"stakingPeriod" + i}
