@@ -131,7 +131,9 @@ class CryptoBridgeGateway extends React.Component {
                                 onSelect={this.onAssetSelected.bind(this)}
                                 include={symbolsToInclude}
                                 selectOnBlur
-                                defaultValue={activeCoin}
+                                defaultValue={assetUtils.getCleanAssetSymbol(
+                                    coin.symbol
+                                )}
                                 includeBTS={false}
                                 usageContext={action}
                                 noLabel={true}
@@ -148,26 +150,36 @@ class CryptoBridgeGateway extends React.Component {
                         </label>
                         <div style={{paddingBottom: 15}}>
                             <ul className="button-group segmented no-margin">
-                                <li className={isDeposit ? "is-active" : ""}>
-                                    <a
-                                        onClick={this.changeAction.bind(
-                                            this,
-                                            "deposit"
-                                        )}
+                                {coin.depositAllowed ? (
+                                    <li
+                                        className={isDeposit ? "is-active" : ""}
                                     >
-                                        <Translate content="gateway.deposit" />
-                                    </a>
-                                </li>
-                                <li className={!isDeposit ? "is-active" : ""}>
-                                    <a
-                                        onClick={this.changeAction.bind(
-                                            this,
-                                            "withdraw"
-                                        )}
+                                        <a
+                                            onClick={this.changeAction.bind(
+                                                this,
+                                                "deposit"
+                                            )}
+                                        >
+                                            <Translate content="gateway.deposit" />
+                                        </a>
+                                    </li>
+                                ) : null}
+                                {coin.withdrawalAllowed ? (
+                                    <li
+                                        className={
+                                            !isDeposit ? "is-active" : ""
+                                        }
                                     >
-                                        <Translate content="gateway.withdraw" />
-                                    </a>
-                                </li>
+                                        <a
+                                            onClick={this.changeAction.bind(
+                                                this,
+                                                "withdraw"
+                                            )}
+                                        >
+                                            <Translate content="gateway.withdraw" />
+                                        </a>
+                                    </li>
+                                ) : null}
                             </ul>
                         </div>
                     </div>
@@ -288,13 +300,16 @@ class CryptoBridgeGateway extends React.Component {
     }
 }
 
-export default connect(CryptoBridgeGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    CryptoBridgeGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

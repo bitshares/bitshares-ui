@@ -28,6 +28,7 @@ class DepositWithdrawAssetSelector extends React.Component {
                 return {
                     id: backedCoin,
                     label: backedCoin,
+                    labelSearch: backedCoin + item.name,
                     labelRender: (
                         <span>
                             <AssetImage
@@ -35,6 +36,15 @@ class DepositWithdrawAssetSelector extends React.Component {
                                 style={{height: 22, marginRight: 10}}
                             />
                             <AssetName name={item.symbol} />
+                            <span
+                                style={{
+                                    marginLeft: 10,
+                                    fontWeight: "normal",
+                                    opacity: 0.5
+                                }}
+                            >
+                                ({item.name})
+                            </span>
                         </span>
                     ),
                     gateway: gateway,
@@ -88,13 +98,16 @@ class DepositWithdrawAssetSelector extends React.Component {
 }
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-export default connect(DepositWithdrawAssetSelector, {
-    listenTo() {
-        return [GatewayStore];
-    },
-    getProps() {
-        return {
-            backedCoins: GatewayStore.getState().backedCoins
-        };
+export default connect(
+    DepositWithdrawAssetSelector,
+    {
+        listenTo() {
+            return [GatewayStore];
+        },
+        getProps() {
+            return {
+                backedCoins: GatewayStore.getState().backedCoins
+            };
+        }
     }
-});
+);
