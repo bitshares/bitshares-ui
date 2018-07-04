@@ -2028,6 +2028,8 @@
     },
     "cryptobridge": {
         "general": {
+            "check_url": "Please check that you are visiting %(url)s",
+            "important": "Important",
             "news": "News"
         },
         "gateway": {

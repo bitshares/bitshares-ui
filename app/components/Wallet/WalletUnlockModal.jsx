@@ -16,6 +16,7 @@ import AccountActions from "actions/AccountActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
+import CheckUrlWarning from "../Utility/CheckUrlWarning";
 import {PrivateKey} from "bitsharesjs/es";
 import {saveAs} from "file-saver";
 import LoginTypeSelector from "./LoginTypeSelector";
@@ -369,6 +370,7 @@ class WalletUnlockModal extends React.Component {
                 overlay={true}
                 overlayClose={false}
                 modalHeader="header.unlock_short"
+                modalHeaderContent={<CheckUrlWarning />}
                 leftHeader
             >
                 {!isOpen ? null : (

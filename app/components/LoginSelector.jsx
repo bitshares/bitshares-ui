@@ -15,6 +15,7 @@ import CreateAccount from "./Account/CreateAccount";
 import CreateAccountPassword from "./Account/CreateAccountPassword";
 import {Route} from "react-router-dom";
 import Icon from "./Icon/Icon";
+import CheckUrlWarning from "./Utility/CheckUrlWarning";
 
 class LoginSelector extends React.Component {
     constructor(props) {
@@ -206,6 +207,10 @@ class LoginSelector extends React.Component {
                                     ]}
                                 />
                             </h5>
+                        </div>
+
+                        <div style={{padding: 10}}>
+                            <CheckUrlWarning />
                         </div>
 
                         <Route
