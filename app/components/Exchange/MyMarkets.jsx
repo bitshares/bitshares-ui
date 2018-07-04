@@ -22,7 +22,6 @@ import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import {ChainValidation} from "bitsharesjs/es";
-import PropTypes from "prop-types";
 
 let lastLookup = new Date();
 
@@ -238,8 +237,6 @@ class MarketGroup extends React.Component {
             }
         });
 
-        let index = 0;
-
         let marketRows = markets
             .map(market => {
                 const name =
@@ -278,6 +275,8 @@ class MarketGroup extends React.Component {
                             this.props.defaultMarkets.has(market.id)
                         }
                         onCheckMarket={this._onToggleUserMarket.bind(this)}
+                        location={this.props.location}
+                        history={this.props.history}
                     />
                 );
             })
@@ -330,8 +329,6 @@ class MarketGroup extends React.Component {
                 }
             });
 
-        let caret = open ? <span>&#9660;</span> : <span>&#9650;</span>;
-
         return (
             <div style={{paddingRight: 10}}>
                 {open ? (
@@ -358,10 +355,6 @@ class MyMarkets extends React.Component {
         activeTab: "my-market",
         core: "1.3.0",
         setMinWidth: false
-    };
-
-    static contextTypes = {
-        router: PropTypes.object.isRequired
     };
 
     constructor(props) {
@@ -509,7 +502,7 @@ class MyMarkets extends React.Component {
     }
 
     _goMarkets() {
-        this.context.router.push("/markets");
+        this.props.history.push("/markets");
     }
 
     _changeTab(tab) {
@@ -1024,6 +1017,8 @@ class MyMarkets extends React.Component {
                                     base={base}
                                     maxRows={myMarketTab ? 20 : 10}
                                     findMarketTab={!myMarketTab}
+                                    location={this.props.location}
+                                    history={this.props.history}
                                 />
                             );
                         })}
@@ -1042,6 +1037,8 @@ class MyMarkets extends React.Component {
                             base="others"
                             maxRows={myMarketTab ? 20 : 10}
                             findMarketTab={!myMarketTab}
+                            location={this.props.location}
+                            history={this.props.history}
                         />
                     ) : null}
                 </div>

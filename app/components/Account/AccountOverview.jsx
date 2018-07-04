@@ -15,7 +15,7 @@ import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import EquivalentPrice from "../Utility/EquivalentPrice";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
@@ -229,11 +229,6 @@ class AccountOverview extends React.Component {
 
     _getSeparator(render) {
         return render ? <span>&nbsp;|&nbsp;</span> : null;
-    }
-
-    _onNavigate(route, e) {
-        e.preventDefault();
-        this.props.router.push(route);
     }
 
     triggerSend(asset) {
@@ -606,7 +601,9 @@ class AccountOverview extends React.Component {
                             market = "USD";
                         let preferredMarket = market
                             ? market
-                            : core_asset ? core_asset.get("symbol") : "BTS";
+                            : core_asset
+                                ? core_asset.get("symbol")
+                                : "BTS";
                         let directMarketLink = notCore ? (
                             <Link
                                 to={`/market/${asset.get(

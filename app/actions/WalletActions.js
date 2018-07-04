@@ -63,6 +63,11 @@ class WalletActions {
             "active",
             password
         );
+        let {privKey: memo_private} = WalletDb.generateKeyFromPassword(
+            account_name,
+            "memo",
+            password
+        );
         console.log("create account:", account_name);
         console.log(
             "new active pubkey",
@@ -72,12 +77,17 @@ class WalletActions {
             "new owner pubkey",
             owner_private.toPublicKey().toPublicKeyString()
         );
+        console.log(
+            "new memo pubkey",
+            memo_private.toPublicKey().toPublicKeyString()
+        );
 
         return new Promise((resolve, reject) => {
             let create_account = () => {
                 return ApplicationApi.create_account(
                     owner_private.toPublicKey().toPublicKeyString(),
                     active_private.toPublicKey().toPublicKeyString(),
+                    memo_private.toPublicKey().toPublicKeyString(),
                     account_name,
                     registrar, //registrar_id,
                     referrer, //referrer_id,
@@ -124,10 +134,9 @@ class WalletActions {
                                 active_key: active_private
                                     .toPublicKey()
                                     .toPublicKeyString(),
-                                memo_key: active_private
+                                memo_key: memo_private
                                     .toPublicKey()
                                     .toPublicKeyString(),
-                                //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
                                 refcode: refcode,
                                 referrer: referrer
                             }
@@ -174,21 +183,22 @@ class WalletActions {
         }
         let owner_private = WalletDb.generateNextKey();
         let active_private = WalletDb.generateNextKey();
-        //let memo_private = WalletDb.generateNextKey()
+        let memo_private = WalletDb.generateNextKey();
+
         let updateWallet = () => {
             let transaction = WalletDb.transaction_update_keys();
             let p = WalletDb.saveKeys(
-                [owner_private, active_private],
-                //[ owner_private, active_private, memo_private ],
+                [owner_private, active_private, memo_private],
                 transaction
             );
-            return p.catch(error => transaction.abort());
+            return p.catch(() => transaction.abort());
         };
 
         let create_account = () => {
             return ApplicationApi.create_account(
                 owner_private.private_key.toPublicKey().toPublicKeyString(),
                 active_private.private_key.toPublicKey().toPublicKeyString(),
+                memo_private.private_key.toPublicKey().toPublicKeyString(),
                 account_name,
                 registrar, //registrar_id,
                 referrer, //referrer_id,
@@ -251,9 +261,10 @@ class WalletActions {
                 .catch(error => {
                     /*
                 * Since the account creation failed, we need to decrement the
-                * sequence used to generate private keys from the brainkey. Two
-                * keys were generated, so we decrement twice.
+                * sequence used to generate private keys from the brainkey. Three
+                * keys were generated, so we decrement three times.
                 */
+                    WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();
                     WalletDb.decrementBrainKeySequence();
                     throw error;

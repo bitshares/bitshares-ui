@@ -1,6 +1,8 @@
+import {connect} from "alt-react";
+import AssetStore from "stores/AssetStore";
 import React from "react";
 import MarketsActions from "actions/MarketsActions";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import {debounce} from "lodash-es";
@@ -10,102 +12,128 @@ import LoadingIndicator from "../LoadingIndicator";
 import AssetActions from "actions/AssetActions";
 import {ChainValidation} from "bitsharesjs/es";
 import counterpart from "counterpart";
+import utils from "common/utils";
+import {hasGatewayPrefix} from "common/gatewayUtils";
 
-let lastLookup = new Date();
-
-export default class MarketPicker extends React.Component {
+class MarketPickerWrapper extends React.Component {
     constructor() {
         super();
 
-        this.state = {
-            marketsList: "",
-            issuersList: "",
-            lookupQuote: null,
-            filterByIssuerName: null
-        };
+        this.state = this.initialState();
 
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
 
+    initialState() {
+        return {
+            marketsList: "",
+            issuersList: "",
+            lookupQuote: null,
+            allMarkets: "",
+            allIssuers: "",
+            inputValue: ""
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.marketPickerAsset !== this.props.marketPickerAsset)
+            this.setState(this.initialState());
+
+        if (nextProps.searchAssets !== this.props.searchAssets)
+            this.assetFilter();
+    }
+
+    shouldComponentUpdate(np, ns) {
+        return (
+            np.marketPickerAsset !== this.props.marketPickerAsset ||
+            np.searchAssets !== this.props.searchAssets ||
+            ns.marketsList !== this.state.marketsList ||
+            ns.issuersList !== this.state.issuersList ||
+            !utils.are_equal_shallow(ns, this.state)
+        );
+    }
+
     _onSelectIssuer(e) {
-        this.setState({
-            filterByIssuerName: e.target.value == "0" ? null : e.target.value
-        });
+        let filterByIssuerName = e.target.value == "0" ? null : e.target.value;
+        this.assetFilter(filterByIssuerName);
     }
 
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
+        /* Don't lookup invalid asset names */
+        if (toFind && toFind.length >= 3 && !isValidName) return;
+
         this.setState({
             inputValue: e.target.value.trim(),
+            activeSearch: true,
+            allMarkets: "",
+            allIssuers: "",
             marketsList: "",
-            issuersList: "",
-            filterByIssuerName: null
+            issuersList: ""
         });
 
-        /* Don't lookup invalid asset names */
-        if (toFind && toFind.length >= 3 && !isValidName) {
-            return this.setState({
-                assetNameError: true
-            });
-        } else {
-            this.setState({
-                assetNameError: false
-            });
+        if (this.state.inputValue !== toFind) {
+            this.timer && clearTimeout(this.timer);
         }
-        this._lookupAssets(toFind, getBackedAssets);
+
+        this.timer = setTimeout(() => {
+            this._lookupAssets(toFind, getBackedAssets);
+        }, 1500);
     }
 
-    _lookupAssets(value, gatewayAssets = false, force = false) {
-        // console.log("__lookupAssets", value, force);
-        if (!value && value !== "") {
-            return;
-        }
-        let now = new Date();
+    _lookupAssets(value, gatewayAssets = false) {
+        if (!value && value !== "") return;
 
         let quote = value.toUpperCase();
+
+        if (quote.length >= 3) this.getAssetList(quote, 10, gatewayAssets);
 
         this.setState({
             lookupQuote: quote
         });
-
-        if (this.state.lookupQuote !== quote || force) {
-            if (quote.length < 1 || now - lastLookup <= 250) {
-                return false;
-            }
-            this.getAssetList(quote, 25, gatewayAssets);
-        }
     }
 
     _changeMarketPickerFilter(value) {
         this.setState({
-            marketPickerTab: value,
-            inputValue: "",
             marketsList: "",
             issuersList: "",
-            filterByIssuerName: null
+            lookupQuote: null,
+            allMarkets: "",
+            allIssuers: "",
+            inputValue: "",
+            marketPickerTab: value,
+            activeSearch: false
         });
     }
 
-    render() {
-        let {searchAssets, assetsLoading, marketPickerAsset} = this.props;
+    _fetchIssuer(asset) {
+        let issuer = ChainStore.getObject(asset.issuer, false, false);
+        // Issuer may sometimes not resolve at first.
+        // A waiter may be required here
+        if (!issuer) {
+            return;
+        } else {
+            return issuer;
+        }
+    }
 
-        let {
-            lookupQuote,
-            marketPickerTab,
-            filterByIssuerName,
-            inputValue
-        } = this.state;
+    assetFilter(filterByIssuerName = null) {
+        let {searchAssets, marketPickerAsset} = this.props;
+
+        let {inputValue, lookupQuote, marketPickerTab} = this.state;
+
+        this.setState({
+            activeSearch: true
+        });
+
+        let assetCount = 0;
+        let allMarkets = [];
+        let allIssuers = [];
 
         let baseSymbol = this.props.baseAsset.get("symbol");
         let quoteSymbol = this.props.quoteAsset.get("symbol");
-
-        let allMarkets = [];
-        let allIssuers = [];
-        let marketsList = this.state.marketsList;
-        let issuersList = this.state.issuersList;
-        let assetCount = 0;
 
         if (searchAssets.size && !!inputValue && inputValue.length > 2) {
             searchAssets
@@ -119,30 +147,30 @@ export default class MarketPicker extends React.Component {
                         }
                     } catch (e) {}
 
-                    return (
-                        a.symbol.indexOf(lookupQuote) !== -1 &&
-                        a.symbol.length >= lookupQuote.length
-                    );
+                    return a.symbol.indexOf(lookupQuote) !== -1;
                 })
                 .forEach(asset => {
                     if (assetCount > 100) return;
                     assetCount++;
-                    let issuer = ChainStore.getObject(
-                        asset.issuer,
-                        false,
-                        false
-                    );
-                    if (!issuer) return;
+
+                    let issuer = this._fetchIssuer(asset);
 
                     let base = this.props.baseAsset.get("symbol");
                     let marketID = asset.symbol + "_" + base;
 
+                    let isQuoteAsset = quoteSymbol == marketPickerAsset;
+                    let includeAsset =
+                        (isQuoteAsset && asset.symbol != baseSymbol) ||
+                        (!isQuoteAsset && asset.symbol != quoteSymbol);
+
                     if (
-                        base !== asset.symbol &&
+                        includeAsset &&
                         (!filterByIssuerName ||
                             filterByIssuerName == issuer.get("name")) &&
                         ((marketPickerTab == "search" &&
-                            asset.symbol.startsWith(inputValue)) ||
+                            asset.symbol.startsWith(
+                                inputValue.toUpperCase()
+                            )) ||
                             (!marketPickerTab || marketPickerTab == "filter"))
                     ) {
                         allMarkets.push([
@@ -150,72 +178,108 @@ export default class MarketPicker extends React.Component {
                             {
                                 quote: asset.symbol,
                                 base: base,
-                                issuer: issuer.get("name")
+                                issuer: !issuer ? null : issuer.get("name")
                             }
                         ]);
                     }
-                    if (!allIssuers.includes(issuer.get("name")))
+                    if (
+                        includeAsset &&
+                        issuer &&
+                        !allIssuers.includes(issuer.get("name"))
+                    )
                         allIssuers.push(issuer.get("name"));
                 });
         }
 
-        issuersList = allIssuers
-            .sort((a, b) => {
-                if (a > b) {
-                    return 1;
-                } else if (a < b) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            })
-            .map(issuer => {
-                return (
-                    <option key={issuer} value={issuer}>
-                        {issuer}
-                    </option>
-                );
-            });
+        let marketsList = this.state.marketsList;
+        let issuersList = this.state.issuersList;
 
-        marketsList = allMarkets
-            .sort((a, b) => {
-                if (a[1]["quote"] > b[1]["quote"]) {
-                    return 1;
-                } else if (a[1]["quote"] < b[1]["quote"]) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            })
-            .map(market => {
-                let isQuoteAsset =
-                    this.props.quoteAsset.get("symbol") == marketPickerAsset;
-                return (
-                    <li key={market[0]}>
-                        <AssetName name={market[1]["quote"]} />
+        issuersList = !allIssuers
+            ? null
+            : allIssuers
+                  .sort((a, b) => {
+                      if (a > b) {
+                          return 1;
+                      } else if (a < b) {
+                          return -1;
+                      } else {
+                          return 0;
+                      }
+                  })
+                  .map(issuer => {
+                      return (
+                          <option key={issuer} value={issuer}>
+                              {issuer}
+                          </option>
+                      );
+                  });
 
-                        <span style={{float: "right"}}>
-                            <Link
-                                onClick={() => {
-                                    this.props.onToggleMarketPicker(null),
-                                        MarketsActions.switchMarket();
-                                }}
-                                to={
-                                    isQuoteAsset
-                                        ? `/market/${
-                                              market[1]["quote"]
-                                          }_${baseSymbol}`
-                                        : `/market/${quoteSymbol}_${
-                                              market[1]["quote"]
-                                          }`
-                                }
-                            >
-                                <Translate content="exchange.market_picker.use" />
-                            </Link>
-                        </span>
-                    </li>
-                );
-            });
+        marketsList = !allMarkets
+            ? null
+            : allMarkets
+                  .sort((a, b) => {
+                      let aIsKnownGateway = hasGatewayPrefix(a[1]["quote"]);
+                      let bIsKnownGateway = hasGatewayPrefix(b[1]["quote"]);
+
+                      if (aIsKnownGateway && !bIsKnownGateway) {
+                          return -1;
+                      } else if (bIsKnownGateway && !aIsKnownGateway) {
+                          return 1;
+                      } else if (a[1]["quote"] > b[1]["quote"]) {
+                          return 1;
+                      } else if (a[1]["quote"] < b[1]["quote"]) {
+                          return -1;
+                      } else {
+                          return 0;
+                      }
+                  })
+                  .map(market => {
+                      return (
+                          <li key={market[0]}>
+                              <AssetName name={market[1]["quote"]} />
+
+                              <span style={{float: "right"}}>
+                                  <Link
+                                      onClick={() => {
+                                          this.props.onToggleMarketPicker(null),
+                                              MarketsActions.switchMarket();
+                                      }}
+                                      to={
+                                          quoteSymbol == marketPickerAsset
+                                              ? `/market/${
+                                                    market[1]["quote"]
+                                                }_${baseSymbol}`
+                                              : `/market/${quoteSymbol}_${
+                                                    market[1]["quote"]
+                                                }`
+                                      }
+                                  >
+                                      <Translate content="exchange.market_picker.use" />
+                                  </Link>
+                              </span>
+                          </li>
+                      );
+                  });
+
+        this.setState({
+            allMarkets,
+            allIssuers,
+            marketsList,
+            issuersList,
+            activeSearch: false
+        });
+    }
+
+    render() {
+        let {marketPickerAsset} = this.props;
+
+        let {
+            marketPickerTab,
+            inputValue,
+            allMarkets,
+            issuersList,
+            marketsList
+        } = this.state;
 
         return (
             <div className="marketPicker">
@@ -356,7 +420,9 @@ export default class MarketPicker extends React.Component {
                                         style={{border: 0}}
                                     >
                                         <option key="0" value="0">
-                                            <Translate content="exchange.market_picker.show_all" />
+                                            {counterpart.translate(
+                                                "exchange.market_picker.show_all"
+                                            )}{" "}
                                         </option>
                                         {issuersList}
                                     </select>
@@ -369,10 +435,11 @@ export default class MarketPicker extends React.Component {
                     <Translate
                         component="header"
                         content="exchange.market_picker.results"
-                        total_assets={allMarkets.length}
+                        total_assets={!allMarkets ? 0 : allMarkets.length}
                     />
                 </section>
-                {assetsLoading && allMarkets.length ? (
+                {this.state.activeSearch &&
+                this.state.inputValue.length != 0 ? (
                     <div style={{textAlign: "center"}}>
                         <LoadingIndicator type="three-bounce" />
                     </div>
@@ -385,3 +452,23 @@ export default class MarketPicker extends React.Component {
         );
     }
 }
+
+class MarketPicker extends React.Component {
+    render() {
+        return <MarketPickerWrapper {...this.props} />;
+    }
+}
+
+MarketPicker = connect(MarketPicker, {
+    listenTo() {
+        return [AssetStore];
+    },
+    getProps() {
+        return {
+            searchAssets: AssetStore.getState().assets,
+            assetsLoading: AssetStore.getState().assetsLoading
+        };
+    }
+});
+
+export default MarketPicker;

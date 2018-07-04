@@ -7,7 +7,7 @@ import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AccountSelect from "../Forms/AccountSelect";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -20,6 +20,7 @@ import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
+import {withRouter} from "react-router-dom";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -90,7 +91,9 @@ class CreateAccount extends React.Component {
                 [this.state.accountName]: true
             }).then(() => {
                 console.log("onFinishConfirm");
-                this.props.router.push("/wallet/backup/create?newAccount=true");
+                this.props.history.push(
+                    "/wallet/backup/create?newAccount=true"
+                );
             });
         }
     }
@@ -563,6 +566,8 @@ class CreateAccount extends React.Component {
         );
     }
 }
+
+CreateAccount = withRouter(CreateAccount);
 
 export default connect(CreateAccount, {
     listenTo() {

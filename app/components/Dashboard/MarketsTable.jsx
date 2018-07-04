@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "alt-react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import cnames from "classnames";
@@ -151,7 +151,12 @@ class MarketRow extends React.Component {
 
         function getImageName(asset) {
             let symbol = asset.get("symbol");
-            if (symbol === "OPEN.BTC" || symbol === "GDEX.BTC") return symbol;
+            if (
+                symbol === "OPEN.BTC" ||
+                symbol === "GDEX.BTC" ||
+                symbol === "RUDEX.BTC"
+            )
+                return symbol;
             let imgName = asset.get("symbol").split(".");
             return imgName.length === 2 ? imgName[1] : imgName[0];
         }
@@ -160,7 +165,9 @@ class MarketRow extends React.Component {
             ? ""
             : parseFloat(marketStats.change) > 0
                 ? "change-up"
-                : parseFloat(marketStats.change) < 0 ? "change-down" : "";
+                : parseFloat(marketStats.change) < 0
+                    ? "change-down"
+                    : "";
 
         let marketID = `${quote.get("symbol")}_${base.get("symbol")}`;
 

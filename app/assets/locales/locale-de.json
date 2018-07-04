@@ -413,6 +413,18 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "app_init": {
+        "browser": "Nicht unterstützter Browser",
+        "browser_text":
+            "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+        "connected": "verbunden",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "Nicht verbunden",
+        "retry": "nocheinmal versuchen",
+        "title": "Initialisierungsfehler",
+        "understand": "Verstanden!",
+        "ws_status": "Websocket Verbindungsstatus"
+    },
     "borrow": {
         "adjust": "Position anpassen",
         "adjust_short": "Adjust",
@@ -941,6 +953,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1083,17 +1096,6 @@
         "mode": "Private/Incognito:",
         "warning":
             "If you close your browser without backing up your wallet, you will lose this account permanently."
-    },
-    "init_error": {
-        "browser": "Nicht unterstützter Browser",
-        "browser_text":
-            "Ihr Browser ist unzureichend mit der CryptoBridge-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
-        "connected": "verbunden",
-        "not_connected": "Nicht verbunden",
-        "retry": "nocheinmal versuchen",
-        "title": "Initialisierungsfehler",
-        "understand": "Verstanden!",
-        "ws_status": "Websocket Verbindungsstatus"
     },
     "languages": {
         "de": "Deutsch",
@@ -1244,6 +1246,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} hat ein Jahresabo gekauft",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} hat das Asset {asset} erzeugt",
         "asset_fund_fee_pool":
             "{account} hat {amount} in den Gebührenpool von  {asset} transferiert",
@@ -1256,6 +1260,8 @@
         "asset_update": "{account} hat das Asset {asset} aktualisiert",
         "asset_update_feed_producers":
             "{account} hat die Feed-Erzeuger für {asset} aktualisiert",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} hat Guthaben von {amount} beansprucht",
         "blacklisted_by": "{lister} hat Konto {listee} schwarzgelistet",
         "call_order_update":
@@ -1641,6 +1647,7 @@
             "all": "Show all",
             "assert": "Operation bestätigen",
             "asset_claim_fees": "Gebühr für 'Asset beanspruchen'",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Asset erstellen",
             "asset_fund_fee_pool": "Asset-Gebührenpool finanzieren",
             "asset_global_settle": "Globales Asset-Settlement",
@@ -1652,6 +1659,7 @@
             "asset_update": "Asset aktualisieren",
             "asset_update_bitasset": "SmartCoin aktualisieren",
             "asset_update_feed_producers": "Asset-Feederzeuger aktualisieren",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Guthaben eingefordert",
             "blind_transfer": "Blind-Transfer",
             "call_order_update": "Call-Order aktualisieren",

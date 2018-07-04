@@ -410,6 +410,18 @@
             "whitelist_authorities": "ホワイトリスト権限"
         }
     },
+    "app_init": {
+        "browser": "サポートされていないブラウザ",
+        "browser_text":
+            "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
+        "connected": "接続しました",
+        "connecting": "Connecting to API server: %(server)s",
+        "not_connected": "接続していません",
+        "retry": "再試行",
+        "title": "アプリケーション初期化エラー",
+        "understand": "理解しました。",
+        "ws_status": "フルノード接続状態"
+    },
     "borrow": {
         "adjust": "ポジションを更新",
         "adjust_short": "調整",
@@ -939,6 +951,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
+        "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code"
     },
     "header": {
@@ -1083,17 +1096,6 @@
         "ignore": "理解しました。",
         "no_support":
             "このCryptoBridgeウォレットはローカルストレージとIndexedDBを使用しており、シークレットブラウザを使用した場合は維持されません。通常モードのブラウザを使用することをおすすめします。"
-    },
-    "init_error": {
-        "browser": "サポートされていないブラウザ",
-        "browser_text":
-            "使用しているブラウザはCryptoBridgeウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
-        "connected": "接続しました",
-        "not_connected": "接続していません",
-        "retry": "再試行",
-        "title": "アプリケーション初期化エラー",
-        "understand": "理解しました。",
-        "ws_status": "フルノード接続状態"
     },
     "languages": {
         "de": "Deutsch",
@@ -1244,6 +1246,8 @@
     },
     "operation": {
         "annual_upgrade_account": "{account}は年間会員にアップグレードしました",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account}はアセット{asset}を作成しました",
         "asset_fund_fee_pool":
             "{account}は{asset}の手数料プールに{amount}を充填しました",
@@ -1256,6 +1260,8 @@
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers":
             "{account}はアセット{asset}のフィード作成者を更新しました",
+        "asset_update_issuer":
+            "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account}は{amount}を請求しました",
         "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
         "call_order_update":
@@ -1639,6 +1645,7 @@
             "all": "すべて表示",
             "assert": "アサート操作",
             "asset_claim_fees": "アセット手数料を請求",
+            "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "アセットを作成",
             "asset_fund_fee_pool": "アセットの手数料プールを充填",
             "asset_global_settle": "グローバルアセット決済",
@@ -1650,6 +1657,7 @@
             "asset_update": "アセットを更新",
             "asset_update_bitasset": "スマートコインを更新",
             "asset_update_feed_producers": "アセットのフィード作成者を更新",
+            "asset_update_issuer": "Update asset issuer",
             "balance_claim": "残高請求",
             "blind_transfer": "匿名転送",
             "call_order_update": "マージンを更新",

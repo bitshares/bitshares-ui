@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import BlockchainActions from "actions/BlockchainActions";
 import Translate from "react-translate-component";
 import {FormattedDate} from "react-intl";
@@ -513,7 +513,7 @@ class Blocks extends React.Component {
                                 <div className="block-content-header">
                                     <Translate content="account.recent" />
                                 </div>
-                                <table className="table">
+                                <table className="table fixed-height-2rem">
                                     <thead>
                                         <tr>
                                             <th>
@@ -531,7 +531,7 @@ class Blocks extends React.Component {
                                 }}
                                 ref="operations"
                             >
-                                <table className="table">
+                                <table className="table fixed-height-2rem">
                                     <tbody>{transactions}</tbody>
                                 </table>
                             </div>
@@ -558,7 +558,7 @@ class Blocks extends React.Component {
                                 }}
                                 ref="blocks"
                             >
-                                <table className="table">
+                                <table className="table fixed-height-2rem">
                                     <thead>
                                         <tr>
                                             <th>

@@ -159,7 +159,7 @@ class AccountNameInput extends React.Component {
                         id="username"
                         type="text"
                         ref="input"
-                        autoComplete="off"
+                        autoComplete="username"
                         placeholder={null}
                         onChange={this.handleChange}
                         onKeyDown={this.onKeyDown}

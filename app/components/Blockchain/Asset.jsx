@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AssetWrapper from "../Utility/AssetWrapper";
@@ -154,7 +154,9 @@ class Asset extends React.Component {
 
     _assetType(asset) {
         return "bitasset" in asset
-            ? asset.bitasset.is_prediction_market ? "Prediction" : "Smart"
+            ? asset.bitasset.is_prediction_market
+                ? "Prediction"
+                : "Smart"
             : "Simple";
     }
 
@@ -254,7 +256,9 @@ class Asset extends React.Component {
         const core_asset = ChainStore.getAsset("1.3.0");
         let preferredMarket = description.market
             ? description.market
-            : core_asset ? core_asset.get("symbol") : "BTS";
+            : core_asset
+                ? core_asset.get("symbol")
+                : "BTS";
         if ("bitasset" in asset && asset.bitasset.is_prediction_market) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -1190,7 +1194,7 @@ AssetContainer = AssetWrapper(AssetContainer, {
 
 export default class AssetSymbolSplitter extends React.Component {
     render() {
-        let symbol = this.props.params.symbol.toUpperCase();
+        let symbol = this.props.match.params.symbol.toUpperCase();
         return <AssetContainer {...this.props} asset={symbol} />;
     }
 }

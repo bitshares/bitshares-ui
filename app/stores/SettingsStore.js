@@ -238,7 +238,13 @@ class SettingsStore {
                     "OPEN.ZEC",
                     "OPEN.WAVES",
                     "OPEN.ZRX",
-                    "OPEN.NEO"
+                    "OPEN.NEO",
+                    "OPEN.XRP",
+                    "OPEN.XMR",
+                    "RUDEX.BTC",
+                    "RUDEX.ETH",
+                    "RUDEX.DGB",
+                    "RUDEX.EOS"
                 ],
                 markets_39f5e2ed: [
                     // BITSHARES TESTNET

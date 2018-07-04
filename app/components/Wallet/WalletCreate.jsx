@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import BrainkeyInput from "components/Wallet/BrainkeyInput";
 import PasswordConfirm from "components/Wallet/PasswordConfirm";
@@ -40,8 +40,8 @@ class CreateNewWallet extends Component {
     }
 
     onPassword(valid_password) {
-        this.state.valid_password = valid_password;
-        this.setState({valid_password}, this.validate);
+        if (valid_password !== this.state.valid_password)
+            this.setState({valid_password}, this.validate);
     }
 
     onCustomBrainkey() {
@@ -49,7 +49,6 @@ class CreateNewWallet extends Component {
     }
 
     onBrainkey(brnkey) {
-        this.state.brnkey = brnkey;
         this.setState({brnkey}, this.validate);
     }
 

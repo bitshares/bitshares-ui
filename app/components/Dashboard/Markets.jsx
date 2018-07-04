@@ -146,6 +146,9 @@ class FeaturedMarkets extends React.Component {
                 ["BTS", "RUDEX.SCR"],
                 ["BTS", "RUDEX.ETH"],
                 ["BTS", "RUDEX.DGB"],
+                ["BTS", "RUDEX.BTC"],
+                ["BTS", "RUDEX.EOS"],
+                ["USD", "RUDEX.EOS"],
                 ["BTS", "ZEPH"],
                 ["BTS", "HERTZ"]
             ],

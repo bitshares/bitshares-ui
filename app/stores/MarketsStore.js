@@ -61,7 +61,6 @@ class MarketsStore {
             call: 0
         };
         this.priceData = [];
-        this.volumeData = [];
         this.pendingCreateLimitOrders = [];
         this.activeMarket = null;
         this.quoteAsset = null;
@@ -754,14 +753,9 @@ class MarketsStore {
     }
 
     _priceChart() {
-        // let volumeData = [];
         let prices = [];
 
         let open, high, low, close, volume;
-
-        // let addTime = (time, i, bucketSize) => {
-        //     return time + i * bucketSize * 1000;
-        // };
 
         for (let i = 0; i < this.priceHistory.length; i++) {
             let current = this.priceHistory[i];
@@ -875,88 +869,9 @@ class MarketsStore {
             }
 
             prices.push({time: date.getTime(), open, high, low, close, volume});
-            // volumeData.push([date.getTime(), volume]);
         }
 
-        // max buckets returned is 200, if we get less, fill in the gaps starting at the first data point
-        // let priceLength = prices.length;
-        // if (priceLength > 0 && priceLength < 200) {
-        //     let now = new Date();
-        // let firstDate = prices[0].date;
-        // ensure there's a final entry close to the current time
-        // let i = 1;
-        // while (addTime(prices[0].time, i, this.bucketSize) < now) {
-        //     i++;
-        // }
-        // let finalDate = addTime(prices[0].time, i - 1, this.bucketSize);
-        // if (prices[priceLength - 1].date !== finalDate) {
-        //     if (priceLength === 1) {
-        //         prices.push({
-        //             time: addTime(finalDate, -1, this.bucketSize),
-        //             open: prices[0].close,
-        //             high: prices[0].close,
-        //             low: prices[0].close,
-        //             close: prices[0].close,
-        //             volume: 0
-        //         });
-        //         prices.push({
-        //             time: finalDate,
-        //             open: prices[0].close,
-        //             high: prices[0].close,
-        //             low: prices[0].close,
-        //             close: prices[0].close,
-        //             volume: 0
-        //         });
-        //         volumeData.push([
-        //             addTime(finalDate, -1, this.bucketSize),
-        //             0
-        //         ]);
-        //     } else {
-        //         prices.push({
-        //             time: finalDate,
-        //             open: prices[priceLength - 1].close,
-        //             high: prices[priceLength - 1].close,
-        //             low: prices[priceLength - 1].close,
-        //             close: prices[priceLength - 1].close,
-        //             volume: 0
-        //         });
-        //     }
-        //     volumeData.push([finalDate, 0]);
-        // }
-
-        // Loop over the data and fill in any blank time periods
-        // for (let ii = 0; ii < prices.length - 1; ii++) {
-        //     // If next date is beyond one bucket up
-        //     if (
-        //         prices[ii + 1].time !==
-        //         addTime(prices[ii].time, 1, this.bucketSize)
-        //     ) {
-        //         // Break if next date is beyond now
-        //         if (
-        //             addTime(prices[ii].time, 1, this.bucketSize) >
-        //             now
-        //         ) {
-        //             break;
-        //         }
-        //
-        //         prices.splice(ii + 1, 0, {
-        //             time: addTime(prices[ii].time, 1, this.bucketSize),
-        //             open: prices[ii].close,
-        //             high: prices[ii].close,
-        //             low: prices[ii].close,
-        //             close: prices[ii].close,
-        //             volume: 0
-        //         });
-        //         volumeData.splice(ii + 1, 0, [
-        //             addTime(prices[ii].time, 1, this.bucketSize),
-        //             0
-        //         ]);
-        //     }
-        // }
-        // }
-
         this.priceData = prices;
-        // this.volumeData = volumeData;
 
         this._notifySubscriber("subscribeBars");
     }

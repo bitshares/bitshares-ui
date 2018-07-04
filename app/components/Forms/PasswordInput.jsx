@@ -179,11 +179,11 @@ class PasswordInput extends Component {
                                     ? 0
                                     : null
                             }}
-                            id="password"
+                            id="current-password"
                             name="password"
                             type="password"
                             ref="password"
-                            autoComplete="off"
+                            autoComplete="current-password"
                             onChange={this.handleChange}
                             onKeyDown={this.onKeyDown}
                         />
@@ -193,7 +193,9 @@ class PasswordInput extends Component {
                                 className={
                                     score === 5
                                         ? "high"
-                                        : score === 4 ? "medium" : "low"
+                                        : score === 4
+                                            ? "medium"
+                                            : "low"
                                 }
                                 value={score}
                                 max="5"
@@ -218,7 +220,7 @@ class PasswordInput extends Component {
                                 name="confirm_password"
                                 type="password"
                                 ref="confirm_password"
-                                autoComplete="off"
+                                autoComplete="confirm-password"
                                 onChange={this.handleChange}
                             />
                             {confirmMatch ? (

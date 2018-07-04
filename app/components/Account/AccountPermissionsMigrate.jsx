@@ -34,7 +34,7 @@ export default class AccountPermissionsMigrate extends React.Component {
             : WalletDb.generateKeyFromPassword(name, "owner", e.value).pubKey;
         const memo = !valid
             ? null
-            : WalletDb.generateKeyFromPassword(name, "active", e.value).pubKey;
+            : WalletDb.generateKeyFromPassword(name, "memo", e.value).pubKey;
         this.setState({validPassword: e.valid, pass: e.value});
         this.props.onSetPasswordKeys({active, owner, memo});
     }
@@ -75,7 +75,9 @@ export default class AccountPermissionsMigrate extends React.Component {
             this.props[
                 role === "active"
                     ? "onAddActive"
-                    : role === "owner" ? "onAddOwner" : "onSetMemo"
+                    : role === "owner"
+                        ? "onAddOwner"
+                        : "onSetMemo"
             ](this.props[role], weights[role]);
         }
     }
