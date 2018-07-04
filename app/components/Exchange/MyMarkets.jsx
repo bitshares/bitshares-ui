@@ -705,12 +705,11 @@ class MyMarkets extends React.Component {
                 if (cryptoBridgeMarketGroups[m.base]) {
                     cryptoBridgeMarketGroups[m.base].push(m);
                 }
-                if (cryptoBridgeMarketGroups[m.quote]) {
-                    //cryptoBridgeMarketGroups[m.quote].push(m);
-                }
                 if (
-                    !cryptoBridgeMarketGroups[m.base] &&
-                    !cryptoBridgeMarketGroups[m.quote]
+                    (!cryptoBridgeMarketGroups[m.base] &&
+                        !cryptoBridgeMarketGroups[m.quote]) ||
+                    (cryptoBridgeMarketGroups[m.quote] &&
+                        !cryptoBridgeMarketGroups[m.base])
                 ) {
                     cryptoBridgeMarketGroups.OTHER.push(m);
                 }
