@@ -18,7 +18,7 @@ class MarketRow extends React.Component {
         noSymbols: false
     };
 
-    constructor() {
+    constructor(props) {
         super();
 
         this.id = props.base + props.quote;
