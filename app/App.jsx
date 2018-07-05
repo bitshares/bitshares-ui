@@ -297,7 +297,6 @@ class App extends React.Component {
                     />
                 </div>
             );
-            // do nothing
         } else if (this.props.location.pathname === "/init-error") {
             content = (
                 <div className="grid-frame vertical">{this.props.children}</div>
