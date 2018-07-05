@@ -2,7 +2,8 @@ var path = require("path");
 var webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var Clean = require("clean-webpack-plugin");
-var git = require("git-rev-sync");
+// var git = require("git-rev-sync");
+var pkg = require("./package.json");
 require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
@@ -12,9 +13,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 * For staging builds, set the version to the latest commit hash, for
 * production set it to the package version
 */
-let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
-var __VERSION__ =
-    branch === "develop" ? git.short() : require("./package.json").version;
+// let branch = !!process.env.BRANCH ? process.env.BRANCH : git.branch();
+var __VERSION__ = `${pkg.version}`;
 
 // BASE APP DIR
 var root_dir = path.resolve(__dirname);
@@ -91,8 +91,7 @@ module.exports = function(env) {
             __DEVNET__: !!process.env.__DEVNET__,
             __TESTNET__: !!process.env.__TESTNET__ || !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
-            DEFAULT_SYMBOL: "BTS",
-            __GIT_BRANCH__: JSON.stringify(git.branch())
+            DEFAULT_SYMBOL: "BTS"
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
