@@ -5,7 +5,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import BlockchainStore from "stores/BlockchainStore";
-import BlockchainActions from "actions/BlockchainActions";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
@@ -20,8 +19,7 @@ import counterpart from "counterpart";
 import ConfirmModal from "../Modal/ConfirmModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {ChainStore} from "bitsharesjs/es";
-
-let ifvisible = require("ifvisible");
+import ifvisible from "ifvisible";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -237,7 +235,7 @@ class Footer extends React.Component {
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
             // handling out of sync state within this one call
 
-            let forceReconnectAfterSeconds = 30;
+            let forceReconnectAfterSeconds = 60;
             let askToReconnectAfterSeconds = 5;
 
             // Trigger automatic reconnect after X seconds
@@ -267,22 +265,36 @@ class Footer extends React.Component {
                         this.confirmOutOfSync.modal.show(
                             <div>
                                 <Translate
-                                    content={
-                                        routerTransitioner.isAutoSelection()
-                                            ? "connection.want_to_reconnect"
-                                            : "connection.out_of_sync"
-                                    }
+                                    content="connection.title_out_of_sync"
                                     out_of_sync_seconds={parseInt(
                                         out_of_sync_seconds
                                     )}
-                                    reconnect_in_seconds={parseInt(
-                                        forceReconnectAfterSeconds
+                                    component="h2"
+                                />
+                                <br />
+                                <br />
+                                <Translate
+                                    content="connection.out_of_sync"
+                                    out_of_sync_seconds={parseInt(
+                                        out_of_sync_seconds
                                     )}
                                 />
                                 <br />
                                 <br />
+                                <Translate content="connection.want_to_reconnect" />
+                                {routerTransitioner.isAutoSelection() && (
+                                    <Translate
+                                        content="connection.automatic_reconnect"
+                                        reconnect_in_seconds={parseInt(
+                                            forceReconnectAfterSeconds
+                                        )}
+                                    />
+                                )}
+                                <br />
+                                <br />
+                                <br />
                             </div>,
-                            counterpart.translate("global.confirm"),
+                            <Translate content="connection.manual_reconnect" />,
                             () => {
                                 if (!this.props.synced) {
                                     this._triggerReconnect(false);

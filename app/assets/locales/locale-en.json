@@ -457,10 +457,14 @@
         }
     },
     "connection": {
-        "want_to_reconnect":
-            "Your connection is out of sync since %(out_of_sync_seconds)s seconds, would you like to reconnect now? You can click cancel to wait if the connection recovers itself or to manually reconnect. If it stays out of sync for more than %(reconnect_in_seconds)s seconds an automatic reconnect will be triggered.",
+        "title_out_of_sync": "Connection out of sync",
         "out_of_sync":
-            "Your connection is out of sync since %(out_of_sync_seconds)s seconds, would you like to reconnect now? You can click cancel to wait if the connection recovers itself or to manually reconnect."
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically.",
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now"
     },
     "dashboard": {
         "featured_markets": "Featured Markets",
