@@ -92,7 +92,10 @@ class BaseModal extends React.Component {
                         ))}
                 </div>
                 {!noHeader && leftHeader && <hr />}
-                <div className="modal-content">{children}</div>
+                <div className="modal-content">
+                    {modalHeaderContent ? modalHeaderContent : null}
+                    {children}
+                </div>
             </Modal>
         );
     }

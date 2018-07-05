@@ -370,7 +370,7 @@ class WalletUnlockModal extends React.Component {
                 overlay={true}
                 overlayClose={false}
                 modalHeader="header.unlock_short"
-                modalHeaderContent={<CheckUrlWarning />}
+                modalHeaderContent={<CheckUrlWarning align="left" />}
                 leftHeader
             >
                 {!isOpen ? null : (

@@ -10,7 +10,7 @@ class CheckUrlWarning extends React.Component {
         }
 
         return (
-            <div className="text-center">
+            <div className={this.props.align === "left" ? null : "text-center"}>
                 <p style={{marginBottom: 5}}>
                     <Translate
                         className="label warning"
