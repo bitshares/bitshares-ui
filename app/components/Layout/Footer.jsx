@@ -31,10 +31,6 @@ class Footer extends React.Component {
         dynGlobalObject: "2.1.0"
     };
 
-    static contextTypes = {
-        router: PropTypes.object
-    };
-
     constructor(props) {
         super(props);
 
@@ -446,11 +442,11 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.router.push("/wallet/backup/create");
+        this.props.history.push("/wallet/backup/create");
     }
 
     onBackupBrainkey() {
-        this.context.router.push("/wallet/backup/brainkey");
+        this.props.history.push("/wallet/backup/brainkey");
     }
 
     onPopup() {
@@ -461,7 +457,7 @@ class Footer extends React.Component {
 
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
-        this.context.router.push("/settings/access");
+        this.props.history.push("/settings/access");
     }
 }
 Footer = BindToChainState(Footer);

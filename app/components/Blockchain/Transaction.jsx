@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link as RealLink} from "react-router/es";
+import {Link as RealLink} from "react-router-dom";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -20,6 +20,16 @@ import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
+import {
+    Link,
+    DirectLink,
+    Element,
+    Events,
+    animateScroll as scroll,
+    scrollSpy,
+    scroller
+} from "react-scroll";
+import {AccountStakingInfo} from "../Account/AccountStakeCreateNew";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -36,11 +46,24 @@ class OpType extends React.Component {
         let trxTypes = counterpart.translate("transaction.trxTypes");
         let labelClass = classNames("txtlabel", this.props.color || "info");
 
+        const trxType =
+            this.props.type === 32
+                ? counterpart.translate("cryptobridge.account.staking")
+                : trxTypes[ops[this.props.type]]; // 32 = vesting_balance_create
+
         return (
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]}
+                        {trxType}
+                        {this.props.txIndex > 0 ? (
+                            <span>
+                                <Translate content="explorer.block.trx" />
+                                {this.props.txIndex}
+                            </span>
+                        ) : (
+                            ""
+                        )}
                     </span>
                 </td>
                 <td />
@@ -80,6 +103,7 @@ class OperationTable extends React.Component {
                     <caption />
                     <tbody>
                         <OpType
+                            txIndex={this.props.txIndex}
                             type={this.props.type}
                             color={this.props.color}
                         />
@@ -139,7 +163,9 @@ class Transaction extends React.Component {
             let key = 0;
 
             let color = "";
-            switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+            switch (
+                ops[op[0]] // For a list of trx types, see chain_types.coffee
+            ) {
                 case "transfer":
                     color = "success";
 
@@ -1413,6 +1439,36 @@ class Transaction extends React.Component {
                     );
                     break;
 
+                case "vesting_balance_create":
+                    const stakingPeriod =
+                        AccountStakingInfo.getStakingPeriodByPeriodValue(
+                            op[1].policy[1].vesting_seconds
+                        ) || {};
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate content="cryptobridge.account.amount_bco" />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    amount={op[1].amount.amount}
+                                    asset={op[1].amount.asset_id}
+                                />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate content="cryptobridge.account.length" />
+                            </td>
+                            <td>{stakingPeriod.name}</td>
+                        </tr>
+                    );
+
+                    break;
+
                 case "vesting_balance_withdraw":
                     color = "success";
 
@@ -1917,6 +1973,99 @@ class Transaction extends React.Component {
 
                     break;
 
+                case "asset_claim_pool":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="account.name"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById asset={op[1].asset_id} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.amount"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    amount={op[1].amount_to_claim.amount}
+                                    asset={op[1].amount_to_claim.asset_id}
+                                />
+                            </td>
+                        </tr>
+                    );
+                    break;
+
+                case "asset_update_issuer":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.from"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.to"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].new_issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById
+                                    asset={op[1].asset_to_update}
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    break;
+
                 default:
                     console.log("unimplemented op:", op);
 
@@ -1938,6 +2087,7 @@ class Transaction extends React.Component {
 
             info.push(
                 <OperationTable
+                    txIndex={this.props.index}
                     key={opIndex}
                     opCount={opCount}
                     index={opIndex}
@@ -1950,12 +2100,7 @@ class Transaction extends React.Component {
             );
         });
 
-        return (
-            <div>
-                {/*     <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5> */}
-                {info}
-            </div>
-        );
+        return <div>{info}</div>;
     }
 }
 

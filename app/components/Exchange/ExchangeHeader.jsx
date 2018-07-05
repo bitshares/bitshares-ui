@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Icon from "../Icon/Icon";
 import AssetName from "../Utility/AssetName";
 import AssetImage from "../Utility/AssetImage";
@@ -116,7 +116,9 @@ export default class ExchangeHeader extends React.Component {
         const dayChangeClass =
             parseFloat(dayChange) === 0
                 ? ""
-                : parseFloat(dayChange) < 0 ? "negative" : "positive";
+                : parseFloat(dayChange) < 0
+                    ? "negative"
+                    : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
         const dayChangeWithSign = dayChange > 0 ? "+" + dayChange : dayChange;
@@ -163,7 +165,9 @@ export default class ExchangeHeader extends React.Component {
             let settleAsset =
                 baseAsset.get("id") == "1.3.0"
                     ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0" ? baseAsset : null;
+                    : quoteAsset.get("id") == "1.3.0"
+                        ? baseAsset
+                        : null;
 
             if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
@@ -212,6 +216,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             quoteSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isQuoteSelected
@@ -238,6 +243,7 @@ export default class ExchangeHeader extends React.Component {
                                             this,
                                             baseSymbol
                                         )}
+                                        className="underline"
                                         style={{
                                             cursor: "pointer",
                                             color: isBaseSelected
@@ -288,7 +294,7 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 </Link>
 
-                                <Link
+                                <a
                                     onClick={() => {
                                         this._addMarket(
                                             this.props.quoteAsset.get("symbol"),
@@ -304,7 +310,7 @@ export default class ExchangeHeader extends React.Component {
                                         name="fi-star"
                                         title="icons.fi_star.market"
                                     />
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -489,10 +495,14 @@ export default class ExchangeHeader extends React.Component {
                                     }}
                                 >
                                     <option value="market_depth">
-                                        <Translate content="exchange.order_depth" />
+                                        {counterpart.translate(
+                                            "exchange.order_depth"
+                                        )}
                                     </option>
                                     <option value="price_chart">
-                                        <Translate content="exchange.price_history" />
+                                        {counterpart.translate(
+                                            "exchange.price_history"
+                                        )}
                                     </option>
                                 </select>
                             </li>

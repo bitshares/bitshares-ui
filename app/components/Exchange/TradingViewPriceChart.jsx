@@ -58,11 +58,12 @@ export default class TradingViewPriceChart extends React.Component {
                 "scalesProperties.lineColor": themeColors.axisLineColor,
                 "scalesProperties.textColor": themeColors.textColor
             },
-            theme: props.theme, // don't think this does anything yet
-            custom_css_url: "custom-css.css",
-            enabled_features: ["study_templates"],
+            custom_css_url: props.theme + ".css",
+            enabled_features: [
+                "study_templates",
+                "keep_left_toolbar_visible_on_small_screens"
+            ],
             disabled_features: [
-                "use_localstorage_for_settings",
                 "header_saveload",
                 "symbol_info",
                 "symbol_search_hot_key",

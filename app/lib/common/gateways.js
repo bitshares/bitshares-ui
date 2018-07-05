@@ -76,4 +76,6 @@ export const availableGateways = {
     }
 };
 
+export const gatewayPrefixes = Object.keys(availableGateways);
+
 export default availableGateways;

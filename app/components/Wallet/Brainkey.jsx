@@ -67,7 +67,7 @@ class ViewBrainkey extends Component {
 }
 ViewBrainkey = connect(ViewBrainkey, connectObject);
 
-class BrainkeyAccounts {
+class BrainkeyAccounts extends React.Component {
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired
     };

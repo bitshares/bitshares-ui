@@ -15,6 +15,7 @@ const ApplicationApi = {
     create_account(
         owner_pubkey,
         active_pubkey,
+        memo_pubkey,
         new_account_name,
         registrar,
         referrer,
@@ -54,7 +55,7 @@ const ApplicationApi = {
                         address_auths: []
                     },
                     options: {
-                        memo_key: active_pubkey,
+                        memo_key: memo_pubkey,
                         voting_account: "1.2.5",
                         num_witness: 0,
                         num_committee: 0,

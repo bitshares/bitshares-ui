@@ -2,9 +2,7 @@
     display: inline-block;
     padding: 1rem;
     margin: 20px 0;
-
 }
-
 
 .pagination > li {
     padding: 1rem;
@@ -16,22 +14,26 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: pointer;
+
     &:first-child {
-      margin-left: 0.2rem;
-      cursor: pointer;
+        margin-left: 0.2rem;
     }
     &:nth-child(2) {
-      margin-right: 0;
+        margin-right: 0;
     }
     &:last-child {
-      margin-right: 0.2rem;
-      margin-left: 0;
-      cursor: pointer;
+        margin-right: 0.2rem;
+        margin-left: 0;
+        cursor: pointer;
     }
     > input {
         display: inline;
         width: 4rem;
         margin: 0 0rem 0 0rem;
         border: none;
+    }
+    &.current {
+        font-weight: bold;
     }
 }

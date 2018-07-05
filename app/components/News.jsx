@@ -173,11 +173,6 @@ class News extends React.Component {
                 <div className="grid-block vertical">
                     <div className="account-tabs">
                         <div className="tab-content">
-                            <div className="hide-selector">
-                                <div className="inline-block">
-                                    <Translate content="news.news" />
-                                </div>
-                            </div>
                             <div className="grid-block vertical">
                                 {isWrong && <SomethingWentWrong />}
                                 {isLoading ? <LoadingIndicator /> : null}

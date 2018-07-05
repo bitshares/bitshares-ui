@@ -34,6 +34,7 @@ class BaseModal extends React.Component {
             overlayClose,
             className,
             modalHeader,
+            modalHeaderContent,
             noCloseBtn,
             noLogo,
             noHeader,
@@ -86,11 +87,15 @@ class BaseModal extends React.Component {
                                         content={modalHeader}
                                     />
                                 </div>
+                                {modalHeaderContent ? modalHeaderContent : null}
                             </div>
                         ))}
                 </div>
                 {!noHeader && leftHeader && <hr />}
-                <div className="modal-content">{children}</div>
+                <div className="modal-content">
+                    {modalHeaderContent ? modalHeaderContent : null}
+                    {children}
+                </div>
             </Modal>
         );
     }

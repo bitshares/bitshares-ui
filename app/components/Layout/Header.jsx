@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import {connect} from "alt-react";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
@@ -28,7 +28,6 @@ import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import {ChainUtilities} from "chain/chainIds";
-import PropTypes from "prop-types";
 
 var logo = require("assets/logo-cryptobridge.png");
 
@@ -41,15 +40,10 @@ const SUBMENUS = {
 };
 
 class Header extends React.Component {
-    static contextTypes = {
-        location: PropTypes.object.isRequired,
-        router: PropTypes.object.isRequired
-    };
-
-    constructor(props, context) {
+    constructor(props) {
         super();
         this.state = {
-            active: context.location.pathname,
+            active: props.location.pathname,
             accountsListDropdownActive: false
         };
 
@@ -69,13 +63,11 @@ class Header extends React.Component {
     }
 
     componentWillMount() {
-        this.unlisten = this.context.router.listen((newState, err) => {
-            if (!err) {
-                if (this.unlisten && this.state.active !== newState.pathname) {
-                    this.setState({
-                        active: newState.pathname
-                    });
-                }
+        this.unlisten = this.props.history.listen(newState => {
+            if (this.unlisten && this.state.active !== newState.pathname) {
+                this.setState({
+                    active: newState.pathname
+                });
             }
         });
     }
@@ -180,7 +172,7 @@ class Header extends React.Component {
             });
         }
 
-        this.context.router.push(route);
+        this.props.history.push(route);
         this._closeDropdown();
     }
 
@@ -230,10 +222,10 @@ class Header extends React.Component {
     _accountClickHandler(account_name, e) {
         e.preventDefault();
         ZfApi.publish("account_drop_down", "close");
-        if (this.context.location.pathname.indexOf("/account/") !== -1) {
-            let currentPath = this.context.location.pathname.split("/");
+        if (this.props.location.pathname.indexOf("/account/") !== -1) {
+            let currentPath = this.props.location.pathname.split("/");
             currentPath[2] = account_name;
-            this.context.router.push(currentPath.join("/"));
+            this.props.history.push(currentPath.join("/"));
         }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
@@ -247,15 +239,7 @@ class Header extends React.Component {
             });
             this._closeDropdown();
         }
-        // this.onClickUser(account_name, e);
     }
-
-    // onClickUser(account, e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //
-    //     this.context.router.push(`/account/${account}/overview`);
-    // }
 
     _toggleAccountDropdownMenu() {
         // prevent state toggling if user cannot have multiple accounts
@@ -344,12 +328,14 @@ class Header extends React.Component {
         let maxHeight = Math.max(40, height - 67 - 36) + "px";
 
         const a = ChainStore.getAccount(currentAccount);
+        const showAccountLinks = !!a;
         const isMyAccount = !a
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
         const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
+            !!a &&
             Apis.instance() &&
             Apis.instance().chain_id &&
             ChainUtilities.isValidChainId(Apis.instance().chain_id);
@@ -1313,7 +1299,7 @@ class Header extends React.Component {
                                     </li>
                                 ) : null}
 
-                                {!isMyAccount ? (
+                                {!isMyAccount && showAccountLinks ? (
                                     <li
                                         className="divider"
                                         onClick={this[
@@ -1473,7 +1459,11 @@ class Header extends React.Component {
                                         }
                                     >
                                         <div className="table-cell">
-                                            <Icon size="2x" name="deposit" />
+                                            <Icon
+                                                size="2x"
+                                                name="deposit"
+                                                title="icons.deposit.deposit"
+                                            />
                                         </div>
                                         <div className="table-cell">
                                             <Translate content="modal.deposit.submit_beta" />
@@ -1822,7 +1812,7 @@ class Header extends React.Component {
                                     </li>
                                 ) : null}
                                 {showAdvancedFeatures
-                                    ? !hasLocalWallet && (
+                                    ? showAccountLinks && (
                                           <li
                                               className={cnames(
                                                   {

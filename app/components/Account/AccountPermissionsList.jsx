@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import AccountImage from "./AccountImage";

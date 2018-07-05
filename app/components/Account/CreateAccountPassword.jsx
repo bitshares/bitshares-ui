@@ -6,7 +6,7 @@ import AccountStore from "stores/AccountStore";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import WalletDb from "stores/WalletDb";
 import notify from "actions/NotificationActions";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import AccountSelect from "../Forms/AccountSelect";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
@@ -19,13 +19,9 @@ import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
-import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
 
 class CreateAccountPassword extends React.Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
-
     constructor() {
         super();
         this.state = {
@@ -100,7 +96,9 @@ class CreateAccountPassword extends React.Component {
             FetchChain("getAccount", this.state.accountName, undefined, {
                 [this.state.accountName]: true
             }).then(() => {
-                this.props.router.push("/wallet/backup/create?newAccount=true");
+                this.props.history.push(
+                    "/wallet/backup/create?newAccount=true"
+                );
             });
         }
     }
@@ -262,16 +260,17 @@ class CreateAccountPassword extends React.Component {
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">
-                                <input
+                                <textarea
                                     style={{
-                                        maxWidth: "calc(30rem - 48px)",
-                                        fontSize: "80%"
+                                        padding: "0px",
+                                        marginBottom: "0px"
                                     }}
+                                    rows="3"
+                                    readOnly
                                     disabled
-                                    value={this.state.generatedPassword}
-                                    type="text"
-                                    className="input-button"
-                                />
+                                >
+                                    {this.state.generatedPassword}
+                                </textarea>
                                 <CopyButton
                                     text={this.state.generatedPassword}
                                     tip="tooltip.copy_password"
@@ -532,7 +531,7 @@ class CreateAccountPassword extends React.Component {
                 <div
                     style={{width: "100%"}}
                     onClick={() => {
-                        this.context.router.push("/");
+                        this.props.history.push("/");
                     }}
                     className="button"
                 >
@@ -672,6 +671,8 @@ class CreateAccountPassword extends React.Component {
         );
     }
 }
+
+CreateAccountPassword = withRouter(CreateAccountPassword);
 
 export default connect(CreateAccountPassword, {
     listenTo() {
