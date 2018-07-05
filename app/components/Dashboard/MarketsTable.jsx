@@ -59,7 +59,7 @@ class MarketRow extends React.Component {
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
             ns.imgError !== this.state.imgError ||
-            np.starredMarkets.size !== this.props.starredMarkets
+            np.starredMarkets.size !== this.props.starredMarkets.size
         ) {
             return true;
         }
@@ -261,19 +261,59 @@ class MarketRow extends React.Component {
 }
 
 MarketRow = BindToChainState(MarketRow);
-MarketRow = connect(MarketRow, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps(props) {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats.get(
-                props.marketId
-            ),
-            starredMarkets: SettingsStore.getState().starredMarkets
-        };
+// MarketRow = connect(MarketRow, {
+//     listenTo() {
+//         return [MarketsStore];
+//     },
+//     getProps(props) {
+//         return {
+//             marketStats: MarketsStore.getState().allMarketStats.get(
+//                 props.marketId
+//             ),
+//             starredMarkets: SettingsStore.getState().starredMarkets
+//         };
+//     }
+// });
+
+class MarketsPagination extends React.Component {
+    shouldComponentUpdate(nextProps) {
+        return nextProps !== this.props;
     }
-});
+
+    onPageClick = page => {
+        console.log(page);
+
+        if (this.props.onPageChange) {
+            this.props.onPageChange(page);
+        }
+    };
+
+    render() {
+        const {size, perPage, page} = this.props;
+
+        const pages = new Array(Math.ceil(size / perPage)).fill(0);
+
+        return (
+            <nav aria-label="Pagination">
+                <ul className="pagination">
+                    {pages.map((p, i) => {
+                        p = i + 1;
+
+                        return (
+                            <li
+                                key={"page" + p}
+                                className={p === page ? "current" : ""}
+                                onClick={this.onPageClick.bind(this, p)}
+                            >
+                                {p}
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
+        );
+    }
+}
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -282,7 +322,8 @@ class MarketsTable extends React.Component {
             filter: "",
             showFlip: true,
             showHidden: false,
-            markets: []
+            markets: [],
+            page: 1
         };
 
         this.update = this.update.bind(this);
@@ -382,72 +423,105 @@ class MarketsTable extends React.Component {
         });
     }
 
+    _onPageChange = page => {
+        this.setState({
+            page
+        });
+    };
+
     render() {
-        let {markets, showFlip, showHidden, filter} = this.state;
+        let {markets, showFlip, showHidden, filter, page} = this.state;
         this.loaded = true;
 
+        const rowsPerPage = 50;
+
         let visibleRow = 0;
-        markets = markets.map(row => {
-            let visible = true;
+        markets = markets
+            .map(row => {
+                let visible = true;
 
-            if (row.isHidden !== this.state.showHidden) {
-                visible = false;
-            } else if (filter) {
-                const quoteObject = ChainStore.getAsset(row.quote);
-                const baseObject = ChainStore.getAsset(row.base);
+                if (row.isHidden !== this.state.showHidden) {
+                    visible = false;
+                } else if (filter) {
+                    const quoteObject = ChainStore.getAsset(row.quote);
+                    const baseObject = ChainStore.getAsset(row.base);
 
-                const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
-                    quoteObject
+                    const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
+                        quoteObject
+                    );
+                    const {isBitAsset: baseIsBitAsset} = utils.replaceName(
+                        baseObject
+                    );
+
+                    let quoteSymbol = row.quote;
+                    let baseSymbol = row.base;
+
+                    if (quoteIsBitAsset) {
+                        quoteSymbol = "bit" + quoteSymbol;
+                    }
+
+                    if (baseIsBitAsset) {
+                        baseSymbol = "bit" + baseSymbol;
+                    }
+
+                    const filterPair = filter.includes(":");
+
+                    if (filterPair) {
+                        const quoteFilter = filter.split(":")[0].trim();
+                        const baseFilter = filter.split(":")[1].trim();
+
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(quoteFilter).toLowerCase()) &&
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(baseFilter).toLowerCase());
+                    } else {
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase()) ||
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase());
+                    }
+                }
+
+                if (visible) ++visibleRow;
+                else return null;
+
+                return (
+                    <MarketRow
+                        {...row}
+                        visible={visible}
+                        marketStats={this.props.allMarketStats.get(
+                            row.marketId
+                        )}
+                        starredMarkets={this.props.starredMarkets}
+                        handleHide={this._handleHide.bind(
+                            this,
+                            row,
+                            !row.isHidden
+                        )}
+                        handleFlip={this._handleFlip.bind(
+                            this,
+                            row,
+                            !row.inverted
+                        )}
+                    />
                 );
-                const {isBitAsset: baseIsBitAsset} = utils.replaceName(
-                    baseObject
-                );
+            })
+            .filter(market => market !== null);
 
-                let quoteSymbol = row.quote;
-                let baseSymbol = row.base;
+        if ((page - 1) * rowsPerPage > markets.length) {
+            page = 1;
+        }
 
-                if (quoteIsBitAsset) {
-                    quoteSymbol = "bit" + quoteSymbol;
-                }
-
-                if (baseIsBitAsset) {
-                    baseSymbol = "bit" + baseSymbol;
-                }
-
-                const filterPair = filter.includes(":");
-
-                if (filterPair) {
-                    const quoteFilter = filter.split(":")[0].trim();
-                    const baseFilter = filter.split(":")[1].trim();
-
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(quoteFilter).toLowerCase()) &&
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(baseFilter).toLowerCase());
-                } else {
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase()) ||
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase());
-                }
-            }
-
-            if (visible) ++visibleRow;
-            return (
-                <MarketRow
-                    {...row}
-                    visible={visible}
-                    handleHide={this._handleHide.bind(this, row, !row.isHidden)}
-                    handleFlip={this._handleFlip.bind(this, row, !row.inverted)}
-                />
-            );
-        });
+        const paginatedMarkets = markets.slice(
+            (page - 1) * rowsPerPage,
+            (page - 1) * rowsPerPage + rowsPerPage
+        );
 
         return (
             <div>
@@ -525,8 +599,22 @@ class MarketsTable extends React.Component {
                                 <Translate content="dashboard.table_empty" />
                             </td>
                         </tr>
-                        {markets}
+                        {paginatedMarkets}
                     </tbody>
+                    {visibleRow > rowsPerPage ? (
+                        <tfoot>
+                            <tr>
+                                <td colSpan={showFlip ? 6 : 5}>
+                                    <MarketsPagination
+                                        onPageChange={this._onPageChange}
+                                        page={page}
+                                        perPage={rowsPerPage}
+                                        size={markets.length}
+                                    />
+                                </td>
+                            </tr>
+                        </tfoot>
+                    ) : null}
                 </table>
             </div>
         );
@@ -535,14 +623,16 @@ class MarketsTable extends React.Component {
 
 export default connect(MarketsTable, {
     listenTo() {
-        return [SettingsStore];
+        return [SettingsStore, MarketsStore];
     },
     getProps() {
         let {marketDirections, hiddenMarkets} = SettingsStore.getState();
 
         return {
             marketDirections,
-            hiddenMarkets
+            hiddenMarkets,
+            allMarketStats: MarketsStore.getState().allMarketStats,
+            starredMarkets: SettingsStore.getState().starredMarkets
         };
     }
 });

@@ -1122,6 +1122,12 @@
 
     .pagination {
         background-color: $panel-bg-color;
+
+        > li {
+            &.current {
+                background-color: $light-panel-bg-color;
+            }
+        }
     }
 
     .invoice {
@@ -1994,6 +2000,10 @@
                     }
                 }
             }
+        }
+        > tfoot > tr > td {
+            text-align: center;
+            padding-top: 1rem;
         }
     }
 
