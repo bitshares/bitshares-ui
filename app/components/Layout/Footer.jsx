@@ -230,27 +230,48 @@ class Footer extends React.Component {
         let connected = !(this.props.rpc_connection_status === "closed");
 
         if (!connected) {
+            console.log("Your connection was lost");
             this._triggerReconnect();
         } else if (!this.props.synced) {
+            // If the blockchain is out of sync the footer will be rerendered one last time and then
+            // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
+            // handling out of sync state within this one call
+
             let forceReconnectAfterSeconds = 30;
-            let askToReconnectAfterSeconds = 0;
-            // trigger automatic reconnect
+            let askToReconnectAfterSeconds = 5;
+
+            // Trigger automatic reconnect after X seconds
             setTimeout(() => {
                 if (!this.props.synced) {
                     this._triggerReconnect();
                 }
             }, forceReconnectAfterSeconds * 1000);
-            // if out of sync more than 10sec ask user
-            let out_of_sync_seconds = this.getBlockTimeDelta();
-            console.log(this.getBlockTimeDelta());
-            if (this.getBlockTimeDelta() > askToReconnectAfterSeconds) {
-                if (this.confirmOutOfSync.shownOnce == false) {
-                    this.confirmOutOfSync.shownOnce = true;
-                    setTimeout(() => {
+
+            // Still out of sync?
+            if (this.getBlockTimeDelta() > 3) {
+                console.log(
+                    "Your node is out of sync since " +
+                        this.getBlockTimeDelta() +
+                        " seconds, waiting " +
+                        askToReconnectAfterSeconds +
+                        " seconds, then we notify you"
+                );
+                setTimeout(() => {
+                    // Only ask the user once, and only continue if still out of sync
+                    let out_of_sync_seconds = this.getBlockTimeDelta();
+                    if (
+                        this.getBlockTimeDelta() > 3 &&
+                        this.confirmOutOfSync.shownOnce == false
+                    ) {
+                        this.confirmOutOfSync.shownOnce = true;
                         this.confirmOutOfSync.modal.show(
                             <div>
                                 <Translate
-                                    content={"connection.want_to_reconnect"}
+                                    content={
+                                        routerTransitioner.isAutoSelection()
+                                            ? "connection.want_to_reconnect"
+                                            : "connection.out_of_sync"
+                                    }
                                     out_of_sync_seconds={parseInt(
                                         out_of_sync_seconds
                                     )}
@@ -264,12 +285,12 @@ class Footer extends React.Component {
                             counterpart.translate("global.confirm"),
                             () => {
                                 if (!this.props.synced) {
-                                    this._triggerReconnect();
+                                    this._triggerReconnect(false);
                                 }
                             }
                         );
-                    }, 50);
-                }
+                    }
+                }, askToReconnectAfterSeconds * 1000);
             }
         } else {
             this._closeOutOfSyncModal();
@@ -277,7 +298,10 @@ class Footer extends React.Component {
         }
     }
 
-    _triggerReconnect() {
+    _triggerReconnect(honorManualSelection = true) {
+        if (honorManualSelection && !routerTransitioner.isAutoSelection()) {
+            return;
+        }
         if (!routerTransitioner.isTransitionInProgress()) {
             this._closeOutOfSyncModal();
             console.log("Trying to reconnect ...");

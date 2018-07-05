@@ -493,7 +493,8 @@ class RouterTransitioner {
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
-                url: failingNodeUrl
+                url: failingNodeUrl,
+                error: err
             }),
             level: "error",
             autoDismiss: 10
