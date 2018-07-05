@@ -266,21 +266,6 @@ class Footer extends React.Component {
                                     />
                                 )}
                                 <span style={updateStyles}>
-                                    <Translate content="footer.title" />
-                                    {__GIT_BRANCH__ === "staging" ? (
-                                        <a
-                                            href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}
-                                            className="version"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            {version}
-                                        </a>
-                                    ) : (
-                                        <span className="version">
-                                            {version}
-                                        </span>
-                                    )}
                                     <Translate content="cryptobridge.footer.title" />
                                     <span className="version">
                                         &nbsp;BETA {version}
