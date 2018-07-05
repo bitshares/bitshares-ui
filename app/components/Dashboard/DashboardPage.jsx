@@ -7,6 +7,7 @@ import AccountStore from "stores/AccountStore";
 
 import {Tabs, Tab} from "../Utility/Tabs";
 import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
+import BitSharesGridLayout from "../Utility/BitSharesGridLayout";
 
 class DashboardPage extends React.Component {
     render() {
@@ -50,9 +51,39 @@ class DashboardPage extends React.Component {
                                     <Tab title="dashboard.featured_markets">
                                         <FeaturedMarkets />
                                     </Tab>
-                                    {/* <Tab title="dashboard.top_markets">
-                                        <TopMarkets />
-                                    </Tab> */}
+                                    <Tab title="ReactGridLayoutTest">
+                                        <BitSharesGridLayout
+                                            rowHeight={100}
+                                            width="100%"
+                                        >
+                                            <div
+                                                key="a"
+                                                layout={{
+                                                    lg: {x: 0, y: 0, w: 1, h: 1}
+                                                }}
+                                                style={{
+                                                    border: "1px solid #000000"
+                                                }}
+                                            >
+                                                <span className="text">
+                                                    foo
+                                                </span>
+                                            </div>
+                                            <div
+                                                key="b"
+                                                layout={{
+                                                    lg: {x: 2, y: 0, w: 1, h: 1}
+                                                }}
+                                                style={{
+                                                    border: "1px solid #000000"
+                                                }}
+                                            >
+                                                <span className="text">
+                                                    bar
+                                                </span>
+                                            </div>
+                                        </BitSharesGridLayout>
+                                    </Tab>
                                 </Tabs>
                             </div>
                         </div>
