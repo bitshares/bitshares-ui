@@ -1090,20 +1090,6 @@ class AccountOverview extends React.Component {
                                                 >
                                                     <Translate content="account.qty" />
                                                 </th>
-                                                <th
-                                                    onClick={this._toggleSortOrder.bind(
-                                                        this,
-                                                        "priceValue"
-                                                    )}
-                                                    className="column-hide-small clickable"
-                                                    style={{textAlign: "right"}}
-                                                >
-                                                    <Translate content="exchange.price" />{" "}
-                                                    (<AssetName
-                                                        name={preferredUnit}
-                                                        noTip
-                                                    />)
-                                                </th>
                                                 {showPriceValue ? (
                                                     <th
                                                         onClick={this._toggleSortOrder.bind(
@@ -1130,27 +1116,6 @@ class AccountOverview extends React.Component {
                                                     style={{textAlign: "right"}}
                                                 >
                                                     <Translate content="account.hour_24_short" />
-                                                </th>
-                                                <th
-                                                    onClick={this._toggleSortOrder.bind(
-                                                        this,
-                                                        "totalValue"
-                                                    )}
-                                                    style={{textAlign: "right"}}
-                                                    className="column-hide-small clickable"
-                                                >
-                                                    <TranslateWithLinks
-                                                        noLink
-                                                        string="account.eq_value_header"
-                                                        keys={[
-                                                            {
-                                                                type: "asset",
-                                                                value: preferredUnit,
-                                                                arg: "asset"
-                                                            }
-                                                        ]}
-                                                        noTip
-                                                    />
                                                 </th>
                                                 {showTotalValue ? (
                                                     <th
