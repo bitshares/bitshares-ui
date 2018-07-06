@@ -116,7 +116,7 @@ class LoginSelector extends React.Component {
         );
 
         return (
-            <div className="grid-block align-center">
+            <div className="grid-block align-center" id="accountForm">
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
                         <div>
