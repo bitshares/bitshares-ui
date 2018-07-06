@@ -223,12 +223,14 @@ class App extends React.Component {
     }
 
     _rebuildTooltips() {
+        if (this.rebuildTimeout) return;
         ReactTooltip.hide();
 
-        setTimeout(() => {
+        this.rebuildTimeout = setTimeout(() => {
             if (this.refs.tooltip) {
                 this.refs.tooltip.globalRebuild();
             }
+            this.rebuildTimeout = null;
         }, 1500);
     }
 
