@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import {ChainStore} from "bitsharesjs/es";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-
 import MarketsStore from "stores/MarketsStore";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
@@ -56,7 +55,7 @@ class MarketRow extends React.Component {
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
             ns.imgError !== this.state.imgError ||
-            np.starredMarkets.size !== this.props.starredMarkets
+            np.starredMarkets.size !== this.props.starredMarkets.size
         );
     }
 
@@ -80,16 +79,16 @@ class MarketRow extends React.Component {
 
     _setInterval(nextProps = null) {
         let {base, quote} = nextProps || this.props;
-        MarketsActions.getMarketStats(base, quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(
-            MarketsActions.getMarketStats.bind(this, base, quote),
-            35 * 1000
+        this.statsInterval = MarketsActions.getMarketStatsInterval(
+            35 * 1000,
+            base,
+            quote
         );
     }
 
     _clearInterval() {
-        clearInterval(this.statsInterval);
+        if (this.statsInterval) this.statsInterval();
     }
 
     _onError(imgName) {
@@ -237,22 +236,19 @@ class MarketRow extends React.Component {
 }
 
 MarketRow = BindToChainState(MarketRow);
-MarketRow = connect(
-    MarketRow,
-    {
-        listenTo() {
-            return [MarketsStore];
-        },
-        getProps(props) {
-            return {
-                marketStats: MarketsStore.getState().allMarketStats.get(
-                    props.marketId
-                ),
-                starredMarkets: SettingsStore.getState().starredMarkets
-            };
-        }
+MarketRow = connect(MarketRow, {
+    listenTo() {
+        return [MarketsStore];
+    },
+    getProps(props) {
+        return {
+            marketStats: MarketsStore.getState().allMarketStats.get(
+                props.marketId
+            ),
+            starredMarkets: SettingsStore.getState().starredMarkets
+        };
     }
-);
+});
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -273,7 +269,6 @@ class MarketsTable extends React.Component {
 
     componentWillMount() {
         ChainStore.subscribe(this.update);
-        this.update();
     }
 
     componentWillUnmount() {
@@ -512,19 +507,16 @@ class MarketsTable extends React.Component {
     }
 }
 
-export default connect(
-    MarketsTable,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            let {marketDirections, hiddenMarkets} = SettingsStore.getState();
+export default connect(MarketsTable, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        let {marketDirections, hiddenMarkets} = SettingsStore.getState();
 
-            return {
-                marketDirections,
-                hiddenMarkets
-            };
-        }
+        return {
+            marketDirections,
+            hiddenMarkets
+        };
     }
-);
+});
