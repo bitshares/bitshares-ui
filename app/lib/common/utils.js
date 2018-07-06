@@ -1,6 +1,4 @@
 var numeral = require("numeral");
-import {is} from "immutable";
-
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
 import {ChainTypes} from "bitsharesjs/es";

@@ -3,69 +3,20 @@
 import React from "react";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
-
-let icons = [
-    "photo-camera",
-    "adjust",
-    "assets",
-    "checkmark-circle",
-    "chevron-down",
-    "clippy",
-    "clock",
-    "cog",
-    "cogs",
-    "connected",
-    "connect",
-    "cross-circle",
-    "dashboard",
-    "deposit",
-    "disconnected",
-    "dollar-green",
-    "dollar",
-    "download",
-    "excel",
-    "eye",
-    "eye-striked",
-    "fi-star",
-    "folder",
-    "hamburger-x",
-    "hamburger",
-    "hourglass",
-    "key",
-    "list",
-    "locked",
-    "minus-circle",
-    "news",
-    "plus-circle",
-    "power",
-    "question-circle",
-    "server",
-    "settle",
-    "share",
-    "shuffle",
-    "text",
-    "thumb-tack",
-    "thumb-untack",
-    "thumbs-up",
-    "times",
-    "trade",
-    "transfer",
-    "unlocked",
-    "user",
-    "warning",
-    "withdraw",
-    "filter",
-    "info-circle-o",
-    "zoom",
-    "people"
-];
-
-let icons_map = {};
-for (let i of icons) icons_map[i] = require(`./${i}.svg`);
+import iconsMap from "../../assets/icons/icons-loader.js";
 
 require("./icon.scss");
 
 class Icon extends React.Component {
+    shouldComponentUpdate(np) {
+        return (
+            np.className !== this.props.className ||
+            np.name !== this.props.name ||
+            np.title !== this.props.title ||
+            np.size !== this.props.size
+        );
+    }
+
     render() {
         let classes = "icon " + this.props.name;
         if (this.props.size) {
@@ -85,7 +36,7 @@ class Icon extends React.Component {
                     className={classes}
                     style={this.props.style || {}}
                     dangerouslySetInnerHTML={{
-                        __html: icons_map[this.props.name]
+                        __html: iconsMap[this.props.name]
                     }}
                     onClick={this.props.onClick}
                 />
@@ -96,7 +47,7 @@ class Icon extends React.Component {
                     className={classes}
                     style={this.props.style || {}}
                     dangerouslySetInnerHTML={{
-                        __html: icons_map[this.props.name]
+                        __html: iconsMap[this.props.name]
                     }}
                     onClick={this.props.onClick}
                 />
