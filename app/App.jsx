@@ -108,6 +108,12 @@ const ExistingAccount = Loadable({
     loading: LoadingIndicator
 });
 
+const CreateWorker = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 import BlockchainActions from "./actions/BlockchainActions";
@@ -175,7 +181,6 @@ class App extends React.Component {
             let now = new Date().getTime() / 1000;
             return Math.abs(now - bt);
         } catch (err) {
-            console.log(err);
             return -1;
         }
     }
@@ -398,6 +403,11 @@ class App extends React.Component {
                                 <Route
                                     path="/existing-account"
                                     component={ExistingAccount}
+                                />
+
+                                <Route
+                                    path="/create-worker"
+                                    component={CreateWorker}
                                 />
 
                                 {/* Help routes */}
