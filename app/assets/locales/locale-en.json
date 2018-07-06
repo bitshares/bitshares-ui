@@ -61,7 +61,7 @@
             "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
         "intro_text_4":
             "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
-        "intro_text_title": "Welcome to BitShares",
+        "intro_text_title": "Welcome to %(wallet_name)s",
         "login_with": "Login with",
         "market_actions": "Market actions",
         "market_value": "Market Value",
@@ -85,7 +85,7 @@
             "network_percentage": "Network",
             "referral_link": "Your referral link",
             "referral_text":
-                "Give this to link to people you want to refer to BitShares",
+                "Give this to link to people you want to refer to %(wallet_name)s",
             "referrals": "Referrals",
             "referrer": "Affiliate Referrer",
             "registrar": "Registrar",
@@ -392,7 +392,7 @@
             "workers_short": "Workers"
         },
         "voting": "Voting",
-        "welcome": "Welcome to BitShares",
+        "welcome": "Welcome to %(wallet_name)s",
         "whitelist": {
             "add": "Add to whitelist",
             "add_black": "Add to blacklist",
@@ -411,7 +411,7 @@
     "app_init": {
         "browser": "Unsupported browser",
         "browser_text":
-            "The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
+            "The Browser you are using has not been fully tested to support the %(wallet_name)s Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
         "connected": "Connected",
         "connecting": "Connecting to API server: %(server)s",
         "not_connected": "Not connected",
@@ -798,13 +798,13 @@
         "loading": "Loading...",
         "nosync": "Your active node is out of sync",
         "synced": "Synced",
-        "title": "BitShares",
+        "title": "%(wallet_name)s",
         "unsynced": "Out of sync",
         "update_available": "UPDATE AVAILABLE"
     },
     "gateway": {
         "add_funds":
-            "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
+            "Quickly and easily add funds to your %(wallet_name)s account <strong>%(account)s</strong>. This service is provided by Openledger.",
         "address": "Address",
         "address_with_memo":
             "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
@@ -941,7 +941,7 @@
         "withdraw": "Withdrawal",
         "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
         "withdraw_funds":
-            "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+            "You are going to withdraw funds from your %(wallet_name)s account to your external %(asset)s account.",
         "withdraw_history_status": {
             "audited": "auditting completed",
             "auditing": "withdraw auditing",
@@ -988,7 +988,7 @@
         "payments_beta": "Send (Beta)",
         "payments_legacy": "Send (legacy)",
         "settings": "Settings",
-        "title": "BitShares UI",
+        "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",
         "unlock_short": "Login",
@@ -1037,7 +1037,7 @@
             "borrow": "Borrow",
             "buy": "Buy"
         },
-        "download": "Download new version of BitShares UI",
+        "download": "Download new version of %(wallet_name)s UI",
         "excel": "Download .csv file",
         "eye": "Hide Node",
         "eye-striked": "Show Node",
@@ -1137,9 +1137,9 @@
             "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
         "text_1": "Local wallet detected",
         "text_2":
-            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+            "Please backup your wallet now and restore the backup file to <a href='%(wallet_url)s' target='blank' rel='noopener noreferrer'>%(wallet_url)s</a>, which will be your new address for the web wallet. Thanks for your continued support.",
         "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
+            "Please use <a href='%(wallet_url)s' target='blank' rel='noopener noreferrer'>%(wallet_url)s</a> from now on, your existing credentials will let you login there as well.",
         "title": "Notice"
     },
     "modal": {
@@ -1218,7 +1218,7 @@
             "address_not_valid": "Invalid address",
             "amount": "Amount to Withdraw",
             "available": "Available: ",
-            "bitshares_account": "Send to Bitshares Account",
+            "bitshares_account": "Send to %(wallet_name)s Account",
             "cancel": "Cancel",
             "cannot_cover": "Insufficient funds!",
             "estimated_value": "Estimated Value",
@@ -1270,6 +1270,8 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_claim_pool":
+            "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers":
             "{account} updated the feed producers for the asset {asset}",
@@ -1536,7 +1538,7 @@
         "hide_asset": "Click here to hide this asset from this list.",
         "latest_price": "This is the latest price seen in this market.",
         "login":
-            "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+            "This %(wallet_name)s wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "margin_price":
             "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee":
@@ -1755,7 +1757,7 @@
         "from": "From",
         "header": "Transfer details",
         "header_subheader":
-            "Transfers are used for sending funds to other BitShares Account Holders",
+            "Transfers are used for sending funds to other %(wallet_name)s Account Holders",
         "memo": "Memo / Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
@@ -1802,10 +1804,6 @@
     },
     "wallet": {
         "accept": "Accept",
-        "account_create_wallet_text":
-            "This password will be used to create a new BitShares local wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
-        "account_exp":
-            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
         "account_public": "Account Name (Public)",
         "active_wallet": "Active Local Wallet",
         "all_set": "You're all set!",
@@ -1816,7 +1814,7 @@
             "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
         "backup_login": "Backup & login",
         "backup_new_account":
-            "Congratulations, you've just created a new account on the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+            "Congratulations, you've just created a new account on the %(wallet_name)s exchange powered by the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
         "backup_warning":
             "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Lookup balances",
@@ -1836,8 +1834,6 @@
         "brainkey_w2": "Anyone with access to your recovery key will",
         "brainkey_w3": "have access to funds within this local wallet.",
         "bts_09_export": "BTS 0.9.3c key export file (.json)",
-        "bts_rules":
-            "The first rule of BitShares is: Do not lose your password.<br/>The second rule of BitShares is: Do not lose your password.<br />The third rule of BitShares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
         "cancel": "Cancel",
         "change": "Change to %(name)s",
         "change_backup":
@@ -1867,7 +1863,7 @@
         "create_password": "Create a new account using a password",
         "create_success": "Your local wallet has been created",
         "create_text":
-            "The BitShares local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+            "The %(wallet_name)s local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
         "create_w_a": "Create a local wallet containing an account",
         "create_wallet": "Create new local wallet",
         "create_wallet_backup": "Create new wallet from backup",
@@ -1892,10 +1888,10 @@
         "generated": "Generated password",
         "go_get_started": "Getting Started",
         "has_wallet":
-            "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
+            "When you create your first %(wallet_name)s account, a %(wallet_name)s local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
         "import_20_notice1": "Import your BTS 2.0+ BACKUP first",
         "import_20_notice2": "(if you have one)",
-        "import_backup": "Import BitShares 2.0 backup (.bin file)",
+        "import_backup": "Import %(wallet_name)s 2.0 backup (.bin file)",
         "import_backup_choose":
             "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
         "import_balance": "Import balance(s)",
@@ -2019,7 +2015,6 @@
             "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move":
             "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_new": "New BitShares account",
         "wallet_password": "Login anywhere using your password"
     },
     "winex": {

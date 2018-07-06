@@ -117,26 +117,20 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(
-    AppInit,
-    {
-        listenTo() {
-            return [IntlStore, WalletManagerStore, SettingsStore];
-        },
-        getProps() {
-            return {
-                locale: IntlStore.getState().currentLocale,
-                walletMode:
-                    !SettingsStore.getState().settings.get("passwordLogin") ||
-                    !!WalletManagerStore.getState().current_wallet,
-                theme: SettingsStore.getState().settings.get("themes"),
-                apiServer: SettingsStore.getState().settings.get(
-                    "activeNode",
-                    ""
-                )
-            };
-        }
+AppInit = connect(AppInit, {
+    listenTo() {
+        return [IntlStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet,
+            theme: SettingsStore.getState().settings.get("themes"),
+            apiServer: SettingsStore.getState().settings.get("activeNode", "")
+        };
     }
-);
+});
 AppInit = supplyFluxContext(alt)(AppInit);
 export default hot(module)(AppInit);

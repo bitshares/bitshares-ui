@@ -22,13 +22,13 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
-// import IntlActions from "actions/IntlActions";
 import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 
-var logo = require("assets/logo-ico-blue.png");
+import {getLogo} from "branding";
+var logo = getLogo();
 
 // const FlagImage = ({flag, width = 20, height = 20}) => {
 //     return <img height={height} width={width} src={`${__BASE_URL__}language-dropdown/${flag.toUpperCase()}.png`} />;

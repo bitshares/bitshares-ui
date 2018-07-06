@@ -10,6 +10,7 @@ import {connect} from "alt-react";
 import cname from "classnames";
 import SettingsActions from "actions/SettingsActions";
 import PropTypes from "prop-types";
+import {getWalletName} from "branding";
 
 class CreateNewWallet extends Component {
     static propTypes = {
@@ -162,6 +163,7 @@ class CreateNewWallet extends Component {
                             <Translate
                                 component="p"
                                 content="wallet.create_text"
+                                wallet_name={getWalletName()}
                             />
                         ) : null}
                     </div>
