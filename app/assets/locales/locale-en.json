@@ -429,9 +429,14 @@
         "errors": {
             "below":
                 "Your collateral ratio is below %(mr)s which is not allowed.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position",
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Insufficient collateral balance"
+            "collateral": "Insufficient collateral balance",
+            "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased."
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
