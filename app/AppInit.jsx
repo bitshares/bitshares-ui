@@ -87,6 +87,10 @@ class AppInit extends React.Component {
         const {apiConnected, apiError} = this.state;
 
         if (!apiConnected) {
+            let server = apiServer;
+            if (!!!server) {
+                server = "";
+            }
             return (
                 <div
                     style={{backgroundColor: !theme ? "#2a2a2a" : null}}
@@ -98,7 +102,7 @@ class AppInit extends React.Component {
                                 <LoadingIndicator
                                     loadingText={counterpart.translate(
                                         "app_init.connecting",
-                                        {server: apiServer}
+                                        {server: server}
                                     )}
                                 />
                             ) : (

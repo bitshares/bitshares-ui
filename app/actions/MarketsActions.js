@@ -30,6 +30,11 @@ function clearBatchTimeouts() {
     dispatchSubTimeout = null;
 }
 
+const marketStatsQueue = []; // Queue array holding get_ticker promises
+const marketStatsQueueLength = 10; // Number of get_ticker calls per batch
+const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
+let marketStatsQueueActive = false;
+
 class MarketsActions {
     changeBase(market) {
         clearBatchTimeouts();
@@ -40,7 +45,7 @@ class MarketsActions {
         return size;
     }
 
-    getMarketStats(base, quote, refresh = false) {
+    getMarketStats(base, quote, refresh = false, errorCallback = null) {
         const {marketName, first, second} = marketUtils.getMarketName(
             base,
             quote
@@ -62,20 +67,56 @@ class MarketsActions {
                     lastFetched: new Date()
                 };
 
-                Apis.instance()
-                    .db_api()
-                    .exec("get_ticker", [second.get("id"), first.get("id")])
-                    .then(result => {
-                        dispatch({
-                            ticker: result,
-                            market: marketName,
-                            base: second,
-                            quote: first
+                marketStatsQueue.push({
+                    promise: Apis.instance()
+                        .db_api()
+                        .exec("get_ticker", [
+                            second.get("id"),
+                            first.get("id")
+                        ]),
+                    market: marketName,
+                    base: second,
+                    quote: first
+                });
+
+                if (!marketStatsQueueActive) {
+                    marketStatsQueueActive = true;
+
+                    setTimeout(() => {
+                        processQueue();
+                    }, 1000 * marketStatsQueueTimeout); // 2 seconds between
+                }
+
+                let processQueue = () => {
+                    let currentBatch = marketStatsQueue.slice(
+                        0,
+                        marketStatsQueueLength
+                    );
+                    Promise.all(currentBatch.map(q => q.promise))
+                        .then(results => {
+                            dispatch({
+                                tickers: results,
+                                markets: currentBatch.map(q => q.market),
+                                bases: currentBatch.map(q => q.base),
+                                quotes: currentBatch.map(q => q.quote)
+                            });
+                            marketStatsQueue.splice(0, results.length);
+                            if (marketStatsQueue.length === 0) {
+                                marketStatsQueueActive = false;
+                            } else {
+                                return processQueue();
+                            }
+                        })
+                        .catch(err => {
+                            console.log(
+                                "getMarketStats error for " + marketName + ":",
+                                err
+                            );
+                            if (errorCallback != null) {
+                                errorCallback(err);
+                            }
                         });
-                    })
-                    .catch(err => {
-                        console.log("getMarketStats error:", err);
-                    });
+                };
             }
         };
     }
@@ -745,5 +786,35 @@ class MarketsActions {
         return groupLimit;
     }
 }
+let actions = alt.createActions(MarketsActions);
 
-export default alt.createActions(MarketsActions);
+// helper method, not actually dispatching anything
+let marketStatsIntervals = {};
+
+actions.clearMarketStatsInInterval = function(key) {
+    if (marketStatsIntervals[key]) {
+        clearInterval(marketStatsIntervals[key]);
+        delete marketStatsIntervals[key];
+    }
+};
+
+actions.getMarketStatsInterval = function(
+    intervalTime,
+    base,
+    quote,
+    refresh = false
+) {
+    actions.getMarketStats(base, quote, refresh);
+    const {marketName} = marketUtils.getMarketName(base, quote);
+    if (marketStatsIntervals[marketName]) {
+        return actions.clearMarketStatsInInterval.bind(this, marketName);
+    }
+    marketStatsIntervals[marketName] = setInterval(() => {
+        actions.getMarketStats(base, quote, refresh, () => {
+            actions.clearMarketStatsInInterval(base, quote);
+        });
+    }, intervalTime);
+    return actions.clearMarketStatsInInterval.bind(this, marketName);
+};
+
+export default actions;

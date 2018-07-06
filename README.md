@@ -90,7 +90,7 @@ Clone this repository, run `docker-compose up` and visit localhost:8080
 ## Contributing
 Please work off the staging branch and make pull requests to that branch. The master branch will only be updated for new releases.
 
-The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
+The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2018-02-bitshares-ui). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
 
 If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help. You may also join [BitShares on Discord](https://discord.gg/GsjQfAJ)
 
@@ -101,13 +101,43 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 ## Development process
 
-- Milestones are numbered YYMMDD and refer to the **anticipated release date**.
+- New issues will, after enough discussion and clarification, be assigned an estimate time to complete, as well as assigned to the next unstarted milestone, by a project coordinator.
+- Milestones are numbered YYMMDD and refer to the **anticipated release date of the next Release Candidate**.
+- Release Candidates sits 1 milestone period (2 weeks) for evaluation by the public before release
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
 - We pay **bounties** for issues that have been estimated. An estimated issue is prefixed with a number in brackets like this: `[2] An nasty bug`. In this example, the bug is valued at two hours ($125 per hour). If you fix this issue according to these guidelines and your PR is accepted, this will earn you $250 bitUSD. You must have a Bitshares wallet and a Bitshares account to receive payment.
-- If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
-- To claim an issue, simply leave a comment with your request to claim.
+- To claim an issue, simply leave a comment with your request to work on it. 
+- If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will have no assigned dev, but have the developers name in brackets.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
+- If an issue missed the intended milestone completion, be sure to make a comment on your progress including the reason for the delay. The issue is pushed to the next milestone. Failing to comment or complete the issue once more will result in release of the assigned issue.
+
+**Please keep comments constructive and clean**
+
+## Release Branches
+Development is processed through milestones, by 2 week intervals. 
+There are three branches that forms the current release process.
+
+### Develop
+All PRs should be pushed to the `develop` branch. At the end of each milestone this branch is pushed to `staging`. 
+New commits are automatically deployed to this branch and published for review.
+
+Available for browsing on https://develop.bitshares.org/
+
+### Staging (Current Release Candidate)
+At the end of each milestone, `develop` branch is pushed to staging and forms the Release Candidate. Milestone 180601 forms the 180615-RC*.
+
+Application breaking issues and bugs should be submitted to the issue tracker. PRs should be pushed to `staging`.
+
+New commits are automatically deployed to this branch and published for review.
+
+Available for browsing on https://staging.bitshares.org/
+
+### Master (stable)
+When all issues to the current RC, `staging` branch is released to the stable `master` branch.
+
+Available for browsing on https://wallet.bitshares.org/, which is the official reference wallet for Bitshares.
+
 
 ## Coding style guideline
 

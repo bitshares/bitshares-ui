@@ -1103,12 +1103,12 @@ class Header extends React.Component {
                                 <div className="table-cell">
                                     <Icon
                                         size="2x"
-                                        name="folder"
-                                        title="icons.folder"
+                                        name="people"
+                                        title="icons.manage_accounts"
                                     />
                                 </div>
                                 <div className="table-cell">
-                                    <Translate content="explorer.accounts.title" />
+                                    <Translate content="header.accounts_manage" />
                                 </div>
                             </li>
                             {accountsList}

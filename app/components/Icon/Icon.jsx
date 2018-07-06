@@ -56,7 +56,8 @@ let icons = [
     "withdraw",
     "filter",
     "info-circle-o",
-    "zoom"
+    "zoom",
+    "people"
 ];
 
 let icons_map = {};

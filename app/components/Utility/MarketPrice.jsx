@@ -45,20 +45,16 @@ class MarketStats extends React.Component {
     }
 
     componentWillMount() {
-        MarketsActions.getMarketStats(this.props.base, this.props.quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(
-            MarketsActions.getMarketStats.bind(
-                this,
-                this.props.base,
-                this.props.quote
-            ),
-            35 * 1000
-        );
+        // this.statsInterval = MarketsActions.getMarketStatsInterval(
+        //     35 * 1000,
+        //     this.props.base,
+        //     this.props.quote
+        // );
     }
 
     componentWillUnmount() {
-        clearInterval(this.statsInterval);
+        if (this.statsInterval) this.statsInterval();
     }
 }
 

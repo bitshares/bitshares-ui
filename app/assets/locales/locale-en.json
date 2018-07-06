@@ -456,6 +456,16 @@
             }
         }
     },
+    "connection": {
+        "title_out_of_sync": "Connection out of sync",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically.",
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now"
+    },
     "dashboard": {
         "featured_markets": "Featured Markets",
         "starred_markets": "Starred Markets",
@@ -956,6 +966,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "Manage Accounts",
         "account": "Account",
         "account_notify": "The active account is now %(account)s",
         "account_value": "Account value",
@@ -986,6 +997,7 @@
         "update_asset": "Update Asset"
     },
     "icons": {
+        "manage_accounts": "Manage Accounts",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1334,11 +1346,11 @@
         "feed_producer":
             "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy":
-            "Place order %(order)s to buy {amount} at {price} for {account}",
+            "Place an order to buy {amount} at {price} for {account}",
         "limit_order_create":
             "Place an order to buy %(buy_amount)s for %(sell_amount)s for %(account)s",
         "limit_order_sell":
-            "Place order %(order)s to sell {amount} at {price} for {account}",
+            "Place an order to sell {amount} at {price} for {account}",
         "override_transfer":
             "Transfer {amount} from {from} to {to} by authority of {issuer}",
         "proposals": "Proposals",
@@ -1422,7 +1434,7 @@
             "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Always",
         "connection_error":
-            "Unable to connect to API node %(url)s, falling back to known working nodes",
+            "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
         "enable_wallet": "Enable local wallet",
@@ -1454,6 +1466,7 @@
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Remove",
         "remove_api": "Remove Node",
         "remove_ws": "Remove Node",

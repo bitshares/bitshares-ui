@@ -954,6 +954,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "계정 관리",
         "account": "계정",
         "account_notify": "The active account is now %(account)s",
         "account_value": "계정 값",
@@ -982,6 +983,7 @@
         "update_asset": "Update Asset"
     },
     "icons": {
+        "accounts_manage": "계정 관리",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
