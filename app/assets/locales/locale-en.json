@@ -456,6 +456,16 @@
             }
         }
     },
+    "connection": {
+        "title_out_of_sync": "Connection out of sync",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically.",
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now"
+    },
     "dashboard": {
         "featured_markets": "Featured Markets",
         "starred_markets": "Starred Markets",
@@ -1422,7 +1432,7 @@
             "Are you sure you want to remove %(name)s from your available nodes?",
         "confirm_yes": "Always",
         "connection_error":
-            "Unable to connect to API node %(url)s, falling back to known working nodes",
+            "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
         "enable_wallet": "Enable local wallet",
@@ -1454,6 +1464,7 @@
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Remove",
         "remove_api": "Remove Node",
         "remove_ws": "Remove Node",
