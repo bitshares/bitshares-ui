@@ -6,6 +6,8 @@ let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 import {ChainTypes} from "bitsharesjs/es";
 var {object_type} = ChainTypes;
 
+import {getAssetNamespaces, getAssetHideNamespaces} from "branding";
+
 var Utils = {
     is_object_id: obj_id => {
         if ("string" != typeof obj_id) return false;
@@ -403,15 +405,7 @@ var Utils = {
             !asset.getIn(["bitasset", "is_prediction_market"]) &&
             asset.get("issuer") === "1.2.0";
 
-        let toReplace = [
-            "TRADE.",
-            "OPEN.",
-            "METAEX.",
-            "BRIDGE.",
-            "RUDEX.",
-            "GDEX.",
-            "WIN."
-        ];
+        let toReplace = getAssetNamespaces();
         let suffix = "";
         let i;
         for (i = 0; i < toReplace.length; i++) {
@@ -421,11 +415,11 @@ var Utils = {
             }
         }
 
-        let prefix = isBitAsset
-            ? "bit"
-            : toReplace[i]
-                ? toReplace[i].toLowerCase()
-                : null;
+        let namespace = isBitAsset ? "bit" : toReplace[i];
+        let prefix = null;
+        if (!getAssetHideNamespaces().find(a => a.indexOf(namespace) !== -1)) {
+            prefix = namespace ? namespace.toLowerCase() : null;
+        }
 
         return {
             name,

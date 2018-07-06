@@ -10,6 +10,8 @@ import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
 import accountUtils from "common/account_utils";
 import {Tabs, Tab} from "../Utility/Tabs";
+import {getWalletName} from "branding";
+import {getWalletURL} from "../../branding";
 
 class FeeHelp extends React.Component {
     static propTypes = {
@@ -176,11 +178,16 @@ class AccountMembership extends React.Component {
                                                         <h4>
                                                             <Translate content="account.member.referral_link" />
                                                         </h4>
-                                                        <Translate content="account.member.referral_text" />:
-                                                        <h5
-                                                        >{`https://wallet.bitshares.org/?r=${
-                                                            account.name
-                                                        }`}</h5>
+                                                        <Translate
+                                                            content="account.member.referral_text"
+                                                            wallet_name={getWalletName()}
+                                                        />:
+                                                        <h5>
+                                                            {getWalletURL() +
+                                                                `/?r=${
+                                                                    account.name
+                                                                }`}
+                                                        </h5>
                                                     </div>
                                                 ) : null}
                                                 <h4>

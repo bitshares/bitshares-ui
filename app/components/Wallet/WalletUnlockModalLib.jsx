@@ -1,6 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import {getWalletName} from "branding";
 
 /* Dummy input to trick Chrome into disabling auto-complete */
 export const DisableChromeAutocomplete = () => (
@@ -93,7 +94,9 @@ export const LoginButtons = ({onLogin, backupLogin}) => (
         className="button"
         data-place="bottom"
         data-html
-        data-tip={counterpart.translate("tooltip.login")}
+        data-tip={counterpart.translate("tooltip.login", {
+            wallet_name: getWalletName()
+        })}
         onClick={onLogin}
     >
         <Translate

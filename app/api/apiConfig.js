@@ -1,3 +1,5 @@
+import {getFaucet} from "../branding";
+
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
@@ -147,7 +149,7 @@ export const settingsAPIs = {
             location: "TESTNET - APT BitShares (Dallas, USA)"
         }
     ],
-    DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
+    DEFAULT_FAUCET: getFaucet().url,
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };

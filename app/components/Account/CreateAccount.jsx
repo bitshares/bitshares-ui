@@ -22,6 +22,7 @@ import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
+import {getWalletName} from "branding";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -367,7 +368,10 @@ class CreateAccount extends React.Component {
 
                 <p>
                     {!hasWallet ? (
-                        <Translate content="wallet.has_wallet" />
+                        <Translate
+                            content="wallet.has_wallet"
+                            wallet_name={getWalletName()}
+                        />
                     ) : null}
                 </p>
 

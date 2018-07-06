@@ -24,6 +24,7 @@ import {ChainStore} from "bitsharesjs/es";
 import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import {openledgerAPIs} from "api/apiConfig";
+import {getWalletName} from "branding";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -445,6 +446,7 @@ class DepositWithdrawContent extends DecimalChecker {
                     <Translate
                         content="gateway.withdraw_funds"
                         asset={assetName}
+                        wallet_name={getWalletName()}
                     />
                 </p>
 
@@ -661,6 +663,7 @@ class DepositWithdrawContent extends DecimalChecker {
                         unsafe
                         content="gateway.add_funds"
                         account={this.props.sender.get("name")}
+                        wallet_name={getWalletName()}
                     />
                 </p>
 
