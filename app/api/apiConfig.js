@@ -1,5 +1,3 @@
-import {getFaucet} from "../branding";
-
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
@@ -51,6 +49,16 @@ export const gdex2APIs = {
     TRADING_PAIRS: "/trading-pairs"
 };
 
+export const citadelAPIs = {
+    BASE: "https://citadel.li/trade",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
 // Legacy Deposit/Withdraw
 export const gdexAPIs = {
     BASE: "https://api.gdex.io",
@@ -81,6 +89,8 @@ export const settingsAPIs = {
         },
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
         {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
+        {url: "wss://citadel.li/node", location: "Island"},
+        {url: "ws://citadel2miawoaqw.onion/node", location: "Citadel Tor"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
@@ -98,8 +108,6 @@ export const settingsAPIs = {
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
         {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
         {url: "wss://node.market.rudex.org", location: "Germany"},
-        {url: "wss://api.bitsharesdex.com/ws", location: "Missouri, USA"},
-        {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
         {
             url: "wss://eu.nodes.bitshares.ws",
             location: "Central Europe - BitShares Infrastructure Program"
@@ -151,7 +159,7 @@ export const settingsAPIs = {
             location: "TESTNET - APT BitShares (Dallas, USA)"
         }
     ],
-    DEFAULT_FAUCET: getFaucet().url,
+    DEFAULT_FAUCET: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
     TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
     RPC_URL: "https://openledger.info/api/"
 };

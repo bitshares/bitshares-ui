@@ -422,18 +422,6 @@
             "whitelist_authorities": "Источник белого списка"
         }
     },
-    "app_init": {
-        "browser": "Неподдерживаемый браузер",
-        "browser_text":
-            "Браузер, который Вы используете, не тестировался на предмет поддержки кошелька BitShares. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не проведем полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
-        "connected": "Соединение установлено",
-        "connecting": "Подключение к серверу API: %(server)s",
-        "not_connected": "Нет соединения",
-        "retry": "Повторить попытку",
-        "title": "Проблемы инициализации приложения",
-        "understand": "Я понимаю",
-        "ws_status": "Состояние подключения полного узла"
-    },
     "borrow": {
         "adjust": "Обновить позицию",
         "adjust_short": "Изменить",
@@ -491,9 +479,9 @@
         "buysell_formatter": "{direction} {asset}",
         "call": "Цена досрочного погашения",
         "change": "Изменение",
-        "chart_height": "Высота графика (в пикселях)",
-        "chart_modal": "Параметры графика",
-        "chart_type": "Тип графика",
+        "chart_height": "Chart height (pixels)",
+        "chart_modal": "Chart options",
+        "chart_type": "Chart type",
         "confirm_buy":
             "Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
         "confirm_no_orders_buy":
@@ -510,7 +498,6 @@
         "feed_price": "Котировка",
         "filter": "Фильтр...",
         "flip": "Инвертировать",
-        "group_order_limit": "группа",
         "hide": "Скрыть",
         "highest_bid": "Наивысшая ставка",
         "history": "Рыночные сделки",
@@ -542,13 +529,10 @@
         "my_bids": "Мои ставки",
         "my_history": "Мои сделки",
         "my_orders": "Мои открытые ордера",
-        "native": "Встроенная",
+        "native": "Native",
         "new": "Новый",
-        "no_asks": "No asks",
         "no_balance": "Недостаточно средств",
-        "no_bids": "No bids",
         "no_data": "Нет данных",
-        "no_orders": "No orders",
         "order_depth": "Глубина Рынка",
         "others": "Другие",
         "overbought": "Перекуплен",
@@ -705,7 +689,7 @@
             "time": "Время",
             "title": "Блок",
             "transactions": "Количество транзакций",
-            "trx": "Транзакции",
+            "trx": "Транзакция",
             "witness": "Заверитель"
         },
         "blocks": {
@@ -741,15 +725,15 @@
         },
         "proposals": {
             "authority_depth_warning":
-                "Это предложение может не получить утверждения, так как данное разрешение превышает максимальный уровень полномочий.",
+                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
             "children_authority_depth_warning":
-                "Это предложение может не получить утверждения, так как данное разрешение превышает максимальный уровень полномочий.",
-            "failed": "Неутвержденные",
-            "failed_execute": "Утвержденные, не удалось выполнить.",
-            "pending": "Ожидающие",
-            "pending_approval": "Ожидающие утверждения",
-            "pending_review": "Утвержденные, ожидающие проверки",
-            "review": "Проверить",
+                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "failed": "Failed",
+            "failed_execute": "Approved, failed to execute.",
+            "pending": "Pending",
+            "pending_approval": "Pending approval.",
+            "pending_review": "Approved, review time.",
+            "review": "Review",
             "title": "Предложенные транзакции"
         },
         "witnesses": {
@@ -849,6 +833,14 @@
             "Пожалуйста, выберите валюту, в которой хотели бы разместить депозит",
         "choose_withdraw":
             "Пожалуйста, выберите валюту, которую хотели бы вывести",
+        "citadel": {
+            "coming_soon": "Скоро",
+            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Пожалуйста введите число >= минимума",
+            "support_block":
+                "Для получения поддержки, пожалуйста, свяжитесь с Citadel по адресу:",
+            "under_construction": "Технические работы"
+        },
         "contact_TRADE": "Связаться с Blocktrades",
         "convert": "Конвертировать внутри системы",
         "convert_coin": "Конвертировать в %(coin)s (%(symbol)s)",
@@ -972,11 +964,9 @@
         "cancel": "Отменить",
         "confirm": "Подтвердить",
         "help": "Помощь",
-        "return_to_top": "Вернуться к началу",
-        "scan_qr_code": "Сканировать QR-код"
+        "scan_qr_code": "Scan QR code"
     },
     "header": {
-        "accounts_manage": "Учетные записи",
         "account": "Аккаунт",
         "account_notify": "Активный аккаунт в настоящее время %(account)s",
         "account_value": "Оценка",
@@ -1007,12 +997,11 @@
         "update_asset": "Обновить актив"
     },
     "icons": {
-        "accounts_manage": "Учетные записи",
-        "adjust": "Настроить маржинальную позицию",
+        "adjust": "Изменить маржинальную позицию",
         "assets": "Активы",
         "checkmark_circle": {
-            "approved": "Подтверждено",
-            "operation_succeed": "Операция выполнена успешно",
+            "approved": "Утверждено",
+            "operation_succeed": "Операция успешна",
             "yes": "Да"
         },
         "chevron_down": {
@@ -1024,59 +1013,59 @@
             "copy": "Скопировать в буфер обмена",
             "withdraw_full": "Вывести баланс целиком"
         },
-        "clock": "Пожалуйста, сверьтесь с часами на вашем компьютере",
+        "clock": "Пожалуйста, проверьте часы на вашем компьютере",
         "cog": "Настройки",
         "cogs": "Настройки",
         "connect": "Подключиться к этому узлу API",
-        "connected": "API узел подключен",
+        "connected": "Узел API подключен",
         "cross_circle": {
             "cancel_order": "Отменить ордер",
             "close_position": "Закрыть позицию",
-            "hide_asset": "Скрыть актив",
-            "hide_market": "Скрыть рынок",
-            "operation_failed": "Не удалось выполнить операцию",
+            "hide_asset": "Спрятать актив",
+            "hide_market": "Спрятать рынок",
+            "operation_failed": "Операция провалена",
             "remove": "Удалить"
         },
-        "dashboard": "Инфопанель",
+        "dashboard": "Панель управления",
         "deposit": {
-            "deposit": "Пополнить счет",
-            "deposit_withdraw": "Пополнить/Вывести"
+            "deposit": "Пополнить",
+            "deposit_withdraw": "Ввод/Вывод"
         },
-        "disconnected": "API узел отключен",
+        "disconnected": "Узел API отключен",
         "dollar": {
-            "borrow": "Занять",
+            "borrow": "Одолжить",
             "buy": "Купить"
         },
-        "download": "Скачать новую версию интерфейса BitShares",
-        "excel": "Скачать CSV-файл",
-        "eye": "Скрыть узел",
-        "eye-striked": "Показать узел",
+        "download": "Скачать новую версию BitShares UI",
+        "excel": "Скачать файл .csv",
+        "eye": "Спрятать узел",
+        "eye-striked": "Отобразить узел",
         "fees": "Комиссии",
         "fi_star": {
-            "account": "Добавить/удалить аккаунт из списка избранных",
-            "market": "Добавить/удалить рынок из списка избранных",
-            "sort_accounts": "Сортировать по избранным",
-            "symbol": "Добавить/удалить символ из списка избранных"
+            "account": "Добавить/удалить аккаунт из избранного",
+            "market": "Добавить/удалить рынок из избранного",
+            "sort_accounts": "Сортировать по избранному",
+            "symbol": "Добавить/удалить тикер из избранного"
         },
-        "filter": "Фильтровать",
+        "filter": "Фильтр",
         "folder": "Аккаунты",
         "hamburger": "Открыть меню",
         "hamburger_x": "Закрыть меню",
-        "hourglass": "Вестинговые счета",
+        "hourglass": "Вестинговые балансы",
         "info_circle_o": "Информация",
         "key": "Ключ",
         "list": "Белый список",
         "locked": {
             "action":
-                "Нажмите, чтобы разблокировать возможность выполнения этого действия вашим аккаунтом",
-            "common": "Нажмите, чтобы разблокировать свой аккаунт",
-            "enable_auto_scroll": "Разрешить автопрокрутку"
+                "Щелкните для разблокировки аккаунта для совершения этого действия",
+            "common": "Щелкните для разблокировки аккаунта",
+            "enable_auto_scroll": "Включить автопрокрутку"
         },
         "minus_circle": {
-            "disapproved": "Отклоненные",
+            "disapproved": "Не утверждено",
             "no": "Нет",
             "remove_contact": "Удалить контакт из списка",
-            "wrong_address": "Не удается создать адрес"
+            "wrong_address": "Невозможно создать адрес"
         },
         "news": "Новости",
         "plus_circle": {
@@ -1084,17 +1073,17 @@
             "show_asset": "Показать актив",
             "show_market": "Показать рынок"
         },
-        "power": "Войти",
+        "power": "Логин",
         "question_circle": "Помощь",
-        "server": "Исследовать",
-        "settle": "Запросить расчет",
-        "share": "Подробнее",
-        "shuffle": "Поменять местами торговые пары",
+        "server": "Обозреватель",
+        "settle": "Погашение",
+        "share": "Детальнее",
+        "shuffle": "Переключить торговую пару",
         "text": {
             "membership_stats": "Статистика членства",
             "signed_messages": "Подписанные сообщения"
         },
-        "thumb_tack": "Прикрепить панель к левой стороне",
+        "thumb_tack": "Прикрепить панель слева",
         "thumb_untack": "Открепить панель",
         "thumbs_up": "Голосование",
         "times": "Удалить узел API",
@@ -1104,22 +1093,33 @@
         },
         "transfer": "Отправить",
         "unlocked": {
-            "common": "Нажмите, чтобы заблокировать свой аккаунт",
-            "disable_auto_scroll": "Запретить автопрокрутку"
+            "common": "Щелкните для блокировки аккаунта",
+            "disable_auto_scroll": "Выключить автопрокрутку"
         },
         "user": {
             "account": "Аккаунт",
             "create_account": "Создать аккаунт",
-            "following": "Вы подписаны на этого пользователя"
+            "following": "Вы отслеживаете этого пользователя"
         },
-        "warning": "Разрешения",
-        "withdraw": "Вывести",
+        "warning": "Права доступа",
+        "withdraw": "Вывод",
         "zoom": "Поиск"
     },
     "incognito": {
         "mode": "Приватный/Инкогнито:",
         "warning":
             "Если вы закрываете браузер без резервного копирования вашего кошелька, вы потеряете этот счет навсегда."
+    },
+    "init_error": {
+        "browser": "Неподдерживаемый браузер",
+        "browser_text":
+            "Браузер, который Вы используете, не тестировался на поддержку кошелька BitShares. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не найдем время, чтобы провести полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
+        "connected": "Соединение установлено",
+        "not_connected": "Отключено",
+        "retry": "Повторить",
+        "title": "Проблемы инициализации приложения",
+        "understand": "Я понимаю",
+        "ws_status": "Состояние подключения полного узла"
     },
     "languages": {
         "de": "Deutsch",
@@ -1271,8 +1271,6 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} обновился до годового членства",
-        "asset_claim_pool":
-            "{account} востребовал {amount} из пула комиссий {asset}",
         "asset_create": "{account} создал актив {asset}",
         "asset_fund_fee_pool":
             "{account} финансировал пул комиссий {asset} в размере {amount}",
@@ -1281,28 +1279,25 @@
         "asset_issue": "{account} эмитировал {amount} к {to}",
         "asset_reserve": "{account} сжег (зарезервировал) {amount}",
         "asset_settle": "{account} запросил погашение {amount}",
-        "asset_settle_cancel": "{account} отменил погашение {amount}",
+        "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} обновил актив {asset}",
         "asset_update_feed_producers":
             "{account} обновил определяющих котировки актива {asset}",
-        "asset_update_issuer": "{from_account} переслал {asset} {to_account}",
         "balance_claim": "{account} запросил баланс в размере {amount}",
         "blacklisted_by": "{lister} добавил аккаунт {listee} в черный список",
         "call_order_update":
             "{account} изменил {debtSymbol} долг на {debt} и залог на {collateral}",
         "committee_member_update_global_parameters":
             "{account} обновил общие параметры комитета",
-        "fill_order_buy":
-            "{account} купил {amount} по цене {price} в ордере #%(order)s",
-        "fill_order_sell":
-            "{account} продал {amount} по цене {price} в ордере #%(order)s",
+        "fill_order_buy": "{account} купил {amount} при цене {price}",
+        "fill_order_sell": "{account} продал {amount} при цене {price}",
         "lifetime_upgrade_account":
             "{account} обновился до пожизненного членства",
         "limit_order_buy":
-            "{account} разместил ордер #%(order)s на покупку {amount} по {price}",
+            "{account} разместил ордер на покупку {amount} за {price}",
         "limit_order_cancel": "{account} отменил ордер #%(order)s",
         "limit_order_sell":
-            "{account} разместил ордер #%(order)s на продажу {amount} по {price}",
+            "{account} разместил ордер на продажу {amount} за {price}",
         "no_recent": "Нет недавних транзакций",
         "override_transfer": "{issuer} перевел {amount} с {from} на {to}",
         "pending": "обрабатывается ещё %(blocks)s блоков",
@@ -1341,11 +1336,11 @@
     "proposal": {
         "action": "Действия",
         "approve": "Подтвердить",
-        "approvers": "Утвердитель(и)",
+        "approvers": "Approver(s)",
         "asset_create": "Создать актив %(asset)s, используя аккаунт {account}",
         "asset_issue": "Выпустить {amount} {to}, используя {account}",
         "asset_reserve": "Сжечь (зарезервировать) {amount} с помощью {account}",
-        "asset_settle": "Запросить погашение {amount} на {account}",
+        "asset_settle": "Запросить расчет",
         "asset_update": "Обновить актив %(asset)s, используя аккаунт {account}",
         "call_order_update":
             "Изменить {debtSymbol} долг {account} на {debt} и залог на {collateral}",
@@ -1355,14 +1350,14 @@
         "feed_producer":
             "Обновить поставщиков котировок для актива {asset} используя аккаунт {account}",
         "limit_order_buy":
-            "Разместить ордер на покупку {amount} по {price} для {account}",
+            "Разместить ордер на покупку {amount} за {price} для {account}",
         "limit_order_create":
             "Разместить ордер на покупку %(buy_amount)s за %(sell_amount)s для %(account)s",
         "limit_order_sell":
-            "Разместить ордер на продажу {amount} по {price} для {account}",
+            "Разместить ордер на продажу {amount} за {price} для {account}",
         "override_transfer":
             "Перевести {amount} от {from} к {to} по поручению {issuer}",
-        "proposals": "Предложения",
+        "proposals": "Proposals",
         "reject": "Отклонить",
         "status": "Статус",
         "transfer": "Перевести {amount} с {from} на {to}",
@@ -1389,10 +1384,10 @@
     },
     "propose": "Предложить",
     "qr_address_scanner": {
-        "address_found": "Найденные адреса",
+        "address_found": "Адрес найден",
         "amount": "Количество",
-        "retry": "Повторить попытку",
-        "use_address": "Использовать адрес"
+        "retry": "Еще раз",
+        "use_address": "Использовать"
     },
     "refcode": {
         "claim": "Ввести",
@@ -1562,7 +1557,6 @@
             "Владелец %(asset)s назначил для ордеров на покупку рыночную комиссию в размере %(percent)s%%. Эта комиссия будет вычтена из суммы, полученной Вами при выполнении ордера, в момент же размещения ордера она не взимается.",
         "memo_tip":
             "В поле примечания Вы можете включить любое сообщение. Примечание необязательно, но обычно необходимо для перевода на биржи.",
-        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "Для этого актива нет доступной недавней цены, которая может быть использована для оценки его стоимости.",
         "over_limit":
@@ -1595,7 +1589,7 @@
     "transaction": {
         "amount_sell": "Количество для продажи",
         "asset_claim_fees":
-            "востребовал комиссии актива {balance_amount} из пула комиссий {asset}",
+            "востребовал комиссии актива %(balance_amount)s из %(asset)s пула комиссий",
         "asset_reserve": "сумма сожженого актива",
         "at": "в",
         "balance_id": "Идентификатор баланса",
@@ -1682,7 +1676,6 @@
             "all": "Показать все",
             "assert": "Операция подтверждения",
             "asset_claim_fees": "Взыскание комиссий с активов",
-            "asset_claim_pool": "Востребовать пул комиссий актива",
             "asset_create": "Создание актива",
             "asset_fund_fee_pool": "Пополнение пула комиссий актива",
             "asset_global_settle": "Глобальное погашение активов",
@@ -1690,12 +1683,11 @@
             "asset_publish_feed": "Публикация котировок",
             "asset_reserve": "Сжечь актив",
             "asset_settle": "Погашение активов",
-            "asset_settle_cancel": "Отменить погашение актива",
+            "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Обновление актива",
             "asset_update_bitasset": "Обновление SmartCoin",
             "asset_update_feed_producers":
                 "Обновление производителей котировок актива",
-            "asset_update_issuer": "Обновить эмитента актива",
             "balance_claim": "Взыскание баланса",
             "blind_transfer": "Слепой перевод",
             "call_order_update": "Обновление залога",

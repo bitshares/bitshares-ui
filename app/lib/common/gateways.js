@@ -8,16 +8,16 @@ import {
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
+    citadelAPIs,
     gdex2APIs
 } from "api/apiConfig";
-import {allowedGateway} from "branding";
 
 export const availableGateways = {
     OPEN: {
         id: "OPEN",
         name: "OPENLEDGER",
         baseAPI: openledgerAPIs,
-        isEnabled: allowedGateway("OPEN"),
+        isEnabled: true,
         selected: false,
         options: {
             enabled: false,
@@ -28,7 +28,7 @@ export const availableGateways = {
         id: "RUDEX",
         name: "RUDEX",
         baseAPI: rudexAPIs,
-        isEnabled: allowedGateway("RUDEX"),
+        isEnabled: true,
         isSimple: true,
         selected: false,
         simpleAssetGateway: true,
@@ -43,7 +43,7 @@ export const availableGateways = {
         id: "WIN",
         name: "Winex",
         baseAPI: widechainAPIs,
-        isEnabled: allowedGateway("WIN"),
+        isEnabled: true,
         selected: false,
         options: {
             enabled: false,
@@ -54,7 +54,7 @@ export const availableGateways = {
         id: "BRIDGE",
         name: "CRYPTO-BRIDGE",
         baseAPI: cryptoBridgeAPIs,
-        isEnabled: allowedGateway("BRIDGE"),
+        isEnabled: true,
         selected: false,
         singleWallet: true, // Has no coresponging coinType == backingCoinType specific wallet
         addressValidatorAsset: true, // Address validator requires output_asset parameter
@@ -69,7 +69,18 @@ export const availableGateways = {
         id: "GDEX",
         name: "GDEX",
         baseAPI: gdex2APIs,
-        isEnabled: allowedGateway("GDEX"),
+        isEnabled: true,
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    CITADEL: {
+        id: "CITADEL",
+        name: "CITADEL",
+        baseAPI: citadelAPIs,
+        isEnabled: true,
+        selected: false,
         options: {
             enabled: false,
             selected: false
