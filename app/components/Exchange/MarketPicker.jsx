@@ -88,7 +88,7 @@ class MarketPickerWrapper extends React.Component {
 
         let quote = value.toUpperCase();
 
-        if (quote.length >= 3) this.getAssetList(quote, 10, gatewayAssets);
+        if (quote.length >= 2) this.getAssetList(quote, 10, gatewayAssets);
 
         this.setState({
             lookupQuote: quote

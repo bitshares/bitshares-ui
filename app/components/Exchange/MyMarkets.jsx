@@ -482,7 +482,7 @@ class MyMarkets extends React.Component {
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
         /* Don't lookup invalid asset names */
-        if (toFind && toFind.length >= 3 && !isValidName) return;
+        if (toFind && toFind.length >= 2 && !isValidName) return;
 
         this.setState({
             inputValue: e.target.value.trim(),
