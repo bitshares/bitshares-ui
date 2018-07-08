@@ -515,9 +515,7 @@ class MyMarkets extends React.Component {
             marketLookupInput: value.toUpperCase()
         });
 
-        if (quote.length >= 3) this.getAssetList(quote, 50, gatewayAssets);
-
-
+        this.getAssetList(quote, 50, gatewayAssets);
     }
 
     toggleActiveMarketTab(index) {
