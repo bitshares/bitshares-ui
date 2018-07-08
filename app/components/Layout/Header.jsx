@@ -287,14 +287,6 @@ class Header extends React.Component {
         }
     }
 
-    _onAddContact() {
-        AccountActions.addAccountContact(this.props.currentAccount);
-    }
-
-    _onRemoveContact() {
-        AccountActions.removeAccountContact(this.props.currentAccount);
-    }
-
     render() {
         let {active} = this.state;
         let {
@@ -314,7 +306,6 @@ class Header extends React.Component {
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
-        const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
             !!a &&
             Apis.instance() &&
@@ -1167,6 +1158,7 @@ class Header extends React.Component {
                                 passwordLogin={passwordLogin}
                                 onNavigate={this._onNavigate.bind(this)}
                                 isMyAccount={isMyAccount}
+                                contacts={this.props.contacts}
                                 showAccountLinks={showAccountLinks}
                                 tradeUrl={tradeUrl}
                                 currentAccount={currentAccount}
