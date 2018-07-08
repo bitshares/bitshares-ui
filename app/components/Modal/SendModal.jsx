@@ -21,7 +21,6 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
-import PropTypes from "prop-types";
 import {getWalletName} from "branding";
 
 class SendModal extends React.Component {
@@ -916,10 +915,11 @@ SendModalConnectWrapper = connect(SendModalConnectWrapper, {
     listenTo() {
         return [AccountStore];
     },
-    getProps() {
+    getProps(props) {
         return {
             currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount
+            passwordAccount: AccountStore.getState().passwordAccount,
+            tabIndex: props.tabIndex || 0
         };
     }
 });

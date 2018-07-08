@@ -38,7 +38,7 @@ class AccountSelector extends React.Component {
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: PropTypes.array
+        typeahead: PropTypes.bool
     };
 
     static defaultProps = {
