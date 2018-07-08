@@ -477,36 +477,30 @@ class MyMarkets extends React.Component {
         this._setMinWidth();
     }
 
-    _onInputName(e) {
-        let inputValue = e.target.value.trim().toUpperCase();
-        let isValidName = !ChainValidation.is_valid_symbol_error(
-            inputValue,
-            true
-        );
-
-        this.setState({
-            inputValue
-        });
+    _onInputName(getBackedAssets, e) {
+        let toFind = e.target.value.trim().toUpperCase();
+        let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
         /* Don't lookup invalid asset names */
-        if (inputValue && inputValue.length >= 3 && !isValidName) {
-            return this.setState({
-                assetNameError: true
-            });
-        } else {
-            this.setState({
-                assetNameError: false
-            });
-        }
-        this._lookupAssets(inputValue);
-    }
+        if (toFind && toFind.length >= 3 && !isValidName) return;
 
-    _lookupAssets(value, force = false) {
-        // console.log("__lookupAssets", value, force);
-        if (!value && value !== "") {
-            return;
+        this.setState({
+            inputValue: e.target.value.trim(),
+            activeSearch: true
+        });
+
+        if (this.state.inputValue !== toFind) {
+            this.timer && clearTimeout(this.timer);
         }
-        let now = new Date();
+
+        this.timer = setTimeout(() => {
+            this._lookupAssets(toFind, getBackedAssets);
+        }, 1500);
+    }
+    
+    _lookupAssets(value, gatewayAssets = false) {
+
+        if (!value && value !== "") return;
 
         let symbols = value.toUpperCase().split(":");
         let quote = symbols[0];
@@ -521,19 +515,9 @@ class MyMarkets extends React.Component {
             marketLookupInput: value.toUpperCase()
         });
 
-        if (this.state.lookupQuote !== quote || force) {
-            if (quote.length < 1 || now - lastLookup <= 250) {
-                return false;
-            }
-            this.getAssetList(quote, 50);
-        } else {
-            if (base && this.state.lookupBase !== base) {
-                if (base.length < 1 || now - lastLookup <= 250) {
-                    return false;
-                }
-                this.getAssetList(base, 50);
-            }
-        }
+        if (quote.length >= 3) this.getAssetList(quote, 50, gatewayAssets);
+
+
     }
 
     toggleActiveMarketTab(index) {
@@ -930,7 +914,8 @@ class MyMarkets extends React.Component {
                                             type="text"
                                             value={this.state.inputValue}
                                             onChange={this._onInputName.bind(
-                                                this
+                                                this, 
+                                                true
                                             )}
                                             placeholder={counterpart.translate(
                                                 "exchange.search"
