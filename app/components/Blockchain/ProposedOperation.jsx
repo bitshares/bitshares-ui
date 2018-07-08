@@ -127,7 +127,7 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, current, block, hideExpiration} = this.props;
+        let {op, proposer, current, block, hideExpiration} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -147,23 +147,44 @@ class ProposedOperation extends React.Component {
 
                 column = (
                     <span className="right-td">
-                        <TranslateWithLinks
-                            string="proposal.transfer"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].from,
-                                    arg: "from"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount,
-                                    arg: "amount"
-                                },
-                                {type: "account", value: op[1].to, arg: "to"}
-                            ]}
-                        />
-                        {memoComponent}
+                        <div className="inline-block">
+                        {!!proposer ? 
+                            <div style={{paddingBottom: 5}}>
+                                <TranslateWithLinks
+                                    string="operation.proposal_create"
+                                    keys={[
+                                        {
+                                            type: "account",
+                                            value: proposer,
+                                            arg: "account"
+                                        }
+                                    ]}
+                                />
+                            </div> : null}
+                            <div>
+                                <TranslateWithLinks
+                                    string="proposal.transfer"
+                                    keys={[
+                                        {
+                                            type: "account",
+                                            value: op[1].from,
+                                            arg: "from"
+                                        },
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount,
+                                            arg: "amount"
+                                        },
+                                        {
+                                            type: "account", 
+                                            value: op[1].to, 
+                                            arg: "to"
+                                        }
+                                    ]}
+                                />
+                                {memoComponent}
+                            </div>
+                        </div>
                     </span>
                 );
 
