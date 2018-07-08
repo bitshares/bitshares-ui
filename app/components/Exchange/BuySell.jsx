@@ -167,11 +167,13 @@ class BuySell extends React.Component {
         );
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div 
-                style={{width: "50%"}} 
+                style={{width: "100%"}} 
                 data-tip={counterpart.translate("tooltip.market_fee", {percent: baseMarketFeePercent,asset: (basePrefix || "") + baseName})}
                 className="inline-block tooltip"
             >
-                <Translate content="explorer.asset.summary.market_fee" /> ({baseMarketFeePercent})
+                <div style={{paddingBottom: 6}}>
+                    <Translate content="explorer.asset.summary.market_fee" /> ({baseMarketFeePercent})
+                </div>
                 <Input 
                     defaultValue="0.0"
                     id="baseMarketFee"
@@ -186,11 +188,13 @@ class BuySell extends React.Component {
         );
         var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
             <div 
-                style={{width: "50%"}} 
+                style={{width: "100%"}} 
                 data-tip={counterpart.translate("tooltip.market_fee", {percent: quoteMarketFeePercent, asset: (quotePrefix || "") + quoteName})}
                 className="inline-block tooltip"
             >
-                <Translate content="explorer.asset.summary.market_fee" /> ({quoteMarketFeePercent})
+                <div style={{paddingBottom: 6}}>
+                    <Translate content="explorer.asset.summary.market_fee" /> ({quoteMarketFeePercent})
+                </div>
                 <Input 
                     defaultValue="0.0"
                     id="quoteMarketFee"
@@ -453,166 +457,197 @@ class BuySell extends React.Component {
                         }
                         noValidate
                     >
-                        <div className="grid-block">
-                            <div style={{paddingRight: "1rem", width: "50%"}}>
-                                <span style={{marginBottom: 6}}><Translate content="exchange.price" /></span>
-                                <span style={{marginBottom: 5, float: "right"}}>
-                                    <span
-                                        style={{
-                                            borderBottom:
-                                                "#A09F9F 1px dotted",
-                                            cursor: "pointer"
-                                        }}
-                                        onClick={this.props.setPrice.bind(
-                                            this,
-                                            type,
-                                            currentPriceObject.sellPrice()
-                                        )}
-                                    >
-                                        {isBid ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}
-                                    </span>
-                                </span>
-                                <Input defaultValue="0.0" id={`${type}Price`} value={price} onChange={priceChange} addonAfter={
-                                    <span>
-                                        <AssetName
-                                            dataPlace="right"
-                                            name={base.get("symbol")}
-                                        />
-                                        &nbsp;/&nbsp;
-                                        <AssetName
-                                            dataPlace="right"
-                                            name={quote.get("symbol")}
-                                        />
-                                    </span>} />
-                            </div>
-                            <div style={{width: "50%"}}>
-                                <span style={{marginBottom: 6}}><Translate content="exchange.total" /></span>
-                                <Input 
-                                    defaultValue="0.0" 
-                                    id={`${type}Total`}
-                                    value={total}
-                                    onChange={totalChange}
-                                    addonAfter={
-                                        <AssetName
-                                            dataPlace="right"
-                                            name={base.get("symbol")}
-                                        />
-                                    } 
-                                />
-                            </div>
-                        </div>
-                        <div className="grid-block" style={{paddingTop: 10}}>
-                            <div style={{paddingRight: "1rem", width: "50%"}}>
-                                <span style={{marginBottom: 6}}><Translate content="transfer.amount" /></span>
-                                <span style={{marginBottom: 5, float: "right"}}>
-                                    <span
-                                        style={{
-                                            borderBottom:
-                                                "#A09F9F 1px dotted",
-                                            cursor: "pointer"
-                                        }}
-                                        onClick={this._addBalance.bind(
-                                            this,
-                                            balanceToAdd
-                                        )}
-                                    >
-                                        Use all balance
-                                    </span>
-                                </span>
-                                <Input 
-                                    defaultValue="0.0" 
-                                    id={`${type}Amount`}
-                                    value={amount}
-                                    onChange={amountChange}
-                                    addonAfter={
-                                        <AssetName
-                                            style={{width: 100}}
-                                            dataPlace="right"
-                                            name={quote.get("symbol")}
-                                        />
-                                    } 
-                                />
-                            </div>
-                            <div style={{width: "50%"}}>
-                                <span style={{marginBottom: 6}}><Translate content="transfer.fee" /></span>
-                                <Input.Group>
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-12 medium-12 xlarge-6" style={{paddingRight: 10}}>
+                                <div>
+                                    <div style={{paddingBottom: 6}}><Translate content="exchange.price" />
+                                        <span style={{float: "right"}}>
+                                            <span
+                                                style={{
+                                                    borderBottom:
+                                                        "#A09F9F 1px dotted",
+                                                    cursor: "pointer"
+                                                }}
+                                                onClick={this.props.setPrice.bind(
+                                                    this,
+                                                    type,
+                                                    currentPriceObject.sellPrice()
+                                                )}
+                                            >
+                                                {isBid ? <Translate content="exchange.lowest_ask" /> : <Translate content="exchange.highest_bid" />}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    
+                                    <Input defaultValue="0.0" id={`${type}Price`} value={price} onChange={priceChange} addonAfter={
+                                        <span>
+                                            <AssetName
+                                                dataPlace="right"
+                                                name={base.get("symbol")}
+                                            />
+                                            &nbsp;/&nbsp;
+                                            <AssetName
+                                                dataPlace="right"
+                                                name={quote.get("symbol")}
+                                            />
+                                        </span>} 
+                                    />
+                                </div>
+                                <div>
+                                    <div style={{paddingBottom: 6}}><Translate content="transfer.amount" />
+                                        <span style={{float: "right"}}>
+                                            <span
+                                                style={{
+                                                    borderBottom:
+                                                        "#A09F9F 1px dotted",
+                                                    cursor: "pointer"
+                                                }}
+                                                onClick={this._addBalance.bind(
+                                                    this,
+                                                    balanceToAdd
+                                                )}
+                                            >
+                                                Use all balance
+                                            </span>
+                                        </span>
+                                    </div>
+                                    
                                     <Input 
                                         defaultValue="0.0" 
-                                        id={`${type}Fee`}
-                                        value={
-                                            !hasFeeBalance
-                                                ? counterpart.translate(
-                                                        "transfer.errors.insufficient"
-                                                    )
-                                                : fee.getAmount({real: true})
-                                        }
-                                        disabled
-                                        style={{width: "40%"}}
+                                        id={`${type}Amount`}
+                                        value={amount}
+                                        onChange={amountChange}
+                                        addonAfter={
+                                            <AssetName
+                                                style={{width: 100}}
+                                                dataPlace="right"
+                                                name={quote.get("symbol")}
+                                            />
+                                        } 
                                     />
-                                    <Select 
-                                        style={{width: "60%"}}
-                                        disabled={feeAssets.length === 1}
-                                        defaultValue={feeAssets.indexOf(
-                                            this.props.feeAsset
-                                        )}
-                                        onChange={this.props.onChangeFeeAsset}
-                                    >
-                                        {options}
-                                    </Select>
-                                </Input.Group>
+                                </div>
+                                
                             </div>
-                        </div>
-                        
-                        <div className="grid-block no-overflow" style={{paddingTop: 10}}>
-                            <div style={{paddingRight: "1rem", width: "50%"}} >
-                                <span style={{marginBottom: 5}}><Translate content="transaction.expiration" /></span>
-                                <div className="expiration-datetime-picker" style={{minHeight: 60}}>
-                                    <select
-                                        onChange={this.props.onExpirationTypeChange}
-                                        value={this.props.expirationType}
-                                    >
-                                        {expirationsOptionsList}
-                                    </select>
-                                    {this.props.expirationType === "SPECIFIC" ? (
-                                        <DatePicker
-                                            pickerPosition={"bottom center"}
-                                            wrapperClassName={theme}
-                                            timePicker={true}
-                                            min={minExpirationDate}
-                                            inputFormat={"Do MMM YYYY hh:mm A"}
-                                            value={this.props.expirationCustomTime}
-                                            onChange={this.props.onExpirationCustomChange}
+                            <div className="small-12 medium-12 xlarge-6" style={{paddingRight: 10}}>
+                                <div>
+                                    <div style={{paddingBottom: 6}}><Translate content="exchange.total" /></div>
+                                    <Input 
+                                        defaultValue="0.0" 
+                                        id={`${type}Total`}
+                                        value={total}
+                                        onChange={totalChange}
+                                        addonAfter={
+                                            <AssetName
+                                                dataPlace="right"
+                                                name={base.get("symbol")}
+                                            />
+                                        } 
+                                    />
+                                </div>
+                                <div>
+                                    <div style={{paddingBottom: 6}}><Translate content="transfer.fee" /></div>
+                                    <Input.Group>
+                                        <Input 
+                                            defaultValue="0.0" 
+                                            id={`${type}Fee`}
+                                            value={
+                                                !hasFeeBalance
+                                                    ? counterpart.translate(
+                                                            "transfer.errors.insufficient"
+                                                        )
+                                                    : fee.getAmount({real: true})
+                                            }
+                                            disabled
+                                            style={{width: "40%"}}
                                         />
-                                    ) : null}
+                                        <Select 
+                                            style={{width: "60%"}}
+                                            disabled={feeAssets.length === 1}
+                                            defaultValue={feeAssets.indexOf(
+                                                this.props.feeAsset
+                                            )}
+                                            onChange={this.props.onChangeFeeAsset}
+                                        >
+                                            {options}
+                                        </Select>
+                                    </Input.Group>
+                                </div>
+                                <div>
+                                    {marketFee}
                                 </div>
                             </div>
-                            {marketFee}
                         </div>
 
                         <div className="grid-block no-overflow">
-                            <div style={{width: "100%"}}>
-                                <div>
-                                    Advanced options...
+                            <div className="small-12 medium-12 xlarge-12">
+                                <div className="small-12 medium-6 xlarge-6">
+                                    <span style={{marginBottom: 5}}><Translate content="transaction.expiration" /></span>
+                                    <div className="expiration-datetime-picker" style={{minHeight: 60}}>
+                                        <select
+                                            onChange={this.props.onExpirationTypeChange}
+                                            value={this.props.expirationType}
+                                        >
+                                            {expirationsOptionsList}
+                                        </select>
+                                        {this.props.expirationType === "SPECIFIC" ? (
+                                            <DatePicker
+                                                pickerPosition={"bottom center"}
+                                                wrapperClassName={theme}
+                                                timePicker={true}
+                                                min={minExpirationDate}
+                                                inputFormat={"Do MMM YYYY hh:mm A"}
+                                                value={this.props.expirationCustomTime}
+                                                onChange={this.props.onExpirationCustomChange}
+                                            />
+                                        ) : null}
+                                    </div>
                                 </div>
-                                <div data-tip={disabledText ? disabledText : ""} data-place="left">
-                                    <Button 
-                                        className={disabled ? null : buttonClass}
-                                        disabled={disabled}
-                                        onClick={onSubmit.bind(this, true)}
-                                        type="primary"
-                                        style={{margin: 5}}
-                                    >
-                                        {isBid ? "Buy" : "Sell"}
-                                    </Button>
-                                    <Button
-                                        style={{margin: 5}}
-                                    >
-                                        Clear
-                                    </Button>
-                                    {this.props.backedCoin ? (
+                                <div>
+                                    <div>
+                                        Advanced options...
+                                    </div>
+                                    <div  data-tip={disabledText ? disabledText : ""} data-place="left">
                                         <Button 
+                                            className={disabled ? null : buttonClass}
+                                            disabled={disabled}
+                                            onClick={onSubmit.bind(this, true)}
+                                            type="primary"
                                             style={{margin: 5}}
-                                            onClick={this._onDeposit.bind(this)}>
+                                        >
+                                            {isBid ? "Buy" : "Sell"}
+                                        </Button>
+                                        <Button
+                                            style={{margin: 5}}
+                                        >
+                                            Clear
+                                        </Button>
+                                        {this.props.backedCoin ? (
+                                            <Button 
+                                                style={{margin: 5}}
+                                                onClick={this._onDeposit.bind(this)}>
+                                                    <TranslateWithLinks
+                                                        string="exchange.buysell_formatter"
+                                                        noLink
+                                                        keys={[
+                                                            {
+                                                                type: "asset",
+                                                                value: null,
+                                                                arg: "asset"
+                                                            },
+                                                            {
+                                                                type: "translate",
+                                                                value: "exchange.deposit",
+                                                                arg: "direction"
+                                                            }
+                                                        ]}
+                                                    />
+                                            </Button>
+                                        ) : null}
+                                        {this.props.onBorrow ? (
+                                            <Button 
+                                                style={{margin: 5}}
+                                                onClick={this.props.onBorrow}
+                                            >
                                                 <TranslateWithLinks
                                                     string="exchange.buysell_formatter"
                                                     noLink
@@ -624,62 +659,38 @@ class BuySell extends React.Component {
                                                         },
                                                         {
                                                             type: "translate",
-                                                            value: "exchange.deposit",
+                                                            value: "exchange.borrow",
                                                             arg: "direction"
                                                         }
                                                     ]}
                                                 />
-                                        </Button>
-                                    ) : null}
-                                    {this.props.onBorrow ? (
-                                        <Button 
-                                            style={{margin: 5}}
-                                            onClick={this.props.onBorrow}
-                                        >
-                                            <TranslateWithLinks
-                                                string="exchange.buysell_formatter"
-                                                noLink
-                                                keys={[
-                                                    {
-                                                        type: "asset",
-                                                        value: null,
-                                                        arg: "asset"
-                                                    },
-                                                    {
-                                                        type: "translate",
-                                                        value: "exchange.borrow",
-                                                        arg: "direction"
-                                                    }
-                                                ]}
-                                            />
-                                        </Button>
-                                    ) : null}
-                                    {this.props.currentBridges ? (
-                                        <Button 
-                                            style={{margin: 5}}
-                                            onClick={this._onBuy.bind(this)}
-                                        >
-                                            <TranslateWithLinks
-                                                string="exchange.buysell_formatter"
-                                                noLink
-                                                keys={[
-                                                    {
-                                                        type: "asset",
-                                                        value: null,
-                                                        arg: "asset"
-                                                    },
-                                                    {
-                                                        type: "translate",
-                                                        value: "exchange.buy_quick",
-                                                        arg: "direction"
-                                                    }
-                                                ]}
-                                            />
-                                        </Button>
-                                    ) : null}
-
-                                </div> 
-                               
+                                            </Button>
+                                        ) : null}
+                                        {this.props.currentBridges ? (
+                                            <Button 
+                                                style={{margin: 5}}
+                                                onClick={this._onBuy.bind(this)}
+                                            >
+                                                <TranslateWithLinks
+                                                    string="exchange.buysell_formatter"
+                                                    noLink
+                                                    keys={[
+                                                        {
+                                                            type: "asset",
+                                                            value: null,
+                                                            arg: "asset"
+                                                        },
+                                                        {
+                                                            type: "translate",
+                                                            value: "exchange.buy_quick",
+                                                            arg: "direction"
+                                                        }
+                                                    ]}
+                                                />
+                                            </Button>
+                                        ) : null}
+                                    </div> 
+                                </div>
                             </div>
                         </div>
                         <div>

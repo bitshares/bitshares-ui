@@ -34,7 +34,6 @@ import guide from "intro.js";
 import translator from "counterpart";
 import {Tabs, Button, Icon as AntIcon} from 'bitshares-ui-style-guide'
 import Icon from "../Icon/Icon";
-import DynamicGrid from "./DynamicGrid";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -1415,7 +1414,7 @@ class Exchange extends React.Component {
         let smallScreen = false;
         if (width < 1000) {
             smallScreen = true;
-            exchangeLayout = exchangeLayout <= 2 ? 3 : exchangeLayout;
+            //exchangeLayout = exchangeLayout <= 2 ? 3 : exchangeLayout;
         }
 
         let orderMultiplier = exchangeLayout <= 2 ? 2 : 1;
@@ -1729,7 +1728,9 @@ class Exchange extends React.Component {
 
         let verticalPanel;
 
-        if(exchangeLayout <= 2) {
+        if(smallScreen || hideColumn) {
+            verticalPanel = null;
+        } else if(exchangeLayout <= 2) {
             verticalPanel =
                 <div className="left-order-book no-padding no-overflow">
                     <div className="v-align no-padding align-center grid-block footer shrink column">
@@ -1764,11 +1765,10 @@ class Exchange extends React.Component {
 
         }
 
-        let verticalPanelToggle =
+        let verticalPanelToggle = !smallScreen ?
             <div style={{width: "auto", paddingTop: "calc(50vh - 120px)"}} onClick={this._toggleColumn.bind(this)} >
                 <AntIcon type={(exchangeLayout == 1 && !hideColumn) || (exchangeLayout == 2 && hideColumn) ? "caret-left" : "caret-right"} />
-            </div>
-        ;
+            </div> : null;
 
         let marketsTab = 
             <div className="small-12 medium-6 xlarge-6" style={{paddingLeft: 5, paddingRight: 5}}>
@@ -1880,7 +1880,7 @@ class Exchange extends React.Component {
 
 
 
-        //console.log(exchangeLayout + " - L:" + leftColumnActive + " R:" + rightColumnActive + " Hide:" + this.state.hideColumn);
+        console.log(exchangeLayout + " - L:" + leftColumnActive + " R:" + rightColumnActive + " Hide:" + this.state.hideColumn);
         //console.log(tabMarket, tabAction, tabPanel);
         return (
             <div className="grid-block vertical">
@@ -1925,8 +1925,8 @@ class Exchange extends React.Component {
                     {/* Left Column - Open Orders */}
                     {leftColumnActive ? 
                         <div className="grid-block left-column shrink no-overflow" style={{height: "100%"}}>
-                            {!this.state.hideColumn ? verticalPanel : null}
-                            {!smallScreen ? verticalPanelToggle : null}
+                            {verticalPanel}
+                            {verticalPanelToggle}
                         </div>
                     : null}
 
@@ -2036,8 +2036,8 @@ class Exchange extends React.Component {
                     {/* Right Column */}
                     {rightColumnActive ? 
                         <div className="grid-block right-column shrink no-overflow">
-                            {!smallScreen ? verticalPanelToggle : null}
-                            {!this.state.hideColumn ? verticalPanel : null}
+                            {verticalPanelToggle}
+                            {verticalPanel}
                         </div>
                     : null}
                     
