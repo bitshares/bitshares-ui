@@ -223,6 +223,7 @@
         "html-webpack-plugin": "^3.2.0",
         "husky": "^0.14.3",
         "jest-cli": "^22.4.4",
+        "less-plugin-precompile-import": "git+https://github.com/gibbsfromncis/less-plugin-precompile-import.git#166550452515c03c0d497cae97bf58ba15ca1f84",
         "markdown-loader": "^2.0.2",
         "mini-css-extract-plugin": "^0.4.0",
         "mocha": "^5.1.1",
