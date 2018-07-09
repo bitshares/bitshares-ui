@@ -31,7 +31,7 @@ function clearBatchTimeouts() {
 }
 
 const marketStatsQueue = []; // Queue array holding get_ticker promises
-const marketStatsQueueLength = 10; // Number of get_ticker calls per batch
+const marketStatsQueueLength = 500; // Number of get_ticker calls per batch
 const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
 let marketStatsQueueActive = false;
 
@@ -92,7 +92,7 @@ class MarketsActions {
                         0,
                         marketStatsQueueLength
                     );
-                    Promise.all(currentBatch.map(q => q.promise))
+                    return Promise.all(currentBatch.map(q => q.promise))
                         .then(results => {
                             dispatch({
                                 tickers: results,
@@ -103,6 +103,7 @@ class MarketsActions {
                             marketStatsQueue.splice(0, results.length);
                             if (marketStatsQueue.length === 0) {
                                 marketStatsQueueActive = false;
+                                return;
                             } else {
                                 return processQueue();
                             }

@@ -203,6 +203,23 @@ var Utils = {
         };
     },
 
+    check_market_stats: function(
+        newStats = {close: {}},
+        oldStats = {close: {}}
+    ) {
+        let statsChanged =
+            newStats.volumeBase !== oldStats.volumeBase ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.base,
+                oldStats.close && oldStats.close.base
+            ) ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.quote,
+                oldStats.close && oldStats.close.quote
+            );
+        return statsChanged;
+    },
+
     are_equal_shallow: function(a, b) {
         if ((!a && b) || (a && !b)) {
             return false;

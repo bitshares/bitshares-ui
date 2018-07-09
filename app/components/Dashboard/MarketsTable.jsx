@@ -34,23 +34,9 @@ class MarketRow extends React.Component {
         };
     }
 
-    _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
-        return (
-            newStats.volumeBase !== oldStats.volumeBase ||
-            !utils.are_equal_shallow(
-                newStats.close && newStats.close.base,
-                oldStats.close && oldStats.close.base
-            ) ||
-            !utils.are_equal_shallow(
-                newStats.close && newStats.close.quote,
-                oldStats.close && oldStats.close.quote
-            )
-        );
-    }
-
     shouldComponentUpdate(np, ns) {
         return (
-            this._checkStats(np.marketStats, this.props.marketStats) ||
+            utils.check_market_stats(np.marketStats, this.props.marketStats) ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
