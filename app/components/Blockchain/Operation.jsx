@@ -1006,12 +1006,7 @@ class Operation extends React.Component {
                                                     amount: receivedAmount,
                                                     asset_id: amount.asset_id
                                                 },
-                                                arg: "amount",
-                                                decimalOffset:
-                                                    op[1].receives.asset_id ===
-                                                    "1.3.0"
-                                                        ? 3
-                                                        : null
+                                                arg: "amount"
                                             },
                                             {
                                                 type: "price",
