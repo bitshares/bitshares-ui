@@ -88,7 +88,8 @@ module.exports = function(env) {
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
             DEFAULT_SYMBOL: "BTS",
-            __GIT_BRANCH__: JSON.stringify(git.branch())
+            __GIT_BRANCH__: JSON.stringify(git.branch()),
+            __PERFORMANCE_DEVTOOL__: !!env.perf_dev
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
