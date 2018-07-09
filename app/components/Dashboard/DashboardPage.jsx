@@ -6,7 +6,7 @@ import LoginSelector from "../LoginSelector";
 import AccountStore from "stores/AccountStore";
 
 import {Tabs, Tab} from "../Utility/Tabs";
-import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
+import {StarredMarkets, FeaturedMarkets} from "./Markets";
 
 class DashboardPage extends React.Component {
     render() {

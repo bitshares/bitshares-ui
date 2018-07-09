@@ -254,6 +254,7 @@ class MarketsTable extends React.Component {
     }
 
     componentWillMount() {
+        -this.update();
         ChainStore.subscribe(this.update);
     }
 
@@ -344,71 +345,79 @@ class MarketsTable extends React.Component {
 
     render() {
         let {markets, showFlip, showHidden, filter} = this.state;
-        this.loaded = true;
 
-        let visibleRow = 0;
-        markets = markets.map(row => {
-            let visible = true;
+        const marketRows = markets
+            .map(row => {
+                let visible = true;
 
-            if (row.isHidden !== this.state.showHidden) {
-                visible = false;
-            } else if (filter) {
-                const quoteObject = ChainStore.getAsset(row.quote);
-                const baseObject = ChainStore.getAsset(row.base);
+                if (row.isHidden !== this.state.showHidden) {
+                    visible = false;
+                } else if (filter) {
+                    const quoteObject = ChainStore.getAsset(row.quote);
+                    const baseObject = ChainStore.getAsset(row.base);
 
-                const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
-                    quoteObject
+                    const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
+                        quoteObject
+                    );
+                    const {isBitAsset: baseIsBitAsset} = utils.replaceName(
+                        baseObject
+                    );
+
+                    let quoteSymbol = row.quote;
+                    let baseSymbol = row.base;
+
+                    if (quoteIsBitAsset) {
+                        quoteSymbol = "bit" + quoteSymbol;
+                    }
+
+                    if (baseIsBitAsset) {
+                        baseSymbol = "bit" + baseSymbol;
+                    }
+
+                    const filterPair = filter.includes(":");
+
+                    if (filterPair) {
+                        const quoteFilter = filter.split(":")[0].trim();
+                        const baseFilter = filter.split(":")[1].trim();
+
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(quoteFilter).toLowerCase()) &&
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(baseFilter).toLowerCase());
+                    } else {
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase()) ||
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase());
+                    }
+                }
+
+                if (!visible) return null;
+
+                return (
+                    <MarketRow
+                        {...row}
+                        visible={visible}
+                        handleHide={this._handleHide.bind(
+                            this,
+                            row,
+                            !row.isHidden
+                        )}
+                        handleFlip={this._handleFlip.bind(
+                            this,
+                            row,
+                            !row.inverted
+                        )}
+                    />
                 );
-                const {isBitAsset: baseIsBitAsset} = utils.replaceName(
-                    baseObject
-                );
-
-                let quoteSymbol = row.quote;
-                let baseSymbol = row.base;
-
-                if (quoteIsBitAsset) {
-                    quoteSymbol = "bit" + quoteSymbol;
-                }
-
-                if (baseIsBitAsset) {
-                    baseSymbol = "bit" + baseSymbol;
-                }
-
-                const filterPair = filter.includes(":");
-
-                if (filterPair) {
-                    const quoteFilter = filter.split(":")[0].trim();
-                    const baseFilter = filter.split(":")[1].trim();
-
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(quoteFilter).toLowerCase()) &&
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(baseFilter).toLowerCase());
-                } else {
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase()) ||
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase());
-                }
-            }
-
-            if (visible) ++visibleRow;
-            return (
-                <MarketRow
-                    {...row}
-                    visible={visible}
-                    handleHide={this._handleHide.bind(this, row, !row.isHidden)}
-                    handleFlip={this._handleFlip.bind(this, row, !row.inverted)}
-                />
-            );
-        });
-
+            })
+            .filter(r => !!r);
         return (
             <div>
                 <div className="header-selector">
@@ -477,15 +486,14 @@ class MarketsTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            className="table-empty"
-                            style={{display: visibleRow ? "none" : ""}}
-                        >
-                            <td colSpan={showFlip ? 6 : 5}>
-                                <Translate content="dashboard.table_empty" />
-                            </td>
-                        </tr>
-                        {markets}
+                        {!marketRows.length && (
+                            <tr className="table-empty">
+                                <td colSpan={showFlip ? 7 : 6}>
+                                    <Translate content="dashboard.table_empty" />
+                                </td>
+                            </tr>
+                        )}
+                        {marketRows}
                     </tbody>
                 </table>
             </div>
