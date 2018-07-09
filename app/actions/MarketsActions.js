@@ -31,7 +31,7 @@ function clearBatchTimeouts() {
 }
 
 const marketStatsQueue = []; // Queue array holding get_ticker promises
-const marketStatsQueueLength = 10; // Number of get_ticker calls per batch
+const marketStatsQueueLength = 500; // Number of get_ticker calls per batch
 const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
 let marketStatsQueueActive = false;
 
