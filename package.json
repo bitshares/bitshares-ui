@@ -133,7 +133,7 @@
         "alt-container": "^1.0.0",
         "alt-react": "git+https://github.com/bitshares/react.git",
         "bignumber.js": "^4.0.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#707f6f7e65e43c31a828ad02e3dda2adccf6cfc3",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#02a57452198f9c9b7218f38868045df599b005a5",
         "bitsharesjs": "^1.8.0",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
