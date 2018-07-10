@@ -417,8 +417,10 @@
         "browser": "Nicht unterstützter Browser",
         "browser_text":
             "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+        "check_latency": "Running latency checks...",
         "connected": "verbunden",
         "connecting": "Connecting to API server: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "Nicht verbunden",
         "retry": "nocheinmal versuchen",
         "title": "Initialisierungsfehler",
@@ -433,9 +435,15 @@
         "coll_ratio": "Kollateral-Ratio",
         "errors": {
             "below": "Kollateral-Ratio unter Aufrechterhaltungslevel",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Unzureichendes Kollateral"
+            "collateral": "Unzureichendes Kollateral",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -450,6 +458,16 @@
         "money_received_title": "Übertragen von %(from)s"
     },
     "cancel": "abbrechen",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -961,10 +979,10 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
-        "accounts_manage": "Konten verwalten",
         "account": "Konto",
         "account_notify": "The active account is now %(account)s",
         "account_value": "Kontowert",
+        "accounts_manage": "Konten verwalten",
         "collateral_ratio": "Collateral ratio",
         "create_account": "Konto erstellen",
         "create_asset": "Asset erstellen",
@@ -990,7 +1008,6 @@
         "update_asset": "Asset ändern"
     },
     "icons": {
-        "accounts_manage": "Konten verwalten",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1054,6 +1071,7 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",
@@ -1456,6 +1474,7 @@
         "passwordLogin": "Login using the account model",
         "password_text": "Change your password.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Remove",
         "remove_api": "Remove Node",
         "remove_ws": "Websocket API entfernen",
@@ -1801,10 +1820,6 @@
     },
     "wallet": {
         "accept": "Zustimmen",
-        "account_create_wallet_text":
-            "This password will be used to create a new BitShares local wallet for you, which will only be stored locally in your browser. A BitShares wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
-        "account_exp":
-            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
         "account_public": "Account Name (Public)",
         "active_wallet": "Active Geldbörse",
         "all_set": "You're all set!",
@@ -1835,8 +1850,6 @@
         "brainkey_w2": "Jeder mit Zugang zu diesem Schlüssel wird",
         "brainkey_w3": "Zugang zu Ihren Finanzen in dieser Geldbörse erhalten",
         "bts_09_export": "BTS 0.9.3c key export file (.json)",
-        "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
         "cancel": "Abbrechen",
         "change": "Wechsele Geldbörse (%(name)s)",
         "change_backup":
@@ -2018,7 +2031,6 @@
             "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move":
             "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_new": "New BitShares account",
         "wallet_password": "Login anywhere using your password"
     },
     "winex": {

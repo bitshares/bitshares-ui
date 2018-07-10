@@ -399,8 +399,10 @@
         "browser": "不支持的浏览器",
         "browser_text":
             "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+        "check_latency": "Running latency checks...",
         "connected": "已连接",
         "connecting": "Connecting to API server: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "未连接",
         "retry": "重试",
         "title": "应用初始化错误",
@@ -415,9 +417,15 @@
         "coll_ratio": "抵押率",
         "errors": {
             "below": "抵押率低于要求的 %(mr)s，不允许操作",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "抵押率接近要求的 %(mr)s，这意味着如果价格下跌，你的债仓有可能被强制平仓。",
-            "collateral": "可用抵押物不足"
+            "collateral": "可用抵押物不足",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -432,6 +440,16 @@
         "money_received_title": "从转移 %(from)s"
     },
     "cancel": "取消",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -928,10 +946,10 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
-        "accounts_manage": "管理帐户",
         "account": "账户",
         "account_notify": "当前活跃账户为 %(account)s",
         "account_value": "账户价值",
+        "accounts_manage": "管理帐户",
         "collateral_ratio": "Collateral ratio",
         "create_account": "创建账户",
         "create_asset": "创建资产",
@@ -957,7 +975,6 @@
         "update_asset": "更新资产"
     },
     "icons": {
-        "accounts_manage": "管理帐户",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1021,6 +1038,7 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",
@@ -1409,6 +1427,7 @@
         "passwordLogin": "登录方式",
         "password_text": "修改钱包密码。",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "删除",
         "remove_api": "移除 API 服务器节点",
         "remove_ws": "删除 API 服务器",
@@ -1716,10 +1735,6 @@
     },
     "wallet": {
         "accept": "接受",
-        "account_create_wallet_text":
-            "这个密码将被用来创建你的钱包，并且仅保存在本地的浏览器中，而不是在云端。一个钱包中往往包含多个账户。通过传输备份文件可以轻松实现钱包的跨浏览器或跨计算机的迁移。",
-        "account_exp":
-            "此账户名将被注册在区块链中，你将可以使用此账户名进行转账等任意操作。<strong>比特股中不使用类似比特币等的长地址！</strong>",
         "account_public": "账户名称（公开可见）",
         "active_wallet": "当前使用的钱包",
         "all_set": "准备完成！",
@@ -1749,8 +1764,6 @@
         "brainkey_w2": "任何人获得了你的脑钱包密钥信息将",
         "brainkey_w3": "可以获得钱包中资金的使用权限。",
         "bts_09_export": "BTS 0.9.3c 私钥导出文件 (.json)",
-        "bts_rules":
-            "比特股法则第一条: 不要弄丢自己的密码。<br/>第二条法则: 不要弄丢自己的密码。<br />第三条法则: 没有人能帮你恢复。<br />第四条法则: 如果你仅凭脑力就能记住自己的密码，那通常来说它不够强。<br />第五条法则: 只用随机生成的密码。<br />第六条法则: 别告诉别人你的密码。<br />第七条法则: 总是备份你的密码。",
         "cancel": "取消",
         "change": "切换到钱包 %(name)s",
         "change_backup": "你已经修改了密码，强烈建议你创建一个新的备份文件。",
@@ -1924,7 +1937,6 @@
             "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move":
             "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_new": "新账户",
         "wallet_password": "从任意地点使用密码登录"
     },
     "winex": {

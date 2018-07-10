@@ -426,8 +426,10 @@
         "browser": "Неподдерживаемый браузер",
         "browser_text":
             "Браузер, который Вы используете, не тестировался на предмет поддержки кошелька BitShares. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не проведем полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
+        "check_latency": "Running latency checks...",
         "connected": "Соединение установлено",
         "connecting": "Подключение к серверу API: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "Нет соединения",
         "retry": "Повторить попытку",
         "title": "Проблемы инициализации приложения",
@@ -443,9 +445,15 @@
         "errors": {
             "below":
                 "Ваш уровень гарантийного обеспечения ниже %(mr)s, что не допускается.",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "Ваш уровень обеспечения близок к %(mr)s, что означает, что в случае падения цены, в отношении данной позиции будет совершён марджин колл.",
-            "collateral": "Недостаточный остаток на счете"
+            "collateral": "Недостаточный остаток на счете",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "Прежде чем максимизировать долг, вы должны задать коэффициент залогового обеспечения",
@@ -460,6 +468,16 @@
         "money_received_title": "Перевод от %(from)s"
     },
     "cancel": "Отменить",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -976,10 +994,10 @@
         "scan_qr_code": "Сканировать QR-код"
     },
     "header": {
-        "accounts_manage": "Учетные записи",
         "account": "Аккаунт",
         "account_notify": "Активный аккаунт в настоящее время %(account)s",
         "account_value": "Оценка",
+        "accounts_manage": "Учетные записи",
         "collateral_ratio": "Коэффициент покрытия",
         "create_account": "Создать аккаунт",
         "create_asset": "Создать актив",
@@ -1007,7 +1025,6 @@
         "update_asset": "Обновить актив"
     },
     "icons": {
-        "accounts_manage": "Учетные записи",
         "adjust": "Настроить маржинальную позицию",
         "assets": "Активы",
         "checkmark_circle": {
@@ -1072,6 +1089,7 @@
             "common": "Нажмите, чтобы разблокировать свой аккаунт",
             "enable_auto_scroll": "Разрешить автопрокрутку"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Отклоненные",
             "no": "Нет",
@@ -1478,6 +1496,7 @@
         "passwordLogin": "Режим входа",
         "password_text": "Поменяйте пароль.",
         "ping": "Проверить Узлы",
+        "pinging": "Pinging ...",
         "remove": "Удалить",
         "remove_api": "Удалить API",
         "remove_ws": "Удалить WebSocket API",
@@ -1832,10 +1851,6 @@
     },
     "wallet": {
         "accept": "Принять",
-        "account_create_wallet_text":
-            "Этот пароль будет использован для создания Вашего нового локального кошелька BitShares, который будет храниться только в Вашем браузере. Кошелек BitShares может содержать несколько аккаунтов, а также может легко переноситься между браузерами и компьютерами с помощью резервной копии.",
-        "account_exp":
-            "Этот аккаунт будет создан в блокчейне и будет являться Вашим адресом для любых переводов, которые Вы захотите осуществить! <strong>Bitshares использует имена вместо длинных незапоминающихся адресов в стиле Биткоина!</strong>",
         "account_public": "Имя аккаунта (публичное)",
         "active_wallet": "Активный локальный кошелек",
         "all_set": "Всё готово!",
@@ -1870,8 +1885,6 @@
         "brainkey_w3":
             "получить доступ к средствам на этом локальном кошельке.",
         "bts_09_export": "Экспорт файл ключа BTS 0.9.3c (.json)",
-        "bts_rules":
-            "Первое правило BitShares: не потеряйте свой пароль.<br/>Второе правило BitShares: не потеряйте свой пароль.<br />Третье правило BitShares: мы не можем восстановить Ваш пароль.<br />Четвертое правило: если Вы помните пароль наизусть, он небезопасен.<br />Пятое правило: используйте только рандомно сгенерированные пароли.<br />Шестое правило: никому не говорите свой пароль.<br />Седьмое правило: всегда храните копию своего пароля.",
         "cancel": "Отменить",
         "change": "Сменить на %(name)s",
         "change_backup":
@@ -2059,7 +2072,6 @@
             "<li>Несколько аккаунтов</li><li>Требуется резервное копирование файлов кошелька</li><li>Высокая безопасность</li>",
         "wallet_move":
             "Резервная копия также может использоваться для перемещения Вашего локального кошелька на другие компьютеры или браузеры. Для восстановления локального кошелька из резервной копии <strong>Вам также понадобится Ваш пароль!</strong>",
-        "wallet_new": "Новый аккаунт BitShares",
         "wallet_password": "Войдите, используя пароль"
     },
     "winex": {

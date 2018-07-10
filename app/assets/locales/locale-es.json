@@ -425,8 +425,10 @@
         "browser": "Navegador no soportado",
         "browser_text":
             "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
+        "check_latency": "Running latency checks...",
         "connected": "Conectado",
         "connecting": "Connecting to API server: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "No conectado",
         "retry": "Reintentar",
         "title": "Problemas de inicialización de la aplicación",
@@ -441,9 +443,15 @@
         "coll_ratio": "Proporción",
         "errors": {
             "below": "Su colateral está por debajo %(mr)s y no está permitido.",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "Su proporciòn de colateral está por debajo %(mr)s lo que significa que esta posición está en peligro de ser llamada de margen si el precio baja.",
-            "collateral": "Insuficiente saldo colateral"
+            "collateral": "Insuficiente saldo colateral",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -458,6 +466,16 @@
         "money_received_title": "Transferido de %(from)s"
     },
     "cancel": "Cancel",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -972,10 +990,10 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
-        "accounts_manage": "Cuentas de administración",
         "account": "Cuenta",
         "account_notify": "La cuenta activa es ahora %(account)s",
         "account_value": "Valor de la cuenta",
+        "accounts_manage": "Cuentas de administración",
         "collateral_ratio": "Collateral ratio",
         "create_account": "Crear Cuenta",
         "create_asset": "Crear Activo",
@@ -1001,7 +1019,6 @@
         "update_asset": "Actualizar activo"
     },
     "icons": {
-        "accounts_manage": "Cuentas de administración",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1065,6 +1082,7 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",
@@ -1475,6 +1493,7 @@
         "passwordLogin": "Modo de acceso",
         "password_text": "cambia tu contraseña.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "retirar",
         "remove_api": "Eliminar nodo",
         "remove_ws": "Remover API websocket",
@@ -1830,10 +1849,6 @@
     },
     "wallet": {
         "accept": "Aceptar",
-        "account_create_wallet_text":
-            "Esta contraseña se usará para crear una nueva billetera local de BitShares, que solo se almacenará localmente en su navegador. Un monedero BitShares puede contener múltiples cuentas y se puede transferir fácilmente entre navegadores y computadoras utilizando un archivo de respaldo.",
-        "account_exp":
-            "¡Esta cuenta se creará en blockchain y será su dirección para cualquier transferencia que quiera hacer! <strong>¡No hay largas direcciones estilo Bitcoin en BitShares!</strong>",
         "account_public": "Nombre de la cuenta (Public)",
         "active_wallet": "Billetera Activa",
         "all_set": "¡Estás listo!",
@@ -1863,8 +1878,6 @@
         "brainkey_w2": "Cualquiera con acceso a su llave de recuperación",
         "brainkey_w3": "tendrá acceso a los fondos de esta billetera.",
         "bts_09_export": "BTS 0.9.3c Exportar el file de la llave (.json)",
-        "bts_rules":
-            "La primera regla de BitShares es: No pierdas tu contraseña.<br/>La segunda regla de BitShares es: No pierdas tu contraseña.<br />La tercera regla de BitShares es: no podemos recuperar su contraseña.<br />La cuarta regla: si puede recordar la contraseña, no es segura.<br />La quinta regla: use solo contraseñas generadas aleatoriamente.<br />La sexta regla: No le digas a nadie tu contraseña. <br /> La séptima regla: Siempre haz una copia de seguridad de tu contraseña.",
         "cancel": "Cancelar",
         "change": "Cambiar (%(name)s Billetera)",
         "change_backup":
@@ -2047,7 +2060,6 @@
             "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move":
             "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
-        "wallet_new": "Nueva cuenta BitShares",
         "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
     },
     "winex": {
