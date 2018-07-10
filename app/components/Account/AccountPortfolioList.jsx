@@ -635,7 +635,12 @@ class AccountPortfolioList extends React.Component {
                             !!this.props.backedCoins
                                 .get("RUDEX", [])
                                 .find(
-                                    a => a.backingCoin === thisAssetName[1]
+                                    a => a.backingCoinType === thisAssetName[1]
+                                ) ||
+                            !!this.props.backedCoins
+                                .get("XBTSX", [])
+                                .find(
+                                    a => a.backingCoinType === thisAssetName[1]
                                 ) ||
                             asset.get("symbol") == "BTS";
 

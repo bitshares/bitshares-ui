@@ -915,6 +915,13 @@
             "support_block": "Per supporto, contatta RuDEX a:",
             "under_construction": "Under Construction"
         },
+        "xbtsx": {
+            "coming_soon": "Prossimamente",
+            "min_amount": "Quantità minima: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Per favore inserisci un numero >= minimo",
+            "support_block": "Per supporto, contatta XBTS.io a:",
+            "under_construction": "Under Construction"
+        },
         "scan_qr": "Scandisci QR",
         "service": "Servizio di Trasferimento",
         "status": "Status",

@@ -436,7 +436,8 @@
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
             "collateral": "Insufficient collateral balance",
-            "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased."
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased."
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -917,6 +918,13 @@
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
             "support_block": "For support, please contact RuDEX at:",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact Xbtsx.io at:",
             "under_construction": "Under Construction"
         },
         "scan_qr": "Scan QR",

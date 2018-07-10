@@ -152,7 +152,13 @@ export function getMyMarketsQuotes() {
         "WIN.ETC",
         "WIN.ETH",
         "WIN.HSR",
-        "YOYOW"
+        "YOYOW",
+        "XBTSX.STH",
+        "XBTSX.POST",
+        "XBTSX.DASH",
+        "XBTSX.BTC",
+        "XBTSX.DOGE",
+        "XBTSX.LTC"
     ];
 }
 
@@ -224,6 +230,7 @@ export function getFeaturedMarkets() {
         ["BTS", "RUDEX.KRM"],
         ["USD", "RUDEX.KRM"],
         ["RUBLE", "RUDEX.GOLOS"],
+        ["RUBLE", "XBTSX.STH"],
         ["CNY", "RUDEX.GOLOS"],
         ["RUBLE", "RUDEX.GBG"],
         ["CNY", "RUDEX.GBG"],
@@ -233,7 +240,13 @@ export function getFeaturedMarkets() {
         ["BTS", "RUDEX.ETH"],
         ["BTS", "RUDEX.DGB"],
         ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"]
+        ["BTS", "HERTZ"],
+        ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.POST"],
+        ["BTS", "XBTSX.BTC"],
+        ["BTS", "XBTSX.DOGE"],
+        ["BTS", "XBTSX.DASH"],
+        ["BTS", "XBTSX.LTC"]
     ];
 }
 
@@ -243,7 +256,16 @@ export function getFeaturedMarkets() {
  * @returns {[string,string,string,string,string,string,string]}
  */
 export function getAssetNamespaces() {
-    return ["TRADE.", "OPEN.", "METAEX.", "BRIDGE.", "RUDEX.", "GDEX.", "WIN."];
+    return [
+        "TRADE.",
+        "OPEN.",
+        "METAEX.",
+        "BRIDGE.",
+        "RUDEX.",
+        "GDEX.",
+        "WIN.",
+        "XBTSX."
+    ];
 }
 
 /**
@@ -261,7 +283,7 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return gateway in ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"];
+    return gateway in ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX"];
 }
 
 export function getSupportedLanguages() {

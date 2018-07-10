@@ -125,6 +125,7 @@ class WithdrawModalNew extends React.Component {
         let gateFee = 0;
 
         if (selectedGateway) {
+            console.log(selectedGateway);
             this.props.backedCoins.get(selectedGateway).forEach(item => {
                 if (
                     item.symbol == [selectedGateway, selectedAsset].join(".") ||

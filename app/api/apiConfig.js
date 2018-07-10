@@ -67,6 +67,11 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const xbtsxAPIs = {
+    BASE: "https://apis.xbts.io/api/v1",
+    COINS_LIST: "/coin"
+};
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
@@ -137,6 +142,7 @@ export const settingsAPIs = {
         {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
         {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
+        {url: "wss://node.xbts.io/ws", location: "Falkenstein, Germany"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",

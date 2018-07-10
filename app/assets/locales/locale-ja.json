@@ -902,6 +902,13 @@
             "support_block": "サポートについては、RuDEXまでご連絡ください。:",
             "under_construction": "工事中"
         },
+        "xbtsx": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、XBTS.ioまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "scan_qr": "QRをスキャン",
         "service": "転送サービス",
         "status": "ステータス",
