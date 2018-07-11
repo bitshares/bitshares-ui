@@ -5,7 +5,7 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
@@ -300,7 +300,6 @@ class RecentTransactions extends React.Component {
               ];
         display_history.push(
             <tr className="total-value" key="total_value">
-                
                 <td style={{textAlign: "center"}}>
                     {historyCount > 0 ? (
                         <span>

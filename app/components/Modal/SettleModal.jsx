@@ -9,7 +9,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 
 class ModalContent extends React.Component {

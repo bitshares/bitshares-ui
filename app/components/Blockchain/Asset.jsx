@@ -11,7 +11,7 @@ import HelpContent from "../Utility/HelpContent";
 import assetUtils from "common/asset_utils";
 import utils from "common/utils";
 import FormattedTime from "../Utility/FormattedTime";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {CallOrder, FeedPrice} from "common/MarketClasses";

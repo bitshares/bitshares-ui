@@ -23,7 +23,7 @@ import ReactTooltip from "react-tooltip";
 import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";

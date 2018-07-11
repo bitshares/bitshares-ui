@@ -18,7 +18,7 @@ import {debounce} from "lodash-es";
 import AssetSelector from "../Utility/AssetSelector";
 import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
-import {ChainValidation} from "bitsharesjs/es";
+import {ChainValidation} from "bitsharesjs";
 import debounceRender from "react-debounce-render";
 
 class MarketGroup extends React.Component {

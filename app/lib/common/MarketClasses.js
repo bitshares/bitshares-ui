@@ -1,5 +1,5 @@
 import {Fraction} from "fractional";
-import utils from "common/utils";
+import utils from "./utils";
 
 const GRAPHENE_100_PERCENT = 10000;
 

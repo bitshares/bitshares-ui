@@ -10,7 +10,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
 import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";

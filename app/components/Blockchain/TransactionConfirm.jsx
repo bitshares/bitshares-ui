@@ -11,7 +11,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import Operation from "components/Blockchain/Operation";
 import notify from "actions/NotificationActions";

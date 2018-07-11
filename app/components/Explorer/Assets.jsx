@@ -10,7 +10,7 @@ import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetName from "../Utility/AssetName";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import cnames from "classnames";
 import utils from "common/utils";
 import LoadingIndicator from "../LoadingIndicator";

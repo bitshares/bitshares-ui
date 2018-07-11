@@ -2,7 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";

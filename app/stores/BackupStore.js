@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import BackupActions from "actions/BackupActions";
 import BaseStore from "stores/BaseStore";
-import {hash, PublicKey} from "bitsharesjs/es";
+import {hash, PublicKey} from "bitsharesjs";
 
 class BackupStore extends BaseStore {
     constructor() {

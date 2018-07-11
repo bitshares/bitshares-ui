@@ -11,7 +11,7 @@ import ProposalApproveModal, {
     finalRequiredPerms
 } from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import counterpart from "counterpart";
 import pu from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";

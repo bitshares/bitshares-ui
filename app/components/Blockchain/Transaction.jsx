@@ -16,7 +16,7 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import {ChainTypes} from "bitsharesjs/es";
+import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
