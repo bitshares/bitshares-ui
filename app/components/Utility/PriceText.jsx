@@ -3,9 +3,9 @@ import utils from "common/utils";
 
 class PriceText extends React.Component {
     render() {
-        let {price, preFormattedPrice, quote, base, component} = this.props;
-
-        let formattedPrice = preFormattedPrice
+        let {price, preFormattedPrice, quote, base} = this.props;
+        if (!price && !preFormattedPrice) return null;
+        let formattedPrice = !!preFormattedPrice
             ? preFormattedPrice
             : utils.price_to_text(price, quote, base);
 

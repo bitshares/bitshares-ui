@@ -7,7 +7,8 @@ import {
     precisionToRatio,
     LimitOrder,
     SettleOrder,
-    CallOrder
+    CallOrder,
+    FillOrder
 } from "../lib/common/MarketClasses";
 import assert from "assert";
 
@@ -15,7 +16,13 @@ console.log("**** Starting market tests here ****");
 const asset1 = {asset_id: "1.3.0", precision: 5};
 const asset2 = {asset_id: "1.3.121", precision: 4}; // bitUSD
 const asset3 = {asset_id: "1.3.113", precision: 4}; // bitCNY
-const assets = {"1.3.0": asset1, "1.3.121": asset2, "1.3.113": asset3};
+const asset4 = {asset_id: "1.3.22", precision: 4}; // PEG.FAKEUSD
+const assets = {
+    "1.3.0": asset1,
+    "1.3.121": asset2,
+    "1.3.113": asset3,
+    "1.3.22": asset4
+};
 
 describe("Utility functions", function() {
     describe("limitByPrecision", function() {
@@ -1316,5 +1323,324 @@ describe("Settle Order", function() {
         );
         assert.equal(order.isBid(), false, "Order is not a a bid");
         assert.equal(order2.isBid(), true, "Order is a bid");
+    });
+});
+
+describe("Fill Order", function() {
+    const fill_1 = {
+        id: "5.0.46863942",
+        key: {
+            base: "1.3.0",
+            quote: "1.3.121",
+            sequence: -6204499
+        },
+        op: {
+            account_id: "1.2.438680",
+            fee: {
+                amount: 0,
+                asset_id: "1.3.121"
+            },
+            fill_price: {
+                base: {
+                    amount: 42848745,
+                    asset_id: "1.3.0"
+                },
+                quote: {
+                    amount: 626498,
+                    asset_id: "1.3.121"
+                }
+            },
+            is_maker: true,
+            order_id: "1.7.104920573",
+            pays: {
+                amount: 55674,
+                asset_id: "1.3.0"
+            },
+            receives: {
+                amount: 814,
+                asset_id: "1.3.121"
+            }
+        },
+        time: "2018-07-11T07:48:42"
+    };
+
+    const fill_2 = {
+        id: "5.0.46863942",
+        key: {
+            base: "1.3.0",
+            quote: "1.3.121",
+            sequence: -6204499
+        },
+        op: {
+            account_id: "1.2.438680",
+            fee: {
+                amount: 0,
+                asset_id: "1.3.121"
+            },
+            fill_price: {
+                base: {
+                    amount: 42848745,
+                    asset_id: "1.3.0"
+                },
+                quote: {
+                    amount: 626498,
+                    asset_id: "1.3.121"
+                }
+            },
+            is_maker: true,
+            order_id: "1.7.104920573",
+            pays: {
+                amount: 55674,
+                asset_id: "1.3.121"
+            },
+            receives: {
+                amount: 814,
+                asset_id: "1.3.0"
+            }
+        },
+        time: "2018-07-11T07:48:42"
+    };
+
+    const fill_3 = {
+        id: "5.0.46863942",
+        key: {
+            base: "1.3.0",
+            quote: "1.3.121",
+            sequence: -6204499
+        },
+        op: {
+            account_id: "1.2.438680",
+            fee: {
+                amount: 0,
+                asset_id: "1.3.121"
+            },
+            fill_price: {
+                base: {
+                    amount: 42848745,
+                    asset_id: "1.3.0"
+                },
+                quote: {
+                    amount: 626498,
+                    asset_id: "1.3.121"
+                }
+            },
+            is_maker: true,
+            order_id: "1.8.104920573",
+            pays: {
+                amount: 55674,
+                asset_id: "1.3.121"
+            },
+            receives: {
+                amount: 814,
+                asset_id: "1.3.0"
+            }
+        },
+        time: "2018-07-11T07:48:42"
+    };
+
+    const myHistorySellMarketBase = "1.3.22";
+    const myHistorySellTaker = {
+        block_num: 18884610,
+        id: "1.11.37874337",
+        op: [
+            4,
+            {
+                account_id: "1.2.680",
+                fee: {
+                    amount: 0,
+                    asset_id: "1.3.0"
+                },
+                fill_price: {
+                    base: {
+                        amount: 1000200002,
+                        asset_id: "1.3.0"
+                    },
+                    quote: {
+                        amount: 20000,
+                        asset_id: "1.3.22"
+                    }
+                },
+                is_maker: false,
+                order_id: "1.7.74696",
+                pays: {
+                    amount: 10000,
+                    asset_id: "1.3.22"
+                },
+                receives: {
+                    amount: 500100001,
+                    asset_id: "1.3.0"
+                }
+            }
+        ],
+        op_in_trx: 0,
+        result: [0, {}],
+        trx_in_block: 0,
+        virtual_op: 29010
+    };
+    const myHistorySellMaker = {
+        block_num: 18885060,
+        id: "1.11.37874356",
+        op: [
+            4,
+            {
+                account_id: "1.2.680",
+                fee: {
+                    amount: 0,
+                    asset_id: "1.3.0"
+                },
+                fill_price: {
+                    base: {
+                        amount: 20000,
+                        asset_id: "1.3.22"
+                    },
+                    quote: {
+                        amount: 1020000000,
+                        asset_id: "1.3.0"
+                    }
+                },
+                is_maker: true,
+                order_id: "1.7.74697",
+                pays: {
+                    amount: 20000,
+                    asset_id: "1.3.22"
+                },
+                receives: {
+                    amount: 1020000000,
+                    asset_id: "1.3.0"
+                }
+            }
+        ],
+        op_in_trx: 0,
+        result: [0, {}],
+        trx_in_block: 0,
+        virtual_op: 29043
+    };
+
+    const marketHistorySell = {
+        id: "5.0.44514",
+        key: {
+            base: "1.3.0",
+            quote: "1.3.22",
+            sequence: -40474
+        },
+        op: {
+            account_id: "1.2.680",
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            fill_price: {
+                base: {
+                    amount: 1000200002,
+                    asset_id: "1.3.0"
+                },
+                quote: {
+                    amount: 20000,
+                    asset_id: "1.3.22"
+                }
+            },
+            is_maker: false,
+            order_id: "1.7.74696",
+            pays: {
+                amount: 10000,
+                asset_id: "1.3.22"
+            },
+            receives: {
+                amount: 500100001,
+                asset_id: "1.3.0"
+            }
+        },
+        time: "2018-07-12T09:18:57"
+    };
+
+    const marketHistorySell2 = {
+        id: "5.0.40990",
+        key: {
+            base: "1.3.0",
+            quote: "1.3.22",
+            sequence: -40429
+        },
+        op: {
+            account_id: "1.2.780",
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            fill_price: {
+                base: {
+                    amount: 130,
+                    asset_id: "1.3.22"
+                },
+                quote: {
+                    amount: 272073,
+                    asset_id: "1.3.0"
+                }
+            },
+            is_maker: false,
+            order_id: "1.4.32",
+            pays: {
+                amount: 10000,
+                asset_id: "1.3.22"
+            },
+            receives: {
+                amount: 20928691,
+                asset_id: "1.3.0"
+            }
+        },
+        time: "2017-02-10T09:07:50"
+    };
+
+    it("Instantiates", function() {
+        new FillOrder(fill_1, assets, "1.3.0");
+    });
+
+    it("Returns the correct price", function() {
+        let o6 = new FillOrder(marketHistorySell2, assets, "1.3.22");
+        assert.equal(o6.getPrice(), 209.28692308);
+
+        let o3 = new FillOrder(marketHistorySell, assets, "1.3.22");
+        assert.equal(o3.getPrice(), 5001.00001);
+
+        let o4 = new FillOrder(myHistorySellMaker, assets, "1.3.22");
+        assert.equal(o4.getPrice(), 5100);
+
+        let o5 = new FillOrder(myHistorySellTaker, assets, "1.3.22");
+        assert.equal(o5.getPrice(), 5001.00001);
+
+        let o = new FillOrder(fill_1, assets, "1.3.0");
+        let o2 = new FillOrder(fill_1, assets, "1.3.121");
+
+        assert.equal(o.getPrice(), 0.14621152);
+        assert.equal(o2.getPrice(), 6.83940651);
+        assert(o.getPrice() !== o._calculatePrice());
+    });
+
+    it("Returns the amount to receive", function() {
+        let o = new FillOrder(fill_1, assets, "1.3.0");
+        assert.equal(o.amountToReceive(), 0.55672);
+    });
+
+    it("Returns the amount to pay", function() {
+        let o = new FillOrder(fill_1, assets, "1.3.0");
+        assert.equal(o.amountToPay(), 0.0814);
+    });
+
+    it("Can tell what type of fill it was", function() {
+        let o4 = new FillOrder(myHistorySellTaker, assets, "1.3.22");
+        assert.equal(o4.isBid, false);
+
+        let o6 = new FillOrder(myHistorySellMaker, assets, "1.3.22");
+        assert.equal(o6.isBid, false);
+
+        let o5 = new FillOrder(marketHistorySell, assets, "1.3.22");
+        assert.equal(o5.isBid, false);
+
+        let o = new FillOrder(fill_1, assets, "1.3.0");
+        assert.equal(o.isBid, false);
+        let o2 = new FillOrder(fill_2, assets, "1.3.0");
+        assert.equal(o2.isBid, true);
+        let o3 = new FillOrder(fill_3, assets, "1.3.0");
+        assert.equal(o3.isBid, true);
+        assert.equal(o3.isCall, true);
     });
 });

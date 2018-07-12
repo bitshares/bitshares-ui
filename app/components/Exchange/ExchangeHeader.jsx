@@ -284,7 +284,7 @@ export default class ExchangeHeader extends React.Component {
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         ready={marketReady}
-                                        price={latestPrice.full}
+                                        price={latestPrice}
                                         quote={quoteAsset}
                                         base={baseAsset}
                                         market={marketID}
