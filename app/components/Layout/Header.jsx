@@ -23,11 +23,10 @@ import ReactTooltip from "react-tooltip";
 import {Apis} from "bitsharesjs-ws";
 import notify from "actions/NotificationActions";
 import AccountImage from "../Account/AccountImage";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
-import {withRouter} from "react-router-dom";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -45,9 +44,7 @@ class Header extends React.Component {
         super();
         this.state = {
             active: props.location.pathname,
-            accountsListDropdownActive: false,
-            dropdownActive: false,
-            dropdownSubmenuActive: false
+            accountsListDropdownActive: false
         };
 
         this.unlisten = null;
@@ -112,8 +109,7 @@ class Header extends React.Component {
                 this.state.dropdownSubmenuActive ||
             nextState.accountsListDropdownActive !==
                 this.state.accountsListDropdownActive ||
-            nextProps.height !== this.props.height ||
-            nextProps.location.pathname !== this.props.location.pathname
+            nextProps.height !== this.props.height
         );
     }
 
@@ -169,27 +165,21 @@ class Header extends React.Component {
     }
 
     _closeAccountsListDropdown() {
-        if (this.state.accountsListDropdownActive) {
-            this.setState({
-                accountsListDropdownActive: false
-            });
-        }
+        this.setState({
+            accountsListDropdownActive: false
+        });
     }
 
     _closeMenuDropdown() {
-        if (this.state.dropdownActive) {
-            this.setState({
-                dropdownActive: false
-            });
-        }
+        this.setState({
+            dropdownActive: false
+        });
     }
 
     _closeDropdownSubmenu() {
-        if (this.state.dropdownSubmenuActive) {
-            this.setState({
-                dropdownSubmenuActive: false
-            });
-        }
+        this.setState({
+            dropdownSubmenuActive: false
+        });
     }
 
     _closeDropdown() {
@@ -251,7 +241,7 @@ class Header extends React.Component {
         });
     }
 
-    _toggleDropdownMenu() {
+    _toggleDropdownMenu(e) {
         this.setState({
             dropdownActive: !this.state.dropdownActive
         });
@@ -287,6 +277,14 @@ class Header extends React.Component {
         }
     }
 
+    _onAddContact() {
+        AccountActions.addAccountContact(this.props.currentAccount);
+    }
+
+    _onRemoveContact() {
+        AccountActions.removeAccountContact(this.props.currentAccount);
+    }
+
     render() {
         let {active} = this.state;
         let {
@@ -306,6 +304,7 @@ class Header extends React.Component {
             ? false
             : AccountStore.isMyAccount(a) ||
               (passwordLogin && currentAccount === passwordAccount);
+        const isContact = this.props.contacts.has(currentAccount);
         const enableDepositWithdraw =
             !!a &&
             Apis.instance() &&
@@ -1158,7 +1157,6 @@ class Header extends React.Component {
                                 passwordLogin={passwordLogin}
                                 onNavigate={this._onNavigate.bind(this)}
                                 isMyAccount={isMyAccount}
-                                contacts={this.props.contacts}
                                 showAccountLinks={showAccountLinks}
                                 tradeUrl={tradeUrl}
                                 currentAccount={currentAccount}
@@ -1197,44 +1195,39 @@ class Header extends React.Component {
     }
 }
 
-Header = connect(
-    Header,
-    {
-        listenTo() {
-            return [
-                AccountStore,
-                WalletUnlockStore,
-                WalletManagerStore,
-                SettingsStore,
-                GatewayStore
-            ];
-        },
-        getProps() {
-            const chainID = Apis.instance().chain_id;
-            return {
-                backedCoins: GatewayStore.getState().backedCoins,
-                myActiveAccounts: AccountStore.getState().myActiveAccounts,
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                locked: WalletUnlockStore.getState().locked,
-                current_wallet: WalletManagerStore.getState().current_wallet,
-                lastMarket: SettingsStore.getState().viewSettings.get(
-                    `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`
-                ),
-                starredAccounts: AccountStore.getState().starredAccounts,
-                passwordLogin: SettingsStore.getState().settings.get(
-                    "passwordLogin"
-                ),
-                currentLocale: SettingsStore.getState().settings.get("locale"),
-                hiddenAssets: SettingsStore.getState().hiddenAssets,
-                settings: SettingsStore.getState().settings,
-                locales: SettingsStore.getState().defaults.locale,
-                contacts: AccountStore.getState().accountContacts
-            };
-        }
+export default connect(Header, {
+    listenTo() {
+        return [
+            AccountStore,
+            WalletUnlockStore,
+            WalletManagerStore,
+            SettingsStore,
+            GatewayStore
+        ];
+    },
+    getProps() {
+        const chainID = Apis.instance().chain_id;
+        return {
+            backedCoins: GatewayStore.getState().backedCoins,
+            myActiveAccounts: AccountStore.getState().myActiveAccounts,
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount,
+            passwordAccount: AccountStore.getState().passwordAccount,
+            locked: WalletUnlockStore.getState().locked,
+            current_wallet: WalletManagerStore.getState().current_wallet,
+            lastMarket: SettingsStore.getState().viewSettings.get(
+                `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`
+            ),
+            starredAccounts: AccountStore.getState().starredAccounts,
+            passwordLogin: SettingsStore.getState().settings.get(
+                "passwordLogin"
+            ),
+            currentLocale: SettingsStore.getState().settings.get("locale"),
+            hiddenAssets: SettingsStore.getState().hiddenAssets,
+            settings: SettingsStore.getState().settings,
+            locales: SettingsStore.getState().defaults.locale,
+            contacts: AccountStore.getState().accountContacts
+        };
     }
-);
-
-export default withRouter(Header);
+});

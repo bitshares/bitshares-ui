@@ -1,5 +1,5 @@
 import MarketsStore from "stores/MarketsStore";
-import {FetchChain} from "bitsharesjs";
+import {FetchChain} from "bitsharesjs/es";
 import moment from "moment-timezone";
 import MarketsActions from "actions/MarketsActions";
 import {getGatewayName} from "common/gatewayUtils";

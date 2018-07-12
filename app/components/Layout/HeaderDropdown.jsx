@@ -2,7 +2,6 @@ import React from "react";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-import AccountActions from "actions/AccountActions";
 
 export default class DropDownMenu extends React.Component {
     shouldComponentUpdate(np) {
@@ -12,14 +11,6 @@ export default class DropDownMenu extends React.Component {
             shouldUpdate = shouldUpdate || np[key] !== this.props[key];
         }
         return shouldUpdate;
-    }
-
-    _onAddContact() {
-        AccountActions.addAccountContact(this.props.currentAccount);
-    }
-
-    _onRemoveContact() {
-        AccountActions.removeAccountContact(this.props.currentAccount);
     }
 
     render() {
@@ -34,12 +25,8 @@ export default class DropDownMenu extends React.Component {
             showAccountLinks,
             tradeUrl,
             enableDepositWithdraw,
-            currentAccount,
-            contacts
+            currentAccount
         } = this.props;
-
-        let isContact = contacts.has(currentAccount);
-
         return (
             <ul
                 className="dropdown header-menu"

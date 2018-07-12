@@ -8,7 +8,7 @@ import {
     TransactionHelper,
     FetchChain,
     ChainStore
-} from "bitsharesjs";
+} from "bitsharesjs/es";
 import counterpart from "counterpart";
 
 const ApplicationApi = {

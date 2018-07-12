@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import AccountImage from "../Account/AccountImage";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import FormattedAsset from "../Utility/FormattedAsset";
 import Translate from "react-translate-component";
 import TimeAgo from "../Utility/TimeAgo";
@@ -573,21 +573,18 @@ class WitnessStoreWrapper extends React.Component {
     }
 }
 
-WitnessStoreWrapper = connect(
-    WitnessStoreWrapper,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                cardView: SettingsStore.getState().viewSettings.get("cardView"),
-                filterWitness: SettingsStore.getState().viewSettings.get(
-                    "filterWitness"
-                )
-            };
-        }
+WitnessStoreWrapper = connect(WitnessStoreWrapper, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            cardView: SettingsStore.getState().viewSettings.get("cardView"),
+            filterWitness: SettingsStore.getState().viewSettings.get(
+                "filterWitness"
+            )
+        };
     }
-);
+});
 
 export default WitnessStoreWrapper;

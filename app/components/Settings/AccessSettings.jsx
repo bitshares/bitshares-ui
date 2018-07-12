@@ -4,6 +4,8 @@ import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {settingsAPIs} from "../../api/apiConfig";
 import willTransitionTo, {routerTransitioner} from "../../routerTransition";
+// import {routerTransitioner} from "../../routerTransition";
+import {withRouter} from "react-router-dom";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
@@ -316,6 +318,8 @@ ApiNode.defaultProps = {
     hidden: false
 };
 
+const ApiNodeWithRouter = withRouter(ApiNode);
+
 class AccessSettings extends React.Component {
     constructor(props) {
         super(props);
@@ -382,7 +386,7 @@ class AccessSettings extends React.Component {
             !automatic && !this.isDefaultNode[node.url] ? true : false;
 
         return (
-            <ApiNode
+            <ApiNodeWithRouter
                 {...node}
                 autoActive={props.currentNode === autoSelectAPI}
                 automatic={automatic}
@@ -594,20 +598,17 @@ class AccessSettings extends React.Component {
     }
 }
 
-AccessSettings = connect(
-    AccessSettings,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                currentNode: SettingsStore.getState().settings.get("apiServer"),
-                activeNode: SettingsStore.getState().settings.get("activeNode"),
-                apiLatencies: SettingsStore.getState().apiLatencies
-            };
-        }
+AccessSettings = connect(AccessSettings, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            currentNode: SettingsStore.getState().settings.get("apiServer"),
+            activeNode: SettingsStore.getState().settings.get("activeNode"),
+            apiLatencies: SettingsStore.getState().apiLatencies
+        };
     }
-);
+});
 
 export default AccessSettings;

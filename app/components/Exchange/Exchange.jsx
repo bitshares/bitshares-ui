@@ -17,7 +17,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import notify from "actions/NotificationActions";
 import AccountNotifications from "../Notifier/NotifierContainer";
 import Ps from "perfect-scrollbar";
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs/es";
 import SettingsActions from "actions/SettingsActions";
 import cnames from "classnames";
 import market_utils from "common/market_utils";
@@ -1239,7 +1239,7 @@ class Exchange extends React.Component {
             quoteSymbol,
             baseSymbol,
             showCallLimit = false,
-            latest,
+            latestPrice,
             changeClass;
 
         const showVolumeChart = this.props.viewSettings.get(
@@ -1282,16 +1282,56 @@ class Exchange extends React.Component {
 
         // Latest price
         if (activeMarketHistory.size) {
-            let latest_two = activeMarketHistory.take(2);
-            latest = latest_two.first();
+            // Orders come in pairs, first is driver. Third entry is first of second pair.
+            let latest_two = activeMarketHistory.take(3);
+            let latest = latest_two.first();
             let second_latest = latest_two.last();
+            let paysAsset,
+                receivesAsset,
+                isAsk = false;
+            if (latest.pays.asset_id === base.get("id")) {
+                paysAsset = base;
+                receivesAsset = quote;
+                isAsk = true;
+            } else {
+                paysAsset = quote;
+                receivesAsset = base;
+            }
+            let flipped =
+                base.get("id").split(".")[2] > quote.get("id").split(".")[2];
+            latestPrice = market_utils.parse_order_history(
+                latest,
+                paysAsset,
+                receivesAsset,
+                isAsk,
+                flipped
+            );
 
-            changeClass =
-                latest.getPrice() === second_latest.getPrice()
-                    ? ""
-                    : latest.getPrice() - second_latest.getPrice() > 0
-                        ? "change-up"
-                        : "change-down";
+            isAsk = false;
+            if (second_latest) {
+                if (second_latest.pays.asset_id === base.get("id")) {
+                    paysAsset = base;
+                    receivesAsset = quote;
+                    isAsk = true;
+                } else {
+                    paysAsset = quote;
+                    receivesAsset = base;
+                }
+
+                let oldPrice = market_utils.parse_order_history(
+                    second_latest,
+                    paysAsset,
+                    receivesAsset,
+                    isAsk,
+                    flipped
+                );
+                changeClass =
+                    latestPrice.full === oldPrice.full
+                        ? ""
+                        : latestPrice.full - oldPrice.full > 0
+                            ? "change-up"
+                            : "change-down";
+            }
         }
 
         // Fees
@@ -1512,7 +1552,7 @@ class Exchange extends React.Component {
 
         let orderBook = (
             <OrderBook
-                latest={latest && latest.getPrice()}
+                latest={latestPrice}
                 changeClass={changeClass}
                 orders={marketLimitOrders}
                 calls={marketCallOrders}
@@ -1561,7 +1601,7 @@ class Exchange extends React.Component {
                     showCallLimit={showCallLimit}
                     feedPrice={feedPrice}
                     marketReady={marketReady}
-                    latestPrice={latest && latest.getPrice()}
+                    latestPrice={latestPrice}
                     showDepthChart={showDepthChart}
                     marketStats={marketStats}
                     onToggleCharts={this._toggleCharts.bind(this)}
@@ -1732,7 +1772,6 @@ class Exchange extends React.Component {
                                     quote={quote}
                                     baseSymbol={baseSymbol}
                                     quoteSymbol={quoteSymbol}
-                                    marketReady={marketReady}
                                 />
 
                                 {!leftOrderBook ? orderBook : null}

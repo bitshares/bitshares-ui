@@ -25,12 +25,12 @@ class EquivalentPrice extends MarketStatsCheck {
     }
 
     getFinalPrice(real = false) {
-        const {coreAsset, fromAsset, toAsset, allMarketStats} = this.props;
+        const {coreAsset, fromAsset, toAsset, marketStats} = this.props;
         return MarketUtils.getFinalPrice(
             coreAsset,
             fromAsset,
             toAsset,
-            allMarketStats,
+            marketStats,
             real
         );
     }
@@ -82,7 +82,7 @@ export default class EquivalentPriceWrapper extends React.Component {
                             )
                         );
                     },
-                    allMarketStats: () => {
+                    marketStats: () => {
                         return MarketsStore.getState().allMarketStats;
                     }
                 }}

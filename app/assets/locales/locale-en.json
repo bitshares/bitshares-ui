@@ -408,20 +408,6 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
-    "app_init": {
-        "browser": "Unsupported browser",
-        "browser_text":
-            "The Browser you are using has not been fully tested to support the %(wallet_name)s Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "check_latency": "Running latency checks...",
-        "connected": "Connected",
-        "connecting": "Connecting to API server: %(server)s",
-        "database": "Connection established, initializing local databases",
-        "not_connected": "Not connected",
-        "retry": "Retry",
-        "title": "Application initialization issues",
-        "understand": "I understand",
-        "ws_status": "Full node connection status"
-    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -433,16 +419,7 @@
                 "Your collateral ratio is below %(mr)s which is not allowed.",
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Insufficient collateral balance",
-            "below_info":
-                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
-            "below_ratio_mcr_update":
-                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
-            "close":
-                "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Insufficient collateral balance",
-            "increased_debt_on_margin_call":
-                "You increased your debt, which is not allowed when updating a margin called position"
+            "collateral": "Insufficient collateral balance"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -457,16 +434,6 @@
         "money_received_title": "Transfer from %(from)s"
     },
     "cancel": "Cancel",
-    "connection": {
-        "automatic_reconnect":
-            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
-        "manual_reconnect": "Reconnect now",
-        "out_of_sync":
-            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
-        "title_out_of_sync": "Connection out of sync",
-        "want_to_reconnect":
-            "If the connection can be recovered this message will disappear automatically."
-    },
     "counterpart": {
         "formats": {
             "date": {
@@ -982,7 +949,6 @@
         "account": "Account",
         "account_notify": "The active account is now %(account)s",
         "account_value": "Account value",
-        "accounts_manage": "Manage Accounts",
         "collateral_ratio": "Collateral ratio",
         "create_account": "Create Account",
         "create_asset": "Create Asset",
@@ -1073,7 +1039,6 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
-        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",

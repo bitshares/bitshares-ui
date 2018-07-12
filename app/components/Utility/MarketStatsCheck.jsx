@@ -6,6 +6,7 @@ import utils from "common/utils";
 class MarketStatsCheck extends React.Component {
     constructor() {
         super();
+
         this.fromStatsIntervals = {};
         this.directStatsIntervals = {};
         this.toStatsInterval = null;
@@ -21,14 +22,14 @@ class MarketStatsCheck extends React.Component {
     }
 
     _useDirectMarket(props) {
-        const {fromAsset, toAsset, allMarketStats} = props;
+        const {fromAsset, toAsset, marketStats} = props;
         if (!fromAsset) return false;
         const {marketName: directMarket} = marketUtils.getMarketName(
             toAsset,
             fromAsset
         );
 
-        const directStats = allMarketStats.get(directMarket);
+        const directStats = marketStats.get(directMarket);
 
         if (directStats && directStats.volumeBase === 0) return false;
 
@@ -36,7 +37,7 @@ class MarketStatsCheck extends React.Component {
     }
 
     _checkDirectMarkets(props) {
-        let {fromAssets, fromAsset, toAsset, allMarketStats} = props;
+        let {fromAssets, fromAsset, toAsset, marketStats} = props;
         if (!fromAssets && fromAsset) fromAssets = [fromAsset];
 
         return fromAssets
@@ -45,7 +46,7 @@ class MarketStatsCheck extends React.Component {
                 return this._useDirectMarket({
                     fromAsset: asset,
                     toAsset,
-                    allMarketStats
+                    marketStats
                 })
                     ? asset.get("symbol")
                     : null;
@@ -91,7 +92,7 @@ class MarketStatsCheck extends React.Component {
                 let useDirectMarket = this._useDirectMarket({
                     toAsset,
                     fromAsset: asset,
-                    allMarketStats: props.allMarketStats
+                    marketStats: props.marketStats
                 });
 
                 if (useDirectMarket && toAsset.get("id") !== asset.get("id")) {
@@ -205,8 +206,8 @@ class MarketStatsCheck extends React.Component {
             return (
                 a ||
                 this._statsChanged(
-                    np.allMarketStats.get(b),
-                    this.props.allMarketStats.get(b)
+                    np.marketStats.get(b),
+                    this.props.marketStats.get(b)
                 )
             );
         }, false);
@@ -215,16 +216,16 @@ class MarketStatsCheck extends React.Component {
             return (
                 a ||
                 this._statsChanged(
-                    np.allMarketStats.get(b),
-                    this.props.allMarketStats.get(b)
+                    np.marketStats.get(b),
+                    this.props.marketStats.get(b)
                 )
             );
         }, false);
 
         return (
             this._statsChanged(
-                np.allMarketStats.get(toMarket),
-                this.props.allMarketStats.get(toMarket)
+                np.marketStats.get(toMarket),
+                this.props.marketStats.get(toMarket)
             ) ||
             indirectCheck ||
             directCheck

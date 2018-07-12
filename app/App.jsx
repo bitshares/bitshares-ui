@@ -1,5 +1,5 @@
 import React from "react";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import AccountStore from "stores/AccountStore";
 import NotificationStore from "stores/NotificationStore";
 import {withRouter} from "react-router-dom";
@@ -116,6 +116,7 @@ const CreateWorker = Loadable({
 
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import BlockchainActions from "./actions/BlockchainActions";
 
 class App extends React.Component {
     constructor() {
@@ -307,7 +308,8 @@ class App extends React.Component {
 
     render() {
         let {incognito, incognitoWarningDismissed} = this.state;
-        let {walletMode, theme, location, match, ...others} = this.props;
+        let {walletMode, theme} = this.props;
+
         let content = null;
 
         if (this.state.syncFail) {
@@ -325,7 +327,7 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height} {...others} />
+                    <Header height={this.state.height} {...this.props} />
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             <Switch>

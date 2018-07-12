@@ -1,4 +1,4 @@
-import {hash, key} from "bitsharesjs";
+import {hash, key} from "bitsharesjs/es";
 
 var bts_genesiskeys_bloom_url = undefined;
 try {

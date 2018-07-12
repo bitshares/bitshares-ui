@@ -1,6 +1,6 @@
 import React from "react";
 import {FormattedRelative} from "react-intl";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import PropTypes from "prop-types";
 
 class TimeAgo extends React.Component {

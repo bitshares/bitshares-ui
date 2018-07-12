@@ -4,7 +4,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import QRCode from "qrcode.react";
-import {Aes} from "bitsharesjs";
+import {Aes} from "bitsharesjs/es";
 
 class QrcodeModal extends React.Component {
     constructor(props) {

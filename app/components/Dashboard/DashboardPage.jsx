@@ -6,7 +6,7 @@ import LoginSelector from "../LoginSelector";
 import AccountStore from "stores/AccountStore";
 
 import {Tabs, Tab} from "../Utility/Tabs";
-import {StarredMarkets, FeaturedMarkets} from "./Markets";
+import {StarredMarkets, TopMarkets, FeaturedMarkets} from "./Markets";
 
 class DashboardPage extends React.Component {
     render() {
@@ -63,27 +63,24 @@ class DashboardPage extends React.Component {
     }
 }
 
-export default connect(
-    DashboardPage,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            let {
-                myActiveAccounts,
-                myHiddenAccounts,
-                passwordAccount,
-                accountsLoaded,
-                refsLoaded
-            } = AccountStore.getState();
+export default connect(DashboardPage, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        let {
+            myActiveAccounts,
+            myHiddenAccounts,
+            passwordAccount,
+            accountsLoaded,
+            refsLoaded
+        } = AccountStore.getState();
 
-            return {
-                myActiveAccounts,
-                myHiddenAccounts,
-                passwordAccount,
-                accountsReady: accountsLoaded && refsLoaded
-            };
-        }
+        return {
+            myActiveAccounts,
+            myHiddenAccounts,
+            passwordAccount,
+            accountsReady: accountsLoaded && refsLoaded
+        };
     }
-);
+});

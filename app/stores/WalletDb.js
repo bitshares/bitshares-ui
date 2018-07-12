@@ -12,7 +12,7 @@ import TransactionConfirmActions from "actions/TransactionConfirmActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import AccountActions from "actions/AccountActions";
-import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs";
+import {ChainStore, PrivateKey, key, Aes} from "bitsharesjs/es";
 import {Apis, ChainConfig} from "bitsharesjs-ws";
 import AddressIndex from "stores/AddressIndex";
 import SettingsActions from "actions/SettingsActions";
@@ -442,8 +442,9 @@ class WalletDb extends BaseStore {
                         if (!foundRole) {
                             let alsoCheckRole =
                                 role === "active" ? "owner" : "active";
-                            acc.getIn([alsoCheckRole, "key_auths"]).forEach(
-                                auth => {
+                            acc
+                                .getIn([alsoCheckRole, "key_auths"])
+                                .forEach(auth => {
                                     if (auth.get(0) === key.pubKey) {
                                         setKey(
                                             alsoCheckRole,
@@ -453,8 +454,7 @@ class WalletDb extends BaseStore {
                                         foundRole = true;
                                         return false;
                                     }
-                                }
-                            );
+                                });
                         }
                     }
                 }

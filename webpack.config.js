@@ -88,8 +88,7 @@ module.exports = function(env) {
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
             DEFAULT_SYMBOL: "BTS",
-            __GIT_BRANCH__: JSON.stringify(git.branch()),
-            __PERFORMANCE_DEVTOOL__: !!env.perf_dev
+            __GIT_BRANCH__: JSON.stringify(git.branch())
         }),
         new webpack.ContextReplacementPlugin(
             /moment[\/\\]locale$/,
@@ -359,18 +358,7 @@ module.exports = function(env) {
                 path.resolve(root_dir, "app/lib"),
                 "node_modules"
             ],
-            extensions: [".js", ".jsx", ".coffee", ".json"],
-            mainFields: ["module", "jsnext:main", "browser", "main"],
-            alias: {
-                moment$: path.resolve(
-                    root_dir,
-                    "node_modules/moment/moment.js"
-                ),
-                "bitshares-ui-style-guide$": path.resolve(
-                    root_dir,
-                    "node_modules/bitshares-ui-style-guide/dist/main.js"
-                )
-            }
+            extensions: [".js", ".jsx", ".coffee", ".json"]
         },
         plugins: plugins
     };

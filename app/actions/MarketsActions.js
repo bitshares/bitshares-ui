@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import {Apis} from "bitsharesjs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
@@ -31,7 +31,7 @@ function clearBatchTimeouts() {
 }
 
 const marketStatsQueue = []; // Queue array holding get_ticker promises
-const marketStatsQueueLength = 500; // Number of get_ticker calls per batch
+const marketStatsQueueLength = 10; // Number of get_ticker calls per batch
 const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
 let marketStatsQueueActive = false;
 
@@ -92,7 +92,7 @@ class MarketsActions {
                         0,
                         marketStatsQueueLength
                     );
-                    return Promise.all(currentBatch.map(q => q.promise))
+                    Promise.all(currentBatch.map(q => q.promise))
                         .then(results => {
                             dispatch({
                                 tickers: results,
@@ -103,7 +103,6 @@ class MarketsActions {
                             marketStatsQueue.splice(0, results.length);
                             if (marketStatsQueue.length === 0) {
                                 marketStatsQueueActive = false;
-                                return;
                             } else {
                                 return processQueue();
                             }

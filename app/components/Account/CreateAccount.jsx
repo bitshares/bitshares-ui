@@ -14,7 +14,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import WalletActions from "actions/WalletActions";
 import Translate from "react-translate-component";
-import {ChainStore, FetchChain} from "bitsharesjs";
+import {ChainStore, FetchChain} from "bitsharesjs/es";
 import {BackupCreate} from "../Wallet/Backup";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
@@ -546,11 +546,7 @@ class CreateAccount extends React.Component {
         let {step} = this.state;
 
         return (
-            <div
-                className="sub-content"
-                id="scrollToInput"
-                name="scrollToInput"
-            >
+            <div className="sub-content" id="scrollToInput" name="scrollToInput">
                 <div style={{maxWidth: "95vw"}}>
                     {step !== 1 ? (
                         <p
@@ -590,14 +586,11 @@ class CreateAccount extends React.Component {
 
 CreateAccount = withRouter(CreateAccount);
 
-export default connect(
-    CreateAccount,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {};
-        }
+export default connect(CreateAccount, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {};
     }
-);
+});

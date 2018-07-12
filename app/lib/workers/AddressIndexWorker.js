@@ -1,4 +1,4 @@
-import {key} from "bitsharesjs";
+import {key} from "bitsharesjs/es";
 
 onmessage = function(event) {
     try {

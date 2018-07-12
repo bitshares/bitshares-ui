@@ -3,7 +3,7 @@ import alt from "alt-instance";
 import MarketsActions from "actions/MarketsActions";
 import market_utils from "common/market_utils";
 import ls from "common/localStorage";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import utils from "common/utils";
 import {
     LimitOrder,
@@ -13,8 +13,7 @@ import {
     Asset,
     didOrdersChange,
     Price,
-    GroupedOrder,
-    FillOrder
+    GroupedOrder
 } from "common/MarketClasses";
 
 // import {
@@ -407,16 +406,19 @@ class MarketsStore {
         if (result.history) {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
+                if (!/Z$/.test(order.time)) {
+                    order.time += "Z";
+                }
+                order.op.time = order.time;
                 /* Only include history objects that aren't 'something for nothing' to avoid confusion */
                 if (
-                    !order.op.is_maker &&
                     !(
                         order.op.receives.amount == 0 ||
                         order.op.pays.amount == 0
                     )
                 ) {
                     this.activeMarketHistory = this.activeMarketHistory.add(
-                        new FillOrder(order, assets, this.quoteAsset.get("id"))
+                        order.op
                     );
                 }
             });
@@ -424,9 +426,9 @@ class MarketsStore {
 
         if (result.fillOrders) {
             result.fillOrders.forEach(fill => {
-                console.log("fill:", fill, JSON.stringify(fill));
+                // console.log("fill:", fill);
                 this.activeMarketHistory = this.activeMarketHistory.add(
-                    new FillOrder(fill[0][1], assets, this.quoteAsset.get("id"))
+                    fill[0][1]
                 );
             });
         }

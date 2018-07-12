@@ -12,7 +12,6 @@ import {IntlProvider} from "react-intl";
 import willTransitionTo from "./routerTransition";
 import LoadingIndicator from "./components/LoadingIndicator";
 import InitError from "./components/InitError";
-import SyncError from "./components/SyncError";
 import counterpart from "counterpart";
 
 /*
@@ -48,31 +47,23 @@ class AppInit extends React.Component {
 
         this.state = {
             apiConnected: false,
-            apiError: false,
-            syncError: null,
-            status: ""
+            apiError: false
         };
     }
 
     componentWillMount() {
-        willTransitionTo(true, this._statusCallback.bind(this))
+        willTransitionTo()
             .then(() => {
                 this.setState({
                     apiConnected: true,
-                    apiError: false,
-                    syncError: null
+                    apiError: false
                 });
             })
             .catch(err => {
                 console.log("willTransitionTo err:", err);
                 this.setState({
                     apiConnected: false,
-                    apiError: true,
-                    syncError: !err
-                        ? null
-                        : (err && err.message).indexOf(
-                              "ChainStore sync error"
-                          ) !== -1
+                    apiError: true
                 });
             });
     }
@@ -91,13 +82,9 @@ class AppInit extends React.Component {
         }
     }
 
-    _statusCallback(status) {
-        this.setState({status});
-    }
-
     render() {
         const {theme, apiServer} = this.props;
-        const {apiConnected, apiError, syncError, status} = this.state;
+        const {apiConnected, apiError} = this.state;
 
         if (!apiConnected) {
             let server = apiServer;
@@ -113,16 +100,11 @@ class AppInit extends React.Component {
                         <div className="grid-frame vertical">
                             {!apiError ? (
                                 <LoadingIndicator
-                                    loadingText={
-                                        status ||
-                                        counterpart.translate(
-                                            "app_init.connecting",
-                                            {server: server}
-                                        )
-                                    }
+                                    loadingText={counterpart.translate(
+                                        "app_init.connecting",
+                                        {server: server}
+                                    )}
                                 />
-                            ) : syncError ? (
-                                <SyncError />
                             ) : (
                                 <InitError />
                             )}
@@ -135,26 +117,20 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(
-    AppInit,
-    {
-        listenTo() {
-            return [IntlStore, WalletManagerStore, SettingsStore];
-        },
-        getProps() {
-            return {
-                locale: IntlStore.getState().currentLocale,
-                walletMode:
-                    !SettingsStore.getState().settings.get("passwordLogin") ||
-                    !!WalletManagerStore.getState().current_wallet,
-                theme: SettingsStore.getState().settings.get("themes"),
-                apiServer: SettingsStore.getState().settings.get(
-                    "activeNode",
-                    ""
-                )
-            };
-        }
+AppInit = connect(AppInit, {
+    listenTo() {
+        return [IntlStore, WalletManagerStore, SettingsStore];
+    },
+    getProps() {
+        return {
+            locale: IntlStore.getState().currentLocale,
+            walletMode:
+                !SettingsStore.getState().settings.get("passwordLogin") ||
+                !!WalletManagerStore.getState().current_wallet,
+            theme: SettingsStore.getState().settings.get("themes"),
+            apiServer: SettingsStore.getState().settings.get("activeNode", "")
+        };
     }
-);
+});
 AppInit = supplyFluxContext(alt)(AppInit);
 export default hot(module)(AppInit);

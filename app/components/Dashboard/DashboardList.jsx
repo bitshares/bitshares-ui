@@ -10,7 +10,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import SettingsActions from "actions/SettingsActions";
 import AccountActions from "actions/AccountActions";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
@@ -565,18 +565,15 @@ class AccountsListWrapper extends React.Component {
 }
 AccountsListWrapper = withRouter(AccountsListWrapper);
 
-export default connect(
-    AccountsListWrapper,
-    {
-        listenTo() {
-            return [SettingsStore, WalletUnlockStore, AccountStore];
-        },
-        getProps() {
-            return {
-                locked: WalletUnlockStore.getState().locked,
-                starredAccounts: AccountStore.getState().starredAccounts,
-                viewSettings: SettingsStore.getState().viewSettings
-            };
-        }
+export default connect(AccountsListWrapper, {
+    listenTo() {
+        return [SettingsStore, WalletUnlockStore, AccountStore];
+    },
+    getProps() {
+        return {
+            locked: WalletUnlockStore.getState().locked,
+            starredAccounts: AccountStore.getState().starredAccounts,
+            viewSettings: SettingsStore.getState().viewSettings
+        };
     }
-);
+});

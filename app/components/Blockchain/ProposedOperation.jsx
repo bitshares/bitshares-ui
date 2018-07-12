@@ -10,7 +10,7 @@ import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedPrice from "../Utility/FormattedPrice";
-import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
@@ -127,7 +127,7 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, proposer, current, block, hideExpiration} = this.props;
+        let {op, current, block, hideExpiration} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -147,45 +147,23 @@ class ProposedOperation extends React.Component {
 
                 column = (
                     <span className="right-td">
-                        <div className="inline-block">
-                            {!!proposer ? (
-                                <div style={{paddingBottom: 5}}>
-                                    <TranslateWithLinks
-                                        string="operation.proposal_create"
-                                        keys={[
-                                            {
-                                                type: "account",
-                                                value: proposer,
-                                                arg: "account"
-                                            }
-                                        ]}
-                                    />
-                                </div>
-                            ) : null}
-                            <div>
-                                <TranslateWithLinks
-                                    string="proposal.transfer"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].from,
-                                            arg: "from"
-                                        },
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount,
-                                            arg: "amount"
-                                        },
-                                        {
-                                            type: "account",
-                                            value: op[1].to,
-                                            arg: "to"
-                                        }
-                                    ]}
-                                />
-                                {memoComponent}
-                            </div>
-                        </div>
+                        <TranslateWithLinks
+                            string="proposal.transfer"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].from,
+                                    arg: "from"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                },
+                                {type: "account", value: op[1].to, arg: "to"}
+                            ]}
+                        />
+                        {memoComponent}
                     </span>
                 );
 

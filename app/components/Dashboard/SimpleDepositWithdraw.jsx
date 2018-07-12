@@ -20,7 +20,7 @@ import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import {openledgerAPIs} from "api/apiConfig";

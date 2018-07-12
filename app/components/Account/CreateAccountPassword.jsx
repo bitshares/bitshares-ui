@@ -12,7 +12,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {ChainStore, FetchChain, key} from "bitsharesjs";
+import {ChainStore, FetchChain, key} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
@@ -77,7 +77,7 @@ class CreateAccountPassword extends React.Component {
             containerId: "accountForm"
         });
     }
-
+    
     isValid() {
         let firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
@@ -656,11 +656,7 @@ class CreateAccountPassword extends React.Component {
         // let my_accounts = AccountStore.getMyAccounts();
         // let firstAccount = my_accounts.length === 0;
         return (
-            <div
-                className="sub-content"
-                id="scrollToInput"
-                name="scrollToInput"
-            >
+            <div className="sub-content" id="scrollToInput" name="scrollToInput">
                 <div>
                     {step === 2 ? (
                         <p
@@ -691,14 +687,11 @@ class CreateAccountPassword extends React.Component {
 
 CreateAccountPassword = withRouter(CreateAccountPassword);
 
-export default connect(
-    CreateAccountPassword,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {};
-        }
+export default connect(CreateAccountPassword, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {};
     }
-);
+});

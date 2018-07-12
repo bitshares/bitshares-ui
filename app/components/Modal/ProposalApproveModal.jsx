@@ -10,7 +10,7 @@ import WalletDb from "stores/WalletDb";
 import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 
 export const finalRequiredPerms = (
     requiredPermissions,
