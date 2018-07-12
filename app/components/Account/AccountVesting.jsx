@@ -1,7 +1,7 @@
 import React from "react";
 import Translate from "react-translate-component";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import WalletActions from "actions/WalletActions";
 import {Apis} from "bitsharesjs-ws";
@@ -92,8 +92,7 @@ class VestingBalance extends React.Component {
                             <td>
                                 {utils.format_number(
                                     utils.get_asset_amount(
-                                        vb.balance.amount *
-                                            vestingPeriod /
+                                        (vb.balance.amount * vestingPeriod) /
                                             secondsPerDay,
                                         cvbAsset
                                     ),
@@ -108,8 +107,7 @@ class VestingBalance extends React.Component {
                             </td>
                             <td>
                                 {utils.format_number(
-                                    vestingPeriod *
-                                        (1 - availablePercent) /
+                                    (vestingPeriod * (1 - availablePercent)) /
                                         secondsPerDay || 0,
                                     2
                                 )}

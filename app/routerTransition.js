@@ -1,5 +1,5 @@
 import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import chainIds from "chain/chainIds";
 
 // Stores
@@ -56,8 +56,9 @@ class RouterTransitioner {
      * @param appInit true when called via router, false false when node is manually selected in access settings
      * @returns {Promise}
      */
-    willTransitionTo(appInit = true) {
+    willTransitionTo(appInit = true, statusCallback = () => {}) {
         if (this.isTransitionInProgress()) return;
+        this.statusCallback = statusCallback;
         this._willTransitionToInProgress = true;
 
         return new Promise((resolve, reject) => {
@@ -108,6 +109,9 @@ class RouterTransitioner {
             ) {
                 this._willTransitionToInProgress = counterpart.translate(
                     "settings.ping"
+                );
+                this.statusCallback(
+                    counterpart.translate("app_init.check_latency")
                 );
                 this.doLatencyUpdate(true)
                     .then(
@@ -164,8 +168,6 @@ class RouterTransitioner {
             } else {
                 SettingsActions.updateLatencies({});
             }
-
-            console.log(range);
 
             function local_ping(thiz, range = null) {
                 if (current < urls.length) {
@@ -230,7 +232,16 @@ class RouterTransitioner {
             closeCb: this._onConnectionClose.bind(this),
             optionalApis: {enableOrders: true},
             urlChangeCallback: url => {
-                console.log("fallback to new url:", url);
+                console.log(
+                    "fallback to new url:",
+                    url,
+                    "old",
+                    this._willTransitionToInProgress
+                );
+                /* Update connection status */
+                this.statusCallback(
+                    counterpart.translate("app_init.connecting", {server: url})
+                );
                 this._willTransitionToInProgress = url;
                 SettingsActions.changeSetting({
                     setting: "activeNode",
@@ -442,6 +453,11 @@ class RouterTransitioner {
 
         if (appInit) {
             // only true if app is initialized
+            this.statusCallback(
+                counterpart.translate("app_init.connecting", {
+                    server: this._connectionManager.url
+                })
+            );
             this._connectionManager
                 .connectWithFallback(true)
                 .then(() => {
@@ -493,7 +509,7 @@ class RouterTransitioner {
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
-                url: failingNodeUrl,
+                url: failingNodeUrl || "",
                 error: err
             }),
             level: "error",
@@ -534,6 +550,7 @@ class RouterTransitioner {
             console.error("MULTIPLE CONNECT IN PROGRESS");
             return;
         }
+        this.statusCallback(counterpart.translate("app_init.database"));
         this._connectInProgress = true;
         if (Apis.instance()) {
             if (!Apis.instance().orders_api())
@@ -580,39 +597,44 @@ class RouterTransitioner {
                 let chainStoreResetPromise = chainChanged
                     ? ChainStore.resetCache(false)
                     : Promise.resolve();
-                return chainStoreResetPromise.then(() => {
-                    return Promise.all([
-                        PrivateKeyActions.loadDbData().then(() => {
-                            return AccountRefsStore.loadDbData();
-                        }),
-                        WalletDb.loadDbData()
-                            .then(() => {
-                                if (chainChanged) {
-                                    AccountStore.reset();
-                                    return AccountStore.loadDbData(
-                                        currentChain
-                                    ).catch(err => {
-                                        console.error(err);
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                console.error(
-                                    "----- WalletDb.willTransitionTo error ----->",
-                                    error
-                                );
-                                this._transitionDone(reject);
+                return chainStoreResetPromise
+                    .then(() => {
+                        return Promise.all([
+                            PrivateKeyActions.loadDbData().then(() => {
+                                return AccountRefsStore.loadDbData();
                             }),
-                        WalletManagerStore.init()
-                    ]).then(() => {
-                        this._connectInProgress = false;
-                        SettingsActions.changeSetting({
-                            setting: "activeNode",
-                            value: this._connectionManager.url
+                            WalletDb.loadDbData()
+                                .then(() => {
+                                    if (chainChanged) {
+                                        AccountStore.reset();
+                                        return AccountStore.loadDbData(
+                                            currentChain
+                                        ).catch(err => {
+                                            console.error(err);
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        "----- WalletDb.willTransitionTo error ----->",
+                                        error
+                                    );
+                                    this._transitionDone(reject);
+                                }),
+                            WalletManagerStore.init()
+                        ]).then(() => {
+                            this._connectInProgress = false;
+                            SettingsActions.changeSetting({
+                                setting: "activeNode",
+                                value: this._connectionManager.url
+                            });
+                            this._transitionDone(resolve);
                         });
-                        this._transitionDone(resolve);
+                    })
+                    .catch(err => {
+                        this._connectInProgress = false;
+                        this._transitionDone(reject.bind(this, err));
                     });
-                });
             })
             .catch(err => {
                 console.error(err);

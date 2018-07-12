@@ -322,7 +322,10 @@ class OrderBook extends React.Component {
         };
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
+        if (!nextProps.marketReady) return false;
+        return true;
+    }
     //     console.log("calls changed:", !Immutable.is(nextProps.calls, this.props.calls), nextProps.calls && nextProps.calls.toJS(), this.props.calls && this.props.calls.toJS());
     //     const callsChanged = didOrdersChange(nextProps.calls, this.props.calls);
     //     const limitsChanged = didOrdersChange(nextProps.orders, this.props.orders);
@@ -1138,9 +1141,17 @@ class OrderBook extends React.Component {
                                                             }
                                                         >
                                                             <PriceText
-                                                                preFormattedPrice={
+                                                                price={
                                                                     this.props
                                                                         .latest
+                                                                }
+                                                                base={
+                                                                    this.props
+                                                                        .base
+                                                                }
+                                                                quote={
+                                                                    this.props
+                                                                        .quote
                                                                 }
                                                             />
                                                         </span>

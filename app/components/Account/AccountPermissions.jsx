@@ -5,7 +5,7 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
 import ApplicationApi from "api/ApplicationApi";
-import {PublicKey} from "bitsharesjs/es";
+import {PublicKey} from "bitsharesjs";
 import AccountPermissionsList from "./AccountPermissionsList";
 import AccountPermissionsMigrate from "./AccountPermissionsMigrate";
 import PubKeyInput from "../Forms/PubKeyInput";

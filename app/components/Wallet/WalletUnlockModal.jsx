@@ -16,7 +16,7 @@ import AccountActions from "actions/AccountActions";
 import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
-import {PrivateKey} from "bitsharesjs/es";
+import {PrivateKey} from "bitsharesjs";
 import {saveAs} from "file-saver";
 import LoginTypeSelector from "./LoginTypeSelector";
 import counterpart from "counterpart";

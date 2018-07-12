@@ -1,5 +1,5 @@
 import {Fraction} from "fractional";
-import utils from "common/utils";
+import utils from "./utils";
 
 const GRAPHENE_100_PERCENT = 10000;
 
@@ -134,7 +134,7 @@ class Asset {
         // asset amount times a price p
         let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            temp = this.amount * p.quote.amount / p.base.amount;
+            temp = (this.amount * p.quote.amount) / p.base.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -151,7 +151,7 @@ class Asset {
                 precision: p.quote.precision
             });
         } else if (this.asset_id === p.quote.asset_id) {
-            temp = this.amount * p.base.amount / p.quote.amount;
+            temp = (this.amount * p.base.amount) / p.quote.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -273,11 +273,9 @@ class Price {
             return this[key];
         }
         let real = sameBase
-            ? this.quote.amount *
-              this.base.toSats() /
+            ? (this.quote.amount * this.base.toSats()) /
               (this.base.amount * this.quote.toSats())
-            : this.base.amount *
-              this.quote.toSats() /
+            : (this.base.amount * this.quote.toSats()) /
               (this.quote.amount * this.base.toSats());
         return (this[key] = parseFloat(real.toFixed(8))); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
@@ -1032,6 +1030,116 @@ class GroupedOrder {
     }
 }
 
+class FillOrder {
+    constructor(fill, assets, market_base) {
+        /* Check if the fill op is from a user history object */
+        if ("virtual_op" in fill) {
+            fill = {
+                id: fill.id,
+                op: fill.op[1],
+                time: null,
+                block: fill.block_num
+            };
+        }
+        if (!market_base) {
+            throw new Error("LimitOrder requires a market_base id");
+        }
+        this.op = fill.op;
+        this.assets = assets;
+        this.market_base = market_base;
+        this.id = fill.id;
+        this.order_id = fill.op.order_id;
+        this.isCall = utils.is_object_type(fill.op.order_id, "call_order")
+            ? true
+            : false;
+
+        this.isBid = fill.op.receives.asset_id === this.market_base;
+        this.className = this.isCall
+            ? "orderHistoryCall"
+            : this.isBid
+                ? "orderHistoryBid"
+                : "orderHistoryAsk";
+        this.time = fill.time && new Date(utils.makeISODateString(fill.time));
+        this.block = fill.block;
+        this.account = fill.op.account || fill.op.account_id;
+
+        this.is_maker = fill.op.is_maker;
+
+        let pays = new Asset({
+            asset_id: fill.op.pays.asset_id,
+            amount: parseInt(fill.op.pays.amount, 10),
+            precision: assets[fill.op.pays.asset_id].precision
+        });
+        let receives = new Asset({
+            asset_id: fill.op.receives.asset_id,
+            amount: parseInt(fill.op.receives.amount, 10),
+            precision: assets[fill.op.receives.asset_id].precision
+        });
+
+        this.pays = this.isBid ? pays : receives;
+        this.receives = this.isBid ? receives : pays;
+
+        if (fill.op.fill_price) {
+            this.fill_price = new Price({
+                base: new Asset({
+                    asset_id: fill.op.fill_price.base.asset_id,
+                    amount: parseInt(fill.op.fill_price.base.amount, 10),
+                    precision:
+                        assets[fill.op.fill_price.base.asset_id].precision
+                }),
+                quote: new Asset({
+                    asset_id: fill.op.fill_price.quote.asset_id,
+                    amount: parseInt(fill.op.fill_price.quote.amount, 10),
+                    precision:
+                        assets[fill.op.fill_price.quote.asset_id].precision
+                })
+            });
+        }
+
+        this.fee = new Asset({
+            asset_id: fill.op.fee.asset_id,
+            amount: parseInt(fill.op.fee.amount, 10),
+            precision: assets[fill.op.fee.asset_id].precision
+        });
+    }
+
+    _calculatePrice() {
+        if (this._cached_price) {
+            return this._cached_price;
+        } else {
+            return (this._cached_price = new Price({
+                base: this.pays,
+                quote: this.receives
+            }).toReal(false));
+        }
+    }
+
+    getPrice() {
+        if (this.fill_price) {
+            return this.fill_price.toReal(
+                this.fill_price.base.asset_id === this.receives.asset_id
+            );
+        } else {
+            return this._calculatePrice();
+        }
+    }
+
+    amountToReceive() {
+        let amount = this.fill_price
+            ? this.pays.times(this.fill_price).getAmount({real: true})
+            : this.receives.getAmount({real: true});
+
+        return utils.format_number(amount, this.receives.precision);
+    }
+
+    amountToPay() {
+        return utils.format_number(
+            this.pays.getAmount({real: true}),
+            this.pays.precision
+        );
+    }
+}
+
 export {
     Asset,
     Price,
@@ -1043,5 +1151,6 @@ export {
     CallOrder,
     SettleOrder,
     didOrdersChange,
-    GroupedOrder
+    GroupedOrder,
+    FillOrder
 };

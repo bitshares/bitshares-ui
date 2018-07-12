@@ -1,4 +1,4 @@
-import {FetchChain} from "bitsharesjs/es";
+import {FetchChain} from "bitsharesjs";
 import {FeedPrice, Asset} from "./MarketClasses";
 
 let asyncCache = {};

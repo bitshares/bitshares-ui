@@ -8,7 +8,7 @@ import {PrivateKeyTcomb} from "./tcomb_structs";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import CachedPropertyActions from "actions/CachedPropertyActions";
 import AddressIndex from "stores/AddressIndex";
-import {PublicKey, ChainStore, Aes} from "bitsharesjs/es";
+import {PublicKey, ChainStore, Aes} from "bitsharesjs";
 
 /** No need to wait on the promises returned by this store as long as
     this.state.privateKeyStorage_error == false and
@@ -137,34 +137,32 @@ class PrivateKeyStore extends BaseStore {
                 private_key_object
             );
 
-            p
-                .catch(event => {
-                    // ignore_duplicates
-                    let error = event.target.error;
-                    console.log("... error", error, event);
-                    if (
-                        error.name != "ConstraintError" ||
-                        error.message.indexOf("by_encrypted_key") == -1
-                    ) {
-                        this.privateKeyStorageError("add_key", error);
-                        throw event;
-                    }
-                    duplicate = true;
-                    event.preventDefault();
-                })
-                .then(() => {
-                    this.pendingOperationDone();
-                    if (duplicate) return {result: "duplicate", id: null};
-                    if (private_key_object.brainkey_sequence == null)
-                        this.binaryBackupRecommended(); // non-deterministic
-                    idb_helper.on_transaction_end(transaction).then(() => {
-                        this.setState({keys: this.state.keys});
-                    });
-                    return {
-                        result: "added",
-                        id: private_key_object.id
-                    };
+            p.catch(event => {
+                // ignore_duplicates
+                let error = event.target.error;
+                console.log("... error", error, event);
+                if (
+                    error.name != "ConstraintError" ||
+                    error.message.indexOf("by_encrypted_key") == -1
+                ) {
+                    this.privateKeyStorageError("add_key", error);
+                    throw event;
+                }
+                duplicate = true;
+                event.preventDefault();
+            }).then(() => {
+                this.pendingOperationDone();
+                if (duplicate) return {result: "duplicate", id: null};
+                if (private_key_object.brainkey_sequence == null)
+                    this.binaryBackupRecommended(); // non-deterministic
+                idb_helper.on_transaction_end(transaction).then(() => {
+                    this.setState({keys: this.state.keys});
                 });
+                return {
+                    result: "added",
+                    id: private_key_object.id
+                };
+            });
             resolve(p);
         });
         resolve(p);

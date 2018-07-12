@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import Translate from "react-translate-component";
 import PrivateKeyView from "components/PrivateKeyView";
-import {PublicKey} from "bitsharesjs/es";
+import {PublicKey} from "bitsharesjs";
 import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import PropTypes from "prop-types";

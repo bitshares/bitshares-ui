@@ -12,7 +12,7 @@ import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
@@ -583,7 +583,7 @@ class MyOpenOrders extends React.Component {
             >
                 <div
                     className="exchange-bordered small-12"
-                    style={{height: 266}}
+                    style={{height: "auto", minHeight: 266}}
                 >
                     <div className="grid-block shrink left-orderbook-header">
                         <div
