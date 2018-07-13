@@ -13,20 +13,20 @@
 //    <a href="http://bing.com">bing</a>
 // </p>
 
-(function () {
-    'use strict';
+(function() {
+    "use strict";
 
-    var shell = require('electron').shell;
+    var shell = require("electron").shell;
 
-    var supportExternalLinks = function (e) {
+    var supportExternalLinks = function(e) {
         var href;
         var isExternal = false;
 
-        var checkDomElement = function (element) {
-            if (element.nodeName === 'A') {
-                href = element.getAttribute('href');
+        var checkDomElement = function(element) {
+            if (element.nodeName === "A") {
+                href = element.getAttribute("href");
             }
-            if (element.classList.contains('js-external-link')) {
+            if (element.classList.contains("js-external-link")) {
                 isExternal = true;
             }
             if (href && isExternal) {
@@ -35,10 +35,10 @@
             } else if (element.parentElement) {
                 checkDomElement(element.parentElement);
             }
-        }
+        };
 
         checkDomElement(e.target);
-    }
+    };
 
-    document.addEventListener('click', supportExternalLinks, false);
-}());
+    document.addEventListener("click", supportExternalLinks, false);
+})();

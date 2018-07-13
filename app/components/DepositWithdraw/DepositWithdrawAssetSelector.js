@@ -77,13 +77,16 @@ class DepositWithdrawAssetSelector extends React.Component {
 }
 DepositWithdrawAssetSelector = BindToChainState(DepositWithdrawAssetSelector);
 
-export default connect(DepositWithdrawAssetSelector, {
-    listenTo() {
-        return [GatewayStore];
-    },
-    getProps() {
-        return {
-            backedCoins: GatewayStore.getState().backedCoins
-        };
+export default connect(
+    DepositWithdrawAssetSelector,
+    {
+        listenTo() {
+            return [GatewayStore];
+        },
+        getProps() {
+            return {
+                backedCoins: GatewayStore.getState().backedCoins
+            };
+        }
     }
-});
+);

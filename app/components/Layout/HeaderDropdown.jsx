@@ -121,7 +121,9 @@ export default class DropDownMenu extends React.Component {
                 {!isMyAccount && showAccountLinks ? (
                     <li
                         className="divider"
-                        onClick={this[isContact ? "_onRemoveContact" : "_onAddContact"].bind(this)}
+                        onClick={this[
+                            isContact ? "_onRemoveContact" : "_onAddContact"
+                        ].bind(this)}
                     >
                         <div className="table-cell">
                             <Icon

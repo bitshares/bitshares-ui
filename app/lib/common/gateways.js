@@ -8,6 +8,7 @@ import {
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
+    citadelAPIs,
     gdex2APIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
@@ -60,6 +61,17 @@ export const availableGateways = {
         addressValidatorAsset: true, // Address validator requires output_asset parameter
         useFullAssetName: true, // Adds <gateway>.<asset> to memo and address object
         intermediateAccount: "cryptobridge", // Fixed intermediateAccount
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    CITADEL: {
+        id: "CITADEL",
+        name: "CITADEL",
+        baseAPI: citadelAPIs,
+        isEnabled: true,
+        selected: false,
         options: {
             enabled: false,
             selected: false

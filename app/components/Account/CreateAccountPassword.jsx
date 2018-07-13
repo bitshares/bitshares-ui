@@ -691,11 +691,14 @@ class CreateAccountPassword extends React.Component {
 
 CreateAccountPassword = withRouter(CreateAccountPassword);
 
-export default connect(CreateAccountPassword, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {};
+export default connect(
+    CreateAccountPassword,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {};
+        }
     }
-});
+);

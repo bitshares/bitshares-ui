@@ -43,13 +43,16 @@ class ResolvemyActiveAccounts extends Component {
     }
 }
 
-ResolvemyActiveAccounts = connect(ResolvemyActiveAccounts, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return AccountStore.getState();
+ResolvemyActiveAccounts = connect(
+    ResolvemyActiveAccounts,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return AccountStore.getState();
+        }
     }
-});
+);
 
 export default ResolvemyActiveAccounts;

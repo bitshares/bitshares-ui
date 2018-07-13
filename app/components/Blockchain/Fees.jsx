@@ -81,7 +81,7 @@ class FeeGroup extends React.Component {
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
-                let amount = fee[key] * scale / 1e4;
+                let amount = (fee[key] * scale) / 1e4;
                 let amountForLTM = amount * feeRateForLTM;
                 let feeTypes = counterpart.translate("transaction.feeTypes");
                 let assetAmount = amount ? (

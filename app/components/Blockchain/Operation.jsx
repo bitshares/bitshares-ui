@@ -1405,15 +1405,18 @@ class Operation extends React.Component {
     }
 }
 
-Operation = connect(Operation, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+Operation = connect(
+    Operation,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default Operation;

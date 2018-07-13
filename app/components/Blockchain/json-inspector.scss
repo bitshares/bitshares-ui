@@ -15,7 +15,7 @@
 }
 
 .json-inspector__line:after {
-    content: '';
+    content: "";
 
     position: absolute;
     top: 0;
@@ -91,9 +91,9 @@
 }
 
 .json-inspector__show-original:before {
-    content: '⥂';
+    content: "⥂";
 }
 
 .json-inspector__show-original:hover:after {
-    content: ' expand'
+    content: " expand";
 }

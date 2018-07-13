@@ -232,15 +232,18 @@ class LoginSelector extends React.Component {
     }
 }
 
-export default connect(LoginSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+export default connect(
+    LoginSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);

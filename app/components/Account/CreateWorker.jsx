@@ -183,13 +183,16 @@ class CreateWorker extends React.Component {
     }
 }
 
-export default (CreateWorker = connect(CreateWorker, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount
-        };
+export default (CreateWorker = connect(
+    CreateWorker,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount: AccountStore.getState().currentAccount
+            };
+        }
     }
-}));
+));

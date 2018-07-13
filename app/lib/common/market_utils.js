@@ -275,7 +275,7 @@ const MarketUtils = {
             }
         } else if (!ask) {
             amount = this.limitByPrecision(
-                buy.amount / sell.amount * order.for_sale / quotePrecision,
+                ((buy.amount / sell.amount) * order.for_sale) / quotePrecision,
                 quote
             );
             value = order.for_sale / basePrecision;

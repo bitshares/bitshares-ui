@@ -76,45 +76,43 @@ class GdexGateway extends React.Component {
     _transformCoin(data) {
         var result = [];
         try {
-            data
-                .filter(asset => {
-                    return asset.status != 0;
-                })
-                .forEach(asset => {
-                    let coin = {};
-                    if (asset.type == 1) {
-                        // inner asset
-                        coin.innerAssetId = asset.assetId;
-                        coin.innerAssetName = asset.assetName;
-                        coin.innerSymbol = asset.assetSymbol;
-                        coin.outerAssetId = asset.relationId;
-                        coin.outerAssetName = asset.relationSymbol;
-                        coin.outerSymbol = asset.relationSymbol;
-                        coin.status = asset.withdrawStatus;
-                        coin.gateFee = asset.withdrawFees;
-                        coin.needMemo = asset.needMemo;
-                        coin.minTransactionAmount = asset.minWithdrawAmount;
-                        coin.type = asset.type;
-                        coin.relationPrecision = asset.relationPrecision;
-                    } else if (asset.type == 2) {
-                        // outer asset
-                        coin.innerAssetId = asset.relationId;
-                        coin.innerAssetName = asset.relationSymbol;
-                        coin.innerSymbol = asset.relationSymbol;
-                        coin.outerAssetId = asset.assetId;
-                        coin.outerAssetName = asset.assetName;
-                        coin.outerSymbol = asset.assetSymbol;
-                        coin.status = asset.depositStatus;
-                        coin.gateFee = asset.depositFees;
-                        coin.needMemo = asset.needMemo;
-                        coin.minTransactionAmount = asset.minDepositAmount;
-                        coin.type = asset.type;
-                        coin.relationPrecision = asset.relationPrecision;
-                    } else {
-                        coin = null;
-                    }
-                    if (coin) result.push(coin);
-                });
+            data.filter(asset => {
+                return asset.status != 0;
+            }).forEach(asset => {
+                let coin = {};
+                if (asset.type == 1) {
+                    // inner asset
+                    coin.innerAssetId = asset.assetId;
+                    coin.innerAssetName = asset.assetName;
+                    coin.innerSymbol = asset.assetSymbol;
+                    coin.outerAssetId = asset.relationId;
+                    coin.outerAssetName = asset.relationSymbol;
+                    coin.outerSymbol = asset.relationSymbol;
+                    coin.status = asset.withdrawStatus;
+                    coin.gateFee = asset.withdrawFees;
+                    coin.needMemo = asset.needMemo;
+                    coin.minTransactionAmount = asset.minWithdrawAmount;
+                    coin.type = asset.type;
+                    coin.relationPrecision = asset.relationPrecision;
+                } else if (asset.type == 2) {
+                    // outer asset
+                    coin.innerAssetId = asset.relationId;
+                    coin.innerAssetName = asset.relationSymbol;
+                    coin.innerSymbol = asset.relationSymbol;
+                    coin.outerAssetId = asset.assetId;
+                    coin.outerAssetName = asset.assetName;
+                    coin.outerSymbol = asset.assetSymbol;
+                    coin.status = asset.depositStatus;
+                    coin.gateFee = asset.depositFees;
+                    coin.needMemo = asset.needMemo;
+                    coin.minTransactionAmount = asset.minDepositAmount;
+                    coin.type = asset.type;
+                    coin.relationPrecision = asset.relationPrecision;
+                } else {
+                    coin = null;
+                }
+                if (coin) result.push(coin);
+            });
         } catch (err) {
             console.log("Transform coin failed: ", err);
         }
@@ -591,14 +589,17 @@ class GdexGateway extends React.Component {
     }
 }
 
-export default connect(GdexGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings,
-            settings: SettingsStore.getState().settings
-        };
+export default connect(
+    GdexGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings,
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);

@@ -683,7 +683,7 @@ class ImportKeys extends Component {
                                     <span>
                                         Filtering{" "}
                                         {Math.round(
-                                            status.count / status.total * 100
+                                            (status.count / status.total) * 100
                                         )}{" "}
                                         %{" "}
                                     </span>
@@ -940,15 +940,18 @@ class ImportKeys extends Component {
     }
 }
 
-ImportKeys = connect(ImportKeys, {
-    listenTo() {
-        return [ImportKeysStore];
-    },
-    getProps() {
-        return {
-            importing: ImportKeysStore.getState().importing
-        };
+ImportKeys = connect(
+    ImportKeys,
+    {
+        listenTo() {
+            return [ImportKeysStore];
+        },
+        getProps() {
+            return {
+                importing: ImportKeysStore.getState().importing
+            };
+        }
     }
-});
+);
 
 export default ImportKeys;

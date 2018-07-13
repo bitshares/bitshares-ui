@@ -262,7 +262,7 @@ function estimateFee(op_type, options, globalObject, data = {}) {
                         ops.memo_data.toHex(serialized)
                     );
                     const byteLength = Buffer.byteLength(stringified, "hex");
-                    fee += optionFee * byteLength / 1024;
+                    fee += (optionFee * byteLength) / 1024;
 
                     _prevContent = data.content;
                 }
@@ -273,8 +273,7 @@ function estimateFee(op_type, options, globalObject, data = {}) {
     }
     // console.timeEnd("estimateFee");
     fee =
-        fee *
-        globalObject.getIn(["parameters", "current_fees", "scale"]) /
+        (fee * globalObject.getIn(["parameters", "current_fees", "scale"])) /
         10000;
     _feeCache[cacheKey] = fee;
     setTimeout(() => {

@@ -1,11 +1,7 @@
 {
     "locale": "en",
     "date": {
-        "ca": [
-            "gregory",
-            "chinese",
-            "generic"
-        ],
+        "ca": ["gregory", "chinese", "generic"],
         "hourNo0": true,
         "hour12": true,
         "formats": {
@@ -110,24 +106,8 @@
                     ]
                 },
                 "days": {
-                    "narrow": [
-                        "S",
-                        "M",
-                        "T",
-                        "W",
-                        "T",
-                        "F",
-                        "S"
-                    ],
-                    "short": [
-                        "Sun",
-                        "Mon",
-                        "Tue",
-                        "Wed",
-                        "Thu",
-                        "Fri",
-                        "Sat"
-                    ],
+                    "narrow": ["S", "M", "T", "W", "T", "F", "S"],
+                    "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                     "long": [
                         "Sunday",
                         "Monday",
@@ -189,24 +169,8 @@
                     ]
                 },
                 "days": {
-                    "narrow": [
-                        "S",
-                        "M",
-                        "T",
-                        "W",
-                        "T",
-                        "F",
-                        "S"
-                    ],
-                    "short": [
-                        "Sun",
-                        "Mon",
-                        "Tue",
-                        "Wed",
-                        "Thu",
-                        "Fri",
-                        "Sat"
-                    ],
+                    "narrow": ["S", "M", "T", "W", "T", "F", "S"],
+                    "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                     "long": [
                         "Sunday",
                         "Monday",
@@ -218,18 +182,9 @@
                     ]
                 },
                 "eras": {
-                    "narrow": [
-                        "ERA0",
-                        "ERA1"
-                    ],
-                    "short": [
-                        "ERA0",
-                        "ERA1"
-                    ],
-                    "long": [
-                        "ERA0",
-                        "ERA1"
-                    ]
+                    "narrow": ["ERA0", "ERA1"],
+                    "short": ["ERA0", "ERA1"],
+                    "long": ["ERA0", "ERA1"]
                 },
                 "dayPeriods": {
                     "am": "AM",
@@ -282,24 +237,8 @@
                     ]
                 },
                 "days": {
-                    "narrow": [
-                        "S",
-                        "M",
-                        "T",
-                        "W",
-                        "T",
-                        "F",
-                        "S"
-                    ],
-                    "short": [
-                        "Sun",
-                        "Mon",
-                        "Tue",
-                        "Wed",
-                        "Thu",
-                        "Fri",
-                        "Sat"
-                    ],
+                    "narrow": ["S", "M", "T", "W", "T", "F", "S"],
+                    "short": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
                     "long": [
                         "Sunday",
                         "Monday",
@@ -311,18 +250,8 @@
                     ]
                 },
                 "eras": {
-                    "narrow": [
-                        "B",
-                        "A",
-                        "BCE",
-                        "CE"
-                    ],
-                    "short": [
-                        "BC",
-                        "AD",
-                        "BCE",
-                        "CE"
-                    ],
+                    "narrow": ["B", "A", "BCE", "CE"],
+                    "short": ["BC", "AD", "BCE", "CE"],
                     "long": [
                         "Before Christ",
                         "Anno Domini",
@@ -338,9 +267,7 @@
         }
     },
     "number": {
-        "nu": [
-            "latn"
-        ],
+        "nu": ["latn"],
         "patterns": {
             "decimal": {
                 "positivePattern": "{number}",

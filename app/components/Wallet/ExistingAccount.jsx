@@ -80,7 +80,10 @@ class ExistingAccount extends Component {
         );
     }
 }
-ExistingAccount = connect(ExistingAccount, connectObject);
+ExistingAccount = connect(
+    ExistingAccount,
+    connectObject
+);
 
 class ExistingAccountOptions extends Component {
     render() {
@@ -133,7 +136,10 @@ class ExistingAccountOptions extends Component {
         );
     }
 }
-ExistingAccountOptions = connect(ExistingAccountOptions, connectObject);
+ExistingAccountOptions = connect(
+    ExistingAccountOptions,
+    connectObject
+);
 
 export default ExistingAccount;
 export {ExistingAccountOptions};

@@ -911,17 +911,20 @@ class SendModalConnectWrapper extends React.Component {
     }
 }
 
-SendModalConnectWrapper = connect(SendModalConnectWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps(props) {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            tabIndex: props.tabIndex || 0
-        };
+SendModalConnectWrapper = connect(
+    SendModalConnectWrapper,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps(props) {
+            return {
+                currentAccount: AccountStore.getState().currentAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                tabIndex: props.tabIndex || 0
+            };
+        }
     }
-});
+);
 
 export default SendModalConnectWrapper;

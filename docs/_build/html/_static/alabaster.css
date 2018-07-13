@@ -1,26 +1,10 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @import url("basic.css");
 
 /* -- page layout ----------------------------------------------------------- */
 
 body {
-    font-family: 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
+    font-family: "goudy old style", "minion pro", "bell mt", Georgia,
+        "Hiragino Mincho Pro", serif;
     font-size: 17px;
     background-color: white;
     color: #000;
@@ -47,12 +31,12 @@ div.sphinxsidebar {
 }
 
 hr {
-    border: 1px solid #B1B4B6;
+    border: 1px solid #b1b4b6;
 }
 
 div.body {
     background-color: #ffffff;
-    color: #3E4349;
+    color: #3e4349;
     padding: 0 30px 0 30px;
 }
 
@@ -72,11 +56,9 @@ div.footer a {
     color: #888;
 }
 
-
 div.relations {
     display: none;
 }
-
 
 div.sphinxsidebar a {
     color: #444;
@@ -121,7 +103,7 @@ div.sphinxsidebarwrapper p.blurb {
 
 div.sphinxsidebar h3,
 div.sphinxsidebar h4 {
-    font-family: 'Garamond', 'Georgia', serif;
+    font-family: "Garamond", "Georgia", serif;
     color: #444;
     font-size: 24px;
     font-weight: normal;
@@ -164,16 +146,17 @@ div.sphinxsidebar ul li.toctree-l2 > a {
 }
 
 div.sphinxsidebar input {
-    border: 1px solid #CCC;
-    font-family: 'goudy old style', 'minion pro', 'bell mt', Georgia, 'Hiragino Mincho Pro', serif;
+    border: 1px solid #ccc;
+    font-family: "goudy old style", "minion pro", "bell mt", Georgia,
+        "Hiragino Mincho Pro", serif;
     font-size: 1em;
 }
 
 div.sphinxsidebar hr {
     border: none;
     height: 1px;
-    color: #AAA;
-    background: #AAA;
+    color: #aaa;
+    background: #aaa;
 
     text-align: left;
     margin-left: 0;
@@ -183,12 +166,12 @@ div.sphinxsidebar hr {
 /* -- body styles ----------------------------------------------------------- */
 
 a {
-    color: #004B6B;
+    color: #004b6b;
     text-decoration: underline;
 }
 
 a:hover {
-    color: #6D4100;
+    color: #6d4100;
     text-decoration: underline;
 }
 
@@ -198,42 +181,59 @@ div.body h3,
 div.body h4,
 div.body h5,
 div.body h6 {
-    font-family: 'Garamond', 'Georgia', serif;
+    font-family: "Garamond", "Georgia", serif;
     font-weight: normal;
     margin: 30px 0px 10px 0px;
     padding: 0;
 }
 
-div.body h1 { margin-top: 0; padding-top: 0; font-size: 240%; }
-div.body h2 { font-size: 180%; }
-div.body h3 { font-size: 150%; }
-div.body h4 { font-size: 130%; }
-div.body h5 { font-size: 100%; }
-div.body h6 { font-size: 100%; }
+div.body h1 {
+    margin-top: 0;
+    padding-top: 0;
+    font-size: 240%;
+}
+div.body h2 {
+    font-size: 180%;
+}
+div.body h3 {
+    font-size: 150%;
+}
+div.body h4 {
+    font-size: 130%;
+}
+div.body h5 {
+    font-size: 100%;
+}
+div.body h6 {
+    font-size: 100%;
+}
 
 a.headerlink {
-    color: #DDD;
+    color: #ddd;
     padding: 0 4px;
     text-decoration: none;
 }
 
 a.headerlink:hover {
     color: #444;
-    background: #EAEAEA;
+    background: #eaeaea;
 }
 
-div.body p, div.body dd, div.body li {
+div.body p,
+div.body dd,
+div.body li {
     line-height: 1.4em;
 }
 
 div.admonition {
     margin: 20px 0px;
     padding: 10px 30px;
-    background-color: #FCC;
-    border: 1px solid #FAA;
+    background-color: #fcc;
+    border: 1px solid #faa;
 }
 
-div.admonition tt.xref, div.admonition a tt {
+div.admonition tt.xref,
+div.admonition a tt {
     border-bottom: 1px solid #fafafa;
 }
 
@@ -243,7 +243,7 @@ dd div.admonition {
 }
 
 div.admonition p.admonition-title {
-    font-family: 'Garamond', 'Georgia', serif;
+    font-family: "Garamond", "Georgia", serif;
     font-weight: normal;
     font-size: 24px;
     margin: 0 0 10px 0;
@@ -259,18 +259,19 @@ div.highlight {
     background-color: white;
 }
 
-dt:target, .highlight {
-    background: #FAF3E8;
+dt:target,
+.highlight {
+    background: #faf3e8;
 }
 
 div.note {
-    background-color: #EEE;
-    border: 1px solid #CCC;
+    background-color: #eee;
+    border: 1px solid #ccc;
 }
 
 div.seealso {
-    background-color: #EEE;
-    border: 1px solid #CCC;
+    background-color: #eee;
+    border: 1px solid #ccc;
 }
 
 div.topic {
@@ -285,13 +286,16 @@ p.admonition-title:after {
     content: ":";
 }
 
-pre, tt, code {
-    font-family: 'Consolas', 'Menlo', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+pre,
+tt,
+code {
+    font-family: "Consolas", "Menlo", "Deja Vu Sans Mono",
+        "Bitstream Vera Sans Mono", monospace;
     font-size: 0.9em;
 }
 
 .hll {
-    background-color: #FFC;
+    background-color: #ffc;
     margin: 0 -12px;
     padding: 0 12px;
     display: block;
@@ -300,11 +304,15 @@ pre, tt, code {
 img.screenshot {
 }
 
-tt.descname, tt.descclassname, code.descname, code.descclassname {
+tt.descname,
+tt.descclassname,
+code.descname,
+code.descclassname {
     font-size: 0.95em;
 }
 
-tt.descname, code.descname {
+tt.descname,
+code.descname {
     padding-right: 0.08em;
 }
 
@@ -321,12 +329,14 @@ table.docutils {
     box-shadow: 2px 2px 4px #eee;
 }
 
-table.docutils td, table.docutils th {
+table.docutils td,
+table.docutils th {
     border: 1px solid #888;
     padding: 0.25em 0.7em;
 }
 
-table.field-list, table.footnote {
+table.field-list,
+table.footnote {
     border: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
@@ -336,8 +346,8 @@ table.field-list, table.footnote {
 table.footnote {
     margin: 15px 0;
     width: 100%;
-    border: 1px solid #EEE;
-    background: #FDFDFD;
+    border: 1px solid #eee;
+    background: #fdfdfd;
     font-size: 0.9em;
 }
 
@@ -381,19 +391,22 @@ blockquote {
     padding: 0;
 }
 
-ul, ol {
+ul,
+ol {
     margin: 10px 0 10px 30px;
     padding: 0;
 }
 
 pre {
-    background: #EEE;
+    background: #eee;
     padding: 7px 30px;
     margin: 15px 0px;
     line-height: 1.3em;
 }
 
-dl pre, blockquote pre, li pre {
+dl pre,
+blockquote pre,
+li pre {
     margin-left: 0;
     padding-left: 30px;
 }
@@ -403,99 +416,94 @@ dl dl pre {
     padding-left: 90px;
 }
 
-tt, code {
+tt,
+code {
     background-color: #ecf0f3;
     color: #222;
     /* padding: 1px 2px; */
 }
 
-tt.xref, code.xref, a tt {
-    background-color: #FBFBFB;
+tt.xref,
+code.xref,
+a tt {
+    background-color: #fbfbfb;
     border-bottom: 1px solid white;
 }
 
 a.reference {
     text-decoration: none;
-    border-bottom: 1px dotted #004B6B;
+    border-bottom: 1px dotted #004b6b;
 }
 
 a.reference:hover {
-    border-bottom: 1px solid #6D4100;
+    border-bottom: 1px solid #6d4100;
 }
 
 a.footnote-reference {
     text-decoration: none;
     font-size: 0.7em;
     vertical-align: top;
-    border-bottom: 1px dotted #004B6B;
+    border-bottom: 1px dotted #004b6b;
 }
 
 a.footnote-reference:hover {
-    border-bottom: 1px solid #6D4100;
+    border-bottom: 1px solid #6d4100;
 }
 
-a:hover tt, a:hover code {
-    background: #EEE;
+a:hover tt,
+a:hover code {
+    background: #eee;
 }
-
 
 @media screen and (max-width: 870px) {
-
     div.sphinxsidebar {
-    	display: none;
+        display: none;
     }
 
     div.document {
-       width: 100%;
-
+        width: 100%;
     }
 
     div.documentwrapper {
-    	margin-left: 0;
-    	margin-top: 0;
-    	margin-right: 0;
-    	margin-bottom: 0;
+        margin-left: 0;
+        margin-top: 0;
+        margin-right: 0;
+        margin-bottom: 0;
     }
 
     div.bodywrapper {
-    	margin-top: 0;
-    	margin-right: 0;
-    	margin-bottom: 0;
-    	margin-left: 0;
+        margin-top: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+        margin-left: 0;
     }
 
     ul {
-    	margin-left: 0;
+        margin-left: 0;
     }
 
     .document {
-    	width: auto;
+        width: auto;
     }
 
     .footer {
-    	width: auto;
+        width: auto;
     }
 
     .bodywrapper {
-    	margin: 0;
+        margin: 0;
     }
 
     .footer {
-    	width: auto;
+        width: auto;
     }
 
     .github {
         display: none;
     }
-
-
-
 }
 
-
-
 @media screen and (max-width: 875px) {
-
     body {
         margin: 0;
         padding: 20px 30px;
@@ -513,16 +521,18 @@ a:hover tt, a:hover code {
         margin: 50px -30px -20px -30px;
         padding: 10px 20px;
         background: #333;
-        color: #FFF;
+        color: #fff;
     }
 
-    div.sphinxsidebar h3, div.sphinxsidebar h4, div.sphinxsidebar p,
+    div.sphinxsidebar h3,
+    div.sphinxsidebar h4,
+    div.sphinxsidebar p,
     div.sphinxsidebar h3 a {
         color: white;
     }
 
     div.sphinxsidebar a {
-        color: #AAA;
+        color: #aaa;
     }
 
     div.sphinxsidebar p.logo {
@@ -568,11 +578,10 @@ a:hover tt, a:hover code {
     }
 }
 
-
 /* misc. */
 
 .revsys-inline {
-    display: none!important;
+    display: none !important;
 }
 
 /* Make nested-list/multi-paragraph items look better in Releases changelog
@@ -584,10 +593,12 @@ div#changelog > div.section > ul > li > p:only-child {
 }
 
 /* Hide fugly table cell borders in ..bibliography:: directive output */
-table.docutils.citation, table.docutils.citation td, table.docutils.citation th {
-  border: none;
-  /* Below needed in some edge cases; if not applied, bottom shadows appear */
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+table.docutils.citation,
+table.docutils.citation td,
+table.docutils.citation th {
+    border: none;
+    /* Below needed in some edge cases; if not applied, bottom shadows appear */
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }

@@ -327,13 +327,16 @@ class TransactionConfirm extends React.Component {
     }
 }
 
-TransactionConfirm = connect(TransactionConfirm, {
-    listenTo() {
-        return [TransactionConfirmStore];
-    },
-    getProps() {
-        return TransactionConfirmStore.getState();
+TransactionConfirm = connect(
+    TransactionConfirm,
+    {
+        listenTo() {
+            return [TransactionConfirmStore];
+        },
+        getProps() {
+            return TransactionConfirmStore.getState();
+        }
     }
-});
+);
 
 export default TransactionConfirm;

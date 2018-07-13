@@ -573,18 +573,21 @@ class WitnessStoreWrapper extends React.Component {
     }
 }
 
-WitnessStoreWrapper = connect(WitnessStoreWrapper, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            cardView: SettingsStore.getState().viewSettings.get("cardView"),
-            filterWitness: SettingsStore.getState().viewSettings.get(
-                "filterWitness"
-            )
-        };
+WitnessStoreWrapper = connect(
+    WitnessStoreWrapper,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                cardView: SettingsStore.getState().viewSettings.get("cardView"),
+                filterWitness: SettingsStore.getState().viewSettings.get(
+                    "filterWitness"
+                )
+            };
+        }
     }
-});
+);
 
 export default WitnessStoreWrapper;

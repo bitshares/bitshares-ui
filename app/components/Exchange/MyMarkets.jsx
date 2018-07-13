@@ -1032,21 +1032,24 @@ class MyMarketsWrapper extends React.Component {
     }
 }
 
-export default connect(MyMarketsWrapper, {
-    listenTo() {
-        return [SettingsStore, MarketsStore, AssetStore];
-    },
-    getProps() {
-        return {
-            starredMarkets: SettingsStore.getState().starredMarkets,
-            defaultMarkets: SettingsStore.getState().defaultMarkets,
-            viewSettings: SettingsStore.getState().viewSettings,
-            preferredBases: SettingsStore.getState().preferredBases,
-            marketStats: MarketsStore.getState().allMarketStats,
-            userMarkets: SettingsStore.getState().userMarkets,
-            searchAssets: AssetStore.getState().assets,
-            onlyStars: MarketsStore.getState().onlyStars,
-            assetsLoading: AssetStore.getState().assetsLoading
-        };
+export default connect(
+    MyMarketsWrapper,
+    {
+        listenTo() {
+            return [SettingsStore, MarketsStore, AssetStore];
+        },
+        getProps() {
+            return {
+                starredMarkets: SettingsStore.getState().starredMarkets,
+                defaultMarkets: SettingsStore.getState().defaultMarkets,
+                viewSettings: SettingsStore.getState().viewSettings,
+                preferredBases: SettingsStore.getState().preferredBases,
+                marketStats: MarketsStore.getState().allMarketStats,
+                userMarkets: SettingsStore.getState().userMarkets,
+                searchAssets: AssetStore.getState().assets,
+                onlyStars: MarketsStore.getState().onlyStars,
+                assetsLoading: AssetStore.getState().assetsLoading
+            };
+        }
     }
-});
+);

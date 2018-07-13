@@ -95,15 +95,18 @@ class MarketPrice extends React.Component {
     }
 }
 
-MarketPrice = connect(MarketPrice, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+MarketPrice = connect(
+    MarketPrice,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 export {MarketPrice, MarketStats};

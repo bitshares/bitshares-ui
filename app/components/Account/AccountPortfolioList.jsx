@@ -899,21 +899,24 @@ class AccountPortfolioList extends React.Component {
     }
 }
 
-AccountPortfolioList = connect(AccountPortfolioList, {
-    listenTo() {
-        return [SettingsStore, GatewayStore, MarketsStore];
-    },
-    getProps() {
-        return {
-            settings: SettingsStore.getState().settings,
-            viewSettings: SettingsStore.getState().viewSettings,
-            backedCoins: GatewayStore.getState().backedCoins,
-            bridgeCoins: GatewayStore.getState().bridgeCoins,
-            gatewayDown: GatewayStore.getState().down,
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+AccountPortfolioList = connect(
+    AccountPortfolioList,
+    {
+        listenTo() {
+            return [SettingsStore, GatewayStore, MarketsStore];
+        },
+        getProps() {
+            return {
+                settings: SettingsStore.getState().settings,
+                viewSettings: SettingsStore.getState().viewSettings,
+                backedCoins: GatewayStore.getState().backedCoins,
+                bridgeCoins: GatewayStore.getState().bridgeCoins,
+                gatewayDown: GatewayStore.getState().down,
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 AccountPortfolioList = debounceRender(AccountPortfolioList, 50, {
     leading: false

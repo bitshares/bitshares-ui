@@ -494,16 +494,19 @@ class AccountSelector extends React.Component {
 
 AccountSelector = BindToChainState(AccountSelector);
 
-AccountSelector = connect(AccountSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            contacts: AccountStore.getState().accountContacts
-        };
+AccountSelector = connect(
+    AccountSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 export default AccountSelector;
