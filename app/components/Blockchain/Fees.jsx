@@ -8,7 +8,7 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
-import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
 const {operations} = grapheneChainTypes;
 let ops = Object.keys(operations);
 
@@ -81,7 +81,7 @@ class FeeGroup extends React.Component {
             let labelClass = classNames("label", "info");
 
             for (let key in fee) {
-                let amount = fee[key] * scale / 1e4;
+                let amount = (fee[key] * scale) / 1e4;
                 let amountForLTM = amount * feeRateForLTM;
                 let feeTypes = counterpart.translate("transaction.feeTypes");
                 let assetAmount = amount ? (

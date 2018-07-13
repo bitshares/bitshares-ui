@@ -54,14 +54,14 @@ class ValueComponent extends MarketStatsCheck {
             toAsset,
             fromAsset,
             fullPrecision,
-            marketStats,
+            allMarketStats,
             coreAsset
         } = this.props;
         return MarketUtils.convertValue(
             amount,
             toAsset,
             fromAsset,
-            marketStats,
+            allMarketStats,
             coreAsset,
             fullPrecision
         );
@@ -127,16 +127,19 @@ class EquivalentValueComponent extends React.Component {
     }
 }
 
-EquivalentValueComponent = connect(EquivalentValueComponent, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps() {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats
-        };
+EquivalentValueComponent = connect(
+    EquivalentValueComponent,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 class BalanceValueComponent extends React.Component {
     static propTypes = {

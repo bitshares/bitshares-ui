@@ -11,7 +11,7 @@ import LinkToAssetById from "../Utility/LinkToAssetById";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
 import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import ProposedOperation from "./ProposedOperation";
@@ -1006,12 +1006,7 @@ class Operation extends React.Component {
                                                     amount: receivedAmount,
                                                     asset_id: amount.asset_id
                                                 },
-                                                arg: "amount",
-                                                decimalOffset:
-                                                    op[1].receives.asset_id ===
-                                                    "1.3.0"
-                                                        ? 3
-                                                        : null
+                                                arg: "amount"
                                             },
                                             {
                                                 type: "price",
@@ -1410,15 +1405,18 @@ class Operation extends React.Component {
     }
 }
 
-Operation = connect(Operation, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+Operation = connect(
+    Operation,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default Operation;

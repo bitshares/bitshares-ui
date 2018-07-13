@@ -14,7 +14,7 @@ import {blockTradesAPIs} from "api/apiConfig";
 import {debounce} from "lodash-es";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {getConversionJson} from "common/gatewayMethods";
 import PropTypes from "prop-types";
 

@@ -418,8 +418,10 @@
         "browser": "Desteklenmeyen tarayıcı",
         "browser_text":
             "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
+        "check_latency": "Running latency checks...",
         "connected": "Bağlandı",
         "connecting": "Connecting to API server: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "Bağlı değil",
         "retry": "Yeniden dene",
         "title": "Uygulama başlatma problemleri",
@@ -435,9 +437,15 @@
         "errors": {
             "below":
                 "Teminat oranı çok düşük, bu pozisyon anında marjin-çağrılır",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "Your collateral ratio is close to %(mr)s which means this position is in danger of being margin called if the price drops.",
-            "collateral": "Yetersiz teminat seviyesi"
+            "collateral": "Yetersiz teminat seviyesi",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -452,6 +460,16 @@
         "money_received_title": "Şuradan transfer %(from)s"
     },
     "cancel": "İptal",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -965,10 +983,10 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
-        "accounts_manage": "Hesapları yönet",
         "account": "Hesap",
         "account_notify": "Aktif hesap: %(account)s",
         "account_value": "Hesap değeri",
+        "accounts_manage": "Hesapları yönet",
         "collateral_ratio": "Collateral ratio",
         "create_account": "Hesap Oluştur",
         "create_asset": "Dijital Varlık Oluştur",
@@ -994,7 +1012,6 @@
         "update_asset": "Dijital Varlık Güncelle"
     },
     "icons": {
-        "accounts_manage": "Hesapları yönet",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1058,6 +1075,7 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",
@@ -1465,6 +1483,7 @@
         "passwordLogin": "Login mode",
         "password_text": "Şifre değiştirme",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Remove",
         "remove_api": "API kaldır",
         "remove_ws": "Websocket API'sini kaldır",
@@ -1802,10 +1821,6 @@
     },
     "wallet": {
         "accept": "Kabul",
-        "account_create_wallet_text":
-            "Bu şifre yeni bir Bitshares cüzdanı oluşturmak için kullanılacak ve tarayıcınızda saklanacaktır. Cüzdanınızı yedeklerseniz, bu şifre ile birlikte başka bilgisayarlardan ve tarayıcılardan cüzdanınıza ulaşabilirsiniz.",
-        "account_exp":
-            "This account will be created on the blockchain and will be your address for any transfers you want to make! <strong>There are no long Bitcoin-style addresses in BitShares!</strong>",
         "account_public": "Kullanıcı adı (herkese açık)",
         "active_wallet": "Etkin Cüzdan",
         "all_set": "İşleminiz başarıyla tamamlandı!",
@@ -1835,8 +1850,6 @@
         "brainkey_w2": "Kurtarma anahtarınıza ulaşan herhangi bir kimse",
         "brainkey_w3": "bu cüzdan içindeki fonlara ulaşabilir.",
         "bts_09_export": "BTS 0.9.3c yedek anahtar dosyası (.json)",
-        "bts_rules":
-            "The first rule of Bitshares is: Do not lose your password.<br/>The second rule of Bitshares is: Do not lose your password.<br />The third rule of Bitshares is: We cannot recover your password.<br />The fourth rule: If you can remember the password, it's not secure.<br />The fifth rule: Use only randomly-generated passwords.<br />The sixth rule: Do not tell anyone your password.<br />The seventh rule: Always back up your password.",
         "cancel": "İptal",
         "change": "Değiştir (%(name)s Cüzdan)",
         "change_backup":
@@ -2014,7 +2027,6 @@
             "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "wallet_move":
             "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_new": "Bitshares'e Hoş Geldiniz",
         "wallet_password":
             "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
     },

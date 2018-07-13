@@ -6,7 +6,7 @@ import BalanceClaimActiveStore from "stores/BalanceClaimActiveStore";
 import CachedPropertyStore from "stores/CachedPropertyStore";
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import WalletActions from "actions/WalletActions";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import BaseStore from "stores/BaseStore";
 import iDB from "idb-instance";
 import Immutable from "immutable";
@@ -42,8 +42,7 @@ class WalletManagerStore extends BaseStore {
 
     /** This will change the current wallet the newly restored wallet. */
     onRestore({wallet_name, wallet_object}) {
-        iDB
-            .restore(wallet_name, wallet_object)
+        iDB.restore(wallet_name, wallet_object)
             .then(() => {
                 AccountStore.setWallet(wallet_name);
                 return this.onSetWallet({wallet_name});

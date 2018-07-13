@@ -11,7 +11,7 @@ import ProposalApproveModal, {
     finalRequiredPerms
 } from "../Modal/ProposalApproveModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import counterpart from "counterpart";
 import pu from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
@@ -85,6 +85,7 @@ class Proposals extends Component {
             .reduce((result, proposal, index) => {
                 let isScam = false;
                 const id = proposal.proposal.get("id");
+                const proposer = proposal.proposal.get("proposer");
                 const expiration = proposal.proposal.get("expiration_time");
                 let text = proposal.operations
                     .map((o, index) => {
@@ -106,6 +107,7 @@ class Proposals extends Component {
                                 hideDate={true}
                                 proposal={true}
                                 id={id}
+                                proposer={proposer}
                             />
                         );
                     })
