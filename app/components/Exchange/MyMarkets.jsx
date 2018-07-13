@@ -20,8 +20,9 @@ import counterpart from "counterpart";
 import LoadingIndicator from "../LoadingIndicator";
 import {ChainValidation, ChainStore} from "bitsharesjs";
 import debounceRender from "react-debounce-render";
-
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {gatewayPrefixes} from "common/gateways";
+import QuoteSelectionModal from "./QuoteSelectionModal";
 
 class MarketGroup extends React.Component {
     static defaultProps = {
@@ -162,14 +163,14 @@ class MarketGroup extends React.Component {
                 case "quoteSupply":
                     return (
                         <th key={header.name}>
-                            <Translate content="exchange.quote_supply" />
+                            <Translate content="exchange.base_supply" />
                         </th>
                     );
 
                 case "baseSupply":
                     return (
                         <th key={header.name}>
-                            <Translate content="exchange.base_supply" />
+                            <Translate content="exchange.quote_supply" />
                         </th>
                     );
 
@@ -1071,6 +1072,18 @@ class MyMarkets extends React.Component {
                             <Translate content="exchange.others" />
                         </li>
                     ) : null}
+
+                    {/* Quote edit tab */}
+                    <li
+                        key="quote_edit"
+                        style={{textTransform: "uppercase"}}
+                        onClick={() => {
+                            ZfApi.publish("quote_selection", "open");
+                        }}
+                        className="mymarkets-tab"
+                    >
+                        &nbsp;+&nbsp;
+                    </li>
                 </ul>
 
                 <div
@@ -1143,6 +1156,7 @@ class MyMarkets extends React.Component {
                         />
                     ) : null}
                 </div>
+                <QuoteSelectionModal quotes={this.props.preferredBases} />
             </div>
         );
     }
