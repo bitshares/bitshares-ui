@@ -485,6 +485,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Asks",
         "atr": "Average True Range",
         "balance": "Guthaben",
@@ -511,6 +512,7 @@
         "confirm_sell":
             "Your order is %(diff)s times lower than the highest bid, are you sure?",
         "core_rate": "Gebührenrate",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Exponential Moving Average",
@@ -547,6 +549,8 @@
             "use": "Use"
         },
         "more": "Alle Märkte",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Meine Asks",
         "my_bids": "Meine Bids",
         "my_history": "Meine Historie",
@@ -568,8 +572,10 @@
         "price_market": "Market Price",
         "quantity": "Quantität",
         "quote": "Quote currency:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Quote Verfügbarkeit",
         "receive": "Empfangen",
+        "remove": "Remove",
         "rsi": "Relative Strength Index",
         "search": "Search for more markets here",
         "sell": "Verkaufen",
@@ -581,6 +587,7 @@
         "short": "Short",
         "show_asks": "Show all asks",
         "show_bids": "Show all bids",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
         "spread": "Spread",

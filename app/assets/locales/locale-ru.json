@@ -495,6 +495,7 @@
         "top_markets": "Лучшие рынки"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Ордера на Продажу",
         "atr": "Средний истинный диапазон",
         "balance": "Баланс",
@@ -521,6 +522,7 @@
         "confirm_sell":
             "Ваш ордер в %(diff)s раз ниже, чем самая высокая ставка, Вы уверены?",
         "core_rate": "Уровень выплат",
+        "custom_quote": "Add a custom quote",
         "deposit": "Пополнить счет",
         "description": "Описание",
         "ema": "Экспоненциальная скользящая средняя",
@@ -556,6 +558,8 @@
             "use": "Использовать"
         },
         "more": "Найти рынки",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Мои запросы",
         "my_bids": "Мои ставки",
         "my_history": "Мои сделки",
@@ -577,8 +581,10 @@
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quote": "Валюта котировки:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Назначить запас",
         "receive": "Получить",
+        "remove": "Remove",
         "rsi": "Индекс относительной прочности",
         "search": "Искать здесь другие рынки",
         "sell": "Продать",
@@ -590,6 +596,7 @@
         "short": "Сократить",
         "show_asks": "Показать все запросы",
         "show_bids": "Показать все заявки",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Показывать только {star_icon}",
         "sma": "Простая скользящая средняя",
         "spread": "Спред",

@@ -487,6 +487,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Satış emirleri",
         "atr": "Ortalama Gerçek Fiyat Aralığı",
         "balance": "Bakiye",
@@ -513,6 +514,7 @@
         "confirm_sell":
             "Emri teyit et: Sat %(sell_amount)s %(sell_symbol)s fiyat %(price_amount)s %(price_symbol)s",
         "core_rate": "Ücret Oranı",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Üssel Hareketli Ortalama",
@@ -549,6 +551,8 @@
             "use": "Use"
         },
         "more": "Piyasa bul",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Satış Fiyatlarım",
         "my_bids": "Alış Fiyatlarım",
         "my_history": "Önceki İşlemlerim",
@@ -570,8 +574,10 @@
         "price_market": "Market Price",
         "quantity": "Miktar",
         "quote": "Quote currency:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Karşıt arzı",
         "receive": "Tahsil",
+        "remove": "Remove",
         "rsi": "Relatif Güç İndeksi",
         "search": "Search for more markets here",
         "sell": "Satış -",
@@ -583,6 +589,7 @@
         "short": "Kısa pozisyon",
         "show_asks": "Tümünü göster",
         "show_bids": "Tüm alışları göster",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Basit Hareketli Ortalama",
         "spread": "Makas",

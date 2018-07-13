@@ -48,7 +48,8 @@ class SettingsStore {
             onClearSettings: SettingsActions.clearSettings,
             onSwitchLocale: IntlActions.switchLocale,
             onSetUserMarket: SettingsActions.setUserMarket,
-            onUpdateLatencies: SettingsActions.updateLatencies
+            onUpdateLatencies: SettingsActions.updateLatencies,
+            onModifyPreferedBases: SettingsActions.modifyPreferedBases
         });
 
         this.initDone = false;
@@ -183,6 +184,7 @@ class SettingsStore {
             if (this.initDone) resolve();
             this.starredKey = this._getChainKey("markets");
             this.marketsKey = this._getChainKey("userMarkets");
+            this.basesKey = this._getChainKey("preferredBases");
             // Default markets setup
             let topMarkets = {
                 markets_4018d784: getMyMarketsQuotes(),
@@ -208,28 +210,15 @@ class SettingsStore {
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             this.defaults.unit[0] = coreAsset;
 
-            let chainBases = bases[this.starredKey] || bases.markets_4018d784;
-            this.preferredBases = Immutable.List(chainBases);
+            let defaultBases = bases[this.starredKey] || bases.markets_4018d784;
+            let storedBases = ss.get(this.basesKey, []);
+            this.preferredBases = Immutable.List(
+                storedBases.length ? storedBases : defaultBases
+            );
 
-            function addMarkets(target, base, markets) {
-                markets
-                    .filter(a => {
-                        return a !== base;
-                    })
-                    .forEach(market => {
-                        target.push([
-                            `${market}_${base}`,
-                            {quote: market, base: base}
-                        ]);
-                    });
-            }
+            this.chainMarkets = topMarkets[this.starredKey] || [];
 
-            let defaultMarkets = [];
-            let chainMarkets = topMarkets[this.starredKey] || [];
-            this.preferredBases.forEach(base => {
-                addMarkets(defaultMarkets, base, chainMarkets);
-            });
-
+            let defaultMarkets = this._getDefaultMarkets();
             this.defaultMarkets = Immutable.Map(defaultMarkets);
             this.starredMarkets = Immutable.Map(ss.get(this.starredKey, []));
             this.userMarkets = Immutable.Map(ss.get(this.marketsKey, {}));
@@ -237,6 +226,29 @@ class SettingsStore {
             this.initDone = true;
             resolve();
         });
+    }
+
+    _getDefaultMarkets() {
+        let markets = [];
+
+        this.preferredBases.forEach(base => {
+            addMarkets(markets, base, this.chainMarkets);
+        });
+
+        function addMarkets(target, base, markets) {
+            markets
+                .filter(a => {
+                    return a !== base;
+                })
+                .forEach(market => {
+                    target.push([
+                        `${market}_${base}`,
+                        {quote: market, base: base}
+                    ]);
+                });
+        }
+
+        return markets;
     }
 
     getSetting(setting) {
@@ -440,6 +452,33 @@ class SettingsStore {
 
     getExhchangeLastExpiration() {
         return this.getExchangeSettings("lastExpiration");
+    }
+
+    onModifyPreferedBases(payload) {
+        if ("newIndex" in payload && "oldIndex" in payload) {
+            /* Reorder */
+            let current = this.preferredBases.get(payload.newIndex);
+            this.preferredBases = this.preferredBases.set(
+                payload.newIndex,
+                this.preferredBases.get(payload.oldIndex)
+            );
+            this.preferredBases = this.preferredBases.set(
+                payload.oldIndex,
+                current
+            );
+        } else if ("remove" in payload) {
+            /* Remove */
+            this.preferredBases = this.preferredBases.delete(payload.remove);
+            let defaultMarkets = this._getDefaultMarkets();
+            this.defaultMarkets = Immutable.Map(defaultMarkets);
+        } else if ("add" in payload) {
+            /* Add new */
+            this.preferredBases = this.preferredBases.push(payload.add);
+            let defaultMarkets = this._getDefaultMarkets();
+            this.defaultMarkets = Immutable.Map(defaultMarkets);
+        }
+
+        ss.set(this.basesKey, this.preferredBases.toArray());
     }
 }
 

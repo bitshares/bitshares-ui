@@ -64,7 +64,7 @@ class AssetSelector extends React.Component {
         assetInput: PropTypes.string, // the current value of the account selector, the string the user enters
         asset: ChainTypes.ChainAsset, // account object retrieved via BindToChainState decorator (not input)
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: PropTypes.string // use it if you need to disable action button
+        disableActionButton: PropTypes.bool // use it if you need to disable action button
     };
 
     static defaultProps = {

@@ -481,6 +481,7 @@
         "top_markets": "トップマーケット"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "売り注文",
         "atr": "アベレージトゥルーレンジ",
         "balance": "残高",
@@ -507,6 +508,7 @@
         "confirm_sell":
             "あなたの注文は、最高ビッド価格より%(diff)s倍低いです。続行してもよろしいですか？",
         "core_rate": "手数料率",
+        "custom_quote": "Add a custom quote",
         "deposit": "入金",
         "description": "説明",
         "ema": "指数平滑移動平均",
@@ -543,6 +545,8 @@
             "use": "Use"
         },
         "more": "マーケットを探す",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "自分の売り注文",
         "my_bids": "自分の買い注文",
         "my_history": "自分の履歴",
@@ -564,8 +568,10 @@
         "price_market": "マーケット価格",
         "quantity": "数量",
         "quote": "クオート通貨:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "クオート供給量",
         "receive": "取得",
+        "remove": "Remove",
         "rsi": "相対力指数",
         "search": "他のマーケットを検索する",
         "sell": "売る",
@@ -577,6 +583,7 @@
         "short": "ショート",
         "show_asks": "すべての売り注文を見る",
         "show_bids": "すべての買い注文を見る",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "{star_icon}のみ表示",
         "sma": "単純移動平均",
         "spread": "スプレッド",

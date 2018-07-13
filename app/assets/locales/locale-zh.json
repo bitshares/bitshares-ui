@@ -467,6 +467,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "卖单",
         "atr": "平均真实波幅(ATR)",
         "balance": "我的余额",
@@ -491,6 +492,7 @@
             "你在一个没有委托买单的市场下了一个卖单，确定下单吗？",
         "confirm_sell": "你的委单价低于最高买入价 %(diff)s 倍，确定下单吗？",
         "core_rate": "手续费率",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "指数移动平均线(EMA)",
@@ -526,6 +528,8 @@
             "use": "Use"
         },
         "more": "搜索更多市场",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "我的卖单",
         "my_bids": "我的买单",
         "my_history": "我的交易历史",
@@ -547,8 +551,10 @@
         "price_market": "Market Price",
         "quantity": "数量",
         "quote": "报价货币：",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "标价资产供应量",
         "receive": "获得",
+        "remove": "Remove",
         "rsi": "相对强弱指数(RSI)",
         "search": "搜索更多交易对",
         "sell": "卖出",
@@ -560,6 +566,7 @@
         "short": "做空",
         "show_asks": "显示所有卖单",
         "show_bids": "显示所有买单",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "算数移动平均线(SMA)",
         "spread": "买卖价差",

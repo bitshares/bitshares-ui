@@ -493,6 +493,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Vender ordenes",
         "atr": "Average True Range",
         "balance": "Su balance",
@@ -519,6 +520,7 @@
         "confirm_sell":
             "Tu pedido es %(diff)s veces inferior a la oferta más alta,  ¿estás seguro?",
         "core_rate": "Tasa de Comisión",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Exponential Moving Average",
@@ -555,6 +557,8 @@
             "use": "Use"
         },
         "more": "busca mercados",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Mis domandas",
         "my_bids": "Mis ofertas",
         "my_history": "Mis comercios",
@@ -576,8 +580,10 @@
         "price_market": "Market Price",
         "quantity": "Monto",
         "quote": "Quote currency:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Fuente de cotización",
         "receive": "Recibir",
+        "remove": "Remove",
         "rsi": "Relative Strength Index",
         "search": "Busque más mercados aquí",
         "sell": "Vender",
@@ -589,6 +595,7 @@
         "short": "Corto",
         "show_asks": "Mostrar todas las domandas",
         "show_bids": "Mostrar todas las ofertas",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
         "spread": "Margen (spread)",
