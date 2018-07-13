@@ -75,7 +75,7 @@ export function getUnits() {
  */
 
 export function getMyMarketsBases() {
-    return ["USD", "OPEN.BTC", "CNY", "BTS", "BTC"];
+    return ["BTC", "ETH", "BTS", "USD", "CNY"];
 }
 
 /**

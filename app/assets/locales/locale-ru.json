@@ -590,6 +590,7 @@
         "short": "Сократить",
         "show_asks": "Показать все запросы",
         "show_bids": "Показать все заявки",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Показывать только {star_icon}",
         "sma": "Простая скользящая средняя",
         "spread": "Спред",

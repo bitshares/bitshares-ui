@@ -583,6 +583,7 @@
         "short": "Kısa pozisyon",
         "show_asks": "Tümünü göster",
         "show_bids": "Tüm alışları göster",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Basit Hareketli Ortalama",
         "spread": "Makas",

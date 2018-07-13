@@ -560,6 +560,7 @@
         "short": "做空",
         "show_asks": "显示所有卖单",
         "show_bids": "显示所有买单",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "算数移动平均线(SMA)",
         "spread": "买卖价差",
