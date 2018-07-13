@@ -344,12 +344,17 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
     );
 
     let allowed_outputs_by_input = {};
+    let additional_trading_pair_info = {};
     tradingPairs.forEach(pair => {
         if (!allowed_outputs_by_input[pair.inputCoinType])
             allowed_outputs_by_input[pair.inputCoinType] = {};
         allowed_outputs_by_input[pair.inputCoinType][
             pair.outputCoinType
         ] = true;
+        if (!additional_trading_pair_info[pair.inputCoinType])
+            additional_trading_pair_info[pair.inputCoinType] = [];
+
+        additional_trading_pair_info[pair.inputCoinType].push(pair);
     });
 
     let backedCoins = [];
@@ -399,7 +404,9 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 depositFeeMinimum: outputCoin.depositFeeMinimum,
                 depositFeePercentageLowAmounts:
                     outputCoin.depositFeePercentageLowAmounts,
-                info: outputCoin.info
+                info: outputCoin.info,
+                tradingPairInfo:
+                    additional_trading_pair_info[outputCoin.coinType] || []
             });
         }
     });
