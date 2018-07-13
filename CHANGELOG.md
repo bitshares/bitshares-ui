@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------
+Release 2.0.180720-rc2
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix back/forward buttons and navigation
+- #1643: Set marketStatsQueueLength to 500
+- Fix #1682: Missing isContact in HeaderDropdown
+- Fix #1684 and some excessive Header rerendering
+
+---------------------------------------------------------------------
 Release 2.0.180720-rc1
 ---------------------------------------------------------------------
 New features
