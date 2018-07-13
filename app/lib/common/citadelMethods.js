@@ -1,7 +1,7 @@
 import ls from "./localStorage";
-import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
+import {citadelAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
-const blockTradesStorage = new ls("");
+const citadelStorage = new ls("");
 
 let fetchInProgess = {};
 let fetchCache = {};
@@ -14,55 +14,8 @@ function setCacheClearTimer(key) {
     }, fetchCacheTTL);
 }
 
-export function fetchCoins(
-    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
-) {
-    const key = "fetchCoins_" + url;
-    let currentPromise = fetchInProgess[key];
-    if (fetchCache[key]) {
-        return Promise.resolve(fetchCache[key]);
-    } else if (!currentPromise) {
-        fetchInProgess[key] = currentPromise = fetch(url)
-            .then(reply =>
-                reply.json().then(result => {
-                    // throw new Error("Test");
-                    return result;
-                })
-            )
-            .catch(err => {
-                console.log(`fetchCoins error from ${url}: ${err}`);
-                throw err;
-            });
-    }
-    return new Promise((res, rej) => {
-        currentPromise
-            .then(result => {
-                fetchCache[key] = result;
-                res(result);
-                delete fetchInProgess[key];
-                if (!clearIntervals[key]) setCacheClearTimer(key);
-            })
-            .catch(rej);
-    });
-}
-
-export function fetchCoinsSimple(
-    url = openledgerAPIs.BASE + openledgerAPIs.COINS_LIST
-) {
-    return fetch(url)
-        .then(reply =>
-            reply.json().then(result => {
-                return result;
-            })
-        )
-        .catch(err => {
-            console.log(`fetchCoinsSimple error from ${url}: ${err}`);
-            throw err;
-        });
-}
-
 export function fetchTradingPairs(
-    url = blockTradesAPIs.BASE + blockTradesAPIs.TRADING_PAIRS
+    url = citadelAPIs.BASE + citadelAPIs.TRADING_PAIRS
 ) {
     const key = "fetchTradingPairs_" + url;
     let currentPromise = fetchInProgess[key];
@@ -98,7 +51,7 @@ export function fetchTradingPairs(
 export function getDepositLimit(
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.DEPOSIT_LIMIT
+    url = citadelAPIs.BASE + citadelAPIs.DEPOSIT_LIMIT
 ) {
     return fetch(
         url +
@@ -127,7 +80,7 @@ export function estimateOutput(
     inputAmount,
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_OUTPUT
+    url = citadelAPIs.BASE + citadelAPIs.ESTIMATE_OUTPUT
 ) {
     return fetch(
         url +
@@ -158,7 +111,7 @@ export function estimateInput(
     outputAmount,
     inputCoin,
     outputCoin,
-    url = blockTradesAPIs.BASE + blockTradesAPIs.ESTIMATE_INPUT
+    url = citadelAPIs.BASE + citadelAPIs.ESTIMATE_INPUT
 ) {
     return fetch(
         url +
@@ -185,149 +138,6 @@ export function estimateInput(
                 outputCoin,
                 err
             );
-        });
-}
-
-export function getActiveWallets(
-    url = openledgerAPIs.BASE + openledgerAPIs.ACTIVE_WALLETS
-) {
-    const key = "getActiveWallets_" + url;
-    let currentPromise = fetchInProgess[key];
-
-    if (fetchCache[key]) {
-        return Promise.resolve(fetchCache[key]);
-    } else if (!currentPromise) {
-        fetchInProgess[key] = currentPromise = fetch(url)
-            .then(reply =>
-                reply.json().then(result => {
-                    return result;
-                })
-            )
-            .catch(err => {
-                console.log(
-                    "error fetching blocktrades active wallets",
-                    err,
-                    url
-                );
-            });
-    }
-
-    return new Promise(res => {
-        currentPromise.then(result => {
-            fetchCache[key] = result;
-            res(result);
-            delete fetchInProgess[key];
-            if (!clearIntervals[key]) setCacheClearTimer(key);
-        });
-    });
-}
-
-export function getDepositAddress({coin, account, stateCallback}) {
-    let body = {
-        coin,
-        account
-    };
-
-    let body_string = JSON.stringify(body);
-
-    fetch(openledgerAPIs.BASE + "/simple-api/get-last-address", {
-        method: "POST",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
-        .then(
-            data => {
-                data.json().then(
-                    json => {
-                        let address = {
-                            address: json.address,
-                            memo: json.memo || null,
-                            error: json.error || null,
-                            loading: false
-                        };
-                        if (stateCallback) stateCallback(address);
-                    },
-                    error => {
-                        console.log("error: ", error);
-                        if (stateCallback)
-                            stateCallback({address: error.message, memo: null});
-                    }
-                );
-            },
-            error => {
-                console.log("error: ", error);
-                if (stateCallback)
-                    stateCallback({address: error.message, memo: null});
-            }
-        )
-        .catch(err => {
-            console.log("fetch error:", err);
-        });
-}
-
-let depositRequests = {};
-export function requestDepositAddress({
-    inputCoinType,
-    outputCoinType,
-    outputAddress,
-    url = openledgerAPIs.BASE,
-    stateCallback
-}) {
-    if (
-        inputCoinType.toLowerCase() === "monero" &&
-        outputCoinType.toLowerCase() === "citadel.monero"
-    )
-        inputCoinType = "xmr";
-
-    let body = {
-        inputCoinType,
-        outputCoinType,
-        outputAddress
-    };
-
-    let body_string = JSON.stringify(body);
-    if (depositRequests[body_string]) return;
-    depositRequests[body_string] = true;
-    fetch(url + "/simple-api/initiate-trade", {
-        method: "post",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
-        .then(
-            reply => {
-                reply.json().then(
-                    json => {
-                        delete depositRequests[body_string];
-                        // console.log( "reply: ", json );
-                        let address = {
-                            address: json.inputAddress || "unknown",
-                            memo: json.inputMemo,
-                            error: json.error || null
-                        };
-                        if (stateCallback) stateCallback(address);
-                    },
-                    error => {
-                        console.log("error: ", error);
-                        delete depositRequests[body_string];
-                        if (stateCallback) stateCallback(null);
-                    }
-                );
-            },
-            error => {
-                console.log("error: ", error);
-                delete depositRequests[body_string];
-                if (stateCallback) stateCallback(null);
-            }
-        )
-        .catch(err => {
-            console.log("fetch error:", err);
-            delete depositRequests[body_string];
         });
 }
 
@@ -397,7 +207,7 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
 }
 
 export function validateAddress({
-    url = blockTradesAPIs.BASE,
+    url = citadelAPIs.BASE,
     walletType,
     newAddress,
     output_coin_type = null,
@@ -450,10 +260,7 @@ export function getConversionJson(inputs) {
         outputCoinType: output_coin_type,
         outputAddress: account_name,
         inputMemo:
-            "blocktrades conversion: " +
-            input_coin_type +
-            "to" +
-            output_coin_type
+            "citadel conversion: " + input_coin_type + "to" + output_coin_type
     });
 
     const _cacheString =
@@ -483,23 +290,23 @@ export function getConversionJson(inputs) {
 }
 
 function hasWithdrawalAddress(wallet) {
-    return blockTradesStorage.has(`history_address_${wallet}`);
+    return citadelStorage.has(`history_address_${wallet}`);
 }
 
 function setWithdrawalAddresses({wallet, addresses}) {
-    blockTradesStorage.set(`history_address_${wallet}`, addresses);
+    citadelStorage.set(`history_address_${wallet}`, addresses);
 }
 
 function getWithdrawalAddresses(wallet) {
-    return blockTradesStorage.get(`history_address_${wallet}`, []);
+    return citadelStorage.get(`history_address_${wallet}`, []);
 }
 
 function setLastWithdrawalAddress({wallet, address}) {
-    blockTradesStorage.set(`history_address_last_${wallet}`, address);
+    citadelStorage.set(`history_address_last_${wallet}`, address);
 }
 
 function getLastWithdrawalAddress(wallet) {
-    return blockTradesStorage.get(`history_address_last_${wallet}`, "");
+    return citadelStorage.get(`history_address_last_${wallet}`, "");
 }
 
 export const WithdrawAddresses = {

@@ -8,6 +8,7 @@ import {
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
+    citadelAPIs,
     gdex2APIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
@@ -70,6 +71,17 @@ export const availableGateways = {
         name: "GDEX",
         baseAPI: gdex2APIs,
         isEnabled: allowedGateway("GDEX"),
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    CITADEL: {
+        id: "CITADEL",
+        name: "CITADEL",
+        baseAPI: citadelAPIs,
+        isEnabled: true,
+        selected: false,
         options: {
             enabled: false,
             selected: false

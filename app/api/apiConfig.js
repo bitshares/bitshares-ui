@@ -44,6 +44,16 @@ export const widechainAPIs = {
     DEPOSIT_HISTORY: "/latelyRecharge"
 };
 
+export const citadelAPIs = {
+    BASE: "https://citadel.li/trade",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
 export const gdex2APIs = {
     BASE: "https://api.gdex.io/adjust",
     COINS_LIST: "/coins",
@@ -81,6 +91,8 @@ export const settingsAPIs = {
         },
         {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
         {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
+        {url: "wss://citadel.li/node", location: "Island"},
+        {url: "ws://citadel2miawoaqw.onion/node", location: "Citadel Tor"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
