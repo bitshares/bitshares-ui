@@ -32,13 +32,16 @@ class BackupFavorites extends React.Component {
     }
 }
 
-export default connect(BackupFavorites, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            starredMarkets: SettingsStore.getState().starredMarkets
-        };
+export default connect(
+    BackupFavorites,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                starredMarkets: SettingsStore.getState().starredMarkets
+            };
+        }
     }
-});
+);

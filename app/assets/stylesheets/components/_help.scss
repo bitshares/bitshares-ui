@@ -1,14 +1,15 @@
 .help-content {
-	padding: 0!important;
+    padding: 0 !important;
 }
 
 .help-content > table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-.help-content > table td, .help-content > table th {
+.help-content > table td,
+.help-content > table th {
     border: 1px solid;
     padding: 5px;
 }
@@ -20,5 +21,5 @@
 }
 
 .help-content p:last-of-type {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }

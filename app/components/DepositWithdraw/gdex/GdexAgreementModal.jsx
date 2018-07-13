@@ -459,13 +459,16 @@ class GdexAgreementModal extends React.Component {
     }
 }
 
-export default connect(GdexAgreementModal, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            settings: SettingsStore.getState().settings
-        };
+export default connect(
+    GdexAgreementModal,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);

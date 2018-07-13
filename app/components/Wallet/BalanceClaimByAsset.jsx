@@ -79,39 +79,42 @@ class BalanceClaimByAsset extends Component {
     }
 }
 
-BalanceClaimByAsset = connect(BalanceClaimByAsset, {
-    listenTo() {
-        return [BalanceClaimActiveStore, PrivateKeyStore];
-    },
-    getProps() {
-        let props = BalanceClaimActiveStore.getState();
-        let {balances} = props;
-        if (balances !== undefined)
-            props.total_by_asset = balances
-                .groupBy(v => {
-                    // K E Y S
-                    return v.balance.asset_id;
-                })
-                .map(l =>
-                    l.reduce(
-                        (r, v) => {
-                            // V A L U E S
-                            if (v.vested_balance != undefined) {
-                                r.vesting.unclaimed += Number(
-                                    v.vested_balance.amount
-                                );
-                                r.vesting.total += Number(v.balance.amount);
-                            } else {
-                                r.unclaimed += Number(v.balance.amount);
-                            }
-                            return r;
-                        },
-                        {unclaimed: 0, vesting: {unclaimed: 0, total: 0}}
+BalanceClaimByAsset = connect(
+    BalanceClaimByAsset,
+    {
+        listenTo() {
+            return [BalanceClaimActiveStore, PrivateKeyStore];
+        },
+        getProps() {
+            let props = BalanceClaimActiveStore.getState();
+            let {balances} = props;
+            if (balances !== undefined)
+                props.total_by_asset = balances
+                    .groupBy(v => {
+                        // K E Y S
+                        return v.balance.asset_id;
+                    })
+                    .map(l =>
+                        l.reduce(
+                            (r, v) => {
+                                // V A L U E S
+                                if (v.vested_balance != undefined) {
+                                    r.vesting.unclaimed += Number(
+                                        v.vested_balance.amount
+                                    );
+                                    r.vesting.total += Number(v.balance.amount);
+                                } else {
+                                    r.unclaimed += Number(v.balance.amount);
+                                }
+                                return r;
+                            },
+                            {unclaimed: 0, vesting: {unclaimed: 0, total: 0}}
+                        )
                     )
-                )
-                .sortBy(k => k);
-        return props;
+                    .sortBy(k => k);
+            return props;
+        }
     }
-});
+);
 
 export default BalanceClaimByAsset;

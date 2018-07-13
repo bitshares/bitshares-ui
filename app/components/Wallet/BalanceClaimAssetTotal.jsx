@@ -37,13 +37,16 @@ class BalanceClaimAssetTotals extends Component {
     }
 }
 
-BalanceClaimAssetTotals = connect(BalanceClaimAssetTotals, {
-    listenTo() {
-        return [BalanceClaimActiveStore];
-    },
-    getProps() {
-        return BalanceClaimActiveStore.getState();
+BalanceClaimAssetTotals = connect(
+    BalanceClaimAssetTotals,
+    {
+        listenTo() {
+            return [BalanceClaimActiveStore];
+        },
+        getProps() {
+            return BalanceClaimActiveStore.getState();
+        }
     }
-});
+);
 
 export default BalanceClaimAssetTotals;

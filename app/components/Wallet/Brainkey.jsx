@@ -37,7 +37,10 @@ class Brainkey extends Component {
         );
     }
 }
-Brainkey = connect(Brainkey, connectObject);
+Brainkey = connect(
+    Brainkey,
+    connectObject
+);
 export default Brainkey;
 
 class ViewBrainkey extends Component {
@@ -65,7 +68,10 @@ class ViewBrainkey extends Component {
         );
     }
 }
-ViewBrainkey = connect(ViewBrainkey, connectObject);
+ViewBrainkey = connect(
+    ViewBrainkey,
+    connectObject
+);
 
 class BrainkeyAccounts extends React.Component {
     static propTypes = {

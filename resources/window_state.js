@@ -2,35 +2,39 @@
 // Can be used for more than one window, just construct many
 // instances of it and give each different name.
 
-'use strict';
+"use strict";
 
-var app = require('electron').app;
-var fs = require('fs');
+var app = require("electron").app;
+var fs = require("fs");
 
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16).substring(1);
+            .toString(16)
+            .substring(1);
     }
     return s4() + s4() + s4() + s4();
 }
 
-module.exports = function (name, defaults) {
-    var stateStoreFile = 'window-state-' + name + '.json';
-    var state_file_name = app.getPath('userData') + "/" + stateStoreFile;
+module.exports = function(name, defaults) {
+    var stateStoreFile = "window-state-" + name + ".json";
+    var state_file_name = app.getPath("userData") + "/" + stateStoreFile;
     var state_file_data = null;
-    try { state_file_data = fs.readFileSync(state_file_name); }
-    catch(error) {}
+    try {
+        state_file_data = fs.readFileSync(state_file_name);
+    } catch (error) {}
 
     var state = {width: defaults.width, height: defaults.height};
     if (state_file_data) {
-        try { state = JSON.parse(state_file_data); }
-        catch(error) {}
+        try {
+            state = JSON.parse(state_file_data);
+        } catch (error) {}
     }
     if (!state.guid) state.guid = guid();
-    if (!state.width || !state.height) state.width = defaults.width; state.height = defaults.height;
+    if (!state.width || !state.height) state.width = defaults.width;
+    state.height = defaults.height;
 
-    var saveState = function (win) {
+    var saveState = function(win) {
         if (!win.isMaximized() && !win.isMinimized()) {
             var position = win.getPosition();
             var size = win.getSize();
@@ -44,12 +48,24 @@ module.exports = function (name, defaults) {
     };
 
     return {
-        get x() { return state.x; },
-        get y() { return state.y; },
-        get width() { return state.width; },
-        get height() { return state.height; },
-        get isMaximized() { return state.isMaximized; },
-        get guid() { return state.guid; },
+        get x() {
+            return state.x;
+        },
+        get y() {
+            return state.y;
+        },
+        get width() {
+            return state.width;
+        },
+        get height() {
+            return state.height;
+        },
+        get isMaximized() {
+            return state.isMaximized;
+        },
+        get guid() {
+            return state.guid;
+        },
         saveState: saveState
     };
 };

@@ -1,16 +1,9 @@
 {
-  "name": "webgui",
-  "version": "0.0.1",
-  "homepage": "https://github.com/cryptonomex/graphene_ui",
-  "authors": [
-    "Cryptonomex, Inc."
-  ],
-  "description": "gui powered by react and graphene",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components"
-  ],
-  "dependencies": {
-  }
+    "name": "webgui",
+    "version": "0.0.1",
+    "homepage": "https://github.com/cryptonomex/graphene_ui",
+    "authors": ["Cryptonomex, Inc."],
+    "description": "gui powered by react and graphene",
+    "ignore": ["**/.*", "node_modules", "bower_components"],
+    "dependencies": {}
 }

@@ -52,15 +52,18 @@ class BlockDate extends React.Component {
     }
 }
 
-BlockDate = connect(BlockDate, {
-    listenTo() {
-        return [BlockchainStore];
-    },
-    getProps(props) {
-        return {
-            block: BlockchainStore.getState().blocks.get(props.block_number)
-        };
+BlockDate = connect(
+    BlockDate,
+    {
+        listenTo() {
+            return [BlockchainStore];
+        },
+        getProps(props) {
+            return {
+                block: BlockchainStore.getState().blocks.get(props.block_number)
+            };
+        }
     }
-});
+);
 
 export default BlockDate;

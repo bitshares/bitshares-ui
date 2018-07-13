@@ -125,82 +125,85 @@ class BalanceClaimSelector extends Component {
     }
 }
 
-BalanceClaimSelector = connect(BalanceClaimSelector, {
-    listenTo() {
-        return [BalanceClaimActiveStore];
-    },
-    getProps() {
-        let props = BalanceClaimActiveStore.getState();
-        let {balances, address_to_pubkey} = props;
-        let private_keys = PrivateKeyStore.getState().keys;
-        let groupCountMap = Immutable.Map().asMutable();
-        let groupCount = (group, distinct) => {
-            let set = groupCountMap.get(group);
-            if (!set) {
-                set = Immutable.Set().asMutable();
-                groupCountMap.set(group, set);
-            }
-            set.add(distinct);
-            return set.size;
-        };
-        if (balances)
-            props.total_by_account_asset = balances
-                .groupBy(v => {
-                    // K E Y S
-                    let names = "";
-                    let pubkey = address_to_pubkey.get(v.owner);
-                    let private_key_object = private_keys.get(pubkey);
-                    // Imported Account Names (just a visual aid, helps to auto select a real account)
-                    if (
-                        private_key_object &&
-                        private_key_object.import_account_names
-                    )
-                        names = private_key_object.import_account_names.join(
-                            ", "
-                        );
-
-                    // Signing is very slow, further divide the groups based on the number of signatures required
-                    let batch_number = Math.ceil(
-                        groupCount(
-                            Immutable.List([names, v.balance.asset_id]),
-                            v.owner
-                        ) / 60
-                    );
-                    let name_asset_key = Immutable.List([
-                        names,
-                        v.balance.asset_id,
-                        batch_number
-                    ]);
-                    return name_asset_key;
-                })
-                .map(l =>
-                    l.reduce(
-                        (r, v) => {
-                            // V A L U E S
-                            v.public_key_string = address_to_pubkey.get(
-                                v.owner
+BalanceClaimSelector = connect(
+    BalanceClaimSelector,
+    {
+        listenTo() {
+            return [BalanceClaimActiveStore];
+        },
+        getProps() {
+            let props = BalanceClaimActiveStore.getState();
+            let {balances, address_to_pubkey} = props;
+            let private_keys = PrivateKeyStore.getState().keys;
+            let groupCountMap = Immutable.Map().asMutable();
+            let groupCount = (group, distinct) => {
+                let set = groupCountMap.get(group);
+                if (!set) {
+                    set = Immutable.Set().asMutable();
+                    groupCountMap.set(group, set);
+                }
+                set.add(distinct);
+                return set.size;
+            };
+            if (balances)
+                props.total_by_account_asset = balances
+                    .groupBy(v => {
+                        // K E Y S
+                        let names = "";
+                        let pubkey = address_to_pubkey.get(v.owner);
+                        let private_key_object = private_keys.get(pubkey);
+                        // Imported Account Names (just a visual aid, helps to auto select a real account)
+                        if (
+                            private_key_object &&
+                            private_key_object.import_account_names
+                        )
+                            names = private_key_object.import_account_names.join(
+                                ", "
                             );
-                            r.balances = r.balances.add(v);
-                            if (v.vested_balance != undefined) {
-                                r.vesting.unclaimed += Number(
-                                    v.vested_balance.amount
+
+                        // Signing is very slow, further divide the groups based on the number of signatures required
+                        let batch_number = Math.ceil(
+                            groupCount(
+                                Immutable.List([names, v.balance.asset_id]),
+                                v.owner
+                            ) / 60
+                        );
+                        let name_asset_key = Immutable.List([
+                            names,
+                            v.balance.asset_id,
+                            batch_number
+                        ]);
+                        return name_asset_key;
+                    })
+                    .map(l =>
+                        l.reduce(
+                            (r, v) => {
+                                // V A L U E S
+                                v.public_key_string = address_to_pubkey.get(
+                                    v.owner
                                 );
-                                r.vesting.total += Number(v.balance.amount);
-                            } else {
-                                r.unclaimed += Number(v.balance.amount);
+                                r.balances = r.balances.add(v);
+                                if (v.vested_balance != undefined) {
+                                    r.vesting.unclaimed += Number(
+                                        v.vested_balance.amount
+                                    );
+                                    r.vesting.total += Number(v.balance.amount);
+                                } else {
+                                    r.unclaimed += Number(v.balance.amount);
+                                }
+                                return r;
+                            },
+                            {
+                                unclaimed: 0,
+                                vesting: {unclaimed: 0, total: 0},
+                                balances: Immutable.Set()
                             }
-                            return r;
-                        },
-                        {
-                            unclaimed: 0,
-                            vesting: {unclaimed: 0, total: 0},
-                            balances: Immutable.Set()
-                        }
+                        )
                     )
-                )
-                .sortBy(k => k);
-        return props;
+                    .sortBy(k => k);
+            return props;
+        }
     }
-});
+);
 
 export default BalanceClaimSelector;

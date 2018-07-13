@@ -281,6 +281,7 @@ export function requestDepositAddress({
         outputCoinType.toLowerCase() === "citadel.monero"
     )
         inputCoinType = "xmr";
+
     let body = {
         inputCoinType,
         outputCoinType,

@@ -142,15 +142,18 @@ class BalanceClaimActive extends Component {
     }
 }
 
-BalanceClaimActive = connect(BalanceClaimActive, {
-    listenTo() {
-        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
-    },
-    getProps() {
-        let props = BalanceClaimActiveStore.getState();
-        props.account_refs = AccountRefsStore.getAccountRefs();
-        return props;
+BalanceClaimActive = connect(
+    BalanceClaimActive,
+    {
+        listenTo() {
+            return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
+        },
+        getProps() {
+            let props = BalanceClaimActiveStore.getState();
+            props.account_refs = AccountRefsStore.getAccountRefs();
+            return props;
+        }
     }
-});
+);
 
 export default BalanceClaimActive;

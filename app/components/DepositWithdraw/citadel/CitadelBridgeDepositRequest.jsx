@@ -1494,7 +1494,9 @@ class CitadelBridgeDepositRequest extends React.Component {
                     );
                 else
                     deposit_address_and_memo_element = (
-                        <span>{input_address_and_memo.address}</span>
+                        <span style={{wordBreak: "break-all"}}>
+                            {input_address_and_memo.address}
+                        </span>
                     );
                 //<span><span className="blocktrades-with-memo">with memo</span> {input_address_and_memo.memo}</span>;
 
@@ -1502,7 +1504,13 @@ class CitadelBridgeDepositRequest extends React.Component {
                     <tbody>
                         <tr>
                             <td>
-                                <div className="blocktrades-bridge">
+                                <div
+                                    className="blocktrades-bridge"
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center"
+                                    }}
+                                >
                                     <div className="inline-block">
                                         <div>
                                             {deposit_input_coin_type_select}

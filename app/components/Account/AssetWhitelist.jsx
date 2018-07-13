@@ -239,16 +239,19 @@ class AssetWhitelist extends React.Component {
     }
 }
 
-export default connect(AssetWhitelist, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            assetWhiteListType: SettingsStore.getState().viewSettings.get(
-                "assetWhiteListType",
-                "whitelist_authorities"
-            )
-        };
+export default connect(
+    AssetWhitelist,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                assetWhiteListType: SettingsStore.getState().viewSettings.get(
+                    "assetWhiteListType",
+                    "whitelist_authorities"
+                )
+            };
+        }
     }
-});
+);
