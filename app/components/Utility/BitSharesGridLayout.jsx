@@ -1,5 +1,9 @@
 import React from "react";
 import {WidthProvider, Responsive} from "react-grid-layout";
+import ls from "common/localStorage";
+
+const STORAGE_KEY = "__BitSharesGridLayout__";
+const ss = new ls(STORAGE_KEY);
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
@@ -20,7 +24,7 @@ class BitSharesGridLayout extends React.PureComponent {
     static get defaultProps() {
         return {
             className: "layout",
-            cols: {lg: 12, md: 10, sm: 6, xs: 4, xxs: 2},
+            cols: {lg: 3, md: 2, sm: 1, xs: 1, xxs: 1},
             rowHeight: 30,
             isDraggable: true,
             isResizable: true
@@ -28,8 +32,16 @@ class BitSharesGridLayout extends React.PureComponent {
     }
 
     getInitialLayout() {
-        let layouts = {};
+        let layouts = this.getFromLS();
+        console.log(layouts);
+        if (!!!layouts) {
+            layouts = getDefaultLayout();
+        }
+        return layouts;
+    }
 
+    getDefaultLayout() {
+        let layouts = {};
         this.props.children.forEach(child => {
             if (!!child.props.layout) {
                 Object.keys(child.props.layout).forEach(key => {
@@ -50,7 +62,7 @@ class BitSharesGridLayout extends React.PureComponent {
     }
 
     resetLayout() {
-        this.setState({layouts: this.getInitialLayout()});
+        this.setState({layouts: this.getDefaultLayout()});
     }
 
     toggleCustomizable() {
@@ -61,12 +73,22 @@ class BitSharesGridLayout extends React.PureComponent {
     }
 
     onLayoutChange(layout, layouts) {
-        saveToLS("layouts", layouts);
+        this.saveToLS(layouts);
         this.setState({layouts});
     }
 
+    getFromLS() {
+        return ss.get(this.props.layoutid, null);
+    }
+
+    saveToLS(layouts) {
+        ss.set(this.props.layoutid, layouts);
+    }
+
     render() {
-        const children = this.props.children;
+        let children = this.props.children;
+
+        console.log(this.state.layouts);
 
         return (
             <div>
@@ -93,7 +115,23 @@ class BitSharesGridLayout extends React.PureComponent {
                     }
                 >
                     {React.Children.map(children, (child, i) => {
-                        return child;
+                        let props = {};
+                        props["data-grid"] = child.props.layout.lg;
+                        if (this.state.isDraggable) {
+                            return (
+                                <div
+                                    {...child.props}
+                                    {...props}
+                                    style={{
+                                        border: "1px solid #000000"
+                                    }}
+                                >
+                                    {child.props.dragname}
+                                </div>
+                            );
+                        } else {
+                            return React.cloneElement(child, props);
+                        }
                     })}
                 </ResponsiveReactGridLayout>
             </div>
@@ -102,26 +140,3 @@ class BitSharesGridLayout extends React.PureComponent {
 }
 
 export default BitSharesGridLayout;
-
-function getFromLS(key) {
-    let ls = {};
-    if (global.localStorage) {
-        try {
-            ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
-        } catch (e) {
-            /*Ignore*/
-        }
-    }
-    return ls[key];
-}
-
-function saveToLS(key, value) {
-    if (global.localStorage) {
-        global.localStorage.setItem(
-            "rgl-8",
-            JSON.stringify({
-                [key]: value
-            })
-        );
-    }
-}

@@ -55,31 +55,48 @@ class DashboardPage extends React.Component {
                                         <BitSharesGridLayout
                                             rowHeight={100}
                                             width="100%"
+                                            layoutid="unique_for_ls"
                                         >
                                             <div
                                                 key="a"
+                                                dragname="Draggable Area Starred Markets"
                                                 layout={{
-                                                    lg: {x: 0, y: 0, w: 1, h: 1}
-                                                }}
-                                                style={{
-                                                    border: "1px solid #000000"
+                                                    lg: {x: 0, y: 0, w: 1, h: 5}
                                                 }}
                                             >
-                                                <span className="text">
-                                                    foo
-                                                </span>
+                                                <StarredMarkets />
                                             </div>
                                             <div
                                                 key="b"
+                                                dragname="Draggable Area B"
                                                 layout={{
-                                                    lg: {x: 2, y: 0, w: 1, h: 1}
-                                                }}
-                                                style={{
-                                                    border: "1px solid #000000"
+                                                    lg: {x: 1, y: 0, w: 1, h: 1}
                                                 }}
                                             >
                                                 <span className="text">
-                                                    bar
+                                                    Area B
+                                                </span>
+                                            </div>
+                                            <div
+                                                key="c"
+                                                dragname="Draggable Area C"
+                                                layout={{
+                                                    lg: {x: 2, y: 0, w: 1, h: 1}
+                                                }}
+                                            >
+                                                <span className="text">
+                                                    Area C
+                                                </span>
+                                            </div>
+                                            <div
+                                                key="d"
+                                                dragname="Draggable Area D"
+                                                layout={{
+                                                    lg: {x: 1, y: 1, w: 1, h: 1}
+                                                }}
+                                            >
+                                                <span className="text">
+                                                    Area D
                                                 </span>
                                             </div>
                                         </BitSharesGridLayout>
