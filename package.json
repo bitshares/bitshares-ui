@@ -138,6 +138,7 @@
         "bignumber.js": "^4.0.0",
         "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git",
         "bitsharesjs": "git+https://github.com/CryptoBridge/bitsharesjs.git#master",
+        "bitsharesjs-ws": "git+https://github.com/CryptoBridge/bitsharesjs-ws.git#master",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",
