@@ -526,14 +526,6 @@ class RouterTransitioner {
                     setting: "apiServer",
                     value: currentUrl
                 });
-            const apiLatencies = SettingsStore.getState().apiLatencies;
-
-            //if (!(currentUrl in apiLatencies)) {
-            // we always update ping for now
-            apiLatencies[currentUrl] =
-                new Date().getTime() - this._connectionStart;
-            SettingsActions.updateLatencies(apiLatencies);
-            //}
         }
         const currentChain = Apis.instance().chain_id;
         const chainChanged = this._oldChain !== currentChain;
