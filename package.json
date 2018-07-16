@@ -241,6 +241,7 @@
         "svg-loader": "0.0.2",
         "svgo": "^1.0.5",
         "svgo-loader": "^2.1.0",
+        "uglifyjs-webpack-plugin": "^1.2.7",
         "url-loader": "^1.0.1",
         "webpack": "^4.8.1",
         "webpack-cli": "^2.1.3",
