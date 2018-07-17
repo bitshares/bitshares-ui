@@ -42,6 +42,7 @@
         "build-electron": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.hash",
         "build-electron-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.electron --env.noUgly --env.hash --progress --display-error-details --colors",
         "build-testnet": "cross-env NODE_ENV=production webpack --env.prod --env.testnet",
+        "build-testnet-pipeline": "npm install && npm run build-testnet",
         "prepare-electron": "copyfiles -f resources/*.js build/electron/",
         "postbuild-electron": "npm run prepare-electron",
         "postbuild-electron-nougly": "npm run prepare-electron",
