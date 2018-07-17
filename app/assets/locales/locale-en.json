@@ -412,7 +412,9 @@
         "browser": "Unsupported browser",
         "browser_text":
             "The Browser you are using has not been fully tested to support the %(wallet_name)s Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "check_latency": "Running latency checks...",
+        "check_latency": "Running latency checks ...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Connected",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
