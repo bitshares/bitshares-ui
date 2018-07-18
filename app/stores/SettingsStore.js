@@ -19,6 +19,9 @@ const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when 
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
 
+/**
+ * SettingsStore takes care of maintaining user set settings values and notifies all listeners
+ */
 class SettingsStore {
     constructor() {
         this.exportPublicMethods({
@@ -28,6 +31,7 @@ class SettingsStore {
             setLastBudgetObject: this.setLastBudgetObject.bind(this)
         });
 
+        // bind actions to store
         this.bindListeners({
             onSetExchangeLastExpiration:
                 SettingsActions.setExchangeLastExpiration,
@@ -53,113 +57,14 @@ class SettingsStore {
         });
 
         this.initDone = false;
-        this.defaultSettings = Immutable.Map({
-            locale: "en",
-            apiServer: settingsAPIs.DEFAULT_WS_NODE,
-            faucet_address: settingsAPIs.DEFAULT_FAUCET,
-            unit: CORE_ASSET,
-            showSettles: false,
-            showAssetPercent: false,
-            walletLockTimeout: 60 * 10,
-            themes: getDefaultTheme(),
-            passwordLogin: getDefaultLogin() == "password",
-            browser_notifications: {
-                allow: true,
-                additional: {
-                    transferToMe: true
-                }
-            }
-        });
 
-        // If you want a default value to be translated, add the translation to settings in locale-xx.js
-        // and use an object {translate: key} in the defaults array
-        let apiServer = settingsAPIs.WS_NODE_LIST;
+        this.defaultSettings = Immutable.Map(this._getDefaultSetting());
+        this.settings = Immutable.Map(this._getSetting());
 
-        let defaults = {
-            locale: [
-                "en",
-                "zh",
-                "fr",
-                "ko",
-                "de",
-                "es",
-                "it",
-                "tr",
-                "ru",
-                "ja"
-            ],
-            apiServer: apiServer,
-            unit: getUnits(),
-            showSettles: [{translate: "yes"}, {translate: "no"}],
-            showAssetPercent: [{translate: "yes"}, {translate: "no"}],
-            themes: ["darkTheme", "lightTheme", "midnightTheme"],
-            passwordLogin: [
-                {translate: "cloud_login"},
-                {translate: "local_wallet"}
-            ]
-            // confirmMarketOrder: [
-            //     {translate: "confirm_yes"},
-            //     {translate: "confirm_no"}
-            // ]
-        };
-
-        this.settings = Immutable.Map(
-            merge(this.defaultSettings.toJS(), ss.get("settings_v3"))
-        );
-        if (this.settings.get("themes") === "olDarkTheme") {
-            this.settings = this.settings.set("themes", "midnightTheme");
-        }
-        let savedDefaults = ss.get("defaults_v1", {});
-        /* Fix for old clients after changing cn to zh */
-        if (savedDefaults && savedDefaults.locale) {
-            let cnIdx = savedDefaults.locale.findIndex(a => a === "cn");
-            if (cnIdx !== -1) savedDefaults.locale[cnIdx] = "zh";
-        }
-        if (savedDefaults && savedDefaults.themes) {
-            let olIdx = savedDefaults.themes.findIndex(
-                a => a === "olDarkTheme"
-            );
-            if (olIdx !== -1) savedDefaults.themes[olIdx] = "midnightTheme";
-        }
-
-        this.defaults = merge({}, defaults, savedDefaults);
-
-        (savedDefaults.apiServer || []).forEach(api => {
-            let hasApi = false;
-            if (typeof api === "string") {
-                api = {url: api, location: null};
-            }
-            this.defaults.apiServer.forEach(server => {
-                if (server.url === api.url) {
-                    hasApi = true;
-                }
-            });
-
-            if (!hasApi) {
-                this.defaults.apiServer.push(api);
-            }
-        });
-
-        if (
-            !savedDefaults ||
-            (savedDefaults &&
-                (!savedDefaults.apiServer || !savedDefaults.apiServer.length))
-        ) {
-            for (let i = apiServer.length - 1; i >= 0; i--) {
-                let hasApi = false;
-                this.defaults.apiServer.forEach(api => {
-                    if (api.url === apiServer[i].url) {
-                        hasApi = true;
-                    }
-                });
-                if (!hasApi) {
-                    this.defaults.apiServer.unshift(apiServer[i]);
-                }
-            }
-        }
+        // this should be called choices, defaults is confusing
+        this.defaults = this._getChoices();
 
         this.viewSettings = Immutable.Map(ss.get("viewSettings_v1"));
-
         this.marketDirections = Immutable.Map(ss.get("marketDirections"));
 
         this.hiddenAssets = Immutable.List(ss.get("hiddenAssets", []));
@@ -177,6 +82,175 @@ class SettingsStore {
         );
 
         this.exchange = fromJS(ss.get("exchange", {}));
+    }
+
+    /**
+     * Returns the default selected values that the user can reset to
+     * @returns dictionary
+     * @private
+     */
+    _getDefaultSetting() {
+        return {
+            locale: "en",
+            apiServer: settingsAPIs.DEFAULT_WS_NODE,
+            faucet_address: settingsAPIs.DEFAULT_FAUCET,
+            unit: CORE_ASSET,
+            showSettles: false,
+            showAssetPercent: false,
+            walletLockTimeout: 60 * 10,
+            themes: getDefaultTheme(),
+            passwordLogin: getDefaultLogin() == "password",
+            browser_notifications: {
+                allow: true,
+                additional: {
+                    transferToMe: true
+                }
+            }
+        };
+    }
+
+    /**
+     * All possible choices for the settings
+     * @returns dictionary
+     * @private
+     */
+    _getDefaultChoices() {
+        return {
+            locale: [
+                "en",
+                "zh",
+                "fr",
+                "ko",
+                "de",
+                "es",
+                "it",
+                "tr",
+                "ru",
+                "ja"
+            ],
+            apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
+            unit: getUnits(),
+            showSettles: [{translate: "yes"}, {translate: "no"}],
+            showAssetPercent: [{translate: "yes"}, {translate: "no"}],
+            themes: ["darkTheme", "lightTheme", "midnightTheme"],
+            passwordLogin: [
+                {translate: "cloud_login"},
+                {translate: "local_wallet"}
+            ]
+        };
+    }
+
+    /**
+     * Returns the currently active settings, either default or from local storage
+     * @returns {*}
+     * @private
+     */
+    _getSetting() {
+        let savedSettings = this._ensureBackwardsCompatibilitySettings(
+            ss.get("settings_v3")
+        );
+        return merge(this._getDefaultSetting(), savedSettings);
+    }
+
+    /**
+     * Overwrite configuration while utilizing call-by-reference
+     * @param apiTarget
+     * @param apiSource
+     * @private
+     */
+    _injectApiConfiguration(apiTarget, apiSource) {
+        apiTarget.url = apiSource.url;
+        apiTarget.hidden = !!apiSource.hidden;
+        apiTarget.location = apiSource.location;
+    }
+
+    /**
+     * Returns the currently active choices for settings, either default or from local storage
+     * @returns {*}
+     * @private
+     */
+    _getChoices() {
+        // default choices the user can select from
+        let choices = this._getDefaultChoices();
+        console.log(choices);
+        // get choices stored in local storage
+        let savedChoices = this._ensureBackwardsCompatibilityChoices(
+            ss.get("defaults_v1", {})
+        );
+
+        // merge choices by hand (do not use merge as the order in the apiServer list may change)
+        let mergedChoices = Object.assign({}, savedChoices);
+        Object.keys(choices).forEach(key => {
+            if (key != "apiServer") {
+                mergedChoices[key] = choices[key];
+            } else {
+                mergedChoices.apiServer = choices.apiServer.slice(0); // maintain order in apiConfig.js
+                // add any apis that the user added and update changes
+                savedChoices.apiServer.forEach(api => {
+                    let found = mergedChoices.apiServer.find(
+                        a => a.url == api.url
+                    );
+                    if (!!found) {
+                        this._injectApiConfiguration(found, api);
+                    } else {
+                        // always add at the end of existing nodes, arbitrary decision
+                        mergedChoices.apiServer.push(api);
+                    }
+                });
+            }
+        });
+        mergedChoices.apiServer = mergedChoices.apiServer.map(node => {
+            let found = choices.apiServer.find(a => a.url == node.url);
+            node.default = !!found;
+            node.hidden = !!node.hidden; // make sure this flag exists
+            return node;
+        });
+        return mergedChoices;
+    }
+
+    /**
+     * Adjust loaded settings for backwards compatibility if any key names or values change
+     * @param savedSettings
+     * @returns {*}
+     * @private
+     */
+    _ensureBackwardsCompatibilitySettings(savedSettings) {
+        if (savedSettings["themes"] === "olDarkTheme") {
+            return (savedSettings["themes"] = "midnightTheme");
+        } else {
+            return savedSettings;
+        }
+    }
+
+    /**
+     * Adjust loaded choices for backwards compatibility if any key names or values change
+     * @param savedChoices
+     * @returns {*}
+     * @private
+     */
+    _ensureBackwardsCompatibilityChoices(savedChoices) {
+        /* Fix for old clients after changing cn to zh */
+        if (savedChoices && savedChoices.locale) {
+            let cnIdx = savedChoices.locale.findIndex(a => a === "cn");
+            if (cnIdx !== -1) savedChoices.locale[cnIdx] = "zh";
+        }
+        if (savedChoices && savedChoices.themes) {
+            let olIdx = savedChoices.themes.findIndex(a => a === "olDarkTheme");
+            if (olIdx !== -1) savedChoices.themes[olIdx] = "midnightTheme";
+        }
+        if (savedChoices && savedChoices.apiServer) {
+            savedChoices.apiServer = savedChoices.apiServer.map(api => {
+                // might be only a string, be backwards compatible
+                if (typeof api === "string") {
+                    api = {
+                        url: api,
+                        location: null
+                    };
+                }
+                return api;
+            });
+        }
+        return savedChoices;
     }
 
     init() {

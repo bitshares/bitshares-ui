@@ -323,14 +323,6 @@ class AccessSettings extends React.Component {
         this.state = {
             activeTab: "available-nodes"
         };
-
-        let isDefaultNode = {};
-
-        settingsAPIs.WS_NODE_LIST.forEach(node => {
-            isDefaultNode[node.url] = true;
-        });
-
-        this.isDefaultNode = isDefaultNode;
     }
 
     getNodeIndexByURL(url) {
@@ -358,7 +350,9 @@ class AccessSettings extends React.Component {
             url: node.url,
             up: node.url in props.apiLatencies,
             ping: props.apiLatencies[node.url],
-            hidden: !!node.hidden
+            hidden: node.hidden,
+            default: node.default,
+            category: node.category
         };
     }
 
@@ -378,8 +372,7 @@ class AccessSettings extends React.Component {
                 node.name
             );
 
-        let allowRemoval =
-            !automatic && !this.isDefaultNode[node.url] ? true : false;
+        let allowRemoval = !automatic && !node.default;
 
         return (
             <ApiNode
@@ -473,14 +466,11 @@ class AccessSettings extends React.Component {
 
         if (this.state.activeTab === "my-nodes") {
             nodes = nodes.filter(node => {
-                return !this.isDefaultNode[node.url];
+                return !node.default;
             });
         } else {
             nodes = nodes.filter(node => {
-                return (
-                    node.hidden !== showAvailableNodes &&
-                    this.isDefaultNode[node.url]
-                );
+                return node.hidden !== showAvailableNodes && node.default;
             });
         }
 
