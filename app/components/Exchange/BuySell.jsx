@@ -264,8 +264,7 @@ class BuySell extends React.Component {
             let {name, prefix} = utils.replaceName(asset);
             return (
                 <Select.Option key={asset.get("id")} value={index++}>
-                    {prefix}
-                    {name}
+                    {prefix}{name}
                 </Select.Option>
             );
         });
@@ -311,6 +310,12 @@ class BuySell extends React.Component {
         const theme = SettingsStore.getState().settings.get("themes");
 
         const minExpirationDate = moment();
+
+        const containerClass = this.props.exchangeLayout <= 2 
+            ? this.props.hidePanel 
+                ? "small-12 medium-6 large-6 xlarge-6" 
+                : "small-12 medium-6 large-12 xlarge-6" 
+            : "small-12 medium-12 xlarge-12";
 
         return (
             <div className={this.props.className}>
@@ -458,7 +463,7 @@ class BuySell extends React.Component {
                         noValidate
                     >
                         <div className="grid-block no-overflow wrap shrink">
-                            <div className="small-12 medium-12 xlarge-6" style={{paddingRight: 10}}>
+                            <div className={containerClass} style={{paddingRight: 10}}>
                                 <div>
                                     <div style={{paddingBottom: 6}}><Translate content="exchange.price" />
                                         <span style={{float: "right"}}>
@@ -528,7 +533,7 @@ class BuySell extends React.Component {
                                 </div>
                                 
                             </div>
-                            <div className="small-12 medium-12 xlarge-6" style={{paddingRight: 10}}>
+                            <div className={containerClass} style={{paddingRight: 10}}>
                                 <div>
                                     <div style={{paddingBottom: 6}}><Translate content="exchange.total" /></div>
                                     <Input 
@@ -558,18 +563,19 @@ class BuySell extends React.Component {
                                                     : fee.getAmount({real: true})
                                             }
                                             disabled
-                                            style={{width: "40%"}}
+                                            addonAfter={
+                                                <Select 
+                                                    disabled={feeAssets.length === 1}
+                                                    defaultValue={feeAssets.indexOf(
+                                                        this.props.feeAsset
+                                                    )}
+                                                    onChange={this.props.onChangeFeeAsset}
+                                                >
+                                                    {options}
+                                                </Select>
+                                            }
                                         />
-                                        <Select 
-                                            style={{width: "60%"}}
-                                            disabled={feeAssets.length === 1}
-                                            defaultValue={feeAssets.indexOf(
-                                                this.props.feeAsset
-                                            )}
-                                            onChange={this.props.onChangeFeeAsset}
-                                        >
-                                            {options}
-                                        </Select>
+                                        
                                     </Input.Group>
                                 </div>
                                 <div>
@@ -606,8 +612,10 @@ class BuySell extends React.Component {
                                     <div>
                                         Advanced options...
                                     </div>
-                                    <div  data-tip={disabledText ? disabledText : ""} data-place="left">
+                                    <div >
                                         <Button 
+                                            data-tip={disabledText ? disabledText : ""} 
+                                            data-place="top"
                                             className={disabled ? null : buttonClass}
                                             disabled={disabled}
                                             onClick={onSubmit.bind(this, true)}

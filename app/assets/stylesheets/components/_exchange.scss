@@ -76,12 +76,16 @@
     > thead > tr > th {
         font-size: 14px;
         padding: 5px 5px;
-        text-align: right;
+        text-align: right !important;
     }
 
     > tbody > tr > td {
         font-size: 12px;
         padding-bottom: 4px;
+    }
+
+    .sticky-table-container  {
+        width: 100%;
     }
 }
 
@@ -808,4 +812,14 @@ tbody.orderbook > tr.my-order > td {
 // DatePicker Layer Issues
 .tether-element {
     z-index: 100;
+}
+
+// TEMPORARY ANT CHANGES
+.ant-tabs-bar {
+    margin: 0 0 10px !important;
+}
+
+.ant-tabs-nav, .ant-tabs-tab {
+    margin: 0 12px 0 0 !important;
+    padding: 6px 6px !important;
 }

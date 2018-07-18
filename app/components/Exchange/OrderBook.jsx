@@ -816,16 +816,26 @@ class OrderBook extends React.Component {
                 <div
                     className={classnames(
                         this.props.wrapperClass,
-                        "grid-block orderbook no-padding align-spaced no-overflow small-12 xlarge-8 wrap shrink"
+                        this.props.exchangeLayout >= 3 
+                            ? this.props.hidePanel 
+                                ? "medium-12 large-6 xlarge-8" 
+                                : "medium-12 large-12 xlarge-5" 
+                            : "xlarge-8",
+                        "grid-block orderbook no-padding align-spaced no-overflow small-12 wrap shrink"
                     )}
                 >
                     <div
                         className={classnames(
                             "small-12 medium-6 middle-content",
+                            this.props.exchangeLayout >= 3 
+                                ? this.props.hidePanel 
+                                    ? "medium-6 large-6 xlarge-6" 
+                                    : "medium-12 large-6 xlarge-12" 
+                                : "medium-6",
                             this.state.flip ? "order-1" : "order-2"
                         )}
                     >
-                        <div className="exchange-bordered">
+                        <div className="exchange-padded">
                             <div
                                 className="exchange-content-header ask"
                                 data-intro={counterpart.translate(
@@ -851,16 +861,6 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        {/*<span
-                                            className="order-book-button-v"
-                                            onClick={this.props.moveOrderBook}
-                                        >
-                                            <Icon
-                                                name="thumb-tack"
-                                                title="icons.thumb_tack"
-                                                className="icon-14px"
-                                            />
-                                        </span>*/}
                                     </div>
                                 ) : null}
                                 {this.state.flip ? (
@@ -882,9 +882,9 @@ class OrderBook extends React.Component {
                                 ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
-                                    className="float-right header-sub-title"
+                                    className="header-sub-title"
                                 >
-                                    <Translate content="exchange.total" />
+                                    <Translate content="exchange.volume" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalAsks,
@@ -914,7 +914,7 @@ class OrderBook extends React.Component {
                             >
                                 <table
                                     style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                                    className="table order-table no-stripes table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper
                                         ref="askTransition"
@@ -940,10 +940,8 @@ class OrderBook extends React.Component {
                                                     ? "exchange.hide"
                                                     : "exchange.show_asks"
                                             }
+                                            orderCount={totalAsksLength}
                                         />
-                                        {!showAllAsks ? (
-                                            <span> ({totalAsksLength})</span>
-                                        ) : null}
                                     </a>
                                 </div>
                             ) : null}
@@ -952,11 +950,16 @@ class OrderBook extends React.Component {
 
                     <div
                         className={classnames(
-                            "small-12 medium-6 middle-content",
+                            "small-12  middle-content",
+                            this.props.exchangeLayout >= 3 
+                                ? this.props.hidePanel 
+                                    ? "medium-6 large-6 xlarge-6" 
+                                    : "medium-12 large-6 xlarge-12" 
+                                : "medium-6",
                             this.state.flip ? "order-2" : "order-1"
                         )}
                     >
-                        <div className="exchange-bordered">
+                        <div className="exchange-padded">
                             <div
                                 className="exchange-content-header bid"
                                 data-intro={counterpart.translate(
@@ -982,16 +985,6 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-                                        {/*<span
-                                            className="order-book-button-v"
-                                            onClick={this.props.moveOrderBook}
-                                        >
-                                            <Icon
-                                                name="thumb-tack"
-                                                title="icons.thumb_tack"
-                                                className="icon-14px"
-                                            />
-                                        </span>*/}
                                     </div>
                                 ) : null}
                                 {!this.state.flip ? (
@@ -1013,9 +1006,9 @@ class OrderBook extends React.Component {
                                 ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
-                                    className="float-right header-sub-title"
+                                    className="header-sub-title"
                                 >
-                                    <Translate content="exchange.total" />
+                                    <Translate content="exchange.volume" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalBids,
@@ -1043,7 +1036,7 @@ class OrderBook extends React.Component {
                             >
                                 <table
                                     style={{paddingBottom: 5}}
-                                    className="table order-table table-hover fixed-table text-right no-overflow"
+                                    className="table order-table no-stripes table-hover fixed-table text-right no-overflow"
                                 >
                                     <TransitionWrapper
                                         ref="bidTransition"
@@ -1069,10 +1062,8 @@ class OrderBook extends React.Component {
                                                     ? "exchange.hide"
                                                     : "exchange.show_bids"
                                             }
+                                            orderCount={totalBidsLength}
                                         />
-                                        {!showAllBids ? (
-                                            <span> ({totalBidsLength})</span>
-                                        ) : null}
                                     </a>
                                 </div>
                             ) : null}

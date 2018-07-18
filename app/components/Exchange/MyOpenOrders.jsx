@@ -604,7 +604,7 @@ class MyOpenOrders extends React.Component {
                         </div>
                     </div>}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table table-no-padding order-table text-right fixed-table market-right-padding">
+                        <table className="table order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
                                 <TableHeader
                                     type="sell"
@@ -651,9 +651,9 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", minHeight: 260, maxHeight: 260}}
+                        style={{overflow: "hidden", minHeight: 260, maxHeight: 260, lineHeight: "13px"}}
                     >
-                        <table className="table table-no-padding table-highlight-hover no-stripes text-right fixed-table market-right-padding">
+                        <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}
                         </table>
                     </div>

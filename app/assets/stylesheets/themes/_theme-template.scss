@@ -1400,17 +1400,14 @@
         }
     }
 
+    div.exchange-content-header {
+        background-color: transparent !important;
+    }
+
     .exchange-content-header {
         color: $light-text-color;
-        background-color: $header-color !important;
-        border-bottom: 1px solid $button-bg-color;
-        &.bid {
-            border-bottom: 1px solid $bid-color;
-        }
+        background-color: transparent !important;
 
-        &.ask {
-            border-bottom: 1px solid $ask-color;
-        }
     }
 
     // .block-content-header {
@@ -1637,9 +1634,6 @@
         cursor: pointer;
     }
 
-    div.exchange-content-header {
-        background-color: $header-color !important;
-    }
 
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);

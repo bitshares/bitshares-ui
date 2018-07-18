@@ -357,6 +357,10 @@ class MyMarkets extends React.Component {
             this._lookupAssets("OPEN.", true);
         }
 
+        if(this.state.activeTab !== nextProps.activeTab) {
+            this._changeTab(nextProps.activeTab);
+        }
+
         return (
             !Immutable.is(nextProps.searchAssets, this.props.searchAssets) ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
@@ -410,6 +414,10 @@ class MyMarkets extends React.Component {
 
         if (this.state.activeTab === "find-market") {
             this._lookupAssets("OPEN.", true);
+        }
+
+        if(this.state.activeTab !== this.props.activeTab) {
+            this._changeTab(this.props.activeTab);
         }
     }
 
@@ -763,7 +771,7 @@ class MyMarkets extends React.Component {
 
         let listStyle = {
             minWidth: this.state.minWidth,
-            minHeight: "6rem"
+            minHeight: "6rem",
         };
         if (listHeight) {
             listStyle.height = listHeight;
@@ -965,7 +973,7 @@ class MyMarkets extends React.Component {
                     </div>
                 )}
 
-                <ul className="mymarkets-tabs">
+                <ul className="mymarkets-tabs" style={{marginBottom: 0}}>
                     {preferredBases.map((base, index) => {
                         if (!base) return null;
                         return (
