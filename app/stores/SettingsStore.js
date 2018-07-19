@@ -159,9 +159,8 @@ class SettingsStore {
      * @private
      */
     _injectApiConfiguration(apiTarget, apiSource) {
-        apiTarget.url = apiSource.url;
-        apiTarget.hidden = !!apiSource.hidden;
-        apiTarget.location = apiSource.location;
+        // any defaults in the apiConfig are to be maintained!
+        apiTarget.hidden = apiSource.hidden;
     }
 
     /**
@@ -183,29 +182,36 @@ class SettingsStore {
         Object.keys(choices).forEach(key => {
             if (key != "apiServer") {
                 mergedChoices[key] = choices[key];
-            } else {
-                mergedChoices.apiServer = choices.apiServer.slice(0); // maintain order in apiConfig.js
-                // add any apis that the user added and update changes
-                savedChoices.apiServer.forEach(api => {
-                    let found = mergedChoices.apiServer.find(
-                        a => a.url == api.url
-                    );
-                    if (!!found) {
-                        this._injectApiConfiguration(found, api);
-                    } else {
-                        // always add at the end of existing nodes, arbitrary decision
-                        mergedChoices.apiServer.push(api);
-                    }
-                });
             }
         });
-        mergedChoices.apiServer = mergedChoices.apiServer.map(node => {
+        mergedChoices.apiServer = this._getApiServerChoices(
+            choices,
+            savedChoices
+        );
+        return mergedChoices;
+    }
+
+    _getApiServerChoices(choices, savedChoices) {
+        let apiServer = choices.apiServer.slice(0); // maintain order in apiConfig.js
+        // add any apis that the user added and update changes
+        savedChoices.apiServer.forEach(api => {
+            let found = apiServer.find(a => a.url == api.url);
+            if (!!found) {
+                this._injectApiConfiguration(found, api);
+            } else {
+                if (!api.default) {
+                    // always add personal nodes at end of existing nodes, arbitrary decision
+                    apiServer.push(api);
+                }
+            }
+        });
+        apiServer = apiServer.map(node => {
             let found = choices.apiServer.find(a => a.url == node.url);
             node.default = !!found;
             node.hidden = !!node.hidden; // make sure this flag exists
             return node;
         });
-        return mergedChoices;
+        return apiServer;
     }
 
     /**

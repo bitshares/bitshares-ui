@@ -1496,6 +1496,7 @@
         "show": "Show",
         "showAssetPercent": "Show asset percentages on the account page",
         "showSettles": "Show settle orders in depth chart",
+        "skipped": "Skipped",
         "switch": "Switch Node",
         "themes": "Theme",
         "unit": "Preferred unit of account",

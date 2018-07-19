@@ -76,12 +76,24 @@ export const settingsAPIs = {
             url: "wss://fake.automatic-selection.com",
             location: {translate: "settings.api_closest"}
         },
-        {url: "ws://127.0.0.1:8090", location: "Locally hosted"},
+        {
+            url: "ws://127.0.0.1:8090",
+            location: "Locally hosted"
+        },
         {
             url: "wss://bitshares.openledger.info/ws",
-            location: "Nuremberg, Germany"
+            location: "Nuremberg",
+            region: "Europe",
+            country: "Germany",
+            operator: "OpenLedger"
         },
-        {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
+        {
+            url: "wss://eu.openledger.info/ws",
+            location: "Berlin",
+            region: "Europe",
+            country: "Germany",
+            operator: "OpenLedger"
+        },
         {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
@@ -104,15 +116,21 @@ export const settingsAPIs = {
         {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
         {
             url: "wss://eu.nodes.bitshares.ws",
-            location: "Central Europe - BitShares Infrastructure Program"
+            region: "Central Europe",
+            country: "Germany",
+            operator: "Infrastructure Worker"
         },
         {
             url: "wss://us.nodes.bitshares.ws",
-            location: "U.S. West Coast - BitShares Infrastructure Program"
+            region: "North America",
+            country: "U.S.A.",
+            operator: "Infrastructure Worker"
         },
         {
             url: "wss://sg.nodes.bitshares.ws",
-            location: "Singapore - BitShares Infrastructure Program"
+            region: "Southeast Asia",
+            country: "Singapore",
+            operator: "Infrastructure Worker"
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
         {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
