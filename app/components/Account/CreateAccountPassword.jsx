@@ -12,7 +12,7 @@ import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {ChainStore, FetchChain, key} from "bitsharesjs/es";
+import {ChainStore, FetchChain, key} from "bitsharesjs";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
@@ -20,6 +20,7 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
+import {scroller} from "react-scroll";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -46,6 +47,8 @@ class CreateAccountPassword extends React.Component {
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
         this.accountNameInput = null;
+
+        this.scrollToInput = this.scrollToInput.bind(this);
     }
 
     componentWillMount() {
@@ -59,10 +62,20 @@ class CreateAccountPassword extends React.Component {
 
     componentDidMount() {
         ReactTooltip.rebuild();
+        this.scrollToInput();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
         return !utils.are_equal_shallow(nextState, this.state);
+    }
+
+    scrollToInput() {
+        scroller.scrollTo(`scrollToInput`, {
+            duration: 1500,
+            delay: 100,
+            smooth: true,
+            containerId: "accountForm"
+        });
     }
 
     isValid() {
@@ -643,7 +656,11 @@ class CreateAccountPassword extends React.Component {
         // let my_accounts = AccountStore.getMyAccounts();
         // let firstAccount = my_accounts.length === 0;
         return (
-            <div className="sub-content">
+            <div
+                className="sub-content"
+                id="scrollToInput"
+                name="scrollToInput"
+            >
                 <div>
                     {step === 2 ? (
                         <p

@@ -11,7 +11,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import Operation from "components/Blockchain/Operation";
 import notify from "actions/NotificationActions";
@@ -297,7 +297,7 @@ class TransactionConfirm extends React.Component {
 
                             {/* P R O P O S E   T O G G L E */}
                             {!this.props.transaction.has_proposed_operation() &&
-                            !(broadcast || broadcasting) ? (
+                            !(broadcast || broadcasting || this.props.error) ? (
                                 <div className="align-right grid-block">
                                     <label
                                         style={{

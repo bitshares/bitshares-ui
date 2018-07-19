@@ -42,7 +42,7 @@ import {
 import AmountSelector from "components/Utility/AmountSelector";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 const gatewayBoolCheck = "withdrawalAllowed";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
@@ -1383,6 +1383,11 @@ export default class WithdrawModal extends React.Component {
         ZfApi.publish(this.props.modalId, "close");
 
         this.onClose();
+    }
+
+    shouldComponentUpdate(np, ns) {
+        if (!this.state.open && !ns.open) return false;
+        return true;
     }
 
     render() {

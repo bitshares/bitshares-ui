@@ -5,7 +5,7 @@ import AccountImage from "../Account/AccountImage";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation} from "bitsharesjs/es";
+import {ChainStore, PublicKey, ChainValidation} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
@@ -38,7 +38,7 @@ class AccountSelector extends React.Component {
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: PropTypes.array
+        typeahead: PropTypes.bool
     };
 
     static defaultProps = {
@@ -139,7 +139,6 @@ class AccountSelector extends React.Component {
 
         // If regex matches ^.*#/account/account-name/.*$, parse out account-name
         let _value = value.replace("#", "").match(/(?:\/account\/)(.*)/);
-        console.log("getVerifiedAccountName", value);
         if (_value) value = _value[1];
 
         return value;

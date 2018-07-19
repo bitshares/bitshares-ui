@@ -2,7 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
@@ -21,7 +21,7 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
-import PropTypes from "prop-types";
+import {getWalletName} from "branding";
 
 class SendModal extends React.Component {
     constructor(props) {
@@ -666,7 +666,10 @@ class SendModal extends React.Component {
                                 }}
                             >
                                 <p>
-                                    <Translate content="transfer.header_subheader" />
+                                    <Translate
+                                        content="transfer.header_subheader"
+                                        wallet_name={getWalletName()}
+                                    />
                                 </p>
                             </div>
                         </div>
@@ -912,10 +915,11 @@ SendModalConnectWrapper = connect(SendModalConnectWrapper, {
     listenTo() {
         return [AccountStore];
     },
-    getProps() {
+    getProps(props) {
         return {
             currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount
+            passwordAccount: AccountStore.getState().passwordAccount,
+            tabIndex: props.tabIndex || 0
         };
     }
 });

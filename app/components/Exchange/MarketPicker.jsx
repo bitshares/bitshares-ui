@@ -6,11 +6,11 @@ import {Link} from "react-router-dom";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import {debounce} from "lodash-es";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import Translate from "react-translate-component";
 import LoadingIndicator from "../LoadingIndicator";
 import AssetActions from "actions/AssetActions";
-import {ChainValidation} from "bitsharesjs/es";
+import {ChainValidation} from "bitsharesjs";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import {hasGatewayPrefix} from "common/gatewayUtils";
@@ -63,7 +63,7 @@ class MarketPickerWrapper extends React.Component {
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
 
         /* Don't lookup invalid asset names */
-        if (toFind && toFind.length >= 3 && !isValidName) return;
+        if (toFind && toFind.length >= 2 && !isValidName) return;
 
         this.setState({
             inputValue: e.target.value.trim(),
@@ -88,7 +88,7 @@ class MarketPickerWrapper extends React.Component {
 
         let quote = value.toUpperCase();
 
-        if (quote.length >= 3) this.getAssetList(quote, 10, gatewayAssets);
+        this.getAssetList(quote, 10, gatewayAssets);
 
         this.setState({
             lookupQuote: quote

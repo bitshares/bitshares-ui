@@ -6,7 +6,6 @@ import utils from "common/utils";
 class MarketStatsCheck extends React.Component {
     constructor() {
         super();
-
         this.fromStatsIntervals = {};
         this.directStatsIntervals = {};
         this.toStatsInterval = null;
@@ -22,14 +21,14 @@ class MarketStatsCheck extends React.Component {
     }
 
     _useDirectMarket(props) {
-        const {fromAsset, toAsset, marketStats} = props;
+        const {fromAsset, toAsset, allMarketStats} = props;
         if (!fromAsset) return false;
         const {marketName: directMarket} = marketUtils.getMarketName(
             toAsset,
             fromAsset
         );
 
-        const directStats = marketStats.get(directMarket);
+        const directStats = allMarketStats.get(directMarket);
 
         if (directStats && directStats.volumeBase === 0) return false;
 
@@ -37,7 +36,7 @@ class MarketStatsCheck extends React.Component {
     }
 
     _checkDirectMarkets(props) {
-        let {fromAssets, fromAsset, toAsset, marketStats} = props;
+        let {fromAssets, fromAsset, toAsset, allMarketStats} = props;
         if (!fromAssets && fromAsset) fromAssets = [fromAsset];
 
         return fromAssets
@@ -46,7 +45,7 @@ class MarketStatsCheck extends React.Component {
                 return this._useDirectMarket({
                     fromAsset: asset,
                     toAsset,
-                    marketStats
+                    allMarketStats
                 })
                     ? asset.get("symbol")
                     : null;
@@ -75,6 +74,11 @@ class MarketStatsCheck extends React.Component {
     }
 
     _startUpdates(props) {
+        /* Only run this every x seconds */
+        if (!!this.updatesTimer) return;
+        this.updatesTimer = setTimeout(() => {
+            this.updatesTimer = null;
+        }, 10 * 1000);
         let {coreAsset, fromAssets, fromAsset, toAsset} = props;
         if (!fromAssets && fromAsset) fromAssets = [fromAsset];
 
@@ -87,28 +91,26 @@ class MarketStatsCheck extends React.Component {
                 let useDirectMarket = this._useDirectMarket({
                     toAsset,
                     fromAsset: asset,
-                    marketStats: props.marketStats
+                    allMarketStats: props.allMarketStats
                 });
 
                 if (useDirectMarket && toAsset.get("id") !== asset.get("id")) {
                     if (!this.directStatsIntervals[directMarket]) {
                         setTimeout(() => {
-                            MarketsActions.getMarketStats(asset, toAsset);
                             this.directStatsIntervals[
                                 directMarket
-                            ] = setInterval(
-                                MarketsActions.getMarketStats.bind(
-                                    this,
-                                    asset,
-                                    toAsset
-                                ),
-                                5 * 60 * 1000
+                            ] = MarketsActions.getMarketStatsInterval(
+                                5 * 60 * 1000,
+                                asset,
+                                toAsset
                             );
                         }, 50);
                     }
-                } else if (this.directStatsIntervals[directMarket]) {
-                    clearInterval(this.directStatsIntervals[directMarket]);
                 }
+                // else if (this.directStatsIntervals[directMarket]) {
+                //     console.log(directMarket, "directStatsIntervals exists, clearing");
+                //     this.directStatsIntervals[directMarket]();
+                // }
 
                 return useDirectMarket ? directMarket : null;
             })
@@ -132,16 +134,13 @@ class MarketStatsCheck extends React.Component {
                         asset
                     );
                     if (!this.fromStatsIntervals[marketName]) {
-                        this.fromStatsIntervals[marketName] = true;
                         setTimeout(() => {
-                            MarketsActions.getMarketStats(coreAsset, asset);
-                            this.fromStatsIntervals[marketName] = setInterval(
-                                MarketsActions.getMarketStats.bind(
-                                    this,
-                                    coreAsset,
-                                    asset
-                                ),
-                                5 * 60 * 1000
+                            this.fromStatsIntervals[
+                                marketName
+                            ] = MarketsActions.getMarketStatsInterval(
+                                5 * 60 * 1000,
+                                coreAsset,
+                                asset
                             );
                         }, 50);
                     }
@@ -151,29 +150,25 @@ class MarketStatsCheck extends React.Component {
             // To asset
             if (props.toAsset.get("id") !== coreAsset.get("id")) {
                 // wrap this in a timeout to prevent dispatch in the middle of a dispatch
-                MarketsActions.getMarketStats(coreAsset, props.toAsset);
-                this.toStatsInterval = setInterval(() => {
-                    MarketsActions.getMarketStats(coreAsset, props.toAsset);
-                }, 5 * 60 * 1000);
+                this.toStatsInterval = MarketsActions.getMarketStatsInterval(
+                    5 * 60 * 1000,
+                    coreAsset,
+                    props.toAsset
+                );
             }
         }
     }
 
-    _stopUpdate(marketName) {
-        clearInterval(this.fromStatsIntervals[marketName]);
-        delete this.fromStatsIntervals[marketName];
-    }
-
     _stopUpdates() {
         for (let key in this.fromStatsIntervals) {
-            clearInterval(this.fromStatsIntervals[key]);
+            this.fromStatsIntervals[key]();
             delete this.fromStatsIntervals[key];
         }
         for (let key in this.directStatsIntervals) {
-            clearInterval(this.directStatsIntervals[key]);
+            this.directStatsIntervals[key]();
             delete this.directStatsIntervals[key];
         }
-        clearInterval(this.toStatsInterval);
+        if (this.toStatsInterval) this.toStatsInterval();
         this.toStatsInterval = null;
     }
 
@@ -210,8 +205,8 @@ class MarketStatsCheck extends React.Component {
             return (
                 a ||
                 this._statsChanged(
-                    np.marketStats.get(b),
-                    this.props.marketStats.get(b)
+                    np.allMarketStats.get(b),
+                    this.props.allMarketStats.get(b)
                 )
             );
         }, false);
@@ -220,16 +215,16 @@ class MarketStatsCheck extends React.Component {
             return (
                 a ||
                 this._statsChanged(
-                    np.marketStats.get(b),
-                    this.props.marketStats.get(b)
+                    np.allMarketStats.get(b),
+                    this.props.allMarketStats.get(b)
                 )
             );
         }, false);
 
         return (
             this._statsChanged(
-                np.marketStats.get(toMarket),
-                this.props.marketStats.get(toMarket)
+                np.allMarketStats.get(toMarket),
+                this.props.allMarketStats.get(toMarket)
             ) ||
             indirectCheck ||
             directCheck

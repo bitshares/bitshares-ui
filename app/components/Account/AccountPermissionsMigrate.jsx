@@ -3,7 +3,7 @@ import PasswordInput from "./../Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import {key} from "bitsharesjs/es";
+import {key} from "bitsharesjs";
 
 export default class AccountPermissionsMigrate extends React.Component {
     constructor() {

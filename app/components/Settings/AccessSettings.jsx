@@ -3,12 +3,11 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {settingsAPIs} from "../../api/apiConfig";
-import willTransitionTo from "../../routerTransition";
-// import {routerTransitioner} from "../../routerTransition";
-import {withRouter} from "react-router-dom";
+import willTransitionTo, {routerTransitioner} from "../../routerTransition";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
+import LoadingButton from "../Utility/LoadingButton";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
 const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
@@ -17,6 +16,13 @@ const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
 const testnetAPI2 = settingsAPIs.WS_NODE_LIST.find(
     a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
 );
+
+function isTestNet(url) {
+    if (!!testnetAPI || !!testnetAPI2) {
+        return url === testnetAPI.url || url === testnetAPI2.url;
+    }
+    return false;
+}
 
 /**
  * This class renders a a single node within the nodes list in the settings overview.
@@ -37,12 +43,17 @@ class ApiNode extends React.Component {
             setting: "apiServer",
             value: url
         });
-        setTimeout(
-            function() {
-                willTransitionTo(false);
-            }.bind(this),
-            50
-        );
+        if (
+            SettingsStore.getSetting("activeNode") !=
+            SettingsStore.getSetting("apiServer")
+        ) {
+            setTimeout(
+                function() {
+                    willTransitionTo(false);
+                }.bind(this),
+                50
+            );
+        }
     }
 
     remove(url, name, e) {
@@ -100,7 +111,7 @@ class ApiNode extends React.Component {
         * so we force enable activation of it even though it shows as 'down'
         *
         */
-        const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
+        const isTestnet = isTestNet(url);
 
         let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
 
@@ -284,7 +295,6 @@ class ApiNode extends React.Component {
                                     name={"connected"}
                                     title="icons.connected"
                                     size="2x"
-                                    title="settings.active_node"
                                 />
                             )}
                         </div>
@@ -305,8 +315,6 @@ ApiNode.defaultProps = {
     allowRemoval: false,
     hidden: false
 };
-
-const ApiNodeWithRouter = withRouter(ApiNode);
 
 class AccessSettings extends React.Component {
     constructor(props) {
@@ -374,7 +382,7 @@ class AccessSettings extends React.Component {
             !automatic && !this.isDefaultNode[node.url] ? true : false;
 
         return (
-            <ApiNodeWithRouter
+            <ApiNode
                 {...node}
                 autoActive={props.currentNode === autoSelectAPI}
                 automatic={automatic}
@@ -402,6 +410,13 @@ class AccessSettings extends React.Component {
             feedback();
         });
     }*/
+
+    _recalculateLatency(event, feedback) {
+        feedback("settings.pinging");
+        routerTransitioner.doLatencyUpdate(true, 4).finally(() => {
+            feedback();
+        });
+    }
 
     render() {
         const {props} = this;
@@ -439,8 +454,7 @@ class AccessSettings extends React.Component {
             });
 
         nodes = nodes.sort(function(a, b) {
-            let isTestnet =
-                a.url === testnetAPI.url || a.url === testnetAPI2.url;
+            let isTestnet = isTestNet(a.url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {
@@ -509,12 +523,12 @@ class AccessSettings extends React.Component {
             <div style={{paddingTop: "1em"}}>
                 {renderNode(autoNode, activeNode, false)}
                 <div className="active-node">
-                    {/*<LoadingButton
-                        style={{"float": "right"}}
-                        caption="Reload latency"
+                    <LoadingButton
+                        style={{float: "right"}}
+                        caption="settings.ping"
                         loadingType="inside-feedback-resize"
                         onClick={this._recalculateLatency.bind(this)}
-                    />*/}
+                    />
                     <Translate
                         component="h4"
                         style={{marginLeft: "1rem"}}

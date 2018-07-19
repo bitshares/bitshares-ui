@@ -12,6 +12,7 @@ import {IntlProvider} from "react-intl";
 import willTransitionTo from "./routerTransition";
 import LoadingIndicator from "./components/LoadingIndicator";
 import InitError from "./components/InitError";
+import SyncError from "./components/SyncError";
 import counterpart from "counterpart";
 
 /*
@@ -47,23 +48,31 @@ class AppInit extends React.Component {
 
         this.state = {
             apiConnected: false,
-            apiError: false
+            apiError: false,
+            syncError: null,
+            status: ""
         };
     }
 
     componentWillMount() {
-        willTransitionTo()
+        willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
                     apiConnected: true,
-                    apiError: false
+                    apiError: false,
+                    syncError: null
                 });
             })
             .catch(err => {
                 console.log("willTransitionTo err:", err);
                 this.setState({
                     apiConnected: false,
-                    apiError: true
+                    apiError: true,
+                    syncError: !err
+                        ? null
+                        : (err && err.message).indexOf(
+                              "ChainStore sync error"
+                          ) !== -1
                 });
             });
     }
@@ -82,11 +91,19 @@ class AppInit extends React.Component {
         }
     }
 
+    _statusCallback(status) {
+        this.setState({status});
+    }
+
     render() {
         const {theme, apiServer} = this.props;
-        const {apiConnected, apiError} = this.state;
+        const {apiConnected, apiError, syncError, status} = this.state;
 
         if (!apiConnected) {
+            let server = apiServer;
+            if (!!!server) {
+                server = "";
+            }
             return (
                 <div
                     style={{backgroundColor: !theme ? "#2a2a2a" : null}}
@@ -96,11 +113,16 @@ class AppInit extends React.Component {
                         <div className="grid-frame vertical">
                             {!apiError ? (
                                 <LoadingIndicator
-                                    loadingText={counterpart.translate(
-                                        "app_init.connecting",
-                                        {server: apiServer}
-                                    )}
+                                    loadingText={
+                                        status ||
+                                        counterpart.translate(
+                                            "app_init.connecting",
+                                            {server: server}
+                                        )
+                                    }
                                 />
+                            ) : syncError ? (
+                                <SyncError />
                             ) : (
                                 <InitError />
                             )}

@@ -422,8 +422,10 @@
         "browser": "Browser non supportato",
         "browser_text":
             "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
+        "check_latency": "Running latency checks...",
         "connected": "Connesso",
         "connecting": "Connecting to API server: %(server)s",
+        "database": "Connection established, initializing local databases",
         "not_connected": "Non connesso",
         "retry": "Riprova",
         "title": "Problemi nell'inizializzazione dell'applicazione",
@@ -439,9 +441,15 @@
         "errors": {
             "below":
                 "Il tuo collateral ratio è inferiore a %(mr)s, che non è consentito.",
+            "below_info":
+                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update":
+                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
             "close":
                 "Il tuo collateral ratio è vicino a %(mr)s che significa che questa posizione rischia di essere chiamata con margine se il prezzo scende.",
-            "collateral": "Saldo di garanzia insufficiente"
+            "collateral": "Saldo di garanzia insufficiente",
+            "increased_debt_on_margin_call":
+                "You increased your debt, which is not allowed when updating a margin called position"
         },
         "maximize_debt_set_ratio_slider":
             "You must set a collateral ratio before being able to maximize debt",
@@ -456,6 +464,16 @@
         "money_received_title": "Trasferito da %(from)s"
     },
     "cancel": "Annulla",
+    "connection": {
+        "automatic_reconnect":
+            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_reconnect": "Reconnect now",
+        "out_of_sync":
+            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "title_out_of_sync": "Connection out of sync",
+        "want_to_reconnect":
+            "If the connection can be recovered this message will disappear automatically."
+    },
     "counterpart": {
         "formats": {
             "date": {
@@ -473,6 +491,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Ordini di vendita",
         "atr": "Average True Range",
         "balance": "Saldo",
@@ -499,6 +518,7 @@
         "confirm_sell":
             "Il tuo ordine è %(diff)s volte più basso della domanda più alta, sei sicuro?",
         "core_rate": "Tasso di commissione",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Exponential Moving Average",
@@ -535,6 +555,8 @@
             "use": "Use"
         },
         "more": "Trova mercati",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Le mie ask",
         "my_bids": "Le mie bid",
         "my_history": "Il mio storico transazioni",
@@ -556,8 +578,10 @@
         "price_market": "Market Price",
         "quantity": "Quantità",
         "quote": "Quote currency:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Disponibilità valuta quotata",
         "receive": "Ricevi",
+        "remove": "Remove",
         "rsi": "Relative Strength Index",
         "search": "Cerca qui altri mercati",
         "sell": "Vendi",
@@ -569,6 +593,7 @@
         "short": "Short",
         "show_asks": "Mostra tutte le ask",
         "show_bids": "Mostra tutte le bid",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
         "spread": "Spread",
@@ -975,6 +1000,7 @@
         "account": "Account",
         "account_notify": "L'account attivo è ora %(account)s",
         "account_value": "Valore dell'Account",
+        "accounts_manage": "Gestisci account",
         "collateral_ratio": "Collateral ratio",
         "create_account": "Crea Account",
         "create_asset": "Crea Asset",
@@ -1065,6 +1091,7 @@
             "common": "Click to unlock your account",
             "enable_auto_scroll": "Enable auto scroll"
         },
+        "manage_accounts": "Manage Accounts",
         "minus_circle": {
             "disapproved": "Disapproved",
             "no": "No",
@@ -1471,6 +1498,7 @@
         "passwordLogin": "Fai il login usando il modalità account",
         "password_text": "Cambia la tua password.",
         "ping": "Ping Nodes",
+        "pinging": "Pinging ...",
         "remove": "Rimuovi",
         "remove_api": "Rimuovi Nodo",
         "remove_ws": "Rimuovi Nodo",
@@ -1824,10 +1852,6 @@
     },
     "wallet": {
         "accept": "Accetta",
-        "account_create_wallet_text":
-            "Questa password sarà utilizzata per creare un nuovo portafoglio BitShares, che sarà solo memorizzato localmente nel tuo browser. Un portafoglio BitShares può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
-        "account_exp":
-            "Questo account sarà creato nella blockchain e sarà il tuo indirizzo per ogni trasferimento tu voglia effettuare! <strong>Non ci sono lunghi indirizzi stile Bitcoin su BitShares!</strong>",
         "account_public": "Nome account (Pubblico)",
         "active_wallet": "Portafoglio attivo",
         "all_set": "Tutto fatto!",
@@ -1861,8 +1885,6 @@
             "Chiunque abbia accesso alla tua chiave di recupero avrà",
         "brainkey_w3": "accesso ai fondi in questo portafoglio.",
         "bts_09_export": "File di esportazione chiavi BTS 0.9.3c (.json)",
-        "bts_rules":
-            "La prima regola di BitShares è: Non perdere la tua password.<br/>La seconda regola di BitShares è: Non perdere la tua password.<br />La terza regola di BitShares è: Non possiamo recuperare la tua password.<br />La quarta regola: Se puoi ricordare la tua password, allora non è sicura.<br />La quinta regola: Usa solo password generate a caso.<br />La sesta regola: Non dire a nessuno la tua password.<br />La settima regola: Fai sempre il backup della tua password.",
         "cancel": "Annulla",
         "change": "Cambia a %(name)s",
         "change_backup":
@@ -2048,7 +2070,6 @@
             "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move":
             "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
-        "wallet_new": "Nuovo account BitShares",
         "wallet_password": "Fai il login dovunque usando la tua password"
     },
     "winex": {

@@ -54,14 +54,14 @@ class ValueComponent extends MarketStatsCheck {
             toAsset,
             fromAsset,
             fullPrecision,
-            marketStats,
+            allMarketStats,
             coreAsset
         } = this.props;
         return MarketUtils.convertValue(
             amount,
             toAsset,
             fromAsset,
-            marketStats,
+            allMarketStats,
             coreAsset,
             fullPrecision
         );
@@ -133,7 +133,7 @@ EquivalentValueComponent = connect(EquivalentValueComponent, {
     },
     getProps() {
         return {
-            marketStats: MarketsStore.getState().allMarketStats
+            allMarketStats: MarketsStore.getState().allMarketStats
         };
     }
 });

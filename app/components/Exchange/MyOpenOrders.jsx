@@ -12,7 +12,7 @@ import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {MarketPrice} from "../Utility/MarketPrice";
@@ -167,7 +167,7 @@ class OrderRow extends React.Component {
                 <td
                     style={{width: "25%", textAlign: "right"}}
                     className="tooltip"
-                    data-tip={new Date(order.expiration)}
+                    data-tip={order.expiration.toLocaleString()}
                 >
                     {isCall
                         ? null

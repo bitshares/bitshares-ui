@@ -8,7 +8,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedFee from "../Utility/FormattedFee";
 import AssetActions from "actions/AssetActions";
 import AssetWrapper from "../Utility/AssetWrapper";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 
 const stateSetter = (that, key, transform = value => value) => value =>
     that.setState({[key]: transform(value)});

@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import iDB from "idb-instance";
 import Immutable from "immutable";
 import BaseStore from "./BaseStore";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import PrivateKeyActions from "actions/PrivateKeyActions";

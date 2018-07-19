@@ -13,6 +13,14 @@ import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
 import PropTypes from "prop-types";
+import {routerTransitioner} from "../../routerTransition";
+import LoadingIndicator from "../LoadingIndicator";
+import counterpart from "counterpart";
+import ConfirmModal from "../Modal/ConfirmModal";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import {ChainStore} from "bitsharesjs";
+import ifvisible from "ifvisible";
+import {getWalletName} from "branding";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -28,7 +36,13 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {
-            showNodesPopup: false
+            showNodesPopup: false,
+            showConnectingPopup: false
+        };
+
+        this.confirmOutOfSync = {
+            modal: null,
+            shownOnce: false
         };
     }
 
@@ -36,6 +50,11 @@ class Footer extends React.Component {
         this.checkNewVersionAvailable.call(this);
 
         this.downloadLink = "https://bitshares.org/download";
+
+        let ensure = this._ensureConnectivity.bind(this);
+        ifvisible.on("wakeup", function() {
+            ensure();
+        });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -138,6 +157,179 @@ class Footer extends React.Component {
         };
     }
 
+    /**
+     * Returns the current blocktime, or exception if not yet available
+     * @returns {Date}
+     */
+    getBlockTime() {
+        let dynGlobalObject = ChainStore.getObject("2.1.0");
+        if (dynGlobalObject) {
+            let block_time = dynGlobalObject.get("time");
+            if (!/Z$/.test(block_time)) {
+                block_time += "Z";
+            }
+            return new Date(block_time);
+        } else {
+            throw new Error("Blocktime not available right now");
+        }
+    }
+
+    /**
+     * Returns the delta between the current time and the block time in seconds, or -1 if block time not available yet
+     *
+     * Note: Could be integrating properly with BlockchainStore to send out updates, but not necessary atp
+     */
+    getBlockTimeDelta() {
+        try {
+            let bt =
+                (this.getBlockTime().getTime() +
+                    ChainStore.getEstimatedChainTimeOffset()) /
+                1000;
+            let now = new Date().getTime() / 1000;
+            return Math.abs(now - bt);
+        } catch (err) {
+            console.log(err);
+            return -1;
+        }
+    }
+
+    /**
+     * Closes the out of sync modal if closed
+     *
+     * @private
+     */
+    _closeOutOfSyncModal() {
+        if (
+            !!this.confirmOutOfSync.modal &&
+            this.confirmOutOfSync.modal.state.show
+        ) {
+            ZfApi.publish(this.confirmOutOfSync.modal.props.modalId, "close");
+        }
+    }
+
+    /**
+     * This method can be called whenever it is assumed that the connection is stale.
+     * It will check synced/connected state and notify the user or do automatic reconnect.
+     * In general the connection state can be "out of sync" and "disconnected".
+     *
+     * disconnected:
+     *      - dependent on rpc_connection_status of BlockchainStore
+     *
+     * out of sync:
+     *      - reported block time is more than X sec in the past, as reported in
+     *        App -> _syncStatus
+     *
+     * @private
+     */
+    _ensureConnectivity() {
+        // user is not looking at the app, no reconnection effort necessary
+        if (!ifvisible.now("active")) return;
+
+        let connected = !(this.props.rpc_connection_status === "closed");
+
+        if (!connected) {
+            console.log("Your connection was lost");
+            this._triggerReconnect();
+        } else if (!this.props.synced) {
+            // If the blockchain is out of sync the footer will be rerendered one last time and then
+            // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
+            // handling out of sync state within this one call
+
+            let forceReconnectAfterSeconds = 60;
+            let askToReconnectAfterSeconds = 5;
+
+            // Trigger automatic reconnect after X seconds
+            setTimeout(() => {
+                if (!this.props.synced) {
+                    this._triggerReconnect();
+                }
+            }, forceReconnectAfterSeconds * 1000);
+
+            // Still out of sync?
+            if (this.getBlockTimeDelta() > 3) {
+                console.log(
+                    "Your node is out of sync since " +
+                        this.getBlockTimeDelta() +
+                        " seconds, waiting " +
+                        askToReconnectAfterSeconds +
+                        " seconds, then we notify you"
+                );
+                setTimeout(() => {
+                    // Only ask the user once, and only continue if still out of sync
+                    let out_of_sync_seconds = this.getBlockTimeDelta();
+                    if (
+                        this.getBlockTimeDelta() > 3 &&
+                        this.confirmOutOfSync.shownOnce == false
+                    ) {
+                        this.confirmOutOfSync.shownOnce = true;
+                        this.confirmOutOfSync.modal.show(
+                            <div>
+                                <Translate
+                                    content="connection.title_out_of_sync"
+                                    out_of_sync_seconds={parseInt(
+                                        out_of_sync_seconds
+                                    )}
+                                    component="h2"
+                                />
+                                <br />
+                                <br />
+                                <Translate
+                                    content="connection.out_of_sync"
+                                    out_of_sync_seconds={parseInt(
+                                        out_of_sync_seconds
+                                    )}
+                                />
+                                <br />
+                                <br />
+                                <Translate content="connection.want_to_reconnect" />
+                                {routerTransitioner.isAutoSelection() && (
+                                    <Translate
+                                        content="connection.automatic_reconnect"
+                                        reconnect_in_seconds={parseInt(
+                                            forceReconnectAfterSeconds
+                                        )}
+                                    />
+                                )}
+                                <br />
+                                <br />
+                                <br />
+                            </div>,
+                            <Translate content="connection.manual_reconnect" />,
+                            () => {
+                                if (!this.props.synced) {
+                                    this._triggerReconnect(false);
+                                }
+                            }
+                        );
+                    }
+                }, askToReconnectAfterSeconds * 1000);
+            }
+        } else {
+            this._closeOutOfSyncModal();
+            this.confirmOutOfSync.shownOnce = false;
+        }
+    }
+
+    _triggerReconnect(honorManualSelection = true) {
+        if (honorManualSelection && !routerTransitioner.isAutoSelection()) {
+            return;
+        }
+        if (!routerTransitioner.isTransitionInProgress()) {
+            this._closeOutOfSyncModal();
+            console.log("Trying to reconnect ...");
+
+            // reconnect to anythin
+            let promise = routerTransitioner.willTransitionTo(false);
+            if (!!promise)
+                setTimeout(() => {
+                    this.forceUpdate();
+                }, 10);
+            promise.then(() => {
+                console.log("... done trying to reconnect");
+            });
+        }
+    }
+
     render() {
         const autoSelectAPI = "wss://fake.automatic-selection.com";
         const {state, props} = this;
@@ -165,8 +357,27 @@ class Footer extends React.Component {
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
+        this._ensureConnectivity();
+
         return (
             <div>
+                {!!routerTransitioner &&
+                    routerTransitioner.isTransitionInProgress() && (
+                        <LoadingIndicator
+                            loadingText={counterpart.translate(
+                                "app_init.connecting",
+                                {
+                                    server: routerTransitioner.getTransitionTarget()
+                                }
+                            )}
+                        />
+                    )}
+                <ConfirmModal
+                    modalId="footer_out_of_sync"
+                    ref={thiz => {
+                        this.confirmOutOfSync.modal = thiz;
+                    }}
+                />
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">
@@ -194,7 +405,10 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
-                                        title="icons.download"
+                                        title={counterpart.translate(
+                                            "icons.download",
+                                            {wallet_name: getWalletName()}
+                                        )}
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -204,7 +418,10 @@ class Footer extends React.Component {
                                     />
                                 )}
                                 <span style={updateStyles}>
-                                    <Translate content="footer.title" />
+                                    <Translate
+                                        content="footer.title"
+                                        wallet_name={getWalletName()}
+                                    />
                                     {__GIT_BRANCH__ === "staging" ? (
                                         <a
                                             href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}
@@ -279,13 +496,16 @@ class Footer extends React.Component {
                         {block_height ? (
                             <div className="grid-block shrink">
                                 <div
-                                    onMouseEnter={() => {
-                                        this.setState({showNodesPopup: true});
+                                    onClick={() => {
+                                        this.setState({
+                                            showNodesPopup: !this.state
+                                                .showNodesPopup
+                                        });
                                     }}
-                                    onMouseLeave={() => {
-                                        this.setState({showNodesPopup: false});
+                                    style={{
+                                        position: "relative",
+                                        cursor: "pointer"
                                     }}
-                                    style={{position: "relative"}}
                                 >
                                     <div className="footer-status">
                                         {!connected ? (
@@ -335,9 +555,6 @@ class Footer extends React.Component {
                     </div>
                 </div>
                 <div
-                    onMouseEnter={() => {
-                        this.setState({showNodesPopup: true});
-                    }}
                     onMouseLeave={() => {
                         this.setState({showNodesPopup: false});
                     }}

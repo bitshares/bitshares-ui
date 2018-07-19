@@ -1,10 +1,10 @@
 var numeral = require("numeral");
-import {is} from "immutable";
-
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {ChainTypes} from "bitsharesjs/es";
+import {ChainTypes} from "bitsharesjs";
 var {object_type} = ChainTypes;
+
+import {getAssetNamespaces, getAssetHideNamespaces} from "../../branding";
 
 var Utils = {
     is_object_id: obj_id => {
@@ -203,6 +203,23 @@ var Utils = {
         };
     },
 
+    check_market_stats: function(
+        newStats = {close: {}},
+        oldStats = {close: {}}
+    ) {
+        let statsChanged =
+            newStats.volumeBase !== oldStats.volumeBase ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.base,
+                oldStats.close && oldStats.close.base
+            ) ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.quote,
+                oldStats.close && oldStats.close.quote
+            );
+        return statsChanged;
+    },
+
     are_equal_shallow: function(a, b) {
         if ((!a && b) || (a && !b)) {
             return false;
@@ -230,18 +247,21 @@ var Utils = {
         return true;
     },
 
-    format_date: function(date_str) {
-        if (!/Z$/.test(date_str)) {
+    makeISODateString(date_str) {
+        if (typeof date_str === "string" && !/Z$/.test(date_str)) {
             date_str += "Z";
         }
+        return date_str;
+    },
+
+    format_date: function(date_str) {
+        date_str = this.makeISODateString(date_str);
         let date = new Date(date_str);
         return date.toLocaleDateString();
     },
 
     format_time: function(time_str) {
-        if (!/Z$/.test(time_str)) {
-            time_str += "Z";
-        }
+        time_str = this.makeISODateString(time_str);
         let date = new Date(time_str);
         return date.toLocaleString();
     },
@@ -400,15 +420,7 @@ var Utils = {
             !asset.getIn(["bitasset", "is_prediction_market"]) &&
             asset.get("issuer") === "1.2.0";
 
-        let toReplace = [
-            "TRADE.",
-            "OPEN.",
-            "METAEX.",
-            "BRIDGE.",
-            "RUDEX.",
-            "GDEX.",
-            "WIN."
-        ];
+        let toReplace = getAssetNamespaces();
         let suffix = "";
         let i;
         for (i = 0; i < toReplace.length; i++) {
@@ -418,11 +430,11 @@ var Utils = {
             }
         }
 
-        let prefix = isBitAsset
-            ? "bit"
-            : toReplace[i]
-                ? toReplace[i].toLowerCase()
-                : null;
+        let namespace = isBitAsset ? "bit" : toReplace[i];
+        let prefix = null;
+        if (!getAssetHideNamespaces().find(a => a.indexOf(namespace) !== -1)) {
+            prefix = namespace ? namespace.toLowerCase() : null;
+        }
 
         return {
             name,

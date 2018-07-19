@@ -80,7 +80,6 @@ Market24HourChangeComponent = connect(Market24HourChangeComponent, {
         return [MarketsStore];
     },
     getProps(props) {
-        // console.log("allMarketStats:", MarketsStore.getState().allMarketStats.toJS());
         return {
             marketStats: MarketsStore.getState().allMarketStats.get(
                 props.marketId

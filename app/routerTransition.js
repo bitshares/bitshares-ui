@@ -1,5 +1,5 @@
 import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import chainIds from "chain/chainIds";
 
 // Stores
@@ -41,8 +41,10 @@ class RouterTransitioner {
         this._connectInProgress = false;
         this._connectionStart = null;
 
-        this.willTransitionToInProgress = false;
+        this._willTransitionToInProgress = false;
 
+        // transitionDone is called within Promises etc., rebind it to always reference to RouterTransitioner object as
+        // this
         this._transitionDone = this._transitionDone.bind(this);
     }
 
@@ -54,9 +56,10 @@ class RouterTransitioner {
      * @param appInit true when called via router, false false when node is manually selected in access settings
      * @returns {Promise}
      */
-    willTransitionTo(appInit = true) {
-        if (this.willTransitionToInProgress) return;
-        this.willTransitionToInProgress = true;
+    willTransitionTo(appInit = true, statusCallback = () => {}) {
+        if (this.isTransitionInProgress()) return;
+        this.statusCallback = statusCallback;
+        this._willTransitionToInProgress = true;
 
         return new Promise((resolve, reject) => {
             // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
@@ -82,7 +85,7 @@ class RouterTransitioner {
             let latencyChecks = ss.get("latencyChecks", 1);
             if (latencyChecks >= 5) {
                 // every x connect attempts we refresh the api latency list
-                // automtically
+                // automatically
                 ss.set("latencyChecks", 0);
                 latenciesEstablished = false;
             } else {
@@ -104,6 +107,12 @@ class RouterTransitioner {
                 !latenciesEstablished ||
                 Object.keys(apiLatencies).length < 10
             ) {
+                this._willTransitionToInProgress = counterpart.translate(
+                    "settings.ping"
+                );
+                this.statusCallback(
+                    counterpart.translate("app_init.check_latency")
+                );
                 this.doLatencyUpdate(true)
                     .then(
                         this._initiateConnection.bind(
@@ -123,15 +132,16 @@ class RouterTransitioner {
     }
 
     /**
-     * Updates the latency of all target nodes
+     * Called when connection to a node has been established
      *
-     * @param refresh boolean true reping all existing nodes
+     * @param resolveOrReject
      * @private
      */
     _transitionDone(resolveOrReject) {
         resolveOrReject();
-        this.willTransitionToInProgress = false;
+        this._willTransitionToInProgress = false;
     }
+
     /**
      * Updates the latency of all target nodes
      *
@@ -139,7 +149,7 @@ class RouterTransitioner {
      *                        false only reping all reachable nodes
      * @returns {Promise}
      */
-    doLatencyUpdate(refresh = true) {
+    doLatencyUpdate(refresh = true, range = null) {
         return new Promise((resolve, reject) => {
             // if for some reason this method is called before connections are setup via willTransitionTo,
             // initialize the manager
@@ -149,23 +159,62 @@ class RouterTransitioner {
             if (refresh) {
                 this._connectionManager.urls = this._getNodesToConnectTo(true);
             }
-            console.log(SettingsStore.getState().apiLatencies);
-            this._connectionManager
-                .checkConnections()
-                .then(res => {
-                    // resort the api nodes with the new pings
-                    this._connectionManager.urls = this._getNodesToConnectTo(
-                        false,
-                        res
+            let url = this._connectionManager.url;
+            let urls = this._connectionManager.urls;
+            let current = 0;
+
+            if (range == null) {
+                range = this._connectionManager.urls.length;
+            } else {
+                SettingsActions.updateLatencies({});
+            }
+
+            function local_ping(thiz, range = null) {
+                if (current < urls.length) {
+                    thiz._connectionManager.url = urls[current];
+                    thiz._connectionManager.urls = urls.slice(
+                        current + 1,
+                        current + range
                     );
-                    // update the latencies object
-                    SettingsActions.updateLatencies(res);
-                    resolve();
-                })
-                .catch(err => {
-                    console.log("doLatencyUpdate error", err);
-                    reject(err);
-                });
+                    console.log(
+                        current,
+                        range,
+                        thiz._connectionManager.url,
+                        thiz._connectionManager.urls
+                    );
+                    thiz._connectionManager
+                        .checkConnections()
+                        .then(res => {
+                            console.log(res);
+                            // update the latencies object
+                            const apiLatencies = SettingsStore.getState()
+                                .apiLatencies;
+                            for (var nodeUrl in res) {
+                                apiLatencies[nodeUrl] = res[nodeUrl];
+                            }
+                            SettingsActions.updateLatencies(apiLatencies);
+                        })
+                        .catch(err => {
+                            console.log("doLatencyUpdate error", err);
+                        })
+                        .finally(() => {
+                            current = current + range;
+                            setTimeout(() => {
+                                local_ping(thiz, range);
+                            }, 50);
+                        });
+                } else {
+                    done_pinging(thiz);
+                }
+            }
+
+            function done_pinging(thiz) {
+                thiz._connectionManager.url = url;
+                // resort the api nodes with the new pings
+                thiz._connectionManager.urls = thiz._getNodesToConnectTo();
+                resolve();
+            }
+            local_ping(this, range);
         });
     }
 
@@ -175,6 +224,7 @@ class RouterTransitioner {
         }
         // decide where to connect to first
         let connectionString = this._getFirstToTry(urls);
+        this._willTransitionToInProgress = connectionString;
 
         this._connectionManager = new Manager({
             url: connectionString,
@@ -182,7 +232,17 @@ class RouterTransitioner {
             closeCb: this._onConnectionClose.bind(this),
             optionalApis: {enableOrders: true},
             urlChangeCallback: url => {
-                console.log("fallback to new url:", url);
+                console.log(
+                    "fallback to new url:",
+                    url,
+                    "old",
+                    this._willTransitionToInProgress
+                );
+                /* Update connection status */
+                this.statusCallback(
+                    counterpart.translate("app_init.connecting", {server: url})
+                );
+                this._willTransitionToInProgress = url;
                 SettingsActions.changeSetting({
                     setting: "activeNode",
                     value: url
@@ -195,8 +255,18 @@ class RouterTransitioner {
         // Possibly do something about auto reconnect attempts here
     }
 
-    _isAutoSelection() {
+    isAutoSelection() {
         return this._autoSelection;
+    }
+
+    isTransitionInProgress() {
+        return !!this._willTransitionToInProgress;
+    }
+
+    getTransitionTarget() {
+        if (this.isTransitionInProgress())
+            return this._willTransitionToInProgress;
+        return null;
     }
 
     /**
@@ -322,11 +392,11 @@ class RouterTransitioner {
      * Returns a list of viable api nodes that we consider connecting to
      *
      * @param all (default false) if true, all nodes are returned
-     * @param latencies (default null)
+     * @param latenciesMap (default null)
      * @returns see getNodes
      */
-    _getNodesToConnectTo(all = false, latencies = null) {
-        return this.getNodes(latencies, !all).map(a => a.url); // drop location, only urls in list
+    _getNodesToConnectTo(all = false, latenciesMap = null) {
+        return this.getNodes(latenciesMap, !all).map(a => a.url); // drop location, only urls in list
     }
 
     /**
@@ -346,9 +416,12 @@ class RouterTransitioner {
         // ... if there is no preset connectionString fallback to lowest latency
         if (!connectionString) connectionString = urls[0];
 
-        // ... if auto selection is one (is also ensured in initConnection, but we don't want to ping
+        // ... if auto selection is on (is also ensured in initConnection, but we don't want to ping
         //     a unreachable url)
-        if (this._isAutoSelection()) connectionString = urls[0];
+        if (this.isAutoSelection()) {
+            connectionString = urls[0];
+            console.log("auto selecting to " + connectionString);
+        }
 
         // ... if insecure websocket url is used when using secure protocol
         //    (the list urls only contains matching ones)
@@ -375,19 +448,20 @@ class RouterTransitioner {
      * @private
      */
     _initiateConnection(appInit, resolve, reject) {
-        if (this._autoSelection) {
-            this._connectionManager.url = this._connectionManager.urls[0];
-            console.log("auto selecting to " + this._connectionManager.url);
-        }
-
+        this._willTransitionToInProgress = this._connectionManager.url;
         this._connectionStart = new Date().getTime();
 
         if (appInit) {
             // only true if app is initialized
+            this.statusCallback(
+                counterpart.translate("app_init.connecting", {
+                    server: this._connectionManager.url
+                })
+            );
             this._connectionManager
                 .connectWithFallback(true)
                 .then(() => {
-                    if (!this._autoSelection) {
+                    if (!this.isAutoSelection()) {
                         SettingsActions.changeSetting({
                             setting: "apiServer",
                             value: this._connectionManager.url
@@ -412,7 +486,7 @@ class RouterTransitioner {
         } else {
             // in case switches manually, reset the settings so we dont connect to
             // a faulty node twice. If connection is established, onConnect sets the settings again
-            if (!this._autoSelection) {
+            if (!this.isAutoSelection()) {
                 SettingsActions.changeSetting({
                     setting: "apiServer",
                     value: ""
@@ -431,11 +505,12 @@ class RouterTransitioner {
      */
     _onResetError(failingNodeUrl, err) {
         console.error("onResetError:", err, failingNodeUrl);
-        this.willTransitionToInProgress = false;
+        this._willTransitionToInProgress = false;
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
-                url: failingNodeUrl
+                url: failingNodeUrl || "",
+                error: err
             }),
             level: "error",
             autoDismiss: 10
@@ -475,6 +550,7 @@ class RouterTransitioner {
             console.error("MULTIPLE CONNECT IN PROGRESS");
             return;
         }
+        this.statusCallback(counterpart.translate("app_init.database"));
         this._connectInProgress = true;
         if (Apis.instance()) {
             if (!Apis.instance().orders_api())
@@ -486,19 +562,19 @@ class RouterTransitioner {
                 setting: "activeNode",
                 value: currentUrl
             });
-            if (!this._autoSelection)
+            if (!this.isAutoSelection())
                 SettingsActions.changeSetting({
                     setting: "apiServer",
                     value: currentUrl
                 });
             const apiLatencies = SettingsStore.getState().apiLatencies;
-
-            //if (!(currentUrl in apiLatencies)) {
-            // we always update ping for now
-            apiLatencies[currentUrl] =
-                new Date().getTime() - this._connectionStart;
-            SettingsActions.updateLatencies(apiLatencies);
-            //}
+            if (!(currentUrl in apiLatencies)) {
+                // the ping calculated here does not reflect the same ping as in checkConnection from ConnectionManager,
+                // thus updating would be "unfair" and also is confusing in UI
+                apiLatencies[currentUrl] =
+                    new Date().getTime() - this._connectionStart;
+                SettingsActions.updateLatencies(apiLatencies);
+            }
         }
         const currentChain = Apis.instance().chain_id;
         const chainChanged = this._oldChain !== currentChain;
@@ -521,39 +597,44 @@ class RouterTransitioner {
                 let chainStoreResetPromise = chainChanged
                     ? ChainStore.resetCache(false)
                     : Promise.resolve();
-                return chainStoreResetPromise.then(() => {
-                    return Promise.all([
-                        PrivateKeyActions.loadDbData().then(() => {
-                            return AccountRefsStore.loadDbData();
-                        }),
-                        WalletDb.loadDbData()
-                            .then(() => {
-                                if (chainChanged) {
-                                    AccountStore.reset();
-                                    return AccountStore.loadDbData(
-                                        currentChain
-                                    ).catch(err => {
-                                        console.error(err);
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                console.error(
-                                    "----- WalletDb.willTransitionTo error ----->",
-                                    error
-                                );
-                                this._transitionDone(reject);
+                return chainStoreResetPromise
+                    .then(() => {
+                        return Promise.all([
+                            PrivateKeyActions.loadDbData().then(() => {
+                                return AccountRefsStore.loadDbData();
                             }),
-                        WalletManagerStore.init()
-                    ]).then(() => {
-                        this._connectInProgress = false;
-                        SettingsActions.changeSetting({
-                            setting: "activeNode",
-                            value: this._connectionManager.url
+                            WalletDb.loadDbData()
+                                .then(() => {
+                                    if (chainChanged) {
+                                        AccountStore.reset();
+                                        return AccountStore.loadDbData(
+                                            currentChain
+                                        ).catch(err => {
+                                            console.error(err);
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        "----- WalletDb.willTransitionTo error ----->",
+                                        error
+                                    );
+                                    this._transitionDone(reject);
+                                }),
+                            WalletManagerStore.init()
+                        ]).then(() => {
+                            this._connectInProgress = false;
+                            SettingsActions.changeSetting({
+                                setting: "activeNode",
+                                value: this._connectionManager.url
+                            });
+                            this._transitionDone(resolve);
                         });
-                        this._transitionDone(resolve);
+                    })
+                    .catch(err => {
+                        this._connectInProgress = false;
+                        this._transitionDone(reject.bind(this, err));
                     });
-                });
             })
             .catch(err => {
                 console.error(err);

@@ -2,8 +2,13 @@ import React from "react";
 import Identicon from "./Identicon";
 import {Component} from "react";
 import PropTypes from "prop-types";
+import utils from "common/utils";
 
 class AccountImage extends Component {
+    shouldComponentUpdate(np) {
+        return !utils.are_equal_shallow(np, this.props);
+    }
+
     render() {
         let {account, image, style} = this.props;
         let {height, width} = this.props.size;

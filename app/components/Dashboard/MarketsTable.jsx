@@ -1,10 +1,9 @@
 import React from "react";
 import {connect} from "alt-react";
 import {Link} from "react-router-dom";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import Translate from "react-translate-component";
 import cnames from "classnames";
-
 import MarketsStore from "stores/MarketsStore";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
@@ -35,28 +34,14 @@ class MarketRow extends React.Component {
         };
     }
 
-    _checkStats(newStats = {close: {}}, oldStats = {close: {}}) {
-        return (
-            newStats.volumeBase !== oldStats.volumeBase ||
-            !utils.are_equal_shallow(
-                newStats.close && newStats.close.base,
-                oldStats.close && oldStats.close.base
-            ) ||
-            !utils.are_equal_shallow(
-                newStats.close && newStats.close.quote,
-                oldStats.close && oldStats.close.quote
-            )
-        );
-    }
-
     shouldComponentUpdate(np, ns) {
         return (
-            this._checkStats(np.marketStats, this.props.marketStats) ||
+            utils.check_market_stats(np.marketStats, this.props.marketStats) ||
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id") ||
             np.visible !== this.props.visible ||
             ns.imgError !== this.state.imgError ||
-            np.starredMarkets.size !== this.props.starredMarkets
+            np.starredMarkets.size !== this.props.starredMarkets.size
         );
     }
 
@@ -80,16 +65,16 @@ class MarketRow extends React.Component {
 
     _setInterval(nextProps = null) {
         let {base, quote} = nextProps || this.props;
-        MarketsActions.getMarketStats(base, quote);
         this.statsChecked = new Date();
-        this.statsInterval = setInterval(
-            MarketsActions.getMarketStats.bind(this, base, quote),
-            35 * 1000
+        this.statsInterval = MarketsActions.getMarketStatsInterval(
+            35 * 1000,
+            base,
+            quote
         );
     }
 
     _clearInterval() {
-        clearInterval(this.statsInterval);
+        if (this.statsInterval) this.statsInterval();
     }
 
     _onError(imgName) {
@@ -124,7 +109,12 @@ class MarketRow extends React.Component {
 
         function getImageName(asset) {
             let symbol = asset.get("symbol");
-            if (symbol === "OPEN.BTC" || symbol === "GDEX.BTC") return symbol;
+            if (
+                symbol === "OPEN.BTC" ||
+                symbol === "GDEX.BTC" ||
+                symbol === "RUDEX.BTC"
+            )
+                return symbol;
             let imgName = asset.get("symbol").split(".");
             return imgName.length === 2 ? imgName[1] : imgName[0];
         }
@@ -264,8 +254,8 @@ class MarketsTable extends React.Component {
     }
 
     componentWillMount() {
+        -this.update();
         ChainStore.subscribe(this.update);
-        this.update();
     }
 
     componentWillUnmount() {
@@ -355,71 +345,79 @@ class MarketsTable extends React.Component {
 
     render() {
         let {markets, showFlip, showHidden, filter} = this.state;
-        this.loaded = true;
 
-        let visibleRow = 0;
-        markets = markets.map(row => {
-            let visible = true;
+        const marketRows = markets
+            .map(row => {
+                let visible = true;
 
-            if (row.isHidden !== this.state.showHidden) {
-                visible = false;
-            } else if (filter) {
-                const quoteObject = ChainStore.getAsset(row.quote);
-                const baseObject = ChainStore.getAsset(row.base);
+                if (row.isHidden !== this.state.showHidden) {
+                    visible = false;
+                } else if (filter) {
+                    const quoteObject = ChainStore.getAsset(row.quote);
+                    const baseObject = ChainStore.getAsset(row.base);
 
-                const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
-                    quoteObject
+                    const {isBitAsset: quoteIsBitAsset} = utils.replaceName(
+                        quoteObject
+                    );
+                    const {isBitAsset: baseIsBitAsset} = utils.replaceName(
+                        baseObject
+                    );
+
+                    let quoteSymbol = row.quote;
+                    let baseSymbol = row.base;
+
+                    if (quoteIsBitAsset) {
+                        quoteSymbol = "bit" + quoteSymbol;
+                    }
+
+                    if (baseIsBitAsset) {
+                        baseSymbol = "bit" + baseSymbol;
+                    }
+
+                    const filterPair = filter.includes(":");
+
+                    if (filterPair) {
+                        const quoteFilter = filter.split(":")[0].trim();
+                        const baseFilter = filter.split(":")[1].trim();
+
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(quoteFilter).toLowerCase()) &&
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(baseFilter).toLowerCase());
+                    } else {
+                        visible =
+                            quoteSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase()) ||
+                            baseSymbol
+                                .toLowerCase()
+                                .includes(String(filter).toLowerCase());
+                    }
+                }
+
+                if (!visible) return null;
+
+                return (
+                    <MarketRow
+                        {...row}
+                        visible={visible}
+                        handleHide={this._handleHide.bind(
+                            this,
+                            row,
+                            !row.isHidden
+                        )}
+                        handleFlip={this._handleFlip.bind(
+                            this,
+                            row,
+                            !row.inverted
+                        )}
+                    />
                 );
-                const {isBitAsset: baseIsBitAsset} = utils.replaceName(
-                    baseObject
-                );
-
-                let quoteSymbol = row.quote;
-                let baseSymbol = row.base;
-
-                if (quoteIsBitAsset) {
-                    quoteSymbol = "bit" + quoteSymbol;
-                }
-
-                if (baseIsBitAsset) {
-                    baseSymbol = "bit" + baseSymbol;
-                }
-
-                const filterPair = filter.includes(":");
-
-                if (filterPair) {
-                    const quoteFilter = filter.split(":")[0].trim();
-                    const baseFilter = filter.split(":")[1].trim();
-
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(quoteFilter).toLowerCase()) &&
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(baseFilter).toLowerCase());
-                } else {
-                    visible =
-                        quoteSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase()) ||
-                        baseSymbol
-                            .toLowerCase()
-                            .includes(String(filter).toLowerCase());
-                }
-            }
-
-            if (visible) ++visibleRow;
-            return (
-                <MarketRow
-                    {...row}
-                    visible={visible}
-                    handleHide={this._handleHide.bind(this, row, !row.isHidden)}
-                    handleFlip={this._handleFlip.bind(this, row, !row.inverted)}
-                />
-            );
-        });
-
+            })
+            .filter(r => !!r);
         return (
             <div>
                 <div className="header-selector">
@@ -488,15 +486,14 @@ class MarketsTable extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            className="table-empty"
-                            style={{display: visibleRow ? "none" : ""}}
-                        >
-                            <td colSpan={showFlip ? 6 : 5}>
-                                <Translate content="dashboard.table_empty" />
-                            </td>
-                        </tr>
-                        {markets}
+                        {!marketRows.length && (
+                            <tr className="table-empty">
+                                <td colSpan={showFlip ? 7 : 6}>
+                                    <Translate content="dashboard.table_empty" />
+                                </td>
+                            </tr>
+                        )}
+                        {marketRows}
                     </tbody>
                 </table>
             </div>

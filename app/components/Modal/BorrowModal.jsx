@@ -18,7 +18,7 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
 import Immutable from "immutable";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {List} from "immutable";
 import Icon from "../Icon/Icon";
 
@@ -135,6 +135,16 @@ class BorrowModalContent extends React.Component {
         };
     }
 
+    _getMaintenanceRatio() {
+        return (
+            this.props.quote_asset.getIn([
+                "bitasset",
+                "current_feed",
+                "maintenance_collateral_ratio"
+            ]) / 1000
+        );
+    }
+
     confirmClicked(e) {
         e.preventDefault();
         ZfApi.publish(this.props.modalId, "close");
@@ -142,7 +152,7 @@ class BorrowModalContent extends React.Component {
 
     toggleLockedCR(e) {
         e.preventDefault();
-        this.setState({lockedCR: !this.state.lockedCR ? true : false})
+        this.setState({lockedCR: !this.state.lockedCR ? true : false});
     }
 
     _onBorrowChange(e) {
@@ -201,7 +211,7 @@ class BorrowModalContent extends React.Component {
         let short_amount;
         let collateral;
 
-        if(this.state.lockedCR) {
+        if (this.state.lockedCR) {
             short_amount = (this.state.collateral * feed_price / ratio).toFixed(
                 this.props.backing_asset.get("precision")
             );
@@ -210,7 +220,7 @@ class BorrowModalContent extends React.Component {
             short_amount = this.state.short_amount;
             collateral = (this.state.short_amount / feed_price * ratio).toFixed(
                 this.props.backing_asset.get("precision")
-            )
+            );
         }
 
         let newState = {
@@ -325,6 +335,14 @@ class BorrowModalContent extends React.Component {
             ? {balance: 0}
             : this.props.backing_balance.toJS();
 
+        let maintenanceRatio = this._getMaintenanceRatio();
+        let originalCR = this._getCollateralRatio(
+            original_position.debt,
+            original_position.collateral
+        );
+        let isOriginalBelowMCR =
+            original_position.collateral > 0 && originalCR < maintenanceRatio;
+
         if (
             parseFloat(newState.collateral) - original_position.collateral >
             utils.get_asset_amount(
@@ -336,40 +354,44 @@ class BorrowModalContent extends React.Component {
                 "borrow.errors.collateral"
             );
         }
-        let isValid =
-            newState.short_amount >= 0 &&
-            newState.collateral >= 0 &&
-            (newState.short_amount != original_position.debt ||
-                newState.collateral != original_position.collateral);
 
         // let sqp = this.props.quote_asset.getIn(["bitasset", "current_feed", "maximum_short_squeeze_ratio"]) / 1000;
-        let mcr =
-            this.props.quote_asset.getIn([
-                "bitasset",
-                "current_feed",
-                "maintenance_collateral_ratio"
-            ]) / 1000;
+
         if (
+            isOriginalBelowMCR &&
+            newState.short_amount > original_position.debt
+        ) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.increased_debt_on_margin_call"
+            );
+        } else if (
+            isOriginalBelowMCR &&
+            parseFloat(newState.collateral_ratio) <= parseFloat(originalCR)
+        ) {
+            errors.below_maintenance = counterpart.translate(
+                "borrow.errors.below_ratio_mcr_update",
+                {ocr: originalCR.toFixed(4)}
+            );
+        } else if (
+            !isOriginalBelowMCR &&
             parseFloat(newState.collateral_ratio) <
-            (this._isPredictionMarket(this.props) ? 1 : mcr)
+                (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio)
         ) {
             errors.below_maintenance = counterpart.translate(
                 "borrow.errors.below",
-                {mr: mcr}
+                {mr: maintenanceRatio}
             );
-            isValid = false;
         } else if (
             parseFloat(newState.collateral_ratio) <
-            (this._isPredictionMarket(this.props) ? 1 : mcr + 0.5)
+            (this._isPredictionMarket(this.props) ? 1 : maintenanceRatio + 0.5)
         ) {
             errors.close_maintenance = counterpart.translate(
                 "borrow.errors.close",
-                {mr: mcr}
+                {mr: maintenanceRatio}
             );
-            isValid = true;
         }
 
-        this.setState({errors, isValid});
+        this.setState({errors});
     }
 
     _onSubmit(e) {
@@ -494,7 +516,7 @@ class BorrowModalContent extends React.Component {
             collateral,
             collateral_ratio,
             errors,
-            isValid
+            original_position
         } = this.state;
         let quotePrecision = utils.get_asset_precision(
             this.props.quote_asset.get("precision")
@@ -523,11 +545,6 @@ class BorrowModalContent extends React.Component {
             "form-group",
             {"has-error": errors.below_maintenance},
             {"has-warning": errors.close_maintenance}
-        );
-        let buttonClass = classNames(
-            "button",
-            {disabled: errors.collateral_balance || !isValid},
-            {success: isValid}
         );
 
         // Dynamically update user's remaining collateral
@@ -601,12 +618,8 @@ class BorrowModalContent extends React.Component {
 
         let feed_price = this._getFeedPrice();
 
-        let maintenanceRatio =
-            this.props.quote_asset.getIn([
-                "bitasset",
-                "current_feed",
-                "maintenance_collateral_ratio"
-            ]) / 1000;
+        let maintenanceRatio = this._getMaintenanceRatio();
+
         let squeezeRatio =
             this.props.quote_asset.getIn([
                 "bitasset",
@@ -615,6 +628,13 @@ class BorrowModalContent extends React.Component {
             ]) / 1000;
 
         let isPredictionMarket = this._isPredictionMarket(this.props);
+
+        let isOriginalBelowMCR =
+            original_position.collateral > 0 &&
+            this._getCollateralRatio(
+                original_position.debt,
+                original_position.collateral
+            ) < maintenanceRatio;
 
         if (!isPredictionMarket && isNaN(feed_price)) {
             return (
@@ -667,8 +687,21 @@ class BorrowModalContent extends React.Component {
                             />
                         )}
 
+                        {isOriginalBelowMCR ? (
+                            <Translate
+                                component="h6"
+                                className="has-warning"
+                                content="borrow.errors.below_info"
+                            />
+                        ) : null}
+
                         {!isPredictionMarket ? (
-                            <div style={{paddingBottom: "1rem"}}>
+                            <div
+                                style={{
+                                    paddingTop: "1rem",
+                                    paddingBottom: "1rem"
+                                }}
+                            >
                                 <div className="borrow-price-feeds">
                                     <span className="borrow-price-label">
                                         <Translate content="transaction.feed_price" />:&nbsp;
@@ -757,7 +790,16 @@ class BorrowModalContent extends React.Component {
 
                         <div className="form-group">
                             <span style={{position: "absolute", left: 20}}>
-                                <Icon onClick={this.toggleLockedCR.bind(this)} name={!this.state.lockedCR ? "locked" : "unlocked"} size="1_5x" style={{position: "relative", top: -10}} />
+                                <Icon
+                                    onClick={this.toggleLockedCR.bind(this)}
+                                    name={
+                                        !this.state.lockedCR
+                                            ? "locked"
+                                            : "unlocked"
+                                    }
+                                    size="1_5x"
+                                    style={{position: "relative", top: -10}}
+                                />
                             </span>
                             <AmountSelector
                                 label="transaction.borrow_amount"
@@ -772,7 +814,16 @@ class BorrowModalContent extends React.Component {
                         </div>
                         <div className={collateralClass}>
                             <span style={{position: "absolute", left: 20}}>
-                                <Icon onClick={this.toggleLockedCR.bind(this)} name={this.state.lockedCR ? "locked" : "unlocked"} size="1_5x" style={{position: "relative", top: -10}} />
+                                <Icon
+                                    onClick={this.toggleLockedCR.bind(this)}
+                                    name={
+                                        this.state.lockedCR
+                                            ? "locked"
+                                            : "unlocked"
+                                    }
+                                    size="1_5x"
+                                    style={{position: "relative", top: -10}}
+                                />
                             </span>
                             <AmountSelector
                                 label="transaction.collateral"
@@ -853,7 +904,7 @@ class BorrowModalContent extends React.Component {
                         <div className="no-padding grid-content button-group no-overflow">
                             <div
                                 onClick={this._onSubmit.bind(this)}
-                                className={buttonClass}
+                                className={classNames("button")}
                             >
                                 <Translate content="borrow.adjust" />
                             </div>

@@ -3,7 +3,7 @@ import alt from "alt-instance";
 import MarketsActions from "actions/MarketsActions";
 import market_utils from "common/market_utils";
 import ls from "common/localStorage";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import {
     LimitOrder,
@@ -13,7 +13,8 @@ import {
     Asset,
     didOrdersChange,
     Price,
-    GroupedOrder
+    GroupedOrder,
+    FillOrder
 } from "common/MarketClasses";
 
 // import {
@@ -80,7 +81,16 @@ class MarketsStore {
         });
         this.marketReady = false;
 
-        this.allMarketStats = Immutable.Map();
+        let allMarketStats = marketStorage.get("allMarketStats", {});
+        for (let market in allMarketStats) {
+            if (allMarketStats[market].price) {
+                allMarketStats[market].price = new Price({
+                    base: new Asset({...allMarketStats[market].price.base}),
+                    quote: new Asset({...allMarketStats[market].price.quote})
+                });
+            }
+        }
+        this.allMarketStats = Immutable.Map(allMarketStats);
         this.lowVolumeMarkets = Immutable.Map(
             marketStorage.get("lowVolumeMarkets", {})
         );
@@ -397,19 +407,16 @@ class MarketsStore {
         if (result.history) {
             this.activeMarketHistory = this.activeMarketHistory.clear();
             result.history.forEach(order => {
-                if (!/Z$/.test(order.time)) {
-                    order.time += "Z";
-                }
-                order.op.time = order.time;
                 /* Only include history objects that aren't 'something for nothing' to avoid confusion */
                 if (
+                    !order.op.is_maker &&
                     !(
                         order.op.receives.amount == 0 ||
                         order.op.pays.amount == 0
                     )
                 ) {
                     this.activeMarketHistory = this.activeMarketHistory.add(
-                        order.op
+                        new FillOrder(order, assets, this.quoteAsset.get("id"))
                     );
                 }
             });
@@ -417,9 +424,9 @@ class MarketsStore {
 
         if (result.fillOrders) {
             result.fillOrders.forEach(fill => {
-                // console.log("fill:", fill);
+                console.log("fill:", fill, JSON.stringify(fill));
                 this.activeMarketHistory = this.activeMarketHistory.add(
-                    fill[0][1]
+                    new FillOrder(fill[0][1], assets, this.quoteAsset.get("id"))
                 );
             });
         }
@@ -445,6 +452,7 @@ class MarketsStore {
                 invertedMarketName,
                 invertedStats
             );
+            this._saveMarketStats();
 
             this.marketStats = this.marketStats.set("change", stats.change);
             this.marketStats = this.marketStats.set(
@@ -1078,6 +1086,19 @@ class MarketsStore {
         return calls;
     }
 
+    _saveMarketStats() {
+        /*
+        * Only save stats once every 30s to limit writes and
+        * allMarketStats JS conversions
+        */
+        if (!this.saveStatsTimeout) {
+            this.saveStatsTimeout = setTimeout(() => {
+                marketStorage.set("allMarketStats", this.allMarketStats.toJS());
+                this.saveStatsTimeout = null;
+            }, 1000 * 30);
+        }
+    }
+
     _combineOrders() {
         const hasCalls = !!this.marketCallOrders.size;
         const isBid = hasCalls && this.marketCallOrders.first().isBid();
@@ -1442,27 +1463,34 @@ class MarketsStore {
     }
 
     onGetMarketStats(payload) {
-        if (payload && payload.ticker) {
-            let stats = this._calcMarketStats(
-                payload.base,
-                payload.quote,
-                payload.market,
-                payload.ticker
-            );
-            this.allMarketStats = this.allMarketStats.set(
-                payload.market,
-                stats
-            );
+        if (payload && payload.tickers) {
+            for (var i = 0; i < payload.tickers.length; i++) {
+                let stats = this._calcMarketStats(
+                    payload.bases[i],
+                    payload.quotes[i],
+                    payload.markets[i],
+                    payload.tickers[i]
+                );
+                this.allMarketStats = this.allMarketStats.set(
+                    payload.markets[i],
+                    stats
+                );
 
-            let {invertedStats, invertedMarketName} = this._invertMarketStats(
-                stats,
-                payload.market
-            );
-            this.allMarketStats = this.allMarketStats.set(
-                invertedMarketName,
-                invertedStats
-            );
+                let {
+                    invertedStats,
+                    invertedMarketName
+                } = this._invertMarketStats(stats, payload.markets[i]);
+                this.allMarketStats = this.allMarketStats.set(
+                    invertedMarketName,
+                    invertedStats
+                );
+            }
+
+            this._saveMarketStats();
+
+            return true;
         }
+        return false;
     }
 
     onSettleOrderUpdate(result) {

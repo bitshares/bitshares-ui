@@ -4,7 +4,7 @@ import Treemap from "highcharts/modules/treemap";
 import Heatmap from "highcharts/modules/heatmap";
 import utils from "common/utils";
 import ChainTypes from "../Utility/ChainTypes";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import BindToChainState from "../Utility/BindToChainState";
 import AltContainer from "alt-container";
 import MarketUtils from "common/market_utils";

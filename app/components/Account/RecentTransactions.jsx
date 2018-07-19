@@ -5,7 +5,7 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs/es";
+import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
@@ -300,8 +300,7 @@ class RecentTransactions extends React.Component {
               ];
         display_history.push(
             <tr className="total-value" key="total_value">
-                <td className="column-hide-tiny" />
-                <td style={alignRight}>
+                <td style={{textAlign: "center"}}>
                     {historyCount > 0 ? (
                         <span>
                             <a
@@ -321,7 +320,8 @@ class RecentTransactions extends React.Component {
                         </span>
                     ) : null}
                 </td>
-                <td style={{textAlign: "center"}}>
+                <td className="column-hide-tiny" />
+                <td colSpan="2" style={{textAlign: "center"}}>
                     &nbsp;{(this.props.showMore &&
                         historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (

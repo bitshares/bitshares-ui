@@ -1,5 +1,5 @@
 import React from "react";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AccountStore from "stores/AccountStore";
 import NotificationStore from "stores/NotificationStore";
 import {withRouter} from "react-router-dom";
@@ -108,6 +108,12 @@ const ExistingAccount = Loadable({
     loading: LoadingIndicator
 });
 
+const CreateWorker = Loadable({
+    loader: () =>
+        import(/* webpackChunkName: "create-worker" */ "./components/Account/CreateWorker"),
+    loading: LoadingIndicator
+});
+
 import LoginSelector from "./components/LoginSelector";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 
@@ -143,22 +149,43 @@ class App extends React.Component {
         clearInterval(this.syncCheckInterval);
     }
 
-    _syncStatus(setState = false) {
-        let synced = true;
+    /**
+     * Returns the current blocktime, or exception if not yet available
+     * @returns {Date}
+     */
+    getBlockTime() {
         let dynGlobalObject = ChainStore.getObject("2.1.0");
         if (dynGlobalObject) {
             let block_time = dynGlobalObject.get("time");
             if (!/Z$/.test(block_time)) {
                 block_time += "Z";
             }
+            return new Date(block_time);
+        } else {
+            throw new Error("Blocktime not available right now");
+        }
+    }
 
+    /**
+     * Returns the delta between the current time and the block time in seconds, or -1 if block time not available yet
+     *
+     * Note: Could be integrating properly with BlockchainStore to send out updates, but not necessary atp
+     */
+    getBlockTimeDelta() {
+        try {
             let bt =
-                (new Date(block_time).getTime() +
+                (this.getBlockTime().getTime() +
                     ChainStore.getEstimatedChainTimeOffset()) /
                 1000;
             let now = new Date().getTime() / 1000;
-            synced = Math.abs(now - bt) < 5;
+            return Math.abs(now - bt);
+        } catch (err) {
+            return -1;
         }
+    }
+
+    _syncStatus(setState = false) {
+        let synced = this.getBlockTimeDelta() < 5;
         if (setState && synced !== this.state.synced) {
             this.setState({synced});
         }
@@ -181,7 +208,10 @@ class App extends React.Component {
 
     componentDidMount() {
         this._setListeners();
-        this.syncCheckInterval = setInterval(this._syncStatus, 5000);
+        this.syncCheckInterval = setInterval(
+            this._syncStatus.bind(this, true),
+            5000
+        );
         const user_agent = navigator.userAgent.toLowerCase();
         if (
             !(
@@ -223,12 +253,14 @@ class App extends React.Component {
     }
 
     _rebuildTooltips() {
+        if (this.rebuildTimeout) return;
         ReactTooltip.hide();
 
-        setTimeout(() => {
+        this.rebuildTimeout = setTimeout(() => {
             if (this.refs.tooltip) {
                 this.refs.tooltip.globalRebuild();
             }
+            this.rebuildTimeout = null;
         }, 1500);
     }
 
@@ -275,8 +307,7 @@ class App extends React.Component {
 
     render() {
         let {incognito, incognitoWarningDismissed} = this.state;
-        let {walletMode, theme} = this.props;
-
+        let {walletMode, theme, location, match, ...others} = this.props;
         let content = null;
 
         if (this.state.syncFail) {
@@ -294,7 +325,7 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height} {...this.props} />
+                    <Header height={this.state.height} {...others} />
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             <Switch>
@@ -370,6 +401,11 @@ class App extends React.Component {
                                 <Route
                                     path="/existing-account"
                                     component={ExistingAccount}
+                                />
+
+                                <Route
+                                    path="/create-worker"
+                                    component={CreateWorker}
                                 />
 
                                 {/* Help routes */}

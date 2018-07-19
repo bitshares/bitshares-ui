@@ -4,7 +4,7 @@ import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
 import marketUtils from "common/market_utils";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
@@ -62,7 +62,7 @@ class TotalValue extends MarketStatsCheck {
         }
     }
 
-    _convertValue(amount, fromAsset, toAsset, marketStats, coreAsset) {
+    _convertValue(amount, fromAsset, toAsset, allMarketStats, coreAsset) {
         if (!fromAsset || !toAsset) {
             return 0;
         }
@@ -71,7 +71,7 @@ class TotalValue extends MarketStatsCheck {
             amount,
             toAsset,
             fromAsset,
-            marketStats,
+            allMarketStats,
             coreAsset
         );
     }
@@ -91,7 +91,7 @@ class TotalValue extends MarketStatsCheck {
             fromAssets,
             toAsset,
             balances,
-            marketStats,
+            allMarketStats,
             collateral,
             debt,
             openOrders,
@@ -121,7 +121,7 @@ class TotalValue extends MarketStatsCheck {
                     collateral[asset],
                     fromAsset,
                     toAsset,
-                    marketStats,
+                    allMarketStats,
                     coreAsset
                 );
                 totalValue += collateralValue;
@@ -141,7 +141,7 @@ class TotalValue extends MarketStatsCheck {
                     openOrders[asset],
                     fromAsset,
                     toAsset,
-                    marketStats,
+                    allMarketStats,
                     coreAsset
                 );
                 totalValue += orderValue;
@@ -161,7 +161,7 @@ class TotalValue extends MarketStatsCheck {
                     debt[asset],
                     fromAsset,
                     toAsset,
-                    marketStats,
+                    allMarketStats,
                     coreAsset
                 );
                 totalValue -= debtValue;
@@ -183,7 +183,7 @@ class TotalValue extends MarketStatsCheck {
                               balance.amount,
                               fromAsset,
                               toAsset,
-                              marketStats,
+                              allMarketStats,
                               coreAsset
                           )
                         : balance.amount;
@@ -330,7 +330,7 @@ ValueStoreWrapper = connect(ValueStoreWrapper, {
     },
     getProps() {
         return {
-            marketStats: MarketsStore.getState().allMarketStats,
+            allMarketStats: MarketsStore.getState().allMarketStats,
             settings: SettingsStore.getState().settings
         };
     }

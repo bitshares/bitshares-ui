@@ -1,4 +1,64 @@
 ---------------------------------------------------------------------
+Release 2.0.180720-rc1
+---------------------------------------------------------------------
+New features
+--------
+- #1613: Add feature branding (#1627)
+- #1407: Add reconnect strategy (#1633)
+
+Bug fixes and improvements
+--------
+- Various performance tweaks to render cycles
+- Fix #1671: Restore the create-worker route
+- #1510: Adding API nodes for BitsharesDEX
+- Fix #1610: Add react-scroll on account create form
+- Fix #1577 - BSIP-0030 Implementation for margin position updates
+- #1530: Fix error propagation for asset issuance
+- #1458 Update accounts dropdown label & icon (#1603)
+- List XRP and XMR Openledger assets (#1631)
+- #1106: Add a tooltip message explaining why group selection is not available
+- Fix #1529: Expiration Time tooltip in open orders (#1616)
+- Fix #1618: Vertical orderbook missing translations
+- Add missing translations (no orders, no bids) (#1617)
+- Fix #1609: React hot reload error for antd components
+
+---------------------------------------------------------------------
+Release 2.0.180629
+---------------------------------------------------------------------
+New features
+--------
+- #1484 TradingView restyle
+- #1547: Support New OPs 47 + 48
+- #1591: Add code splitting, dynamic imports
+- #1557 - Use order ID consistently
+- #1292 - Autoscroll to transaction number
+- #1496: Locking CR / Debt values for ratio selection
+- List XRP and XMR Openledger assets (#1631)
+- Add RuDEX: BTC, ETH, DGB, EOS (#1635)
+
+Bug fixes and improvements
+--------
+- #1620: Fix undefined order property (#1624)
+- Updating ru locale (#1602)
+- #1620: Order ID is not always populated
+- #1605: White screen after order creation
+- #1611: Accessing withdraw modal with no account available
+- #1612: Add contact with no account selected
+- #1538: Disable different precision error message when not creating PM
+- #1566: UI Update for BSIP-0037
+- Update TradingView lib
+- Fix #1556: Remove forced decimalOffset on Proposed Transaction
+- Fix #1532 - Generated password does not show completely
+- Fix an issue in PasswordConfirm making input imposible
+- #1584: Move to react router v4
+- #1560: Enable develop branch with automatic builds
+- #1569: Use unique memo keys when creating new accounts
+- Fix #1568: AssetName crash on non-existing asset
+- #1580 Integrate bitshares-ui-style-guide
+- #1525 - Clear Voting Proxy
+- #1555 - Market Picker fixes for improvements
+
+---------------------------------------------------------------------
 Release 2.0.180629-rc2
 ---------------------------------------------------------------------
 Bug fixes and improvements

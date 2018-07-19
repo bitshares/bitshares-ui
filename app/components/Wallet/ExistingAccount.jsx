@@ -8,6 +8,7 @@ import {Switch, Route} from "react-router-dom";
 import Brainkey from "./Brainkey";
 import ImportKeys from "./ImportKeys";
 import {BackupRestore} from "./Backup";
+import {getWalletName} from "branding";
 
 const connectObject = {
     listenTo() {
@@ -28,7 +29,10 @@ class ExistingAccount extends Component {
                     <div className="content-block center-content">
                         <div className="page-header">
                             <h1>
-                                <Translate content="account.welcome" />
+                                <Translate
+                                    content="account.welcome"
+                                    wallet_name={getWalletName()}
+                                />
                             </h1>
                             {!has_wallet ? (
                                 <h3>
@@ -86,7 +90,10 @@ class ExistingAccountOptions extends Component {
                 {!has_wallet ? (
                     <div>
                         <Link to="existing-account/import-backup">
-                            <Translate content="wallet.import_backup" />
+                            <Translate
+                                content="wallet.import_backup"
+                                wallet_name={getWalletName()}
+                            />
                         </Link>
                         <br />
                         <br />
