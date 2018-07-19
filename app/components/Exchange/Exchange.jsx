@@ -1764,7 +1764,7 @@ class Exchange extends React.Component {
             verticalPanel = null;
         } else if(exchangeLayout <= 2) {
             verticalPanel =
-                <div className="left-order-book no-padding no-overflow">
+                <div className="left-order-book no-padding no-overflow" style={{display: "block"}}>
                     <div className="v-align no-padding align-center grid-block footer shrink column">
                         <Tabs defaultActiveKey="order_book" activeKey={tabVerticalPanel} onChange={this._setTabVerticalPanel.bind(this)}>
                             <Tabs.TabPane tab="Order Book" key="order_book" />
