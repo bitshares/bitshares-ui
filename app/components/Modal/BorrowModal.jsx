@@ -440,7 +440,7 @@ class BorrowModalContent extends React.Component {
         let extensionsProp = false;
 
         if(isTCR) {
-            extensionsProp = { target_collateral_ratio: this.state.target_collateral_ratio * 100 };
+            extensionsProp = { target_collateral_ratio: parseInt(this.state.target_collateral_ratio * 100, 10) };
         }
 
         var tr = WalletApi.new_transaction();
