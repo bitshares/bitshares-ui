@@ -298,9 +298,11 @@ class Operation extends React.Component {
                                 const amount = isBid
                                     ? op[1].min_to_receive
                                     : op[1].amount_to_sell;
-                                let orderId = this.props.result 
+                                let orderId = this.props.result
                                     ? typeof this.props.result[1] == "string"
-                                        ? "#" + this.props.result[1].substring(4) : ""
+                                        ? "#" +
+                                          this.props.result[1].substring(4)
+                                        : ""
                                     : "";
 
                                 return (

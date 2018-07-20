@@ -297,7 +297,7 @@ class TransactionConfirm extends React.Component {
 
                             {/* P R O P O S E   T O G G L E */}
                             {!this.props.transaction.has_proposed_operation() &&
-                            !(broadcast || broadcasting) ? (
+                            !(broadcast || broadcasting || this.props.error) ? (
                                 <div className="align-right grid-block">
                                     <label
                                         style={{

@@ -13,6 +13,7 @@ import ResetSettings from "./ResetSettings";
 import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 import {set} from "lodash-es";
+import {getAllowedLogins, getFaucet} from "../../branding";
 
 class Settings extends React.Component {
     constructor(props) {
@@ -25,22 +26,25 @@ class Settings extends React.Component {
             : props.viewSettings.get("activeSetting", 0);
         if (tabIndex >= 0) activeSetting = tabIndex;
 
+        let general = [
+            "locale",
+            "unit",
+            "browser_notifications",
+            "showSettles",
+            "walletLockTimeout",
+            "themes",
+            "showAssetPercent"
+        ];
+        // disable that the user can change login method if only one is allowed
+        if (getAllowedLogins().length > 1) general.push("passwordLogin");
+        general.push("reset");
+
         this.state = {
             apiServer: props.settings.get("apiServer"),
             activeSetting,
             menuEntries,
             settingEntries: {
-                general: [
-                    "locale",
-                    "unit",
-                    "browser_notifications",
-                    "showSettles",
-                    "walletLockTimeout",
-                    "themes",
-                    "showAssetPercent",
-                    "passwordLogin",
-                    "reset"
-                ],
+                general: general,
                 access: ["apiServer", "faucet_address"]
             }
         };
@@ -88,23 +92,20 @@ class Settings extends React.Component {
         if (props.deprecated) {
             return ["wallet", "backup"];
         }
-        let menuEntries = [
-            "general",
-            "wallet",
-            "accounts",
-            "password",
-            "backup",
-            "restore",
-            "access",
-            "faucet_address",
-            "reset"
-        ];
+        let menuEntries = [];
 
-        if (props.settings.get("passwordLogin")) {
-            menuEntries.splice(4, 1);
-            menuEntries.splice(3, 1);
-            menuEntries.splice(1, 1);
-        }
+        menuEntries.push("general");
+        if (!props.settings.get("passwordLogin")) menuEntries.push("wallet");
+        menuEntries.push("accounts");
+        menuEntries.push("password");
+        if (!props.settings.get("passwordLogin")) menuEntries.push("backup");
+        if (!props.settings.get("passwordLogin")) menuEntries.push("restore");
+        menuEntries.push("access");
+
+        if (getFaucet().show) menuEntries.push("faucet_address");
+
+        menuEntries.push("reset");
+
         return menuEntries;
     }
 
@@ -289,13 +290,18 @@ class Settings extends React.Component {
             case "faucet_address":
                 entries = (
                     <input
+                        disabled={!getFaucet().editable}
                         type="text"
                         className="settings-input"
                         defaultValue={settings.get("faucet_address")}
-                        onChange={this._onChangeSetting.bind(
-                            this,
-                            "faucet_address"
-                        )}
+                        onChange={
+                            getFaucet().editable
+                                ? this._onChangeSetting.bind(
+                                      this,
+                                      "faucet_address"
+                                  )
+                                : null
+                        }
                     />
                 );
                 break;

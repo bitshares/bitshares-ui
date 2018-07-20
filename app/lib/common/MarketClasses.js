@@ -1,4 +1,5 @@
 import {Fraction} from "fractional";
+import utils from "common/utils";
 
 const GRAPHENE_100_PERCENT = 10000;
 
@@ -484,7 +485,9 @@ class LimitOrder {
         this.market_base = market_base;
         this.id = order.id;
         this.sellers = [order.seller];
-        this.expiration = order.expiration && new Date(order.expiration);
+        this.expiration =
+            order.expiration &&
+            new Date(utils.makeISODateString(order.expiration));
         this.seller = order.seller;
         this.for_sale = parseInt(order.for_sale, 10); // asset id is sell_price.base.asset_id
 
@@ -852,7 +855,9 @@ class SettleOrder extends LimitOrder {
         super(order, assets, market_base);
 
         this.offset_percent = bitasset_options.force_settlement_offset_percent;
-        this.settlement_date = new Date(order.settlement_date);
+        this.settlement_date = new Date(
+            utils.makeISODateString(order.settlement_date)
+        );
 
         this.for_sale = new Asset({
             amount: order.balance.amount,
@@ -888,6 +893,145 @@ class SettleOrder extends LimitOrder {
     }
 }
 
+class GroupedOrder {
+    constructor(order, assets, is_bid) {
+        if (is_bid === undefined) {
+            throw new Error("GroupedOrder requires is_bid");
+        }
+        this.order = order;
+        this.assets = assets;
+        this.is_bid = is_bid;
+        this.max_price = order.max_price;
+        this.min_price = order.min_price;
+        this.for_sale = parseInt(order.total_for_sale, 10);
+        this._for_sale = null;
+        this._to_receive = null;
+
+        const base = this.is_bid
+            ? new Asset({
+                  asset_id: order.min_price.base.asset_id,
+                  amount: parseInt(order.min_price.base.amount, 10),
+                  precision: assets[order.min_price.base.asset_id].precision
+              })
+            : new Asset({
+                  asset_id: order.max_price.base.asset_id,
+                  amount: parseInt(order.max_price.base.amount, 10),
+                  precision: assets[order.max_price.base.asset_id].precision
+              });
+        const quote = this.is_bid
+            ? new Asset({
+                  asset_id: order.min_price.quote.asset_id,
+                  amount: parseInt(order.min_price.quote.amount, 10),
+                  precision: assets[order.min_price.quote.asset_id].precision
+              })
+            : new Asset({
+                  asset_id: order.max_price.quote.asset_id,
+                  amount: parseInt(order.max_price.quote.amount, 10),
+                  precision: assets[order.max_price.quote.asset_id].precision
+              });
+
+        this.sell_price = new Price({
+            base,
+            quote
+        });
+
+        this.base = base;
+        this.quote = quote;
+
+        this.total_for_sale = this.amountForSale().getAmount({real: true});
+        this.total_to_receive = this.amountToReceive().getAmount({real: true});
+        this._total_for_sale = null;
+        this._total_to_receive = null;
+
+        this.market_base = this.is_bid
+            ? this.base.asset_id
+            : this.quote.asset_id;
+    }
+
+    isBid() {
+        return this.is_bid;
+    }
+
+    sellPrice() {
+        return this.sell_price;
+    }
+
+    getPrice(p = this.sell_price) {
+        if (this._real_price) {
+            return this._real_price;
+        }
+        return (this._real_price = p.toReal(
+            p.base.asset_id !== this.market_base
+        ));
+    }
+
+    amountForSale() {
+        if (this._for_sale) return this._for_sale;
+        return (this._for_sale = new Asset({
+            asset_id: this.sell_price.base.asset_id,
+            amount: this.for_sale,
+            precision: this.assets[this.sell_price.base.asset_id].precision
+        }));
+    }
+
+    amountToReceive(isBid = this.isBid()) {
+        if (this._to_receive) return this._to_receive;
+        this._to_receive = this.amountForSale().times(this.sell_price, isBid);
+        return this._to_receive;
+    }
+
+    clone() {
+        return new GroupedOrder(this.order, this.assets, this.is_bid);
+    }
+
+    // sum(order) {
+    // }
+
+    _clearCache() {
+        this._for_sale = null;
+        this._to_receive = null;
+        this._total_to_receive = null;
+        this._total_for_sale = null;
+        this._real_price = null;
+    }
+
+    ne(order) {
+        return (
+            this.sell_price.ne(order.sell_price) ||
+            this.for_sale !== order.for_sale
+        );
+    }
+
+    equals(order) {
+        return !this.ne(order);
+    }
+
+    setTotalToReceive(total) {
+        this.total_to_receive = total;
+    }
+
+    setTotalForSale(total) {
+        this.total_for_sale = total;
+        this._total_to_receive = null;
+    }
+
+    totalToReceive({noCache = false} = {}) {
+        if (!noCache && this._total_to_receive) return this._total_to_receive;
+        this._total_to_receive = (
+            this.total_to_receive || this.amountToReceive()
+        ).clone();
+        return this._total_to_receive;
+    }
+
+    totalForSale({noCache = false} = {}) {
+        if (!noCache && this._total_for_sale) return this._total_for_sale;
+        this._total_for_sale = (
+            this.total_for_sale || this.amountForSale()
+        ).clone();
+        return this._total_for_sale;
+    }
+}
+
 export {
     Asset,
     Price,
@@ -898,5 +1042,6 @@ export {
     LimitOrder,
     CallOrder,
     SettleOrder,
-    didOrdersChange
+    didOrdersChange,
+    GroupedOrder
 };

@@ -496,6 +496,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "그룹",
         "hide": "Hide",
         "highest_bid": "매수 호가",
         "history": "Market trades",
@@ -530,8 +531,11 @@
         "my_orders": "My open orders",
         "native": "Native",
         "new": "New",
+        "no_asks": "No asks",
         "no_balance": "Insufficient balance",
+        "no_bids": "No bids",
         "no_data": "No data",
+        "no_orders": "No orders",
         "order_depth": "주문 깊이",
         "others": "Others",
         "overbought": "Overbought",
@@ -950,6 +954,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "계정 관리",
         "account": "계정",
         "account_notify": "The active account is now %(account)s",
         "account_value": "계정 값",
@@ -978,6 +983,7 @@
         "update_asset": "Update Asset"
     },
     "icons": {
+        "accounts_manage": "계정 관리",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1520,6 +1526,7 @@
             "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip":
             "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit":
