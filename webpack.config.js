@@ -8,6 +8,7 @@ require("es6-promise").polyfill();
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 var locales = require("./app/assets/locales");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 /*
 * For staging builds, set the version to the latest commit hash, for
@@ -234,7 +235,19 @@ module.exports = function(env) {
                         enforce: true
                     }
                 }
-            }
+            },
+            minimizer: [
+                new UglifyJsPlugin({
+                    cache: true,
+                    parallel: true,
+                    uglifyOptions: {
+                        compress: false,
+                        ecma: 6,
+                        mangle: true
+                    },
+                    sourceMap: true
+                })
+            ]
         },
         devtool: env.noUgly || !env.prod ? "cheap-module-source-map" : "none",
         module: {
