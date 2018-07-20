@@ -9,7 +9,7 @@ import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import LoadingButton from "../Utility/LoadingButton";
 
-const autoSelectAPI = "wss://fake.automatic-selection.com";
+const autoSelectionUrl = "wss://fake.automatic-selection.com";
 
 function isTestNet(url) {
     return !__TESTNET__ && url.indexOf("testnet") !== -1;
@@ -42,7 +42,7 @@ class AutoSelectionNode extends React.Component {
     }
 
     render() {
-        const {autoActive, activeNode, totalNodes, popup} = this.props;
+        const {isActive, connectedNode, totalNodes, popup} = this.props;
 
         if (popup) {
             return (
@@ -56,13 +56,13 @@ class AutoSelectionNode extends React.Component {
                         }}
                         onClick={this.activate.bind(
                             this,
-                            autoActive ? activeNode.url : autoSelectAPI
+                            isActive ? connectedNode.url : autoSelectionUrl
                         )}
                     >
                         <input
                             id="automatic_node_switcher"
                             type="checkbox"
-                            checked={autoActive}
+                            checked={isActive}
                             onChange={() => {}}
                         />
                         <label />
@@ -81,13 +81,13 @@ class AutoSelectionNode extends React.Component {
                             className="switch"
                             onClick={this.activate.bind(
                                 this,
-                                autoActive ? activeNode.url : autoSelectAPI
+                                isActive ? connectedNode.url : autoSelectionUrl
                             )}
                         >
                             <input
                                 id="automatic_node_switcher"
                                 type="checkbox"
-                                checked={autoActive}
+                                checked={isActive}
                                 onChange={() => {}}
                             />
                             <label />
@@ -202,15 +202,14 @@ class ApiNode extends React.Component {
     }
 
     render() {
-        const {node, activeNode, popup} = this.props;
+        const {node, isActive, popup} = this.props;
 
         let ping = this._getPing();
 
         let url = node.url;
 
-        let isActive = activeNode.url == url;
         let canBeHidden = !isActive;
-        let canBeRemoved = !node.default;
+        let canBeRemoved = !node.default && !isActive;
 
         let hidden = !!node.hidden;
 
@@ -360,30 +359,12 @@ class AccessSettings extends React.Component {
         super(props);
 
         this.state = {
-            activeTab: "available-nodes"
+            activeTab: "available_nodes"
         };
-    }
-
-    getNodeIndexByURL(url) {
-        const {nodes} = this.props;
-
-        let index = nodes.findIndex(node => node.url === url);
-        if (index === -1) {
-            return null;
-        }
-        return index;
-    }
-
-    getCurrentNodeIndex() {
-        const {props} = this;
-        let currentNode = this.getNodeIndexByURL.call(this, props.currentNode);
-
-        return currentNode;
     }
 
     getNode(node) {
         const {props} = this;
-
         let nodeWrapper = {
             ping: props.apiLatencies[node.url]
         };
@@ -393,38 +374,49 @@ class AccessSettings extends React.Component {
         return nodeWrapper;
     }
 
+    _getConnectedNode() {
+        return this.getNode(
+            this.props.nodes.find(node => node.url == this.props.connectedNode)
+        );
+    }
+
     _getMainNetNodes() {
         return this.props.nodes.filter(a => {
             return !isTestNet(a.url);
         });
     }
 
-    renderNode(node, activeNode) {
+    /**
+     * @param node either a string (and then au
+     * @param connectedNode
+     * @returns {XML}
+     */
+    renderNode(node, connectedNode) {
         const {props} = this;
 
-        let automatic = node.url === autoSelectAPI;
+        return (
+            <ApiNode
+                node={node}
+                key={node.url}
+                triggerModal={props.triggerModal}
+                isActive={node.url == connectedNode.url}
+                popup={props.popup}
+            />
+        );
+    }
 
-        if (automatic) {
-            return (
-                <AutoSelectionNode
-                    key={node.url}
-                    autoActive={props.currentNode === autoSelectAPI}
-                    activeNode={activeNode}
-                    totalNodes={this._getMainNetNodes().length}
-                    popup={props.popup}
-                />
-            );
-        } else {
-            return (
-                <ApiNode
-                    node={node}
-                    key={node.url}
-                    triggerModal={props.triggerModal}
-                    activeNode={activeNode}
-                    popup={props.popup}
-                />
-            );
-        }
+    renderAutoSelection(connectedNode) {
+        const {props} = this;
+
+        return (
+            <AutoSelectionNode
+                key={autoSelectionUrl}
+                isActive={props.selectedNode === autoSelectionUrl}
+                connectedNode={connectedNode}
+                totalNodes={this._getMainNetNodes().length}
+                popup={props.popup}
+            />
+        );
     }
 
     _changeTab(tab) {
@@ -442,105 +434,88 @@ class AccessSettings extends React.Component {
 
     render() {
         const {props} = this;
+
+        let showAvailableNodes = this.state.activeTab !== "hidden-nodes";
+
+        // placeholder to avoid this mismatch
         let getNode = this.getNode.bind(this);
         let renderNode = this.renderNode.bind(this);
-        let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-        let hc = "nodes-header clickable";
-        let showAvailableNodes = this.state.activeTab !== "hidden-nodes";
-        let availableClass = cnames(hc, {
-            inactive: this.state.activeTab !== "available-nodes"
-        });
-        let hiddenClass = cnames(hc, {
-            inactive: this.state.activeTab !== "hidden-nodes"
-        });
-        let myClass = cnames(hc, {
-            inactive: this.state.activeTab !== "my-nodes"
-        });
 
-        let activeNode = getNode(
-            props.nodes[currentNodeIndex] || props.nodes[0]
-        );
+        // currently selected and active node
+        let connectedNode = this._getConnectedNode();
 
-        if (activeNode.url == autoSelectAPI) {
-            let nodeUrl = props.activeNode;
-            currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(props.nodes[currentNodeIndex]);
-        }
-
-        let nodes = props.nodes
+        let allNodesExceptConnected = props.nodes
             .map(node => {
                 return getNode(node);
             })
             .filter(node => {
-                return node.url !== activeNode.url;
+                return (
+                    node.url !== connectedNode.url &&
+                    node.url !== autoSelectionUrl
+                );
+            })
+            .sort(function(a, b) {
+                let isTestnet = isTestNet(a.url);
+                if (!!a.ping && !!b.ping) {
+                    return a.ping - b.ping;
+                } else if (!a.ping && !b.ping) {
+                    if (isTestnet) return -1;
+                    return 1;
+                } else if (!!a.ping && !b.ping) {
+                    return -1;
+                } else if (!!b.ping && !a.ping) {
+                    return 1;
+                }
+                return 0;
             });
 
-        nodes = nodes.sort(function(a, b) {
-            let isTestnet = isTestNet(a.url);
-            if (a.url == autoSelectAPI) {
-                return -1;
-            } else if (!!a.ping && !!b.ping) {
-                return a.ping - b.ping;
-            } else if (!a.ping && !b.ping) {
-                if (isTestnet) return -1;
-                return 1;
-            } else if (!!a.ping && !b.ping) {
-                return -1;
-            } else if (!!b.ping && !a.ping) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        if (this.state.activeTab === "my-nodes") {
-            nodes = nodes.filter(node => {
-                return !node.default;
+        let nodesToShow = null;
+        if (this.state.activeTab === "my_nodes") {
+            nodesToShow = allNodesExceptConnected.filter(node => {
+                return !node.default && !node.hidden && !isTestNet(node.url);
+            });
+        } else if (this.state.activeTab === "available_nodes") {
+            nodesToShow = allNodesExceptConnected.filter(node => {
+                return node.default && !node.hidden && !isTestNet(node.url);
+            });
+        } else if (this.state.activeTab === "testnet_nodes") {
+            nodesToShow = allNodesExceptConnected.filter(node => {
+                return isTestNet(node.url);
             });
         } else {
-            nodes = nodes.filter(node => {
-                return node.hidden !== showAvailableNodes && node.default;
+            nodesToShow = allNodesExceptConnected.filter(node => {
+                return node.hidden && !isTestNet(node.url);
             });
         }
 
-        let autoNode = getNode(props.nodes[0]);
         let popupCount = 0;
 
-        let uniqueNodes = nodes.reduce((a, node) => {
-            let exists =
-                a.findIndex(n => {
-                    return n.url === node.url;
-                }) !== -1;
-
-            if (!exists) a.push(node);
-            return a;
-        }, []);
         return this.props.popup ? (
             <div>
                 <div style={{fontWeight: "bold", height: 40}}>
                     <Translate content="settings.switch" />
-                    {renderNode(autoNode, activeNode)}
+                    {this.renderAutoSelection(connectedNode)}
                 </div>
                 <div
                     className="nodes-list"
                     style={{
                         display:
-                            props.currentNode === autoSelectAPI ? "none" : ""
+                            props.selectedNode === autoSelectionUrl
+                                ? "none"
+                                : ""
                     }}
                 >
-                    {uniqueNodes.map(node => {
-                        if (node.url !== autoSelectAPI) {
-                            popupCount++;
-                            if (popupCount <= 5) {
-                                return renderNode(node, activeNode);
-                            }
+                    {nodesToShow.map(node => {
+                        popupCount++;
+                        if (popupCount <= 5) {
+                            return renderNode(node, connectedNode);
                         }
                     })}
                 </div>
             </div>
         ) : (
             <div style={{paddingTop: "1em"}}>
-                {renderNode(autoNode, activeNode)}
+                {this.renderAutoSelection(connectedNode)}
                 <div className="active-node">
                     <LoadingButton
                         style={{float: "right"}}
@@ -553,41 +528,44 @@ class AccessSettings extends React.Component {
                         style={{marginLeft: "1rem"}}
                         content="settings.active_node"
                     />
-                    {renderNode(activeNode, activeNode)}
+                    {renderNode(connectedNode, connectedNode)}
                 </div>
                 <div
                     className="nodes"
                     style={{
                         display:
-                            props.currentNode === autoSelectAPI ? "none" : "",
+                            props.selectedNode === autoSelectionUrl
+                                ? "none"
+                                : "",
                         position: "relative",
                         marginBottom: "2em"
                     }}
                 >
                     <div className="grid-block shrink" style={{marginLeft: 0}}>
-                        <div
-                            className={availableClass}
-                            onClick={this._changeTab.bind(
-                                this,
-                                "available-nodes"
-                            )}
-                        >
-                            <Translate content="settings.available_nodes" />
-                        </div>
-                        <div
-                            className={hiddenClass}
-                            onClick={this._changeTab.bind(this, "hidden-nodes")}
-                        >
-                            <Translate content="settings.hidden_nodes" />
-                        </div>
-                        <div
-                            className={myClass}
-                            onClick={this._changeTab.bind(this, "my-nodes")}
-                        >
-                            <Translate content="settings.my_nodes" />
-                        </div>
+                        {[
+                            "available_nodes",
+                            "my_nodes",
+                            "hidden_nodes",
+                            "testnet_nodes"
+                        ].map(key => {
+                            return (
+                                <div
+                                    key={key}
+                                    className={cnames(
+                                        "nodes-header clickable",
+                                        {
+                                            inactive:
+                                                this.state.activeTab !== key
+                                        }
+                                    )}
+                                    onClick={this._changeTab.bind(this, key)}
+                                >
+                                    <Translate content={"settings." + key} />
+                                </div>
+                            );
+                        })}
                     </div>
-                    {this.state.activeTab !== "my-nodes" ? null : (
+                    {this.state.activeTab === "my_nodes" && (
                         <div
                             style={{paddingLeft: "1rem", paddingBottom: "1rem"}}
                         >
@@ -603,9 +581,14 @@ class AccessSettings extends React.Component {
                             </div>
                         </div>
                     )}
-                    {uniqueNodes.map(node => {
-                        if (node.url !== autoSelectAPI)
-                            return renderNode(node, activeNode);
+                    {this.state.activeTab === "testnet_nodes" && (
+                        <Translate
+                            component="p"
+                            content={"settings.testnet_nodes_disclaimer"}
+                        />
+                    )}
+                    {nodesToShow.map(node => {
+                        return renderNode(node, connectedNode);
                     })}
                 </div>
             </div>
@@ -619,11 +602,11 @@ AccessSettings = connect(AccessSettings, {
     },
     getProps() {
         return {
-            currentNode: SettingsStore.getState().settings.get("apiServer"),
-            activeNode: SettingsStore.getState().settings.get("activeNode"),
-            apiLatencies: SettingsStore.getState().apiLatencies,
+            // apiServer and activeNode are ambiguous definition when dealing with isActive, autoSelectionActive etc..
+            // using distinct names
             selectedNode: SettingsStore.getState().settings.get("apiServer"),
-            activeNode: SettingsStore.getState().settings.get("activeNode")
+            connectedNode: SettingsStore.getState().settings.get("activeNode"),
+            apiLatencies: SettingsStore.getState().apiLatencies
         };
     }
 });

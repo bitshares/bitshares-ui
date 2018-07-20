@@ -270,7 +270,7 @@ class RouterTransitioner {
                 thiz._connectionManager.url = url;
                 // resort the api nodes with the new pings
                 thiz._connectionManager.urls = thiz._getNodesToConnectTo();
-                resolve();
+                thiz._transitionDone(resolve);
             }
             local_ping(this, range);
         });

@@ -83,14 +83,14 @@ export const settingsAPIs = {
         {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
-            region: "Europe",
+            region: "Central Europe",
             country: "Germany",
             operator: "OpenLedger"
         },
         {
             url: "wss://eu.openledger.info/ws",
             location: "Berlin",
-            region: "Europe",
+            region: "Central Europe",
             country: "Germany",
             operator: "OpenLedger"
         },

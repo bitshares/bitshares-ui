@@ -62,16 +62,6 @@ class SettingsStore {
         // deprecated to support existing code
         this.defaultSettings = Immutable.Map(this._getDefaultSetting());
 
-        console.log("set", this.settings.toJS());
-        console.log("default", this.defaultSettings.toJS());
-        console.log(
-            this._replaceDefaults(
-                "loading",
-                this.settings.toJS(),
-                this.defaultSettings.toJS()
-            )
-        );
-
         // this should be called choices, defaults is confusing
         this.defaults = this._getChoices();
 
@@ -186,7 +176,7 @@ class SettingsStore {
         } else {
             Object.keys(defaultSettings).forEach(key => {
                 let setDefaults = false;
-                if (settings[key] == undefined) {
+                if (settings[key] !== undefined) {
                     // exists in saved settings, check value
                     if (typeof settings[key] !== typeof defaultSettings[key]) {
                         // incompatible types, use default
@@ -239,7 +229,7 @@ class SettingsStore {
         // - v4  refactored complete settings handling. defaults are no longer stored in local storage and
         //       set if not present on loading
         let support_v3_until = new Date("2018-10-20T00:00:00Z");
-        if (!!ss.get("settings_v4") && new Date() < support_v3_until) {
+        if (!ss.get("settings_v4") && new Date() < support_v3_until) {
             // ensure backwards compatibility of settings version
             let settings_v3 = ss.get("settings_v3");
             if (!!settings_v3) {
@@ -446,14 +436,6 @@ class SettingsStore {
                 }
                 break;
 
-            case "apiServer":
-                let faucetUrl =
-                    payload.value.indexOf("testnet") !== -1
-                        ? this.testnet_faucet
-                        : this.mainnet_faucet;
-                this.settings = this.settings.set("faucet_address", faucetUrl);
-                break;
-
             case "walletLockTimeout":
                 ss.set("lockTimeout", payload.value);
                 break;
@@ -462,7 +444,7 @@ class SettingsStore {
                 break;
         }
 
-        ss.set("settings_v3", this.settings.toJS());
+        this._saveSettings();
     }
 
     onChangeViewSetting(payload) {
@@ -578,9 +560,10 @@ class SettingsStore {
 
     onClearSettings(resolve) {
         ss.remove("settings_v3");
+        ss.remove("settings_v4");
         this.settings = this.defaultSettings;
 
-        ss.set("settings_v3", this.settings.toJS());
+        this._saveSettings();
 
         if (resolve) {
             resolve();

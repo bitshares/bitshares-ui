@@ -364,12 +364,7 @@ class Footer extends React.Component {
                 {!!routerTransitioner &&
                     routerTransitioner.isTransitionInProgress() && (
                         <LoadingIndicator
-                            loadingText={counterpart.translate(
-                                "app_init.connecting",
-                                {
-                                    server: routerTransitioner.getTransitionTarget()
-                                }
-                            )}
+                            loadingText={routerTransitioner.getTransitionTarget()}
                         />
                     )}
                 <ConfirmModal
