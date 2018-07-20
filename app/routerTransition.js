@@ -47,38 +47,28 @@ class RouterTransitioner {
         // transitionDone is called within Promises etc., rebind it to always reference to RouterTransitioner object as
         // this
         this._transitionDone = this._transitionDone.bind(this);
+
+        // function that can be provided to willTransitionTo
+        this._statusCallback = null;
     }
 
     /**
      * Is called once when router is initialized, and then if a connection error occurs or user manually
      * switches nodes
      *
-     * @param callback argument as given by Route onEnter
      * @param appInit true when called via router, false false when node is manually selected in access settings
+     * @param statusCallback null function  can be given by the requesting component to notify the user of status changes
      * @returns {Promise}
      */
     willTransitionTo(appInit = true, statusCallback = () => {}) {
-        if (this.isTransitionInProgress()) return;
-        this.statusCallback = statusCallback;
+        if (this.isTransitionInProgress())
+            return new Promise((resolve, reject) => {
+                resolve();
+            });
+        this._statusCallback = statusCallback;
         this._willTransitionToInProgress = true;
 
         return new Promise((resolve, reject) => {
-            // Bypass the app init chain for the migration path which is only used at bitshares.org/wallet
-            if (__DEPRECATED__) {
-                ChainConfig.setChainId(chainIds.MAIN_NET);
-                let dbPromise = iDB.init_instance(this._getIndexDBImpl())
-                    .init_promise;
-                return dbPromise.then(() => {
-                    Promise.all([
-                        WalletDb.loadDbData().then(() => {
-                            // console.log("wallet init done");
-                            this._transitionDone(resolve);
-                        }),
-                        WalletManagerStore.init()
-                    ]);
-                });
-            }
-
             // dict of apiServer url as key and the latency as value
             const apiLatencies = SettingsStore.getState().apiLatencies;
             let latenciesEstablished = Object.keys(apiLatencies).length > 0;
@@ -104,14 +94,8 @@ class RouterTransitioner {
 
             if (
                 !latenciesEstablished ||
-                Object.keys(apiLatencies).length < 10
+                Object.keys(apiLatencies).length == 0
             ) {
-                this._willTransitionToInProgress = counterpart.translate(
-                    "settings.ping"
-                );
-                this.statusCallback(
-                    counterpart.translate("app_init.check_latency")
-                );
                 this.doLatencyUpdate(true)
                     .then(
                         this._initiateConnection.bind(
@@ -144,14 +128,66 @@ class RouterTransitioner {
         return null;
     }
 
+    updateTransitionTarget(update) {
+        this._willTransitionToInProgress = update;
+        if (this._statusCallback != null) {
+            this._statusCallback(update);
+        }
+    }
+
+    /**
+     * Updates the latency of all target nodes
+     *
+     * @param nodeUrls list of string nodes to update
+     * @returns {Promise}
+     */
+    doQuickLatencyUpdate(nodeUrls) {
+        return new Promise((resolve, reject) => {
+            let url = this._connectionManager.url;
+            let urls = this._connectionManager.urls;
+
+            if (typeof nodeUrls === "string") {
+                nodeUrls = [nodeUrls];
+            }
+            this._connectionManager.url = nodeUrls[0];
+            this._connectionManager.urls = nodeUrls.slice(1, nodeUrls.length);
+
+            this._connectionManager
+                .checkConnections()
+                .then(res => {
+                    console.log("Following nodes have been pinged:", res);
+                    // update the latencies object
+                    const apiLatencies = SettingsStore.getState().apiLatencies;
+                    for (var nodeUrl in res) {
+                        apiLatencies[nodeUrl] = res[nodeUrl];
+                    }
+                    SettingsActions.updateLatencies(apiLatencies);
+                })
+                .catch(err => {
+                    console.log("doLatencyUpdate error", err);
+                })
+                .finally(() => {
+                    this._connectionManager.url = url;
+                    this._connectionManager.urls = urls;
+                    resolve();
+                });
+        });
+    }
+
     /**
      * Updates the latency of all target nodes
      *
      * @param refresh boolean true reping all existing nodes
      *                        false only reping all reachable nodes
+     * @param beSatisfiedWith integer if nodes with less than this integer latency are found, pinging is stopped
+     * @param range integer ping range amount of nodes at the same time, default 5
      * @returns {Promise}
      */
-    doLatencyUpdate(refresh = true, range = null) {
+    doLatencyUpdate(refresh = true, beSatisfiedWith = 200, range = 5) {
+        this.updateTransitionTarget(
+            counterpart.translate("app_init.check_latency")
+        );
+
         return new Promise((resolve, reject) => {
             // if for some reason this method is called before connections are setup via willTransitionTo,
             // initialize the manager
@@ -178,16 +214,42 @@ class RouterTransitioner {
                         current + 1,
                         current + range
                     );
-                    console.log(
-                        current,
-                        range,
-                        thiz._connectionManager.url,
-                        thiz._connectionManager.urls
+                    thiz.updateTransitionTarget(
+                        counterpart.translate(
+                            "app_init.check_latency_feedback",
+                            {
+                                pinged: current,
+                                totalToPing: urls.length
+                            }
+                        )
                     );
                     thiz._connectionManager
                         .checkConnections()
                         .then(res => {
-                            console.log(res);
+                            console.log(
+                                "Following nodes have been pinged:",
+                                res
+                            );
+                            // update the latencies object
+                            const apiLatencies = SettingsStore.getState()
+                                .apiLatencies;
+                            for (var nodeUrl in res) {
+                                apiLatencies[nodeUrl] = res[nodeUrl];
+                                // if we find a node that has less than beSatisfiedWith ms latency we stop pinging
+                                if (
+                                    beSatisfiedWith != null &&
+                                    res[nodeUrl] < beSatisfiedWith
+                                ) {
+                                    console.log(
+                                        "Found node " +
+                                            nodeUrl +
+                                            " with less than " +
+                                            beSatisfiedWith +
+                                            "ms, stopping latency update"
+                                    );
+                                    current = urls.length;
+                                }
+                            }
                             thiz._updateLatencies(res);
                         })
                         .catch(err => {
@@ -254,17 +316,15 @@ class RouterTransitioner {
             closeCb: this._onConnectionClose.bind(this),
             optionalApis: {enableOrders: true},
             urlChangeCallback: url => {
-                console.log(
-                    "fallback to new url:",
-                    url,
-                    "old",
-                    this._willTransitionToInProgress
-                );
-                /* Update connection status */
-                this.statusCallback(
-                    counterpart.translate("app_init.connecting", {server: url})
-                );
-                this._willTransitionToInProgress = url;
+                console.log("fallback to new url:", url);
+                if (!!url) {
+                    // Update connection status
+                    this.updateTransitionTarget(
+                        counterpart.translate("app_init.connecting", {
+                            server: url
+                        })
+                    );
+                }
                 SettingsActions.changeSetting({
                     setting: "activeNode",
                     value: url
@@ -326,10 +386,10 @@ class RouterTransitioner {
         unsuitableSecurity = false,
         testNet = false
     ) {
+        if (latenciesMap == null) {
+            latenciesMap = SettingsStore.getState().apiLatencies;
+        }
         if (latencies) {
-            if (latenciesMap == null) {
-                latenciesMap = SettingsStore.getState().apiLatencies;
-            }
             // if there are no latencies, return all that are left after filtering
             latencies = Object.keys(latenciesMap).length > 0;
         }
@@ -367,30 +427,22 @@ class RouterTransitioner {
             }
             return newEntry;
         });
-        if (!latencies) {
-            return filtered;
-        }
         // now sort
         filtered = filtered.sort((a, b) => {
-            if (!latencies) {
+            // if both have latency, sort according to that
+            if (a.latency != null && b.latency != null) {
+                return a.latency - b.latency;
+                // sort testnet to the bottom
+            } else if (a.latency == null && b.latency == null) {
                 if (this._isTestNet(a.url)) return -1;
                 return 1;
-            } else {
-                // if both have latency, sort according to that
-                if (a.latency != null && b.latency != null) {
-                    return a.latency - b.latency;
-                    // sort testnet to the bottom
-                } else if (a.latency == null && b.latency == null) {
-                    if (this._isTestNet(a.url)) return -1;
-                    return 1;
-                    // otherwise prefer the pinged one
-                } else if (a.latency != null && b.latency == null) {
-                    return -1;
-                } else if (b.latency != null && a.latency == null) {
-                    return 1;
-                }
-                return 0;
+                // otherwise prefer the pinged one
+            } else if (a.latency != null && b.latency == null) {
+                return -1;
+            } else if (b.latency != null && a.latency == null) {
+                return 1;
             }
+            return 0;
         });
         // remove before release
         return filtered;
@@ -483,7 +535,7 @@ class RouterTransitioner {
 
         if (appInit) {
             // only true if app is initialized
-            this.statusCallback(
+            this.updateTransitionTarget(
                 counterpart.translate("app_init.connecting", {
                     server: this._connectionManager.url
                 })
@@ -539,6 +591,9 @@ class RouterTransitioner {
             level: "error",
             autoDismiss: 10
         });
+        let apiLatencies = SettingsStore.getState().apiLatencies;
+        delete apiLatencies[failingNodeUrl];
+        SettingsActions.updateLatencies(apiLatencies);
         return Apis.close().then(() => {
             return this.willTransitionTo(true);
         });
@@ -569,12 +624,11 @@ class RouterTransitioner {
      * @private
      */
     _onConnect(resolve, reject) {
-        // console.log(new Date().getTime(), "routerTransition onConnect", caller, "_connectInProgress", _connectInProgress);
         if (this._connectInProgress) {
             console.error("MULTIPLE CONNECT IN PROGRESS");
             return;
         }
-        this.statusCallback(counterpart.translate("app_init.database"));
+        this.updateTransitionTarget(counterpart.translate("app_init.database"));
         this._connectInProgress = true;
         if (Apis.instance()) {
             if (!Apis.instance().orders_api())

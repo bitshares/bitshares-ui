@@ -260,17 +260,18 @@ class ApiNode extends React.Component {
         } else {
             return (
                 <div className="api-node">
-                    <div>
-                        <p>{title}</p>
-                        <p id={isActive ? "active_node" : null}>
+                    <div className="api-node-left">
+                        <p className="api-node-title">{title}</p>
+                        {!!node.operator && (
+                            <p className="api-node-operator">
+                                {node.operator}&nbsp;&nbsp;&nbsp;
+                            </p>
+                        )}
+                        <p
+                            className="api-node-url"
+                            id={isActive ? "active_node" : null}
+                        >
                             {url}
-                            {!!node.operator && (
-                                <div style={{float: "right"}}>
-                                    <text style={{color: "gray"}}>
-                                        {node.operator}&nbsp;&nbsp;&nbsp;
-                                    </text>
-                                </div>
-                            )}
                         </p>
                     </div>
                     <div>
@@ -434,7 +435,7 @@ class AccessSettings extends React.Component {
 
     _recalculateLatency(event, feedback) {
         feedback("settings.pinging");
-        routerTransitioner.doLatencyUpdate(true, 4).finally(() => {
+        routerTransitioner.doLatencyUpdate(true, null).finally(() => {
             feedback();
         });
     }

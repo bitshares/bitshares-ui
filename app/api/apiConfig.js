@@ -118,7 +118,8 @@ export const settingsAPIs = {
             url: "wss://eu.nodes.bitshares.ws",
             region: "Central Europe",
             country: "Germany",
-            operator: "Infrastructure Worker"
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://us.nodes.bitshares.ws",

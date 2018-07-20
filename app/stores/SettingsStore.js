@@ -2,7 +2,6 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import {merge} from "lodash-es";
 import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
@@ -58,8 +57,20 @@ class SettingsStore {
 
         this.initDone = false;
 
-        this.defaultSettings = Immutable.Map(this._getDefaultSetting());
         this.settings = Immutable.Map(this._getSetting());
+
+        // deprecated to support existing code
+        this.defaultSettings = Immutable.Map(this._getDefaultSetting());
+
+        console.log("set", this.settings.toJS());
+        console.log("default", this.defaultSettings.toJS());
+        console.log(
+            this._replaceDefaults(
+                "loading",
+                this.settings.toJS(),
+                this.defaultSettings.toJS()
+            )
+        );
 
         // this should be called choices, defaults is confusing
         this.defaults = this._getChoices();
@@ -140,16 +151,106 @@ class SettingsStore {
         };
     }
 
+    _replaceDefaults(mode = "saving", settings, defaultSettings = null) {
+        if (defaultSettings == null) {
+            // this method might be called recursively, so not always use the whole defaults
+            defaultSettings = this._getDefaultSetting();
+        }
+
+        let excludedKeys = [];
+
+        // avoid copy by reference
+        let returnSettings = {};
+        if (mode === "saving") {
+            // remove every setting that is default
+            Object.keys(settings).forEach(key => {
+                if (excludedKeys.includes(key)) {
+                    return;
+                }
+                // must be of same type to be compatible
+                if (typeof settings[key] === typeof defaultSettings[key]) {
+                    // incompatible settings, dont store
+                    if (typeof settings[key] == "object") {
+                        returnSettings[key] = this._replaceDefaults(
+                            "saving",
+                            settings[key],
+                            defaultSettings[key]
+                        );
+                    } else if (settings[key] !== defaultSettings[key]) {
+                        // only save if its not the default
+                        returnSettings[key] = settings[key];
+                    }
+                }
+                // all other cases are defaults, do not put the value in local storage
+            });
+        } else {
+            Object.keys(defaultSettings).forEach(key => {
+                let setDefaults = false;
+                if (settings[key] == undefined) {
+                    // exists in saved settings, check value
+                    if (typeof settings[key] !== typeof defaultSettings[key]) {
+                        // incompatible types, use default
+                        setDefaults = true;
+                    } else if (typeof settings[key] == "object") {
+                        // check all subkeys
+                        returnSettings[key] = this._replaceDefaults(
+                            "loading",
+                            settings[key],
+                            defaultSettings[key]
+                        );
+                    } else {
+                        returnSettings[key] = settings[key];
+                    }
+                } else {
+                    setDefaults = true;
+                }
+                if (setDefaults) {
+                    if (typeof settings[key] == "object") {
+                        // use defaults, deep copy
+                        returnSettings[key] = JSON.parse(
+                            JSON.stringify(defaultSettings[key])
+                        );
+                    } else {
+                        returnSettings[key] = defaultSettings[key];
+                    }
+                }
+            });
+            // copy all the rest as well
+            Object.keys(settings).forEach(key => {
+                if (returnSettings[key] == undefined) {
+                    // deep copy
+                    returnSettings[key] = JSON.parse(
+                        JSON.stringify(settings[key])
+                    );
+                }
+            });
+        }
+        return returnSettings;
+    }
+
     /**
      * Returns the currently active settings, either default or from local storage
      * @returns {*}
      * @private
      */
     _getSetting() {
-        let savedSettings = this._ensureBackwardsCompatibilitySettings(
-            ss.get("settings_v3")
-        );
-        return merge(this._getDefaultSetting(), savedSettings);
+        // migrate to new settings
+        // - v3  defaults are stored as values which makes it impossible to react on changed defaults
+        // - v4  refactored complete settings handling. defaults are no longer stored in local storage and
+        //       set if not present on loading
+        let support_v3_until = new Date("2018-10-20T00:00:00Z");
+        if (!!ss.get("settings_v4") && new Date() < support_v3_until) {
+            // ensure backwards compatibility of settings version
+            let settings_v3 = ss.get("settings_v3");
+            if (!!settings_v3) {
+                if (settings_v3["themes"] === "olDarkTheme") {
+                    settings_v3["themes"] = "midnightTheme";
+                }
+            }
+            this._saveSettings(settings_v3, this._getDefaultSetting());
+        }
+
+        return this._loadSettings();
     }
 
     /**
@@ -163,6 +264,17 @@ class SettingsStore {
         apiTarget.hidden = apiSource.hidden;
     }
 
+    _saveSettings(settings = null) {
+        if (settings == null) {
+            settings = this.settings.toJS();
+        }
+        ss.set("settings_v4", this._replaceDefaults("saving", settings));
+    }
+
+    _loadSettings() {
+        return this._replaceDefaults("loading", ss.get("settings_v4"));
+    }
+
     /**
      * Returns the currently active choices for settings, either default or from local storage
      * @returns {*}
@@ -171,7 +283,6 @@ class SettingsStore {
     _getChoices() {
         // default choices the user can select from
         let choices = this._getDefaultChoices();
-        console.log(choices);
         // get choices stored in local storage
         let savedChoices = this._ensureBackwardsCompatibilityChoices(
             ss.get("defaults_v1", {})
@@ -212,20 +323,6 @@ class SettingsStore {
             return node;
         });
         return apiServer;
-    }
-
-    /**
-     * Adjust loaded settings for backwards compatibility if any key names or values change
-     * @param savedSettings
-     * @returns {*}
-     * @private
-     */
-    _ensureBackwardsCompatibilitySettings(savedSettings) {
-        if (savedSettings["themes"] === "olDarkTheme") {
-            return (savedSettings["themes"] = "midnightTheme");
-        } else {
-            return savedSettings;
-        }
     }
 
     /**
