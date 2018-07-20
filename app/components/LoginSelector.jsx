@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "./Utility/TranslateWithLinks";
 import {isIncognito} from "feature_detect";
-var logo = require("assets/logo-ico-blue.png");
 import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
@@ -14,6 +13,8 @@ import IntlActions from "actions/IntlActions";
 import CreateAccount from "./Account/CreateAccount";
 import CreateAccountPassword from "./Account/CreateAccountPassword";
 import {Route} from "react-router-dom";
+import {getWalletName, getLogo} from "branding";
+var logo = getLogo();
 
 const FlagImage = ({flag, width = 50, height = 50}) => {
     return (
@@ -115,7 +116,7 @@ class LoginSelector extends React.Component {
         );
 
         return (
-            <div className="grid-block align-center">
+            <div className="grid-block align-center" id="accountForm">
                 <div className="grid-block shrink vertical">
                     <div className="grid-content shrink text-center account-creation">
                         <div>
@@ -133,6 +134,7 @@ class LoginSelector extends React.Component {
                             <Translate
                                 content="account.intro_text_title"
                                 component="h4"
+                                wallet_name={getWalletName()}
                             />
                             <Translate
                                 unsafe

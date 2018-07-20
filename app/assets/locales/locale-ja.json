@@ -496,6 +496,7 @@
         "feed_price": "フィード価格",
         "filter": "フィルター",
         "flip": "ひっくり返す",
+        "group_order_limit": "グループ",
         "hide": "非表示",
         "highest_bid": "最高ビッド価格",
         "history": "マーケット履歴",
@@ -530,8 +531,11 @@
         "my_orders": "自分の未執行注文",
         "native": "Native",
         "new": "新しい",
+        "no_asks": "No asks",
         "no_balance": "残高不足",
+        "no_bids": "No bids",
         "no_data": "データなし",
+        "no_orders": "No orders",
         "order_depth": "マーケットデプス",
         "others": "その他",
         "overbought": "買われすぎ",
@@ -954,6 +958,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "アカウントの管理",
         "account": "アカウント",
         "account_notify": "現在のアクティブアカウントは%(account)sです。",
         "account_value": "アカウント値",
@@ -984,6 +989,7 @@
         "update_asset": "アセット更新"
     },
     "icons": {
+        "accounts_manage": "アカウントの管理",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1526,6 +1532,7 @@
             "%(asset)sのオーナーは買い注文に対して%(percent)s%%の取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
         "memo_tip":
             "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "このアセットには推定価格を算出するために使用可能な最新の価格がありません。",
         "over_limit":

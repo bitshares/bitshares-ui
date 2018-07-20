@@ -18,6 +18,7 @@ import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs/es";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
+import {getWalletName} from "branding";
 
 const connectObject = {
     listenTo() {
@@ -332,6 +333,7 @@ class Create extends Component {
                             <Translate
                                 component="p"
                                 content="wallet.backup_new_account"
+                                wallet_name={getWalletName()}
                             />
                         ) : null}
                         <Translate

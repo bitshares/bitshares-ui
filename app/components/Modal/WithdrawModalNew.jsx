@@ -1385,6 +1385,11 @@ export default class WithdrawModal extends React.Component {
         this.onClose();
     }
 
+    shouldComponentUpdate(np, ns) {
+        if (!this.state.open && !ns.open) return false;
+        return true;
+    }
+
     render() {
         let withdrawAssets = Immutable.List();
         let intermediateAccounts = Immutable.List();

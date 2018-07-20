@@ -215,6 +215,8 @@ class Exchange extends React.Component {
     }
 
     componentDidMount() {
+        MarketsActions.getTrackedGroupsConfig();
+
         SettingsActions.changeViewSetting.defer({
             [this._getLastMarketKey()]:
                 this.props.quoteAsset.get("symbol") +
@@ -1159,6 +1161,25 @@ class Exchange extends React.Component {
         });
     }
 
+    _onGroupOrderLimitChange(e) {
+        if (e) e.preventDefault();
+        let groupLimit = parseInt(e.target.value);
+        MarketsActions.changeCurrentGroupLimit(groupLimit);
+        if (groupLimit !== this.props.currentGroupOrderLimit) {
+            MarketsActions.changeCurrentGroupLimit(groupLimit);
+            let currentSub = this.props.sub.split("_");
+            MarketsActions.unSubscribeMarket(currentSub[0], currentSub[1]).then(
+                () => {
+                    this.props.subToMarket(
+                        this.props,
+                        this.props.bucketSize,
+                        groupLimit
+                    );
+                }
+            );
+        }
+    }
+
     render() {
         let {
             currentAccount,
@@ -1178,7 +1199,9 @@ class Exchange extends React.Component {
             totals,
             feedPrice,
             buckets,
-            coreAsset
+            coreAsset,
+            trackedGroupsConfig,
+            currentGroupOrderLimit
         } = this.props;
 
         const {
@@ -1189,7 +1212,9 @@ class Exchange extends React.Component {
             flatBids,
             flatAsks,
             flatCalls,
-            flatSettles
+            flatSettles,
+            groupedBids,
+            groupedAsks
         } = marketData;
 
         let {
@@ -1551,6 +1576,13 @@ class Exchange extends React.Component {
                     buySellTop ? 4 : 1
                 }`}
                 currentAccount={this.props.currentAccount.get("id")}
+                handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
+                    this
+                )}
+                trackedGroupsConfig={trackedGroupsConfig}
+                currentGroupOrderLimit={currentGroupOrderLimit}
+                groupedBids={groupedBids}
+                groupedAsks={groupedAsks}
             />
         );
 

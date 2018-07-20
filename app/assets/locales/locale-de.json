@@ -500,6 +500,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "group_order_limit": "Gruppe",
         "hide": "Hide",
         "highest_bid": "Höchstes Bid",
         "history": "Marktverlauf",
@@ -534,8 +535,11 @@
         "my_orders": "My open orders",
         "native": "Native",
         "new": "New",
+        "no_asks": "No asks",
         "no_balance": "Ungenügendes Guthaben",
+        "no_bids": "No bids",
         "no_data": "Keine Daten",
+        "no_orders": "No orders",
         "order_depth": "Ordertiefe",
         "others": "Others",
         "overbought": "Overbought",
@@ -957,6 +961,7 @@
         "scan_qr_code": "Scan QR code"
     },
     "header": {
+        "accounts_manage": "Konten verwalten",
         "account": "Konto",
         "account_notify": "The active account is now %(account)s",
         "account_value": "Kontowert",
@@ -985,6 +990,7 @@
         "update_asset": "Asset ändern"
     },
     "icons": {
+        "accounts_manage": "Konten verwalten",
         "adjust": "Adjust margin position",
         "assets": "Assets",
         "checkmark_circle": {
@@ -1528,6 +1534,7 @@
             "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip":
             "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "no_groups_available": "No groupings available using this API server",
         "no_price":
             "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit":

@@ -171,7 +171,7 @@ class OrderRow extends React.Component {
                 <td
                     style={{width: "25%", textAlign: "right"}}
                     className="tooltip"
-                    data-tip={new Date(order.expiration)}
+                    data-tip={order.expiration.toLocaleString()}
                 >
                     {isCall
                         ? null
