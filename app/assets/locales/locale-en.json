@@ -430,6 +430,9 @@
         "call_limit": "Market Call Limit",
         "close": "Close position",
         "coll_ratio": "Ratio",
+        "coll_ratio_target": "Target Ratio",
+        "target_collateral_ratio": "Target Collateral Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below":
                 "Your collateral ratio is below %(mr)s which is not allowed.",
@@ -1580,6 +1583,8 @@
         "sync_no":
             "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position":
