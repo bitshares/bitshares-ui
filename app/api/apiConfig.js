@@ -84,8 +84,6 @@ export const settingsAPIs = {
         {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
-        {url: "wss://bitshares.dacplay.org/ws", location: "Hangzhou, China"},
-        {url: "wss://bitshares-api.wancloud.io/ws", location: "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
         {url: "wss://ws.gdex.io", location: "Japan"},
@@ -100,6 +98,7 @@ export const settingsAPIs = {
         {url: "wss://node.market.rudex.org", location: "Germany"},
         {url: "wss://api.bitsharesdex.com/ws", location: "Missouri, USA"},
         {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
+        {url: "wss://blockzms.xyz/ws", location: "USA"},
         {
             url: "wss://eu.nodes.bitshares.ws",
             location: "Central Europe - BitShares Infrastructure Program"
@@ -127,11 +126,9 @@ export const settingsAPIs = {
         {url: "wss://api.btsgo.net/ws", location: "Singapore"},
         {url: "wss://bts.proxyhosts.info/wss", location: "Germany"},
         {url: "wss://bts.open.icowallet.net/ws", location: "Hangzhou, China"},
-        {url: "wss://blockzms.xyz/ws", location: "USA"},
         {url: "wss://crazybit.online", location: "China"},
         {url: "wss://freedom.bts123.cc:15138/", location: "China"},
         {url: "wss://bitshares.bts123.cc:15138/", location: "China"},
-        {url: "wss://api.bts.ai/", location: "Beijing, China"},
         {url: "wss://ws.hellobts.com/", location: "Japan"},
         {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
         {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
