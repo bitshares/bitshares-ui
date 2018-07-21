@@ -430,6 +430,7 @@
         "call_limit": "Market Call Limit",
         "close": "Close position",
         "coll_ratio": "Ratio",
+        "coll_ratio_target": "Target Ratio",
         "target_collateral_ratio": "Target Collateral Ratio",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
