@@ -699,8 +699,15 @@ class WithdrawModalNew extends React.Component {
             feeAmount
         } = this.state;
 
-        let assetName = selectedAsset.toLowerCase();
+        let assetName;
         let gatewayStatus = this.state.gatewayStatus[selectedGateway];
+
+        gatewayStatus.assetWithdrawlAlias
+            ? (assetName =
+                  gatewayStatus.assetWithdrawlAlias[
+                      selectedAsset.toLowerCase()
+                  ] || selectedAsset.toLowerCase())
+            : (assetName = selectedAsset.toLowerCase());
 
         const intermediateAccountNameOrId = getIntermediateAccount(
             withdrawalCurrency.symbol,
@@ -767,16 +774,9 @@ class WithdrawModalNew extends React.Component {
             descriptor = memo ? new Buffer(memo, "utf-8") : "";
             to = btsAccount.get("id");
         } else {
-            if (
-                assetName.toLowerCase() === "monero" &&
-                selectedGateway.toLowerCase() === "citadel"
-            ) {
-                assetName = "xmr";
-            } else {
-                assetName = gatewayStatus.useFullAssetName
-                    ? selectedGateway.toLowerCase() + "." + assetName
-                    : assetName;
-            }
+            assetName = gatewayStatus.useFullAssetName
+                ? selectedGateway.toLowerCase() + "." + assetName
+                : assetName;
             descriptor =
                 assetName +
                 ":" +

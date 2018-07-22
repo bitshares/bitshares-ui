@@ -82,6 +82,7 @@ export const availableGateways = {
         baseAPI: citadelAPIs,
         isEnabled: true,
         selected: false,
+        assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {
             enabled: false,
             selected: false

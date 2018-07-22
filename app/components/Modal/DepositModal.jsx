@@ -109,7 +109,8 @@ class DepositModalContent extends DecimalChecker {
                 selectedAsset.toLowerCase(),
             outputAddress: account,
             url: url,
-            stateCallback: this.addDepositAddress
+            stateCallback: this.addDepositAddress,
+            selectedGateway: selectedGateway
         };
     }
 
