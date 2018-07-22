@@ -1596,7 +1596,7 @@
             "¡Esta propuesta fue creada por un estafador conocido, no la aprueba!",
         "propose_tip": "Proponer otro usuario para iniciar una transacción",
         "settle":
-            "El settling te permitirá de convertir tus propriedades de %(asset)s en BTS después de un retraso de 24 horas, a un precio igual al precio dado en ese momento.",
+            "El settling te permitirá de convertir tus propriedades de %(asset)s en %(backingAsset)s después de un retraso de 24 horas, a un precio igual al precio dado en ese momento.",
         "settle_price":
             "Este es el precio al que se ejecutarán los pedidos colocados.",
         "show_asset":

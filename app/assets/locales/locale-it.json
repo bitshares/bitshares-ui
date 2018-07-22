@@ -1591,7 +1591,7 @@
             "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
         "propose_tip": "Propose another user to initiate a transaction",
         "settle":
-            "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in BTS dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
+            "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in %(backingAsset)s dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
         "settle_price":
             "Questo è il prezzo a cui i settle order saranno eseguiti.",
         "show_asset":

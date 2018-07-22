@@ -1514,7 +1514,7 @@
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议另一个用户发起交易",
         "settle":
-            "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
+            "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of 24 hours, at a price equal to the feed price at that time.",
         "settle_price": "清算单执行时将使用的价格",
         "show_asset": "在主列表中显示资产",
         "show_block": "显示收录交易的区块 #%(block)s 的信息",

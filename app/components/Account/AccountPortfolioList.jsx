@@ -404,6 +404,9 @@ class AccountPortfolioList extends React.Component {
                 asset
             );
 
+            let options = asset && asset.has("bitasset") ? asset.getIn(["bitasset", "options"]).toJS() : null;
+            let backing_asset = !!options ? ChainStore.getAsset(options.short_backing_asset) : null;
+
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
@@ -552,7 +555,7 @@ class AccountPortfolioList extends React.Component {
                                 data-place="bottom"
                                 data-tip={counterpart.translate(
                                     "tooltip.settle",
-                                    {asset: symbol}
+                                    {asset: symbol, backingAsset: backing_asset.get("symbol")}
                                 )}
                             >
                                 {settleLink}
