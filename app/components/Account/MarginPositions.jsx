@@ -203,7 +203,17 @@ class MarginPosition extends React.Component {
 
         return (
             <tr className="margin-row">
-                <td style={alignLeft}>
+                <td style={{textAlign: "left", whiteSpace: "nowrap"}}>
+                    <Link
+                        to={`/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`}
+                    >
+                        <Icon
+                            name="trade"
+                            title="icons.trade.trade"
+                            className="icon-14px"
+                            style={{marginRight: 5}}
+                        />
+                    </Link>
                     <Link to={`/asset/${debtAsset.get("symbol")}`}>
                         <AssetName noTip name={debtAsset.get("symbol")} />
                     </Link>
@@ -445,7 +455,17 @@ class MarginPositionPlaceHolder extends React.Component {
 
         return (
             <tr className="margin-row">
-                <td style={alignLeft}>
+                <td style={{textAlign: "left", whiteSpace: "nowrap"}}>
+                    <Link
+                        to={`/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`}
+                    >
+                        <Icon
+                            name="trade"
+                            title="icons.trade.trade"
+                            className="icon-14px"
+                            style={{marginRight: 5}}
+                        />
+                    </Link>
                     <Link to={`/asset/${debtAsset.get("symbol")}`}>
                         <AssetName noTip name={debtAsset.get("symbol")} />
                     </Link>
