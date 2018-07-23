@@ -141,13 +141,22 @@ class SettingsStore {
         };
     }
 
+    _isEmpty(object) {
+        let isEmpty = true;
+        Object.keys(object).forEach(key => {
+            if (object.hasOwnProperty(key) && object[key] !== null)
+                isEmpty = false;
+        });
+        return isEmpty;
+    }
+
     _replaceDefaults(mode = "saving", settings, defaultSettings = null) {
         if (defaultSettings == null) {
             // this method might be called recursively, so not always use the whole defaults
             defaultSettings = this._getDefaultSetting();
         }
 
-        let excludedKeys = [];
+        let excludedKeys = ["activeNode"];
 
         // avoid copy by reference
         let returnSettings = {};
@@ -161,11 +170,14 @@ class SettingsStore {
                 if (typeof settings[key] === typeof defaultSettings[key]) {
                     // incompatible settings, dont store
                     if (typeof settings[key] == "object") {
-                        returnSettings[key] = this._replaceDefaults(
+                        let newSetting = this._replaceDefaults(
                             "saving",
                             settings[key],
                             defaultSettings[key]
                         );
+                        if (!this._isEmpty(newSetting)) {
+                            returnSettings[key] = newSetting;
+                        }
                     } else if (settings[key] !== defaultSettings[key]) {
                         // only save if its not the default
                         returnSettings[key] = settings[key];
@@ -229,6 +241,7 @@ class SettingsStore {
         // - v4  refactored complete settings handling. defaults are no longer stored in local storage and
         //       set if not present on loading
         let support_v3_until = new Date("2018-10-20T00:00:00Z");
+
         if (!ss.get("settings_v4") && new Date() < support_v3_until) {
             // ensure backwards compatibility of settings version
             let settings_v3 = ss.get("settings_v3");
@@ -262,7 +275,11 @@ class SettingsStore {
     }
 
     _loadSettings() {
-        return this._replaceDefaults("loading", ss.get("settings_v4"));
+        let userSavedSettings = ss.get("settings_v4");
+        if (!!userSavedSettings) {
+            console.log("User settings have been loaded:", userSavedSettings);
+        }
+        return this._replaceDefaults("loading", userSavedSettings);
     }
 
     /**
@@ -423,8 +440,7 @@ class SettingsStore {
     }
 
     onChangeSetting(payload) {
-        this.settings = this.settings.set(payload.setting, payload.value);
-
+        let save = true;
         switch (payload.setting) {
             case "faucet_address":
                 if (payload.value.indexOf("testnet") === -1) {
@@ -440,11 +456,29 @@ class SettingsStore {
                 ss.set("lockTimeout", payload.value);
                 break;
 
+            case "activeNode":
+                // doesnt need to be saved in local storage
+                save = true;
+
             default:
                 break;
         }
 
-        this._saveSettings();
+        // check current settings
+        if (this.settings.get(payload.setting) !== payload.value) {
+            this.settings = this.settings.set(payload.setting, payload.value);
+            if (save) {
+                this._saveSettings();
+            }
+        } else {
+            console.warn(
+                "Trying to save unchanged value (" +
+                    payload.setting +
+                    ": " +
+                    payload.value +
+                    "), consider refactoring to avoid this"
+            );
+        }
     }
 
     onChangeViewSetting(payload) {

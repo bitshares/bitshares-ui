@@ -248,6 +248,7 @@ class RouterTransitioner {
                                             "ms, stopping latency update"
                                     );
                                     current = urls.length;
+                                    break;
                                 }
                             }
                             thiz._updateLatencies(res);
@@ -476,10 +477,13 @@ class RouterTransitioner {
      * @private
      */
     _setLastNode(url) {
-        SettingsActions.changeSetting({
-            setting: "apiServer",
-            value: url
-        });
+        // only update settings if changed
+        if (SettingsStore.getSetting("apiServer") !== url) {
+            SettingsActions.changeSetting({
+                setting: "apiServer",
+                value: url
+            });
+        }
     }
 
     /**
@@ -636,10 +640,6 @@ class RouterTransitioner {
                     `${Apis.instance().url} does not support the orders api`
                 );
             let currentUrl = Apis.instance().url;
-            SettingsActions.changeSetting({
-                setting: "activeNode",
-                value: currentUrl
-            });
             if (!this.isAutoSelection()) this._setLastNode(currentUrl);
 
             // the ping calculated here does not reflect the same ping as in checkConnection from ConnectionManager,

@@ -67,6 +67,34 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const nodeRegions = [
+    // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
+    "Northern Europe",
+    "Western Europe",
+    "Southern Europe",
+    "Eastern Europe",
+    "Northern Asia",
+    "Western Asia",
+    "Southern Asia",
+    "Eastern Asia",
+    "Central Asia",
+    "Southeastern Asia",
+    "Australia",
+    "New Zealand",
+    "Melanesia",
+    "Polynesia",
+    "Micronesia",
+    "Northern Africa",
+    "Western Africa",
+    "Middle Africa",
+    "Eastern Africa",
+    "Southern Africa",
+    "Northern America",
+    "Central America",
+    "Caribbean",
+    "South America"
+];
+
 export const settingsAPIs = {
     // If you want a location to be translated, add the translation to settings in locale-xx.js
     // and use an object {translate: key} in WS_NODE_LIST
@@ -83,19 +111,28 @@ export const settingsAPIs = {
         {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
-            region: "Central Europe",
+            region: "Western Europe", // stick to the regions that are available in nodeRegions
             country: "Germany",
             operator: "OpenLedger"
         },
         {
             url: "wss://eu.openledger.info/ws",
             location: "Berlin",
-            region: "Central Europe",
+            region: "Western Europe", // stick to the regions that are available in nodeRegions
             country: "Germany",
             operator: "OpenLedger"
         },
-        {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
-        {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
+        {
+            url: "wss://bitshares.nu/ws",
+            location: "Stockholm",
+            region: "Northern Europe",
+            country: "Sweden",
+            operator: "Unknown"
+        },
+        {
+            url: "wss://bit.btsabc.org/ws",
+            location: "Hong Kong"
+        },
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
         {url: "wss://bitshares.dacplay.org/ws", location: "Hangzhou, China"},
