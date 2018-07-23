@@ -404,9 +404,16 @@ class AccountPortfolioList extends React.Component {
                 asset
             );
 
+            {/* Asset and Backing Asset Prefixes */}
             let options = asset && asset.has("bitasset") ? asset.getIn(["bitasset", "options"]).toJS() : null;
-            let backing_asset = !!options ? ChainStore.getAsset(options.short_backing_asset) : null;
+            let backingAsset = !!options ? ChainStore.getAsset(options.short_backing_asset) : null;
+            let {prefix: backingAssetPrefix} = utils.replaceName(backingAsset);
+            let backingAssetIsBitAsset = backingAssetPrefix === "bit";
 
+            let {prefix: assetPrefix} = utils.replaceName(asset);
+            let assetIsBitAsset = assetPrefix === "bit";
+
+            
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
@@ -555,7 +562,12 @@ class AccountPortfolioList extends React.Component {
                                 data-place="bottom"
                                 data-tip={counterpart.translate(
                                     "tooltip.settle",
-                                    {asset: symbol, backingAsset: backing_asset.get("symbol")}
+                                    {
+                                        asset: symbol, 
+                                        backingAsset: backingAsset.get("symbol"),
+                                        assetPrepend: assetIsBitAsset ? "bit" : "",
+                                        backingPrepend: backingAssetIsBitAsset ? "bit" : ""
+                                    }
                                 )}
                             >
                                 {settleLink}
