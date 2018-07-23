@@ -2,7 +2,6 @@ import React from "react";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import {settingsAPIs} from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 // import {routerTransitioner} from "../../routerTransition";
 import {withRouter} from "react-router-dom";
@@ -11,12 +10,18 @@ import cnames from "classnames";
 import Icon from "../Icon/Icon";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
-const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
-    a => a.url.indexOf("node.testnet.bitshares.eu") !== -1
-);
-const testnetAPI2 = settingsAPIs.WS_NODE_LIST.find(
-    a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
-);
+
+const getTestnetAPI = () => {
+    return SettingsStore.getState().defaults.apiServer.find(
+        a => a.url.indexOf("node.testnet.bitshares.eu") !== -1
+    );
+};
+
+const getTestnetAPI2 = () => {
+    return SettingsStore.getState().defaults.apiServer.find(
+        a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
+    );
+};
 
 /**
  * This class renders a a single node within the nodes list in the settings overview.
@@ -101,10 +106,10 @@ class ApiNode extends React.Component {
         *
         */
         const isTestnet =
-            (url === testnetAPI && testnetAPI.url) ||
-            (url === testnetAPI2 && testnetAPI2.url);
+            (url === getTestnetAPI() && getTestnetAPI().url) ||
+            (url === getTestnetAPI2() && getTestnetAPI2().url);
 
-        let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
+        let totalNodes = SettingsStore.getState().defaults.apiServer.length - 1;
 
         let isActive = activeNode.url == url;
         let showControls = !isActive && !automatic;
@@ -319,7 +324,7 @@ class AccessSettings extends React.Component {
 
         let isDefaultNode = {};
 
-        settingsAPIs.WS_NODE_LIST.forEach(node => {
+        SettingsStore.getState().defaults.apiServer.forEach(node => {
             isDefaultNode[node.url] = true;
         });
 
@@ -428,7 +433,11 @@ class AccessSettings extends React.Component {
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(props.nodes[currentNodeIndex]);
+            activeNode = getNode(
+                currentNodeIndex > 0 && props.nodes[currentNodeIndex]
+                    ? props.nodes[currentNodeIndex]
+                    : props.nodes[1]
+            );
         }
 
         let nodes = props.nodes
@@ -441,8 +450,8 @@ class AccessSettings extends React.Component {
 
         nodes = nodes.sort(function(a, b) {
             let isTestnet =
-                (testnetAPI && a.url === testnetAPI.url) ||
-                (testnetAPI2 && a.url === testnetAPI2.url);
+                (getTestnetAPI() && a.url === getTestnetAPI().url) ||
+                (getTestnetAPI2() && a.url === getTestnetAPI2().url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {

@@ -212,7 +212,11 @@ class Footer extends React.Component {
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = getNode(
+                currentNodeIndex > 0 && nodes[currentNodeIndex]
+                    ? nodes[currentNodeIndex]
+                    : nodes[1]
+            );
         }
 
         // Track node details
