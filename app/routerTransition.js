@@ -104,55 +104,110 @@ class RouterTransitioner {
                 });
             }
 
-            // dict of apiServer url as key and the latency as value
-            const apiLatencies = SettingsStore.getState().apiLatencies;
-            const apiServer = SettingsStore.getState().defaults.apiServer;
-            let latenciesEstablished = Object.keys(apiLatencies).length > 0;
-
-            let latencyChecks = ss.get("latencyChecks", 1);
-            if (
-                latencyChecks >= 5 ||
-                apiLatenciesInconsistentWithNodes(apiLatencies, apiServer) ||
-                apiConfigInconsistent()
-            ) {
-                // every x connect attempts we refresh the api latency list
-                // automtically
-                ss.set("latencyChecks", 0);
-                latenciesEstablished = false;
-            } else {
-                // otherwise increase the counter
-                if (appInit) ss.set("latencyChecks", latencyChecks + 1);
-            }
-
-            let urls = this._getNodesToConnectTo(false, apiLatencies);
-
             // set auto selection flag
             this._autoSelection =
                 SettingsStore.getSetting("apiServer").indexOf(
                     "fake.automatic-selection"
                 ) !== -1;
 
-            this._initConnectionManager(urls);
+            fetch("https://api.crypto-bridge.org/api/v1/geo-nodes")
+                .then(reply =>
+                    reply.json().then(nodes => {
+                        const apiServer = __TESTNET__
+                            ? settingsAPIs.WS_NODE_LIST
+                            : [
+                                  {
+                                      url: "wss://fake.automatic-selection.com",
+                                      location: {
+                                          translate: "settings.api_closest"
+                                      }
+                                  }
+                              ].concat(nodes);
 
-            if (
-                !latenciesEstablished ||
-                Object.keys(apiLatencies).length < 10
-            ) {
-                this.doLatencyUpdate(true)
-                    .then(
-                        this._initiateConnection.bind(
-                            this,
-                            appInit,
-                            resolve,
-                            reject
-                        )
-                    )
-                    .catch(err => {
-                        console.log("catch doLatency", err);
-                    });
-            } else {
-                this._initiateConnection(appInit, resolve, reject);
-            }
+                        let settingsDefaults = SettingsStore.getState()
+                            .defaults;
+
+                        settingsDefaults.apiServer = apiServer.concat(
+                            settingsDefaults.apiServer.filter(
+                                currentApiServer => {
+                                    return !apiServer.find(server => {
+                                        return (
+                                            server.url === currentApiServer.url
+                                        );
+                                    });
+                                }
+                            )
+                        );
+
+                        SettingsActions.changeSetting({
+                            setting: "defaults",
+                            value: settingsDefaults
+                        });
+
+                        const activeNode = SettingsStore.getSetting(
+                            "activeNode"
+                        );
+
+                        if (
+                            activeNode &&
+                            !apiServer.find(server => server.url === activeNode)
+                        ) {
+                            SettingsActions.changeSetting({
+                                setting: "activeNode",
+                                value: apiServer[0].url
+                            });
+                        }
+
+                        // dict of apiServer url as key and the latency as value
+                        const apiLatencies = SettingsStore.getState()
+                            .apiLatencies;
+
+                        let latenciesEstablished =
+                            Object.keys(apiLatencies).length >= 3;
+
+                        let latencyChecks = ss.get("latencyChecks", 1);
+                        if (
+                            latencyChecks >= 5 ||
+                            apiLatenciesInconsistentWithNodes(
+                                apiLatencies,
+                                apiServer
+                            ) ||
+                            apiConfigInconsistent()
+                        ) {
+                            // every x connect attempts we refresh the api latency list
+                            // automatically
+                            ss.set("latencyChecks", 0);
+                            latenciesEstablished = false;
+                        } else {
+                            // otherwise increase the counter
+                            if (appInit)
+                                ss.set("latencyChecks", latencyChecks + 1);
+                        }
+
+                        this._initConnectionManager();
+
+                        if (!latenciesEstablished || !appInit) {
+                            this.doLatencyUpdate(true)
+                                .then(
+                                    this._initiateConnection.bind(
+                                        this,
+                                        appInit,
+                                        resolve,
+                                        reject
+                                    )
+                                )
+                                .catch(err => {
+                                    console.log("catch doLatency", err);
+                                });
+                        } else {
+                            this._initiateConnection(appInit, resolve, reject);
+                        }
+                    })
+                )
+                .catch(() => {
+                    this._initConnectionManager();
+                    this._initiateConnection(appInit, resolve, reject);
+                });
         });
     }
 
@@ -183,18 +238,39 @@ class RouterTransitioner {
             if (refresh) {
                 this._connectionManager.urls = this._getNodesToConnectTo(true);
             }
-            console.log(SettingsStore.getState().apiLatencies);
+
+            const urls = this._connectionManager.urls;
+
+            this._connectionManager.reducedUrls = urls.slice(0, 6);
+
+            const updateLatencies = res => {
+                const latencies = Object.assign(
+                    SettingsStore.getState().apiLatencies,
+                    res
+                );
+
+                this._connectionManager.urls = this._getNodesToConnectTo(
+                    false,
+                    latencies
+                );
+
+                // update the latencies object
+                SettingsActions.updateLatencies(latencies);
+            };
+
             this._connectionManager
                 .checkConnections()
                 .then(res => {
                     // resort the api nodes with the new pings
-                    this._connectionManager.urls = this._getNodesToConnectTo(
-                        false,
-                        res
-                    );
-                    // update the latencies object
-                    SettingsActions.updateLatencies(res);
+                    updateLatencies(res);
                     resolve();
+
+                    this._connectionManager.reducedUrls = urls.slice(6, 25);
+
+                    this._connectionManager.checkConnections().then(res => {
+                        this._connectionManager.reducedUrls = null;
+                        updateLatencies(res);
+                    });
                 })
                 .catch(err => {
                     console.log("doLatencyUpdate error", err);
