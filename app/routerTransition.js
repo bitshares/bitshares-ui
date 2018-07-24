@@ -110,8 +110,6 @@ class RouterTransitioner {
                     "fake.automatic-selection"
                 ) !== -1;
 
-            this._initConnectionManager();
-
             fetch("https://api.crypto-bridge.org/api/v1/geo-nodes")
                 .then(reply =>
                     reply.json().then(nodes => {
@@ -126,6 +124,7 @@ class RouterTransitioner {
 
                         let settingsDefaults = SettingsStore.getState()
                             .defaults;
+
                         settingsDefaults.apiServer = apiServer.concat(
                             settingsDefaults.apiServer.filter(
                                 currentApiServer => {
@@ -160,6 +159,7 @@ class RouterTransitioner {
                         // dict of apiServer url as key and the latency as value
                         const apiLatencies = SettingsStore.getState()
                             .apiLatencies;
+
                         let latenciesEstablished =
                             Object.keys(apiLatencies).length >= 3;
 
@@ -173,7 +173,7 @@ class RouterTransitioner {
                             apiConfigInconsistent()
                         ) {
                             // every x connect attempts we refresh the api latency list
-                            // automtically
+                            // automatically
                             ss.set("latencyChecks", 0);
                             latenciesEstablished = false;
                         } else {
@@ -181,6 +181,8 @@ class RouterTransitioner {
                             if (appInit)
                                 ss.set("latencyChecks", latencyChecks + 1);
                         }
+
+                        this._initConnectionManager();
 
                         if (!latenciesEstablished || !appInit) {
                             this.doLatencyUpdate(true)
@@ -201,6 +203,7 @@ class RouterTransitioner {
                     })
                 )
                 .catch(() => {
+                    this._initConnectionManager();
                     this._initiateConnection(appInit, resolve, reject);
                 });
         });
