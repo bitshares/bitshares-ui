@@ -115,12 +115,16 @@ class RouterTransitioner {
                     reply.json().then(nodes => {
                         // nodes = [{url: "wss://ap-southeast-2.bts.crypto-bridge.org", location: "Sydney, Australia"}];
 
-                        const apiServer = [
-                            {
-                                url: "wss://fake.automatic-selection.com",
-                                location: {translate: "settings.api_closest"}
-                            }
-                        ].concat(nodes);
+                        const apiServer = __TESTNET__
+                            ? settingsAPIs.WS_NODE_LIST
+                            : [
+                                  {
+                                      url: "wss://fake.automatic-selection.com",
+                                      location: {
+                                          translate: "settings.api_closest"
+                                      }
+                                  }
+                              ].concat(nodes);
 
                         let settingsDefaults = SettingsStore.getState()
                             .defaults;
