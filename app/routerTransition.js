@@ -113,8 +113,6 @@ class RouterTransitioner {
             fetch("https://api.crypto-bridge.org/api/v1/geo-nodes")
                 .then(reply =>
                     reply.json().then(nodes => {
-                        // nodes = [{url: "wss://ap-southeast-2.bts.crypto-bridge.org", location: "Sydney, Australia"}];
-
                         const apiServer = __TESTNET__
                             ? settingsAPIs.WS_NODE_LIST
                             : [
