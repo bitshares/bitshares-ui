@@ -253,7 +253,7 @@ class ApiNode extends React.Component {
                             onClick={this.activate.bind(this, url)}
                         />
                     </a>
-                    {name}
+                    {title}
                 </div>
             );
         } else {
@@ -434,8 +434,6 @@ class AccessSettings extends React.Component {
 
     render() {
         const {props} = this;
-
-        let showAvailableNodes = this.state.activeTab !== "hidden-nodes";
 
         // placeholder to avoid this mismatch
         let getNode = this.getNode.bind(this);

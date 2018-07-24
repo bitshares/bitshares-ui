@@ -126,8 +126,7 @@ export const settingsAPIs = {
             url: "wss://bitshares.nu/ws",
             location: "Stockholm",
             region: "Northern Europe",
-            country: "Sweden",
-            operator: "Unknown"
+            country: "Sweden"
         },
         {
             url: "wss://bit.btsabc.org/ws",
@@ -138,7 +137,14 @@ export const settingsAPIs = {
         {url: "wss://bitshares.dacplay.org/ws", location: "Hangzhou, China"},
         {url: "wss://bitshares-api.wancloud.io/ws", location: "China"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
-        {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
+        {
+            url: "wss://bitshares.crypto.fans/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Munich",
+            operator: "Witness: sc-ol",
+            contact: "telegram:startail"
+        },
         {url: "wss://ws.gdex.io", location: "Japan"},
         {url: "wss://ws.gdex.top", location: "China"},
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
@@ -153,7 +159,7 @@ export const settingsAPIs = {
         {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
         {
             url: "wss://eu.nodes.bitshares.ws",
-            region: "Central Europe",
+            region: "Western Europe",
             country: "Germany",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
@@ -166,12 +172,19 @@ export const settingsAPIs = {
         },
         {
             url: "wss://sg.nodes.bitshares.ws",
-            region: "Southeast Asia",
+            region: "Southeastern Asia",
             country: "Singapore",
             operator: "Infrastructure Worker"
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
-        {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
+        {
+            url: "wss://api.bts.mobi/ws",
+            region: "Northern America",
+            country: "USA",
+            location: "Virginia",
+            operator: "Witness: in.abit",
+            contact: "telegram:abitmore"
+        },
         {
             url: "wss://api.btsxchng.com",
             location:
@@ -192,7 +205,14 @@ export const settingsAPIs = {
         {url: "wss://api.bts.ai/", location: "Beijing, China"},
         {url: "wss://ws.hellobts.com/", location: "Japan"},
         {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
-        {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
+        {
+            url: "wss://bts-seoul.clockwork.gr",
+            region: "Southeastern Asia",
+            country: "Korea",
+            location: "Seoul",
+            operator: "Witness: clockwork",
+            contact: "telegram:clockworkgr"
+        },
         {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
         // Testnet

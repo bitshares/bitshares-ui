@@ -459,7 +459,8 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
-        "manual_reconnect": "Reconnect now",
+        "manual_reconnect": "Try reconnecting now",
+        "manual_ping": "Go to ping nodes",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
         "title_out_of_sync": "Connection out of sync",
@@ -1416,7 +1417,7 @@
         "always_confirm": "Always ask for confirmation",
         "apiServer": "Full node API server",
         "api_closest": "Choose closest automatically",
-        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "automatic": "Automatically select node (%(totalNodes)s listed)",
         "automatic_short": "Automatic Switching",
         "available_nodes": "Available",
         "backup": "Backup",
