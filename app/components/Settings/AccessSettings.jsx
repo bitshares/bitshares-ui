@@ -23,6 +23,12 @@ class AutoSelectionNode extends React.Component {
         super(props);
     }
 
+    /**
+     * On activation routerTransitioner selects the best by itself. On deactivation the currently connected, or
+     * last connected node is selected again.
+     *
+     * @param url
+     */
     activate(url) {
         SettingsActions.changeSetting({
             setting: "apiServer",
@@ -118,6 +124,10 @@ class ApiNode extends React.Component {
         super(props);
     }
 
+    /**
+     * Nodes can only be activated, as switching only works by activating another
+     * @param url
+     */
     activate(url) {
         SettingsActions.changeSetting({
             setting: "apiServer",
@@ -149,6 +159,11 @@ class ApiNode extends React.Component {
         SettingsActions.hideWS(url);
     }
 
+    /**
+     * Construct ping dict containing toString, color and rating.
+     * @returns {*}
+     * @private
+     */
     _getPing() {
         if (isTestNet(this.props.node.url)) {
             return {
@@ -363,6 +378,12 @@ class AccessSettings extends React.Component {
         };
     }
 
+    /**
+     * Copies all keys in the default apiServer and adds the ping
+     *
+     * @param node
+     * @returns {{ping: *}}
+     */
     getNode(node) {
         const {props} = this;
         let nodeWrapper = {

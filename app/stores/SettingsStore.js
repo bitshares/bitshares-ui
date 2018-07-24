@@ -141,6 +141,12 @@ class SettingsStore {
         };
     }
 
+    /**
+     * Checks if an object is actually empty (no keys or only empty keys)
+     * @param object
+     * @returns {boolean}
+     * @private
+     */
     _isEmpty(object) {
         let isEmpty = true;
         Object.keys(object).forEach(key => {
@@ -150,6 +156,15 @@ class SettingsStore {
         return isEmpty;
     }
 
+    /**
+     * Ensures that defauls are not stored in local storage, only changes, and when reading inserts all defaults.
+     *
+     * @param mode
+     * @param settings
+     * @param defaultSettings
+     * @returns {{}}
+     * @private
+     */
     _replaceDefaults(mode = "saving", settings, defaultSettings = null) {
         if (defaultSettings == null) {
             // this method might be called recursively, so not always use the whole defaults
@@ -267,6 +282,11 @@ class SettingsStore {
         apiTarget.hidden = apiSource.hidden;
     }
 
+    /**
+     * Save settings to local storage after checking for defaults
+     * @param settings
+     * @private
+     */
     _saveSettings(settings = null) {
         if (settings == null) {
             settings = this.settings.toJS();
@@ -274,6 +294,11 @@ class SettingsStore {
         ss.set("settings_v4", this._replaceDefaults("saving", settings));
     }
 
+    /**
+     * Load settings from local storage and fill in details
+     * @returns {{}}
+     * @private
+     */
     _loadSettings() {
         let userSavedSettings = ss.get("settings_v4");
         if (!!userSavedSettings) {
@@ -309,6 +334,13 @@ class SettingsStore {
         return mergedChoices;
     }
 
+    /**
+     * Get all apiServer choices and mark the ones that are in the default choice as default
+     * @param choices
+     * @param savedChoices
+     * @returns {string}
+     * @private
+     */
     _getApiServerChoices(choices, savedChoices) {
         let apiServer = choices.apiServer.slice(0); // maintain order in apiConfig.js
         // add any apis that the user added and update changes
