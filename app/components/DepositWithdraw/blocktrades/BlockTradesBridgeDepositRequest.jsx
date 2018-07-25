@@ -336,6 +336,7 @@ class ButtonWithdraw extends React.Component {
             )
         ) {
             if (
+                this.props.amount_to_withdraw &&
                 !(this.props.amount_to_withdraw.indexOf(" ") >= 0) &&
                 !isNaN(this.props.amount_to_withdraw) &&
                 this.props.amount_to_withdraw > 0 &&
