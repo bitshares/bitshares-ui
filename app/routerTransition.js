@@ -177,6 +177,45 @@ class RouterTransitioner {
     /**
      * Updates the latency of all target nodes
      *
+     * @param nodeUrls list of string nodes to update
+     * @returns {Promise}
+     */
+    doQuickLatencyUpdate(nodeUrls) {
+        return new Promise((resolve, reject) => {
+            let url = this._connectionManager.url;
+            let urls = this._connectionManager.urls;
+
+            if (typeof nodeUrls === "string") {
+                nodeUrls = [nodeUrls];
+            }
+            this._connectionManager.url = nodeUrls[0];
+            this._connectionManager.urls = nodeUrls.slice(1, nodeUrls.length);
+
+            this._connectionManager
+                .checkConnections()
+                .then(res => {
+                    console.log("Following nodes have been pinged:", res);
+                    // update the latencies object
+                    const apiLatencies = SettingsStore.getState().apiLatencies;
+                    for (var nodeUrl in res) {
+                        apiLatencies[nodeUrl] = res[nodeUrl];
+                    }
+                    SettingsActions.updateLatencies(apiLatencies);
+                })
+                .catch(err => {
+                    console.log("doLatencyUpdate error", err);
+                })
+                .finally(() => {
+                    this._connectionManager.url = url;
+                    this._connectionManager.urls = urls;
+                    resolve();
+                });
+        });
+    }
+
+    /**
+     * Updates the latency of all target nodes
+     *
      * @param refresh boolean true reping all existing nodes
      *                        false only reping all reachable nodes
      * @param beSatisfiedWith integer if nodes with less than this integer latency are found, pinging is stopped

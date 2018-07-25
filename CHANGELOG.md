@@ -1,4 +1,42 @@
 ---------------------------------------------------------------------
+Release 2.0.180720
+---------------------------------------------------------------------
+New features
+--------
+- #1613: Add feature branding (#1627)
+- #1407: Add reconnect strategy (#1633)
+
+Bug fixes and improvements
+--------
+- Fix back/forward buttons and navigation
+- #1643: Set marketStatsQueueLength to 500
+- Fix #1682: Missing isContact in HeaderDropdown
+- Fix #1684 and some excessive Header rerendering
+- Various performance tweaks to render cycles
+- Fix #1671: Restore the create-worker route
+- #1510: Adding API nodes for BitsharesDEX
+- Fix #1610: Add react-scroll on account create form
+- Fix #1577 - BSIP-0030 Implementation for margin position updates
+- #1530: Fix error propagation for asset issuance
+- #1458 Update accounts dropdown label & icon (#1603)
+- List XRP and XMR Openledger assets (#1631)
+- #1106: Add a tooltip message explaining why group selection is not available
+- Fix #1529: Expiration Time tooltip in open orders (#1616)
+- Fix #1618: Vertical orderbook missing translations
+- Add missing translations (no orders, no bids) (#1617)
+- Fix #1609: React hot reload error for antd components
+
+---------------------------------------------------------------------
+Release 2.0.180720-rc2
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix back/forward buttons and navigation
+- #1643: Set marketStatsQueueLength to 500
+- Fix #1682: Missing isContact in HeaderDropdown
+- Fix #1684 and some excessive Header rerendering
+
+---------------------------------------------------------------------
 Release 2.0.180720-rc1
 ---------------------------------------------------------------------
 New features

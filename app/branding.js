@@ -261,7 +261,7 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return gateway in ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"];
+    return ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"].indexOf(gateway) >= 0;
 }
 
 export function getSupportedLanguages() {
