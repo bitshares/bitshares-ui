@@ -257,7 +257,7 @@ class SettingsStore {
         //       set if not present on loading
         let support_v3_until = new Date("2018-10-20T00:00:00Z");
 
-        if (!ss.get("settings_v4") && new Date() < support_v3_until) {
+        if (!ss.has("settings_v4") && new Date() < support_v3_until) {
             // ensure backwards compatibility of settings version
             let settings_v3 = ss.get("settings_v3");
             if (!!settings_v3) {
