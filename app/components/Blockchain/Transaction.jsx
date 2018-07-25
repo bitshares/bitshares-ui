@@ -449,7 +449,7 @@ class Transaction extends React.Component {
                                     />
                                 </td>
                                 <td>
-                                    {op[1].extensions.target_collateral_ratio / 100}
+                                    {op[1].extensions.target_collateral_ratio / 1000}
                                 </td>
                             </tr>
                         )
