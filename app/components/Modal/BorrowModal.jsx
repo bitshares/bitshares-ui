@@ -61,7 +61,7 @@ class BorrowModalContent extends React.Component {
             );
 
             let target_collateral_ratio = !isNaN(currentPosition.target_collateral_ratio) 
-                ? currentPosition.target_collateral_ratio / 100
+                ? currentPosition.target_collateral_ratio / 1000
                 : 0;
 
             return {
@@ -441,7 +441,7 @@ class BorrowModalContent extends React.Component {
         let extensionsProp = false;
 
         if(isTCR) {
-            extensionsProp = { target_collateral_ratio: parseInt(this.state.target_collateral_ratio * 100, 10) };
+            extensionsProp = { target_collateral_ratio: parseInt(this.state.target_collateral_ratio * 1000, 10) };
         }
 
         var tr = WalletApi.new_transaction();
