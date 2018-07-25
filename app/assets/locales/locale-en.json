@@ -1620,6 +1620,7 @@
         "coll_of": "with collateral of",
         "coll_ratio": "Initial collateral ratio",
         "collateral": "Collateral",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Created the committee member",
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
