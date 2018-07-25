@@ -317,7 +317,7 @@ class SettingsStore {
         let choices = this._getDefaultChoices();
         // get choices stored in local storage
         let savedChoices = this._ensureBackwardsCompatibilityChoices(
-            ss.get("defaults_v1", {})
+            ss.get("defaults_v1", {apiServer: []})
         );
 
         // merge choices by hand (do not use merge as the order in the apiServer list may change)
