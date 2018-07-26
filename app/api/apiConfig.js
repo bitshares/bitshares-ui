@@ -139,14 +139,6 @@ export const settingsAPIs = {
             country: "Sweden"
         },
         {
-            url: "wss://citadel.li/node",
-            location: "Island"
-        },
-        {
-            url: "ws://citadel2miawoaqw.onion/node",
-            location: "Citadel Tor"
-        },
-        {
             url: "wss://bit.btsabc.org/ws",
             location: "Hong Kong"
         },
@@ -242,6 +234,14 @@ export const settingsAPIs = {
         {
             url: "wss://testnet.bitshares.apasia.tech/ws",
             location: "TESTNET - APT BitShares (Dallas, USA)"
+        },
+        {
+            url: "wss://citadel.li/node",
+            location: "Island"
+        },
+        {
+            url: "ws://citadel2miawoaqw.onion/node",
+            location: "Citadel Tor"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
