@@ -301,9 +301,9 @@ class SettingsStore {
      */
     _loadSettings() {
         let userSavedSettings = ss.get("settings_v4");
-        if (!!userSavedSettings) {
-            console.log("User settings have been loaded:", userSavedSettings);
-        }
+        // if (!!userSavedSettings) {
+        //     console.log("User settings have been loaded:", userSavedSettings);
+        // }
         return this._replaceDefaults("loading", userSavedSettings);
     }
 
@@ -502,15 +502,16 @@ class SettingsStore {
             if (save) {
                 this._saveSettings();
             }
-        } else {
-            console.warn(
-                "Trying to save unchanged value (" +
-                    payload.setting +
-                    ": " +
-                    payload.value +
-                    "), consider refactoring to avoid this"
-            );
         }
+        // else {
+        //     console.warn(
+        //         "Trying to save unchanged value (" +
+        //             payload.setting +
+        //             ": " +
+        //             payload.value +
+        //             "), consider refactoring to avoid this"
+        //     );
+        // }
     }
 
     onChangeViewSetting(payload) {
