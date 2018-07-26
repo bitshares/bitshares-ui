@@ -401,6 +401,17 @@ class AccessSettings extends React.Component {
         );
     }
 
+    _connectedNodeIsPersonal() {
+        let cn = this.props.nodes.find(
+            node => node.url == this.props.connectedNode
+        );
+        return cn && this._nodeIsPersonal(cn);
+    }
+
+    _nodeIsPersonal(node) {
+        return !node.default && !node.hidden && !isTestNet(node.url);
+    }
+
     _getMainNetNodes() {
         return this.props.nodes.filter(a => {
             return !isTestNet(a.url);
@@ -489,10 +500,13 @@ class AccessSettings extends React.Component {
             });
 
         let nodesToShow = null;
+        let onlyPersonalNodeActive = false;
         if (this.state.activeTab === "my_nodes") {
             nodesToShow = allNodesExceptConnected.filter(node => {
-                return !node.default && !node.hidden && !isTestNet(node.url);
+                return this._nodeIsPersonal(node);
             });
+            onlyPersonalNodeActive =
+                this._connectedNodeIsPersonal() && nodesToShow.length === 0;
         } else if (this.state.activeTab === "available_nodes") {
             nodesToShow = allNodesExceptConnected.filter(node => {
                 return node.default && !node.hidden && !isTestNet(node.url);
@@ -609,6 +623,16 @@ class AccessSettings extends React.Component {
                     {nodesToShow.map(node => {
                         return renderNode(node, connectedNode);
                     })}
+                    {onlyPersonalNodeActive ? (
+                        <div className="api-node">
+                            <p
+                                className="api-node-title"
+                                style={{padding: "1rem"}}
+                            >
+                                <Translate content="settings.personal_active" />
+                            </p>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         );

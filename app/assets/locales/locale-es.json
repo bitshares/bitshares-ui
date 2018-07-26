@@ -426,6 +426,8 @@
         "browser_text":
             "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Conectado",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -441,6 +443,8 @@
         "call_limit": "Mercado llamada a limite",
         "close": "Cerrar la posición",
         "coll_ratio": "Proporción",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Su colateral está por debajo %(mr)s y no está permitido.",
             "below_info":
@@ -457,6 +461,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "No hay feeds válidos para %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s Margen",
         "update": "Actualizar",
         "use_max": "Use Max"
@@ -469,6 +474,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -1499,6 +1505,8 @@
         "password": "Contraseña",
         "passwordLogin": "Modo de acceso",
         "password_text": "cambia tu contraseña.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "retirar",
@@ -1522,7 +1530,11 @@
             "Mostrar porcentajes de activos en la página de la cuenta",
         "showSettles":
             "Mostrar órdenes de liquidación en el gráfico de profundidad",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Tema",
         "unit": "Unidad preferida para esta cuenta",
         "valid_node_url": "La URL del nodo debe comenzar con ws:// or wss://",
@@ -1608,6 +1620,8 @@
         "sync_no":
             "El nodo actual no está sincronizado con la cadena de bloques, intente cambiar a otro",
         "sync_yes": "El nodo actual está sincronizado con la cadena de bloques",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             " Haga clic aquí para hacer una transferencia, o para depositar / retirar aquellos activos que lo soportan.",
         "update_position":
@@ -1643,6 +1657,7 @@
         "coll_of": "con un colateral de",
         "coll_ratio": "Relación colateral inicial",
         "collateral": "Colateral",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Miembro del Comité creado",
         "confirm": "Por favor confirme la transacción",
         "create_key": "Llave pública creada",
