@@ -4,6 +4,10 @@ import SettingsStore from "stores/SettingsStore";
 import AltContainer from "alt-container";
 import BrowserNotifications from "./BrowserNotifications";
 
+const Wrapper = props => {
+    return !!props.account ? <BrowserNotifications {...props} /> : null;
+};
+
 class BrowserNotificationsContainer extends React.Component {
     render() {
         return (
@@ -18,7 +22,7 @@ class BrowserNotificationsContainer extends React.Component {
                     }
                 }}
             >
-                <BrowserNotifications />
+                <Wrapper />
             </AltContainer>
         );
     }
