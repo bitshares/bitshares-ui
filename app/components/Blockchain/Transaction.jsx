@@ -439,25 +439,26 @@ class Transaction extends React.Component {
                             </td>
                         </tr>
                     );
-                    {
+                    if (
                         !!op[1].extensions &&
                         !!op[1].extensions.target_collateral_ratio
-                            ? rows.push(
-                                  <tr key={key++}>
-                                      <td>
-                                          <Translate
-                                              component="span"
-                                              content="transaction.collateral_target"
-                                          />
-                                      </td>
-                                      <td>
-                                          {op[1].extensions
-                                              .target_collateral_ratio / 100}
-                                      </td>
-                                  </tr>
-                              )
-                            : null;
+                    ) {
+                        rows.push(
+                            <tr key={key++}>
+                                <td>
+                                    <Translate
+                                        component="span"
+                                        content="transaction.collateral_target"
+                                    />
+                                </td>
+                                <td>
+                                    {op[1].extensions.target_collateral_ratio /
+                                        1000}
+                                </td>
+                            </tr>
+                        );
                     }
+
                     break;
 
                 case "key_create":
