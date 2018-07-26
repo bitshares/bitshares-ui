@@ -427,6 +427,8 @@
         "browser_text":
             "Браузер, который Вы используете, не тестировался на поддержку кошелька %(wallet_name)s. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не найдем время, чтобы провести полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
         "check_latency": "Выполняется проверка задержки...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Соединение установлено",
         "connecting": "Подключение к серверу API: %(server)s",
         "database":
@@ -443,6 +445,8 @@
         "call_limit": "Предел",
         "close": "Закрыть позицию",
         "coll_ratio": "Коэффициент перекрытия",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below":
                 "Ваш уровень гарантийного обеспечения ниже %(mr)s, что не допускается.",
@@ -460,6 +464,7 @@
             "Прежде чем максимизировать долг, вы должны задать коэффициент залогового обеспечения",
         "no_valid": "Для %(asset_symbol)s нет действующих котировок",
         "pay_max_debt": "Выплатить максимальный долг",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s маржа",
         "update": "Обновить",
         "use_max": "Использовать максимум"
@@ -472,6 +477,7 @@
     "connection": {
         "automatic_reconnect":
             " Повторная попытка соединения будет совершена автоматически через %(reconnect_in_seconds)s секунд.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Переподключиться",
         "out_of_sync":
             "Ваше соединение потеряно %(out_of_sync_seconds)s секунд.",
@@ -1503,6 +1509,8 @@
         "password": "Пароль",
         "passwordLogin": "Режим входа",
         "password_text": "Поменяйте пароль.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Проверить Узлы",
         "pinging": "Отслеживается...",
         "remove": "Удалить",
@@ -1524,7 +1532,11 @@
         "showAssetPercent":
             "Показать процентное соотношение активов на странице аккаунтов",
         "showSettles": "Показать ордера на погашение ордера на графике глубины",
+        "skipped": "Skipped",
         "switch": "Сменить узел",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Тема",
         "unit": "Предпочтительные единицы счета",
         "valid_node_url": "URL-адрес узла должен начинаться с ws:// или wss://",
@@ -1612,6 +1624,8 @@
         "sync_no":
             "Данный узел не синхронизирован с блокчейном, попробуйте переключиться на другой",
         "sync_yes": "Данный узел синхронизирован с блокчейном",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Нажмите здесь, чтобы совершить перевод или разместить депозит/вывести те активы, которые это позволяют.",
         "update_position":
@@ -1647,6 +1661,7 @@
         "coll_of": "с обеспечением",
         "coll_ratio": "Начальный коэффициент обеспечения",
         "collateral": "Обеспечение",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Создал члена комитета",
         "confirm": "Пожалуйста, подтвердите транзакцию",
         "create_key": "Создан публичный ключ",

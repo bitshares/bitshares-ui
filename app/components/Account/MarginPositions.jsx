@@ -295,7 +295,9 @@ class MarginPosition extends React.Component {
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
                 <td style={{textAlign: "center"}}>
                     <Link
-                        to={`/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`}
+                        to={`/market/${debtAsset.get(
+                            "symbol"
+                        )}_${collateralAsset.get("symbol")}`}
                     >
                         <Icon
                             name="trade"
@@ -493,7 +495,9 @@ class MarginPositionPlaceHolder extends React.Component {
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
                 <td style={{textAlign: "center"}}>
                     <Link
-                        to={`/market/${debtAsset.get("symbol")}_${collateralAsset.get("symbol")}`}
+                        to={`/market/${debtAsset.get(
+                            "symbol"
+                        )}_${collateralAsset.get("symbol")}`}
                     >
                         <Icon
                             name="trade"

@@ -423,6 +423,8 @@
         "browser_text":
             "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Connesso",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -438,6 +440,8 @@
         "call_limit": "Market Call Limit",
         "close": "Chiudi posizione",
         "coll_ratio": "Collateral ratio",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below":
                 "Il tuo collateral ratio è inferiore a %(mr)s, che non è consentito.",
@@ -455,6 +459,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "Nessun feed valido per %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s con margine",
         "update": "Aggiorna",
         "use_max": "Use Max"
@@ -467,6 +472,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -1497,6 +1503,8 @@
         "password": "Password",
         "passwordLogin": "Fai il login usando il modalità account",
         "password_text": "Cambia la tua password.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "Rimuovi",
@@ -1516,7 +1524,11 @@
         "show": "mostra",
         "showAssetPercent": "Mostra percentuali asset nella pagina Account",
         "showSettles": "Mostra settlement nel depth chart",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Tema",
         "unit": "Unità preferite per l'account",
         "valid_node_url":
@@ -1603,6 +1615,8 @@
         "sync_no":
             "Il nodo corrente non è sincronizzato con la blockchain, prova a passare a un altro",
         "sync_yes": "Il nodo corrente è sincronizzato con la blockchain",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
         "update_position":
@@ -1639,6 +1653,7 @@
         "coll_of": "con una garanzia di",
         "coll_ratio": "Rapporto di garanzia iniziale",
         "collateral": "Garanzia",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Ha creato il membro del comitato",
         "confirm": "Per favore conferma la transazione",
         "create_key": "Creata una chiave pubblica",

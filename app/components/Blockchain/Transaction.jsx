@@ -439,7 +439,10 @@ class Transaction extends React.Component {
                             </td>
                         </tr>
                     );
-                    {!!op[1].extensions && !!op[1].extensions.target_collateral_ratio ?
+                    if (
+                        !!op[1].extensions &&
+                        !!op[1].extensions.target_collateral_ratio
+                    ) {
                         rows.push(
                             <tr key={key++}>
                                 <td>
@@ -449,11 +452,13 @@ class Transaction extends React.Component {
                                     />
                                 </td>
                                 <td>
-                                    {op[1].extensions.target_collateral_ratio / 1000}
+                                    {op[1].extensions.target_collateral_ratio /
+                                        1000}
                                 </td>
                             </tr>
-                        )
-                        : null}
+                        );
+                    }
+
                     break;
 
                 case "key_create":

@@ -419,6 +419,8 @@
         "browser_text":
             "Kullandığınız tarayıcı üzerinde testlerimiz devam etmektedir, bu yüzden BitShares Cüzdanını desteklemeyebilir. Cüzdanınızı yedekleyip Chrome Tarayıcısını kullanarak içeri aktarmanızı önemle tavsiye ederiz. Mesuliyet size aittir.",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Bağlandı",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -434,6 +436,8 @@
         "call_limit": "Piyasa Çağrı Limiti",
         "close": "Pozisyonu Kapat",
         "coll_ratio": "Teminat oranı",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below":
                 "Teminat oranı çok düşük, bu pozisyon anında marjin-çağrılır",
@@ -451,6 +455,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "%(asset_symbol)s için geçerli yayın mevcut değil",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s Marjin",
         "update": "Güncelle",
         "use_max": "Use Max"
@@ -463,6 +468,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -1489,6 +1495,8 @@
         "password": "Şifre",
         "passwordLogin": "Login mode",
         "password_text": "Şifre değiştirme",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "Remove",
@@ -1507,7 +1515,11 @@
         "show": "Show",
         "showAssetPercent": "Bakiyeleri yüzde olarak da göster",
         "showSettles": "Derinlik tablosunda settle order'ları göster",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Tema",
         "unit": "Tercih edilen hesap birimi",
         "valid_node_url": "Node URL must begin with ws:// or wss://",
@@ -1589,6 +1601,8 @@
         "sync_no":
             "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Dijital ürün transferi ya da (eğer destekleniyorsa) yatırma-çekme işlemi yapmak için buraya tıklayın.",
         "update_position":
@@ -1624,6 +1638,7 @@
         "coll_of": "teminatıyla",
         "coll_ratio": "Başlangıç teminat oranı",
         "collateral": "Teminat",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Kurul üyesi oluşturuldu.",
         "confirm": "Lütfen işlemi teyit et",
         "create_key": "Açık anahtar oluşturuldu",

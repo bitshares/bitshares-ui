@@ -1065,7 +1065,11 @@ class Asset extends React.Component {
                         />
                     </td>
                     <td style={{textAlign: "right", paddingRight: 10}}>
-                        {!!c.order.target_collateral_ratio ? (c.order.target_collateral_ratio / 1000).toFixed(3) : "-"}
+                        {!!c.order.target_collateral_ratio
+                            ? (c.order.target_collateral_ratio / 1000).toFixed(
+                                  3
+                              )
+                            : "-"}
                     </td>
                     <td className={c.getStatus()} style={{textAlign: "right"}}>
                         {c.getRatio().toFixed(3)}

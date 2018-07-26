@@ -412,7 +412,7 @@
         "browser": "Unsupported browser",
         "browser_text":
             "The Browser you are using has not been fully tested to support the %(wallet_name)s Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
-        "check_latency": "Running latency checks ...",
+        "check_latency": "Running latency checks...",
         "check_latency_feedback":
             "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Connected",
@@ -431,7 +431,6 @@
         "close": "Close position",
         "coll_ratio": "Ratio",
         "coll_ratio_target": "Target Ratio",
-        "target_collateral_ratio": "Target Collateral Ratio",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below":
@@ -450,6 +449,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "No valid feeds for %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s Margin",
         "update": "Update",
         "use_max": "Use Max"
@@ -462,7 +462,8 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
-        "manual_reconnect": "Reconnect now",
+        "manual_ping": "Go to ping nodes",
+        "manual_reconnect": "Try reconnecting now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
         "title_out_of_sync": "Connection out of sync",
@@ -1419,7 +1420,7 @@
         "always_confirm": "Always ask for confirmation",
         "apiServer": "Full node API server",
         "api_closest": "Choose closest automatically",
-        "automatic": "Automatically select node (%(totalNodes)s available)",
+        "automatic": "Automatically select node (%(totalNodes)s listed)",
         "automatic_short": "Automatic Switching",
         "available_nodes": "Available",
         "backup": "Backup",
@@ -1483,6 +1484,8 @@
         "password": "Password",
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "Remove",
@@ -1501,7 +1504,11 @@
         "show": "Show",
         "showAssetPercent": "Show asset percentages on the account page",
         "showSettles": "Show settle orders in depth chart",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Theme",
         "unit": "Preferred unit of account",
         "valid_node_url": "Node URL must begin with ws:// or wss://",

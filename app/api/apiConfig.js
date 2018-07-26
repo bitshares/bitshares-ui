@@ -67,25 +67,82 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const nodeRegions = [
+    // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
+    "Northern Europe",
+    "Western Europe",
+    "Southern Europe",
+    "Eastern Europe",
+    "Northern Asia",
+    "Western Asia",
+    "Southern Asia",
+    "Eastern Asia",
+    "Central Asia",
+    "Southeastern Asia",
+    "Australia",
+    "New Zealand",
+    "Melanesia",
+    "Polynesia",
+    "Micronesia",
+    "Northern Africa",
+    "Western Africa",
+    "Middle Africa",
+    "Eastern Africa",
+    "Southern Africa",
+    "Northern America",
+    "Central America",
+    "Caribbean",
+    "South America"
+];
+
 export const settingsAPIs = {
+    // If you want a location to be translated, add the translation to settings in locale-xx.js
+    // and use an object {translate: key} in WS_NODE_LIST
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
         {
             url: "wss://fake.automatic-selection.com",
             location: {translate: "settings.api_closest"}
         },
-        {url: "ws://127.0.0.1:8090", location: "Locally hosted"},
+        {
+            url: "ws://127.0.0.1:8090",
+            location: "Locally hosted"
+        },
         {
             url: "wss://bitshares.openledger.info/ws",
-            location: "Nuremberg, Germany"
+            location: "Nuremberg",
+            region: "Western Europe", // stick to the regions that are available in nodeRegions
+            country: "Germany",
+            operator: "OpenLedger"
         },
-        {url: "wss://eu.openledger.info/ws", location: "Berlin, Germany"},
-        {url: "wss://bitshares.nu/ws", location: "Stockholm, Sweden"},
-        {url: "wss://bit.btsabc.org/ws", location: "Hong Kong"},
+        {
+            url: "wss://eu.openledger.info/ws",
+            location: "Berlin",
+            region: "Western Europe", // stick to the regions that are available in nodeRegions
+            country: "Germany",
+            operator: "OpenLedger"
+        },
+        {
+            url: "wss://bitshares.nu/ws",
+            location: "Stockholm",
+            region: "Northern Europe",
+            country: "Sweden"
+        },
+        {
+            url: "wss://bit.btsabc.org/ws",
+            location: "Hong Kong"
+        },
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
         {url: "wss://openledger.hk/ws", location: "Hong Kong"},
-        {url: "wss://bitshares.crypto.fans/ws", location: "Munich, Germany"},
+        {
+            url: "wss://bitshares.crypto.fans/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Munich",
+            operator: "Witness: sc-ol",
+            contact: "telegram:startail"
+        },
         {url: "wss://ws.gdex.io", location: "Japan"},
         {url: "wss://ws.gdex.top", location: "China"},
         {url: "wss://dex.rnglab.org", location: "Netherlands"},
@@ -101,18 +158,32 @@ export const settingsAPIs = {
         {url: "wss://blockzms.xyz/ws", location: "USA"},
         {
             url: "wss://eu.nodes.bitshares.ws",
-            location: "Central Europe - BitShares Infrastructure Program"
+            region: "Western Europe",
+            country: "Germany",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://us.nodes.bitshares.ws",
-            location: "U.S. West Coast - BitShares Infrastructure Program"
+            region: "North America",
+            country: "U.S.A.",
+            operator: "Infrastructure Worker"
         },
         {
             url: "wss://sg.nodes.bitshares.ws",
-            location: "Singapore - BitShares Infrastructure Program"
+            region: "Southeastern Asia",
+            country: "Singapore",
+            operator: "Infrastructure Worker"
         },
         {url: "wss://ws.winex.pro", location: "Singapore"},
-        {url: "wss://api.bts.mobi/ws", location: "VA, USA"},
+        {
+            url: "wss://api.bts.mobi/ws",
+            region: "Northern America",
+            country: "USA",
+            location: "Virginia",
+            operator: "Witness: in.abit",
+            contact: "telegram:abitmore"
+        },
         {
             url: "wss://api.btsxchng.com",
             location:
@@ -131,7 +202,14 @@ export const settingsAPIs = {
         {url: "wss://bitshares.bts123.cc:15138/", location: "China"},
         {url: "wss://ws.hellobts.com/", location: "Japan"},
         {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
-        {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
+        {
+            url: "wss://bts-seoul.clockwork.gr",
+            region: "Southeastern Asia",
+            country: "Korea",
+            location: "Seoul",
+            operator: "Witness: clockwork",
+            contact: "telegram:clockworkgr"
+        },
         {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
         // Testnet
