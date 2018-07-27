@@ -428,7 +428,7 @@
         "call_limit": "Market Call Limit",
         "close": "Close position",
         "coll_ratio": "Ratio",
-       "errors": {
+        "errors": {
             "below":
                 "Your collateral ratio is below %(mr)s which is not allowed.",
             "below_info":
