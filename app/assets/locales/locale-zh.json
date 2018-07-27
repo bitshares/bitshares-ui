@@ -353,6 +353,7 @@
             "remove_committee": "移除",
             "remove_witness": "移除",
             "save_finish": "点击“保存修改”完成投票",
+            "set_proxy": "Set a proxy here",
             "start": "开始时间",
             "status": {
                 "neutral": "中立",
@@ -1525,6 +1526,10 @@
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议另一个用户发起交易",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
         "settle_price": "清算单执行时将使用的价格",

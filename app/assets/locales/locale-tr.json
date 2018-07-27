@@ -369,6 +369,7 @@
             "remove_committee": "Kaldır",
             "remove_witness": "Kaldır",
             "save_finish": "Click save to finish",
+            "set_proxy": "Set a proxy here",
             "start": "Başlangıç tarihi",
             "status": {
                 "neutral": "Tarafsız",
@@ -1590,6 +1591,10 @@
         "propose_scam":
             "Bu işlem teklifi bilinen bir dolandırıcı tarafından sunulmuştur, onaylamayın!",
         "propose_tip": "Propose another user to initiate a transaction",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "Sona erdirme işlemi dijital varlıklarınızı 24 saatlik bir gecikme ile o anki fiyat üzerinden BTS'ye dönüştürmenizi sağlar",
         "settle_price": "Sona erdirilen emirlerin gerçekleşeceği fiyat",

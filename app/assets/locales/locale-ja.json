@@ -363,6 +363,7 @@
             "remove_committee": "削除",
             "remove_witness": "削除",
             "save_finish": "Click save to finish",
+            "set_proxy": "Set a proxy here",
             "start": "開始日",
             "status": {
                 "neutral": "中立",
@@ -1578,6 +1579,10 @@
         "propose_scam":
             "この提案は有名な詐欺師によるものです。応じないでください！",
         "propose_tip": "別のユーザーからトランザクションを提案する",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "精算により、保有する%(asset)sを24時間の遅延後にBTSにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",

@@ -376,6 +376,7 @@
             "remove_committee": "Удалить",
             "remove_witness": "Удалить",
             "save_finish": "Нажмите кнопку \"Сохранить\", чтобы закончить",
+            "set_proxy": "Set a proxy here",
             "start": "Дата начала",
             "status": {
                 "neutral": "Нейтральные",
@@ -1611,6 +1612,10 @@
             "Это предложение было создано известным мошенником, не подтверждайте его!",
         "propose_tip":
             "Предложить другому пользователю инициировать транзакцию",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "Погашение позволит Вам обменять Ваши %(asset)s на BTS с задержкой в 24 часа по цене, равной цене котировки на момент погашения.",
         "settle_price":

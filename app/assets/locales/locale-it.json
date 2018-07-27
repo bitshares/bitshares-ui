@@ -373,6 +373,7 @@
             "remove_committee": "Rimuovi",
             "remove_witness": "Rimuovi",
             "save_finish": "Clicca Salva per completare",
+            "set_proxy": "Set a proxy here",
             "start": "Data inizio",
             "status": {
                 "neutral": "Neutrale",
@@ -1602,6 +1603,10 @@
         "propose_scam":
             "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
         "propose_tip": "Propose another user to initiate a transaction",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in BTS dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
         "settle_price":
