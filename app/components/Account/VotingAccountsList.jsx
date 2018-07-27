@@ -2,7 +2,7 @@ import React from "react";
 import AccountSelector from "./AccountSelector";
 import Translate from "react-translate-component";
 import Icon from "../Icon/Icon";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BindToChainState from "../Utility/BindToChainState";

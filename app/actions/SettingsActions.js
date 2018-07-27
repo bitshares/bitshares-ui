@@ -72,6 +72,14 @@ class SettingsActions {
     setExchangeTutorialShown(value) {
         return value;
     }
+
+    modifyPreferedBases(payload) {
+        return payload;
+    }
+
+    updateUnits() {
+        return true;
+    }
 }
 
 export default alt.createActions(SettingsActions);

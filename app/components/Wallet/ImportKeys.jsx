@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "alt-react";
 import cname from "classnames";
 import notify from "actions/NotificationActions";
-import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs/es";
+import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs";
 import {ChainConfig} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
@@ -240,9 +240,8 @@ class ImportKeys extends Component {
                                 filter_status[
                                     filter_status.length - 1
                                 ] = status;
-                            else
-                                // new account
-                                filter_status.push(status);
+                            // new account
+                            else filter_status.push(status);
                         }
                         update_state({genesis_filter_status: filter_status});
                     });

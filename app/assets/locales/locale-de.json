@@ -370,6 +370,7 @@
             "remove_committee": "Entfernen",
             "remove_witness": "Entfernen",
             "save_finish": "Click save to finish",
+            "set_proxy": "Set a proxy here",
             "start": "Start Datum",
             "status": {
                 "neutral": "Neutral",
@@ -418,6 +419,8 @@
         "browser_text":
             "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "verbunden",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -433,6 +436,8 @@
         "call_limit": "Markt Call Limit",
         "close": "Position schlißen",
         "coll_ratio": "Kollateral-Ratio",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Kollateral-Ratio unter Aufrechterhaltungslevel",
             "below_info":
@@ -449,6 +454,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "Kein gültiger Feed-Preis für %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "Kollateral Position für %(asset_symbol)s",
         "update": "Aktualisieren",
         "use_max": "Use Max"
@@ -461,6 +467,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -485,6 +492,7 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "add_quote": "Add",
         "asks": "Asks",
         "atr": "Average True Range",
         "balance": "Guthaben",
@@ -511,6 +519,7 @@
         "confirm_sell":
             "Your order is %(diff)s times lower than the highest bid, are you sure?",
         "core_rate": "Gebührenrate",
+        "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
         "description": "Description",
         "ema": "Exponential Moving Average",
@@ -547,6 +556,8 @@
             "use": "Use"
         },
         "more": "Alle Märkte",
+        "move_down": "Move down",
+        "move_up": "Move up",
         "my_asks": "Meine Asks",
         "my_bids": "Meine Bids",
         "my_history": "Meine Historie",
@@ -568,8 +579,10 @@
         "price_market": "Market Price",
         "quantity": "Quantität",
         "quote": "Quote currency:",
+        "quote_selection": "Modify quote selection",
         "quote_supply": "Quote Verfügbarkeit",
         "receive": "Empfangen",
+        "remove": "Remove",
         "rsi": "Relative Strength Index",
         "search": "Search for more markets here",
         "sell": "Verkaufen",
@@ -581,6 +594,7 @@
         "short": "Short",
         "show_asks": "Show all asks",
         "show_bids": "Show all bids",
+        "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
         "spread": "Spread",
@@ -1480,6 +1494,8 @@
         "password": "Password",
         "passwordLogin": "Login using the account model",
         "password_text": "Change your password.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "Remove",
@@ -1498,7 +1514,11 @@
         "show": "Show",
         "showAssetPercent": "Show asset percentages on the account page",
         "showSettles": "Settlements in der Depth-Chart anzeigen",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Theme",
         "unit": "Bevorzugte Rechnungseinheit",
         "valid_node_url": "Node URL must begin with ws:// or wss://",
@@ -1568,6 +1588,10 @@
         "propose_scam":
             "This proposal was created by a known scammer, do not approve it!",
         "propose_tip": "Propose another user to initiate a transaction",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "Settling will let you convert your holdings of %(asset)s to BTS after a delay of 24 hours, at a price equal to the feed price at that time.",
         "settle_price":
@@ -1580,6 +1604,8 @@
         "sync_no":
             "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position":
@@ -1616,6 +1642,7 @@
         "coll_of": "mit einer Sicherheit bestehend aus",
         "coll_ratio": "Anfängliche Sicherheit (Verhältnis)",
         "collateral": "Sicherheit/Pfand",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Komitee-Mitglied erstellen",
         "confirm": "Bitte bestätigen Sie die Transaktion",
         "create_key": "Ein öffentlicher Schlüssel wurde erzeugt",

@@ -7,7 +7,7 @@ import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AssetWrapper from "./AssetWrapper";
 import BindToChainState from "./BindToChainState";
 import ChainTypes from "./ChainTypes";

@@ -11,7 +11,7 @@ import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import {RecentTransactions} from "../Account/RecentTransactions";
 import Immutable from "immutable";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import {
     checkFeeStatusAsync,

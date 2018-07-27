@@ -1,7 +1,12 @@
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "./utils";
 import counterpart from "counterpart";
 import {estimateFee} from "./trxHelper";
+import {
+    scamAccountsPolo,
+    scamAccountsBittrex,
+    scamAccountsOther
+} from "./scamAccounts";
 
 export default class AccountUtils {
     /**
@@ -99,50 +104,6 @@ export default class AccountUtils {
     }
 
     static isKnownScammer(account) {
-        const scamAccountsPolo = [
-            "polonie-wallet",
-            "polonie-xwallet",
-            "poloniewallet",
-            "poloniex-deposit",
-            "poloniex-wallet",
-            "poloniexwall-et",
-            "poloniexwallett",
-            "poloniexwall-t",
-            "poloniexwalle",
-            "poloniex",
-            "poloneix"
-        ];
-
-        const scamAccountsBittrex = [
-            "bittrex-deopsit",
-            "bittrex-deposi",
-            "bittrex-depositt",
-            "bittrex-dposit",
-            "bittrex",
-            "bittrex-deposits"
-        ];
-
-        const scamAccountsOther = [
-            "coinbase",
-            "blocktrade",
-            "locktrades",
-            "yun.bts",
-            "transwiser-walle",
-            "transwiser-wallets",
-            "ranswiser-wallet",
-            "yun.btc",
-            "pay.coinbase.com",
-            "pay.bts.com",
-            "btc38.com",
-            "yunbi.com",
-            "aex-bts-deposit-walle",
-            "coinbase.com",
-            "ripple.com",
-            "livecoi-net",
-            "livecoin.net",
-            "livecoinnet"
-        ];
-
         let scamMessage = null;
         if (scamAccountsPolo.indexOf(account) !== -1) {
             scamMessage = counterpart.translate("account.polo_scam");

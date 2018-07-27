@@ -3,7 +3,7 @@ import {Apis} from "bitsharesjs-ws";
 import utils from "common/utils";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import big from "bignumber.js";
 import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};

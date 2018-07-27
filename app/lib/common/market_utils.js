@@ -1,5 +1,5 @@
 import utils from "./utils";
-import {ChainStore, ChainTypes} from "bitsharesjs/es";
+import {ChainStore, ChainTypes} from "bitsharesjs";
 let {object_type} = ChainTypes;
 let opTypes = Object.keys(object_type);
 import {Asset} from "./MarketClasses";
@@ -297,79 +297,6 @@ const MarketUtils = {
             value: value,
             price: price,
             amount: amount
-        };
-    },
-
-    parse_order_history(order, paysAsset, receivesAsset, isAsk, flipped) {
-        let isCall =
-            order.order_id.split(".")[1] == object_type.limit_order
-                ? false
-                : true;
-        let receivePrecision = utils.get_asset_precision(
-            receivesAsset.get("precision")
-        );
-        let payPrecision = utils.get_asset_precision(
-            paysAsset.get("precision")
-        );
-
-        let receives = order.receives.amount / receivePrecision;
-        receives = utils.format_number(
-            receives,
-            receivesAsset.get("precision")
-        );
-        let pays = order.pays.amount / payPrecision;
-        pays = utils.format_number(pays, paysAsset.get("precision"));
-        let price_full = utils.get_asset_price(
-            order.receives.amount,
-            receivesAsset,
-            order.pays.amount,
-            paysAsset,
-            isAsk
-        );
-        // price_full = !flipped ? (1 / price_full) : price_full;
-        // let {int, dec} = this.split_price(price_full, isAsk ? receivesAsset.get("precision") : paysAsset.get("precision"));
-
-        let {int, dec, trailing} = utils.price_to_text(
-            price_full,
-            isAsk ? receivesAsset : paysAsset,
-            isAsk ? paysAsset : receivesAsset
-        );
-        let className = isCall
-            ? "orderHistoryCall"
-            : isAsk
-                ? "orderHistoryBid"
-                : "orderHistoryAsk";
-
-        let time;
-        if (order.time) {
-            time = order.time.split("T")[1];
-            let now = new Date();
-            let offset = now.getTimezoneOffset() / 60;
-            let date = utils.format_date(order.time).split(/\W/);
-            let hour = time.substr(0, 2);
-            let hourNumber = parseInt(hour, 10);
-            let localHour = hourNumber - offset;
-            if (localHour >= 24) {
-                localHour -= 24;
-            } else if (localHour < 0) {
-                localHour += 24;
-            }
-            let hourString = localHour.toString();
-            if (parseInt(hourString, 10) < 10) {
-                hourString = "0" + hourString;
-            }
-            time =
-                date[0] + "/" + date[1] + " " + time.replace(hour, hourString);
-        }
-        return {
-            receives: isAsk ? receives : pays,
-            pays: isAsk ? pays : receives,
-            full: price_full,
-            int: int,
-            dec: dec,
-            trailing: trailing,
-            className: className,
-            time: time
         };
     },
 

@@ -6,7 +6,7 @@ import AssetName from "../Utility/AssetName";
 import MarginPositions from "./MarginPositions";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
 

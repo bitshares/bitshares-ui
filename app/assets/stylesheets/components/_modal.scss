@@ -134,3 +134,10 @@
 #simple_bridge_modal_ask label {
     text-transform: none !important;
 }
+
+// Ant Overrides
+label.ant-checkbox-wrapper {
+    > span {
+        text-transform: none;
+    }
+}

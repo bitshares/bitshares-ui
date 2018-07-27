@@ -2,7 +2,7 @@ import React from "react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import accountUtils from "common/account_utils";
-import {ChainStore, FetchChainObjects} from "bitsharesjs/es";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import WorkerApproval from "./WorkerApproval";
 import VotingAccountsList from "./VotingAccountsList";
 import cnames from "classnames";
@@ -684,18 +684,23 @@ class AccountVoting extends React.Component {
                 onChange={this.onProxyChange.bind(this)}
                 onAccountChanged={this.onProxyAccountFound}
                 tabIndex={1}
-                placeholder="Proxy not set"
+                placeholder={counterpart.translate("account.votes.set_proxy")}
+                tooltip={counterpart.translate(
+                    !this.state.proxy_account_id
+                        ? "tooltip.proxy_search"
+                        : "tooltip.proxy_remove"
+                )}
                 hideImage
             >
                 <span
                     style={{
                         paddingLeft: 5,
                         position: "relative",
-                        top: -1,
+                        top: 9,
                         display: hasProxy ? "" : "none"
                     }}
                 >
-                    <Icon name="locked" title="icons.locked.action" size="1x" />
+                    <Icon name="locked" size="1x" />
                 </span>
                 <span
                     style={{
