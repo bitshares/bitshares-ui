@@ -72,6 +72,34 @@ export const xbtsxAPIs = {
     COINS_LIST: "/coin"
 };
 
+export const nodeRegions = [
+    // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
+    "Northern Europe",
+    "Western Europe",
+    "Southern Europe",
+    "Eastern Europe",
+    "Northern Asia",
+    "Western Asia",
+    "Southern Asia",
+    "Eastern Asia",
+    "Central Asia",
+    "Southeastern Asia",
+    "Australia",
+    "New Zealand",
+    "Melanesia",
+    "Polynesia",
+    "Micronesia",
+    "Northern Africa",
+    "Western Africa",
+    "Middle Africa",
+    "Eastern Africa",
+    "Southern Africa",
+    "Northern America",
+    "Central America",
+    "Caribbean",
+    "South America"
+];
+
 export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: [
