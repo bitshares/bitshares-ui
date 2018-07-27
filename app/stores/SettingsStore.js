@@ -52,7 +52,8 @@ class SettingsStore {
             onSwitchLocale: IntlActions.switchLocale,
             onSetUserMarket: SettingsActions.setUserMarket,
             onUpdateLatencies: SettingsActions.updateLatencies,
-            onModifyPreferedBases: SettingsActions.modifyPreferedBases
+            onModifyPreferedBases: SettingsActions.modifyPreferedBases,
+            onUpdateUnits: SettingsActions.updateUnits
         });
 
         this.initDone = false;
@@ -130,7 +131,7 @@ class SettingsStore {
                 "ja"
             ],
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
-            unit: getUnits(),
+            unit: getUnits(this._getChainId()),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
@@ -424,6 +425,11 @@ class SettingsStore {
                 markets_39f5e2ed: "TEST"
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
+            /*
+            * Update units depending on the chain, also make sure the 0 index
+            * asset is always the correct CORE asset name
+            */
+            this.onUpdateUnits();
             this.defaults.unit[0] = coreAsset;
 
             let defaultBases = bases[this.starredKey] || bases.markets_4018d784;
@@ -641,8 +647,12 @@ class SettingsStore {
         this.onChangeSetting({setting: "locale", value: locale});
     }
 
+    _getChainId() {
+        return (Apis.instance().chain_id || "4018d784").substr(0, 8);
+    }
+
     _getChainKey(key) {
-        const chainId = Apis.instance().chain_id;
+        const chainId = this._getChainId();
         return key + (chainId ? `_${chainId.substr(0, 8)}` : "");
     }
 
@@ -706,6 +716,13 @@ class SettingsStore {
         }
 
         ss.set(this.basesKey, this.preferredBases.toArray());
+    }
+
+    onUpdateUnits() {
+        this.defaults.unit = getUnits(this._getChainId());
+        if (this.defaults.unit.indexOf(this.settings.get("unit")) === -1) {
+            this.settings = this.settings.set("unit", this.defaults.unit[0]);
+        }
     }
 }
 
