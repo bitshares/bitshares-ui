@@ -273,7 +273,7 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
-            name: "XBTSX",
+            name: "XBTS (XBTSX.X)",
             template: (
                 <div className="content-block">
                     <div

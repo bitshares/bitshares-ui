@@ -14,6 +14,7 @@ import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "lib/common/utils";
 import counterpart from "counterpart";
+import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
 
 class XbtsxGatewayDepositRequest extends React.Component {
@@ -185,6 +186,16 @@ class XbtsxGatewayDepositRequest extends React.Component {
         // else
         // {
         let clipboardText = "";
+        let payFromWallet =
+            "sth:" +
+            receive_address.address +
+            "?vendorField=" +
+            this.props.account.get("name");
+        var showPayFromWallet = false;
+        if (this.props.deposit_asset === "STH") {
+            showPayFromWallet = true;
+        }
+
         let memoText;
         if (this.props.deposit_account) {
             deposit_address_fragment = (
@@ -330,6 +341,11 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                 </tbody>
                             </table>
                         </div>
+                        {!memoText ? (
+                            <div className="QR">
+                                <QRCode size={128} value={clipboardText} />
+                            </div>
+                        ) : null}
                     </div>
                     <div className="small-12 medium-7">
                         <Translate
@@ -405,6 +421,12 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     >
                                         <Translate content="gateway.copy_memo" />
                                     </div>
+                                ) : null}
+                                {showPayFromWallet ? (
+                                    <a className="button" href={payFromWallet}>
+                                        <Translate content="gateway.deposit_from_wallet" />{" "}
+                                        {this.props.deposit_asset}
+                                    </a>
                                 ) : null}
                             </div>
                             <Translate
