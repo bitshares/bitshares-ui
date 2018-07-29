@@ -11,6 +11,7 @@ import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
 import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import {Tabs, Button, Collapse, Icon as AntIcon} from 'bitshares-ui-style-guide'
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -399,14 +400,15 @@ export default class ExchangeHeader extends React.Component {
                                 ) : null}
                             </ul>
                             <ul className="market-stats stats top-stats">
-                                <li
+                                <li 
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px"}}
                                     onClick={() => {
                                         ZfApi.publish("chart_options", "open");
                                     }}
                                 >
-                                    <Translate content="exchange.chart_modal" />
+                                    <AntIcon type="setting" style={{paddingRight: 5}}/>
+                                    <Translate className="column-hide-xs" content="exchange.settings" />
                                 </li>
                             </ul>
                         </div>
@@ -441,9 +443,9 @@ export default class ExchangeHeader extends React.Component {
                                     <option value="3">
                                         {counterpart.translate("exchange.layout.3")}
                                     </option>
-                                    {/*<option value="4">
+                                    {<option value="4">
                                         {counterpart.translate("exchange.layout.4")}
-                                    </option>*/}
+                                    </option>}
                                 </select>
                             </li>
                         </ul>

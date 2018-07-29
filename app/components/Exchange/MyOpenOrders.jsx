@@ -134,8 +134,6 @@ class OrderRow extends React.Component {
         let quoteColor = !isBid ? "value negative" : "value positive";
         let baseColor = isBid ? "value negative" : "value positive";
 
-        console.log(order.expiration);
-        
         return !dashboard ? (
             <tr key={order.id}>
                 <td className={tdClass} style={{paddingLeft: 10}}>
@@ -165,7 +163,7 @@ class OrderRow extends React.Component {
                     {valueSymbol}
                 </td>
                 <td
-                    style={{width: "25%", textAlign: "right"}}
+                    style={{width: "25%", textAlign: "right", whiteSpace: "nowrap"}}
                     className="tooltip"
                     data-tip={order.expiration.toLocaleString()}
                 >
@@ -567,41 +565,21 @@ class MyOpenOrders extends React.Component {
             );
         }
 
-        let hc = "mymarkets-header clickable";
-        let myOrdersClass = cnames(hc, {inactive: activeTab !== "my_orders"});
-        let openSettlementClass = cnames(hc, {
-            inactive: activeTab !== "open_settlement"
-        });
-        let myOrdersWidth = baseIsBitAsset || quoteIsBitAsset ? "50%" : "100%";
-        let openSettlementWidth =
-            baseIsBitAsset || quoteIsBitAsset ? "inherit" : "none";
-
         return (
             <div
                 style={{marginBottom: "15px"}}
                 key="open_orders"
                 className={this.props.className}
             >
-                <div className="small-12">
+                <div className="exchange-padded" style={{paddingBottom: "1.2rem"}}>
                     {this.props.noHeader ? null : 
-                    <div className="grid-block shrink left-orderbook-header">
-                        <div
-                            style={{width: myOrdersWidth}}
-                            className={myOrdersClass}
-                            onClick={this._changeTab.bind(this, "my_orders")}
-                        >
+                    <div style={this.props.headerStyle} className="exchange-content-header">
+                        {activeTab == "my_orders" ?
                             <Translate content="exchange.my_orders" />
-                        </div>
-                        <div
-                            style={{display: openSettlementWidth}}
-                            className={openSettlementClass}
-                            onClick={this._changeTab.bind(
-                                this,
-                                "open_settlement"
-                            )}
-                        >
+                            : null}
+                        {activeTab == "open_settlement" ?
                             <Translate content="exchange.settle_orders" />
-                        </div>
+                            : null}
                     </div>}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table order-table text-right fixed-table market-right-padding">

@@ -46,7 +46,9 @@ class OrderBookRowVertical extends React.Component {
         return (
             np.order.ne(this.props.order) ||
             np.index !== this.props.index ||
-            np.currentAccount !== this.props.currentAccount
+            np.currentAccount !== this.props.currentAccount ||
+            np.isPanelActive !== this.props.isPanelActive ||
+            np.exchangeLayout !== this.props.exchangeLayout 
         );
     }
 
@@ -156,7 +158,7 @@ class OrderBookRowHorizontal extends React.Component {
                 }
             >
                 {position === "left" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -165,7 +167,7 @@ class OrderBookRowHorizontal extends React.Component {
                 <td>{position === "left" ? value : amount}</td>
                 <td>{position === "left" ? amount : value}</td>
                 {position === "right" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -273,7 +275,7 @@ class GroupedOrderBookRowHorizontal extends React.Component {
         return (
             <tr onClick={this.props.onClick}>
                 {position === "left" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -282,7 +284,7 @@ class GroupedOrderBookRowHorizontal extends React.Component {
                 <td>{position === "left" ? value : amount}</td>
                 <td>{position === "left" ? amount : value}</td>
                 {position === "right" ? (
-                    <td>{total}</td>
+                    <td className="column-hide-xs">{total}</td>
                 ) : (
                     <td style={{width: "25%"}} className={integerClass}>
                         {price}
@@ -544,7 +546,9 @@ class OrderBook extends React.Component {
             handleGroupOrderLimitChange,
             orderBookReversed,
             groupedBids,
-            groupedAsks
+            groupedAsks,
+            exchangeLayout,
+            isPanelActive
         } = this.props;
         let {
             showAllAsks,
@@ -738,7 +742,7 @@ class OrderBook extends React.Component {
             let leftHeader = (
                 <thead>
                     <tr key="top-header" className="top-header">
-                        <th>
+                        <th className="column-hide-xs">
                             <Translate
                                 className="header-sub-title"
                                 content="exchange.total"
@@ -798,7 +802,7 @@ class OrderBook extends React.Component {
                                 <AssetName dataPlace="top" name={baseSymbol} />
                             </span>
                         </th>
-                        <th>
+                        <th className="column-hide-xs">
                             <Translate
                                 className="header-sub-title"
                                 content="exchange.total"
@@ -815,26 +819,42 @@ class OrderBook extends React.Component {
                 </thead>
             );
 
+            let wrapperClass = "xlarge-8";
+            let innerClass = "";
+
+            console.log("isPanelActive: " + isPanelActive + " L:" + exchangeLayout);
+            
+            
+            if(!isPanelActive) {
+                innerClass = exchangeLayout <= 2 ? "medium-12 large-12 xlarge-6" : innerClass;
+
+                wrapperClass = exchangeLayout == 3 ? "medium-12 large-6 xlarge-8" : wrapperClass;
+                innerClass = exchangeLayout == 3 ? "medium-12 large-12 xlarge-6" : innerClass;
+
+                wrapperClass = exchangeLayout == 4 ? "medium-12 large-12 xlarge-8" : wrapperClass;
+                innerClass = exchangeLayout == 4 ? "medium-6 large-6 xlarge-6" : innerClass;
+            } else {
+                innerClass = exchangeLayout <= 2 ? "medium-6 large-6 xlarge-12" : innerClass;
+
+                wrapperClass = exchangeLayout == 3 ? "medium-12 large-12 xlarge-5" : wrapperClass;
+                innerClass = exchangeLayout == 3 ? "medium-12 large-6 xlarge-12" : innerClass;
+
+                wrapperClass = exchangeLayout == 4 ? "medium-12 large-12 xlarge-12" : wrapperClass;
+                innerClass = exchangeLayout == 4 ? "medium-12 large-6 xlarge-6" : innerClass;
+            }
+
             return (
                 <div
                     className={classnames(
                         this.props.wrapperClass,
-                        this.props.exchangeLayout >= 3 
-                            ? this.props.hidePanel 
-                                ? "medium-12 large-6 xlarge-8" 
-                                : "medium-12 large-12 xlarge-5" 
-                            : "xlarge-8",
-                        "grid-block orderbook no-padding align-spaced no-overflow small-12 wrap shrink"
+                        wrapperClass,
+                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink"
                     )}
                 >
                     <div
                         className={classnames(
-                            "small-12 medium-6 middle-content",
-                            this.props.exchangeLayout >= 3 
-                                ? this.props.hidePanel 
-                                    ? "medium-6 large-6 xlarge-6" 
-                                    : "medium-12 large-6 xlarge-12" 
-                                : "medium-6",
+                            "small-12 middle-content",
+                            innerClass,
                             this.state.flip ? "order-1" : "order-2"
                         )}
                     >
@@ -953,12 +973,8 @@ class OrderBook extends React.Component {
 
                     <div
                         className={classnames(
-                            "small-12  middle-content",
-                            this.props.exchangeLayout >= 3 
-                                ? this.props.hidePanel 
-                                    ? "medium-6 large-6 xlarge-6" 
-                                    : "medium-12 large-6 xlarge-12" 
-                                : "medium-6",
+                            "middle-content",
+                            innerClass,
                             this.state.flip ? "order-2" : "order-1"
                         )}
                     >
@@ -1168,11 +1184,19 @@ class OrderBook extends React.Component {
                                                         }
                                                     >
                                                         <PriceText
-                                                            preFormattedPrice={
-                                                                this.props
-                                                                    .latest
-                                                            }
-                                                        />
+                                                                price={
+                                                                    this.props
+                                                                        .latest
+                                                                }
+                                                                base={
+                                                                    this.props
+                                                                        .base
+                                                                }
+                                                                quote={
+                                                                    this.props
+                                                                        .quote
+                                                                }
+                                                            />
                                                     </span>
                                                 </span>
                                             )}

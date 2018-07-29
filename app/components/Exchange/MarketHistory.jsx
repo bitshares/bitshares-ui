@@ -39,6 +39,7 @@ class MarketHistory extends React.Component {
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
+            nextProps.isPanelActive !== this.props.isPanelActive ||
             nextProps.activeTab !== this.props.activeTab ||
             nextState.activeTab !== this.state.activeTab ||
             nextProps.currentAccount !== this.props.currentAccount
@@ -158,7 +159,7 @@ class MarketHistory extends React.Component {
                             </td>
                             <td>{fill.amountToReceive()}</td>
                             <td>{fill.amountToPay()}</td>
-                            <td className="tooltip" data-tip={fill.time}>
+                            <td className="tooltip" style={{whiteSpace: "nowrap"}} data-tip={fill.time}>
                                 {counterpart.localize(fill.time, {
                                     type: "date",
                                     format:
@@ -174,37 +175,27 @@ class MarketHistory extends React.Component {
                 })
                 .toArray();
         }
-
-        let hc = "mymarkets-header clickable";
-        let historyClass = cnames(hc, {inactive: activeTab === "my_history"});
-        let myHistoryClass = cnames(hc, {inactive: activeTab === "history"});
-
+        
         return (
-            <div className={this.props.className}>
-                <div className="small-12">
+            <div className={cnames(this.props.className)}>
+                <div className="exchange-padded" style={{paddingBottom: "1.2rem"}}>
                     {this.props.noHeader ? null : 
                     <div
                         style={this.props.headerStyle}
-                        className="grid-block shrink left-orderbook-header bottom-header"
+                        className="exchange-content-header"
                     >
-                        <div
-                            className={cnames(myHistoryClass, {
-                                disabled: isNullAccount
-                            })}
-                            onClick={this._changeTab.bind(this, "my_history")}
-                        >
+                        {activeTab === "my_history" ? 
                             <Translate content="exchange.my_history" />
-                        </div>
-                        <div
-                            className={historyClass}
-                            onClick={this._changeTab.bind(this, "history")}
-                        >
+                            : null}
+                        {activeTab === "history" ? 
                             <Translate content="exchange.history" />
-                        </div>
+                            : null}
                     </div>
                     }
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
+                        <table 
+                            className="table table-no-padding order-table text-left fixed-table market-right-padding"
+                        >
                             <thead style={{backgroundColor: "#2c2e37"}}>
                                 <tr>
                                     <th style={{textAlign: "right"}}>

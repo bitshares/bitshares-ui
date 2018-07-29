@@ -311,10 +311,15 @@ class BuySell extends React.Component {
 
         const minExpirationDate = moment();
 
-        const containerClass = this.props.exchangeLayout <= 2 
-            ? this.props.hidePanel 
-                ? "small-12 medium-6 large-6 xlarge-6" 
-                : "small-12 medium-6 large-12 xlarge-6" 
+        const containerClass = 
+            this.props.exchangeLayout <= 2 
+                ? !this.props.isPanelActive 
+                    ? "small-12 medium-6 large-6 xlarge-6" 
+                    : "small-12 medium-6 large-12 xlarge-6" 
+            : this.props.exchangeLayout >= 3 
+                ? !this.props.isPanelActive 
+                    ? "small-12 medium-6 large-6 xlarge-6" 
+                    : "small-12 medium-12 xlarge-12"
             : "small-12 medium-12 xlarge-12";
 
         return (
@@ -465,7 +470,8 @@ class BuySell extends React.Component {
                         <div className="grid-block no-overflow wrap shrink">
                             <div className={containerClass} style={{paddingRight: 10}}>
                                 <div>
-                                    <div style={{paddingBottom: 6}}><Translate content="exchange.price" />
+                                    <div style={{paddingBottom: 6}}>
+                                        <Translate content="exchange.price" />
                                         <span style={{float: "right"}}>
                                             <span
                                                 style={{
@@ -639,7 +645,7 @@ class BuySell extends React.Component {
                                                         keys={[
                                                             {
                                                                 type: "asset",
-                                                                value: null,
+                                                                value: isBid ? base.get("symbol") : quote.get("symbol"),
                                                                 arg: "asset"
                                                             },
                                                             {
@@ -662,7 +668,7 @@ class BuySell extends React.Component {
                                                     keys={[
                                                         {
                                                             type: "asset",
-                                                            value: null,
+                                                            value: isBid ? base.get("symbol") : quote.get("symbol"),
                                                             arg: "asset"
                                                         },
                                                         {
@@ -685,7 +691,7 @@ class BuySell extends React.Component {
                                                     keys={[
                                                         {
                                                             type: "asset",
-                                                            value: null,
+                                                            value: isBid ? base.get("symbol") : quote.get("symbol"),
                                                             arg: "asset"
                                                         },
                                                         {

@@ -32,7 +32,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
 import guide from "intro.js";
 import translator from "counterpart";
-import {Tabs, Button, Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {Tabs, Button, Collapse, Icon as AntIcon} from 'bitshares-ui-style-guide'
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
 
@@ -210,6 +210,7 @@ class Exchange extends React.Component {
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
+            hidePanel: false
         };
     }
 
@@ -1378,9 +1379,8 @@ class Exchange extends React.Component {
         }
 
         let smallScreen = false;
-        if (width < 1000) {
+        if (width < 850) {
             smallScreen = true;
-            //exchangeLayout = exchangeLayout <= 2 ? 3 : exchangeLayout;
         }
 
         let orderMultiplier = exchangeLayout <= 2 ? 2 : 1;
@@ -1393,6 +1393,15 @@ class Exchange extends React.Component {
         let expirationType = this.state.expirationType;
         let expirationCustomTime = this.state.expirationCustomTime;
 
+        // Reset TabBuySell 
+        tabBuySell = !tabBuySell || ((exchangeLayout == 3 && smallScreen && (tabBuySell != "buy" && tabBuySell != "sell"))) ? "buy" : tabBuySell;
+        
+        let isPanelActive = !hidePanel && !smallScreen ? true : false;
+        let isPredictionMarket = base.getIn([
+            "bitasset",
+            "is_prediction_market"
+        ]);
+
         let buyForm = isFrozen ? null : (
             <BuySell
                 onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
@@ -1403,7 +1412,6 @@ class Exchange extends React.Component {
                 currentBridges={
                     this.props.bridgeCoins.get(base.get("symbol")) || null
                 }
-                smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
@@ -1478,7 +1486,7 @@ class Exchange extends React.Component {
                         : null
                 }
                 exchangeLayout={exchangeLayout}
-                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
@@ -1492,7 +1500,6 @@ class Exchange extends React.Component {
                 currentBridges={
                     this.props.bridgeCoins.get(quote.get("symbol")) || null
                 }
-                smallScreen={smallScreen}
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 className={cnames(
@@ -1569,7 +1576,7 @@ class Exchange extends React.Component {
                         : null
                 }
                 exchangeLayout={exchangeLayout}
-                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
@@ -1635,17 +1642,11 @@ class Exchange extends React.Component {
                 groupedBids={groupedBids}
                 groupedAsks={groupedAsks}
                 exchangeLayout={exchangeLayout}
-                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
-        let isPanelActive = !hidePanel || !smallScreen ? true : false;
-        let leftColumnActive = (hidePanel || !smallScreen) && exchangeLayout == 1 ? true : false;
-        let rightColumnActive = (hidePanel || !smallScreen) && exchangeLayout >= 2 ? true : false;
-        let isPredictionMarket = base.getIn([
-            "bitasset",
-            "is_prediction_market"
-        ]);
+
 
         {classnames(
             "small-12 medium-6 middle-content",
@@ -1760,13 +1761,17 @@ class Exchange extends React.Component {
                 <AntIcon type={(exchangeLayout == 1 && !hidePanel) || (exchangeLayout != 1 && hidePanel) ? "caret-left" : "caret-right"} />
             </div> : null;
 
+        console.log("IsPanelActive: " + isPanelActive);
+
         let marketHistory = (
             <MarketHistory
                 className={cnames(
-                    !smallScreen
-                        ? "medium-12 xlarge-12"
-                        : "",
-                    "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
+                    exchangeLayout == 4
+                        ? isPanelActive 
+                            ? "medium-6 large-6 xlarge-6"
+                            : "medium-6 xlarge-4"
+                        : "medium-12 xlarge-12",
+                    "no-padding no-overflow middle-content small-12 order-3"
                 )}
                 noHeader={exchangeLayout == 4 ? false : true}
                 headerStyle={{paddingTop: 0}}
@@ -1778,16 +1783,22 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"history"}
+                exchangeLayout={exchangeLayout}
+                smallScreen={smallScreen}
+                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
         let myMarketHistory = (
             <MarketHistory
                 className={cnames(
-                    !smallScreen
-                        ? "medium-12 xlarge-12"
-                        : "",
-                    "no-padding no-overflow middle-content small-12 medium-12 order-5 xlarge-order-3"
+                    exchangeLayout == 4
+                        ? isPanelActive 
+                            ? "medium-6 xlarge-6"
+                            : "medium-6 xlarge-4"
+                        : "medium-12 xlarge-12",
+                    "no-padding no-overflow middle-content small-12 order-6"
                 )}
                 noHeader={exchangeLayout == 4 ? false : true}
                 headerStyle={{paddingTop: 0}}
@@ -1799,21 +1810,27 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"my_history"}
+                exchangeLayout={exchangeLayout}
+                smallScreen={smallScreen}
+                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
         let myOpenOrders = (
             <MyOpenOrders
                 smallScreen={this.props.smallScreen}
-                className={cnames(
-                    !smallScreen
-                        ? "medium-12 xlarge-12"
-                        : "",
-                    `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
-                        buySellTop ? 4 : 4
+                className={classnames(
+                    exchangeLayout == 4
+                        ? isPanelActive 
+                            ? "medium-6 xlarge-6"
+                            : "medium-6 xlarge-4"
+                    : "medium-12 xlarge-12",
+                    `small-12 no-padding align-spaced ps-container middle-content order-5
                     }`
                 )}
                 key="my_orders"
+                headerStyle={{paddingTop: 0}}
                 noHeader={exchangeLayout == 4 ? false : true}
                 orders={marketLimitOrders}
                 settleOrders={marketSettleOrders}
@@ -1830,19 +1847,26 @@ class Exchange extends React.Component {
                     "flipMyOrders"
                 )}
                 feedPrice={this.props.feedPrice}
+                exchangeLayout={exchangeLayout}
+                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
         let settlementOrders = (
             <MyOpenOrders
                 smallScreen={this.props.smallScreen}
-                className={cnames(
-                    !smallScreen ? "medium-12 xlarge-12" : "",
-                    `small-12 medium-12 no-padding align-spaced ps-container middle-content order-${
-                        buySellTop ? 5 : 5
+                className={classnames(
+                    exchangeLayout == 4
+                        ? isPanelActive 
+                            ? "medium-6 xlarge-6"
+                            : "medium-6 xlarge-4"
+                    : "medium-12 xlarge-12",
+                    `small-12 no-padding align-spaced ps-container middle-content order-4
                     }`
                 )}
-                key="my_orders"
+                key="my_settle_orders"
+                headerStyle={{paddingTop: 0}}
                 noHeader={exchangeLayout != 4 ? true : false}
                 orders={marketLimitOrders}
                 settleOrders={marketSettleOrders}
@@ -1859,6 +1883,10 @@ class Exchange extends React.Component {
                     "flipMyOrders"
                 )}
                 feedPrice={this.props.feedPrice}
+                exchangeLayout={exchangeLayout}
+                smallScreen={smallScreen}
+                hidePanel={hidePanel}
+                isPanelActive={isPanelActive}
             />
         );
 
@@ -1895,10 +1923,55 @@ class Exchange extends React.Component {
                 </Tabs>
             </div>;
 
+        let actionCards = [];
+        if(!smallScreen) {
+            if(exchangeLayout >= 3) { 
+                actionCards.push(orderBook); 
+            }
 
+            if(exchangeLayout == 4) {
+                actionCards.push(marketHistory);
+                actionCards.push(settlementOrders);
+                actionCards.push(myMarketHistory);
+                actionCards.push(myOpenOrders);
+            }
 
-        //console.log(exchangeLayout + " - L:" + leftColumnActive + " R:" + rightColumnActive + " Hide:" + this.state.hidePanel);
-        console.log(tabBuySell, tabVerticalPanel, tabTrades);
+            if(exchangeLayout <= 3) {
+                actionCards.push(marketsTab);
+            }
+
+            if(exchangeLayout <= 2) {
+                actionCards.push(buySellTab); 
+            }
+        } else {
+            if(exchangeLayout <= 2) { 
+                actionCards.push(orderBook); 
+            }
+
+            if(exchangeLayout >= 3) { 
+                actionCards.push(orderBook); 
+            }
+
+            if(exchangeLayout == 4) {
+                actionCards.push(marketHistory);
+                actionCards.push(settlementOrders);
+                actionCards.push(myMarketHistory);
+                actionCards.push(myOpenOrders);
+            }
+
+            if(exchangeLayout <= 3) {
+                actionCards.push(marketsTab);
+            }
+
+            if(exchangeLayout == 3) { 
+                actionCards.push(buySellTab); 
+            }
+
+            if(exchangeLayout <= 2) {
+                actionCards.push(buySellTab); 
+            }
+        }
+
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
@@ -1940,9 +2013,9 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    {isPanelActive && exchangeLayout == 1 ? 
+                    {exchangeLayout == 1 ? 
                         <div className="grid-block left-column shrink no-overflow" style={{height: "100%"}}>
-                            {verticalPanel}
+                            {isPanelActive ? verticalPanel : null}
                             {verticalPanelToggle}
                         </div>
                     : null}
@@ -2042,23 +2115,17 @@ class Exchange extends React.Component {
                                 )}
                             </div>
                             <div className="grid-block no-overflow wrap shrink">
-                                {(exchangeLayout <= 2 && smallScreen) || exchangeLayout >= 3 ? orderBook : null}
-                                {exchangeLayout == 4 ? marketHistory : null}
-                                {exchangeLayout == 4 ? settlementOrders : null}
-                                {exchangeLayout == 4 ? myMarketHistory : null}
-                                {exchangeLayout <= 3 ? marketsTab : null}
-                                {exchangeLayout == 3 && smallScreen ? buySellTab : null}
-                                {exchangeLayout <= 2 ? buySellTab : null}
+                                {actionCards}
                             </div>
                         </div>
                     </div>
                     {/* End of Main Content Column */}
 
                     {/* Right Column */}
-                    {isPanelActive && exchangeLayout > 1 ? 
+                    {exchangeLayout > 1 ? 
                         <div ref="wrapper" className="grid-block right-column shrink no-overflow" style={{maxWidth: 450}}>
                             {verticalPanelToggle}
-                            {verticalPanel}
+                            {isPanelActive ? verticalPanel : null}
                         </div>
                     : null}
                     
