@@ -220,7 +220,14 @@ export const settingsAPIs = {
             operator: "Witness: clockwork",
             contact: "telegram:clockworkgr"
         },
-        {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
+        {
+            url: "wss://bts.to0l.cn:4443/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shandong",
+            operator: "Witness: liuye",
+            contact: "email:work@liuye.tech"
+        },
         {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
         // Testnet
         {
