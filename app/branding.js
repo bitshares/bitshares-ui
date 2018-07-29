@@ -29,7 +29,7 @@ export function getFaucet() {
     return {
         url: "https://faucet.bitshares.eu/onboarding", // 2017-12-infrastructure worker proposal
         show: true,
-        editable: true
+        editable: false
     };
 }
 
@@ -64,8 +64,10 @@ export function getDefaultLogin() {
  *
  * @returns {[string,string,string,string,string,string]}
  */
-export function getUnits() {
-    return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+export function getUnits(chainId = "4018d784") {
+    if (chainId === "4018d784")
+        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+    else if (chainId === "39f5e2ed") return ["TEST"];
 }
 
 /**
@@ -136,6 +138,7 @@ export function getMyMarketsQuotes() {
         "OPEN.WAVES",
         "OPEN.ZEC",
         "OPEN.ZRX",
+        "OPEN.EOSDAC",
         "PPY",
         "RUBLE",
         "RUDEX.DCT",
@@ -174,6 +177,7 @@ export function getFeaturedMarkets() {
         ["USD", "GDEX.ETH"],
         ["USD", "GDEX.EOS"],
         ["USD", "GDEX.BTO"],
+        ["USD", "OPEN.EOSDAC"],
         ["CNY", "BTS"],
         ["CNY", "OPEN.BTC"],
         ["CNY", "USD"],
@@ -208,6 +212,7 @@ export function getFeaturedMarkets() {
         ["BTS", "GDEX.ETH"],
         ["BTS", "GDEX.EOS"],
         ["BTS", "GDEX.BTO"],
+        ["BTS", "OPEN.EOSDAC"],
         ["KAPITAL", "OPEN.BTC"],
         ["USD", "OPEN.STEEM"],
         ["USD", "OPEN.MAID"],
@@ -261,7 +266,7 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return gateway in ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"];
+    return ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"].indexOf(gateway) >= 0;
 }
 
 export function getSupportedLanguages() {

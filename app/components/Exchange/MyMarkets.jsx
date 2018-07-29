@@ -1095,16 +1095,18 @@ class MyMarkets extends React.Component {
                     ) : null}
 
                     {/* Quote edit tab */}
-                    <li
-                        key="quote_edit"
-                        style={{textTransform: "uppercase"}}
-                        onClick={() => {
-                            ZfApi.publish("quote_selection", "open");
-                        }}
-                        className="mymarkets-tab"
-                    >
-                        &nbsp;+&nbsp;
-                    </li>
+                    {myMarketTab && (
+                        <li
+                            key="quote_edit"
+                            style={{textTransform: "uppercase"}}
+                            onClick={() => {
+                                ZfApi.publish("quote_selection", "open");
+                            }}
+                            className="mymarkets-tab"
+                        >
+                            &nbsp;+&nbsp;
+                        </li>
+                    )}
                 </ul>
 
                 <div

@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
-import ConfirmModal from "../Modal/ConfirmModal";
+import ChoiceModal from "../Modal/ChoiceModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
@@ -148,12 +148,15 @@ class Footer extends React.Component {
     getNode(node) {
         const {props} = this;
 
+        let title = node.operator + " " + !!node.location ? node.location : "";
+        if (!!node.country) {
+            title = node.country + (!!title ? " - " + title : "");
+        }
+
         return {
-            name: node.location || "Unknown location",
+            name: title,
             url: node.url,
-            up: node.url in props.apiLatencies,
-            ping: props.apiLatencies[node.url],
-            hidden: !!node.hidden
+            ping: props.apiLatencies[node.url]
         };
     }
 
@@ -235,7 +238,7 @@ class Footer extends React.Component {
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
             // handling out of sync state within this one call
 
-            let forceReconnectAfterSeconds = 60;
+            let forceReconnectAfterSeconds = this._getForceReconnectAfterSeconds();
             let askToReconnectAfterSeconds = 5;
 
             // Trigger automatic reconnect after X seconds
@@ -256,51 +259,12 @@ class Footer extends React.Component {
                 );
                 setTimeout(() => {
                     // Only ask the user once, and only continue if still out of sync
-                    let out_of_sync_seconds = this.getBlockTimeDelta();
                     if (
                         this.getBlockTimeDelta() > 3 &&
                         this.confirmOutOfSync.shownOnce == false
                     ) {
                         this.confirmOutOfSync.shownOnce = true;
-                        this.confirmOutOfSync.modal.show(
-                            <div>
-                                <Translate
-                                    content="connection.title_out_of_sync"
-                                    out_of_sync_seconds={parseInt(
-                                        out_of_sync_seconds
-                                    )}
-                                    component="h2"
-                                />
-                                <br />
-                                <br />
-                                <Translate
-                                    content="connection.out_of_sync"
-                                    out_of_sync_seconds={parseInt(
-                                        out_of_sync_seconds
-                                    )}
-                                />
-                                <br />
-                                <br />
-                                <Translate content="connection.want_to_reconnect" />
-                                {routerTransitioner.isAutoSelection() && (
-                                    <Translate
-                                        content="connection.automatic_reconnect"
-                                        reconnect_in_seconds={parseInt(
-                                            forceReconnectAfterSeconds
-                                        )}
-                                    />
-                                )}
-                                <br />
-                                <br />
-                                <br />
-                            </div>,
-                            <Translate content="connection.manual_reconnect" />,
-                            () => {
-                                if (!this.props.synced) {
-                                    this._triggerReconnect(false);
-                                }
-                            }
-                        );
+                        this.confirmOutOfSync.modal.show();
                     }
                 }, askToReconnectAfterSeconds * 1000);
             }
@@ -308,6 +272,10 @@ class Footer extends React.Component {
             this._closeOutOfSyncModal();
             this.confirmOutOfSync.shownOnce = false;
         }
+    }
+
+    _getForceReconnectAfterSeconds() {
+        return 60;
     }
 
     _triggerReconnect(honorManualSelection = true) {
@@ -364,20 +332,62 @@ class Footer extends React.Component {
                 {!!routerTransitioner &&
                     routerTransitioner.isTransitionInProgress() && (
                         <LoadingIndicator
-                            loadingText={counterpart.translate(
-                                "app_init.connecting",
-                                {
-                                    server: routerTransitioner.getTransitionTarget()
-                                }
-                            )}
+                            loadingText={routerTransitioner.getTransitionTarget()}
                         />
                     )}
-                <ConfirmModal
+                <ChoiceModal
                     modalId="footer_out_of_sync"
                     ref={thiz => {
                         this.confirmOutOfSync.modal = thiz;
                     }}
-                />
+                    choices={[
+                        {
+                            translationKey: "connection.manual_reconnect",
+                            callback: () => {
+                                if (!this.props.synced) {
+                                    this._triggerReconnect(false);
+                                }
+                            }
+                        },
+                        {
+                            translationKey: "connection.manual_ping",
+                            callback: () => {
+                                if (!this.props.synced) {
+                                    this.onAccess();
+                                }
+                            }
+                        }
+                    ]}
+                >
+                    <div>
+                        <Translate
+                            content="connection.title_out_of_sync"
+                            out_of_sync_seconds={parseInt(
+                                this.getBlockTimeDelta()
+                            )}
+                            component="h2"
+                        />
+                        <br />
+                        <br />
+                        <Translate
+                            content="connection.out_of_sync"
+                            out_of_sync_seconds={parseInt(
+                                this.getBlockTimeDelta()
+                            )}
+                        />
+                        <br />
+                        <br />
+                        <Translate content="connection.want_to_reconnect" />
+                        {routerTransitioner.isAutoSelection() && (
+                            <Translate
+                                content="connection.automatic_reconnect"
+                                reconnect_in_seconds={parseInt(
+                                    this._getForceReconnectAfterSeconds()
+                                )}
+                            />
+                        )}
+                    </div>
+                </ChoiceModal>
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">

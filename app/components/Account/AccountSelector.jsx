@@ -366,7 +366,7 @@ class AccountSelector extends React.Component {
                             {useHR && <hr />}
                         </div>
                     ) : null}
-                    <div className="input-area">
+                    <div className="input-area" data-tip={this.props.tooltip}>
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
