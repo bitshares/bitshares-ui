@@ -20,6 +20,7 @@ class DepthHighChart extends React.Component {
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.height !== this.props.height ||
+            nextProps.isPanelActive !== this.props.isPanelActive ||
             nextProps.exchangeLayout !== this.props.exchangeLayout ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||

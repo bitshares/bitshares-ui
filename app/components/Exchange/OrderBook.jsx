@@ -822,9 +822,6 @@ class OrderBook extends React.Component {
             let wrapperClass = "xlarge-8";
             let innerClass = "";
 
-            console.log("isPanelActive: " + isPanelActive + " L:" + exchangeLayout);
-            
-            
             if(!isPanelActive) {
                 innerClass = exchangeLayout <= 2 ? "medium-12 large-12 xlarge-6" : innerClass;
 

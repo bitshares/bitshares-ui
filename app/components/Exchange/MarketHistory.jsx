@@ -32,17 +32,17 @@ class MarketHistory extends React.Component {
         if(nextProps.activeTab !== this.props.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
-
-        if (!nextProps.marketReady) return false;
+        
         return (
             !Immutable.is(nextProps.history, this.props.history) ||
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
-            nextProps.isPanelActive !== this.props.isPanelActive ||
             nextProps.activeTab !== this.props.activeTab ||
             nextState.activeTab !== this.state.activeTab ||
-            nextProps.currentAccount !== this.props.currentAccount
+            nextProps.currentAccount !== this.props.currentAccount ||
+            nextProps.isPanelActive !== this.props.isPanelActive ||
+            nextProps.exchangeLayout !== this.props.exchangeLayout
         );
     }
 

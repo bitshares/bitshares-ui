@@ -210,7 +210,8 @@ class Exchange extends React.Component {
             width: window.innerWidth,
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
-            hidePanel: false
+            hidePanel: false,
+            showMarketPicker: false
         };
     }
 
@@ -1761,8 +1762,6 @@ class Exchange extends React.Component {
                 <AntIcon type={(exchangeLayout == 1 && !hidePanel) || (exchangeLayout != 1 && hidePanel) ? "caret-left" : "caret-right"} />
             </div> : null;
 
-        console.log("IsPanelActive: " + isPanelActive);
-
         let marketHistory = (
             <MarketHistory
                 className={cnames(
@@ -1783,10 +1782,8 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"history"}
-                exchangeLayout={exchangeLayout}
-                smallScreen={smallScreen}
-                hidePanel={hidePanel}
                 isPanelActive={isPanelActive}
+                exchangeLayout={exchangeLayout}
             />
         );
 
@@ -1810,10 +1807,8 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"my_history"}
-                exchangeLayout={exchangeLayout}
-                smallScreen={smallScreen}
-                hidePanel={hidePanel}
                 isPanelActive={isPanelActive}
+                exchangeLayout={exchangeLayout}
             />
         );
 
@@ -2087,6 +2082,7 @@ class Exchange extends React.Component {
                                                     ? chartHeight
                                                     : chartHeight - 150
                                             }
+                                            isPanelActive={isPanelActive}
                                             onClick={this._depthChartClick.bind(
                                                 this,
                                                 base,
