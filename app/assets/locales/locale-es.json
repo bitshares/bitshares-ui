@@ -321,6 +321,8 @@
             "transfer_restricted":
                 "El emisor debe aprobar todas las transferencias",
             "update_owner": "Proprietario actualizado",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Ocultar activos desde la búsqueda y el mercados",
             "white_list":
                 "Requerir que los titulares sean incluidos en la lista blanca",
@@ -630,6 +632,7 @@
             "title": "Cuentas"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Reclamar tarifas",
@@ -647,6 +650,7 @@
                 "title": "Fondo de Comisiones",
                 "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
             },
+            "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
                 "title": "posiciòn a margen"

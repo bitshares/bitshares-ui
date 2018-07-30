@@ -314,6 +314,8 @@
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "transfer_restricted": "Issuer must approve all transfers",
             "update_owner": "Update owner",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Hide asset from search and markets",
             "white_list": "Require holders to be white-listed",
             "witness_fed_asset": "Allow witnesses to provide feeds"
@@ -618,6 +620,7 @@
             "title": "Comptes"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -635,6 +638,7 @@
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Unclaimed issuer income"
             },
+            "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
                 "title": "Margin positions"

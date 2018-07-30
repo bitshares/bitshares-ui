@@ -316,6 +316,8 @@
             "transfer_restricted":
                 "İhrac eden tüm transferleri onlaylamak zorunda",
             "update_owner": "Sahibi güncelle",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Hide asset from search and markets",
             "white_list": "İzin listesi gerektiren dijital varlık",
             "witness_fed_asset":
@@ -624,6 +626,7 @@
             "title": "Hesaplar"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Ücretleri talep et",
@@ -641,6 +644,7 @@
                 "title": "Ücret Havuzu",
                 "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri"
             },
+            "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
                 "title": "Margin positions"

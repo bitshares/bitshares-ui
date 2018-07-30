@@ -312,6 +312,8 @@
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "transfer_restricted": "発行者はすべての転送を承認する必要がある",
             "update_owner": "オーナーを更新",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "検索と市場からアセットを非表示にする",
             "white_list": "保有者はホワイトリストに登録されている必要がある",
             "witness_fed_asset": "証人にフィード供給を許可する"
@@ -618,6 +620,7 @@
             "title": "アカウント"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -635,6 +638,7 @@
                 "title": "手数料プール",
                 "unclaimed_issuer_income": "未請求の発行者収入"
             },
+            "info": "Asset info",
             "invalid": "アセット名%(name)sは無効です",
             "margin_positions": {
                 "title": "マージンポジション"

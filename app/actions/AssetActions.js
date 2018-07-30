@@ -63,6 +63,32 @@ class AssetActions {
         };
     }
 
+    updateOwner(asset, new_issuer_id) {
+        let tr = WalletApi.new_transaction();
+        tr.add_type_operation("asset_update_issuer", {
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            issuer: asset.issuer,
+            asset_to_update: asset.id,
+            new_issuer: new_issuer_id
+        });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:150] ----- updateOwner error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
     updateFeedProducers(account, asset, producers) {
         let tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_update_feed_producers", {

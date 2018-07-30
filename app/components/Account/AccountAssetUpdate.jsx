@@ -13,7 +13,6 @@ import BindToChainState from "../Utility/BindToChainState";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AmountSelector from "../Utility/AmountSelector";
 import FormattedPrice from "../Utility/FormattedPrice";
-import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
 import big from "bignumber.js";
 import cnames from "classnames";
@@ -117,7 +116,6 @@ class AccountAssetUpdate extends React.Component {
             core_exchange_rate: core_exchange_rate,
             issuer: asset.issuer,
             new_issuer_account_id: null,
-            issuer_account_name: null,
             new_funder_account: props.account.get("id"),
             asset_to_update: asset.id,
             errors: {
@@ -733,7 +731,7 @@ class AccountAssetUpdate extends React.Component {
     }
 
     render() {
-        let {account, asset, core} = this.props;
+        let {asset} = this.props;
         let {
             errors,
             isValid,
@@ -1349,50 +1347,8 @@ class AccountAssetUpdate extends React.Component {
                             ) : null}
 
                             <Tab
-                                title="account.user_issued_assets.update_owner"
-                                updatedTab={this.tabChanged(4)}
-                            >
-                                <div className="small-12 large-8 large-offset-2 grid-content">
-                                    <div style={{paddingBottom: "1rem"}}>
-                                        <AccountSelector
-                                            label="account.user_issued_assets.current_issuer"
-                                            accountName={account.get("name")}
-                                            account={account.get("name")}
-                                            error={null}
-                                            tabIndex={1}
-                                            disabled={true}
-                                        />
-                                    </div>
-                                    <AccountSelector
-                                        label="account.user_issued_assets.new_issuer"
-                                        accountName={
-                                            this.state.issuer_account_name
-                                        }
-                                        onChange={this.onAccountNameChanged.bind(
-                                            this,
-                                            "issuer_account_name"
-                                        )}
-                                        onAccountChanged={this.onAccountChanged.bind(
-                                            this,
-                                            "new_issuer_account_id"
-                                        )}
-                                        account={this.state.issuer_account_name}
-                                        error={null}
-                                        tabIndex={1}
-                                        typeahead={true}
-                                    />
-                                    {
-                                        <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
-                                        </p>
-                                    }
-                                </div>
-                            </Tab>
-
-                            <Tab
                                 title="account.permissions"
-                                updatedTab={this.tabChanged(5)}
+                                updatedTab={this.tabChanged(4)}
                             >
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
@@ -1414,7 +1370,7 @@ class AccountAssetUpdate extends React.Component {
 
                             <Tab
                                 title="account.user_issued_assets.flags"
-                                updatedTab={this.tabChanged(6)}
+                                updatedTab={this.tabChanged(5)}
                             >
                                 <div className="small-12 large-8 large-offset-2 grid-content">
                                     <HelpContent
@@ -1602,7 +1558,7 @@ class AccountAssetUpdate extends React.Component {
                             {isBitAsset ? (
                                 <Tab
                                     title="account.user_issued_assets.feed_producers"
-                                    updatedTab={this.tabChanged(8)}
+                                    updatedTab={this.tabChanged(6)}
                                 >
                                     <AssetFeedProducers
                                         asset={this.props.asset}

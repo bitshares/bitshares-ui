@@ -981,6 +981,9 @@
                 }
             }
         }
+        &.tab-no-background {
+            background-color: inherit;
+        }
     }
 
     // Exchange

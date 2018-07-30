@@ -137,7 +137,7 @@ class FeePoolOperation extends React.Component {
                     style={{width: "100%", paddingTop: 16}}
                 />
 
-                <div style={{paddingTop: "1rem"}}>
+                <div style={{paddingTop: "1rem"}} className="button-group">
                     <button
                         className={classnames("button", {
                             disabled: fundPoolAmount <= 0
@@ -149,14 +149,11 @@ class FeePoolOperation extends React.Component {
                     <button className="button outline" onClick={reset}>
                         <Translate content="account.perm.reset" />
                     </button>
-                    <br />
-                    <br />
-                    <p>
-                        <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                        <FormattedFee opType="asset_fund_fee_pool" />
-                    </p>
-                    <hr />
                 </div>
+                <p>
+                    <Translate content="account.user_issued_assets.approx_fee" />:{" "}
+                    <FormattedFee opType="asset_fund_fee_pool" />
+                </p>
             </div>
         );
     }
@@ -209,7 +206,7 @@ class FeePoolOperation extends React.Component {
                     style={{width: "100%", paddingTop: 16}}
                 />
 
-                <div style={{paddingTop: "1rem"}}>
+                <div style={{paddingTop: "1rem"}} className="button-group">
                     <button
                         className={classnames("button", {
                             disabled: claimPoolAmount <= 0
@@ -221,14 +218,11 @@ class FeePoolOperation extends React.Component {
                     <button className="button outline" onClick={reset}>
                         <Translate content="account.perm.reset" />
                     </button>
-                    <br />
-                    <br />
-                    <p>
-                        <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                        <FormattedFee opType="asset_fund_fee_pool" />
-                    </p>
-                    <hr />
                 </div>
+                <p>
+                    <Translate content="account.user_issued_assets.approx_fee" />:{" "}
+                    <FormattedFee opType="asset_claim_pool" />
+                </p>
             </div>
         );
     }

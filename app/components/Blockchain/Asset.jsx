@@ -13,12 +13,13 @@ import utils from "common/utils";
 import FormattedTime from "../Utility/FormattedTime";
 import {ChainStore} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
-import {Tabs, Tab} from "../Utility/Tabs";
 import {CallOrder, FeedPrice} from "common/MarketClasses";
 import Page404 from "../Page404/Page404";
 import FeePoolOperation from "../Account/FeePoolOperation";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
+import AssetOwnerUpdate from "./AssetOwnerUpdate";
+import {Tab, Tabs} from "../Utility/Tabs";
 
 class AssetFlag extends React.Component {
     render() {
@@ -601,6 +602,31 @@ class Asset extends React.Component {
         );
     }
 
+    renderAssetOwnerUpdate(asset) {
+        return (
+            <div
+                className="grid-content small-no-padding"
+                style={{overflowY: "visible"}}
+            >
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="account.user_issued_assets.update_owner" />
+                    </div>
+                    <Translate
+                        component="p"
+                        content="account.user_issued_assets.update_owner_text"
+                        asset={asset.symbol}
+                    />
+                    <AssetOwnerUpdate
+                        asset={asset}
+                        account={this.props.currentAccount}
+                        currentOwner={asset.issuer}
+                    />
+                </div>
+            </div>
+        );
+    }
+
     renderFeePoolFunding(asset) {
         return (
             <div className="grid-content small-no-padding">
@@ -909,7 +935,7 @@ class Asset extends React.Component {
                         {" "}
                         <Translate content="explorer.asset.price_feed_data.publisher" />{" "}
                     </th>
-                    <th>
+                    <th style={{textAlign: "right"}}>
                         <Translate content="explorer.asset.price_feed_data.settlement_price" />
                         <br />
                         ({this.formattedPrice(
@@ -918,7 +944,10 @@ class Asset extends React.Component {
                             true
                         )})
                     </th>
-                    <th>
+                    <th
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         <Translate content="explorer.asset.price_feed_data.core_exchange_rate" />
                         <br />
                         ({this.formattedPrice(
@@ -927,15 +956,18 @@ class Asset extends React.Component {
                             true
                         )})
                     </th>
-                    <th>
+                    <th style={{textAlign: "right"}}>
                         {" "}
                         <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio" />{" "}
                     </th>
-                    <th>
+                    <th style={{textAlign: "right"}}>
                         {" "}
                         <Translate content="explorer.asset.price_feed_data.maximum_short_squeeze_ratio" />{" "}
                     </th>
-                    <th>
+                    <th
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         {" "}
                         <Translate content="explorer.asset.price_feed_data.published" />{" "}
                     </th>
@@ -961,7 +993,10 @@ class Asset extends React.Component {
                     <td style={{textAlign: "right"}}>
                         {this.formattedPrice(settlement_price, true)}
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         {" "}
                         {this.formattedPrice(core_exchange_rate, true)}{" "}
                     </td>
@@ -973,7 +1008,10 @@ class Asset extends React.Component {
                         {" "}
                         {maximum_short_squeeze_ratio}
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         <TimeAgo time={publishDate} />
                     </td>
                 </tr>
@@ -992,7 +1030,7 @@ class Asset extends React.Component {
                         <Translate content="transaction.borrower" />
                     </th>
                     <th
-                        className="clickable"
+                        className="clickable column-hide-small"
                         onClick={this._toggleSortOrder.bind(this, "collateral")}
                     >
                         <Translate content="transaction.collateral" />
@@ -1013,7 +1051,7 @@ class Asset extends React.Component {
                         ) : null}
                     </th>
                     <th
-                        className="clickable"
+                        className="clickable column-hide-small"
                         onClick={this._toggleSortOrder.bind(this, "debt")}
                     >
                         <Translate content="transaction.borrow_amount" />
@@ -1033,7 +1071,10 @@ class Asset extends React.Component {
                             </span>
                         ) : null}
                     </th>
-                    <th style={{paddingRight: 10}} className="clickable">
+                    <th
+                        style={{paddingRight: 10}}
+                        className="clickable column-hide-small"
+                    >
                         <span
                             onClick={this._toggleSortOrder.bind(this, "price")}
                         >
@@ -1083,21 +1124,30 @@ class Asset extends React.Component {
                     <td>
                         <LinkToAccountById account={c.borrower} />
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         <FormattedAsset
                             amount={c.getCollateral().getAmount()}
                             asset={c.getCollateral().asset_id}
                             hide_asset
                         />
                     </td>
-                    <td style={{textAlign: "right"}}>
+                    <td
+                        style={{textAlign: "right"}}
+                        className="column-hide-small"
+                    >
                         <FormattedAsset
                             amount={c.amountToReceive().getAmount()}
                             asset={c.amountToReceive().asset_id}
                             hide_asset
                         />
                     </td>
-                    <td style={{textAlign: "right", paddingRight: 10}}>
+                    <td
+                        style={{textAlign: "right", paddingRight: 10}}
+                        className="column-hide-small"
+                    >
                         <FormattedPrice
                             base_amount={c.call_price.base.amount}
                             base_asset={c.call_price.base.asset_id}
@@ -1130,15 +1180,13 @@ class Asset extends React.Component {
                             setting="bitassetDataTabs"
                         >
                             <Tab title="explorer.asset.price_feed_data.title">
-                                <div className="responsive-table">
-                                    <table
-                                        className=" table order-table table-hover"
-                                        style={{padding: "1.2rem"}}
-                                    >
-                                        {header}
-                                        <tbody>{rows}</tbody>
-                                    </table>
-                                </div>
+                                <table
+                                    className=" table order-table table-hover"
+                                    style={{padding: "1.2rem"}}
+                                >
+                                    {header}
+                                    <tbody>{rows}</tbody>
+                                </table>
                             </Tab>
 
                             <Tab title="explorer.asset.margin_positions.title">
@@ -1170,7 +1218,7 @@ class Asset extends React.Component {
                 : null;
 
         return (
-            <div className="grid-container">
+            <div className="grid-container asset-page">
                 <div className="grid-block page-layout">
                     <div className="grid-block main-content wrap">
                         <div
@@ -1179,28 +1227,50 @@ class Asset extends React.Component {
                         >
                             {this.renderAboutBox(asset, this.props.asset)}
                         </div>
-                        <div className="grid-block vertical large-horizontal medium-up-1 large-up-2">
-                            <div className="grid-content small-no-padding">
-                                {this.renderSummary(asset)}
-                            </div>
-                            <div className="grid-content small-no-padding">
-                                {this.renderPermissions(asset)}
-                            </div>
-                        </div>
-                        <div className="grid-block vertical large-horizontal medium-up-1 large-up-2">
-                            <div className="grid-content small-no-padding">
-                                {this.renderFeePool(asset)}
-                            </div>
-                            {this.renderFeePoolFunding(asset)}
-                            {this.renderFeePoolClaiming(asset)}
 
-                            {priceFeed ? (
-                                <div className="grid-content small-no-padding">
-                                    {this.renderPriceFeed(asset)}
+                        <Tabs
+                            setting="assetDataTabs"
+                            className="grid-block vertical"
+                            tabsClass="bordered-header content-block"
+                            contentClass="tab-no-background"
+                            segmented={false}
+                        >
+                            <Tab title="explorer.asset.info">
+                                <div
+                                    className="grid-block vertical large-horizontal medium-up-1 large-up-2"
+                                    style={{paddingTop: "1rem"}}
+                                >
+                                    <div className="grid-content small-no-padding">
+                                        {this.renderSummary(asset)}
+                                    </div>
+
+                                    <div className="grid-content small-no-padding">
+                                        {this.renderPermissions(asset)}
+                                    </div>
+
+                                    <div className="grid-content small-no-padding">
+                                        {this.renderFeePool(asset)}
+                                    </div>
+
+                                    {priceFeed ? (
+                                        <div className="grid-content small-no-padding">
+                                            {this.renderPriceFeed(asset)}
+                                        </div>
+                                    ) : null}
                                 </div>
-                            ) : null}
-                        </div>
-                        {priceFeedData ? priceFeedData : null}
+                                {priceFeedData ? priceFeedData : null}
+                            </Tab>
+                            <Tab title="explorer.asset.actions">
+                                <div
+                                    className="grid-block vertical large-horizontal medium-up-1 large-up-2"
+                                    style={{paddingTop: "1rem"}}
+                                >
+                                    {this.renderAssetOwnerUpdate(asset)}
+                                    {this.renderFeePoolFunding(asset)}
+                                    {this.renderFeePoolClaiming(asset)}
+                                </div>
+                            </Tab>
+                        </Tabs>
                     </div>
                 </div>
             </div>
@@ -1213,7 +1283,6 @@ Asset = connect(Asset, {
         return [AccountStore];
     },
     getProps() {
-        const chainID = Apis.instance().chain_id;
         return {
             currentAccount:
                 AccountStore.getState().currentAccount ||

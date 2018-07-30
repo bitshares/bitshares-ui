@@ -324,6 +324,8 @@
                 "Число производителей котировок превысило максимально допустимое (%(max)s).",
             "transfer_restricted": "Эмитент должен одобрять все переводы",
             "update_owner": "Обновить владельца",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Не отображать актив в поиске и в рынках",
             "white_list":
                 "Требуется, чтобы держатели находились в белом списке",
@@ -632,6 +634,7 @@
             "title": "Аккаунты"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Потребовать комиссию",
@@ -649,6 +652,7 @@
                 "title": "Пул комиссии",
                 "unclaimed_issuer_income": "Невостребованный доход эмитента\n"
             },
+            "info": "Asset info",
             "invalid": "Недопустимое имя %(name)s актива",
             "margin_positions": {
                 "title": "Маржинальные позиции"

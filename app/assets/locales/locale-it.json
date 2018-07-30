@@ -321,6 +321,8 @@
             "transfer_restricted":
                 "L'erogatore deve approvare tutti i trasferimenti",
             "update_owner": "Aggiorna proprietario",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Nascondi asset in ricerca e mercati",
             "white_list": "Esigi che i possessori siano in white-list",
             "witness_fed_asset": "Permetti alle witness di fornire feed"
@@ -628,6 +630,7 @@
             "title": "Account"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Riscuoti commissioni",
@@ -645,6 +648,7 @@
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Reddito dell'erogatore non riscosso"
             },
+            "info": "Asset info",
             "invalid": "Il nome di asset %(name)s non è valido",
             "margin_positions": {
                 "title": "Posizioni con margine"

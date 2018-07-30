@@ -38,11 +38,13 @@ class AccountSelector extends React.Component {
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: PropTypes.bool
+        typeahead: PropTypes.bool,
+        excludeAccounts: PropTypes.array // array of accounts to exclude from the typeahead
     };
 
     static defaultProps = {
-        autosubscribe: false
+        autosubscribe: false,
+        excludeAccounts: []
     };
 
     constructor(props) {
@@ -67,7 +69,8 @@ class AccountSelector extends React.Component {
 
     componentWillReceiveProps(newProps) {
         if (newProps.account && newProps.account !== this.props.account) {
-            this.props.onAccountChanged(newProps.account);
+            if (this.props.onAccountChanged)
+                this.props.onAccountChanged(newProps.account);
         }
     }
 
@@ -231,24 +234,30 @@ class AccountSelector extends React.Component {
                 contacts.has(account.get("name"));
 
         if (typeahead && linkedAccounts) {
-            linkedAccounts.map(function(accountName) {
-                let account = ChainStore.getAccount(accountName);
-                let account_status = ChainStore.getAccountMemberStatus(account);
-                let account_status_text = !accountUtils.isKnownScammer(
-                    accountName
-                )
-                    ? "account.member." + account_status
-                    : "account.member.suspected_scammer";
+            linkedAccounts
+                .map(accountName => {
+                    if (this.props.excludeAccounts.indexOf(accountName) !== -1)
+                        return null;
+                    let account = ChainStore.getAccount(accountName);
+                    let account_status = ChainStore.getAccountMemberStatus(
+                        account
+                    );
+                    let account_status_text = !accountUtils.isKnownScammer(
+                        accountName
+                    )
+                        ? "account.member." + account_status
+                        : "account.member.suspected_scammer";
 
-                typeAheadAccounts.push({
-                    id: accountName,
-                    label: accountName,
-                    status: counterpart.translate(account_status_text),
-                    className: accountUtils.isKnownScammer(accountName)
-                        ? "negative"
-                        : "positive"
-                });
-            });
+                    typeAheadAccounts.push({
+                        id: accountName,
+                        label: accountName,
+                        status: counterpart.translate(account_status_text),
+                        className: accountUtils.isKnownScammer(accountName)
+                            ? "negative"
+                            : "positive"
+                    });
+                })
+                .filter(a => !!a);
         }
 
         let typeaheadHasAccount = !!accountName

@@ -302,6 +302,8 @@
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "transfer_restricted": "所有转账必须通过发行人审核同意",
             "update_owner": "更新发行人",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "在搜索与市场中隐藏资产",
             "white_list": "要求资产持有人预先加入白名单",
             "witness_fed_asset": "允许见证人提供喂价"
@@ -601,6 +603,7 @@
             "title": "账户"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "领取手续费",
@@ -617,6 +620,7 @@
                 "title": "手续费资金池",
                 "unclaimed_issuer_income": "发行人未申领收入"
             },
+            "info": "Asset info",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
                 "title": "债仓"
