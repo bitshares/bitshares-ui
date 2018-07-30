@@ -37,6 +37,32 @@ class AssetActions {
         };
     }
 
+    claimPool(asset, amount) {
+        let tr = WalletApi.new_transaction();
+        tr.add_type_operation("asset_claim_pool", {
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            issuer: asset.get("issuer"),
+            asset_id: asset.get("id"),
+            amount_to_claim: amount.toObject()
+        });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:150] ----- claimPool error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
     updateFeedProducers(account, asset, producers) {
         let tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_update_feed_producers", {

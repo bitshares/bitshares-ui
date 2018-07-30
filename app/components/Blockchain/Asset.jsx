@@ -16,7 +16,7 @@ import {Apis} from "bitsharesjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {CallOrder, FeedPrice} from "common/MarketClasses";
 import Page404 from "../Page404/Page404";
-import FundFeePool from "../Account/FundFeePool";
+import FeePoolOperation from "../Account/FeePoolOperation";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
 
@@ -226,7 +226,7 @@ class Asset extends React.Component {
                 var marketID = market + "_" + symbol;
                 var marketName = market + "/" + symbol;
                 return (
-                    <span>
+                    <span key={marketID}>
                         <Link to={`/market/${marketID}`}>{marketName}</Link>{" "}
                         &nbsp;
                     </span>
@@ -534,11 +534,20 @@ class Asset extends React.Component {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         var options = asset.options;
+        const core = ChainStore.getAsset("1.3.0");
+
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">
                     {<Translate content="explorer.asset.fee_pool.title" />}
                 </div>
+                <Translate
+                    component="p"
+                    content="explorer.asset.fee_pool.pool_text"
+                    unsafe
+                    asset={asset.symbol}
+                    core={core.get("symbol")}
+                />
                 <table
                     className="table key-value-table"
                     style={{padding: "1.2rem"}}
@@ -588,11 +597,49 @@ class Asset extends React.Component {
                         </tr>
                     </tbody>
                 </table>
-                <FundFeePool
-                    asset={asset.symbol}
-                    funderAccountName={this.props.currentAccount}
-                    hideBalance
-                />
+            </div>
+        );
+    }
+
+    renderFeePoolFunding(asset) {
+        return (
+            <div className="grid-content small-no-padding">
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="explorer.asset.fee_pool.fund" />
+                    </div>
+                    <Translate
+                        component="p"
+                        content="explorer.asset.fee_pool.fund_text"
+                        asset={asset.symbol}
+                    />
+                    <FeePoolOperation
+                        asset={asset.symbol}
+                        funderAccountName={this.props.currentAccount}
+                        hideBalance
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    renderFeePoolClaiming(asset) {
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
+        if (dynamic) dynamic = dynamic.toJS();
+        return (
+            <div className="grid-content small-no-padding">
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="explorer.asset.fee_pool.claim_balance" />
+                    </div>
+                    <FeePoolOperation
+                        asset={asset.symbol}
+                        funderAccountName={this.props.currentAccount}
+                        dynamic={dynamic}
+                        hideBalance
+                        type="claim"
+                    />
+                </div>
             </div>
         );
     }
@@ -774,12 +821,8 @@ class Asset extends React.Component {
     // he/she owes. If the feed price goes above this,
     // then
     getGlobalSettlementPrice() {
-        var call_orders;
         if (!this.state.callOrders) {
             return null;
-        } else {
-            // put the call order on the stack
-            call_orders = this.state.callOrders;
         }
 
         // first get the least collateralized short position
@@ -810,7 +853,6 @@ class Asset extends React.Component {
         // feed_price == collateral / debt
         let debt = leastColShort.amountToReceive().getAmount();
         let collateral = leastColShort.getCollateral().getAmount();
-        let globalSettlementPrice = collateral / debt;
 
         return (
             <FormattedPrice
@@ -1130,32 +1172,33 @@ class Asset extends React.Component {
         return (
             <div className="grid-container">
                 <div className="grid-block page-layout">
-                    <div className="grid-block main-content wrap regular-padding">
+                    <div className="grid-block main-content wrap">
                         <div
-                            className="grid-block small-up-1"
+                            className="grid-block medium-up-1"
                             style={{width: "100%"}}
                         >
                             {this.renderAboutBox(asset, this.props.asset)}
                         </div>
-                        <div className="grid-block small-up-1 medium-up-2">
-                            <div className="grid-content">
+                        <div className="grid-block vertical large-horizontal medium-up-1 large-up-2">
+                            <div className="grid-content small-no-padding">
                                 {this.renderSummary(asset)}
                             </div>
-                            <div className="grid-content">
-                                {priceFeed
-                                    ? priceFeed
-                                    : this.renderPermissions(asset)}
+                            <div className="grid-content small-no-padding">
+                                {this.renderPermissions(asset)}
                             </div>
                         </div>
-                        <div className="grid-block small-up-1 medium-up-2">
-                            <div className="grid-content">
+                        <div className="grid-block vertical large-horizontal medium-up-1 large-up-2">
+                            <div className="grid-content small-no-padding">
                                 {this.renderFeePool(asset)}
                             </div>
-                            <div className="grid-content">
-                                {priceFeed
-                                    ? this.renderPermissions(asset)
-                                    : null}
-                            </div>
+                            {this.renderFeePoolFunding(asset)}
+                            {this.renderFeePoolClaiming(asset)}
+
+                            {priceFeed ? (
+                                <div className="grid-content small-no-padding">
+                                    {this.renderPriceFeed(asset)}
+                                </div>
+                            ) : null}
                         </div>
                         {priceFeedData ? priceFeedData : null}
                     </div>

@@ -619,13 +619,19 @@
         },
         "asset": {
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "アセット発行者はここに蓄積された手数料を請求することができます。",
                 "core_exchange_rate": "中心取引レート (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "手数料プールは%(asset)sの手数料を%(core)sに換算することによって%(core)sの手数料を支払うために使用されます。手数料プールの資金が尽きた場合、手数料を%(asset)sで払うことはできなくなり、既定値は%(core)sになります。",
                 "pool_balance": "プール残高",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "手数料プール",
                 "unclaimed_issuer_income": "未請求の発行者収入"
             },
@@ -1695,6 +1701,7 @@
             "account_whitelist": "アカウントホワイトリスト",
             "all": "すべて表示",
             "assert": "アサート操作",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "アセット手数料を請求",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "アセットを作成",

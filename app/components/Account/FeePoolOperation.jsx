@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import Translate from "react-translate-component";
-
+import {Asset} from "common/MarketClasses";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 import FormattedAsset from "../Utility/FormattedAsset";
@@ -15,14 +15,27 @@ const stateSetter = (that, key, transform = value => value) => value =>
 
 const keyGetter = key => object => object[key];
 
-class FundFeePool extends React.Component {
+class FeePoolOperation extends React.Component {
+    static defaultProps = {
+        type: "fund"
+    };
+
     constructor(props) {
         super(props);
         this.state = this.initialState();
     }
+
     onAccountNameChanged = stateSetter(this, "funderAccountName");
     onAccountChanged = stateSetter(this, "newFunderAccount");
     onPoolInput = stateSetter(this, "fundPoolAmount", keyGetter("amount"));
+
+    onClaimInput({amount}) {
+        this.state.claimPoolAsset.setAmount({real: amount});
+        this.setState({
+            claimPoolAmount: amount
+        });
+    }
+
     onFundPool = () =>
         AssetActions.fundPool(
             this.state.newFunderAccount
@@ -32,14 +45,28 @@ class FundFeePool extends React.Component {
             this.props.asset,
             this.state.fundPoolAmount.replace(/,/g, "")
         );
+
     reset = () => {
         this.setState(this.initialState());
     };
+
     initialState = () => ({
         funderAccountName: this.props.funderAccountName,
-        fundPoolAmount: 0
+        fundPoolAmount: 0,
+        fundPoolAsset: new Asset({
+            amount: 0,
+            precision: this.props.core.get("precision"),
+            asset_id: this.props.core.get("id")
+        }),
+        claimPoolAmount: 0,
+        claimPoolAsset: new Asset({
+            amount: 0,
+            precision: this.props.core.get("precision"),
+            asset_id: this.props.core.get("id")
+        })
     });
-    render = () => {
+
+    renderFundPool() {
         const {
             props,
             state,
@@ -57,7 +84,6 @@ class FundFeePool extends React.Component {
                 asset.get("dynamic_asset_data_id")
             );
         const coreID = core.get("id") || "1.3.0";
-        const account = newFunderAccount;
         let balance = 0;
         if (newFunderAccount) {
             const coreBalanceID = newFunderAccount.getIn(["balances", coreID]);
@@ -76,13 +102,6 @@ class FundFeePool extends React.Component {
         );
         return (
             <div>
-                <Translate
-                    component="p"
-                    content="explorer.asset.fee_pool.fund_text"
-                    asset={asset.get("symbol")}
-                    core={core.get("symbol")}
-                />
-
                 {hideBalance || (
                     <div style={{paddingBottom: "1.5rem"}}>
                         <Translate content="explorer.asset.fee_pool.pool_balance" />
@@ -140,10 +159,93 @@ class FundFeePool extends React.Component {
                 </div>
             </div>
         );
-    };
+    }
+
+    renderClaimPool() {
+        const {props, onClaim, reset} = this;
+        const {claimPoolAmount} = this.state;
+        const {asset, core, getDynamicObject} = props;
+        let dynamicObject = getDynamicObject(
+            asset.get("dynamic_asset_data_id")
+        );
+        const coreID = core.get("id") || "1.3.0";
+
+        const balanceText = !!dynamicObject ? (
+            <span
+                onClick={() => {
+                    this.state.claimPoolAsset.setAmount({
+                        sats: dynamicObject.get("fee_pool")
+                    });
+                    this.setState({
+                        claimPoolAmount: this.state.claimPoolAsset.getAmount({
+                            real: true
+                        })
+                    });
+                }}
+            >
+                <Translate component="span" content="transfer.available" />:&nbsp;
+                <FormattedAsset
+                    amount={dynamicObject.get("fee_pool")}
+                    asset={coreID}
+                />
+            </span>
+        ) : null;
+
+        return (
+            <div>
+                <Translate
+                    component="p"
+                    content="explorer.asset.fee_pool.claim_pool_text"
+                />
+                <AmountSelector
+                    label="transfer.amount"
+                    display_balance={balanceText}
+                    amount={claimPoolAmount}
+                    onChange={this.onClaimInput.bind(this)}
+                    asset={coreID}
+                    assets={[coreID]}
+                    placeholder="0.0"
+                    tabIndex={2}
+                    style={{width: "100%", paddingTop: 16}}
+                />
+
+                <div style={{paddingTop: "1rem"}}>
+                    <button
+                        className={classnames("button", {
+                            disabled: claimPoolAmount <= 0
+                        })}
+                        onClick={onClaim}
+                    >
+                        <Translate content="transaction.trxTypes.asset_claim_fee_pool" />
+                    </button>
+                    <button className="button outline" onClick={reset}>
+                        <Translate content="account.perm.reset" />
+                    </button>
+                    <br />
+                    <br />
+                    <p>
+                        <Translate content="account.user_issued_assets.approx_fee" />:{" "}
+                        <FormattedFee opType="asset_fund_fee_pool" />
+                    </p>
+                    <hr />
+                </div>
+            </div>
+        );
+    }
+
+    onClaim = () =>
+        AssetActions.claimPool(this.props.asset, this.state.claimPoolAsset);
+
+    render() {
+        if (this.props.type === "fund") {
+            return this.renderFundPool();
+        } else if (this.props.type === "claim") {
+            return this.renderClaimPool();
+        }
+    }
 }
 
-FundFeePool = AssetWrapper(FundFeePool, {
+FeePoolOperation = AssetWrapper(FeePoolOperation, {
     propNames: ["asset", "core"],
     defaultProps: {
         core: "1.3.0"
@@ -151,4 +253,4 @@ FundFeePool = AssetWrapper(FundFeePool, {
     withDynamic: true
 });
 
-export default FundFeePool;
+export default FeePoolOperation;

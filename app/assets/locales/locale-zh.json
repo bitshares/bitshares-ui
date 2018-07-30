@@ -602,12 +602,18 @@
         },
         "asset": {
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "领取手续费",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text": "资产发行人可以在这里领取累积的资产手续费。",
                 "core_exchange_rate": "手续费汇率",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "所有网络手续费最终将使用 %(core)s 进行支付。手续费资金池用来承担从 %(asset)s 转换为 %(core)s 的费用，以便用户可以使用 %(asset)s 来支付手续费。如果资金池中余额用完，用户将无法继续使用 %(asset)s 支付手续费。",
                 "pool_balance": "资金池余额",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "手续费资金池",
                 "unclaimed_issuer_income": "发行人未申领收入"
             },
@@ -1636,6 +1642,7 @@
             "account_whitelist": "账户白名单",
             "all": "显示全部",
             "assert": "断言操作",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "领取资产手续费",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "创建资产",

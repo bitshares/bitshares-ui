@@ -633,13 +633,19 @@
         },
         "asset": {
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Потребовать комиссию",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "Эмитент активов может востребовать любую из накопленных здесь комиссий.",
                 "core_exchange_rate": "Основной обменный курс (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "Комиссионный пул платит в %(core)s, конвертируя комиссию из %(asset)s в %(core)s. Если в пуле недостаточно средств, комиссии могут не выплачиваться в %(asset)s, а будут по умолчанию в %(core)s",
                 "pool_balance": "Баланс пула",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Пул комиссии",
                 "unclaimed_issuer_income": "Невостребованный доход эмитента\n"
             },
@@ -1729,6 +1735,7 @@
             "account_whitelist": "Добавление в белый список",
             "all": "Показать все",
             "assert": "Операция подтверждения",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Взыскание комиссий с активов",
             "asset_claim_pool": "Востребовать пул комиссий актива",
             "asset_create": "Создание актива",

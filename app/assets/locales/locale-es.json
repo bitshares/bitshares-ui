@@ -631,13 +631,19 @@
         },
         "asset": {
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Reclamar tarifas",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "El emisor del activo puede reclamar cualquier comisiòn acumulada aquí.",
                 "core_exchange_rate": "Core exchange rate (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "El conjunto de comisiones se usa para pagar tarifas en %(core)s convirtiendo la comisiòn en %(asset)s a %(core)s. Si la comisiòn de la piscina se queda sin fondos, las comisiones ya no se pueden pagar en %(asset)s y seran el predeterminada a %(core)s",
                 "pool_balance": "Balance del Fondo",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fondo de Comisiones",
                 "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
             },
@@ -1726,6 +1732,7 @@
             "account_whitelist": "Lista blanca",
             "all": "Mostrar todo",
             "assert": "Afirmar operación",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Reclamar comisiones de activos",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Crear activo",

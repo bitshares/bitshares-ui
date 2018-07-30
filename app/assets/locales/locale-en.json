@@ -619,13 +619,19 @@
         },
         "asset": {
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "The asset issuer may claim any accumulated fees here.",
                 "core_exchange_rate": "Core exchange rate (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
-                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s",
+                    "Anyone can add %(core)s to the fee pool balance using this form:",
                 "pool_balance": "Pool balance",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Unclaimed issuer income"
             },
@@ -1695,6 +1701,7 @@
             "account_whitelist": "Account whitelist",
             "all": "Show all",
             "assert": "Assert operation",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Claim asset fees",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Create asset",

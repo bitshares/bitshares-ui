@@ -25,7 +25,7 @@ import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
 import BaseModal from "components/Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import FundFeePool from "./FundFeePool";
+import FeePoolOperation from "./FeePoolOperation";
 import {withRouter} from "react-router-dom";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
@@ -1536,7 +1536,7 @@ class AccountAssetUpdate extends React.Component {
 
                             <Tab title="explorer.asset.fee_pool.title">
                                 <div className="small-12 large-8 large-offset-2 grid-content">
-                                    <FundFeePool
+                                    <FeePoolOperation
                                         asset={asset.get("symbol")}
                                         funderAccountName={this.props.account.get(
                                             "name"
