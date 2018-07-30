@@ -620,6 +620,9 @@
             "title": "Accounts"
         },
         "asset": {
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
             "actions": "Asset actions",
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",

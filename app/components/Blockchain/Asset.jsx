@@ -19,6 +19,7 @@ import FeePoolOperation from "../Account/FeePoolOperation";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
 import AssetOwnerUpdate from "./AssetOwnerUpdate";
+import AssetPublishFeed from "./AssetPublishFeed";
 import {Tab, Tabs} from "../Utility/Tabs";
 
 class AssetFlag extends React.Component {
@@ -627,6 +628,30 @@ class Asset extends React.Component {
         );
     }
 
+    renderFeedPublish(asset) {
+        return (
+            <div
+                className="grid-content small-no-padding"
+                style={{overflowY: "visible"}}
+            >
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="transaction.trxTypes.asset_publish_feed" />
+                    </div>
+                    <Translate
+                        component="p"
+                        content="explorer.asset.feed_producer_text"
+                    />
+                    <AssetPublishFeed
+                        base={asset.id}
+                        account={this.props.currentAccount}
+                        currentOwner={asset.issuer}
+                    />
+                </div>
+            </div>
+        );
+    }
+
     renderFeePoolFunding(asset) {
         return (
             <div className="grid-content small-no-padding">
@@ -890,7 +915,6 @@ class Asset extends React.Component {
 
         if (leastColShort == null) {
             // couldn't find the least colshort?
-            console.log("couldn't find the least col short");
             return null;
         }
 
@@ -1290,6 +1314,10 @@ class Asset extends React.Component {
                                     {this.renderFeePoolClaiming(asset)}
                                     {this.renderFeesClaiming(asset)}
                                     {this.renderAssetOwnerUpdate(asset)}
+                                    {"bitasset" in asset &&
+                                    !asset.bitasset.is_prediction_market
+                                        ? this.renderFeedPublish(asset)
+                                        : null}
                                 </div>
                             </Tab>
                         </Tabs>

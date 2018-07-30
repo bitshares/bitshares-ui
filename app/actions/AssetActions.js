@@ -9,6 +9,34 @@ import {gatewayPrefixes} from "common/gateways";
 let inProgress = {};
 
 class AssetActions {
+    publishFeed({publisher, asset_id, mcr, mssr, settlementPrice, cer}) {
+        let tr = WalletApi.new_transaction();
+        tr.add_type_operation("asset_publish_feed", {
+            publisher,
+            asset_id,
+            feed: {
+                settlement_price: settlementPrice.toObject(),
+                maintenance_collateral_ratio: mcr,
+                maximum_short_squeeze_ratio: mssr,
+                core_exchange_rate: cer.toObject()
+            }
+        });
+
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:150] ----- fundPool error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
     fundPool(account_id, core, asset, amount) {
         let tr = WalletApi.new_transaction();
         let precision = utils.get_asset_precision(core.get("precision"));
