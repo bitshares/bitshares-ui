@@ -5,7 +5,6 @@ import AssetActions from "actions/AssetActions";
 import HelpContent from "../Utility/HelpContent";
 import utils from "common/utils";
 import {ChainStore} from "bitsharesjs";
-import FormattedAsset from "../Utility/FormattedAsset";
 import FormattedFee from "../Utility/FormattedFee";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
@@ -24,7 +23,6 @@ import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
 import BaseModal from "components/Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import FeePoolOperation from "./FeePoolOperation";
 import {withRouter} from "react-router-dom";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
@@ -206,6 +204,7 @@ class AccountAssetUpdate extends React.Component {
 
         let tabUpdateIndex = [];
 
+        /* Primary */
         if (
             s.update.max_supply !== p.update.max_supply ||
             s.core_exchange_rate.base.amount !==
@@ -215,6 +214,7 @@ class AccountAssetUpdate extends React.Component {
         )
             tabUpdateIndex["0"] = true;
 
+        /* Whitelist */
         if (
             JSON.stringify(s.whitelist_authorities) !==
                 JSON.stringify(p.whitelist_authorities) ||
@@ -227,6 +227,7 @@ class AccountAssetUpdate extends React.Component {
         )
             tabUpdateIndex["1"] = true;
 
+        /* Description */
         if (
             s.update.description.main !== p.update.description.main ||
             s.update.description.short_name !==
@@ -235,38 +236,33 @@ class AccountAssetUpdate extends React.Component {
         )
             tabUpdateIndex["2"] = true;
 
+        /* Bitasset options */
         if (
             JSON.stringify(s.bitasset_opts) !==
             JSON.stringify(p.original_bitasset_opts)
         )
             tabUpdateIndex["3"] = true;
 
-        if (
-            s.new_issuer_account_id !== null &&
-            s.new_issuer_account_id !== s.issuer
-        )
-            tabUpdateIndex["4"] = true;
-
+        /* Permissions */
         if (
             JSON.stringify(s.permissionBooleans) !==
             JSON.stringify(p.permissionBooleans)
         )
-            tabUpdateIndex["5"] = true;
+            tabUpdateIndex["4"] = true;
 
+        /* Flags */
         if (
             JSON.stringify(s.flagBooleans) !== JSON.stringify(p.flagBooleans) ||
             s.update.market_fee_percent !== p.update.market_fee_percent ||
             s.update.max_market_fee !== p.update.max_market_fee
         )
-            tabUpdateIndex["6"] = true;
-
-        // Tab 7 == Fee Pool
+            tabUpdateIndex["5"] = true;
 
         if (
             JSON.stringify(s.feedProducers) !==
             JSON.stringify(p.originalFeedProducers)
         )
-            tabUpdateIndex["8"] = true;
+            tabUpdateIndex["6"] = true;
 
         return tabUpdateIndex;
     }
@@ -888,10 +884,6 @@ class AccountAssetUpdate extends React.Component {
                     <Translate content="account.perm.reset" />
                 </button>
             </div>
-        );
-
-        const dynamicObject = this.props.getDynamicObject(
-            asset.get("dynamic_asset_data_id")
         );
 
         let cerValid = false;
@@ -1571,24 +1563,20 @@ class ConfirmModal extends React.Component {
                                 <Translate content="account.user_issued_assets.bitasset_opts" />
                             </li>
                         ) : null}
+
                         {tabsChanged["4"] ? (
-                            <li>
-                                <Translate content="account.user_issued_assets.update_owner" />
-                            </li>
-                        ) : null}
-                        {tabsChanged["5"] ? (
                             <li>
                                 <Translate content="account.permissions" />
                             </li>
                         ) : null}
-                        {tabsChanged["6"] ? (
+                        {tabsChanged["5"] ? (
                             <li>
                                 <Translate content="account.user_issued_assets.flags" />
                             </li>
                         ) : null}
 
                         {/* NEEDS CHECKING */}
-                        {tabsChanged["8"] ? (
+                        {tabsChanged["6"] ? (
                             <li>
                                 <Translate content="account.user_issued_assets.feed_producers" />
                             </li>

@@ -26,6 +26,9 @@ import DepositModal from "../Modal/DepositModal";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import WithdrawModal from "../Modal/WithdrawModalNew";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import ReserveAssetModal from "../Modal/ReserveAssetModal";
+import BaseModal from "../Modal/BaseModal";
 
 class AccountPortfolioList extends React.Component {
     constructor() {
@@ -185,6 +188,12 @@ class AccountPortfolioList extends React.Component {
 
     _hideAsset(asset, status) {
         SettingsActions.hideAsset(asset, status);
+    }
+
+    _burnAsset(asset, e) {
+        e.preventDefault();
+        this.setState({reserve: asset});
+        ZfApi.publish("reserve_asset", "open");
     }
 
     _showDepositModal(asset, e) {
@@ -564,6 +573,23 @@ class AccountPortfolioList extends React.Component {
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
+                    >
+                        {!isBitAsset ? (
+                            <a
+                                style={{marginRight: 0}}
+                                onClick={this._burnAsset.bind(
+                                    this,
+                                    asset.get("id")
+                                )}
+                            >
+                                <Icon name="fire" className="icon-14px" />
+                            </a>
+                        ) : null}
+                    </td>
+
+                    <td
+                        style={{textAlign: "center"}}
+                        className="column-hide-small"
                         data-place="bottom"
                         data-tip={counterpart.translate(
                             "tooltip." +
@@ -894,6 +920,20 @@ class AccountPortfolioList extends React.Component {
                     bridges={currentBridges}
                     isDown={this.props.gatewayDown.get("TRADE")}
                 />
+
+                {/* Burn modal */}
+                <BaseModal id="reserve_asset" overlay={true}>
+                    <br />
+                    <div className="grid-block vertical">
+                        <ReserveAssetModal
+                            asset={this.state.reserve}
+                            account={this.props.account}
+                            onClose={() => {
+                                ZfApi.publish("reserve_asset", "close");
+                            }}
+                        />
+                    </div>
+                </BaseModal>
             </tbody>
         );
     }

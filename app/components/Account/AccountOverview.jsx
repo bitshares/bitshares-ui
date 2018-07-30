@@ -530,6 +530,9 @@ class AccountOverview extends React.Component {
                                                     <Translate content="account.settle" />
                                                 </th>
                                                 <th className="column-hide-small">
+                                                    <Translate content="modal.reserve.submit" />
+                                                </th>
+                                                <th className="column-hide-small">
                                                     <Translate
                                                         content={
                                                             shownAssets ==

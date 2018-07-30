@@ -515,17 +515,21 @@ class AssetActions {
             payer,
             extensions: []
         });
-        return WalletDb.process_transaction(tr, null, true)
-            .then(result => {
-                return true;
-            })
-            .catch(error => {
-                console.log(
-                    "[AssetActions.js:150] ----- reserveAsset error ----->",
-                    error
-                );
-                return false;
-            });
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                    return true;
+                })
+                .catch(error => {
+                    dispatch(false);
+                    console.log(
+                        "[AssetActions.js:150] ----- reserveAsset error ----->",
+                        error
+                    );
+                    return false;
+                });
+        };
     }
 }
 
