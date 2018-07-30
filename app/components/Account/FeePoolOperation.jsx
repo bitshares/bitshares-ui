@@ -5,7 +5,6 @@ import {Asset} from "common/MarketClasses";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 import FormattedAsset from "../Utility/FormattedAsset";
-import FormattedFee from "../Utility/FormattedFee";
 import AssetActions from "actions/AssetActions";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {ChainStore} from "bitsharesjs";
@@ -172,10 +171,6 @@ class FeePoolOperation extends React.Component {
                         <Translate content="account.perm.reset" />
                     </button>
                 </div>
-                <p>
-                    <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                    <FormattedFee opType="asset_fund_fee_pool" />
-                </p>
             </div>
         );
     }
@@ -243,10 +238,6 @@ class FeePoolOperation extends React.Component {
                         <Translate content="account.perm.reset" />
                     </button>
                 </div>
-                <p>
-                    <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                    <FormattedFee opType="asset_claim_pool" />
-                </p>
             </div>
         );
     }
@@ -305,7 +296,7 @@ class FeePoolOperation extends React.Component {
                     style={{width: "100%", paddingTop: 16}}
                 />
 
-                <div style={{paddingTop: "1rem"}}>
+                <div style={{paddingTop: "1rem"}} className="button-group">
                     <button
                         className={classnames("button", {
                             disabled: !validClaim

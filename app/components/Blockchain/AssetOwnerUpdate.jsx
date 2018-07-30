@@ -3,7 +3,6 @@ import AccountSelector from "../Account/AccountSelector";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import FormattedFee from "../Utility/FormattedFee";
 import classnames from "classnames";
 import AssetActions from "actions/AssetActions";
 
@@ -98,10 +97,6 @@ class AssetOwnerUpdate extends React.Component {
                         <Translate content="account.perm.reset" />
                     </button>
                 </div>
-                <p>
-                    <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                    <FormattedFee opType="asset_update_issuer" />
-                </p>
             </div>
         );
     }
