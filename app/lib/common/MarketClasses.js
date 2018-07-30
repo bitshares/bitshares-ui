@@ -761,12 +761,6 @@ class CallOrder {
 
     _getMaxDebtToCover() {
         let max_collateral_to_sell = this._getMaxCollateralToSell();
-        console.log(
-            "collateral",
-            this.collateral,
-            "max_collateral_to_sell",
-            max_collateral_to_sell
-        );
         let match_price = this._getMatchPrice();
         return max_collateral_to_sell * match_price;
     }

@@ -1177,12 +1177,6 @@ describe("CallOrder", function() {
         assert(o.amountForSale().getAmount() !== 188045485419); // amountForSale without target collateral ratio
         assert.equal(o.amountForSale().getAmount(), 3784277224);
         assert.equal(o.amountToReceive().getAmount(), 472518644);
-        console.log(
-            "o feed price",
-            o.getFeedPrice(),
-            "o2 feed price",
-            o2.getFeedPrice()
-        );
 
         assert.equal(o2.amountForSale().getAmount(), 3784277224);
         assert.equal(o2.amountToReceive().getAmount(), 472518644);
