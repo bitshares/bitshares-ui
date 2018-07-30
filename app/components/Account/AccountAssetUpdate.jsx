@@ -701,14 +701,6 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
-    _onClaimFees() {
-        AssetActions.claimPoolFees(
-            this.props.account.get("id"),
-            this.props.asset,
-            this.state.claimFeesAmount.replace(/,/g, "")
-        );
-    }
-
     onChangeList(key, action = "add", id) {
         let current = this.state[key];
         if (action === "add" && !current.includes(id)) {
@@ -900,24 +892,6 @@ class AccountAssetUpdate extends React.Component {
 
         const dynamicObject = this.props.getDynamicObject(
             asset.get("dynamic_asset_data_id")
-        );
-        let unclaimedBalance = dynamicObject
-            ? dynamicObject.get("accumulated_fees")
-            : 0;
-        let validClaim =
-            claimFeesAmount > 0 &&
-            utils.get_asset_precision(asset.get("precision")) *
-                claimFeesAmount <=
-                unclaimedBalance;
-
-        let unclaimedBalanceText = (
-            <span>
-                <Translate component="span" content="transfer.available" />:&nbsp;
-                <FormattedAsset
-                    amount={unclaimedBalance}
-                    asset={asset.get("id")}
-                />
-            </span>
         );
 
         let cerValid = false;
@@ -1487,71 +1461,6 @@ class AccountAssetUpdate extends React.Component {
                                             {errors.conflict_producer}
                                         </p>
                                     ) : null}
-                                </div>
-                            </Tab>
-
-                            <Tab title="explorer.asset.fee_pool.title">
-                                <div className="small-12 large-8 large-offset-2 grid-content">
-                                    <FeePoolOperation
-                                        asset={asset.get("symbol")}
-                                        funderAccountName={this.props.account.get(
-                                            "name"
-                                        )}
-                                    />
-
-                                    {/* Claim fees, disabled until witness node update gets pushed to openledger*/}
-
-                                    <Translate
-                                        component="h3"
-                                        content="transaction.trxTypes.asset_claim_fees"
-                                    />
-                                    <Translate
-                                        component="p"
-                                        content="explorer.asset.fee_pool.claim_text"
-                                        asset={asset.get("symbol")}
-                                    />
-                                    <div style={{paddingBottom: "1rem"}}>
-                                        <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />:&nbsp;
-                                        {dynamicObject ? (
-                                            <FormattedAsset
-                                                amount={dynamicObject.get(
-                                                    "accumulated_fees"
-                                                )}
-                                                asset={asset.get("id")}
-                                            />
-                                        ) : null}
-                                    </div>
-
-                                    <AmountSelector
-                                        label="transfer.amount"
-                                        display_balance={unclaimedBalanceText}
-                                        amount={claimFeesAmount}
-                                        onChange={this._onClaimInput.bind(this)}
-                                        asset={asset.get("id")}
-                                        assets={[asset.get("id")]}
-                                        placeholder="0.0"
-                                        tabIndex={1}
-                                        style={{width: "100%", paddingTop: 16}}
-                                    />
-
-                                    <div style={{paddingTop: "1rem"}}>
-                                        <button
-                                            className={classnames("button", {
-                                                disabled: !validClaim
-                                            })}
-                                            onClick={this._onClaimFees.bind(
-                                                this
-                                            )}
-                                        >
-                                            <Translate content="explorer.asset.fee_pool.claim_fees" />
-                                        </button>
-                                        <button
-                                            className="button outline"
-                                            onClick={this._reset.bind(this)}
-                                        >
-                                            <Translate content="account.perm.reset" />
-                                        </button>
-                                    </div>
                                 </div>
                             </Tab>
 

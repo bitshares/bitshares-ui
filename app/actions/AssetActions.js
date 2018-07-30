@@ -118,7 +118,6 @@ class AssetActions {
 
     claimPoolFees(account_id, asset, amount) {
         let tr = WalletApi.new_transaction();
-        let precision = utils.get_asset_precision(asset.get("precision"));
 
         tr.add_type_operation("asset_claim_fees", {
             fee: {
@@ -128,12 +127,12 @@ class AssetActions {
             issuer: account_id,
             amount_to_claim: {
                 asset_id: asset.get("id"),
-                amount: amount * precision
+                amount: amount.getAmount()
             }
         });
         return dispatch => {
             return WalletDb.process_transaction(tr, null, true)
-                .then(result => {
+                .then(() => {
                     dispatch(true);
                 })
                 .catch(error => {

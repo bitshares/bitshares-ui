@@ -670,6 +670,27 @@ class Asset extends React.Component {
         );
     }
 
+    renderFeesClaiming(asset) {
+        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
+        if (dynamic) dynamic = dynamic.toJS();
+        return (
+            <div className="grid-content small-no-padding">
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="transaction.trxTypes.asset_claim_fees" />
+                    </div>
+                    <FeePoolOperation
+                        asset={asset.symbol}
+                        dynamic={dynamic}
+                        funderAccountName={this.props.currentAccount}
+                        hideBalance
+                        type="claim_fees"
+                    />
+                </div>
+            </div>
+        );
+    }
+
     // TODO: Blacklist Authorities: <Account list like Voting>
     // TODO: Blacklist Market: Base/Market, Base/Market
     renderPermissions(asset) {
@@ -1265,9 +1286,10 @@ class Asset extends React.Component {
                                     className="grid-block vertical large-horizontal medium-up-1 large-up-2"
                                     style={{paddingTop: "1rem"}}
                                 >
-                                    {this.renderAssetOwnerUpdate(asset)}
                                     {this.renderFeePoolFunding(asset)}
                                     {this.renderFeePoolClaiming(asset)}
+                                    {this.renderFeesClaiming(asset)}
+                                    {this.renderAssetOwnerUpdate(asset)}
                                 </div>
                             </Tab>
                         </Tabs>

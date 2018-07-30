@@ -29,10 +29,10 @@ class FeePoolOperation extends React.Component {
     onAccountChanged = stateSetter(this, "newFunderAccount");
     onPoolInput = stateSetter(this, "fundPoolAmount", keyGetter("amount"));
 
-    onClaimInput({amount}) {
-        this.state.claimPoolAsset.setAmount({real: amount});
+    onClaimInput(key, {amount}) {
+        this.state[key + "Asset"].setAmount({real: amount});
         this.setState({
-            claimPoolAmount: amount
+            [key]: amount
         });
     }
 
@@ -59,12 +59,34 @@ class FeePoolOperation extends React.Component {
             asset_id: this.props.core.get("id")
         }),
         claimPoolAmount: 0,
-        claimPoolAsset: new Asset({
+        claimPoolAmountAsset: new Asset({
             amount: 0,
             precision: this.props.core.get("precision"),
             asset_id: this.props.core.get("id")
+        }),
+        claimFeesAmount: 0,
+        claimFeesAmountAsset: new Asset({
+            amount: 0,
+            precision: this.props.asset.get("precision"),
+            asset_id: this.props.asset.get("id")
         })
     });
+
+    onClaimFees() {
+        let account = ChainStore.getAccount(this.props.funderAccountName);
+        if (!account) return;
+        AssetActions.claimPoolFees(
+            account.get("id"),
+            this.props.asset,
+            this.state.claimFeesAmountAsset
+        );
+    }
+
+    onClaimPool = () =>
+        AssetActions.claimPool(
+            this.props.asset,
+            this.state.claimPoolAmountAsset
+        );
 
     renderFundPool() {
         const {
@@ -159,7 +181,7 @@ class FeePoolOperation extends React.Component {
     }
 
     renderClaimPool() {
-        const {props, onClaim, reset} = this;
+        const {props, onClaimPool, reset} = this;
         const {claimPoolAmount} = this.state;
         const {asset, core, getDynamicObject} = props;
         let dynamicObject = getDynamicObject(
@@ -170,13 +192,15 @@ class FeePoolOperation extends React.Component {
         const balanceText = !!dynamicObject ? (
             <span
                 onClick={() => {
-                    this.state.claimPoolAsset.setAmount({
+                    this.state.claimPoolAmountAsset.setAmount({
                         sats: dynamicObject.get("fee_pool")
                     });
                     this.setState({
-                        claimPoolAmount: this.state.claimPoolAsset.getAmount({
-                            real: true
-                        })
+                        claimPoolAmount: this.state.claimPoolAmountAsset.getAmount(
+                            {
+                                real: true
+                            }
+                        )
                     });
                 }}
             >
@@ -198,7 +222,7 @@ class FeePoolOperation extends React.Component {
                     label="transfer.amount"
                     display_balance={balanceText}
                     amount={claimPoolAmount}
-                    onChange={this.onClaimInput.bind(this)}
+                    onChange={this.onClaimInput.bind(this, "claimPoolAmount")}
                     asset={coreID}
                     assets={[coreID]}
                     placeholder="0.0"
@@ -211,7 +235,7 @@ class FeePoolOperation extends React.Component {
                         className={classnames("button", {
                             disabled: claimPoolAmount <= 0
                         })}
-                        onClick={onClaim}
+                        onClick={onClaimPool}
                     >
                         <Translate content="transaction.trxTypes.asset_claim_fee_pool" />
                     </button>
@@ -227,14 +251,87 @@ class FeePoolOperation extends React.Component {
         );
     }
 
-    onClaim = () =>
-        AssetActions.claimPool(this.props.asset, this.state.claimPoolAsset);
+    renderClaimFees() {
+        const {props} = this;
+        const {claimFeesAmount} = this.state;
+        const {asset, getDynamicObject} = props;
+        let dynamicObject = getDynamicObject(
+            asset.get("dynamic_asset_data_id")
+        );
+
+        let unclaimedBalance = dynamicObject
+            ? dynamicObject.get("accumulated_fees")
+            : 0;
+        let validClaim =
+            claimFeesAmount > 0 &&
+            this.state.claimFeesAmountAsset.getAmount() <= unclaimedBalance;
+
+        let unclaimedBalanceText = (
+            <span>
+                <Translate component="span" content="transfer.available" />:&nbsp;
+                <FormattedAsset
+                    amount={unclaimedBalance}
+                    asset={asset.get("id")}
+                />
+            </span>
+        );
+
+        return (
+            <div>
+                <Translate
+                    component="p"
+                    content="explorer.asset.fee_pool.claim_text"
+                    asset={asset.get("symbol")}
+                />
+                <div style={{paddingBottom: "1rem"}}>
+                    <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />:&nbsp;
+                    {dynamicObject ? (
+                        <FormattedAsset
+                            amount={dynamicObject.get("accumulated_fees")}
+                            asset={asset.get("id")}
+                        />
+                    ) : null}
+                </div>
+
+                <AmountSelector
+                    label="transfer.amount"
+                    display_balance={unclaimedBalanceText}
+                    amount={claimFeesAmount}
+                    onChange={this.onClaimInput.bind(this, "claimFeesAmount")}
+                    asset={asset.get("id")}
+                    assets={[asset.get("id")]}
+                    placeholder="0.0"
+                    tabIndex={1}
+                    style={{width: "100%", paddingTop: 16}}
+                />
+
+                <div style={{paddingTop: "1rem"}}>
+                    <button
+                        className={classnames("button", {
+                            disabled: !validClaim
+                        })}
+                        onClick={this.onClaimFees.bind(this)}
+                    >
+                        <Translate content="explorer.asset.fee_pool.claim_fees" />
+                    </button>
+                    <button
+                        className="button outline"
+                        onClick={this.reset.bind(this)}
+                    >
+                        <Translate content="account.perm.reset" />
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     render() {
         if (this.props.type === "fund") {
             return this.renderFundPool();
         } else if (this.props.type === "claim") {
             return this.renderClaimPool();
+        } else if (this.props.type === "claim_fees") {
+            return this.renderClaimFees();
         }
     }
 }
