@@ -3,8 +3,14 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import cnames from "classnames";
 import AccountActions from "actions/AccountActions";
+import {isHiddenInMenu} from "../../branding";
 
 export default class DropDownMenu extends React.Component {
+    constructor(props) {
+        super(props);
+        this._itemWasShown = false;
+    }
+
     shouldComponentUpdate(np) {
         let shouldUpdate = false;
         for (let key in np) {
@@ -20,6 +26,34 @@ export default class DropDownMenu extends React.Component {
 
     _onRemoveContact() {
         AccountActions.removeAccountContact(this.props.currentAccount);
+    }
+
+    _shouldItemBeShown(item, unlocked = false, personal = false) {
+        let showWhenPersonal = true;
+        if (personal) {
+            showWhenPersonal = this.props.isMyAccount;
+        }
+        let showWhenUnLocked = true;
+        if (unlocked) {
+            showWhenUnLocked = !this.props.locked;
+        }
+        let shown =
+            !isHiddenInMenu(item, this.props.locked) &&
+            showWhenPersonal &&
+            showWhenUnLocked;
+        if (shown) {
+            this._itemWasShown = true;
+        }
+        return shown;
+    }
+
+    _getDividerIfNecessary(additionalClass = "") {
+        if (this._itemWasShown) {
+            this._itemWasShown = false;
+            return <div className={additionalClass + " divider"} />;
+        } else {
+            return null;
+        }
     }
 
     render() {
@@ -50,7 +84,7 @@ export default class DropDownMenu extends React.Component {
                     overflowY: "auto"
                 }}
             >
-                <li className="divider" onClick={toggleLock}>
+                <li onClick={toggleLock}>
                     <div className="table-cell">
                         <Icon size="2x" name="power" title="icons.power" />
                     </div>
@@ -65,7 +99,9 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
-                {locked ? (
+                <div className="divider" />
+
+                {this._shouldItemBeShown("create-account") && locked ? (
                     <li
                         className={cnames({
                             active:
@@ -95,7 +131,7 @@ export default class DropDownMenu extends React.Component {
                     </li>
                 ) : null}
 
-                {!this.props.locked ? (
+                {this._shouldItemBeShown("account", true, true) && !locked ? (
                     <li
                         className={cnames({
                             active: active.indexOf("/account") !== -1
@@ -118,10 +154,13 @@ export default class DropDownMenu extends React.Component {
                     </li>
                 ) : null}
 
-                {!isMyAccount && showAccountLinks ? (
+                {this._shouldItemBeShown("add-remove-contact", true) &&
+                !isMyAccount &&
+                showAccountLinks ? (
                     <li
-                        className="divider"
-                        onClick={this[isContact ? "_onRemoveContact" : "_onAddContact"].bind(this)}
+                        onClick={this[
+                            isContact ? "_onRemoveContact" : "_onAddContact"
+                        ].bind(this)}
                     >
                         <div className="table-cell">
                             <Icon
@@ -144,338 +183,390 @@ export default class DropDownMenu extends React.Component {
                     </li>
                 ) : null}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/market/") !== -1
-                        },
-                        "column-show-small"
-                    )}
-                    onClick={this.props.onNavigate.bind(this, tradeUrl)}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="trade"
-                            title="icons.trade.exchange"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.exchange" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("exchange") && (
+                    <li
+                        className={cnames(
+                            {
+                                active: active.indexOf("/market/") !== -1
+                            },
+                            "column-show-small"
+                        )}
+                        onClick={this.props.onNavigate.bind(this, tradeUrl)}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="trade"
+                                title="icons.trade.exchange"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.exchange" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/explorer") !== -1
-                        },
-                        "column-show-small"
-                    )}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        "/explorer/blocks"
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="server" title="icons.server" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.explorer" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("explorer", true) && (
+                    <li
+                        className={cnames(
+                            {
+                                active: active.indexOf("/explorer") !== -1
+                            },
+                            "column-show-small"
+                        )}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            "/explorer/blocks"
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="server"
+                                title="icons.server"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.explorer" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/transfer") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(this, "/transfer")}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="transfer"
-                            title="icons.transfer"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.payments_legacy" />
-                    </div>
-                </li>
+                {this._getDividerIfNecessary("column-show-small")}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
-                        },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.onNavigate.bind(
-                                  this,
-                                  "/deposit-withdraw"
-                              )
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="deposit"
-                            title="icons.deposit.deposit"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="gateway.deposit" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("transfer", true, true) && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/transfer") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(this, "/transfer")}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="transfer"
+                                title="icons.transfer"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.payments_legacy" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
-                        },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.showDeposit
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="deposit"
-                            title="icons.deposit.deposit"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.deposit.submit_beta" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown(
+                    "deposit-withdraw-legacy",
+                    true,
+                    true
+                ) && (
+                    <li
+                        className={cnames(
+                            {
+                                active:
+                                    active.indexOf("/deposit-withdraw") !== -1
+                            },
+                            {disabled: !enableDepositWithdraw}
+                        )}
+                        onClick={
+                            !enableDepositWithdraw
+                                ? () => {}
+                                : this.props.onNavigate.bind(
+                                      this,
+                                      "/deposit-withdraw"
+                                  )
+                        }
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="deposit"
+                                title="icons.deposit.deposit"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="gateway.deposit" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
-                        },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.onNavigate.bind(
-                                  this,
-                                  "/deposit-withdraw"
-                              )
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="withdraw"
-                            title="icons.withdraw"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.withdraw.submit" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("deposit-withdraw", true, true) && (
+                    <li
+                        className={cnames(
+                            {
+                                active:
+                                    active.indexOf("/deposit-withdraw") !== -1
+                            },
+                            {disabled: !enableDepositWithdraw}
+                        )}
+                        onClick={
+                            !enableDepositWithdraw
+                                ? () => {}
+                                : this.props.showDeposit
+                        }
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="deposit"
+                                title="icons.deposit.deposit"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="modal.deposit.submit_beta" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        "divider",
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
-                        },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.showWithdraw
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="withdraw"
-                            title="icons.withdraw"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.withdraw.submit_beta" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown(
+                    "deposit-withdraw-legacy",
+                    true,
+                    true
+                ) && (
+                    <li
+                        className={cnames(
+                            {
+                                active:
+                                    active.indexOf("/deposit-withdraw") !== -1
+                            },
+                            {disabled: !enableDepositWithdraw}
+                        )}
+                        onClick={
+                            !enableDepositWithdraw
+                                ? () => {}
+                                : this.props.onNavigate.bind(
+                                      this,
+                                      "/deposit-withdraw"
+                                  )
+                        }
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="withdraw"
+                                title="icons.withdraw"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="modal.withdraw.submit" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/settings") !== -1
-                        },
-                        "divider",
-                        "desktop-only"
-                    )}
-                    onClick={this.props.onNavigate.bind(this, "/settings")}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="cogs" title="icons.cogs" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.settings" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("deposit-withdraw", true, true) && (
+                    <li
+                        className={cnames(
+                            {
+                                active:
+                                    active.indexOf("/deposit-withdraw") !== -1
+                            },
+                            {disabled: !enableDepositWithdraw}
+                        )}
+                        onClick={
+                            !enableDepositWithdraw
+                                ? () => {}
+                                : this.props.showWithdraw
+                        }
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="withdraw"
+                                title="icons.withdraw"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="modal.withdraw.submit_beta" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/settings") !== -1
-                        },
-                        "divider",
-                        "mobile-only",
-                        "has-submenu"
-                    )}
-                    onClick={this.props.toggleDropdownSubmenu}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="cogs" title="icons.cogs" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.settings" />{" "}
-                    </div>
-                </li>
+                {this._getDividerIfNecessary()}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/news") !== -1
-                    })}
-                    onClick={this.props.onNavigate.bind(this, "/news")}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="news" title="icons.news" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="news.news" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("settings", true, true) && (
+                    <li
+                        className={cnames(
+                            {
+                                active: active.indexOf("/settings") !== -1
+                            },
+                            "desktop-only"
+                        )}
+                        onClick={this.props.onNavigate.bind(this, "/settings")}
+                    >
+                        <div className="table-cell">
+                            <Icon size="2x" name="cogs" title="icons.cogs" />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.settings" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames(
-                        {
+                {this._shouldItemBeShown("settings", true, true) && (
+                    <li
+                        className={cnames(
+                            {
+                                active: active.indexOf("/settings") !== -1
+                            },
+                            "mobile-only",
+                            "has-submenu"
+                        )}
+                        onClick={this.props.toggleDropdownSubmenu}
+                    >
+                        <div className="table-cell">
+                            <Icon size="2x" name="cogs" title="icons.cogs" />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.settings" />{" "}
+                        </div>
+                    </li>
+                )}
+
+                {this._getDividerIfNecessary()}
+
+                {this._shouldItemBeShown("news") && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/news") !== -1
+                        })}
+                        onClick={this.props.onNavigate.bind(this, "/news")}
+                    >
+                        <div className="table-cell">
+                            <Icon size="2x" name="news" title="icons.news" />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="news.news" />
+                        </div>
+                    </li>
+                )}
+
+                {this._shouldItemBeShown("help") && (
+                    <li
+                        className={cnames({
                             active:
                                 active.indexOf(
                                     "/help/introduction/bitshares"
                                 ) !== -1
-                        },
-                        "divider"
-                    )}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        "/help/introduction/bitshares"
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="question-circle"
-                            title="icons.question_circle"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.help" />
-                    </div>
-                </li>
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            "/help/introduction/bitshares"
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="question-circle"
+                                title="icons.question_circle"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="header.help" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/voting") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/voting`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="thumbs-up"
-                            title="icons.thumbs_up"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.voting" />
-                    </div>
-                </li>
+                {this._getDividerIfNecessary()}
 
-                <li
-                    className={cnames({
-                        active:
-                            active.indexOf("/assets") !== -1 &&
-                            active.indexOf("/account/") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/assets`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="assets" title="icons.assets" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="explorer.assets.title" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("voting", true, true) && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/voting") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/voting`
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="thumbs-up"
+                                title="icons.thumbs_up"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="account.voting" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/signedmessages") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/signedmessages`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="text"
-                            title="icons.text.signed_messages"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.signedmessages.menuitem" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("assets", true, true) && (
+                    <li
+                        className={cnames({
+                            active:
+                                active.indexOf("/assets") !== -1 &&
+                                active.indexOf("/account/") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/assets`
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="assets"
+                                title="icons.assets"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="explorer.assets.title" />
+                        </div>
+                    </li>
+                )}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/member-stats") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/member-stats`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="text"
-                            title="icons.text.membership_stats"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.member.stats" />
-                    </div>
-                </li>
+                {this._shouldItemBeShown("signedmessages", true, true) && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/signedmessages") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/signedmessages`
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="text"
+                                title="icons.text.signed_messages"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="account.signedmessages.menuitem" />
+                        </div>
+                    </li>
+                )}
 
-                {isMyAccount ? (
+                {this._shouldItemBeShown("member-stats", true, true) && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/member-stats") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/member-stats`
+                        )}
+                    >
+                        <div className="table-cell">
+                            <Icon
+                                size="2x"
+                                name="text"
+                                title="icons.text.membership_stats"
+                            />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="account.member.stats" />
+                        </div>
+                    </li>
+                )}
+
+                {this._shouldItemBeShown("vesting", true, true) && (
                     <li
                         className={cnames({
                             active: active.indexOf("/vesting") !== -1
@@ -496,66 +587,75 @@ export default class DropDownMenu extends React.Component {
                             <Translate content="account.vesting.title" />
                         </div>
                     </li>
-                ) : null}
+                )}
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/whitelist") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/whitelist`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="list" title="icons.list" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.whitelist.title" />
-                    </div>
-                </li>
-
-                <li
-                    className={cnames("divider", {
-                        active: active.indexOf("/permissions") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        `/account/${currentAccount}/permissions`
-                    )}
-                >
-                    <div className="table-cell">
-                        <Icon size="2x" name="warning" title="icons.warning" />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="account.permissions" />
-                    </div>
-                </li>
-
-                {showAccountLinks ? (
+                {this._shouldItemBeShown("whitelist", true, true) && (
                     <li
-                        className={cnames(
-                            {
-                                active: active.indexOf("/accounts") !== -1
-                            },
-                            "divider"
+                        className={cnames({
+                            active: active.indexOf("/whitelist") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/whitelist`
                         )}
-                        onClick={this.props.onNavigate.bind(this, "/accounts")}
+                    >
+                        <div className="table-cell">
+                            <Icon size="2x" name="list" title="icons.list" />
+                        </div>
+                        <div className="table-cell">
+                            <Translate content="account.whitelist.title" />
+                        </div>
+                    </li>
+                )}
+
+                {this._shouldItemBeShown("permissions", true, true) && (
+                    <li
+                        className={cnames({
+                            active: active.indexOf("/permissions") !== -1,
+                            disabled: !showAccountLinks
+                        })}
+                        onClick={this.props.onNavigate.bind(
+                            this,
+                            `/account/${currentAccount}/permissions`
+                        )}
                     >
                         <div className="table-cell">
                             <Icon
                                 size="2x"
-                                name="folder"
-                                title="icons.folder"
+                                name="warning"
+                                title="icons.warning"
                             />
                         </div>
                         <div className="table-cell">
-                            <Translate content="explorer.accounts.title" />
+                            <Translate content="account.permissions" />
                         </div>
                     </li>
-                ) : null}
+                )}
+
+                {this._shouldItemBeShown("accounts", true, true) &&
+                    showAccountLinks && (
+                        <li
+                            className={cnames({
+                                active: active.indexOf("/accounts") !== -1
+                            })}
+                            onClick={this.props.onNavigate.bind(
+                                this,
+                                "/accounts"
+                            )}
+                        >
+                            <div className="table-cell">
+                                <Icon
+                                    size="2x"
+                                    name="folder"
+                                    title="icons.folder"
+                                />
+                            </div>
+                            <div className="table-cell">
+                                <Translate content="explorer.accounts.title" />
+                            </div>
+                        </li>
+                    )}
             </ul>
         );
     }

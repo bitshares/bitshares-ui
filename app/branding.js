@@ -9,6 +9,7 @@
  * @returns {string}
  */
 export function getWalletName() {
+    // also include in webpack.config.js to display while loading
     return "BitShares";
 }
 
@@ -39,6 +40,15 @@ export function getFaucet() {
  */
 export function getLogo() {
     return require("assets/logo-ico-blue.png");
+}
+
+/**
+ * Target to navigate to when upper left logo is clicked
+ * @returns {*}
+ */
+export function getLogoTarget() {
+    // can be a url (external target) or the key "dashboard" (navigate in wallet to dashboard)
+    return "dashboard";
 }
 
 /**
@@ -269,11 +279,47 @@ export function allowedGateway(gateway) {
     return ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"].indexOf(gateway) >= 0;
 }
 
-export function getSupportedLanguages() {
-    // not yet supported
+export function getLocales() {
+    return ["en"];
 }
 
 export function getAllowedLogins() {
     // possible: list containing any combination of ["password", "wallet"]
     return ["password", "wallet"];
+}
+
+export function isMarginAllowed() {
+    return false;
+}
+
+export function isHiddenInMenu(item, ifNotUnlocked = true) {
+    // to choose from
+    //  "exchange",
+    //  "account",
+    //  "accounts",
+    //  "create-account",
+    //  "dashboard",
+    //  "add-remove-contact",
+    //  "explorer",
+    //  "transfer",
+    //  "deposit-withdraw",
+    //  "deposit-withdraw-legacy",
+    //  "settings",
+    //  "news",
+    //  "help",
+    //  "voting",
+    //  "assets",
+    //  "signedmessages",
+    //  "member-stats",
+    //  "vesting",
+    //  "permissions"
+
+    // always hidden items (e.g. "deposit-withdraw-legacy")
+    let hidden = [];
+
+    if (ifNotUnlocked) {
+        // hidden if the wallet is locked or not account is selected, e.g. "signedmessages", "vesting" etc.
+        hidden = hidden.concat([]);
+    }
+    return hidden.indexOf(item) >= 0;
 }

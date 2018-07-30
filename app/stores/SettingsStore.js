@@ -10,7 +10,9 @@ import {
     getDefaultLogin,
     getMyMarketsBases,
     getMyMarketsQuotes,
-    getUnits
+    getUnits,
+    getLocales,
+    getAllowedLogins
 } from "branding";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
@@ -93,7 +95,7 @@ class SettingsStore {
      */
     _getDefaultSetting() {
         return {
-            locale: "en",
+            locale: getLocales()[0],
             apiServer: settingsAPIs.DEFAULT_WS_NODE,
             faucet_address: settingsAPIs.DEFAULT_FAUCET,
             unit: CORE_ASSET,
@@ -117,28 +119,22 @@ class SettingsStore {
      * @private
      */
     _getDefaultChoices() {
+        let passwordLoginChoices = [];
+        if (getAllowedLogins().indexOf("password") >= 0) {
+            passwordLoginChoices.push({translate: "cloud_login"});
+        }
+        if (getAllowedLogins().indexOf("wallet") >= 0) {
+            passwordLoginChoices.push({translate: "local_wallet"});
+        }
+
         return {
-            locale: [
-                "en",
-                "zh",
-                "fr",
-                "ko",
-                "de",
-                "es",
-                "it",
-                "tr",
-                "ru",
-                "ja"
-            ],
+            locale: getLocales(),
             apiServer: settingsAPIs.WS_NODE_LIST.slice(0), // clone all default servers as configured in apiConfig.js
             unit: getUnits(this._getChainId()),
             showSettles: [{translate: "yes"}, {translate: "no"}],
             showAssetPercent: [{translate: "yes"}, {translate: "no"}],
             themes: ["darkTheme", "lightTheme", "midnightTheme"],
-            passwordLogin: [
-                {translate: "cloud_login"},
-                {translate: "local_wallet"}
-            ]
+            passwordLogin: passwordLoginChoices
         };
     }
 

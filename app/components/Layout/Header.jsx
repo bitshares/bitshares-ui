@@ -29,7 +29,8 @@ import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
 
-import {getLogo} from "branding";
+import {getLogo, isHiddenInMenu} from "branding";
+import {getLogoTarget} from "../../branding";
 var logo = getLogo();
 
 // const FlagImage = ({flag, width = 20, height = 20}) => {
@@ -168,6 +169,14 @@ class Header extends React.Component {
         this._closeDropdown();
     }
 
+    _onLogoClick(e) {
+        if (getLogoTarget() == "dashboard") {
+            this._onNavigate("/", e);
+        } else {
+            window.open(getLogoTarget(), "_blank");
+        }
+    }
+
     _closeAccountsListDropdown() {
         if (this.state.accountsListDropdownActive) {
             this.setState({
@@ -287,6 +296,14 @@ class Header extends React.Component {
         }
     }
 
+    _shouldItemBeShown(item) {
+        return !isHiddenInMenu(item, this.props.locked);
+    }
+
+    _hasNoAccountOrLocked() {
+        return this.props.currentAccount == null || this.props.locked;
+    }
+
     render() {
         let {active} = this.state;
         let {
@@ -351,7 +368,7 @@ class Header extends React.Component {
                         (active.indexOf("dashboard") !== -1 &&
                             active.indexOf("account") === -1)
                 })}
-                onClick={this._onNavigate.bind(this, "/")}
+                onClick={this._onLogoClick.bind(this)}
             >
                 <img style={{margin: 0, height: 40}} src={logo} />
             </a>
@@ -919,35 +936,79 @@ class Header extends React.Component {
 
                         <ul className="menu-bar">
                             <li>{dashboard}</li>
-                            {!currentAccount || !!createAccountLink ? null : (
+                            {this._shouldItemBeShown("dashboard") &&
+                                !!!createAccountLink && (
+                                    <li>
+                                        <Link
+                                            style={{flexFlow: "row"}}
+                                            to={`/account/${currentAccount}`}
+                                            className={cnames({
+                                                active:
+                                                    active.indexOf(
+                                                        "account/"
+                                                    ) !== -1 &&
+                                                    active.indexOf(
+                                                        "/account/"
+                                                    ) !== -1 &&
+                                                    active.indexOf(
+                                                        "/assets"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/voting"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/signedmessages"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/member-stats"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/vesting"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/whitelist"
+                                                    ) === -1 &&
+                                                    active.indexOf(
+                                                        "/permissions"
+                                                    ) === -1
+                                            })}
+                                        >
+                                            <Icon
+                                                size="1_5x"
+                                                style={{
+                                                    position: "relative",
+                                                    top: -2,
+                                                    left: -8
+                                                }}
+                                                name="dashboard"
+                                                title="icons.dashboard"
+                                            />
+                                            <Translate
+                                                className="column-hide-small"
+                                                content="header.dashboard"
+                                            />
+                                        </Link>
+                                    </li>
+                                )}
+                            {this._shouldItemBeShown("exchange") && (
                                 <li>
-                                    <Link
+                                    <a
                                         style={{flexFlow: "row"}}
-                                        to={`/account/${currentAccount}`}
-                                        className={cnames({
-                                            active:
-                                                active.indexOf("account/") !==
-                                                    -1 &&
-                                                active.indexOf("/account/") !==
-                                                    -1 &&
-                                                active.indexOf("/assets") ===
-                                                    -1 &&
-                                                active.indexOf("/voting") ===
-                                                    -1 &&
-                                                active.indexOf(
-                                                    "/signedmessages"
-                                                ) === -1 &&
-                                                active.indexOf(
-                                                    "/member-stats"
-                                                ) === -1 &&
-                                                active.indexOf("/vesting") ===
-                                                    -1 &&
-                                                active.indexOf("/whitelist") ===
-                                                    -1 &&
-                                                active.indexOf(
-                                                    "/permissions"
-                                                ) === -1
-                                        })}
+                                        className={cnames(
+                                            active.indexOf("market/") !== -1
+                                                ? null
+                                                : "column-hide-xxs",
+                                            {
+                                                active:
+                                                    active.indexOf(
+                                                        "market/"
+                                                    ) !== -1
+                                            }
+                                        )}
+                                        onClick={this._onNavigate.bind(
+                                            this,
+                                            tradeUrl
+                                        )}
                                     >
                                         <Icon
                                             size="1_5x"
@@ -956,107 +1017,78 @@ class Header extends React.Component {
                                                 top: -2,
                                                 left: -8
                                             }}
-                                            name="dashboard"
-                                            title="icons.dashboard"
+                                            name="trade"
+                                            title="icons.trade.exchange"
                                         />
                                         <Translate
                                             className="column-hide-small"
-                                            content="header.dashboard"
+                                            component="span"
+                                            content="header.exchange"
                                         />
-                                    </Link>
+                                    </a>
                                 </li>
                             )}
-                            <li>
-                                <a
-                                    style={{flexFlow: "row"}}
-                                    className={cnames(
-                                        active.indexOf("market/") !== -1
-                                            ? null
-                                            : "column-hide-xxs",
-                                        {
-                                            active:
-                                                active.indexOf("market/") !== -1
-                                        }
-                                    )}
-                                    onClick={this._onNavigate.bind(
-                                        this,
-                                        tradeUrl
-                                    )}
-                                >
-                                    <Icon
-                                        size="1_5x"
-                                        style={{
-                                            position: "relative",
-                                            top: -2,
-                                            left: -8
-                                        }}
-                                        name="trade"
-                                        title="icons.trade.exchange"
-                                    />
-                                    <Translate
-                                        className="column-hide-small"
-                                        component="span"
-                                        content="header.exchange"
-                                    />
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    style={{flexFlow: "row"}}
-                                    className={cnames(
-                                        active.indexOf("explorer") !== -1
-                                            ? null
-                                            : "column-hide-xs",
-                                        {
-                                            active:
-                                                active.indexOf("explorer") !==
-                                                -1
-                                        }
-                                    )}
-                                    onClick={this._onNavigate.bind(
-                                        this,
-                                        "/explorer/blocks"
-                                    )}
-                                >
-                                    <Icon
-                                        size="2x"
-                                        style={{
-                                            position: "relative",
-                                            top: 0,
-                                            left: -8
-                                        }}
-                                        name="server"
-                                        title="icons.server"
-                                    />
-                                    <Translate
-                                        className="column-hide-small"
-                                        component="span"
-                                        content="header.explorer"
-                                    />
-                                </a>
-                            </li>
-                            {!!createAccountLink ? null : (
-                                <li className="column-hide-small">
+                            {this._shouldItemBeShown("explorer") && (
+                                <li>
                                     <a
                                         style={{flexFlow: "row"}}
-                                        onClick={this._showSend.bind(this)}
+                                        className={cnames(
+                                            active.indexOf("explorer") !== -1
+                                                ? null
+                                                : "column-hide-xs",
+                                            {
+                                                active:
+                                                    active.indexOf(
+                                                        "explorer"
+                                                    ) !== -1
+                                            }
+                                        )}
+                                        onClick={this._onNavigate.bind(
+                                            this,
+                                            "/explorer/blocks"
+                                        )}
                                     >
                                         <Icon
-                                            size="1_5x"
+                                            size="2x"
                                             style={{
                                                 position: "relative",
                                                 top: 0,
                                                 left: -8
                                             }}
-                                            name="transfer"
-                                            title="icons.transfer"
+                                            name="server"
+                                            title="icons.server"
                                         />
-                                        <span>
-                                            <Translate content="header.payments" />
-                                        </span>
+                                        <Translate
+                                            className="column-hide-small"
+                                            component="span"
+                                            content="header.explorer"
+                                        />
                                     </a>
                                 </li>
                             )}
+                            {this._shouldItemBeShown("transfer") &&
+                                myAccountCount !== 0 && (
+                                    <li className="column-hide-small">
+                                        <a
+                                            style={{flexFlow: "row"}}
+                                            onClick={this._showSend.bind(this)}
+                                        >
+                                            <Icon
+                                                size="1_5x"
+                                                style={{
+                                                    position: "relative",
+                                                    top: 0,
+                                                    left: -8
+                                                }}
+                                                name="transfer"
+                                                title="icons.transfer"
+                                            />
+                                            <span>
+                                                <Translate content="header.payments" />
+                                            </span>
+                                        </a>
+                                    </li>
+                                )}
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>

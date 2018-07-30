@@ -26,6 +26,7 @@ import DepositModal from "../Modal/DepositModal";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import WithdrawModal from "../Modal/WithdrawModalNew";
+import {isMarginAllowed} from "../../branding";
 
 class AccountPortfolioList extends React.Component {
     constructor() {
@@ -528,39 +529,43 @@ class AccountPortfolioList extends React.Component {
                         )}
                     </td>
                     <td>{directMarketLink}</td>
-                    <td>
-                        {isBitAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    "tooltip.borrow",
-                                    {asset: symbol}
-                                )}
-                            >
-                                {borrowLink}
-                                {borrowModal}
-                            </div>
-                        ) : (
-                            emptyCell
-                        )}
-                    </td>
-                    <td>
-                        {isBitAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    "tooltip.settle",
-                                    {asset: symbol}
-                                )}
-                            >
-                                {settleLink}
-                            </div>
-                        ) : (
-                            emptyCell
-                        )}
-                    </td>
+                    {isMarginAllowed() && (
+                        <td>
+                            {isBitAsset ? (
+                                <div
+                                    className="inline-block"
+                                    data-place="bottom"
+                                    data-tip={counterpart.translate(
+                                        "tooltip.borrow",
+                                        {asset: symbol}
+                                    )}
+                                >
+                                    {borrowLink}
+                                    {borrowModal}
+                                </div>
+                            ) : (
+                                emptyCell
+                            )}
+                        </td>
+                    )}
+                    {isMarginAllowed() && (
+                        <td>
+                            {isBitAsset ? (
+                                <div
+                                    className="inline-block"
+                                    data-place="bottom"
+                                    data-tip={counterpart.translate(
+                                        "tooltip.settle",
+                                        {asset: symbol}
+                                    )}
+                                >
+                                    {settleLink}
+                                </div>
+                            ) : (
+                                emptyCell
+                            )}
+                        </td>
+                    )}
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
