@@ -612,6 +612,7 @@ class CallOrder {
             throw new Error("CallOrder missing inputs");
         }
 
+        this.isSum = false;
         this.order = order;
         this.assets = assets;
         this.market_base = market_base;
@@ -621,7 +622,9 @@ class CallOrder {
         this.id = order.id;
         this.borrower = order.borrower;
         this.borrowers = [order.borrower];
-        this.target_collateral_ratio = order.target_collateral_ratio;
+        this.target_collateral_ratio = order.target_collateral_ratio
+            ? order.target_collateral_ratio / 1000
+            : null;
         /* Collateral asset type is call_price.base.asset_id */
         this.collateral = parseInt(order.collateral, 10);
         this.collateral_id = order.call_price.base.asset_id;
@@ -741,11 +744,14 @@ class CallOrder {
 
     _getMaxCollateralToSell() {
         /*
-        BSIP38:
+        BSIP38: https://github.com/bitshares/bsips/blob/master/bsip-0038.md
         * max_amount_to_sell = (debt * target_CR - collateral * feed_price)
         * / (target_CR * match_price - feed_price)
         */
-        if (this.target_collateral_ratio) {
+        if (
+            this.target_collateral_ratio &&
+            this.getRatio() < this.target_collateral_ratio
+        ) {
             let feed_price = this._getFeedPrice();
             let match_price = this._getMatchPrice();
             let nominator =
@@ -765,6 +771,7 @@ class CallOrder {
         return max_collateral_to_sell * match_price;
     }
 
+    /* Returns satoshi feed price in consistent units of debt/collateral */
     _getFeedPrice() {
         return (
             (this.inverted
@@ -773,6 +780,7 @@ class CallOrder {
         );
     }
 
+    /* Returns satoshi match price in consistent units of debt/collateral */
     _getMatchPrice() {
         return (
             (this.inverted
@@ -785,7 +793,8 @@ class CallOrder {
     assignMaxDebtAndCollateral() {
         if (!this.target_collateral_ratio) return;
         let match_price = this._getMatchPrice();
-        let max_debt_to_cover = this._getMaxDebtToCover();
+        let max_debt_to_cover = this._getMaxDebtToCover(),
+            max_debt_to_cover_int;
         /*
         * We may calculate like this: if max_debt_to_cover has no fractional
         * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
@@ -793,27 +802,27 @@ class CallOrder {
         * down then add one Satoshi onto the result:
         */
         if (Math.round(max_debt_to_cover) !== max_debt_to_cover) {
-            // console.log("max_debt_to_cover is rational, need rounding up", Math.round(max_debt_to_cover), max_debt_to_cover);
-            max_debt_to_cover = Math.floor(max_debt_to_cover) + 1;
-
-            // console.log("max_debt_to_cover:", max_debt_to_cover, "full debt:", this.debt, "max smaller than full:", max_debt_to_cover < this.debt, "delta:", this.debt - max_debt_to_cover);
+            max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
         }
-        this.max_debt_to_cover = new Asset({
-            amount: max_debt_to_cover,
-            asset_id: this.debt_id,
-            precision: this.assets[this.debt_id].precision
-        });
 
         /*
         * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
         * integer can be calculated as: max_amount_to_sell_int =
         * round_up(max_debt_to_cover_int / match_price)
         */
-        let max_collateral_to_sell = Math.ceil(max_debt_to_cover / match_price);
-        // console.log("max_collateral_to_sell:", max_collateral_to_sell, "full collateral:", this.collateral, "max smaller than full:", max_collateral_to_sell < this.collateral, "delta:", this.collateral - max_collateral_to_sell);
+        let max_collateral_to_sell_int = Math.ceil(
+            max_debt_to_cover_int / match_price
+        );
+
+        /* Assign to Assets */
+        this.max_debt_to_cover = new Asset({
+            amount: max_debt_to_cover_int,
+            asset_id: this.debt_id,
+            precision: this.assets[this.debt_id].precision
+        });
 
         this.max_collateral_to_sell = new Asset({
-            amount: max_collateral_to_sell,
+            amount: max_collateral_to_sell_int,
             asset_id: this.collateral_id,
             precision: this.assets[this.collateral_id].precision
         });
@@ -833,7 +842,7 @@ class CallOrder {
         * / (target_CR * match_price - feed_price)
         */
         if (this._for_sale) return this._for_sale;
-        if (!!this.target_collateral_ratio) {
+        if (this._useTargetCR() || this.isSum) {
             return (this._for_sale = this.max_collateral_to_sell);
         }
         return (this._for_sale = this.amountToReceive().times(
@@ -842,9 +851,16 @@ class CallOrder {
         ));
     }
 
+    _useTargetCR() {
+        return (
+            !!this.target_collateral_ratio &&
+            this.getRatio() < this.target_collateral_ratio
+        );
+    }
+
     amountToReceive() {
         if (this._to_receive) return this._to_receive;
-        if (!!this.target_collateral_ratio) {
+        if (this._useTargetCR() || this.isSum) {
             return (this._to_receive = this.max_debt_to_cover);
         }
         return (this._to_receive = new Asset({
@@ -859,10 +875,49 @@ class CallOrder {
         if (newOrder.borrowers.indexOf(order.borrower) === -1) {
             newOrder.borrowers.push(order.borrower);
         }
-        newOrder.debt += order.debt;
 
-        newOrder.collateral += order.collateral;
+        /* Determine which debt values to use */
+        let orderDebt = order.iSum
+            ? order.debt
+            : order._useTargetCR()
+                ? order.max_debt_to_cover.getAmount()
+                : order.amountToReceive().getAmount();
+        let newOrderDebt = newOrder.iSum
+            ? newOrder.debt
+            : newOrder._useTargetCR()
+                ? newOrder.max_debt_to_cover.getAmount()
+                : newOrder.amountToReceive().getAmount();
+        newOrder.debt = newOrderDebt + orderDebt;
+
+        /* Determine which collateral values to use */
+        let orderCollateral = order.iSum
+            ? order.collateral
+            : order._useTargetCR()
+                ? order.max_collateral_to_sell.getAmount()
+                : order.amountForSale().getAmount();
+        let newOrderCollateral = newOrder.iSum
+            ? newOrder.collateral
+            : newOrder._useTargetCR()
+                ? newOrder.max_collateral_to_sell.getAmount()
+                : newOrder.amountForSale().getAmount();
+        newOrder.collateral = newOrderCollateral + orderCollateral;
         newOrder._clearCache();
+
+        /* Assign max collateral to sell and max debt to buy as the summed amounts */
+        newOrder.max_debt_to_cover = new Asset({
+            amount: newOrder.debt,
+            asset_id: this.debt_id,
+            precision: this.assets[this.debt_id].precision
+        });
+
+        newOrder.max_collateral_to_sell = new Asset({
+            amount: newOrder.collateral,
+            asset_id: this.collateral_id,
+            precision: this.assets[this.collateral_id].precision
+        });
+
+        newOrder.isSum = true;
+
         return newOrder;
     }
 
@@ -913,9 +968,9 @@ class CallOrder {
 
     getRatio() {
         return (
-            this.getCollateral().getAmount({real: true}) /
-            this.amountToReceive().getAmount({real: true}) /
-            this.getFeedPrice()
+            this.collateral / // CORE
+            (this.debt / // DEBT
+                this._getFeedPrice()) // DEBT/CORE
         );
     }
 

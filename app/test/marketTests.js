@@ -1020,8 +1020,8 @@ describe("CallOrder", function() {
     const o3_target_cr = {
         id: "1.8.2317",
         borrower: "1.2.115227",
-        collateral: "338894366025",
-        debt: 498820000,
+        collateral: "120000",
+        debt: 10000,
         call_price: {
             base: {
                 amount: "1355807223",
@@ -1144,6 +1144,7 @@ describe("CallOrder", function() {
         let o2 = new CallOrder(o, assets, "1.3.0", settlePrice_0);
         const o3 = o1.sum(o2);
 
+        assert(o3.isSum);
         assert.equal(
             o3.amountToReceive().getAmount(),
             498820000 * 2,
@@ -1152,8 +1153,8 @@ describe("CallOrder", function() {
 
         assert.equal(
             o3.amountForSale().getAmount(),
-            7989835693,
-            "The amount should equal 7989835693"
+            7989835692,
+            "The amount should equal 7989835692"
         );
     });
 
@@ -1174,15 +1175,40 @@ describe("CallOrder", function() {
             settlePrice_113
         );
 
-        assert(o.amountForSale().getAmount() !== 188045485419); // amountForSale without target collateral ratio
-        assert.equal(o.amountForSale().getAmount(), 3784277224);
-        assert.equal(o.amountToReceive().getAmount(), 472518644);
+        /* check non-rounded values first */
+        assert.equal(o._getMaxCollateralToSell(), 12542.901290883827);
+        assert.equal(o._getMaxDebtToCover(), 1566.1523615120586);
+        /* then check rounded values: */
+        assert.equal(o.amountToReceive().getAmount(), 1567); // debt gets rounded up
+        assert.equal(o.amountToReceive().getAmount({real: true}), 0.1567);
+        assert.equal(o.amountForSale().getAmount(), 12550); // max_collateral_to_sell gets rounded up
 
-        assert.equal(o2.amountForSale().getAmount(), 3784277224);
-        assert.equal(o2.amountToReceive().getAmount(), 472518644);
+        /* check non-rounded values first */
+        assert.equal(o2._getMaxCollateralToSell(), 12542.901290883827);
+        assert.equal(o2._getMaxDebtToCover(), 1566.1523615120586);
+        /* then check rounded values: */
+        assert.equal(o2.amountToReceive().getAmount(), 1567); // debt gets rounded up
+        assert.equal(o2.amountToReceive().getAmount({real: true}), 0.1567);
+        assert.equal(o2.amountForSale().getAmount(), 12550); // max_collateral_to_sell gets rounded up
+    });
 
-        assert.equal(o2.max_debt_to_cover.getAmount(), 472518644);
-        assert.equal(o2.max_collateral_to_sell.getAmount(), 3784277224);
+    it("Can be summed using target_cr", function() {
+        let o1 = new CallOrder(o3_target_cr, assets, "1.3.0", settlePrice_0);
+        let o2 = new CallOrder(o, assets, "1.3.0", settlePrice_0);
+        const o3 = o1.sum(o2);
+
+        assert(o3.isSum);
+        assert.equal(
+            o3.amountToReceive().getAmount(),
+            498820000 + 1567,
+            "The amount should equal 498821567"
+        );
+
+        assert.equal(
+            o3.amountForSale().getAmount(),
+            3994917846 + 12550,
+            "The amount should equal 3994930396"
+        );
     });
 });
 
