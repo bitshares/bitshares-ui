@@ -1190,6 +1190,36 @@ describe("CallOrder", function() {
         assert.equal(o2.amountToReceive().getAmount(), 1567); // debt gets rounded up
         assert.equal(o2.amountToReceive().getAmount({real: true}), 0.1567);
         assert.equal(o2.amountForSale().getAmount(), 12550); // max_collateral_to_sell gets rounded up
+
+        /* Create a new order with calculated amounts and check that CR = target_CR */
+        let o3 = new CallOrder(
+            {
+                id: "1.8.2317",
+                borrower: "1.2.115227",
+                collateral: 120000 - o2.amountForSale().getAmount(),
+                debt: 10000 - o2.amountToReceive().getAmount(),
+                call_price: {
+                    base: {
+                        amount: "1355807223",
+                        asset_id: "1.3.0"
+                    },
+                    quote: {
+                        amount: 349300000,
+                        asset_id: "1.3.113"
+                    }
+                },
+                target_collateral_ratio: 1750
+            },
+            assets,
+            "1.3.113",
+            settlePrice_113
+        );
+
+        assert.equal(
+            Math.floor(o3.getRatio() * 1000),
+            1750,
+            "Collateral ratio should equal 1.750"
+        );
     });
 
     it("Can be summed using target_cr", function() {
