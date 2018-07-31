@@ -33,9 +33,9 @@ class AssetPublishFeed extends React.Component {
             publisher: props.account.get("name"),
             publisher_id,
             mcr,
-            mcrValue: mcr / 10,
+            mcrValue: mcr / 1000,
             mssr,
-            mssrValue: mssr / 10
+            mssrValue: mssr / 1000
         };
     }
 
@@ -77,13 +77,13 @@ class AssetPublishFeed extends React.Component {
             !!amount &&
             typeof amount === "string" &&
             amount.indexOf(".") !== -1 &&
-            amount.indexOf(".") + 2 !== amount.length
+            amount.indexOf(".") + 4 !== amount.length
         ) {
-            amount = amount.substr(0, amount.indexOf(".") + 2);
+            amount = amount.substr(0, amount.indexOf(".") + 4);
         }
         this.setState({
             [key + "Value"]: amount,
-            [key]: Math.floor(parseFloat(amount) * 10)
+            [key]: Math.floor(parseFloat(amount) * 1000)
         });
     }
 
