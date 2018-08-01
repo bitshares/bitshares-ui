@@ -15,6 +15,7 @@ import cnames from "classnames";
 import utils from "common/utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ls from "common/localStorage";
+import PaginatedList from "../Utility/PaginatedList";
 
 let accountStorage = new ls("__graphene__");
 
@@ -339,6 +340,27 @@ class Assets extends React.Component {
                 .toArray();
         }
 
+        let assetListHeader = (
+            <tr>
+                <th>
+                    <Translate
+                        component="span"
+                        content="explorer.assets.symbol"
+                    />
+                </th>
+                <th>
+                    <Translate
+                        component="span"
+                        content="explorer.assets.issuer"
+                    />
+                </th>
+                <th>
+                    <Translate component="span" content="markets.supply" />
+                </th>
+                <th />
+            </tr>
+        );
+
         return (
             <div className="grid-block vertical">
                 <div className="grid-block vertical">
@@ -404,34 +426,10 @@ class Assets extends React.Component {
                                     className="grid-block"
                                     style={{paddingBottom: 20}}
                                 >
-                                    <div className="grid-content">
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="explorer.assets.symbol"
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="explorer.assets.issuer"
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="markets.supply"
-                                                        />
-                                                    </th>
-                                                    <th />
-                                                </tr>
-                                            </thead>
-                                            <tbody>{mia}</tbody>
-                                        </table>
-                                    </div>
+                                    <PaginatedList
+                                        header={assetListHeader}
+                                        rows={mia}
+                                    />
                                 </div>
                             ) : null}
 
@@ -457,35 +455,10 @@ class Assets extends React.Component {
                                     className="grid-block"
                                     style={{paddingBottom: 20}}
                                 >
-                                    <div className="grid-content">
-                                        <table className="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="explorer.assets.symbol"
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="explorer.assets.issuer"
-                                                        />
-                                                    </th>
-                                                    <th>
-                                                        <Translate
-                                                            component="span"
-                                                            content="markets.supply"
-                                                        />
-                                                    </th>
-                                                    <th />
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>{uia}</tbody>
-                                        </table>
-                                    </div>
+                                    <PaginatedList
+                                        header={assetListHeader}
+                                        rows={uia}
+                                    />
                                 </div>
                             ) : null}
 
@@ -513,11 +486,7 @@ class Assets extends React.Component {
                                     className="grid-block"
                                     style={{paddingBottom: 20}}
                                 >
-                                    <div className="grid-content">
-                                        <table className="table">
-                                            <tbody>{pm}</tbody>
-                                        </table>
-                                    </div>
+                                    <PaginatedList rows={pm} pageSize={6} />
                                 </div>
                             ) : null}
                         </div>
