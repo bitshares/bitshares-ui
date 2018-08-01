@@ -18,7 +18,8 @@ export default class PaginatedList extends React.Component {
         pageSize: 15,
         label: "utility.total_x_items",
         className: "table",
-        extraRow: null
+        extraRow: null,
+        style: {paddingBottom: "1rem"}
     };
 
     onChange(page, pageSize) {
@@ -50,7 +51,7 @@ export default class PaginatedList extends React.Component {
         }
 
         return (
-            <div className="grid-content" style={{paddingBottom: "1rem"}}>
+            <div className="grid-content" style={this.props.style}>
                 <table className={this.props.className}>
                     {header ? <thead>{header}</thead> : null}
                     {this.props.withTransition && page === 1 ? (
@@ -71,7 +72,11 @@ export default class PaginatedList extends React.Component {
 
                 {total > pageSize ? (
                     <Pagination
-                        style={{paddingTop: "1rem"}}
+                        style={{
+                            paddingTop: "1rem",
+                            paddingBottom: "1rem",
+                            paddingLeft: this.props.leftPadding || null
+                        }}
                         total={total}
                         showTotal={total =>
                             counterpart.translate(this.props.label, {
