@@ -254,8 +254,10 @@ export const settingsAPIs = {
         },
         {
             url: "wss://ws.winex.pro",
+            region: "Southeastern Asia",
             location: "Singapore",
-            operator: "Witness: winex.witness"
+            operator: "Witness: winex.witness",
+            contact: "telegram: zmaxin"
         },
         {
             url: "wss://api.bts.mobi/ws",
@@ -378,6 +380,14 @@ export const settingsAPIs = {
             operator: "Witness: Bangzi",
             contact: "telegram:Bangzi"
         },
+        {
+            url: "wss://api.dex.trading/",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: zapata42-witness",
+            contact: "telegram:Zapata_42"
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -390,6 +400,14 @@ export const settingsAPIs = {
         {
             url: "wss://testnet.bitshares.apasia.tech/ws",
             location: "TESTNET - APT BitShares (Dallas, USA)"
+        },
+        {
+            url: "wss://testnet.dex.trading/",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: zapata42-witness",
+            contact: "telegram:Zapata_42"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
