@@ -227,9 +227,12 @@ export const settingsAPIs = {
             contact: "telegram:ihashfury"
         },
         {
-            url: "wss://blockzms.xyz/ws",
-            location: "USA",
-            operator: "Witness: delegate-zhaomu"
+            url: "wss://blockzms.xyz/ws ",
+            region: "North America",
+            country: "America",
+            location: "New Jersey",
+            operator: "Witness: delegate-zhaomu",
+            contact: "telegram:lzmlam;wechat:lzmlam"
         },
         {
             url: "wss://eu.nodes.bitshares.ws",
