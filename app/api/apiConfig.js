@@ -137,6 +137,7 @@ export const settingsAPIs = {
         {url: "wss://bts-seoul.clockwork.gr/", location: "Seoul, Korea"},
         {url: "wss://bts.to0l.cn:4443/ws", location: "China"},
         {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
+        {url: "wss://api.dex.trading/", location: "France"},
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -149,6 +150,10 @@ export const settingsAPIs = {
         {
             url: "wss://testnet.bitshares.apasia.tech/ws",
             location: "TESTNET - APT BitShares (Dallas, USA)"
+        },
+        {
+            url: "wss://testnet.dex.trading/",
+            location: "TESTNET - zapata42-witness (France)"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
