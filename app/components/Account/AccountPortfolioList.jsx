@@ -888,6 +888,7 @@ class AccountPortfolioList extends React.Component {
         return (
             <div>
                 <PaginatedList
+                    style={{padding: 0}}
                     className="table dashboard-table table-hover"
                     rows={this._renderBalances(
                         this.props.balanceList,
@@ -898,6 +899,7 @@ class AccountPortfolioList extends React.Component {
                     pageSize={20}
                     label="utility.total_x_assets"
                     extraRow={this.props.extraRow}
+                    leftPadding="1.5rem"
                 >
                     {this._renderSendModal()}
                     {this._renderSettleModal()}

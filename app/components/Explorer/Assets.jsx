@@ -16,20 +16,29 @@ import utils from "common/utils";
 import LoadingIndicator from "../LoadingIndicator";
 import ls from "common/localStorage";
 import PaginatedList from "../Utility/PaginatedList";
+import {Apis} from "bitsharesjs-ws";
 
 let accountStorage = new ls("__graphene__");
 
 class Assets extends React.Component {
     constructor(props) {
         super();
+
+        let chainID = Apis.instance().chain_id;
+        if (chainID) chainID = chainID.substr(0, 8);
+        else chainID = "4018d784";
+
         this.state = {
+            chainID,
             foundLast: false,
             lastAsset: "",
             isLoading: false,
             totalAssets:
-                typeof accountStorage.get("totalAssets") != "object"
-                    ? accountStorage.get("totalAssets")
-                    : 3000,
+                typeof accountStorage.get(`totalAssets_${chainID}`) != "object"
+                    ? accountStorage.get(`totalAssets_${chainID}`)
+                    : chainID && chainID === "4018d784"
+                        ? 3000
+                        : 50, // mainnet has 3000+ assets, other chains may not have that many
             assetsFetched: 0,
             activeFilter: "market",
             filterUIA: props.filterUIA || "",
@@ -72,7 +81,10 @@ class Assets extends React.Component {
         }
 
         if (assets.size > this.state.totalAssets) {
-            accountStorage.set("totalAssets", assets.size);
+            accountStorage.set(
+                `totalAssets_${this.state.chainID}`,
+                assets.size
+            );
         }
 
         if (this.state.assetsFetched >= this.state.totalAssets - 100) {
