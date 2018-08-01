@@ -63,7 +63,7 @@ class AccountStore extends BaseStore {
             accountContacts: Immutable.Set(),
             linkedAccounts: Immutable.Set(), // linkedAccounts are accounts for which the user controls the private keys, which are stored in a db with the wallet and automatically loaded every time the app starts
             referralAccount,
-            passwordLogin: accountStorage.get("settings_v3", {
+            passwordLogin: accountStorage.get("settings_v4", {
                 passwordLogin: true
             }).passwordLogin
         };
