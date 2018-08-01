@@ -113,19 +113,15 @@ export const settingsAPIs = {
             location: "Nuremberg",
             region: "Western Europe",
             country: "Germany",
-            operator: "Witness: openledger-dc"
-        },
-        {
-            url: "wss://eu.openledger.info/ws",
-            location: "Berlin",
-            region: "Western Europe",
-            country: "Germany",
-            operator: "Witness: openledger-dc"
+            operator: "Witness: openledger-dc",
+            contact: "telegram:mtopenledger"
         },
         {
             url: "wss://openledger.hk/ws",
-            location: "Hong Kong",
-            operator: "Witness: openledger-dc"
+            region: "Southeastern Asia",
+            country: "Singapore",
+            operator: "Witness: openledger-dc",
+            contact: "telegram:mtopenledger"
         },
         {
             url: "wss://bitshares.nu/ws",
@@ -139,7 +135,13 @@ export const settingsAPIs = {
             operator: "Witness: abc123"
         },
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
-        {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
+        {
+            url: "wss://japan.bitshares.apasia.tech/ws",
+            country: "Japan",
+            region: "Southeastern Asia",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
         {
             url: "wss://bitshares.crypto.fans/ws",
             region: "Western Europe",
@@ -178,9 +180,33 @@ export const settingsAPIs = {
             operator: "Witness: Xeldal"
         },
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
-        {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
-        {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
-        {url: "wss://node.market.rudex.org", location: "Germany"},
+        {
+            url: "wss://api.bts.blckchnd.com",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
+        {
+            url: "wss://api-ru.bts.blckchnd.com",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Moscow",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
+        {
+            url: "wss://node.market.rudex.org",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
         {
             url: "wss://api.bitsharesdex.com",
             region: "Northern America",
@@ -213,13 +239,15 @@ export const settingsAPIs = {
             url: "wss://us.nodes.bitshares.ws",
             region: "North America",
             country: "U.S.A.",
-            operator: "Infrastructure Worker"
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://sg.nodes.bitshares.ws",
             region: "Southeastern Asia",
             country: "Singapore",
-            operator: "Infrastructure Worker"
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://ws.winex.pro",
@@ -242,8 +270,10 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api.bts.network",
-            location: "East Coast, USA",
-            operator: "Witness: fox"
+            country: "U.S.A.",
+            region: "Northern America",
+            operator: "Witness: fox",
+            contact: "telegram:ryanRfox"
         },
         {
             url: "wss://btsws.roelandp.nl/ws",
