@@ -113,19 +113,15 @@ export const settingsAPIs = {
             location: "Nuremberg",
             region: "Western Europe",
             country: "Germany",
-            operator: "Witness: openledger-dc"
-        },
-        {
-            url: "wss://eu.openledger.info/ws",
-            location: "Berlin",
-            region: "Western Europe",
-            country: "Germany",
-            operator: "Witness: openledger-dc"
+            operator: "Witness: openledger-dc",
+            contact: "telegram:mtopenledger"
         },
         {
             url: "wss://openledger.hk/ws",
-            location: "Hong Kong",
-            operator: "Witness: openledger-dc"
+            region: "Southeastern Asia",
+            country: "Singapore",
+            operator: "Witness: openledger-dc",
+            contact: "telegram:mtopenledger"
         },
         {
             url: "wss://bitshares.nu/ws",
@@ -139,7 +135,13 @@ export const settingsAPIs = {
             operator: "Witness: abc123"
         },
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
-        {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
+        {
+            url: "wss://japan.bitshares.apasia.tech/ws",
+            country: "Japan",
+            region: "Southeastern Asia",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
         {
             url: "wss://bitshares.crypto.fans/ws",
             region: "Western Europe",
@@ -174,13 +176,40 @@ export const settingsAPIs = {
         },
         {
             url: "wss://kc-us-dex.xeldal.com/ws",
-            location: "Kansas City, USA",
-            operator: "Witness: Xeldal"
+            region: "North America",
+            country: "USA",
+            location: "Kansas City",
+            operator: "Witness: xeldal",
+            contact: "telegram:xeldal"
         },
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
-        {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
-        {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
-        {url: "wss://node.market.rudex.org", location: "Germany"},
+        {
+            url: "wss://api.bts.blckchnd.com",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
+        {
+            url: "wss://api-ru.bts.blckchnd.com",
+            region: "Eastern Europe",
+            country: "Russia",
+            location: "Moscow",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
+        {
+            url: "wss://node.market.rudex.org",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Falkenstein",
+            operator: "Witness: blckchnd",
+            contact:
+                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
+        },
         {
             url: "wss://api.bitsharesdex.com",
             region: "Northern America",
@@ -198,9 +227,12 @@ export const settingsAPIs = {
             contact: "telegram:ihashfury"
         },
         {
-            url: "wss://blockzms.xyz/ws",
-            location: "USA",
-            operator: "Witness: delegate-zhaomu"
+            url: "wss://blockzms.xyz/ws ",
+            region: "North America",
+            country: "America",
+            location: "New Jersey",
+            operator: "Witness: delegate-zhaomu",
+            contact: "telegram:lzmlam;wechat:lzmlam"
         },
         {
             url: "wss://eu.nodes.bitshares.ws",
@@ -213,18 +245,22 @@ export const settingsAPIs = {
             url: "wss://us.nodes.bitshares.ws",
             region: "North America",
             country: "U.S.A.",
-            operator: "Infrastructure Worker"
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://sg.nodes.bitshares.ws",
             region: "Southeastern Asia",
             country: "Singapore",
-            operator: "Infrastructure Worker"
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://ws.winex.pro",
+            region: "Southeastern Asia",
             location: "Singapore",
-            operator: "Witness: winex.witness"
+            operator: "Witness: winex.witness",
+            contact: "telegram: zmaxin"
         },
         {
             url: "wss://api.bts.mobi/ws",
@@ -242,8 +278,10 @@ export const settingsAPIs = {
         },
         {
             url: "wss://api.bts.network",
-            location: "East Coast, USA",
-            operator: "Witness: fox"
+            country: "U.S.A.",
+            region: "Northern America",
+            operator: "Witness: fox",
+            contact: "telegram:ryanRfox"
         },
         {
             url: "wss://btsws.roelandp.nl/ws",
@@ -296,13 +334,19 @@ export const settingsAPIs = {
         },
         {
             url: "wss://freedom.bts123.cc:15138/",
-            location: "China",
-            operator: "Witness: delegate.freedom"
+            region: "South China",
+            country: "China",
+            location: "Changsha",
+            operator: "Witness: delegate.freedom",
+            contact: "telegram:eggplant"
         },
         {
             url: "wss://bitshares.bts123.cc:15138/",
-            location: "China",
-            operator: "Witness: delegate.freedom"
+            region: "North China",
+            country: "China",
+            location: "Hangzhou",
+            operator: "Witness: delegate.freedom",
+            contact: "telegram:eggplant"
         },
         {
             url: "wss://api.bts.ai/",
@@ -339,6 +383,14 @@ export const settingsAPIs = {
             operator: "Witness: Bangzi",
             contact: "telegram:Bangzi"
         },
+        {
+            url: "wss://api.dex.trading/",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: zapata42-witness",
+            contact: "telegram:Zapata_42"
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
@@ -351,6 +403,14 @@ export const settingsAPIs = {
         {
             url: "wss://testnet.bitshares.apasia.tech/ws",
             location: "TESTNET - APT BitShares (Dallas, USA)"
+        },
+        {
+            url: "wss://testnet.dex.trading/",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: zapata42-witness",
+            contact: "telegram:Zapata_42"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
