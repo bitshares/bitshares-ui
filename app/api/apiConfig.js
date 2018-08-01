@@ -176,8 +176,11 @@ export const settingsAPIs = {
         },
         {
             url: "wss://kc-us-dex.xeldal.com/ws",
-            location: "Kansas City, USA",
-            operator: "Witness: Xeldal"
+            region: "North America",
+            country: "USA",
+            location: "Kansas City",
+            operator: "Witness: xeldal",
+            contact: "telegram:xeldal"
         },
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {
@@ -326,13 +329,19 @@ export const settingsAPIs = {
         },
         {
             url: "wss://freedom.bts123.cc:15138/",
-            location: "China",
-            operator: "Witness: delegate.freedom"
+            region: "South China",
+            country: "China",
+            location: "Changsha",
+            operator: "Witness: delegate.freedom",
+            contact: "telegram:eggplant"
         },
         {
             url: "wss://bitshares.bts123.cc:15138/",
-            location: "China",
-            operator: "Witness: delegate.freedom"
+            region: "North China",
+            country: "China",
+            location: "Hangzhou",
+            operator: "Witness: delegate.freedom",
+            contact: "telegram:eggplant"
         },
         {
             url: "wss://api.bts.ai/",
