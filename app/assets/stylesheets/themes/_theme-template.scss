@@ -417,6 +417,9 @@
             background-color: lighten($button-bg-color, 4%) !important;
         }
         &.outline {
+            span {
+                color: $primary-text-color !important;
+            }
             color: $secondary-text-color;
             border-color: $secondary-text-color;
             &:hover {
@@ -977,6 +980,9 @@
                     color: $inactive-text-color;
                 }
             }
+        }
+        &.tab-no-background {
+            background-color: inherit;
         }
     }
 

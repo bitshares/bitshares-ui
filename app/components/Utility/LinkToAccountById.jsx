@@ -28,14 +28,24 @@ class LinkToAccountById extends React.Component {
             return <span>{this.props.account.get("id")}</span>;
         }
 
+        const maxDisplayAccountNameLength = 20;
+
         return this.props.noLink ? (
-            <span>{account_name}</span>
+            <span>
+                {account_name.substr(0, maxDisplayAccountNameLength)}
+                {account_name.length > maxDisplayAccountNameLength
+                    ? "..."
+                    : null}
+            </span>
         ) : (
             <Link
                 onClick={this.props.onClick ? this.props.onClick : () => {}}
                 to={`/account/${account_name}/${this.props.subpage}/`}
             >
-                {account_name}
+                {account_name.substr(0, maxDisplayAccountNameLength)}
+                {account_name.length > maxDisplayAccountNameLength
+                    ? "..."
+                    : null}
             </Link>
         );
     }

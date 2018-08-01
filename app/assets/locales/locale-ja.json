@@ -312,6 +312,8 @@
                 "Number of feed producers exceeded the max allowed (%(max)s).",
             "transfer_restricted": "発行者はすべての転送を承認する必要がある",
             "update_owner": "オーナーを更新",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "検索と市場からアセットを非表示にする",
             "white_list": "保有者はホワイトリストに登録されている必要がある",
             "witness_fed_asset": "証人にフィード供給を許可する"
@@ -363,6 +365,7 @@
             "remove_committee": "削除",
             "remove_witness": "削除",
             "save_finish": "Click save to finish",
+            "set_proxy": "Set a proxy here",
             "start": "開始日",
             "status": {
                 "neutral": "中立",
@@ -414,6 +417,8 @@
         "browser_text":
             "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "接続しました",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -429,6 +434,8 @@
         "call_limit": "マーケットコールリミット",
         "close": "ポジションを閉じる",
         "coll_ratio": "担保比率",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "あなたの担保比率は%(mr)s未満であり、許可されません。",
             "below_info":
@@ -445,6 +452,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "%(asset_symbol)sの有効なフィードがありません",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)sマージン",
         "update": "更新",
         "use_max": "Use Max"
@@ -457,6 +465,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -611,17 +620,28 @@
             "title": "アカウント"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "アセット発行者はここに蓄積された手数料を請求することができます。",
                 "core_exchange_rate": "中心取引レート (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "手数料プールは%(asset)sの手数料を%(core)sに換算することによって%(core)sの手数料を支払うために使用されます。手数料プールの資金が尽きた場合、手数料を%(asset)sで払うことはできなくなり、既定値は%(core)sになります。",
                 "pool_balance": "プール残高",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "手数料プール",
                 "unclaimed_issuer_income": "未請求の発行者収入"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
+            "info": "Asset info",
             "invalid": "アセット名%(name)sは無効です",
             "margin_positions": {
                 "title": "マージンポジション"
@@ -1482,6 +1502,8 @@
         "password": "パスワード",
         "passwordLogin": "ログインモード",
         "password_text": "パスワードを変更する。",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "削除",
@@ -1500,7 +1522,11 @@
         "show": "表示",
         "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
         "showSettles": "決済注文をデプスチャートで表示する",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "テーマ",
         "unit": "アカウントの単位選択",
         "valid_node_url":
@@ -1574,6 +1600,10 @@
         "propose_scam":
             "この提案は有名な詐欺師によるものです。応じないでください！",
         "propose_tip": "別のユーザーからトランザクションを提案する",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "精算により、保有する%(asset)sを24時間の遅延後にBTSにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",
@@ -1586,6 +1616,8 @@
         "sync_no":
             "現在のノードはブロックチェーンと同期していません。別のノードに切り替えてみてください。",
         "sync_yes": "現在のノードはブロックチェーンと同期しています。",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "転送または、サポートするアセットを入出金するにはここをクリックしてください。",
         "update_position":
@@ -1621,6 +1653,7 @@
         "coll_of": "担保: ",
         "coll_ratio": "初期担保比率",
         "collateral": "担保",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "委員を作成する",
         "confirm": "取引を確認してください",
         "create_key": "公開キーを作成しました",
@@ -1683,6 +1716,7 @@
             "account_whitelist": "アカウントホワイトリスト",
             "all": "すべて表示",
             "assert": "アサート操作",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "アセット手数料を請求",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "アセットを作成",
@@ -1788,6 +1822,11 @@
     "trx_error": {
         "expire":
             "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "このフォームを使用して買い注文を出します。",

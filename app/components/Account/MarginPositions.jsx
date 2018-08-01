@@ -293,7 +293,20 @@ class MarginPosition extends React.Component {
                     />
                 </td>
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
-
+                <td style={{textAlign: "center"}}>
+                    <Link
+                        to={`/market/${debtAsset.get(
+                            "symbol"
+                        )}_${collateralAsset.get("symbol")}`}
+                    >
+                        <Icon
+                            name="trade"
+                            title="icons.trade.trade"
+                            className="icon-14px"
+                            style={{marginRight: 5}}
+                        />
+                    </Link>
+                </td>
                 <td>
                     <div
                         data-place="left"
@@ -480,7 +493,20 @@ class MarginPositionPlaceHolder extends React.Component {
                     style={alignLeft}
                 />
                 {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
-
+                <td style={{textAlign: "center"}}>
+                    <Link
+                        to={`/market/${debtAsset.get(
+                            "symbol"
+                        )}_${collateralAsset.get("symbol")}`}
+                    >
+                        <Icon
+                            name="trade"
+                            title="icons.trade.trade"
+                            className="icon-14px"
+                            style={{marginRight: 5}}
+                        />
+                    </Link>
+                </td>
                 <td>
                     <div
                         data-place="left"
@@ -653,6 +679,9 @@ const CollateralTable = ({
                     </th>
                     <th className="column-hide-small" style={alignLeft}>
                         <Translate content="explorer.assets.units" />
+                    </th>
+                    <th style={{textAlign: "center"}}>
+                        <Translate content="exchange.market" />
                     </th>
                     <th>
                         <Translate content="borrow.adjust_short" />

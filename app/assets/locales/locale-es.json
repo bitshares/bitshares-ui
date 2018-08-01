@@ -321,6 +321,8 @@
             "transfer_restricted":
                 "El emisor debe aprobar todas las transferencias",
             "update_owner": "Proprietario actualizado",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Ocultar activos desde la búsqueda y el mercados",
             "white_list":
                 "Requerir que los titulares sean incluidos en la lista blanca",
@@ -375,6 +377,7 @@
             "remove_committee": "Remover",
             "remove_witness": "Remover",
             "save_finish": "Haga clic en guardar para finalizar",
+            "set_proxy": "Set a proxy here",
             "start": "Fecha de inicio",
             "status": {
                 "neutral": "Neutral",
@@ -426,6 +429,8 @@
         "browser_text":
             "El navegador que está utilizando no se ha probado completamente para admitir la billetera BitShares. Le recomendamos encarecidamente que haga una copia de seguridad de su monedero local e importarlo utilizando el navegador Chrome hasta que hayamos tenido más tiempo para probar completamente el navegador de su elección. Úselo bajo su propio riesgo.",
         "check_latency": "Running latency checks...",
+        "check_latency_feedback":
+            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Conectado",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -441,6 +446,8 @@
         "call_limit": "Mercado llamada a limite",
         "close": "Cerrar la posición",
         "coll_ratio": "Proporción",
+        "coll_ratio_target": "Target Ratio",
+        "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Su colateral está por debajo %(mr)s y no está permitido.",
             "below_info":
@@ -457,6 +464,7 @@
             "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "No hay feeds válidos para %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
+        "target_collateral_ratio": "Target Collateral Ratio",
         "title": "%(asset_symbol)s Margen",
         "update": "Actualizar",
         "use_max": "Use Max"
@@ -469,6 +477,7 @@
     "connection": {
         "automatic_reconnect":
             " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
         "out_of_sync":
             "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
@@ -623,17 +632,28 @@
             "title": "Cuentas"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Reclamar tarifas",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "El emisor del activo puede reclamar cualquier comisiòn acumulada aquí.",
                 "core_exchange_rate": "Core exchange rate (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "El conjunto de comisiones se usa para pagar tarifas en %(core)s convirtiendo la comisiòn en %(asset)s a %(core)s. Si la comisiòn de la piscina se queda sin fondos, las comisiones ya no se pueden pagar en %(asset)s y seran el predeterminada a %(core)s",
                 "pool_balance": "Balance del Fondo",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fondo de Comisiones",
                 "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
+            "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
                 "title": "posiciòn a margen"
@@ -1506,6 +1526,8 @@
         "password": "Contraseña",
         "passwordLogin": "Modo de acceso",
         "password_text": "cambia tu contraseña.",
+        "personal_active":
+            "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "retirar",
@@ -1529,7 +1551,11 @@
             "Mostrar porcentajes de activos en la página de la cuenta",
         "showSettles":
             "Mostrar órdenes de liquidación en el gráfico de profundidad",
+        "skipped": "Skipped",
         "switch": "Switch Node",
+        "testnet_nodes": "Testnet",
+        "testnet_nodes_disclaimer":
+            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Tema",
         "unit": "Unidad preferida para esta cuenta",
         "valid_node_url": "La URL del nodo debe comenzar con ws:// or wss://",
@@ -1602,6 +1628,10 @@
         "propose_scam":
             "¡Esta propuesta fue creada por un estafador conocido, no la aprueba!",
         "propose_tip": "Proponer otro usuario para iniciar una transacción",
+        "proxy_remove":
+            "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search":
+            "Search for an account to be used as your proxy for voting",
         "settle":
             "El settling te permitirá de convertir tus propriedades de %(asset)s en BTS después de un retraso de 24 horas, a un precio igual al precio dado en ese momento.",
         "settle_price":
@@ -1615,6 +1645,8 @@
         "sync_no":
             "El nodo actual no está sincronizado con la cadena de bloques, intente cambiar a otro",
         "sync_yes": "El nodo actual está sincronizado con la cadena de bloques",
+        "target_collateral_ratio":
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             " Haga clic aquí para hacer una transferencia, o para depositar / retirar aquellos activos que lo soportan.",
         "update_position":
@@ -1650,6 +1682,7 @@
         "coll_of": "con un colateral de",
         "coll_ratio": "Relación colateral inicial",
         "collateral": "Colateral",
+        "collateral_target": "Target Collateral",
         "committee_member_create": "Miembro del Comité creado",
         "confirm": "Por favor confirme la transacción",
         "create_key": "Llave pública creada",
@@ -1713,6 +1746,7 @@
             "account_whitelist": "Lista blanca",
             "all": "Mostrar todo",
             "assert": "Afirmar operación",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Reclamar comisiones de activos",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Crear activo",
@@ -1825,6 +1859,11 @@
     "trx_error": {
         "expire":
             "Su transacción ha expirado sin confirmación, intente de nuevo más tarde."
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Coloque las órdenes de compra usando este formulario.",

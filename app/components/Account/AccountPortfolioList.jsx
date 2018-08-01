@@ -11,7 +11,7 @@ import LinkToAssetById from "../Utility/LinkToAssetById";
 import BorrowModal from "../Modal/BorrowModal";
 import ReactTooltip from "react-tooltip";
 import {getBackedCoin} from "common/gatewayUtils";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import GatewayStore from "stores/GatewayStore";
@@ -26,6 +26,11 @@ import DepositModal from "../Modal/DepositModal";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import WithdrawModal from "../Modal/WithdrawModalNew";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import ReserveAssetModal from "../Modal/ReserveAssetModal";
+import BaseModal from "../Modal/BaseModal";
+import PaginatedList from "../Utility/PaginatedList";
+import MarketUtils from "common/market_utils";
 
 class AccountPortfolioList extends React.Component {
     constructor() {
@@ -118,42 +123,40 @@ class AccountPortfolioList extends React.Component {
             return 0;
         },
         priceValue: function(a, b) {
-            let aRef = this.priceRefs[a.key];
-            let bRef = this.priceRefs[b.key];
-            if (aRef && bRef) {
-                let aPrice = aRef.getFinalPrice(true);
-                let bPrice = bRef.getFinalPrice(true);
-                if (aPrice === null && bPrice !== null) return 1;
-                if (aPrice !== null && bPrice === null) return -1;
-                if (aPrice === null && bPrice === null)
-                    return this.sortFunctions.alphabetic(a, b, true);
+            let aPrice = this.priceRefs[a.key];
+            let bPrice = this.priceRefs[b.key];
+            if (aPrice && bPrice) {
                 return this.props.sortDirection
                     ? aPrice - bPrice
                     : bPrice - aPrice;
+            } else if (aPrice === null && bPrice !== null) {
+                return 1;
+            } else if (aPrice !== null && bPrice === null) {
+                return -1;
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
             }
         },
         totalValue: function(a, b) {
-            let aRef = this.valueRefs[a.key];
-            let bRef = this.valueRefs[b.key];
-            if (aRef && bRef) {
-                let aValue = aRef.getValue();
-                let bValue = bRef.getValue();
-                if (!aValue && bValue) return 1;
-                if (aValue && !bValue) return -1;
-                if (!aValue && !bValue)
-                    return this.sortFunctions.alphabetic(a, b, true);
+            let aValue = this.valueRefs[a.key];
+            let bValue = this.valueRefs[b.key];
+            if (aValue && bValue) {
                 return this.props.sortDirection
                     ? aValue - bValue
                     : bValue - aValue;
+            } else if (!aValue && bValue) {
+                return 1;
+            } else if (aValue && !bValue) {
+                return -1;
+            } else {
+                return this.sortFunctions.alphabetic(a, b, true);
             }
         },
         changeValue: function(a, b) {
-            let aRef = this.changeRefs[a.key];
-            let bRef = this.changeRefs[b.key];
+            let aValue = this.changeRefs[a.key];
+            let bValue = this.changeRefs[b.key];
 
-            if (aRef && bRef) {
-                let aValue = aRef.getValue();
-                let bValue = bRef.getValue();
+            if (aValue && bValue) {
                 let aChange =
                     parseFloat(aValue) != "NaN" ? parseFloat(aValue) : aValue;
                 let bChange =
@@ -185,6 +188,12 @@ class AccountPortfolioList extends React.Component {
 
     _hideAsset(asset, status) {
         SettingsActions.hideAsset(asset, status);
+    }
+
+    _burnAsset(asset, e) {
+        e.preventDefault();
+        this.setState({reserve: asset});
+        ZfApi.publish("reserve_asset", "open");
     }
 
     _showDepositModal(asset, e) {
@@ -399,10 +408,41 @@ class AccountPortfolioList extends React.Component {
             const canBuy = !!this.props.bridgeCoins.get(symbol);
             const assetAmount = balanceObject.get("balance");
 
+            /* Sorting refs */
             this.qtyRefs[asset.get("symbol")] = utils.get_asset_amount(
                 assetAmount,
                 asset
             );
+
+            let preferredAsset = ChainStore.getAsset(preferredUnit);
+            this.valueRefs[asset.get("symbol")] =
+                hasBalance && !!preferredAsset
+                    ? MarketUtils.convertValue(
+                          assetAmount,
+                          preferredAsset,
+                          asset,
+                          this.props.allMarketStats,
+                          this.props.coreAsset,
+                          true
+                      )
+                    : null;
+
+            this.priceRefs[asset.get("symbol")] = !preferredAsset
+                ? null
+                : MarketUtils.getFinalPrice(
+                      this.props.coreAsset,
+                      asset,
+                      preferredAsset,
+                      this.props.allMarketStats,
+                      true
+                  );
+
+            let marketId = asset.get("symbol") + "_" + preferredUnit;
+            let currentMarketStats = this.props.allMarketStats.get(marketId);
+            this.changeRefs[asset.get("symbol")] =
+                currentMarketStats && currentMarketStats.change
+                    ? currentMarketStats.change
+                    : 0;
 
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
@@ -419,11 +459,6 @@ class AccountPortfolioList extends React.Component {
                         className="column-hide-small"
                     >
                         <EquivalentPrice
-                            refCallback={c => {
-                                if (c && c.refs.bound_component)
-                                    this.priceRefs[asset.get("symbol")] =
-                                        c.refs.bound_component;
-                            }}
                             fromAsset={asset.get("id")}
                             pulsate={{reverse: true, fill: "forwards"}}
                             hide_symbols
@@ -434,14 +469,9 @@ class AccountPortfolioList extends React.Component {
                         className="column-hide-small"
                     >
                         <Market24HourChangeComponent
-                            refCallback={c => {
-                                if (c && c.refs.bound_component)
-                                    this.changeRefs[asset.get("symbol")] =
-                                        c.refs.bound_component;
-                            }}
                             base={asset.get("id")}
                             quote={preferredUnit}
-                            marketId={asset.get("symbol") + "_" + preferredUnit}
+                            marketId={marketId}
                             hide_symbols
                         />
                     </td>
@@ -454,11 +484,6 @@ class AccountPortfolioList extends React.Component {
                                 balance={balance}
                                 toAsset={preferredUnit}
                                 hide_asset
-                                refCallback={c => {
-                                    if (c && c.refs.bound_component)
-                                        this.valueRefs[asset.get("symbol")] =
-                                            c.refs.bound_component;
-                                }}
                             />
                         ) : null}
                     </td>
@@ -561,6 +586,23 @@ class AccountPortfolioList extends React.Component {
                             emptyCell
                         )}
                     </td>
+                    <td
+                        style={{textAlign: "center"}}
+                        className="column-hide-small"
+                    >
+                        {!isBitAsset ? (
+                            <a
+                                style={{marginRight: 0}}
+                                onClick={this._burnAsset.bind(
+                                    this,
+                                    asset.get("id")
+                                )}
+                            >
+                                <Icon name="fire" className="icon-14px" />
+                            </a>
+                        ) : null}
+                    </td>
+
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
@@ -844,57 +886,79 @@ class AccountPortfolioList extends React.Component {
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 
         return (
-            <tbody>
-                {this._renderBalances(
-                    this.props.balanceList,
-                    this.props.optionalAssets,
-                    this.props.visible
-                )}
-                {this._renderSendModal()}
-                {this._renderSettleModal()}
-                {/* Withdraw Modal*/}
-                <SimpleDepositWithdraw
-                    ref="withdraw_modal"
-                    action="withdraw"
-                    fiatModal={this.state.fiatModal}
-                    account={this.props.account.get("name")}
-                    sender={this.props.account.get("id")}
-                    asset={this.state.withdrawAsset}
-                    modalId="simple_withdraw_modal"
-                    balances={this.props.balances}
-                    {...currentWithdrawAsset}
-                    isDown={this.props.gatewayDown.get("OPEN")}
-                />
+            <div>
+                <PaginatedList
+                    className="table dashboard-table table-hover"
+                    rows={this._renderBalances(
+                        this.props.balanceList,
+                        this.props.optionalAssets,
+                        this.props.visible
+                    )}
+                    header={this.props.header}
+                    pageSize={20}
+                    label="utility.total_x_assets"
+                    extraRow={this.props.extraRow}
+                >
+                    {this._renderSendModal()}
+                    {this._renderSettleModal()}
+                    {/* Withdraw Modal*/}
+                    <SimpleDepositWithdraw
+                        ref="withdraw_modal"
+                        action="withdraw"
+                        fiatModal={this.state.fiatModal}
+                        account={this.props.account.get("name")}
+                        sender={this.props.account.get("id")}
+                        asset={this.state.withdrawAsset}
+                        modalId="simple_withdraw_modal"
+                        balances={this.props.balances}
+                        {...currentWithdrawAsset}
+                        isDown={this.props.gatewayDown.get("OPEN")}
+                    />
 
-                <WithdrawModal
-                    ref="withdraw_modal_new"
-                    modalId="withdraw_modal_new"
-                    backedCoins={this.props.backedCoins}
-                    initialSymbol={this.state.withdrawAsset}
-                />
+                    <WithdrawModal
+                        ref="withdraw_modal_new"
+                        modalId="withdraw_modal_new"
+                        backedCoins={this.props.backedCoins}
+                        initialSymbol={this.state.withdrawAsset}
+                    />
 
-                {/* Deposit Modal */}
-                <DepositModal
-                    ref="deposit_modal_new"
-                    modalId="deposit_modal_new"
-                    asset={this.state.depositAsset}
-                    account={this.props.account.get("name")}
-                    backedCoins={this.props.backedCoins}
-                />
+                    {/* Deposit Modal */}
+                    <DepositModal
+                        ref="deposit_modal_new"
+                        modalId="deposit_modal_new"
+                        asset={this.state.depositAsset}
+                        account={this.props.account.get("name")}
+                        backedCoins={this.props.backedCoins}
+                    />
 
-                {/* Bridge modal */}
-                <SimpleDepositBlocktradesBridge
-                    ref="bridge_modal"
-                    action="deposit"
-                    account={this.props.account.get("name")}
-                    sender={this.props.account.get("id")}
-                    asset={this.state.bridgeAsset}
-                    modalId="simple_bridge_modal"
-                    balances={this.props.balances}
-                    bridges={currentBridges}
-                    isDown={this.props.gatewayDown.get("TRADE")}
-                />
-            </tbody>
+                    {/* Bridge modal */}
+                    <SimpleDepositBlocktradesBridge
+                        ref="bridge_modal"
+                        action="deposit"
+                        account={this.props.account.get("name")}
+                        sender={this.props.account.get("id")}
+                        asset={this.state.bridgeAsset}
+                        modalId="simple_bridge_modal"
+                        balances={this.props.balances}
+                        bridges={currentBridges}
+                        isDown={this.props.gatewayDown.get("TRADE")}
+                    />
+
+                    {/* Burn modal */}
+                    <BaseModal id="reserve_asset" overlay={true}>
+                        <br />
+                        <div className="grid-block vertical">
+                            <ReserveAssetModal
+                                asset={this.state.reserve}
+                                account={this.props.account}
+                                onClose={() => {
+                                    ZfApi.publish("reserve_asset", "close");
+                                }}
+                            />
+                        </div>
+                    </BaseModal>
+                </PaginatedList>
+            </div>
         );
     }
 }

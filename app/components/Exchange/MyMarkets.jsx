@@ -1037,25 +1037,33 @@ class MyMarkets extends React.Component {
                 )}
 
                 <ul className="mymarkets-tabs">
-                    {!myMarketTab && !this.state.inputValue
-                        ? null
-                        : preferredBases.map((base, index) => {
-                              if (!base) return null;
-                              return (
-                                  <li
-                                      key={base}
-                                      onClick={this.toggleActiveMarketTab.bind(
-                                          this,
-                                          index
-                                      )}
-                                      className={cnames("mymarkets-tab", {
-                                          active: activeMarketTab === index
-                                      })}
-                                  >
-                                      {base}
-                                  </li>
-                              );
-                          })}
+                    {myMarketTab &&
+                        preferredBases.map((base, index) => {
+                            if (!base) return null;
+                            return (
+                                <li
+                                    key={base}
+                                    onClick={this.toggleActiveMarketTab.bind(
+                                        this,
+                                        index
+                                    )}
+                                    className={cnames("mymarkets-tab", {
+                                        active: activeMarketTab === index
+                                    })}
+                                >
+                                    {base}
+                                </li>
+                            );
+                        })}
+                    {!myMarketTab ? (
+                        <li
+                            className={cnames("mymarkets-tab", {
+                                active: true
+                            })}
+                        >
+                            {this.state.activeFindBase}
+                        </li>
+                    ) : null}
                     {myMarketTab && hasOthers ? (
                         <li
                             key={"others"}
@@ -1074,16 +1082,18 @@ class MyMarkets extends React.Component {
                     ) : null}
 
                     {/* Quote edit tab */}
-                    <li
-                        key="quote_edit"
-                        style={{textTransform: "uppercase"}}
-                        onClick={() => {
-                            ZfApi.publish("quote_selection", "open");
-                        }}
-                        className="mymarkets-tab"
-                    >
-                        &nbsp;+&nbsp;
-                    </li>
+                    {myMarketTab && (
+                        <li
+                            key="quote_edit"
+                            style={{textTransform: "uppercase"}}
+                            onClick={() => {
+                                ZfApi.publish("quote_selection", "open");
+                            }}
+                            className="mymarkets-tab"
+                        >
+                            &nbsp;+&nbsp;
+                        </li>
+                    )}
                 </ul>
 
                 <div

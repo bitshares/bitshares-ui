@@ -121,16 +121,21 @@ export const settingsAPIs = {
         {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
-            region: "Western Europe", // stick to the regions that are available in nodeRegions
+            region: "Western Europe",
             country: "Germany",
-            operator: "OpenLedger"
+            operator: "Witness: openledger-dc"
         },
         {
             url: "wss://eu.openledger.info/ws",
             location: "Berlin",
-            region: "Western Europe", // stick to the regions that are available in nodeRegions
+            region: "Western Europe",
             country: "Germany",
-            operator: "OpenLedger"
+            operator: "Witness: openledger-dc"
+        },
+        {
+            url: "wss://openledger.hk/ws",
+            location: "Hong Kong",
+            operator: "Witness: openledger-dc"
         },
         {
             url: "wss://bitshares.nu/ws",
@@ -140,11 +145,11 @@ export const settingsAPIs = {
         },
         {
             url: "wss://bit.btsabc.org/ws",
-            location: "Hong Kong"
+            location: "Hong Kong",
+            operator: "Witness: abc123"
         },
         {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
         {url: "wss://japan.bitshares.apasia.tech/ws", location: "Tokyo, Japan"},
-        {url: "wss://openledger.hk/ws", location: "Hong Kong"},
         {
             url: "wss://bitshares.crypto.fans/ws",
             region: "Western Europe",
@@ -154,18 +159,59 @@ export const settingsAPIs = {
             contact: "telegram:startail"
         },
         {url: "wss://ws.gdex.io", location: "Japan"},
-        {url: "wss://ws.gdex.top", location: "China"},
-        {url: "wss://dex.rnglab.org", location: "Netherlands"},
-        {url: "wss://dexnode.net/ws", location: "Dallas, USA"},
-        {url: "wss://la.dexnode.net/ws", location: "LA, USA"},
-        {url: "wss://kc-us-dex.xeldal.com/ws", location: "Kansas City, USA"},
+        {
+            url: "wss://ws.gdex.top",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Shanghai",
+            operator: "Witness: gdex-witness",
+            contact: "telegram:BrianZhang"
+        },
+        {
+            url: "wss://dex.rnglab.org",
+            location: "Netherlands",
+            operator: "Witness: rnglab"
+        },
+        {
+            url: "wss://dexnode.net/ws",
+            location: "Dallas, USA",
+            operator: "Witness: Sahkan"
+        },
+        {
+            url: "wss://la.dexnode.net/ws",
+            location: "LA, USA",
+            operator: "Witness: Sahkan"
+        },
+        {
+            url: "wss://kc-us-dex.xeldal.com/ws",
+            location: "Kansas City, USA",
+            operator: "Witness: Xeldal"
+        },
         {url: "wss://btsza.co.za:8091/ws", location: "Cape Town, South Africa"},
         {url: "wss://api.bts.blckchnd.com", location: "Falkenstein, Germany"},
         {url: "wss://api-ru.bts.blckchnd.com", location: "Moscow, Russia"},
         {url: "wss://node.market.rudex.org", location: "Germany"},
-        {url: "wss://api.bitsharesdex.com/ws", location: "Missouri, USA"},
-        {url: "wss://api.fr.bitsharesdex.com/ws", location: "France"},
-        {url: "wss://blockzms.xyz/ws", location: "USA"},
+        {
+            url: "wss://api.bitsharesdex.com",
+            region: "Northern America",
+            country: "U.S.A.",
+            location: "Kansas City",
+            operator: "Witness: delegate.ihashfury",
+            contact: "telegram:ihashfury"
+        },
+        {
+            url: "wss://api.fr.bitsharesdex.com",
+            region: "Western Europe",
+            country: "France",
+            location: "Paris",
+            operator: "Witness: delegate.ihashfury",
+            contact: "telegram:ihashfury"
+        },
+        {
+            url: "wss://blockzms.xyz/ws",
+            location: "USA",
+            operator: "Witness: delegate-zhaomu"
+        },
         {
             url: "wss://eu.nodes.bitshares.ws",
             region: "Western Europe",
@@ -185,7 +231,11 @@ export const settingsAPIs = {
             country: "Singapore",
             operator: "Infrastructure Worker"
         },
-        {url: "wss://ws.winex.pro", location: "Singapore"},
+        {
+            url: "wss://ws.winex.pro",
+            location: "Singapore",
+            operator: "Witness: winex.witness"
+        },
         {
             url: "wss://api.bts.mobi/ws",
             region: "Northern America",
@@ -197,21 +247,84 @@ export const settingsAPIs = {
         {
             url: "wss://api.btsxchng.com",
             location:
-                "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))"
+                "Global (Asia Pacific (Singapore) / US East (N. Virginia) / EU (London))",
+            operator: "Witness: elmato"
         },
-        {url: "wss://api.bts.network", location: "East Coast, USA"},
-        {url: "wss://btsws.roelandp.nl/ws", location: "Finland"},
-        {url: "wss://api.bitshares.bhuz.info/ws", location: "Europe"},
-        {url: "wss://bts-api.lafona.net/ws", location: "USA"},
-        {url: "wss://kimziv.com/ws", location: "Singapore"},
-        {url: "wss://api.btsgo.net/ws", location: "Singapore"},
-        {url: "wss://bts.proxyhosts.info/wss", location: "Germany"},
-        {url: "wss://bts.open.icowallet.net/ws", location: "Hangzhou, China"},
-        {url: "wss://crazybit.online", location: "China"},
-        {url: "wss://freedom.bts123.cc:15138/", location: "China"},
-        {url: "wss://bitshares.bts123.cc:15138/", location: "China"},
+        {
+            url: "wss://api.bts.network",
+            location: "East Coast, USA",
+            operator: "Witness: fox"
+        },
+        {
+            url: "wss://btsws.roelandp.nl/ws",
+            region: "Northern Europe",
+            country: "Finland",
+            location: "Helsinki",
+            operator: "Witness: roelandp",
+            contact: "telegram:roelandp"
+        },
+        {
+            url: "wss://api.bitshares.bhuz.info/ws",
+            location: "Europe",
+            operator: "Witness: bhuz"
+        },
+        {
+            url: "wss://bts-api.lafona.net/ws",
+            location: "USA",
+            operator: "Witness: delegate-1.lafona"
+        },
+        {
+            url: "wss://kimziv.com/ws",
+            region: "North America",
+            country: "USA",
+            location: "New Jersey",
+            operator: "Witness: witness.yao",
+            contact: "telegram: imyao"
+        },
+        {
+            url: "wss://api.btsgo.net/ws",
+            location: "Singapore",
+            operator: "Witness: xn-delegate"
+        },
+        {
+            url: "wss://bts.proxyhosts.info/wss",
+            location: "Germany",
+            operator: "Witness: verbaltech2"
+        },
+        {
+            url: "wss://bts.open.icowallet.net/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Hangzhou",
+            operator: "Witness: magicwallet.witness",
+            contact: "telegram:plus_wave"
+        },
+        {
+            url: "wss://crazybit.online",
+            location: "China",
+            operator: "Witness: crazybit"
+        },
+        {
+            url: "wss://freedom.bts123.cc:15138/",
+            location: "China",
+            operator: "Witness: delegate.freedom"
+        },
+        {
+            url: "wss://bitshares.bts123.cc:15138/",
+            location: "China",
+            operator: "Witness: delegate.freedom"
+        },
+        {
+            url: "wss://api.bts.ai/",
+            location: "Beijing, China",
+            operator: "Witness: witness.hiblockchain"
+        },
         {url: "wss://ws.hellobts.com/", location: "Japan"},
-        {url: "wss://bitshares.cyberit.io/", location: "Hong Kong"},
+        {
+            url: "wss://bitshares.cyberit.io/",
+            location: "Hong Kong",
+            operator: "Witness: witness.still"
+        },
         {
             url: "wss://bts-seoul.clockwork.gr",
             region: "Southeastern Asia",
@@ -228,7 +341,14 @@ export const settingsAPIs = {
             operator: "Witness: liuye",
             contact: "email:work@liuye.tech"
         },
-        {url: "wss://btsfullnode.bangzi.info/ws", location: "Germany"},
+        {
+            url: "wss://btsfullnode.bangzi.info/ws",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Munich",
+            operator: "Witness: Bangzi",
+            contact: "telegram:Bangzi"
+        },
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",

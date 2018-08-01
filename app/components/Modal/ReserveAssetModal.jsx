@@ -1,39 +1,64 @@
 import React from "react";
 import Translate from "react-translate-component";
-import utils from "common/utils";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "../Utility/AmountSelector";
 import AssetActions from "actions/AssetActions";
+import {ChainStore} from "bitsharesjs";
+import {Asset} from "common/MarketClasses";
+import AssetWrapper from "../Utility/AssetWrapper";
 
-export default class ReserveAssetModal extends React.Component {
+class ReserveAssetModal extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            amount: 0
+        this.state = this.getInitialState(props);
+    }
+
+    componentWillReceiveProps(np) {
+        if (
+            np.asset &&
+            this.props.asset &&
+            np.asset.get("id") !== this.props.asset.get("id")
+        ) {
+            console.log("new asset:", np.asset.get("id"));
+            this.setState(this.getInitialState(np));
+        }
+    }
+
+    getInitialState(props) {
+        return {
+            amount: 0,
+            amountAsset: new Asset({
+                amount: 0,
+                asset_id: props.asset.get("id"),
+                precision: props.asset.get("precision")
+            })
         };
     }
 
     onAmountChanged({amount, asset}) {
+        this.state.amountAsset.setAmount({real: amount});
         this.setState({amount, asset});
     }
 
     onSubmit() {
-        let precision = utils.get_asset_precision(
-            this.state.asset.get("precision")
-        );
-        let amount = this.state.amount.replace(/,/g, "");
-        amount *= precision;
         AssetActions.reserveAsset(
-            amount,
-            this.props.assetId,
+            this.state.amountAsset.getAmount(),
+            this.props.asset.get("id"),
             this.props.account.get("id")
-        );
+        ).then(() => {
+            this.state.amountAsset.setAmount({sats: 0});
+            this.setState({amount: 0});
+        });
         this.props.onClose();
     }
 
     render() {
-        let assetId = this.props.assetId;
+        let assetId = this.props.asset.get("id");
+
+        let currentBalance = ChainStore.getObject(
+            this.props.account.getIn(["balances", assetId])
+        );
 
         return (
             <form className="grid-block vertical full-width-content">
@@ -47,12 +72,25 @@ export default class ReserveAssetModal extends React.Component {
                             asset={assetId}
                             assets={[assetId]}
                             display_balance={
-                                <BalanceComponent
-                                    balance={this.props.account.getIn([
-                                        "balances",
-                                        assetId
-                                    ])}
-                                />
+                                <div
+                                    onClick={() => {
+                                        this.state.amountAsset.setAmount({
+                                            sats: currentBalance.get("balance")
+                                        });
+                                        this.setState({
+                                            amount: this.state.amountAsset.getAmount(
+                                                {real: true}
+                                            )
+                                        });
+                                    }}
+                                >
+                                    <BalanceComponent
+                                        balance={this.props.account.getIn([
+                                            "balances",
+                                            assetId
+                                        ])}
+                                    />
+                                </div>
                             }
                             tabIndex={1}
                         />
@@ -82,3 +120,9 @@ export default class ReserveAssetModal extends React.Component {
         );
     }
 }
+
+ReserveAssetModal = AssetWrapper(ReserveAssetModal, {
+    propNames: ["asset"]
+});
+
+export default ReserveAssetModal;

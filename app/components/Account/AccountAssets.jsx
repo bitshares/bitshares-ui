@@ -8,17 +8,15 @@ import AccountActions from "actions/AccountActions";
 import BaseModal from "../Modal/BaseModal";
 import FormattedAsset from "../Utility/FormattedAsset";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import notify from "actions/NotificationActions";
-import utils from "common/utils";
 import {debounce} from "lodash-es";
 import LoadingIndicator from "../LoadingIndicator";
 import IssueModal from "../Modal/IssueModal";
-import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import {connect} from "alt-react";
 import assetUtils from "common/asset_utils";
 import {Map, List} from "immutable";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {Tabs, Tab} from "../Utility/Tabs";
+import Icon from "../Icon/Icon";
 
 class AccountAssets extends React.Component {
     static defaultProps = {
@@ -115,12 +113,6 @@ class AccountAssets extends React.Component {
         AccountActions.accountSearch(searchTerm);
     }
 
-    _reserveButtonClick(assetId, e) {
-        e.preventDefault();
-        this.setState({reserve: assetId});
-        ZfApi.publish("reserve_asset", "open");
-    }
-
     _issueButtonClick(asset_id, symbol, e) {
         e.preventDefault();
         let {issue} = this.state;
@@ -135,6 +127,10 @@ class AccountAssets extends React.Component {
         this.props.history.push(
             `/account/${account_name}/update-asset/${symbol}`
         );
+    }
+
+    _createButtonClick(account_name) {
+        this.props.history.push(`/account/${account_name}/create-asset`);
     }
 
     render() {
@@ -194,15 +190,26 @@ class AccountAssets extends React.Component {
 
                 return (
                     <tr key={asset.symbol}>
-                        <td>
+                        <td style={{textAlign: "left"}}>
                             <Link to={`/asset/${asset.symbol}`}>
                                 {asset.symbol}
                             </Link>
                         </td>
-                        <td style={{maxWidth: "250px"}}>{desc}</td>
-                        <td>
+                        <td style={{textAlign: "left"}}>
+                            {"bitasset" in asset ? (
+                                asset.bitasset.is_prediction_market ? (
+                                    <Translate content="account.user_issued_assets.pm" />
+                                ) : (
+                                    <Translate content="account.user_issued_assets.mpa" />
+                                )
+                            ) : (
+                                "User Issued Asset"
+                            )}
+                        </td>
+                        <td style={{textAlign: "right"}}>
                             {dynamicObject ? (
                                 <FormattedAsset
+                                    hide_asset
                                     amount={parseInt(
                                         dynamicObject.get("current_supply"),
                                         10
@@ -211,52 +218,40 @@ class AccountAssets extends React.Component {
                                 />
                             ) : null}
                         </td>
-                        <td>
+                        <td style={{textAlign: "right"}}>
                             <FormattedAsset
+                                hide_asset
                                 amount={parseInt(asset.options.max_supply, 10)}
                                 asset={asset.id}
                             />
                         </td>
                         <td>
                             {!asset.bitasset_data_id ? (
-                                <button
+                                <a
                                     onClick={this._issueButtonClick.bind(
                                         this,
                                         asset.id,
                                         asset.symbol
                                     )}
-                                    className="button"
                                 >
-                                    <Translate content="transaction.trxTypes.asset_issue" />
-                                </button>
+                                    <Icon
+                                        name="cross-circle"
+                                        className="rotate45"
+                                    />
+                                </a>
                             ) : null}
                         </td>
 
                         <td>
-                            {!asset.bitasset_data_id ? (
-                                <button
-                                    onClick={this._reserveButtonClick.bind(
-                                        this,
-                                        asset.id
-                                    )}
-                                    className="button"
-                                >
-                                    <Translate content="transaction.trxTypes.asset_reserve" />
-                                </button>
-                            ) : null}
-                        </td>
-
-                        <td>
-                            <button
+                            <a
                                 onClick={this._editButtonClick.bind(
                                     this,
                                     asset.symbol,
                                     account_name
                                 )}
-                                className="button"
                             >
-                                <Translate content="transaction.trxTypes.asset_update" />
-                            </button>
+                                <Icon name="dashboard" />
+                            </a>
                         </td>
                     </tr>
                 );
@@ -276,29 +271,38 @@ class AccountAssets extends React.Component {
                         >
                             <Tab title="account.user_issued_assets.issued_assets">
                                 <div className="content-block">
-                                    <table className="table dashboard-table table-hover">
+                                    <table className="table dashboard-table">
                                         <thead>
                                             <tr>
-                                                <th>
+                                                <th style={{textAlign: "left"}}>
                                                     <Translate content="account.user_issued_assets.symbol" />
                                                 </th>
-                                                <th style={{maxWidth: "200px"}}>
-                                                    <Translate content="account.user_issued_assets.description" />
+                                                <th style={{textAlign: "left"}}>
+                                                    <Translate content="explorer.asset.summary.asset_type" />
                                                 </th>
                                                 <Translate
                                                     component="th"
                                                     content="markets.supply"
+                                                    style={{textAlign: "right"}}
                                                 />
-                                                <th>
+                                                <th
+                                                    style={{textAlign: "right"}}
+                                                >
                                                     <Translate content="account.user_issued_assets.max_supply" />
                                                 </th>
                                                 <th
                                                     style={{
                                                         textAlign: "center"
                                                     }}
-                                                    colSpan="3"
                                                 >
-                                                    <Translate content="account.perm.action" />
+                                                    <Translate content="transaction.trxTypes.asset_issue" />
+                                                </th>
+                                                <th
+                                                    style={{
+                                                        textAlign: "center"
+                                                    }}
+                                                >
+                                                    <Translate content="transaction.trxTypes.asset_update" />
                                                 </th>
                                             </tr>
                                         </thead>
@@ -307,13 +311,15 @@ class AccountAssets extends React.Component {
                                 </div>
 
                                 <div className="content-block">
-                                    <Link
-                                        to={`/account/${account_name}/create-asset/`}
+                                    <button
+                                        className="button"
+                                        onClick={this._createButtonClick.bind(
+                                            this,
+                                            account_name
+                                        )}
                                     >
-                                        <button className="button">
-                                            <Translate content="transaction.trxTypes.asset_create" />
-                                        </button>
-                                    </Link>
+                                        <Translate content="transaction.trxTypes.asset_create" />
+                                    </button>
                                 </div>
                             </Tab>
                         </Tabs>
@@ -326,19 +332,6 @@ class AccountAssets extends React.Component {
                                 asset_to_issue={this.state.issue.asset_id}
                                 onClose={() => {
                                     ZfApi.publish("issue_asset", "close");
-                                }}
-                            />
-                        </div>
-                    </BaseModal>
-
-                    <BaseModal id="reserve_asset" overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <ReserveAssetModal
-                                assetId={this.state.reserve}
-                                account={account}
-                                onClose={() => {
-                                    ZfApi.publish("reserve_asset", "close");
                                 }}
                             />
                         </div>
