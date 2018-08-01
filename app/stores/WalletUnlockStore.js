@@ -10,7 +10,7 @@ let ss = new ls(STORAGE_KEY);
 class WalletUnlockStore {
     constructor() {
         this.bindActions(WalletUnlockActions);
-        const storedSettings = ss.get("settings_v3");
+        const storedSettings = ss.get("settings_v4");
         let passwordLogin =
             "passwordLogin" in storedSettings
                 ? storedSettings.passwordLogin

@@ -650,6 +650,9 @@
                 "title": "Fondo de Comisiones",
                 "unclaimed_issuer_income": "Ingresos del emisor no reclamados"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
@@ -1849,6 +1852,11 @@
     "trx_error": {
         "expire":
             "Su transacción ha expirado sin confirmación, intente de nuevo más tarde."
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Coloque las órdenes de compra usando este formulario.",

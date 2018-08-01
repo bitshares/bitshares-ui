@@ -620,6 +620,9 @@
                 "title": "手续费资金池",
                 "unclaimed_issuer_income": "发行人未申领收入"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "资产名 %(name)s 无效",
             "margin_positions": {
@@ -1747,6 +1750,11 @@
     },
     "trx_error": {
         "expire": "你的交易确认超时，请稍后尝试。"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "使用此表格下订单",
