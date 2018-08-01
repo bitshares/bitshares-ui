@@ -638,6 +638,9 @@
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Unclaimed issuer income"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
@@ -1806,6 +1809,11 @@
     "trx_error": {
         "expire":
             "Your transaction has expired without being confirmed, please try again later."
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "이 양식을 사용하여 구매 주문을하십시오.",
