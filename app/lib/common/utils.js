@@ -231,7 +231,13 @@ var Utils = {
         }
         if (typeof a === "string" && typeof b === "string") {
             return a === b;
+        } else if (
+            (typeof a === "string" && typeof b !== "string") ||
+            (typeof a !== "string" && typeof b === "string")
+        ) {
+            return false;
         }
+
         if (a && a.toJS && b && b.toJS) return a === b;
         for (var key in a) {
             if ((a.hasOwnProperty(key) && !(key in b)) || a[key] !== b[key]) {

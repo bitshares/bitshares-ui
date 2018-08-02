@@ -59,11 +59,6 @@ export default class QuoteSelectionModal extends React.Component {
 
     _onFoundBackingAsset(asset) {
         if (asset) {
-            console.log(
-                "asset",
-                asset.get("symbol"),
-                this.props.quotes.includes(asset.get("symbol"))
-            );
             if (!this.props.quotes.includes(asset.get("symbol"))) {
                 this.setState({isValid: true});
             } else {
