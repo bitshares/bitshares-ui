@@ -80,7 +80,9 @@ class Footer extends React.Component {
                     function(json) {
                         let oldVersion = String(json.tag_name);
                         let newVersion = String(APP_VERSION);
-                        if (oldVersion !== newVersion) {
+                        let isReleaseCandidate =
+                            APP_VERSION.indexOf("rc") !== -1;
+                        if (!isReleaseCandidate && oldVersion !== newVersion) {
                             this.setState({newVersion});
                         }
                     }.bind(this)
@@ -322,6 +324,8 @@ class Footer extends React.Component {
         let version = version_match
             ? `.${version_match[1]}`
             : ` ${APP_VERSION}`;
+        let rc_match = APP_VERSION.match(/-rc[0-9]$/);
+        if (rc_match) version += rc_match[0];
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
