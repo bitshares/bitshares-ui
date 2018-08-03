@@ -6,16 +6,14 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
-import TransitionWrapper from "../Utility/TransitionWrapper";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import PropTypes from "prop-types";
-
+import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
-const alignRight = {textAlign: "right"};
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -49,7 +47,7 @@ class RecentTransactions extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            limit: props.limit || 20,
+            limit: props.limit,
             csvExport: false,
             headerHeight: 85,
             filter: "all"
@@ -298,7 +296,7 @@ class RecentTransactions extends React.Component {
                       </td>
                   </tr>
               ];
-        display_history.push(
+        let action = (
             <tr className="total-value" key="total_value">
                 <td style={{textAlign: "center"}}>
                     {historyCount > 0 ? (
@@ -321,7 +319,7 @@ class RecentTransactions extends React.Component {
                     ) : null}
                 </td>
                 <td className="column-hide-tiny" />
-                <td colSpan="2" style={{textAlign: "center"}}>
+                <td style={{textAlign: "center"}}>
                     &nbsp;{(this.props.showMore &&
                         historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (
@@ -334,6 +332,7 @@ class RecentTransactions extends React.Component {
                         </a>
                     ) : null}
                 </td>
+                <td />
             </tr>
         );
 
@@ -386,7 +385,8 @@ class RecentTransactions extends React.Component {
                         }
                         ref="transactions"
                     >
-                        <table
+                        <PaginatedList
+                            withTransition
                             className={
                                 "table table-striped " +
                                 (compactView ? "compact" : "") +
@@ -394,8 +394,7 @@ class RecentTransactions extends React.Component {
                                     ? " dashboard-table table-hover"
                                     : "")
                             }
-                        >
-                            <thead>
+                            header={
                                 <tr>
                                     <th
                                         className="column-hide-tiny"
@@ -412,18 +411,16 @@ class RecentTransactions extends React.Component {
                                     <th style={alignLeft}>
                                         <Translate content="account.transactions.info" />
                                     </th>
-                                    <th style={alignLeft}>
+                                    <th>
                                         <Translate content="account.transactions.time" />
                                     </th>
                                 </tr>
-                            </thead>
-                            <TransitionWrapper
-                                component="tbody"
-                                transitionName="newrow"
-                            >
-                                {display_history}
-                            </TransitionWrapper>
-                        </table>
+                            }
+                            rows={display_history}
+                            withTransition
+                            label="utility.total_x_operations"
+                            extraRow={action}
+                        />
                     </div>
                     {historyCount > 0 &&
                         this.state.csvExport && (

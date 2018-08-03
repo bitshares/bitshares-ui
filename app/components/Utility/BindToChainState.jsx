@@ -347,6 +347,7 @@ function BindToChainState(Component, options = {}) {
                         new_obj === null
                     )
                         new_state[key] = new_obj;
+
                     ++all_objects_counter;
                     if (new_obj !== undefined) ++resolved_objects_counter;
                 } else {
@@ -489,8 +490,29 @@ function BindToChainState(Component, options = {}) {
                 new_state.resolved = true;
 
             let stateChanged = false;
-            for (let key in new_state) {
-                if (!utils.are_equal_shallow(new_state[key], this.state[key])) {
+
+            /*
+            * are_equal_shallow won't correctly compare null to undefined, so
+            * we need to work around it by assigning a non-falsy value instead
+            * of null before making the comparison
+            */
+            function replaceNull(state) {
+                let temp = {};
+                for (let key in state) {
+                    if (state[key] === null) temp[key] = "null";
+                    else temp[key] = state[key];
+                }
+                return temp;
+            }
+            let temp_state = replaceNull(this.state);
+            let temp_new_state = replaceNull(new_state);
+            for (let key in temp_new_state) {
+                if (
+                    !utils.are_equal_shallow(
+                        temp_new_state[key],
+                        temp_state[key]
+                    )
+                ) {
                     stateChanged = true;
                 } else {
                     delete new_state[key];

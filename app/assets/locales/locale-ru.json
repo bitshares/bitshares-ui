@@ -652,6 +652,9 @@
                 "title": "Пул комиссии",
                 "unclaimed_issuer_income": "Невостребованный доход эмитента\n"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "Недопустимое имя %(name)s актива",
             "margin_positions": {
@@ -1854,6 +1857,11 @@
     "trx_error": {
         "expire":
             "Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Разместить заявки на покупку, используя эту форму.",

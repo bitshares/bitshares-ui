@@ -234,7 +234,10 @@ module.exports = function(env) {
                 }
             }
         },
-        devtool: env.noUgly || !env.prod ? "cheap-module-source-map" : "none",
+        devtool:
+            env.noUgly || !env.prod
+                ? "inline-cheap-module-source-map"
+                : "cheap-source-map",
         module: {
             rules: [
                 {
