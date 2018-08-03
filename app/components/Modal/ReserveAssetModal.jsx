@@ -20,7 +20,6 @@ class ReserveAssetModal extends React.Component {
             this.props.asset &&
             np.asset.get("id") !== this.props.asset.get("id")
         ) {
-            console.log("new asset:", np.asset.get("id"));
             this.setState(this.getInitialState(np));
         }
     }
@@ -56,9 +55,13 @@ class ReserveAssetModal extends React.Component {
     render() {
         let assetId = this.props.asset.get("id");
 
-        let currentBalance = ChainStore.getObject(
-            this.props.account.getIn(["balances", assetId])
-        );
+        let currentBalance =
+            this.props.account && this.props.account.get("balances", []).size
+                ? ChainStore.getObject(
+                      this.props.account.getIn(["balances", assetId])
+                  )
+                : null;
+        if (!currentBalance) return null;
 
         return (
             <form className="grid-block vertical full-width-content">
