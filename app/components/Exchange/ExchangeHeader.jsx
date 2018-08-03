@@ -11,7 +11,12 @@ import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
 import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import {Tabs, Button, Collapse, Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {
+    Tabs,
+    Button,
+    Collapse,
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -400,15 +405,21 @@ export default class ExchangeHeader extends React.Component {
                                 ) : null}
                             </ul>
                             <ul className="market-stats stats top-stats">
-                                <li 
+                                <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px"}}
                                     onClick={() => {
                                         ZfApi.publish("chart_options", "open");
                                     }}
                                 >
-                                    <AntIcon type="setting" style={{paddingRight: 5}}/>
-                                    <Translate className="column-hide-xs" content="exchange.settings" />
+                                    <AntIcon
+                                        type="setting"
+                                        style={{paddingRight: 5}}
+                                    />
+                                    <Translate
+                                        className="column-hide-xs"
+                                        content="exchange.settings"
+                                    />
                                 </li>
                             </ul>
                         </div>
@@ -428,24 +439,40 @@ export default class ExchangeHeader extends React.Component {
                         <ul>
                             <li className="with-dropdown">
                                 <select
-                                    value={exchangeLayout ? exchangeLayout : "exchange.layout.1"}
-                                    classNane="settings-select"
+                                    value={
+                                        exchangeLayout
+                                            ? exchangeLayout
+                                            : "exchange.layout.1"
+                                    }
+                                    className="settings-select"
                                     onChange={e => {
-                                        this.props.onChangeLayout(e.target.value);
+                                        this.props.onChangeLayout(
+                                            e.target.value
+                                        );
                                     }}
                                 >
                                     <option value="1">
-                                        {counterpart.translate("exchange.layout.1")}
+                                        {counterpart.translate(
+                                            "exchange.layout.1"
+                                        )}
                                     </option>
                                     <option value="2">
-                                        {counterpart.translate("exchange.layout.2")}
+                                        {counterpart.translate(
+                                            "exchange.layout.2"
+                                        )}
                                     </option>
                                     <option value="3">
-                                        {counterpart.translate("exchange.layout.3")}
+                                        {counterpart.translate(
+                                            "exchange.layout.3"
+                                        )}
                                     </option>
-                                    {<option value="4">
-                                        {counterpart.translate("exchange.layout.4")}
-                                    </option>}
+                                    {
+                                        <option value="4">
+                                            {counterpart.translate(
+                                                "exchange.layout.4"
+                                            )}
+                                        </option>
+                                    }
                                 </select>
                             </li>
                         </ul>

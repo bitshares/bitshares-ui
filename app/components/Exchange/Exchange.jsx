@@ -32,7 +32,12 @@ import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
 import guide from "intro.js";
 import translator from "counterpart";
-import {Tabs, Button, Collapse, Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {
+    Tabs,
+    Button,
+    Collapse,
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
 import Icon from "../Icon/Icon";
 import classnames from "classnames";
 
@@ -190,7 +195,7 @@ class Exchange extends React.Component {
 
         return {
             history: [],
-            
+
             tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
             tabTrades: ws.get("tabTrades", "history"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -199,7 +204,7 @@ class Exchange extends React.Component {
             ask,
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
-            exchangeLayout: ws.get("exchangeLayout", 1),            
+            exchangeLayout: ws.get("exchangeLayout", 1),
             showDepthChart: ws.get("showDepthChart", false),
             buyDiff: false,
             sellDiff: false,
@@ -225,7 +230,7 @@ class Exchange extends React.Component {
             capture: false,
             passive: true
         });
-        
+
         this._checkFeeStatus();
     }
 
@@ -860,9 +865,9 @@ class Exchange extends React.Component {
     _togglePanel() {
         this.setState({
             hidePanel: !this.state.hidePanel
-        })
+        });
     }
-    
+
     _flipBuySell() {
         this.setState({
             flipBuySell: !this.state.flipBuySell
@@ -993,7 +998,7 @@ class Exchange extends React.Component {
         });
         SettingsActions.changeViewSetting({
             tabVerticalPanel: tab
-        })
+        });
     }
 
     _setTabTrades(tab) {
@@ -1002,7 +1007,7 @@ class Exchange extends React.Component {
         });
         SettingsActions.changeViewSetting({
             tabTrades: tab
-        })
+        });
     }
 
     _setTabBuySell(tab) {
@@ -1011,7 +1016,7 @@ class Exchange extends React.Component {
         });
         SettingsActions.changeViewSetting({
             tabBuySell: tab
-        })
+        });
     }
 
     onChangeFeeAsset(type, value) {
@@ -1394,17 +1399,26 @@ class Exchange extends React.Component {
         let expirationType = this.state.expirationType;
         let expirationCustomTime = this.state.expirationCustomTime;
 
-        // Reset TabBuySell 
-        tabBuySell = !tabBuySell || ((exchangeLayout == 3 && smallScreen && (tabBuySell != "buy" && tabBuySell != "sell"))) ? "buy" : tabBuySell;
-        
+        // Reset TabBuySell
+        tabBuySell =
+            !tabBuySell ||
+            (exchangeLayout == 3 &&
+                smallScreen &&
+                (tabBuySell != "buy" && tabBuySell != "sell"))
+                ? "buy"
+                : tabBuySell;
+
         let isPanelActive = !hidePanel && !smallScreen ? true : false;
         let isPredictionMarket = base.getIn([
             "bitasset",
             "is_prediction_market"
         ]);
 
+        let actionCardIndex = 0;
+
         let buyForm = isFrozen ? null : (
             <BuySell
+                key={`actionCard_${actionCardIndex++}`}
                 onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
@@ -1493,6 +1507,7 @@ class Exchange extends React.Component {
 
         let sellForm = isFrozen ? null : (
             <BuySell
+                key={`actionCard_${actionCardIndex++}`}
                 onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 currentAccount={currentAccount}
                 backedCoin={this.props.backedCoins.find(
@@ -1583,11 +1598,16 @@ class Exchange extends React.Component {
 
         let myMarkets = (
             <MyMarkets
+                key={`actionCard_${actionCardIndex++}`}
                 className="left-order-book no-padding no-overflow"
                 style={{display: "block !important"}}
                 headerStyle={{paddingTop: 0, display: "none"}}
                 listHeight={
-                    this.state.height ? tabBuySell == "my-market" ? this.state.height - 325 : this.state.height - 450 : null
+                    this.state.height
+                        ? tabBuySell == "my-market"
+                            ? this.state.height - 325
+                            : this.state.height - 450
+                        : null
                 }
                 columns={[
                     {name: "star", index: 1},
@@ -1611,6 +1631,7 @@ class Exchange extends React.Component {
 
         let orderBook = (
             <OrderBook
+                key={`actionCard_${actionCardIndex++}`}
                 latest={latest && latest.getPrice()}
                 changeClass={changeClass}
                 orders={marketLimitOrders}
@@ -1629,7 +1650,9 @@ class Exchange extends React.Component {
                 onClick={this._orderbookClick.bind(this)}
                 horizontal={exchangeLayout >= 3 || smallScreen ? true : false}
                 flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
-                orderBookReversed={this.props.viewSettings.get("orderBookReversed")}
+                orderBookReversed={this.props.viewSettings.get(
+                    "orderBookReversed"
+                )}
                 marketReady={marketReady}
                 wrapperClass={`order-${buySellTop ? 1 : 1} xlarge-order-${
                     buySellTop ? 1 : 1
@@ -1647,25 +1670,23 @@ class Exchange extends React.Component {
             />
         );
 
-
-
-        {classnames(
-            "small-12 medium-6 middle-content",
-            this.state.flip ? "order-1" : "order-2"
-        )}
-        let buySellTab = 
-            <div 
-                className={
-                    classnames(
-                        "small-12 ",
-                        exchangeLayout <= 2 
-                            ? "medium-12 large-6 xlarge-6" 
-                            : "medium-12 xlarge-12 no-padding"
-                    )}
+        let buySellTab = (
+            <div
+                key={`actionCard_${actionCardIndex++}`}
+                className={classnames(
+                    "small-12 ",
+                    exchangeLayout <= 2
+                        ? "medium-12 large-6 xlarge-6"
+                        : "medium-12 xlarge-12 no-padding"
+                )}
                 style={{paddingLeft: 5, paddingRight: 5}}
             >
-                <Tabs defaultActiveKey="buy" activeKey={tabBuySell} onChange={this._setTabBuySell.bind(this)}>
-                    <Tabs.TabPane 
+                <Tabs
+                    defaultActiveKey="buy"
+                    activeKey={tabBuySell}
+                    onChange={this._setTabBuySell.bind(this)}
+                >
+                    <Tabs.TabPane
                         tab={
                             <TranslateWithLinks
                                 string="exchange.buysell_formatter"
@@ -1680,17 +1701,18 @@ class Exchange extends React.Component {
                                     {
                                         type: "translate",
                                         value: isPredictionMarket
-                                            ? "exchange.short" : "exchange.buy",
+                                            ? "exchange.short"
+                                            : "exchange.buy",
                                         arg: "direction"
                                     }
                                 ]}
-                            />  
+                            />
                         }
                         key="buy"
                     >
                         {buyForm}
                     </Tabs.TabPane>
-                    <Tabs.TabPane 
+                    <Tabs.TabPane
                         tab={
                             <TranslateWithLinks
                                 string="exchange.buysell_formatter"
@@ -1705,7 +1727,8 @@ class Exchange extends React.Component {
                                     {
                                         type: "translate",
                                         value: isPredictionMarket
-                                            ? "exchange.short" : "exchange.sell",
+                                            ? "exchange.short"
+                                            : "exchange.sell",
                                         arg: "direction"
                                     }
                                 ]}
@@ -1715,58 +1738,100 @@ class Exchange extends React.Component {
                     >
                         {sellForm}
                     </Tabs.TabPane>
-                    {exchangeLayout >= 3 && !smallScreen ? <Tabs.TabPane tab="My Markets" key="my-market" /> : null}
-                    {exchangeLayout >= 3 && !smallScreen ? <Tabs.TabPane tab="Find Market" key="find-market" /> : null}
+                    {exchangeLayout >= 3 && !smallScreen ? (
+                        <Tabs.TabPane tab="My Markets" key="my-market" />
+                    ) : null}
+                    {exchangeLayout >= 3 && !smallScreen ? (
+                        <Tabs.TabPane tab="Find Market" key="find-market" />
+                    ) : null}
                 </Tabs>
-            </div>;
+            </div>
+        );
 
         let verticalPanel;
 
-        if(smallScreen || hidePanel) {
+        if (smallScreen || hidePanel) {
             verticalPanel = null;
-        } else if(exchangeLayout <= 2) {
-            verticalPanel =
-                <div className="left-order-book no-padding no-overflow" style={{display: "block"}}>
+        } else if (exchangeLayout <= 2) {
+            verticalPanel = (
+                <div
+                    className="left-order-book no-padding no-overflow"
+                    style={{display: "block"}}
+                    key={`actionCard_${actionCardIndex++}`}
+                >
                     <div className="v-align no-padding align-center grid-block footer shrink column">
-                        <Tabs defaultActiveKey="order_book" activeKey={tabVerticalPanel} onChange={this._setTabVerticalPanel.bind(this)}>
+                        <Tabs
+                            defaultActiveKey="order_book"
+                            activeKey={tabVerticalPanel}
+                            onChange={this._setTabVerticalPanel.bind(this)}
+                        >
                             <Tabs.TabPane tab="Order Book" key="order_book" />
                             <Tabs.TabPane tab="My Markets" key="my-market" />
                             <Tabs.TabPane tab="Find Market" key="find-market" />
                         </Tabs>
                     </div>
                     {tabVerticalPanel == "order_book" ? orderBook : null}
-                    {tabVerticalPanel == "order_book" ? 
+                    {tabVerticalPanel == "order_book" ? (
                         <div className="v-align no-padding align-center grid-block footer shrink column">
                             <div className="v-align grid-block align-center grouped_order">
-                                {trackedGroupsConfig ? 
+                                {trackedGroupsConfig ? (
                                     <GroupOrderLimitSelector
-                                        trackedGroupsConfig={trackedGroupsConfig}
-                                        handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(this)}
-                                        currentGroupOrderLimit={currentGroupOrderLimit}
-                                    /> : null}
+                                        trackedGroupsConfig={
+                                            trackedGroupsConfig
+                                        }
+                                        handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
+                                            this
+                                        )}
+                                        currentGroupOrderLimit={
+                                            currentGroupOrderLimit
+                                        }
+                                    />
+                                ) : null}
                             </div>
-                        </div> 
-                    : null}
-                    {tabVerticalPanel == "my-market" || tabVerticalPanel == "find-market" ? myMarkets : null}
-                </div>;
-        } else if(exchangeLayout >= 3) {
-            verticalPanel =
-                <div className="left-order-book no-padding no-overflow" style={{display: "block"}}>
+                        </div>
+                    ) : null}
+                    {tabVerticalPanel == "my-market" ||
+                    tabVerticalPanel == "find-market"
+                        ? myMarkets
+                        : null}
+                </div>
+            );
+        } else if (exchangeLayout >= 3) {
+            verticalPanel = (
+                <div
+                    className="left-order-book no-padding no-overflow"
+                    style={{display: "block"}}
+                >
                     {buySellTab}
-                    {tabBuySell == "my-market" || tabBuySell == "find-market" ? myMarkets : null}
-                </div>;
+                    {tabBuySell == "my-market" || tabBuySell == "find-market"
+                        ? myMarkets
+                        : null}
+                </div>
+            );
         }
 
-        let verticalPanelToggle = !smallScreen ?
-            <div style={{width: "auto", paddingTop: "calc(50vh - 120px)"}} onClick={this._togglePanel.bind(this)} >
-                <AntIcon type={(exchangeLayout == 1 && !hidePanel) || (exchangeLayout != 1 && hidePanel) ? "caret-left" : "caret-right"} />
-            </div> : null;
+        let verticalPanelToggle = !smallScreen ? (
+            <div
+                style={{width: "auto", paddingTop: "calc(50vh - 120px)"}}
+                onClick={this._togglePanel.bind(this)}
+            >
+                <AntIcon
+                    type={
+                        (exchangeLayout == 1 && !hidePanel) ||
+                        (exchangeLayout != 1 && hidePanel)
+                            ? "caret-left"
+                            : "caret-right"
+                    }
+                />
+            </div>
+        ) : null;
 
         let marketHistory = (
             <MarketHistory
+                key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
                     exchangeLayout == 4
-                        ? isPanelActive 
+                        ? isPanelActive
                             ? "medium-6 large-6 xlarge-6"
                             : "medium-6 xlarge-4"
                         : "medium-12 xlarge-12",
@@ -1789,9 +1854,10 @@ class Exchange extends React.Component {
 
         let myMarketHistory = (
             <MarketHistory
+                key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
                     exchangeLayout == 4
-                        ? isPanelActive 
+                        ? isPanelActive
                             ? "medium-6 xlarge-6"
                             : "medium-6 xlarge-4"
                         : "medium-12 xlarge-12",
@@ -1817,14 +1883,14 @@ class Exchange extends React.Component {
                 smallScreen={this.props.smallScreen}
                 className={classnames(
                     exchangeLayout == 4
-                        ? isPanelActive 
+                        ? isPanelActive
                             ? "medium-6 xlarge-6"
                             : "medium-6 xlarge-4"
-                    : "medium-12 xlarge-12",
+                        : "medium-12 xlarge-12",
                     `small-12 no-padding align-spaced ps-container middle-content order-5
                     }`
                 )}
-                key="my_orders"
+                key={`actionCard_${actionCardIndex++}`}
                 headerStyle={{paddingTop: 0}}
                 noHeader={exchangeLayout == 4 ? false : true}
                 orders={marketLimitOrders}
@@ -1835,12 +1901,8 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"my_orders"}
-                onCancel={this._cancelLimitOrder.bind(
-                    this
-                )}
-                flipMyOrders={this.props.viewSettings.get(
-                    "flipMyOrders"
-                )}
+                onCancel={this._cancelLimitOrder.bind(this)}
+                flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                 feedPrice={this.props.feedPrice}
                 exchangeLayout={exchangeLayout}
                 hidePanel={hidePanel}
@@ -1853,14 +1915,14 @@ class Exchange extends React.Component {
                 smallScreen={this.props.smallScreen}
                 className={classnames(
                     exchangeLayout == 4
-                        ? isPanelActive 
+                        ? isPanelActive
                             ? "medium-6 xlarge-6"
                             : "medium-6 xlarge-4"
-                    : "medium-12 xlarge-12",
+                        : "medium-12 xlarge-12",
                     `small-12 no-padding align-spaced ps-container middle-content order-4
                     }`
                 )}
-                key="my_settle_orders"
+                key={`actionCard_${actionCardIndex++}`}
                 headerStyle={{paddingTop: 0}}
                 noHeader={exchangeLayout != 4 ? true : false}
                 orders={marketLimitOrders}
@@ -1871,12 +1933,8 @@ class Exchange extends React.Component {
                 baseSymbol={baseSymbol}
                 quoteSymbol={quoteSymbol}
                 activeTab={"open_settlement"}
-                onCancel={this._cancelLimitOrder.bind(
-                    this
-                )}
-                flipMyOrders={this.props.viewSettings.get(
-                    "flipMyOrders"
-                )}
+                onCancel={this._cancelLimitOrder.bind(this)}
+                flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                 feedPrice={this.props.feedPrice}
                 exchangeLayout={exchangeLayout}
                 smallScreen={smallScreen}
@@ -1885,22 +1943,27 @@ class Exchange extends React.Component {
             />
         );
 
-        let marketsTab = 
-            <div className=
-                    {cnames(
-                        exchangeLayout == 3 
-                        ? hidePanel 
-                            ? "order-2 small-12 medium-12 large-6 xlarge-4" 
-                            : "order-2 small-12 medium-12 large-12 xlarge-7" 
-                        : exchangeLayout <= 2 
-                        ? hidePanel 
-                            ? "small-12 medium-12 large-6 xlarge-6"
-                            : "small-12 medium-12 large-6 xlarge-6"
-                        : "small-12 medium-12 xlarge-6"
-                    )}
+        let marketsTab = (
+            <div
+                key={`actionCard_${actionCardIndex++}`}
+                className={cnames(
+                    exchangeLayout == 3
+                        ? hidePanel
+                            ? "order-2 small-12 medium-12 large-6 xlarge-4"
+                            : "order-2 small-12 medium-12 large-12 xlarge-7"
+                        : exchangeLayout <= 2
+                            ? hidePanel
+                                ? "small-12 medium-12 large-6 xlarge-6"
+                                : "small-12 medium-12 large-6 xlarge-6"
+                            : "small-12 medium-12 xlarge-6"
+                )}
                 style={{paddingLeft: 5, paddingRight: 5}}
             >
-                <Tabs defaultActiveKey="history" activeKey={tabTrades} onChange={this._setTabTrades.bind(this)}>
+                <Tabs
+                    defaultActiveKey="history"
+                    activeKey={tabTrades}
+                    onChange={this._setTabTrades.bind(this)}
+                >
                     <Tabs.TabPane tab="Market Trades" key="history">
                         {marketHistory}
                     </Tabs.TabPane>
@@ -1910,60 +1973,61 @@ class Exchange extends React.Component {
                     <Tabs.TabPane tab="My Open Orders" key="my_orders">
                         {myOpenOrders}
                     </Tabs.TabPane>
-                    {marketSettleOrders.size > 0 ? 
+                    {marketSettleOrders.size > 0 ? (
                         <Tabs.TabPane tab="Settle Orders" key="open_settlement">
                             {settlementOrders}
-                        </Tabs.TabPane> 
-                    : null}
+                        </Tabs.TabPane>
+                    ) : null}
                 </Tabs>
-            </div>;
+            </div>
+        );
 
         let actionCards = [];
-        if(!smallScreen) {
-            if(exchangeLayout >= 3) { 
-                actionCards.push(orderBook); 
+        if (!smallScreen) {
+            if (exchangeLayout >= 3) {
+                actionCards.push(orderBook);
             }
 
-            if(exchangeLayout == 4) {
+            if (exchangeLayout == 4) {
                 actionCards.push(marketHistory);
                 actionCards.push(settlementOrders);
                 actionCards.push(myMarketHistory);
                 actionCards.push(myOpenOrders);
             }
 
-            if(exchangeLayout <= 3) {
+            if (exchangeLayout <= 3) {
                 actionCards.push(marketsTab);
             }
 
-            if(exchangeLayout <= 2) {
-                actionCards.push(buySellTab); 
+            if (exchangeLayout <= 2) {
+                actionCards.push(buySellTab);
             }
         } else {
-            if(exchangeLayout <= 2) { 
-                actionCards.push(orderBook); 
+            if (exchangeLayout <= 2) {
+                actionCards.push(orderBook);
             }
 
-            if(exchangeLayout >= 3) { 
-                actionCards.push(orderBook); 
+            if (exchangeLayout >= 3) {
+                actionCards.push(orderBook);
             }
 
-            if(exchangeLayout == 4) {
+            if (exchangeLayout == 4) {
                 actionCards.push(marketHistory);
                 actionCards.push(settlementOrders);
                 actionCards.push(myMarketHistory);
                 actionCards.push(myOpenOrders);
             }
 
-            if(exchangeLayout <= 3) {
+            if (exchangeLayout <= 3) {
                 actionCards.push(marketsTab);
             }
 
-            if(exchangeLayout == 3) { 
-                actionCards.push(buySellTab); 
+            if (exchangeLayout == 3) {
+                actionCards.push(buySellTab);
             }
 
-            if(exchangeLayout <= 2) {
-                actionCards.push(buySellTab); 
+            if (exchangeLayout <= 2) {
+                actionCards.push(buySellTab);
             }
         }
 
@@ -2008,12 +2072,15 @@ class Exchange extends React.Component {
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
-                    {exchangeLayout == 1 ? 
-                        <div className="grid-block left-column shrink no-overflow" style={{height: "100%"}}>
+                    {exchangeLayout == 1 ? (
+                        <div
+                            className="grid-block left-column shrink no-overflow"
+                            style={{height: "100%"}}
+                        >
                             {isPanelActive ? verticalPanel : null}
                             {verticalPanelToggle}
                         </div>
-                    : null}
+                    ) : null}
 
                     {/* Center Column */}
                     <div
@@ -2045,7 +2112,9 @@ class Exchange extends React.Component {
                                             )}
                                             buckets={buckets}
                                             bucketSize={bucketSize}
-                                            currentPeriod={this.state.currentPeriod}
+                                            currentPeriod={
+                                                this.state.currentPeriod
+                                            }
                                             chartHeight={
                                                 this.state.height > 1100
                                                     ? chartHeight
@@ -2118,22 +2187,24 @@ class Exchange extends React.Component {
                     {/* End of Main Content Column */}
 
                     {/* Right Column */}
-                    {exchangeLayout > 1 ? 
-                        <div ref="wrapper" className="grid-block right-column shrink no-overflow" style={{maxWidth: 450}}>
+                    {exchangeLayout > 1 ? (
+                        <div
+                            ref="wrapper"
+                            className="grid-block right-column shrink no-overflow"
+                            style={{maxWidth: 450}}
+                        >
                             {verticalPanelToggle}
                             {isPanelActive ? verticalPanel : null}
                         </div>
-                    : null}
-                    
+                    ) : null}
+
                     {/* End of Second Vertical Block */}
                 </div>
 
                 {quoteIsBitAsset ? (
                     <BorrowModal
                         ref="borrowQuote"
-                        modalId={
-                            "borrow_modal_quote_" + quoteAsset.get("id")
-                        }
+                        modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
                         quote_asset={quoteAsset.get("id")}
                         backing_asset={quoteAsset.getIn([
                             "bitasset",
