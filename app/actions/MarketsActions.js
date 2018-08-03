@@ -35,6 +35,7 @@ const marketStatsQueueLength = 500; // Number of get_ticker calls per batch
 const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
 let marketStatsQueueActive = false;
 
+let currentGroupedOrderLimit = 0;
 class MarketsActions {
     changeBase(market) {
         clearBatchTimeouts();
@@ -127,6 +128,15 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize, groupedOrderLimit) {
+        /*
+        * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
+        * so we keep track of the last value used and use that instead in that
+        * case
+        */
+        if (typeof groupedOrderLimit === "undefined")
+            groupedOrderLimit = currentGroupedOrderLimit;
+        else currentGroupedOrderLimit = groupedOrderLimit;
+
         clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
         currentMarket = base.get("id") + "_" + quote.get("id");
