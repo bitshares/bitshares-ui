@@ -169,7 +169,7 @@ export const settingsAPIs = {
         {
             url: "wss://la.dexnode.net/ws",
             region: "Northern America",
-            country: "USA",
+            country: "U.S.A.",
             location: "Los Angeles",
             operator: "Witness: Sahkan",
             contact: "telegram:Sahkan_bitshares"
@@ -177,7 +177,7 @@ export const settingsAPIs = {
         {
             url: "wss://dexnode.net/ws",
             region: "Northern America",
-            country: "USA",
+            country: "U.S.A.",
             location: "Dallas",
             operator: "Witness: Sahkan",
             contact: "telegram:Sahkan_bitshares"
@@ -185,7 +185,7 @@ export const settingsAPIs = {
         {
             url: "wss://kc-us-dex.xeldal.com/ws",
             region: "North America",
-            country: "USA",
+            country: "U.S.A.",
             location: "Kansas City",
             operator: "Witness: xeldal",
             contact: "telegram:xeldal"
@@ -273,7 +273,7 @@ export const settingsAPIs = {
         {
             url: "wss://api.bts.mobi/ws",
             region: "Northern America",
-            country: "USA",
+            country: "U.S.A.",
             location: "Virginia",
             operator: "Witness: in.abit",
             contact: "telegram:abitmore"
@@ -287,7 +287,7 @@ export const settingsAPIs = {
         {
             url: "wss://api.bts.network/",
             region: "North America",
-            country: "USA",
+            country: "U.S.A.",
             location: "Virginia",
             operator: "Witness: fox",
             contact: "telegram:ryanRfox"
@@ -318,7 +318,7 @@ export const settingsAPIs = {
         {
             url: "wss://kimziv.com/ws",
             region: "North America",
-            country: "USA",
+            country: "U.S.A.",
             location: "New Jersey",
             operator: "Witness: witness.yao",
             contact: "telegram:imyao"
@@ -426,19 +426,31 @@ export const settingsAPIs = {
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
-            location: "TESTNET - BitShares Europe (Frankfurt, Germany)"
+            region: "TESTNET - Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "BitShares Europe",
+            contact: "telegram:xeroc"
         },
         {
             url: "wss://testnet.nodes.bitshares.ws",
-            location: "TESTNET - BitShares Infrastructure Program"
+            region: "TESTNET - Western Europe",
+            country: "Germany",
+            location: "Nuremberg",
+            operator: "Infrastructure Worker",
+            contact: "email:info@blockchainprojectsbv.com"
         },
         {
             url: "wss://testnet.bitshares.apasia.tech/ws",
-            location: "TESTNET - APT BitShares (Dallas, USA)"
+            region: "TESTNET - Northern America",
+            country: "U.S.A.",
+            location: "Dallas",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
         },
         {
             url: "wss://testnet.dex.trading/",
-            region: "Western Europe",
+            region: "TESTNET - Western Europe",
             country: "France",
             location: "Paris",
             operator: "Witness: zapata42-witness",
