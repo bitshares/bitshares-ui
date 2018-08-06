@@ -56,7 +56,9 @@ class ReserveAssetModal extends React.Component {
         let assetId = this.props.asset.get("id");
 
         let currentBalance =
-            this.props.account && this.props.account.get("balances", []).size
+            this.props.account &&
+            this.props.account.get("balances", []).size &&
+            !!this.props.account.getIn(["balances", assetId])
                 ? ChainStore.getObject(
                       this.props.account.getIn(["balances", assetId])
                   )
