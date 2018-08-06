@@ -1,12 +1,10 @@
 // main colors
 
-$primary-background: #383838;
-$primary-border-color: #535353;
-$primary-background-active: $primary-border-color;
+$primary-background: #eee;
+$primary-border-color: #e0e0e0;
+$primary-background-active: #eee;
 
-$layout-top-button-border-color: $primary-background;
-
-$primary-text-color: #bababa;
+$primary-text-color: #656565;
 $primary-text-color-active: #059cce;
 
 $button-success-color: #fff;
@@ -22,11 +20,11 @@ $button-cancel-border: $primary-background-active;
 $button-cancel-background: $primary-background-active;
 
 $primary-btn-color: $primary-text-color;
-$primary-btn-background: #262626;
-$primary-btn-background-active: #2d2d2d;
+$primary-btn-background: $primary-background;
+$primary-btn-background-active: #edeeec;
 $primary-btn-border-active: $primary-background-active;
 
 $icon-light-color: $primary-text-color;
 $icon-light-color-active: $primary-text-color-active;
 
-@import "base";
+@import "../base";

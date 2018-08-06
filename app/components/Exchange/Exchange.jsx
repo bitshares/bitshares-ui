@@ -31,6 +31,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import moment from "moment";
 import guide from "intro.js";
 import translator from "counterpart";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -200,6 +201,7 @@ class Exchange extends React.Component {
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
             height: window.innerHeight,
             width: window.innerWidth,
+            hidePanel: false,
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3) // 3 months
         };
@@ -842,6 +844,12 @@ class Exchange extends React.Component {
         this.setState(newState);
     }
 
+    _togglePanel() {
+        this.setState({
+            hidePanel: !this.state.hidePanel
+        });
+    }
+
     _flipBuySell() {
         this.setState({
             flipBuySell: !this.state.flipBuySell
@@ -1226,7 +1234,8 @@ class Exchange extends React.Component {
             buyDiff,
             sellDiff,
             width,
-            buySellTop
+            buySellTop,
+            hidePanel
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
@@ -1335,6 +1344,17 @@ class Exchange extends React.Component {
 
         let expirationType = this.state.expirationType;
         let expirationCustomTime = this.state.expirationCustomTime;
+
+        let isPanelActive = !hidePanel && !smallScreen ? true : false;
+        let verticalPanelToggle = !smallScreen ? (
+            <div
+                className="clickable"
+                style={{width: "auto", paddingTop: "calc(50vh - 120px)"}}
+                onClick={this._togglePanel.bind(this)}
+            >
+                <AntIcon type={hidePanel ? "caret-left" : "caret-right"} />
+            </div>
+        ) : null;
 
         let buyForm = isFrozen ? null : (
             <BuySell
@@ -1804,91 +1824,114 @@ class Exchange extends React.Component {
 
                     {/* Right Column - Market History */}
                     <div
-                        className="grid-block shrink right-column no-overflow vertical show-for-medium"
-                        style={{paddingTop: 0, minWidth: 358, maxWidth: 400}}
+                        className="grid-block shrink right-column no-overflow"
+                        style={{maxWidth: 450}}
                     >
-                        {/* Market History */}
-                        <div className="grid-block no-padding no-margin vertical">
-                            <MyMarkets
-                                className="left-order-book no-padding no-overflow"
-                                headerStyle={{paddingTop: 0}}
-                                columns={[
-                                    {name: "star", index: 1},
-                                    {name: "market", index: 2},
-                                    {name: "vol", index: 3},
-                                    {name: "price", index: 4},
-                                    {name: "change", index: 5}
-                                ]}
-                                findColumns={[
-                                    {name: "market", index: 1},
-                                    {name: "issuer", index: 2},
-                                    {name: "vol", index: 3},
-                                    {name: "add", index: 4}
-                                ]}
-                                current={`${quoteSymbol}_${baseSymbol}`}
-                                location={this.props.location}
-                                history={this.props.history}
-                            />
-                        </div>
-                        <div
-                            style={{
-                                padding: !this.props.miniDepthChart
-                                    ? 0
-                                    : "0 0 40px 0"
-                            }}
-                            className="grid-block no-margin vertical shrink"
-                        >
+                        {verticalPanelToggle}
+                        {!isPanelActive ? null : (
                             <div
-                                onClick={this._toggleMiniChart.bind(this)}
-                                className="exchange-content-header clickable"
-                                style={{textAlign: "left", paddingRight: 10}}
+                                style={{minWidth: 358}}
+                                className="grid-block shrink right-column no-overflow vertical no-padding"
                             >
-                                {this.props.miniDepthChart ? (
-                                    <span>&#9660;</span>
-                                ) : (
-                                    <span>&#9650;</span>
-                                )}
+                                {/* Market History */}
+                                <div className="grid-block no-padding no-margin vertical">
+                                    <MyMarkets
+                                        className="left-order-book no-padding no-overflow"
+                                        headerStyle={{paddingTop: 0}}
+                                        columns={[
+                                            {name: "star", index: 1},
+                                            {name: "market", index: 2},
+                                            {name: "vol", index: 3},
+                                            {name: "price", index: 4},
+                                            {name: "change", index: 5}
+                                        ]}
+                                        findColumns={[
+                                            {name: "market", index: 1},
+                                            {name: "issuer", index: 2},
+                                            {name: "vol", index: 3},
+                                            {name: "add", index: 4}
+                                        ]}
+                                        current={`${quoteSymbol}_${baseSymbol}`}
+                                        location={this.props.location}
+                                        history={this.props.history}
+                                    />
+                                </div>
+
+                                {/* Mini Depth Chart */}
+                                <div
+                                    style={{
+                                        padding: !this.props.miniDepthChart
+                                            ? 0
+                                            : "0 0 40px 0"
+                                    }}
+                                    className="grid-block no-margin vertical shrink"
+                                >
+                                    <div
+                                        onClick={this._toggleMiniChart.bind(
+                                            this
+                                        )}
+                                        className="exchange-content-header clickable"
+                                        style={{
+                                            textAlign: "left",
+                                            paddingRight: 10
+                                        }}
+                                    >
+                                        {this.props.miniDepthChart ? (
+                                            <span>&#9660;</span>
+                                        ) : (
+                                            <span>&#9650;</span>
+                                        )}
+                                    </div>
+                                    {this.props.miniDepthChart ? (
+                                        <DepthHighChart
+                                            marketReady={marketReady}
+                                            orders={marketLimitOrders}
+                                            showCallLimit={showCallLimit}
+                                            call_orders={marketCallOrders}
+                                            flat_asks={flatAsks}
+                                            flat_bids={flatBids}
+                                            flat_calls={
+                                                showCallLimit ? flatCalls : []
+                                            }
+                                            flat_settles={
+                                                this.props.settings.get(
+                                                    "showSettles"
+                                                ) && flatSettles
+                                            }
+                                            settles={marketSettleOrders}
+                                            invertedCalls={invertedCalls}
+                                            totalBids={totals.bid}
+                                            totalAsks={totals.ask}
+                                            base={base}
+                                            quote={quote}
+                                            height={200}
+                                            onClick={this._depthChartClick.bind(
+                                                this,
+                                                base,
+                                                quote
+                                            )}
+                                            settlementPrice={
+                                                !hasPrediction &&
+                                                feedPrice &&
+                                                feedPrice.toReal()
+                                            }
+                                            spread={spread}
+                                            LCP={
+                                                showCallLimit
+                                                    ? lowestCallPrice
+                                                    : null
+                                            }
+                                            leftOrderBook={leftOrderBook}
+                                            hasPrediction={hasPrediction}
+                                            noText={true}
+                                            theme={this.props.settings.get(
+                                                "themes"
+                                            )}
+                                        />
+                                    ) : null}
+                                </div>
                             </div>
-                            {this.props.miniDepthChart ? (
-                                <DepthHighChart
-                                    marketReady={marketReady}
-                                    orders={marketLimitOrders}
-                                    showCallLimit={showCallLimit}
-                                    call_orders={marketCallOrders}
-                                    flat_asks={flatAsks}
-                                    flat_bids={flatBids}
-                                    flat_calls={showCallLimit ? flatCalls : []}
-                                    flat_settles={
-                                        this.props.settings.get(
-                                            "showSettles"
-                                        ) && flatSettles
-                                    }
-                                    settles={marketSettleOrders}
-                                    invertedCalls={invertedCalls}
-                                    totalBids={totals.bid}
-                                    totalAsks={totals.ask}
-                                    base={base}
-                                    quote={quote}
-                                    height={200}
-                                    onClick={this._depthChartClick.bind(
-                                        this,
-                                        base,
-                                        quote
-                                    )}
-                                    settlementPrice={
-                                        !hasPrediction &&
-                                        feedPrice &&
-                                        feedPrice.toReal()
-                                    }
-                                    spread={spread}
-                                    LCP={showCallLimit ? lowestCallPrice : null}
-                                    leftOrderBook={leftOrderBook}
-                                    hasPrediction={hasPrediction}
-                                    noText={true}
-                                    theme={this.props.settings.get("themes")}
-                                />
-                            ) : null}
-                        </div>
+                        )}
                     </div>
 
                     {quoteIsBitAsset ? (
