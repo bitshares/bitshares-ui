@@ -241,7 +241,7 @@ class Footer extends React.Component {
             // handling out of sync state within this one call
 
             let forceReconnectAfterSeconds = this._getForceReconnectAfterSeconds();
-            let askToReconnectAfterSeconds = 5;
+            let askToReconnectAfterSeconds = 10;
 
             // Trigger automatic reconnect after X seconds
             setTimeout(() => {
