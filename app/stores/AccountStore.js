@@ -50,7 +50,11 @@ class AccountStore extends BaseStore {
             "reset",
             "setWallet"
         );
-
+        // can't use settings store due to possible initialization race conditions
+        const storedSettings = ss.get("settings_v4", {});
+        if (storedSettings.passwordLogin === undefined) {
+            storedSettings.passwordLogin = true;
+        }
         const referralAccount = this._checkReferrer();
         this.state = {
             subbed: false,
@@ -63,9 +67,7 @@ class AccountStore extends BaseStore {
             accountContacts: Immutable.Set(),
             linkedAccounts: Immutable.Set(), // linkedAccounts are accounts for which the user controls the private keys, which are stored in a db with the wallet and automatically loaded every time the app starts
             referralAccount,
-            passwordLogin: accountStorage.get("settings_v4", {
-                passwordLogin: true
-            }).passwordLogin
+            passwordLogin: storedSettings.passwordLogin
         };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
