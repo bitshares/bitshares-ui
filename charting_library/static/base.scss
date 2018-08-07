@@ -29,8 +29,14 @@ $primary-btn-border-active: $primary-background-active !default;
 $icon-light-color: $primary-text-color !default;
 $icon-light-color-active: $primary-text-color-active !default;
 
+
+body.chart-page, .loading-indicator {
+  background: $primary-background;
+}
+
 .chart-page .chart-container {
   border: none;
+  background: $primary-background;
 }
 
 .header-chart-panel .group {
