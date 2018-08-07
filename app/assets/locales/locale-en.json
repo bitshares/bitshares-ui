@@ -1,5 +1,7 @@
 {
     "account": {
+        "history_error":
+            "Failed to download the account history, please try again",
         "accounts": "Accounts",
         "activity": "Activity",
         "advanced": "Advanced",
@@ -1650,7 +1652,8 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download history as comma separated .csv file",
+        "csv_tip":
+            "Download full account history as a comma separated .csv file using Cointracking.info format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
