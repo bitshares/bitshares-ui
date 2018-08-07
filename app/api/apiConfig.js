@@ -124,6 +124,14 @@ export const settingsAPIs = {
             contact: "telegram:mtopenledger"
         },
         {
+            url: "wss://na.openledger.info/ws",
+            location: "Quebec",
+            region: "Northern America",
+            country: "Canada",
+            operator: "Witness: openledger-dc",
+            contact: "telegram:mtopenledger"
+        },
+        {
             url: "wss://bitshares.nu/ws",
             location: "Stockholm",
             region: "Northern Europe",
@@ -137,7 +145,14 @@ export const settingsAPIs = {
             operator: "Witness: abc123",
             contact: "QQ:58291;email:58291@qq.com"
         },
-        {url: "wss://node.btscharts.com/ws", location: "Hong Kong"},
+        {
+            url: "wss://node.btscharts.com/ws",
+            region: "Eastern Asia",
+            country: "China",
+            location: "Beijing",
+            operator: "leo2017",
+            contact: "wechat:wx8855221;email:8855221@qq.com"
+        },
         {
             url: "wss://japan.bitshares.apasia.tech/ws",
             country: "Japan",
