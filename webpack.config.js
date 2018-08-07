@@ -362,6 +362,7 @@ module.exports = function(env) {
             extensions: [".js", ".jsx", ".coffee", ".json"],
             mainFields: ["module", "jsnext:main", "browser", "main"],
             alias: {
+                sanitize$: "xss",
                 moment$: path.resolve(
                     root_dir,
                     "node_modules/moment/moment.js"
