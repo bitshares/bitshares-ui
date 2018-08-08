@@ -357,7 +357,7 @@ class DepositModalContent extends DecimalChecker {
                                         className={"copyIcon"}
                                     />
                                 </div>
-                                <div>
+                                <div style={{wordBreak: 'break-word'}}>
                                     <Translate
                                         component="div"
                                         style={{
@@ -389,7 +389,7 @@ class DepositModalContent extends DecimalChecker {
                                             className={"copyIcon"}
                                         />
                                     </div>
-                                    <div>
+                                    <div style={{wordBreak: 'break-word'}}>
                                         <Translate
                                             component="div"
                                             style={{
