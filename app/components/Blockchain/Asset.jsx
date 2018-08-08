@@ -279,7 +279,6 @@ class Asset extends React.Component {
         }
 
         let {name, prefix} = utils.replaceName(originalAsset);
-
         return (
             <div style={{overflow: "visible"}}>
                 <HelpContent
@@ -736,17 +735,21 @@ class Asset extends React.Component {
         var whiteLists = permissionBooleans["white_list"] ? (
             <span>
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_authorities" />:
-                &nbsp;{this.renderAuthorityList(options.blacklist_authorities)}
+                <Translate content="explorer.asset.permissions.blacklist_authorities" />
+                : &nbsp;
+                {this.renderAuthorityList(options.blacklist_authorities)}
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_markets" />:
-                &nbsp;{this.renderMarketList(asset, options.blacklist_markets)}
+                <Translate content="explorer.asset.permissions.blacklist_markets" />
+                : &nbsp;
+                {this.renderMarketList(asset, options.blacklist_markets)}
                 <br />
-                <Translate content="explorer.asset.permissions.whitelist_authorities" />:
-                &nbsp;{this.renderAuthorityList(options.whitelist_authorities)}
+                <Translate content="explorer.asset.permissions.whitelist_authorities" />
+                : &nbsp;
+                {this.renderAuthorityList(options.whitelist_authorities)}
                 <br />
-                <Translate content="explorer.asset.permissions.whitelist_markets" />:
-                &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
+                <Translate content="explorer.asset.permissions.whitelist_markets" />
+                : &nbsp;
+                {this.renderMarketList(asset, options.whitelist_markets)}
             </span>
         ) : null;
 
@@ -945,24 +948,26 @@ class Asset extends React.Component {
                     </th>
                     <th style={{textAlign: "right"}}>
                         <Translate content="explorer.asset.price_feed_data.settlement_price" />
-                        <br />
-                        ({this.formattedPrice(
+                        <br />(
+                        {this.formattedPrice(
                             settlement_price_header,
                             false,
                             true
-                        )})
+                        )}
+                        )
                     </th>
                     <th
                         style={{textAlign: "right"}}
                         className="column-hide-small"
                     >
                         <Translate content="explorer.asset.price_feed_data.core_exchange_rate" />
-                        <br />
-                        ({this.formattedPrice(
+                        <br />(
+                        {this.formattedPrice(
                             core_exchange_rate_header,
                             false,
                             true
-                        )})
+                        )}
+                        )
                     </th>
                     <th style={{textAlign: "right"}}>
                         <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio" />
@@ -1038,7 +1043,8 @@ class Asset extends React.Component {
                         <Translate content="transaction.collateral" />
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedAsset
+                                &nbsp;(
+                                <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .getCollateral()
                                         .getAmount()}
@@ -1060,7 +1066,8 @@ class Asset extends React.Component {
                         <Translate content="transaction.borrow_amount" />
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedAsset
+                                &nbsp;(
+                                <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .amountToReceive()
                                         .getAmount()}
@@ -1085,7 +1092,8 @@ class Asset extends React.Component {
                         </span>
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedPrice
+                                &nbsp;(
+                                <FormattedPrice
                                     base_amount={
                                         this.state.callOrders[0].call_price.base
                                             .amount
@@ -1104,7 +1112,8 @@ class Asset extends React.Component {
                                     }
                                     hide_value
                                     noPopOver
-                                />)
+                                />
+                                )
                             </span>
                         ) : null}
                     </th>
@@ -1287,18 +1296,21 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(Asset, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+Asset = connect(
+    Asset,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]
