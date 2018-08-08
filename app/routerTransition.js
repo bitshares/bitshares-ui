@@ -113,16 +113,18 @@ class RouterTransitioner {
             fetch("https://api.crypto-bridge.org/api/v1/geo-nodes")
                 .then(reply =>
                     reply.json().then(nodes => {
-                        const apiServer = __TESTNET__
-                            ? settingsAPIs.WS_NODE_LIST
-                            : [
-                                  {
-                                      url: "wss://fake.automatic-selection.com",
-                                      location: {
-                                          translate: "settings.api_closest"
+                        const apiServer =
+                            __TESTNET__ || __DEVNET__
+                                ? settingsAPIs.WS_NODE_LIST
+                                : [
+                                      {
+                                          url:
+                                              "wss://fake.automatic-selection.com",
+                                          location: {
+                                              translate: "settings.api_closest"
+                                          }
                                       }
-                                  }
-                              ].concat(nodes);
+                                  ].concat(nodes);
 
                         let settingsDefaults = SettingsStore.getState()
                             .defaults;
