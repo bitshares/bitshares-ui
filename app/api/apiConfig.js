@@ -76,7 +76,7 @@ const WSS_DEV_NODES = [
         location: {translate: "settings.api_closest"}
     },
     {
-        url: "wss://bitshares.testnet.crypto-bridge.org",
+        url: "ws://localhost:8090",
         location: "DEVNET - CryptoBridge"
     }
 ];
@@ -198,7 +198,9 @@ export const settingsAPIs = {
     DEFAULT_WS_NODE: "wss://fake.automatic-selection.com",
     WS_NODE_LIST: __DEVNET__
         ? WSS_DEV_NODES
-        : __TESTNET__ ? WSS_TEST_NODES : WSS_PROD_NODES,
+        : __TESTNET__
+            ? WSS_TEST_NODES
+            : WSS_PROD_NODES,
     DEFAULT_FAUCET: CB_FAUCET,
     TESTNET_FAUCET: CB_FAUCET,
     RPC_URL: "https://openledger.info/api/"
