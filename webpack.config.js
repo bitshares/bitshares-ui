@@ -69,11 +69,21 @@ module.exports = function(env) {
     });
     const localeRegex = new RegExp(regexString);
 
+    const isTestNet = !!process.env.__TESTNET__ || !!env.testnet;
+    const isDevNet = !!process.env.__DEVNET__;
+
+    const walletUrl = isDevNet
+        ? "http://localhost:8080"
+        : isTestNet
+            ? "https://wallet.testnet.crypto-bridge.org"
+            : "https://wallet.crypto-bridge.org";
+
     var plugins = [
         new HtmlWebpackPlugin({
             template: "!!handlebars-loader!app/assets/index.hbs",
             templateParameters: {
                 title: "CryptoBridge decentralized exchange",
+                walletUrl: walletUrl,
                 INCLUDE_BASE: !!env.prod && !env.hash,
                 PRODUCTION: !!env.prod,
                 ELECTRON: !!env.electron
@@ -89,8 +99,8 @@ module.exports = function(env) {
                 env.apiUrl || "https://ui.bitshares.eu/api"
             ),
             __DEVNET_API__: JSON.stringify(process.env.__DEVNET_API__ || false),
-            __DEVNET__: !!process.env.__DEVNET__,
-            __TESTNET__: !!process.env.__TESTNET__ || !!env.testnet,
+            __DEVNET__: isDevNet,
+            __TESTNET__: isTestNet,
             __DEPRECATED__: !!env.deprecated,
             DEFAULT_SYMBOL: "BTS"
         }),

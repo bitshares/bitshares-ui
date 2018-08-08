@@ -29,7 +29,7 @@
         "start": "cross-env NODE_ENV=development node server.js",
         "prestart-electron": "cross-env NODE_ENV=production webpack --env.hash --env.noUgly --env.electron --env.prod && npm run prepare-electron",
         "start-testnet": "cross-env NODE_ENV=development __TESTNET__=true node server.js",
-        "start-dev": "cross-env NODE_ENV=development __DEVNET__=true __DEVNET_API__=http://192.168.250.21:3000 node server.js",
+        "start-dev": "cross-env NODE_ENV=development __DEVNET__=true __DEVNET_API__=http://localhost:5000 node server.js",
         "start-electron": "electron build/electron/index.js",
         "fix-locale-files": "node ./app/assets/locales-fixup.js",
         "postfix-locale-files": "./node_modules/prettier/bin-prettier.js app/assets/locales/locale-*.json --write",
