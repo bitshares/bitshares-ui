@@ -1,7 +1,6 @@
 import React from "react";
 import AssetWrapper from "../Utility/AssetWrapper";
 import cnames from "classnames";
-import MarketsActions from "actions/MarketsActions";
 import MarketsStore from "stores/MarketsStore";
 import {connect} from "alt-react";
 import utils from "common/utils";
@@ -42,15 +41,6 @@ class MarketStats extends React.Component {
             np.base.get("id") !== this.props.base.get("id") ||
             np.quote.get("id") !== this.props.quote.get("id")
         );
-    }
-
-    componentWillMount() {
-        this.statsChecked = new Date();
-        // this.statsInterval = MarketsActions.getMarketStatsInterval(
-        //     35 * 1000,
-        //     this.props.base,
-        //     this.props.quote
-        // );
     }
 
     componentWillUnmount() {
@@ -105,15 +95,18 @@ class MarketPrice extends React.Component {
     }
 }
 
-MarketPrice = connect(MarketPrice, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+MarketPrice = connect(
+    MarketPrice,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 export {MarketPrice, MarketStats};

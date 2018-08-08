@@ -14,7 +14,7 @@ import {blockTradesAPIs} from "api/apiConfig";
 import {debounce} from "lodash-es";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {getConversionJson} from "common/gatewayMethods";
 import PropTypes from "prop-types";
 
@@ -336,6 +336,7 @@ class ButtonWithdraw extends React.Component {
             )
         ) {
             if (
+                this.props.amount_to_withdraw &&
                 !(this.props.amount_to_withdraw.indexOf(" ") >= 0) &&
                 !isNaN(this.props.amount_to_withdraw) &&
                 this.props.amount_to_withdraw > 0 &&

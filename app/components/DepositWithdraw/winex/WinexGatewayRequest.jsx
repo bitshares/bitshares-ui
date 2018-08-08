@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WinexWithdrawModal from "components/DepositWithdraw/winex/WinexWithdrawModal";
@@ -379,7 +379,8 @@ class WinexGatewayRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -413,7 +414,8 @@ class WinexGatewayRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="left-label">
                             <p style={{color: "red"}}>
@@ -571,7 +573,8 @@ class WinexGatewayRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -606,7 +609,8 @@ class WinexGatewayRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button

@@ -2,13 +2,14 @@ import React from "react";
 import {OrderRow, TableHeader} from "../Exchange/MyOpenOrders";
 import counterpart from "counterpart";
 import MarketsActions from "actions/MarketsActions";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {LimitOrder} from "common/MarketClasses";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
+import PaginatedList from "../Utility/PaginatedList";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -235,20 +236,28 @@ class AccountOrders extends React.Component {
 
         let tables = [];
 
-        let marketIndex = 0;
         for (let market in marketOrders) {
             if (marketOrders[market].length) {
-                tables.push(
-                    <tbody key={market}>
-                        {/* {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}><span style={{visibility: "hidden"}}>H</span></td></tr> : null} */}
-                        {marketOrders[market].sort((a, b) => {
-                            return a.props.price - b.props.price;
-                        })}
-                    </tbody>
+                tables = tables.concat(
+                    marketOrders[market].sort((a, b) => {
+                        return a.props.price - b.props.price;
+                    })
                 );
-                marketIndex++;
+                // tables.push(
+                //     <tbody key={market}>
+                //         {/* {marketIndex > 0 ? <tr><td colSpan={this.props.isMyAccount ? "7" : "6"}><span style={{visibility: "hidden"}}>H</span></td></tr> : null} */}
+                //         {marketOrders[market].sort((a, b) => {
+                //             return a.props.price - b.props.price;
+                //         })}
+                //     </tbody>
+                // );
+                // marketIndex++;
             }
         }
+
+        // tables.sort((a, b) => {
+        //     return parseInt(a.key, 10) - parseInt(b.key, 10);
+        // })
 
         return (
             <div
@@ -289,29 +298,36 @@ class AccountOrders extends React.Component {
                     ) : null}
                 </div>
 
-                <table className="table table-striped dashboard-table table-hover">
-                    <TableHeader
-                        settings={this.props.settings}
-                        dashboard
-                        isMyAccount={this.props.isMyAccount}
-                    />
-                    {tables}
-                    {this.props.children}
-                </table>
+                <PaginatedList
+                    pageSize={20}
+                    className="table table-striped dashboard-table table-hover"
+                    header={
+                        <TableHeader
+                            settings={this.props.settings}
+                            dashboard
+                            isMyAccount={this.props.isMyAccount}
+                        />
+                    }
+                    rows={tables}
+                    extraRow={this.props.children}
+                />
             </div>
         );
     }
 }
 
-AccountOrders = connect(AccountOrders, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+AccountOrders = connect(
+    AccountOrders,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default AccountOrders;

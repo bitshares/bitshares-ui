@@ -1,10 +1,10 @@
 var numeral = require("numeral");
 let id_regex = /\b\d+\.\d+\.(\d+)\b/;
 
-import {ChainTypes} from "bitsharesjs/es";
+import {ChainTypes} from "bitsharesjs";
 var {object_type} = ChainTypes;
 
-import {getAssetNamespaces, getAssetHideNamespaces} from "branding";
+import {getAssetNamespaces, getAssetHideNamespaces} from "../../branding";
 
 var Utils = {
     is_object_id: obj_id => {
@@ -203,6 +203,23 @@ var Utils = {
         };
     },
 
+    check_market_stats: function(
+        newStats = {close: {}},
+        oldStats = {close: {}}
+    ) {
+        let statsChanged =
+            newStats.volumeBase !== oldStats.volumeBase ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.base,
+                oldStats.close && oldStats.close.base
+            ) ||
+            !this.are_equal_shallow(
+                newStats.close && newStats.close.quote,
+                oldStats.close && oldStats.close.quote
+            );
+        return statsChanged;
+    },
+
     are_equal_shallow: function(a, b) {
         if ((!a && b) || (a && !b)) {
             return false;
@@ -214,7 +231,13 @@ var Utils = {
         }
         if (typeof a === "string" && typeof b === "string") {
             return a === b;
+        } else if (
+            (typeof a === "string" && typeof b !== "string") ||
+            (typeof a !== "string" && typeof b === "string")
+        ) {
+            return false;
         }
+
         if (a && a.toJS && b && b.toJS) return a === b;
         for (var key in a) {
             if ((a.hasOwnProperty(key) && !(key in b)) || a[key] !== b[key]) {
@@ -348,7 +371,7 @@ var Utils = {
 
         let eqValue =
             fromAsset.get("id") !== toAsset.get("id")
-                ? basePrecision * (amount / quotePrecision) / assetPrice
+                ? (basePrecision * (amount / quotePrecision)) / assetPrice
                 : amount;
 
         if (isNaN(eqValue) || !isFinite(eqValue)) {
@@ -392,7 +415,7 @@ var Utils = {
     },
 
     get_percentage(a, b) {
-        return Math.round(a / b * 100) + "%";
+        return Math.round((a / b) * 100) + "%";
     },
 
     replaceName(asset) {

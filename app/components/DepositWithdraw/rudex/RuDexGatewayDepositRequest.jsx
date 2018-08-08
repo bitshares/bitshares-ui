@@ -1,6 +1,6 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import RuDexWithdrawModal from "./RuDexWithdrawModal";
@@ -298,7 +298,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -331,7 +332,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="left-label">
                             <b>
@@ -465,7 +467,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -500,7 +503,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button

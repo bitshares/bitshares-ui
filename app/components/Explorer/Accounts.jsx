@@ -12,6 +12,7 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
 import LoadingIndicator from "../LoadingIndicator";
+import PaginatedList from "../Utility/PaginatedList";
 
 class AccountRow extends React.Component {
     static propTypes = {
@@ -93,16 +94,19 @@ let AccountRowWrapper = props => {
     return <AccountRow {...props} />;
 };
 
-AccountRowWrapper = connect(AccountRowWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            contacts: AccountStore.getState().accountContacts
-        };
+AccountRowWrapper = connect(
+    AccountRowWrapper,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 class Accounts extends React.Component {
     constructor(props) {
@@ -142,7 +146,7 @@ class Accounts extends React.Component {
     render() {
         let {searchAccounts} = this.props;
         let {searchTerm} = this.state;
-        let accountRows = null;
+        let accountRows = [];
 
         if (searchAccounts.size > 0 && searchTerm && searchTerm.length > 0) {
             accountRows = searchAccounts
@@ -187,57 +191,49 @@ class Accounts extends React.Component {
                             onChange={this._onSearchChange.bind(this)}
                         />
                     </div>
-                    <div className="grid-content">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate
-                                            component="span"
-                                            content="explorer.assets.id"
-                                        />
-                                    </th>
-                                    <th>
-                                        <Icon
-                                            name="user"
-                                            title="icons.user.account"
-                                        />
-                                    </th>
-                                    <th>
-                                        <Translate
-                                            component="span"
-                                            content="account.name"
-                                        />
-                                    </th>
-                                    <th>
-                                        <Translate
-                                            component="span"
-                                            content="gateway.balance"
-                                        />
-                                    </th>
-                                    <th>
-                                        <Translate
-                                            component="span"
-                                            content="account.percent"
-                                        />
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {this.state.isLoading ? (
-                                    <tr colSpan="5" />
-                                ) : (
-                                    accountRows
-                                )}
-                            </tbody>
-                        </table>
-                        {this.state.isLoading ? (
-                            <div style={{textAlign: "center", padding: 10}}>
-                                <LoadingIndicator type="three-bounce" />
-                            </div>
-                        ) : null}
-                    </div>
+                    <PaginatedList
+                        header={
+                            <tr>
+                                <th>
+                                    <Translate
+                                        component="span"
+                                        content="explorer.assets.id"
+                                    />
+                                </th>
+                                <th>
+                                    <Icon
+                                        name="user"
+                                        title="icons.user.account"
+                                    />
+                                </th>
+                                <th>
+                                    <Translate
+                                        component="span"
+                                        content="account.name"
+                                    />
+                                </th>
+                                <th>
+                                    <Translate
+                                        component="span"
+                                        content="gateway.balance"
+                                    />
+                                </th>
+                                <th>
+                                    <Translate
+                                        component="span"
+                                        content="account.percent"
+                                    />
+                                </th>
+                            </tr>
+                        }
+                        rows={accountRows}
+                        pageSize={20}
+                    />
+                    {this.state.isLoading ? (
+                        <div style={{textAlign: "center", padding: 10}}>
+                            <LoadingIndicator type="three-bounce" />
+                        </div>
+                    ) : null}
                 </div>
             </div>
         );

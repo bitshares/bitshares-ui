@@ -1,0 +1,26 @@
+div.asset-page {
+    @include breakpoint(medium) {
+        .grid-block.medium-up-1 {
+            > div:nth-child(odd) {
+                padding-left: 0;
+            }
+        }
+    }
+
+    @include breakpoint(medium only) {
+        .grid-block.medium-up-1 {
+            > div {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+
+    @include breakpoint(large) {
+        .grid-block.medium-up-1 {
+            > div:nth-child(even) {
+                padding-right: 0;
+            }
+        }
+    }
+}

@@ -6,13 +6,13 @@ import SettingsActions from "actions/SettingsActions";
 import WalletActions from "actions/WalletActions";
 import iDB from "idb-instance";
 import PrivateKeyStore from "./PrivateKeyStore";
-import {ChainStore, ChainValidation, FetchChain} from "bitsharesjs/es";
+import {ChainStore, ChainValidation, FetchChain} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
 import AccountRefsStore from "stores/AccountRefsStore";
 import AddressIndex from "stores/AddressIndex";
 import ls from "common/localStorage";
 
-let accountStorage = new ls("__graphene__");
+let ss = new ls("__graphene__");
 
 /**
  *  This Store holds information about accounts in this wallet
@@ -50,7 +50,11 @@ class AccountStore extends BaseStore {
             "reset",
             "setWallet"
         );
-
+        // can't use settings store due to possible initialization race conditions
+        const storedSettings = ss.get("settings_v4", {});
+        if (storedSettings.passwordLogin === undefined) {
+            storedSettings.passwordLogin = true;
+        }
         const referralAccount = this._checkReferrer();
         this.state = {
             subbed: false,
@@ -63,9 +67,7 @@ class AccountStore extends BaseStore {
             accountContacts: Immutable.Set(),
             linkedAccounts: Immutable.Set(), // linkedAccounts are accounts for which the user controls the private keys, which are stored in a db with the wallet and automatically loaded every time the app starts
             referralAccount,
-            passwordLogin: accountStorage.get("settings_v3", {
-                passwordLogin: true
-            }).passwordLogin
+            passwordLogin: storedSettings.passwordLogin
         };
 
         this.getMyAccounts = this.getMyAccounts.bind(this);
@@ -76,20 +78,17 @@ class AccountStore extends BaseStore {
 
     _migrateUnfollowedAccounts(state) {
         try {
-            let unfollowed_accounts = accountStorage.get(
-                "unfollowed_accounts",
-                []
-            );
-            let hiddenAccounts = accountStorage.get(
+            let unfollowed_accounts = ss.get("unfollowed_accounts", []);
+            let hiddenAccounts = ss.get(
                 this._getStorageKey("hiddenAccounts", state),
                 []
             );
             if (unfollowed_accounts.length && !hiddenAccounts.length) {
-                accountStorage.set(
+                ss.set(
                     this._getStorageKey("hiddenAccounts", state),
                     unfollowed_accounts
                 );
-                accountStorage.remove("unfollowed_accounts");
+                ss.remove("unfollowed_accounts");
                 this.setState({
                     myHiddenAccounts: Immutable.Set(unfollowed_accounts)
                 });
@@ -116,9 +115,9 @@ class AccountStore extends BaseStore {
             }
         }
         if (referralAccount) {
-            accountStorage.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
+            ss.set("referralAccount", referralAccount); // Reset to empty string when the user returns with no ref code
         } else {
-            accountStorage.remove("referralAccount");
+            ss.remove("referralAccount");
         }
         if (referralAccount) console.log("referralAccount", referralAccount);
         return referralAccount;
@@ -137,24 +136,24 @@ class AccountStore extends BaseStore {
         if (wallet_name !== this.state.wallet_name) {
             this.setState({
                 wallet_name: wallet_name,
-                passwordAccount: accountStorage.get(
+                passwordAccount: ss.get(
                     this._getStorageKey("passwordAccount", {wallet_name}),
                     null
                 ),
                 starredAccounts: Immutable.Map(
-                    accountStorage.get(
+                    ss.get(
                         this._getStorageKey("starredAccounts", {wallet_name})
                     )
                 ),
                 myActiveAccounts: Immutable.Set(),
                 accountContacts: Immutable.Set(
-                    accountStorage.get(
+                    ss.get(
                         this._getStorageKey("accountContacts", {wallet_name}),
                         []
                     )
                 ),
                 myHiddenAccounts: Immutable.Set(
-                    accountStorage.get(
+                    ss.get(
                         this._getStorageKey("hiddenAccounts", {wallet_name}),
                         []
                     )
@@ -172,16 +171,11 @@ class AccountStore extends BaseStore {
 
         const wallet_name = this.state.wallet_name || "";
         let starredAccounts = Immutable.Map(
-            accountStorage.get(
-                this._getStorageKey("starredAccounts", {wallet_name})
-            )
+            ss.get(this._getStorageKey("starredAccounts", {wallet_name}))
         );
 
         let accountContacts = Immutable.Set(
-            accountStorage.get(
-                this._getStorageKey("accountContacts", {wallet_name}),
-                []
-            )
+            ss.get(this._getStorageKey("accountContacts", {wallet_name}), [])
         );
 
         return {
@@ -190,17 +184,14 @@ class AccountStore extends BaseStore {
             accountsLoaded: false,
             refsLoaded: false,
             currentAccount: null,
-            referralAccount: accountStorage.get("referralAccount", ""),
-            passwordAccount: accountStorage.get(
+            referralAccount: ss.get("referralAccount", ""),
+            passwordAccount: ss.get(
                 this._getStorageKey("passwordAccount", {wallet_name}),
                 ""
             ),
             myActiveAccounts: Immutable.Set(),
             myHiddenAccounts: Immutable.Set(
-                accountStorage.get(
-                    this._getStorageKey("hiddenAccounts", {wallet_name}),
-                    []
-                )
+                ss.get(this._getStorageKey("hiddenAccounts", {wallet_name}), [])
             ),
             searchAccounts: Immutable.Map(),
             searchTerm: "",
@@ -217,7 +208,7 @@ class AccountStore extends BaseStore {
             });
             this.setState({starredAccounts});
 
-            accountStorage.set(
+            ss.set(
                 this._getStorageKey("starredAccounts"),
                 starredAccounts.toJS()
             );
@@ -229,18 +220,15 @@ class AccountStore extends BaseStore {
     onRemoveStarAccount(account) {
         let starredAccounts = this.state.starredAccounts.delete(account);
         this.setState({starredAccounts});
-        accountStorage.set(
-            this._getStorageKey("starredAccounts"),
-            starredAccounts.toJS()
-        );
+        ss.set(this._getStorageKey("starredAccounts"), starredAccounts.toJS());
     }
 
     onSetPasswordAccount(account) {
         let key = this._getStorageKey("passwordAccount");
         if (!account) {
-            accountStorage.remove(key);
+            ss.remove(key);
         } else {
-            accountStorage.set(key, account);
+            ss.set(key, account);
         }
         if (this.state.passwordAccount !== account) {
             this.setState({
@@ -265,8 +253,7 @@ class AccountStore extends BaseStore {
         let myActiveAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
         return new Promise((resolve, reject) => {
-            iDB
-                .load_data("linked_accounts")
+            iDB.load_data("linked_accounts")
                 .then(data => {
                     this.state.linkedAccounts = Immutable.fromJS(
                         data || []
@@ -604,16 +591,14 @@ class AccountStore extends BaseStore {
     tryToSetCurrentAccount() {
         const passwordAccountKey = this._getStorageKey("passwordAccount");
         const currentAccountKey = this._getStorageKey("currentAccount");
-        if (accountStorage.has(passwordAccountKey)) {
-            const acc = accountStorage.get(passwordAccountKey, null);
+        if (ss.has(passwordAccountKey)) {
+            const acc = ss.get(passwordAccountKey, null);
             if (this.state.passwordAccount !== acc) {
                 this.setState({passwordAccount: acc});
             }
             return this.setCurrentAccount(acc);
-        } else if (accountStorage.has(currentAccountKey)) {
-            return this.setCurrentAccount(
-                accountStorage.get(currentAccountKey, null)
-            );
+        } else if (ss.has(currentAccountKey)) {
+            return this.setCurrentAccount(ss.get(currentAccountKey, null));
         }
 
         let {starredAccounts} = this.state;
@@ -636,7 +621,7 @@ class AccountStore extends BaseStore {
             this.setState({currentAccount: name});
         }
 
-        accountStorage.set(key, name || null);
+        ss.set(key, name || null);
     }
 
     onSetCurrentAccount(name) {
@@ -684,7 +669,7 @@ class AccountStore extends BaseStore {
 
         if (!this.state.accountContacts.has(name)) {
             const accountContacts = this.state.accountContacts.add(name);
-            accountStorage.set(
+            ss.set(
                 this._getStorageKey("accountContacts"),
                 accountContacts.toArray()
             );
@@ -701,10 +686,7 @@ class AccountStore extends BaseStore {
         if (this.state.accountContacts.has(name)) {
             const accountContacts = this.state.accountContacts.remove(name);
 
-            accountStorage.set(
-                this._getStorageKey("accountContacts"),
-                accountContacts
-            );
+            ss.set(this._getStorageKey("accountContacts"), accountContacts);
 
             this.setState({
                 accountContacts: accountContacts
@@ -762,7 +744,7 @@ class AccountStore extends BaseStore {
         if (payload.setting === "passwordLogin") {
             if (payload.value === false) {
                 this.onSetPasswordAccount(null);
-                accountStorage.remove(this._getStorageKey());
+                ss.remove(this._getStorageKey());
                 this.loadDbData();
             } else {
                 this.setState({myActiveAccounts: Immutable.Set()});

@@ -5,7 +5,7 @@ import AccountImage from "../Account/AccountImage";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation} from "bitsharesjs/es";
+import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
@@ -38,11 +38,13 @@ class AccountSelector extends React.Component {
         tabIndex: PropTypes.number, // tabindex property to be passed to input tag
         disableActionButton: PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: PropTypes.bool
+        typeahead: PropTypes.bool,
+        excludeAccounts: PropTypes.array // array of accounts to exclude from the typeahead
     };
 
     static defaultProps = {
-        autosubscribe: false
+        autosubscribe: false,
+        excludeAccounts: []
     };
 
     constructor(props) {
@@ -67,7 +69,8 @@ class AccountSelector extends React.Component {
 
     componentWillReceiveProps(newProps) {
         if (newProps.account && newProps.account !== this.props.account) {
-            this.props.onAccountChanged(newProps.account);
+            if (this.props.onAccountChanged)
+                this.props.onAccountChanged(newProps.account);
         }
     }
 
@@ -98,29 +101,42 @@ class AccountSelector extends React.Component {
 
     onSelected(e) {
         this.setState({inputChanged: false});
+        this._notifyOnChange(e);
+    }
+
+    _notifyOnChange(e) {
+        let {onChange, onAccountChanged, accountName} = this.props;
+
         let _accountName = this.getVerifiedAccountName(e);
-        let _account = ChainStore.getAccount(_accountName);
-        if (_account) {
-            this.props.onChange(_accountName);
-            this.props.onAccountChanged(_account);
+
+        if (_accountName === accountName) {
+            // nothing has changed, don't notify
+            return;
+        }
+
+        // Synchronous onChange for input change
+        if (!!onChange && !!_accountName) onChange(_accountName);
+
+        // asynchronous onAccountChanged for checking on chain
+        if (!!onAccountChanged) {
+            FetchChain("getAccount", _accountName, undefined, {
+                [_accountName]: false
+            })
+                .then(_account => {
+                    if (!!_account) {
+                        onAccountChanged(_account);
+                    }
+                })
+                .catch(err => {
+                    // error fetching
+                    console.log(err);
+                });
         }
     }
 
     onInputChanged(e) {
-        let {onChange, onAccountChanged, accountName, typeahead} = this.props;
         this.setState({inputChanged: true});
-
-        let _accountName = this.getVerifiedAccountName(e);
-        let _account = ChainStore.getAccount(_accountName);
-
-        if (onChange && _accountName !== accountName) onChange(_accountName);
-
-        // None-Typeahead Component compatibility
-        // - Always returns account object
-        if (!typeahead) {
-            if (onChange) onChange(_accountName);
-            if (onAccountChanged && _account) onAccountChanged(_account);
-        }
+        this._notifyOnChange(e);
     }
 
     getVerifiedAccountName(e) {
@@ -231,24 +247,30 @@ class AccountSelector extends React.Component {
                 contacts.has(account.get("name"));
 
         if (typeahead && linkedAccounts) {
-            linkedAccounts.map(function(accountName) {
-                let account = ChainStore.getAccount(accountName);
-                let account_status = ChainStore.getAccountMemberStatus(account);
-                let account_status_text = !accountUtils.isKnownScammer(
-                    accountName
-                )
-                    ? "account.member." + account_status
-                    : "account.member.suspected_scammer";
+            linkedAccounts
+                .map(accountName => {
+                    if (this.props.excludeAccounts.indexOf(accountName) !== -1)
+                        return null;
+                    let account = ChainStore.getAccount(accountName);
+                    let account_status = ChainStore.getAccountMemberStatus(
+                        account
+                    );
+                    let account_status_text = !accountUtils.isKnownScammer(
+                        accountName
+                    )
+                        ? "account.member." + account_status
+                        : "account.member.suspected_scammer";
 
-                typeAheadAccounts.push({
-                    id: accountName,
-                    label: accountName,
-                    status: counterpart.translate(account_status_text),
-                    className: accountUtils.isKnownScammer(accountName)
-                        ? "negative"
-                        : "positive"
-                });
-            });
+                    typeAheadAccounts.push({
+                        id: accountName,
+                        label: accountName,
+                        status: counterpart.translate(account_status_text),
+                        className: accountUtils.isKnownScammer(accountName)
+                            ? "negative"
+                            : "positive"
+                    });
+                })
+                .filter(a => !!a);
         }
 
         let typeaheadHasAccount = !!accountName
@@ -352,8 +374,9 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{!!displayText &&
-                                        displayText}
+                                    {account && account.statusText}
+                                    &nbsp;
+                                    {!!displayText && displayText}
                                 </span>
                                 {linked_status}
                             </label>
@@ -366,7 +389,7 @@ class AccountSelector extends React.Component {
                             {useHR && <hr />}
                         </div>
                     ) : null}
-                    <div className="input-area">
+                    <div className="input-area" data-tip={this.props.tooltip}>
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
@@ -494,16 +517,19 @@ class AccountSelector extends React.Component {
 
 AccountSelector = BindToChainState(AccountSelector);
 
-AccountSelector = connect(AccountSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            contacts: AccountStore.getState().accountContacts
-        };
+AccountSelector = connect(
+    AccountSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 export default AccountSelector;

@@ -2,7 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
 import AccountStore from "stores/AccountStore";
@@ -548,7 +548,8 @@ class SendModal extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />:{" "}
+                        />
+                        :{" "}
                         <span
                             className={_error}
                             style={{
@@ -911,17 +912,20 @@ class SendModalConnectWrapper extends React.Component {
     }
 }
 
-SendModalConnectWrapper = connect(SendModalConnectWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps(props) {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            tabIndex: props.tabIndex || 0
-        };
+SendModalConnectWrapper = connect(
+    SendModalConnectWrapper,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps(props) {
+            return {
+                currentAccount: AccountStore.getState().currentAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                tabIndex: props.tabIndex || 0
+            };
+        }
     }
-});
+);
 
 export default SendModalConnectWrapper;

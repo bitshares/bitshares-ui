@@ -123,14 +123,24 @@ class AmountSelector extends React.Component {
                         onChange={this._onChange.bind(this)}
                         tabIndex={this.props.tabIndex}
                     />
+
                     <div className="form-label select floating-dropdown">
-                        <AssetSelector
-                            ref={this.props.refCallback}
-                            value={this.props.asset.get("symbol")}
-                            assets={Immutable.List(this.props.assets)}
-                            onChange={this.onAssetChange.bind(this)}
-                            scroll_length={this.props.scroll_length}
-                        />
+                        {this.props.isPrice ? (
+                            <div className="dropdown-wrapper inactive">
+                                <div>
+                                    {this.props.asset.get("symbol")}/
+                                    {this.props.base}
+                                </div>
+                            </div>
+                        ) : (
+                            <AssetSelector
+                                ref={this.props.refCallback}
+                                value={this.props.asset.get("symbol")}
+                                assets={Immutable.List(this.props.assets)}
+                                onChange={this.onAssetChange.bind(this)}
+                                scroll_length={this.props.scroll_length}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

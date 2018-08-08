@@ -60,11 +60,17 @@ div.api-node {
         padding-top: 1rem;
         padding-left: 1rem;
     }
-    > div:nth-child(1) {
+    > div.api-node-left {
         width: 50%;
-        > p:nth-child(2) {
+        > p.api-node-url {
             overflow-wrap: break-word;
             font-size: 80%;
+        }
+        > p.api-node-operator {
+            overflow-wrap: break-word;
+            font-size: 80%;
+            float: right;
+            color: gray;
         }
     }
     > div:nth-child(2) {
@@ -94,6 +100,7 @@ div.api-status a:hover .hover-icon {
 }
 
 .active-node {
+    position: relative;
     margin-bottom: 2em;
 }
 

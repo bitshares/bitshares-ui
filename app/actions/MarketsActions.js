@@ -1,7 +1,7 @@
 import alt from "alt-instance";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
 import marketUtils from "common/market_utils";
 import accountUtils from "common/account_utils";
@@ -35,6 +35,7 @@ const marketStatsQueueLength = 500; // Number of get_ticker calls per batch
 const marketStatsQueueTimeout = 1.5; // Seconds before triggering a queue processing
 let marketStatsQueueActive = false;
 
+let currentGroupedOrderLimit = 0;
 class MarketsActions {
     changeBase(market) {
         clearBatchTimeouts();
@@ -92,7 +93,7 @@ class MarketsActions {
                         0,
                         marketStatsQueueLength
                     );
-                    Promise.all(currentBatch.map(q => q.promise))
+                    return Promise.all(currentBatch.map(q => q.promise))
                         .then(results => {
                             dispatch({
                                 tickers: results,
@@ -103,6 +104,7 @@ class MarketsActions {
                             marketStatsQueue.splice(0, results.length);
                             if (marketStatsQueue.length === 0) {
                                 marketStatsQueueActive = false;
+                                return;
                             } else {
                                 return processQueue();
                             }
@@ -126,6 +128,15 @@ class MarketsActions {
     }
 
     subscribeMarket(base, quote, bucketSize, groupedOrderLimit) {
+        /*
+        * DataFeed will call subscribeMarket with undefined groupedOrderLimit,
+        * so we keep track of the last value used and use that instead in that
+        * case
+        */
+        if (typeof groupedOrderLimit === "undefined")
+            groupedOrderLimit = currentGroupedOrderLimit;
+        else currentGroupedOrderLimit = groupedOrderLimit;
+
         clearBatchTimeouts();
         let subID = quote.get("id") + "_" + base.get("id");
         currentMarket = base.get("id") + "_" + quote.get("id");

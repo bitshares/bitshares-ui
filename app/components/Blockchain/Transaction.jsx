@@ -16,7 +16,7 @@ import Icon from "../Icon/Icon";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import ProposedOperation from "./ProposedOperation";
-import {ChainTypes} from "bitsharesjs/es";
+import {ChainTypes} from "bitsharesjs";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
 import moment from "moment";
@@ -172,7 +172,8 @@ class Transaction extends React.Component {
                             <td className="memo">{text}</td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -439,6 +440,26 @@ class Transaction extends React.Component {
                             </td>
                         </tr>
                     );
+                    if (
+                        !!op[1].extensions &&
+                        !!op[1].extensions.target_collateral_ratio
+                    ) {
+                        rows.push(
+                            <tr key={key++}>
+                                <td>
+                                    <Translate
+                                        component="span"
+                                        content="transaction.collateral_target"
+                                    />
+                                </td>
+                                <td>
+                                    {op[1].extensions.target_collateral_ratio /
+                                        1000}
+                                </td>
+                            </tr>
+                        );
+                    }
+
                     break;
 
                 case "key_create":
@@ -988,7 +1009,8 @@ class Transaction extends React.Component {
                             <td>{text}</td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -1427,7 +1449,8 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td style={{fontSize: "80%"}}>
-                                {op[1].balance_owner_key.substring(0, 10)}...
+                                {op[1].balance_owner_key.substring(0, 10)}
+                                ...
                             </td>
                         </tr>
                     );

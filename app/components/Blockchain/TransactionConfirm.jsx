@@ -11,7 +11,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
 import AccountSelect from "components/Forms/AccountSelect";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import Operation from "components/Blockchain/Operation";
 import notify from "actions/NotificationActions";
@@ -79,7 +79,8 @@ class TransactionConfirm extends React.Component {
                     <div>
                         <p>
                             <Translate content="transaction.transaction_confirmed" />
-                            &nbsp;&nbsp;<span>
+                            &nbsp;&nbsp;
+                            <span>
                                 <Icon
                                     name="checkmark-circle"
                                     title="icons.checkmark_circle.operation_succeed"
@@ -327,13 +328,16 @@ class TransactionConfirm extends React.Component {
     }
 }
 
-TransactionConfirm = connect(TransactionConfirm, {
-    listenTo() {
-        return [TransactionConfirmStore];
-    },
-    getProps() {
-        return TransactionConfirmStore.getState();
+TransactionConfirm = connect(
+    TransactionConfirm,
+    {
+        listenTo() {
+            return [TransactionConfirmStore];
+        },
+        getProps() {
+            return TransactionConfirmStore.getState();
+        }
     }
-});
+);
 
 export default TransactionConfirm;

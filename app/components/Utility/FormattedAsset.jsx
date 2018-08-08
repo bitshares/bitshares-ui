@@ -7,7 +7,7 @@ import Popover from "react-popover";
 import HelpContent from "./HelpContent";
 import AssetName from "./AssetName";
 import Pulsate from "./Pulsate";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import AssetWrapper from "./AssetWrapper";
 import BindToChainState from "./BindToChainState";
 import ChainTypes from "./ChainTypes";
@@ -28,7 +28,10 @@ class SupplyPercentage extends React.Component {
 
     render() {
         let supply = parseInt(this.props.do.get("current_supply"), 10);
-        let percent = utils.format_number(this.props.amount / supply * 100, 4);
+        let percent = utils.format_number(
+            (this.props.amount / supply) * 100,
+            4
+        );
         return <span className={this.props.colorClass}>{percent}%</span>;
     }
 }
@@ -172,7 +175,7 @@ class FormattedAsset extends React.Component {
                         </span>
                     ) : (
                         <span className="currency" onClick={this.togglePopover}>
-                            {" "}
+                            &nbsp;
                             <AssetName
                                 noTip={this.props.noTip}
                                 noPrefix={this.props.noPrefix}
