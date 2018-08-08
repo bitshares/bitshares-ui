@@ -25,6 +25,8 @@ import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
 import BaseModal from "components/Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import FundFeePool from "./FundFeePool";
+import {withRouter} from "react-router-dom";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -117,7 +119,6 @@ class AccountAssetUpdate extends React.Component {
             new_issuer_account_id: null,
             issuer_account_name: null,
             new_funder_account: props.account.get("id"),
-            funder_account_name: props.account.get("name"),
             asset_to_update: asset.id,
             errors: {
                 max_supply: null
@@ -132,7 +133,6 @@ class AccountAssetUpdate extends React.Component {
             quoteAssetInput: coreRateQuoteAssetName,
             coreRateBaseAssetName: coreRateBaseAssetName,
             baseAssetInput: coreRateBaseAssetName,
-            fundPoolAmount: 0,
             claimFeesAmount: 0,
             bitasset_opts: isBitAsset ? asset.bitasset.options : null,
             original_bitasset_opts: isBitAsset
@@ -617,9 +617,7 @@ class AccountAssetUpdate extends React.Component {
 
         amount.amount = utils.limitByPrecision(
             amount.amount,
-            type === "quote"
-                ? this.props.asset.get("precision")
-                : this.props.core.get("precision")
+            amount.asset.get("precision")
         );
 
         let {core_exchange_rate} = this.state;
@@ -699,21 +697,6 @@ class AccountAssetUpdate extends React.Component {
         });
     }
 
-    _onPoolInput(asset) {
-        this.setState({
-            fundPoolAmount: asset.amount
-        });
-    }
-
-    _onFundPool() {
-        AssetActions.fundPool(
-            this.state.new_funder_account,
-            this.props.core,
-            this.props.asset,
-            this.state.fundPoolAmount.replace(/,/g, "")
-        );
-    }
-
     _onClaimInput(asset) {
         this.setState({
             claimFeesAmount: asset.amount
@@ -758,7 +741,6 @@ class AccountAssetUpdate extends React.Component {
             core_exchange_rate,
             flagBooleans,
             permissionBooleans,
-            fundPoolAmount,
             claimFeesAmount,
             isBitAsset,
             bitasset_opts
@@ -841,7 +823,9 @@ class AccountAssetUpdate extends React.Component {
                 this._onUpdateDescription.bind(this, "visible"),
                 update.description.visible
                     ? false
-                    : update.description.visible === false ? true : false
+                    : update.description.visible === false
+                        ? true
+                        : false
             )
         );
 
@@ -915,25 +899,6 @@ class AccountAssetUpdate extends React.Component {
                     <Translate content="account.perm.reset" />
                 </button>
             </div>
-        );
-
-        let balance = 0;
-        if (account) {
-            let coreBalanceID = account.getIn(["balances", "1.3.0"]);
-
-            if (coreBalanceID) {
-                let balanceObject = ChainStore.getObject(coreBalanceID);
-                if (balanceObject) {
-                    balance = balanceObject.get("balance");
-                }
-            }
-        }
-
-        let balanceText = (
-            <span>
-                <Translate component="span" content="transfer.available" />:&nbsp;
-                <FormattedAsset amount={balance} asset={"1.3.0"} />
-            </span>
         );
 
         const dynamicObject = this.props.getDynamicObject(
@@ -1572,82 +1537,12 @@ class AccountAssetUpdate extends React.Component {
 
                             <Tab title="explorer.asset.fee_pool.title">
                                 <div className="small-12 large-8 large-offset-2 grid-content">
-                                    {/* Fund fee pool */}
-                                    <Translate
-                                        component="p"
-                                        content="explorer.asset.fee_pool.fund_text"
+                                    <FundFeePool
                                         asset={asset.get("symbol")}
-                                        core={core.get("symbol")}
-                                    />
-
-                                    <div style={{paddingBottom: "1.5rem"}}>
-                                        <Translate content="explorer.asset.fee_pool.pool_balance" />
-                                        <span>: </span>
-                                        {dynamicObject ? (
-                                            <FormattedAsset
-                                                amount={dynamicObject.get(
-                                                    "fee_pool"
-                                                )}
-                                                asset={"1.3.0"}
-                                            />
-                                        ) : null}
-                                    </div>
-
-                                    <AccountSelector
-                                        label="transaction.funding_account"
-                                        accountName={
-                                            this.state.funder_account_name
-                                        }
-                                        onChange={this.onAccountNameChanged.bind(
-                                            this,
-                                            "funder_account_name"
+                                        funderAccountName={this.props.account.get(
+                                            "name"
                                         )}
-                                        onAccountChanged={this.onAccountChanged.bind(
-                                            this,
-                                            "new_funder_account"
-                                        )}
-                                        account={this.state.funder_account_name}
-                                        error={null}
-                                        tabIndex={1}
                                     />
-
-                                    <AmountSelector
-                                        label="transfer.amount"
-                                        display_balance={balanceText}
-                                        amount={fundPoolAmount}
-                                        onChange={this._onPoolInput.bind(this)}
-                                        asset={"1.3.0"}
-                                        assets={["1.3.0"]}
-                                        placeholder="0.0"
-                                        tabIndex={2}
-                                        style={{width: "100%", paddingTop: 16}}
-                                    />
-
-                                    <div style={{paddingTop: "1rem"}}>
-                                        <button
-                                            className={classnames("button", {
-                                                disabled: fundPoolAmount <= 0
-                                            })}
-                                            onClick={this._onFundPool.bind(
-                                                this
-                                            )}
-                                        >
-                                            <Translate content="transaction.trxTypes.asset_fund_fee_pool" />
-                                        </button>
-                                        <button
-                                            className="button outline"
-                                            onClick={this._reset.bind(this)}
-                                        >
-                                            <Translate content="account.perm.reset" />
-                                        </button>
-                                        <br />
-                                        <br />
-                                        <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            <FormattedFee opType="asset_fund_fee_pool" />
-                                        </p>
-                                        <hr />
-                                    </div>
 
                                     {/* Claim fees, disabled until witness node update gets pushed to openledger*/}
 
@@ -1783,7 +1678,7 @@ class ConfirmModal extends React.Component {
                 id={this.props.modalId}
                 overlay={true}
                 modalHeader="account.confirm_asset_modal.header"
-                noLoggo
+                noLogo
             >
                 <Translate
                     content="account.confirm_asset_modal.are_you_sure"
@@ -1857,9 +1752,9 @@ class ConfirmModal extends React.Component {
 
 class AssetUpdateWrapper extends React.Component {
     render() {
-        let asset = this.props.params.asset;
+        let asset = this.props.match.params.asset;
         return <AccountAssetUpdate asset={asset} {...this.props} />;
     }
 }
 
-export default AssetUpdateWrapper;
+export default withRouter(AssetUpdateWrapper);

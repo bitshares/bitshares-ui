@@ -9,7 +9,7 @@ import cnames from "classnames";
 import {Tabs, Tab} from "../Utility/Tabs";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "./AccountSelector";
 import Icon from "../Icon/Icon";
@@ -678,15 +678,14 @@ class AccountVoting extends React.Component {
 
         let proxyInput = (
             <AccountSelector
-                hideImage
-                style={{width: "50%", maxWidth: 350}}
+                style={{width: "50%", maxWidth: 250, marginBottom: 10}}
                 account={this.state.current_proxy_input}
                 accountName={this.state.current_proxy_input}
                 onChange={this.onProxyChange.bind(this)}
                 onAccountChanged={this.onProxyAccountFound}
-                typeahead={true}
                 tabIndex={1}
                 placeholder="Proxy not set"
+                hideImage
             >
                 <span
                     style={{
@@ -696,7 +695,7 @@ class AccountVoting extends React.Component {
                         display: hasProxy ? "" : "none"
                     }}
                 >
-                    <Icon name="locked" size="1x" />
+                    <Icon name="locked" title="icons.locked.action" size="1x" />
                 </span>
                 <span
                     style={{
@@ -707,7 +706,11 @@ class AccountVoting extends React.Component {
                     }}
                 >
                     <Link to="/help/voting">
-                        <Icon name="question-circle" size="1x" />
+                        <Icon
+                            name="question-circle"
+                            title="icons.question_circle"
+                            size="1x"
+                        />
                     </Link>
                 </span>
             </AccountSelector>
@@ -745,7 +748,7 @@ class AccountVoting extends React.Component {
                             <Tab title="explorer.witnesses.title">
                                 <div className={cnames("content-block")}>
                                     <div className="header-selector">
-                                        {/* <Link to="/help/voting/witness"><Icon name="question-circle" /></Link> */}
+                                        {/* <Link to="/help/voting/witness"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
                                         {proxyInput}
                                         <div
                                             style={{
@@ -793,7 +796,7 @@ class AccountVoting extends React.Component {
                             <Tab title="explorer.committee_members.title">
                                 <div className={cnames("content-block")}>
                                     <div className="header-selector">
-                                        {/* <Link to="/help/voting/committee"><Icon name="question-circle" /></Link> */}
+                                        {/* <Link to="/help/voting/committee"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
                                         {proxyInput}
                                         <div
                                             style={{
@@ -847,7 +850,7 @@ class AccountVoting extends React.Component {
                                         </Link>
                                     </div>
                                     <div className="selector">
-                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" /></Link> */}
+                                        {/* <Link to="/help/voting/worker"><Icon name="question-circle" title="icons.question_cirlce" /></Link> */}
                                         <div
                                             style={{paddingLeft: 10}}
                                             className={cnames("inline-block", {

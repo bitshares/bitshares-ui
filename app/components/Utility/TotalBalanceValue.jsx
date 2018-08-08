@@ -3,6 +3,7 @@ import FormattedAsset from "./FormattedAsset";
 import ChainTypes from "./ChainTypes";
 import BindToChainState from "./BindToChainState";
 import utils from "common/utils";
+import marketUtils from "common/market_utils";
 import {ChainStore} from "bitsharesjs/es";
 import {connect} from "alt-react";
 import MarketsStore from "stores/MarketsStore";
@@ -12,6 +13,8 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import MarketStatsCheck from "./MarketStatsCheck";
 import AssetWrapper from "./AssetWrapper";
+import ReactTooltip from "react-tooltip";
+import PropTypes from "prop-types";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -27,8 +30,8 @@ class TotalValue extends MarketStatsCheck {
     static propTypes = {
         toAsset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
-        inHeader: React.PropTypes.bool,
-        label: React.PropTypes.string
+        inHeader: PropTypes.bool,
+        label: PropTypes.string
     };
 
     static defaultProps = {
@@ -53,40 +56,24 @@ class TotalValue extends MarketStatsCheck {
         );
     }
 
+    componentDidUpdate() {
+        if (this.props.inHeader) {
+            ReactTooltip.rebuild();
+        }
+    }
+
     _convertValue(amount, fromAsset, toAsset, marketStats, coreAsset) {
         if (!fromAsset || !toAsset) {
             return 0;
         }
-        let toStats, fromStats;
 
-        let toID = toAsset.get("id");
-        let toSymbol = toAsset.get("symbol");
-        let fromID = fromAsset.get("id");
-        let fromSymbol = fromAsset.get("symbol");
-
-        if (coreAsset && marketStats) {
-            let coreSymbol = coreAsset.get("symbol");
-
-            toStats = marketStats.get(toSymbol + "_" + coreSymbol);
-            fromStats = marketStats.get(fromSymbol + "_" + coreSymbol);
-        }
-
-        let price = utils.convertPrice(
-            fromStats && fromStats.close
-                ? fromStats.close
-                : fromID === "1.3.0" || fromAsset.has("bitasset")
-                    ? fromAsset
-                    : null,
-            toStats && toStats.close
-                ? toStats.close
-                : toID === "1.3.0" || toAsset.has("bitasset") ? toAsset : null,
-            fromID,
-            toID
+        return marketUtils.convertValue(
+            amount,
+            toAsset,
+            fromAsset,
+            marketStats,
+            coreAsset
         );
-
-        return price
-            ? utils.convertValue(price, amount, fromAsset, toAsset)
-            : 0;
     }
 
     _assetValues(totals, amount, asset) {
@@ -323,7 +310,7 @@ class TotalValue extends MarketStatsCheck {
         }
     }
 }
-TotalValue = BindToChainState(TotalValue, {keep_updating: true});
+TotalValue = BindToChainState(TotalValue);
 TotalValue = AssetWrapper(TotalValue, {
     propNames: ["fromAssets"],
     asList: true
@@ -376,19 +363,19 @@ class TotalBalanceValue extends React.Component {
         });
 
         for (let asset in collateral) {
-            if (!assets.has(asset)) {
+            if (!assets.includes(asset)) {
                 assets = assets.push(asset);
             }
         }
 
         for (let asset in debt) {
-            if (!assets.has(asset)) {
+            if (!assets.includes(asset)) {
                 assets = assets.push(asset);
             }
         }
 
         for (let asset in openOrders) {
-            if (!assets.has(asset)) {
+            if (!assets.includes(asset)) {
                 assets = assets.push(asset);
             }
         }
@@ -408,7 +395,7 @@ class TotalBalanceValue extends React.Component {
         );
     }
 }
-TotalBalanceValue = BindToChainState(TotalBalanceValue, {keep_updating: true});
+TotalBalanceValue = BindToChainState(TotalBalanceValue);
 
 class AccountWrapper extends React.Component {
     static propTypes = {
@@ -538,7 +525,7 @@ class AccountWrapper extends React.Component {
         }
     }
 }
-AccountWrapper = BindToChainState(AccountWrapper, {keep_updating: true});
+AccountWrapper = BindToChainState(AccountWrapper);
 
 TotalBalanceValue.AccountWrapper = AccountWrapper;
 export default TotalBalanceValue;

@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import TranslateWithLinks from "./Utility/TranslateWithLinks";
 import {isIncognito} from "feature_detect";
@@ -11,6 +11,9 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import ActionSheet from "react-foundation-apps/src/action-sheet";
 import SettingsStore from "stores/SettingsStore";
 import IntlActions from "actions/IntlActions";
+import CreateAccount from "./Account/CreateAccount";
+import CreateAccountPassword from "./Account/CreateAccountPassword";
+import {Route} from "react-router-dom";
 import Icon from "./Icon/Icon";
 import CheckUrlWarning from "./Utility/CheckUrlWarning";
 
@@ -25,21 +28,22 @@ class LoginSelector extends React.Component {
         };
     }
 
-    componentDidUpdate() {
-        const myAccounts = AccountStore.getMyAccounts();
+    // componentDidUpdate() {
+    // const myAccounts = AccountStore.getMyAccounts();
 
-        // use ChildCount to make sure user is on /create-account page except /create-account/*
-        // to prevent redirect when user just registered and need to make backup of wallet or password
-        const childCount = React.Children.count(this.props.children);
+    // use ChildCount to make sure user is on /create-account page except /create-account/*
+    // to prevent redirect when user just registered and need to make backup of wallet or password
+    // const childCount = React.Children.count(this.props.children);
 
-        // do redirect to portfolio if user already logged in
-        if (
-            Array.isArray(myAccounts) &&
-            myAccounts.length !== 0 &&
-            childCount === 0
-        )
-            this.props.router.push("/account/" + this.props.currentAccount);
-    }
+    // do redirect to portfolio if user already logged in
+    // if (
+    //     this.props.history &&
+    //     Array.isArray(myAccounts) &&
+    //     myAccounts.length !== 0 &&
+    //     childCount === 0
+    // )
+    //     this.props.history.push("/account/" + this.props.currentAccount);
+    // }
 
     componentWillMount() {
         isIncognito(incognito => {
@@ -48,13 +52,11 @@ class LoginSelector extends React.Component {
     }
 
     onSelect(route) {
-        this.props.router.push("/create-account/" + route);
+        this.props.history.push("/create-account/" + route);
     }
 
     render() {
         const translator = require("counterpart");
-
-        const childCount = React.Children.count(this.props.children);
 
         const languageDropdown = (
             <ActionSheet>
@@ -83,7 +85,6 @@ class LoginSelector extends React.Component {
                             return (
                                 <li key={locale}>
                                     <a
-                                        href
                                         onClick={e => {
                                             e.preventDefault();
                                             IntlActions.switchLocale(locale);
@@ -116,110 +117,112 @@ class LoginSelector extends React.Component {
                         <div>
                             <img src={logo} />
                         </div>
-                        {childCount == 0 ? null : (
-                            <div>
-                                <Translate
-                                    content="header.create_account"
-                                    component="h4"
-                                />
-                            </div>
-                        )}
 
-                        {childCount == 1 ? null : (
-                            <div>
-                                <Translate
-                                    content="cryptobridge.account.intro_text_title"
-                                    component="h4"
-                                />
-                                <Translate
-                                    unsafe
-                                    content="account.intro_text_1"
-                                    component="p"
-                                />
+                        <div>
+                            <Translate
+                                content="header.create_account"
+                                component="h4"
+                            />
+                        </div>
 
-                                <div className="shrink text-center">
-                                    <div className="grp-menu-item overflow-visible account-drop-down">
-                                        <div
-                                            className="grp-menu-item overflow-visible"
-                                            style={{margin: "0 auto"}}
-                                            data-intro={translator.translate(
-                                                "walkthrough.language_flag"
-                                            )}
-                                        >
-                                            {languageDropdown}
-                                        </div>
+                        <div>
+                            <Translate
+                                content="cryptobridge.account.intro_text_title"
+                                component="h4"
+                            />
+                            <Translate
+                                unsafe
+                                content="account.intro_text_1"
+                                component="p"
+                            />
+
+                            <div className="shrink text-center">
+                                <div className="grp-menu-item overflow-visible account-drop-down">
+                                    <div
+                                        className="grp-menu-item overflow-visible"
+                                        style={{margin: "0 auto"}}
+                                        data-intro={translator.translate(
+                                            "walkthrough.language_flag"
+                                        )}
+                                    >
+                                        {languageDropdown}
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        </div>
 
-                        {!!childCount ? null : (
-                            <div className="grid-block account-login-options">
-                                <Link
-                                    id="account_login_button"
-                                    to="/create-account/password"
-                                    className="button primary"
-                                    data-intro={translator.translate(
-                                        "walkthrough.create_cloud_wallet"
-                                    )}
-                                >
-                                    <Translate content="header.create_account" />
-                                </Link>
+                        <div className="grid-block account-login-options">
+                            <Link
+                                id="account_login_button"
+                                to="/create-account/password"
+                                className="button primary"
+                                data-intro={translator.translate(
+                                    "walkthrough.create_cloud_wallet"
+                                )}
+                            >
+                                <Translate content="header.create_account" />
+                            </Link>
 
-                                <span
-                                    className="button hollow primary"
-                                    onClick={() => {
-                                        SettingsActions.changeSetting({
-                                            setting: "passwordLogin",
-                                            value: true
-                                        });
-                                        WalletUnlockActions.unlock.defer();
-                                    }}
-                                >
-                                    <Translate content="header.unlock_short" />
-                                </span>
-                            </div>
-                        )}
+                            <span
+                                className="button hollow primary"
+                                onClick={() => {
+                                    SettingsActions.changeSetting.defer({
+                                        setting: "passwordLogin",
+                                        value: true
+                                    });
+                                    WalletUnlockActions.unlock().catch(
+                                        () => {}
+                                    );
+                                }}
+                            >
+                                <Translate content="header.unlock_short" />
+                            </span>
+                        </div>
 
-                        {!!childCount ? null : (
-                            <div className="additional-account-options">
-                                <h5 style={{textAlign: "center"}}>
-                                    <TranslateWithLinks
-                                        string="account.optional.formatter"
-                                        keys={[
-                                            {
-                                                type: "link",
-                                                value: "/wallet/backup/restore",
-                                                translation:
-                                                    "account.optional.restore_link",
-                                                dataIntro: translator.translate(
-                                                    "walkthrough.restore_account"
-                                                ),
-                                                arg: "restore_link"
-                                            },
-                                            {
-                                                type: "link",
-                                                value: "/create-account/wallet",
-                                                translation:
-                                                    "account.optional.restore_form",
-                                                dataIntro: translator.translate(
-                                                    "walkthrough.create_local_wallet"
-                                                ),
-                                                arg: "restore_form"
-                                            }
-                                        ]}
-                                    />
-                                </h5>
-                            </div>
-                        )}
+                        <div className="additional-account-options">
+                            <h5 style={{textAlign: "center"}}>
+                                <TranslateWithLinks
+                                    string="account.optional.formatter"
+                                    keys={[
+                                        {
+                                            type: "link",
+                                            value: "/wallet/backup/restore",
+                                            translation:
+                                                "account.optional.restore_link",
+                                            dataIntro: translator.translate(
+                                                "walkthrough.restore_account"
+                                            ),
+                                            arg: "restore_link"
+                                        },
+                                        {
+                                            type: "link",
+                                            value: "/create-account/wallet",
+                                            translation:
+                                                "account.optional.restore_form",
+                                            dataIntro: translator.translate(
+                                                "walkthrough.create_local_wallet"
+                                            ),
+                                            arg: "restore_form"
+                                        }
+                                    ]}
+                                />
+                            </h5>
+                        </div>
 
-                        {!!childCount ? (
-                            <div style={{padding: 10}}>
-                                <CheckUrlWarning />
-                            </div>
-                        ) : null}
+                        <div style={{padding: 10}}>
+                            <CheckUrlWarning />
+                        </div>
 
-                        {this.props.children}
+                        <Route
+                            path="/create-account/wallet"
+                            exact
+                            component={CreateAccount}
+                        />
+                        <Route
+                            path="/create-account/password"
+                            exact
+                            component={CreateAccountPassword}
+                        />
                     </div>
                 </div>
             </div>
@@ -227,18 +230,15 @@ class LoginSelector extends React.Component {
     }
 }
 
-export default connect(
-    LoginSelector,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+export default connect(LoginSelector, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});

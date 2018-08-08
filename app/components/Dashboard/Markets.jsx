@@ -144,9 +144,16 @@ class FeaturedMarkets extends React.Component {
                 ["BTS", "RUDEX.MUSE"],
                 ["BTS", "RUDEX.TT"],
                 ["BTS", "RUDEX.SCR"],
-                ["BTS", "ZEPH"]
+                ["BTS", "RUDEX.ETH"],
+                ["BTS", "RUDEX.DGB"],
+                ["BTS", "RUDEX.BTC"],
+                ["BTS", "RUDEX.EOS"],
+                ["USD", "RUDEX.EOS"],
+                ["BTS", "ZEPH"],
+                ["BTS", "HERTZ"]
             ],
-            "39f5e2ed": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
+            "39f5e2ed": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]],
+            "2821abbb": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
         };
 
         let chainID = Apis.instance().chain_id;

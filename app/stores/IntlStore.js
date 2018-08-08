@@ -3,7 +3,7 @@ import IntlActions from "actions/IntlActions";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import counterpart from "counterpart";
-var locale_en = require("json-loader!assets/locales/locale-en");
+var locale_en = require("assets/locales/locale-en.json");
 import ls from "common/localStorage";
 let ss = new ls("__graphene__");
 

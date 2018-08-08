@@ -3,11 +3,12 @@ import utils from "common/utils";
 import asset_utils from "common/asset_utils";
 import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 class AssetName extends React.Component {
     static propTypes = {
-        replace: React.PropTypes.bool.isRequired,
-        dataPlace: React.PropTypes.string.isRequired
+        replace: PropTypes.bool.isRequired,
+        dataPlace: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -23,14 +24,13 @@ class AssetName extends React.Component {
             this.props.asset !== np.asset ||
             this.props.noPrefix !== np.noPrefix ||
             this.props.noTip !== np.noTip ||
-            this.props.replace !== np.replace ||
-            this.props.noTip !== np.noTip ||
             this.props.dataPlace !== np.dataPlace
         );
     }
 
     render() {
         let {replace, asset, noPrefix, customClass, noTip} = this.props;
+        if (!asset) return null;
         const name = asset.get("symbol");
 
         const isBridgeCoinAsset = asset_utils.isBridgeCoinAsset(asset);
@@ -83,7 +83,9 @@ class AssetName extends React.Component {
             const upperCasePrefix =
                 prefix && prefix === "bit"
                     ? prefix
-                    : !!prefix ? prefix.toUpperCase() : prefix;
+                    : !!prefix
+                        ? prefix.toUpperCase()
+                        : prefix;
             let tooltip = noTip
                 ? null
                 : `<div><strong>${upperCasePrefix ||
@@ -123,7 +125,7 @@ class AssetName extends React.Component {
                     <span className={!noPrefix ? "asset-prefix-replaced" : ""}>
                         {!noPrefix ? prefix : null}
                     </span>
-                    {replacedName}
+                    <span>{replacedName}</span>
                 </span>
             );
         }

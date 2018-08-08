@@ -5,7 +5,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector";
 import Translate from "react-translate-component";
 import ExchangeInput from "components/Exchange/ExchangeInput";
-import {extend, debounce} from "lodash";
+import {extend, debounce} from "lodash-es";
 import GatewayStore from "stores/GatewayStore";
 import AssetStore from "stores/AssetStore";
 import MarketsStore from "stores/MarketsStore";
@@ -22,6 +22,7 @@ import AccountStore from "stores/AccountStore";
 import ChainTypes from "../Utility/ChainTypes";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
+import QRScanner from "../QRAddressScanner";
 import counterpart from "counterpart";
 import {
     gatewaySelector,
@@ -82,6 +83,7 @@ class WithdrawModalNew extends React.Component {
             btsAccount: ""
         };
 
+        this.handleQrScanSuccess = this.handleQrScanSuccess.bind(this);
         this._checkFeeStatus = debounce(this._checkFeeStatus.bind(this), 250);
         this._updateFee = debounce(this._updateFee.bind(this), 250);
     }
@@ -276,6 +278,7 @@ class WithdrawModalNew extends React.Component {
                         fromAsset,
                         toAsset,
                         marketStats,
+                        true,
                         true
                     );
                 if (precisionDifference > 0) {
@@ -837,6 +840,21 @@ class WithdrawModalNew extends React.Component {
         }
     }
 
+    handleQrScanSuccess(data) {
+        // if user don't put quantity on field by himself
+        // use amount detected on QR code
+        if (!this.state.quantity) {
+            this.setState({
+                address: data.address,
+                quantity: data.amount
+            });
+        } else {
+            this.setState({
+                address: data.address
+            });
+        }
+    }
+
     render() {
         const {state, props} = this;
         let {preferredCurrency, assets, balances} = props;
@@ -865,18 +883,24 @@ class WithdrawModalNew extends React.Component {
 
         let minWithdraw = null;
         let maxWithdraw = null;
-        if (selectedGateway.toUpperCase() == "OPEN") {
+        if (backingAsset && backingAsset.minAmount) {
+            minWithdraw = !!backingAsset.precision
+                ? utils.format_number(
+                      backingAsset.minAmount /
+                          utils.get_asset_precision(backingAsset.precision),
+                      backingAsset.precision,
+                      false
+                  )
+                : backingAsset.minAmount;
+        } else if (backingAsset) {
             minWithdraw =
                 backingAsset.gateFee * 2 ||
                 0 + backingAsset.transactionFee ||
                 0;
-        } else if (selectedGateway.toUpperCase() == "RUDEX") {
-            minWithdraw = utils.format_number(
-                backingAsset.minAmount /
-                    utils.get_asset_precision(backingAsset.precision),
-                backingAsset.precision,
-                false
-            );
+        }
+
+        if (backingAsset && backingAsset.maxAmount) {
+            maxWithdraw = backingAsset.maxAmount;
         }
 
         balances.forEach(item => {
@@ -1124,6 +1148,7 @@ class WithdrawModalNew extends React.Component {
                                         onChange={this.onAddressChanged.bind(
                                             this
                                         )}
+                                        className="qr-address-scanner-input-field"
                                         autoComplete="off"
                                     />
                                     {storedAddresses.length > 1 ? (
@@ -1135,6 +1160,10 @@ class WithdrawModalNew extends React.Component {
                                             &#9660;
                                         </span>
                                     ) : null}
+                                    <QRScanner
+                                        label="Scan"
+                                        onSuccess={this.handleQrScanSuccess}
+                                    />
                                 </div>
                             </div>
                             <div className="blocktrades-position-options">
@@ -1322,19 +1351,16 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(
-    BindToChainState(WithdrawModalWrapper, {keep_updating: true}),
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                account: AccountStore.getState().currentAccount
-            };
-        }
+const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper), {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            account: AccountStore.getState().currentAccount
+        };
     }
-);
+});
 
 export default class WithdrawModal extends React.Component {
     constructor() {

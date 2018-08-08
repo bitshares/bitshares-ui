@@ -7,7 +7,8 @@ import {
     rudexAPIs,
     widechainAPIs,
     openledgerAPIs,
-    cryptoBridgeAPIs
+    cryptoBridgeAPIs,
+    gdex2APIs
 } from "api/apiConfig";
 
 export const availableGateways = {
@@ -62,7 +63,19 @@ export const availableGateways = {
             enabled: false,
             selected: false
         }
+    },
+    GDEX: {
+        id: "GDEX",
+        name: "GDEX",
+        baseAPI: gdex2APIs,
+        isEnabled: false,
+        options: {
+            enabled: false,
+            selected: false
+        }
     }
 };
+
+export const gatewayPrefixes = Object.keys(availableGateways);
 
 export default availableGateways;

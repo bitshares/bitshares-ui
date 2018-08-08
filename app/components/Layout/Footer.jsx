@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {Apis} from "bitsharesjs-ws";
+import {settingsAPIs} from "api/apiConfig";
 import AltContainer from "alt-container";
 import Translate from "react-translate-component";
 import BindToChainState from "../Utility/BindToChainState";
@@ -12,6 +14,7 @@ import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import PropTypes from "prop-types";
 
 let connectedNode = null;
 let connectedNodePing = null;
@@ -21,15 +24,11 @@ let trackLatencyDate = null;
 class Footer extends React.Component {
     static propTypes = {
         dynGlobalObject: ChainTypes.ChainObject.isRequired,
-        synced: React.PropTypes.bool.isRequired
+        synced: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
         dynGlobalObject: "2.1.0"
-    };
-
-    static contextTypes = {
-        router: React.PropTypes.object
     };
 
     constructor(props) {
@@ -213,7 +212,11 @@ class Footer extends React.Component {
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = getNode(
+                currentNodeIndex > 0 && nodes[currentNodeIndex]
+                    ? nodes[currentNodeIndex]
+                    : nodes[1]
+            );
         }
 
         // Track node details
@@ -257,6 +260,7 @@ class Footer extends React.Component {
                                 {state.newVersion && (
                                     <Icon
                                         name="download"
+                                        title="icons.download"
                                         style={{
                                             marginRight: "20px",
                                             marginTop: "10px",
@@ -328,17 +332,36 @@ class Footer extends React.Component {
                                 </div>
                             </span>
                         ) : null}
+                        {__DEVNET__ || __TESTNET__ ? (
+                            <span>
+                                <div className="grid-block">
+                                    <span
+                                        className="warning"
+                                        style={{marginRight: 10}}
+                                    >
+                                        {Apis.instance().url.replace(
+                                            /wss:\/\//,
+                                            ""
+                                        ) + " / "}
+                                        {settingsAPIs.DEFAULT_FAUCET.replace(
+                                            /http(s|):\/\//,
+                                            ""
+                                        )}
+                                    </span>
+                                </div>
+                            </span>
+                        ) : null}
                         {block_height ? (
-                            <div
-                                onMouseEnter={() => {
-                                    this.setState({showNodesPopup: true});
-                                }}
-                                onMouseLeave={() => {
-                                    this.setState({showNodesPopup: false});
-                                }}
-                                className="grid-block shrink"
-                            >
-                                <div style={{position: "relative"}}>
+                            <div className="grid-block shrink">
+                                <div
+                                    onMouseEnter={() => {
+                                        this.setState({showNodesPopup: true});
+                                    }}
+                                    onMouseLeave={() => {
+                                        this.setState({showNodesPopup: false});
+                                    }}
+                                    style={{position: "relative"}}
+                                >
                                     <div className="footer-status">
                                         {!connected ? (
                                             <span className="warning">
@@ -423,11 +446,11 @@ class Footer extends React.Component {
     }
 
     onBackup() {
-        this.context.router.push("/wallet/backup/create");
+        this.props.history.push("/wallet/backup/create");
     }
 
     onBackupBrainkey() {
-        this.context.router.push("/wallet/backup/brainkey");
+        this.props.history.push("/wallet/backup/brainkey");
     }
 
     onPopup() {
@@ -438,10 +461,10 @@ class Footer extends React.Component {
 
     onAccess() {
         SettingsActions.changeViewSetting({activeSetting: 6});
-        this.context.router.push("/settings/access");
+        this.props.history.push("/settings/access");
     }
 }
-Footer = BindToChainState(Footer, {keep_updating: true});
+Footer = BindToChainState(Footer);
 
 class AltFooter extends Component {
     render() {

@@ -212,8 +212,22 @@ class Price {
             throw new Error("Base and Quote assets must be different");
         }
 
-        base = base.clone();
-        quote = quote.clone();
+        if (
+            !base.asset_id ||
+            !("amount" in base) ||
+            !quote.asset_id ||
+            !("amount" in quote)
+        ) {
+            throw new Error("Invalid Price inputs");
+        }
+
+        this.base = base.clone();
+        this.quote = quote.clone();
+
+        this.setPriceFromReal(real);
+    }
+
+    setPriceFromReal(real, base = this.base, quote = this.quote) {
         if (real && typeof real === "number") {
             /*
             * In order to make large numbers work properly, we assume numbers
@@ -223,7 +237,7 @@ class Price {
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
             }
-            let frac = new Fraction(real * 100, 100);
+            let frac = new Fraction(real);
             let baseSats = base.toSats(),
                 quoteSats = quote.toSats();
             let numRatio = baseSats / quoteSats,
@@ -235,22 +249,12 @@ class Price {
                 numRatio = 1;
             }
 
-            base.amount = frac.numerator * numRatio;
-            quote.amount = frac.denominator * denRatio;
+            base.setAmount({sats: frac.numerator * numRatio});
+            quote.setAmount({sats: frac.denominator * denRatio});
         } else if (real === 0) {
-            base.amount = 0;
-            quote.amount = 0;
+            base.setAmount({sats: 0});
+            quote.setAmount({sats: 0});
         }
-
-        if (
-            !base.asset_id ||
-            !("amount" in base) ||
-            !quote.asset_id ||
-            !("amount" in quote)
-        )
-            throw new Error("Invalid Price inputs");
-        this.base = base;
-        this.quote = quote;
     }
 
     getUnits() {
@@ -405,14 +409,17 @@ class FeedPrice extends Price {
     getSqueezePrice({real = false} = {}) {
         if (!this._squeeze_price) {
             this._squeeze_price = this.clone();
-            if (this.inverted)
+            if (this.inverted) {
                 this._squeeze_price.base.amount = Math.floor(
-                    this._squeeze_price.base.amount * this.sqr
+                    this._squeeze_price.base.amount * this.sqr * 1000
                 );
-            if (!this.inverted)
+                this._squeeze_price.quote.amount *= 1000;
+            } else if (!this.inverted) {
                 this._squeeze_price.quote.amount = Math.floor(
-                    this._squeeze_price.quote.amount * this.sqr
+                    this._squeeze_price.quote.amount * this.sqr * 1000
                 );
+                this._squeeze_price.base.amount *= 1000;
+            }
         }
 
         if (real) {

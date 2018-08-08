@@ -11,6 +11,7 @@ import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
+import PropTypes from "prop-types";
 
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
@@ -31,11 +32,11 @@ function textContent(n) {
 class RecentTransactions extends React.Component {
     static propTypes = {
         accountsList: ChainTypes.ChainAccountsList.isRequired,
-        compactView: React.PropTypes.bool,
-        limit: React.PropTypes.number,
-        maxHeight: React.PropTypes.number,
-        fullHeight: React.PropTypes.bool,
-        showFilters: React.PropTypes.bool
+        compactView: PropTypes.bool,
+        limit: PropTypes.number,
+        maxHeight: PropTypes.number,
+        fullHeight: PropTypes.bool,
+        showFilters: PropTypes.bool
     };
 
     static defaultProps = {
@@ -246,9 +247,7 @@ class RecentTransactions extends React.Component {
         ).sort(compareOps);
         let historyCount = history.length;
 
-        style = style ? style : {};
-        style.width = "100%";
-        style.height = "100%";
+        style = style ? style : {width: "100%", height: "100%"};
 
         let options = null;
         if (true || this.props.showFilters) {
@@ -282,6 +281,7 @@ class RecentTransactions extends React.Component {
                           key={o.id}
                           op={o.op}
                           result={o.result}
+                          txIndex={o.trx_in_block}
                           block={o.block_num}
                           current={current_account_id}
                           hideFee
@@ -306,11 +306,15 @@ class RecentTransactions extends React.Component {
                         historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (
                         <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon name="chevron-down" className="icon-14px" />
+                            <Icon
+                                name="chevron-down"
+                                title="icons.chevron_down.transactions"
+                                className="icon-14px"
+                            />
                         </a>
                     ) : null}
                 </td>
-                <td>
+                <td style={alignRight}>
                     {historyCount > 0 ? (
                         <span>
                             <a
@@ -321,7 +325,11 @@ class RecentTransactions extends React.Component {
                                 )}
                                 data-place="bottom"
                             >
-                                <Icon name="excel" className="icon-14px" />
+                                <Icon
+                                    name="excel"
+                                    title="icons.excel"
+                                    className="icon-14px"
+                                />
                                 {" .csv"}
                             </a>
                         </span>
@@ -449,9 +457,7 @@ class RecentTransactions extends React.Component {
         );
     }
 }
-RecentTransactions = BindToChainState(RecentTransactions, {
-    keep_updating: true
-});
+RecentTransactions = BindToChainState(RecentTransactions);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

@@ -2,6 +2,7 @@ import React from "react";
 import BaseModal from "components/Modal/BaseModal";
 import QrReader from "react-qr-reader";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import PropTypes from "prop-types";
 
 class QRScanner extends React.Component {
     modalId = "qr_scanner_modal";
@@ -11,9 +12,9 @@ class QRScanner extends React.Component {
     };
 
     static propTypes = {
-        onSuccess: React.PropTypes.func,
-        onError: React.PropTypes.func,
-        label: React.PropTypes.string
+        onSuccess: PropTypes.func,
+        onError: PropTypes.func,
+        label: PropTypes.string
     };
 
     constructor(props) {
@@ -64,7 +65,7 @@ class QRScanner extends React.Component {
                     <BaseModal
                         id={this.modalId}
                         overlay={true}
-                        noLoggo={true}
+                        noLogo={true}
                         onClose={this.handleClose}
                     >
                         <QrReader

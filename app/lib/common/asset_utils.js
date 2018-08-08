@@ -1,4 +1,5 @@
 import assetConstants from "../chain/asset_constants";
+import utils from "./utils";
 
 export default class AssetUtils {
     static getFlagBooleans(mask, isBitAsset = false) {
@@ -111,6 +112,14 @@ export default class AssetUtils {
     static isBridgeCoinAsset(asset) {
         if (!asset) return false;
         return asset.get("symbol").indexOf("BRIDGE.") === 0;
+    }
+
+    static removeCryptoBridgeNameSpace(symbol) {
+        if (symbol && symbol.match(/^BRIDGE\./i)) {
+            return symbol.toUpperCase().replace("BRIDGE.", "");
+        }
+
+        return symbol;
     }
 
     static addCryptoBridgeNameSpace(symbol) {

@@ -1,6 +1,6 @@
 import React from "react";
-import {PropTypes} from "react";
-import {Link} from "react-router/es";
+import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import AssetActions from "actions/AssetActions";
 import AssetStore from "stores/AssetStore";
@@ -10,7 +10,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import notify from "actions/NotificationActions";
 import utils from "common/utils";
-import {debounce} from "lodash";
+import {debounce} from "lodash-es";
 import LoadingIndicator from "../LoadingIndicator";
 import IssueModal from "../Modal/IssueModal";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
@@ -170,7 +170,7 @@ class AccountAssets extends React.Component {
 
     _editButtonClick(symbol, account_name, e) {
         e.preventDefault();
-        this.props.router.push(
+        this.props.history.push(
             `/account/${account_name}/update-asset/${symbol}`
         );
     }

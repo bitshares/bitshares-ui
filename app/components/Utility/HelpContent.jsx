@@ -1,8 +1,9 @@
 import React from "react";
-import {zipObject} from "lodash";
+import {zipObject} from "lodash-es";
 import counterpart from "counterpart";
 import utils from "common/utils";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
+import PropTypes from "prop-types";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -46,8 +47,8 @@ function adjust_links(str) {
 
 class HelpContent extends React.Component {
     static propTypes = {
-        path: React.PropTypes.string.isRequired,
-        section: React.PropTypes.string
+        path: PropTypes.string.isRequired,
+        section: PropTypes.string
     };
 
     constructor(props) {
@@ -84,13 +85,13 @@ class HelpContent extends React.Component {
             .filter(p => p && p !== "#");
         if (path.length === 0) return false;
         let route = "/" + path.join("/");
-        this.props.router.push(route);
+        this.props.history.push(route);
         return false;
     }
 
     setVars(str, hideIssuer) {
         if (hideIssuer == "true") {
-            var str = str.replace(/^.*{issuer}.*$/gm, "");
+            str = str.replace(/<p>[^<]*{issuer}[^<]*<\/p>/gm, "");
         }
 
         return str.replace(/(\{.+?\})/gi, (match, text) => {
@@ -105,14 +106,12 @@ class HelpContent extends React.Component {
                 );
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
-            // console.log("-- var -->", key, value);
             return value;
         });
     }
 
     render() {
         let locale = this.props.locale || counterpart.getLocale() || "en";
-
         if (!HelpData[locale]) {
             console.error(
                 `missing locale '${locale}' help files, rolling back to 'en'`
@@ -160,7 +159,18 @@ class HelpContent extends React.Component {
             return !null;
         }
 
-        if (this.props.section) value = value[this.props.section];
+        if (this.props.section) {
+            /* The previously used remarkable-loader parsed the md properly as an object, the new one does not */
+            for (let key in value) {
+                if (!!key.match(this.props.section)) {
+                    value = key.replace(
+                        new RegExp("^" + this.props.section + ","),
+                        ""
+                    );
+                    break;
+                }
+            }
+        }
 
         if (!value) {
             console.error(

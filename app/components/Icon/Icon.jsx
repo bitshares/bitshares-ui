@@ -2,26 +2,22 @@
 
 import React from "react";
 import counterpart from "counterpart";
+import PropTypes from "prop-types";
 
 let icons = [
-    "accounts",
+    "photo-camera",
     "adjust",
     "assets",
-    "b-logo",
-    "blocks",
     "checkmark-circle",
-    "checkmark",
     "chevron-down",
     "clippy",
     "clock",
     "cog",
     "cogs",
-    "committee_members",
     "connected",
     "connect",
     "cross-circle",
     "dashboard",
-    "database",
     "deposit",
     "disconnected",
     "dollar-green",
@@ -30,30 +26,21 @@ let icons = [
     "excel",
     "eye",
     "eye-striked",
-    "fees",
     "fi-star",
     "folder",
-    "gift",
     "globe",
     "hamburger-x",
     "hamburger",
     "hourglass",
     "key",
-    "layers",
-    "link",
     "list",
     "locked",
     "moon",
-    "markets",
-    "menu",
     "minus-circle",
     "news",
-    "piggy",
     "plus-circle",
     "power",
-    "proposals",
     "question-circle",
-    "search",
     "server",
     "settle",
     "share",
@@ -66,15 +53,13 @@ let icons = [
     "times",
     "trade",
     "transfer",
-    "trash",
     "unlocked",
     "user",
-    "users",
-    "wand",
     "warning",
     "withdraw",
-    "witnesses",
-    "workers"
+    "filter",
+    "info-circle-o",
+    "zoom"
 ];
 
 let icons_map = {};
@@ -123,11 +108,11 @@ class Icon extends React.Component {
 }
 
 Icon.propTypes = {
-    name: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string,
-    size: React.PropTypes.oneOf(["1x", "1_5x", "2x", "3x", "4x", "5x", "10x"]),
-    inverse: React.PropTypes.bool,
-    className: React.PropTypes.string
+    name: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    size: PropTypes.oneOf(["1x", "1_5x", "2x", "3x", "4x", "5x", "10x"]),
+    inverse: PropTypes.bool,
+    className: PropTypes.string
 };
 
 Icon.defaultProps = {

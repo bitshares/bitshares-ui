@@ -15,6 +15,7 @@ import accountUtils from "common/account_utils";
 import FloatingDropdown from "../Utility/FloatingDropdown";
 import TypeAhead from "../Utility/TypeAhead";
 import cnames from "classnames";
+import PropTypes from "prop-types";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -26,18 +27,18 @@ import cnames from "classnames";
 
 class AccountSelector extends React.Component {
     static propTypes = {
-        label: React.PropTypes.string, // a translation key for the label
-        error: React.PropTypes.element, // the error message override
-        placeholder: React.PropTypes.string, // the placeholder text to be displayed when there is no user_input
-        onChange: React.PropTypes.func, // a method to be called any time user input changes
-        onAccountChanged: React.PropTypes.func, // a method to be called when existing account is selected
-        onAction: React.PropTypes.func, // a method called when Add button is clicked
-        accountName: React.PropTypes.string, // the current value of the account selector, the string the user enters
+        label: PropTypes.string, // a translation key for the label
+        error: PropTypes.element, // the error message override
+        placeholder: PropTypes.string, // the placeholder text to be displayed when there is no user_input
+        onChange: PropTypes.func, // a method to be called any time user input changes
+        onAccountChanged: PropTypes.func, // a method to be called when existing account is selected
+        onAction: PropTypes.func, // a method called when Add button is clicked
+        accountName: PropTypes.string, // the current value of the account selector, the string the user enters
         account: ChainTypes.ChainAccount, // account object retrieved via BindToChainState decorator (not input)
-        tabIndex: React.PropTypes.number, // tabindex property to be passed to input tag
-        disableActionButton: React.PropTypes.bool, // use it if you need to disable action button,
-        allowUppercase: React.PropTypes.bool, // use it if you need to allow uppercase letters
-        typeahead: React.PropTypes.bool
+        tabIndex: PropTypes.number, // tabindex property to be passed to input tag
+        disableActionButton: PropTypes.bool, // use it if you need to disable action button,
+        allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
+        typeahead: PropTypes.array
     };
 
     static defaultProps = {
@@ -60,7 +61,7 @@ class AccountSelector extends React.Component {
         if (this.props.onAccountChanged && account)
             this.props.onAccountChanged(account);
 
-        if (!this.props.typeahead && !!accountName)
+        if (!this.props.typeahead && accountName)
             this.onInputChanged(accountName);
     }
 
@@ -78,13 +79,13 @@ class AccountSelector extends React.Component {
     getError() {
         let {account, error} = this.props;
 
-        if (!error && account && !this.getNameType(account.get("name")))
+        if (!error && account && !this.getInputType(account.get("name")))
             error = counterpart.translate("account.errors.invalid");
 
         return error;
     }
 
-    getNameType(value) {
+    getInputType(value) {
         // OK
         if (!value) return null;
         if (value[0] === "#" && utils.is_object_id("1.2." + value.substring(1)))
@@ -118,7 +119,7 @@ class AccountSelector extends React.Component {
         // - Always returns account object
         if (!typeahead) {
             if (onChange) onChange(_accountName);
-            if (onAccountChanged) onAccountChanged(_account);
+            if (onAccountChanged && _account) onAccountChanged(_account);
         }
     }
 
@@ -137,9 +138,8 @@ class AccountSelector extends React.Component {
         if (!allowUppercase) value = value.toLowerCase();
 
         // If regex matches ^.*#/account/account-name/.*$, parse out account-name
-        let _value = value
-            .replace("#", "")
-            .match(/(?:\/account\/)(.*)(?:\/overview)/);
+        let _value = value.replace("#", "").match(/(?:\/account\/)(.*)/);
+        console.log("getVerifiedAccountName", value);
         if (_value) value = _value[1];
 
         return value;
@@ -162,7 +162,7 @@ class AccountSelector extends React.Component {
         e.preventDefault();
         if (!this.getError() && onAction && !disableActionButton) {
             if (account) onAction(account);
-            else if (this.getNameType(accountName) === "pubkey")
+            else if (this.getInputType(accountName) === "pubkey")
                 onAction(accountName);
         }
     }
@@ -175,8 +175,14 @@ class AccountSelector extends React.Component {
             typeahead,
             disableActionButton,
             contacts,
-            myActiveAccounts
+            myActiveAccounts,
+            noPlaceHolder,
+            useHR,
+            labelClass,
+            reserveErrorSpace
         } = this.props;
+
+        const inputType = this.getInputType(accountName);
 
         let typeAheadAccounts = [];
         let error = this.getError();
@@ -184,33 +190,41 @@ class AccountSelector extends React.Component {
         linkedAccounts = linkedAccounts.concat(contacts);
 
         // Selected Account
+        let displayText;
         if (account) {
             account.isKnownScammer = accountUtils.isKnownScammer(
                 account.get("name")
             );
-            account.accountType = this.getNameType(account.get("name"));
+            account.accountType = this.getInputType(account.get("name"));
             account.accountStatus = ChainStore.getAccountMemberStatus(account);
             account.statusText = !account.isKnownScammer
                 ? counterpart.translate(
                       "account.member." + account.accountStatus
                   )
                 : counterpart.translate("account.member.suspected_scammer");
-            account.displayText =
+            displayText =
                 account.accountType === "name"
                     ? "#" + account.get("id").substring(4)
-                    : account.accountType === "id" ? account.get("name") : null;
+                    : account.accountType === "id"
+                        ? account.get("name")
+                        : null;
         }
 
         // Without Typeahead Error Handling
         if (!typeahead) {
-            if (!account)
+            if (!account && accountName && inputType !== "pubkey") {
                 error = counterpart.translate("account.errors.unknown");
+            }
         } else {
-            if (allowPubKey && account.accountType === "pubkey")
-                account.displayText = "Public Key";
-            else if (!error && accountName && !account)
+            if (
+                !(allowPubKey && inputType === "pubkey") &&
+                !error &&
+                accountName &&
+                !account
+            )
                 error = counterpart.translate("account.errors.unknown");
         }
+        if (allowPubKey && inputType === "pubkey") displayText = "Public Key";
 
         if (account && linkedAccounts)
             account.isFavorite =
@@ -288,6 +302,7 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="user"
+                    title="icons.user.following"
                 />
             </span>
         ) : (
@@ -304,13 +319,14 @@ class AccountSelector extends React.Component {
                         right: ".2em"
                     }}
                     name="plus-circle"
+                    title="icons.plus_circle.add_contact"
                 />
             </span>
         );
 
         let action_class = classnames("button", {
             disabled:
-                !(account || (account && account.accountType === "pubkey")) ||
+                !(account || inputType === "pubkey") ||
                 error ||
                 disableActionButton
         });
@@ -337,24 +353,29 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{account &&
-                                        account.displayText}
+                                    {account && account.statusText}&nbsp;{!!displayText &&
+                                        displayText}
                                 </span>
                                 {linked_status}
                             </label>
 
                             <Translate
-                                className="left-label"
+                                className={"left-label " + (labelClass || "")}
                                 component="label"
                                 content={this.props.label}
                             />
+                            {useHR && <hr />}
                         </div>
                     ) : null}
                     <div className="input-area">
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
-                                    <Icon name="key" size="4x" />
+                                    <Icon
+                                        name="key"
+                                        title="icons.key"
+                                        size="4x"
+                                    />
                                 </div>
                             ) : this.props.hideImage ? null : (
                                 <AccountImage
@@ -372,7 +393,11 @@ class AccountSelector extends React.Component {
                                 <TypeAhead
                                     items={typeAheadAccounts}
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
@@ -395,11 +420,16 @@ class AccountSelector extends React.Component {
                             ) : (
                                 <input
                                     style={{
-                                        textTransform: "lowercase",
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
                                         fontVariant: "initial"
                                     }}
                                     name="username"
                                     id="username"
+                                    autoComplete="username"
                                     type="text"
                                     value={this.props.accountName || ""}
                                     placeholder={
@@ -445,8 +475,15 @@ class AccountSelector extends React.Component {
                         </div>
                     </div>
 
-                    {error ? (
-                        <div className="error-area">
+                    {error || reserveErrorSpace ? (
+                        <div
+                            className={
+                                this.props.hideImage
+                                    ? "has-error"
+                                    : "error-area"
+                            }
+                            style={{marginTop: "1rem"}}
+                        >
                             <span>{error}</span>
                         </div>
                     ) : null}
@@ -456,7 +493,7 @@ class AccountSelector extends React.Component {
     }
 }
 
-AccountSelector = BindToChainState(AccountSelector, {keep_updating: true});
+AccountSelector = BindToChainState(AccountSelector);
 
 AccountSelector = connect(AccountSelector, {
     listenTo() {

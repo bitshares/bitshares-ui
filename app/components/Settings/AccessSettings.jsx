@@ -2,21 +2,26 @@ import React from "react";
 import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import {settingsAPIs} from "../../api/apiConfig";
 import willTransitionTo from "../../routerTransition";
 // import {routerTransitioner} from "../../routerTransition";
-import {withRouter} from "react-router/es";
+import {withRouter} from "react-router-dom";
 import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
 
 const autoSelectAPI = "wss://fake.automatic-selection.com";
-const testnetAPI = settingsAPIs.WS_NODE_LIST.find(
-    a => a.url.indexOf("node.testnet.bitshares.eu") !== -1
-);
-const testnetAPI2 = settingsAPIs.WS_NODE_LIST.find(
-    a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
-);
+
+const getTestnetAPI = () => {
+    return SettingsStore.getState().defaults.apiServer.find(
+        a => a.url.indexOf("node.testnet.bitshares.eu") !== -1
+    );
+};
+
+const getTestnetAPI2 = () => {
+    return SettingsStore.getState().defaults.apiServer.find(
+        a => a.url.indexOf("testnet.nodes.bitshares.ws") !== -1
+    );
+};
 
 /**
  * This class renders a a single node within the nodes list in the settings overview.
@@ -39,18 +44,14 @@ class ApiNode extends React.Component {
         });
         setTimeout(
             function() {
-                willTransitionTo(
-                    this.props.router,
-                    this.props.router.replace,
-                    () => {},
-                    false
-                );
+                willTransitionTo(false);
             }.bind(this),
             50
         );
     }
 
     remove(url, name, e) {
+        e.target.id = "remove"; // Override target.id to allow Removal Node Modal
         this.props.triggerModal(e, url, name);
     }
 
@@ -104,9 +105,11 @@ class ApiNode extends React.Component {
         * so we force enable activation of it even though it shows as 'down'
         *
         */
-        const isTestnet = url === testnetAPI.url || url === testnetAPI2.url;
+        const isTestnet =
+            (url === getTestnetAPI() && getTestnetAPI().url) ||
+            (url === getTestnetAPI2() && getTestnetAPI2().url);
 
-        let totalNodes = settingsAPIs.WS_NODE_LIST.length - 3;
+        let totalNodes = SettingsStore.getState().defaults.apiServer.length - 1;
 
         let isActive = activeNode.url == url;
         let showControls = !isActive && !automatic;
@@ -135,7 +138,7 @@ class ApiNode extends React.Component {
                         <label />
                     </span>
                     <p style={{fontSize: "80%"}}>
-                        Automatic Switching {autoActive ? "on" : "off"}
+                        <Translate content="settings.automatic_short" />:
                     </p>
                 </div>
             ) : (
@@ -144,20 +147,20 @@ class ApiNode extends React.Component {
                         <Icon
                             className={color + " default-icon"}
                             name={isActive ? "connected" : "disconnected"}
-                            size="1_5x"
-                            onClick={this.activate.bind(this, url)}
                             title={
                                 isActive
-                                    ? "settings.active_node"
-                                    : "settings.switch"
+                                    ? "icons.connected"
+                                    : "icons.disconnected"
                             }
+                            size="1_5x"
+                            onClick={this.activate.bind(this, url)}
                         />
                         <Icon
                             className={color + " hover-icon"}
                             name={"connect"}
+                            title="icons.connect"
                             size="1_5x"
                             onClick={this.activate.bind(this, url)}
-                            title="settings.switch"
                         />
                     </a>
                     {name}
@@ -236,8 +239,8 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={"shuffle"}
                                         name={"eye-striked"}
+                                        title="icons.eye_striked"
                                         size="1_5x"
-                                        title="settings.show"
                                     />
                                 </a>
                             )}
@@ -247,8 +250,8 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={"shuffle"}
                                         name={"eye"}
+                                        title="icons.eye"
                                         size="1_5x"
-                                        title="settings.hide"
                                     />
                                 </a>
                             )}
@@ -257,8 +260,8 @@ class ApiNode extends React.Component {
                                 <a onClick={this.remove.bind(this, url, name)}>
                                     <Icon
                                         name={"times"}
+                                        title="icons.times"
                                         size="1_5x"
-                                        title="settings.remove"
                                     />
                                 </a>
                             )}
@@ -271,20 +274,21 @@ class ApiNode extends React.Component {
                                     <Icon
                                         className={color + " default-icon"}
                                         name={"disconnected"}
+                                        title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                     <Icon
                                         className={color + " hover-icon"}
                                         name={"connect"}
+                                        title="icons.connect"
                                         size="1_5x"
-                                        title="settings.switch"
                                     />
                                 </a>
                             ) : (
                                 <Icon
                                     className={color}
                                     name={"connected"}
+                                    title="icons.connected"
                                     size="2x"
                                     title="settings.active_node"
                                 />
@@ -320,7 +324,7 @@ class AccessSettings extends React.Component {
 
         let isDefaultNode = {};
 
-        settingsAPIs.WS_NODE_LIST.forEach(node => {
+        SettingsStore.getState().defaults.apiServer.forEach(node => {
             isDefaultNode[node.url] = true;
         });
 
@@ -429,7 +433,11 @@ class AccessSettings extends React.Component {
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(props.nodes[currentNodeIndex]);
+            activeNode = getNode(
+                currentNodeIndex > 0 && props.nodes[currentNodeIndex]
+                    ? props.nodes[currentNodeIndex]
+                    : props.nodes[1]
+            );
         }
 
         let nodes = props.nodes
@@ -442,7 +450,8 @@ class AccessSettings extends React.Component {
 
         nodes = nodes.sort(function(a, b) {
             let isTestnet =
-                a.url === testnetAPI.url || a.url === testnetAPI2.url;
+                (getTestnetAPI() && a.url === getTestnetAPI().url) ||
+                (getTestnetAPI2() && a.url === getTestnetAPI2().url);
             if (a.url == autoSelectAPI) {
                 return -1;
             } else if (a.up && b.up) {

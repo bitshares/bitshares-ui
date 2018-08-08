@@ -13,12 +13,13 @@ import assetUtils from "common/asset_utils";
 import DepositWithdrawAssetSelector from "../DepositWithdrawAssetSelector";
 import Immutable from "immutable";
 import LoadingIndicator from "../../LoadingIndicator";
+import PropTypes from "prop-types";
 
 class CryptoBridgeGateway extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount,
-        coins: React.PropTypes.array,
-        provider: React.PropTypes.string
+        coins: PropTypes.array,
+        provider: PropTypes.string
     };
 
     static defaultProps = {
@@ -75,6 +76,18 @@ class CryptoBridgeGateway extends React.Component {
         SettingsActions.changeViewSetting(setting);
     };
 
+    _getCoinIsDisabled(coin) {
+        return (
+            coin.tradingPairInfo.find(info => {
+                return (
+                    info.disabled === true &&
+                    (info.inputCoinType === coin.symbol.toLowerCase() ||
+                        info.outputCoinType === coin.symbol.toLowerCase())
+                );
+            }) !== undefined
+        );
+    }
+
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
@@ -83,7 +96,7 @@ class CryptoBridgeGateway extends React.Component {
 
         const coinIssuer = {
             name: "cryptobridge",
-            id: "1.2.374566",
+            id: __TESTNET__ || __DEVNET__ ? "1.2.18" : "1.2.374566",
             support: "support@crypto-bridge.org"
         };
 
@@ -114,6 +127,8 @@ class CryptoBridgeGateway extends React.Component {
 
         if (!coin) coin = filteredCoins[0];
 
+        const coinIsDisabled = this._getCoinIsDisabled(coin);
+
         return (
             <div style={this.props.style}>
                 <div className="grid-block no-margin vertical medium-horizontal no-padding">
@@ -142,93 +157,125 @@ class CryptoBridgeGateway extends React.Component {
                     </div>
 
                     <div className="medium-6 medium-offset-1">
-                        <label
-                            style={{minHeight: "2rem"}}
-                            className="left-label"
-                        >
-                            <Translate content="gateway.gateway_text" />:
-                        </label>
-                        <div style={{paddingBottom: 15}}>
-                            <ul className="button-group segmented no-margin">
-                                {coin.depositAllowed ? (
-                                    <li
-                                        className={isDeposit ? "is-active" : ""}
-                                    >
-                                        <a
-                                            onClick={this.changeAction.bind(
-                                                this,
-                                                "deposit"
-                                            )}
+                        {coinIsDisabled ? (
+                            <div>
+                                {coin.tradingPairInfo.map((info, i) => {
+                                    return (
+                                        <label
+                                            className="label warning"
+                                            key={"tradingPairInfo" + i}
+                                            style={{
+                                                whiteSpace: "normal",
+                                                lineHeight: 1.4
+                                            }}
                                         >
-                                            <Translate content="gateway.deposit" />
-                                        </a>
-                                    </li>
-                                ) : null}
-                                {coin.withdrawalAllowed ? (
-                                    <li
-                                        className={
-                                            !isDeposit ? "is-active" : ""
-                                        }
-                                    >
-                                        <a
-                                            onClick={this.changeAction.bind(
-                                                this,
-                                                "withdraw"
-                                            )}
-                                        >
-                                            <Translate content="gateway.withdraw" />
-                                        </a>
-                                    </li>
-                                ) : null}
-                            </ul>
-                        </div>
+                                            {info.message}
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div>
+                                <label
+                                    style={{minHeight: "2rem"}}
+                                    className="left-label"
+                                >
+                                    <Translate content="gateway.gateway_text" />:
+                                </label>
+                                <div style={{paddingBottom: 15}}>
+                                    <ul className="button-group segmented no-margin">
+                                        {coin.depositAllowed ? (
+                                            <li
+                                                className={
+                                                    isDeposit ? "is-active" : ""
+                                                }
+                                            >
+                                                <a
+                                                    onClick={this.changeAction.bind(
+                                                        this,
+                                                        "deposit"
+                                                    )}
+                                                >
+                                                    <Translate content="gateway.deposit" />
+                                                </a>
+                                            </li>
+                                        ) : null}
+                                        {coin.withdrawalAllowed ? (
+                                            <li
+                                                className={
+                                                    !isDeposit
+                                                        ? "is-active"
+                                                        : ""
+                                                }
+                                            >
+                                                <a
+                                                    onClick={this.changeAction.bind(
+                                                        this,
+                                                        "withdraw"
+                                                    )}
+                                                >
+                                                    <Translate content="gateway.withdraw" />
+                                                </a>
+                                            </li>
+                                        ) : null}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 {!coin ? null : (
                     <div>
-                        <div style={{marginBottom: 15}}>
-                            <CryptoBridgeGatewayDepositRequest
-                                key={`${coin.symbol}`}
-                                gateway={provider}
-                                issuer_account={coinIssuer.name}
-                                account={account}
-                                deposit_asset={assetUtils.getCleanAssetSymbol(
-                                    coin.backingCoinType
-                                )}
-                                deposit_asset_name={coin.name}
-                                deposit_coin_type={coin.backingCoinType.toLowerCase()}
-                                deposit_account={coin.depositAccount}
-                                deposit_wallet_type={coin.walletType}
-                                receive_asset={coin.symbol}
-                                receive_coin_type={coin.symbol.toLowerCase()}
-                                supports_output_memos={
-                                    coin.supportsMemos === true
-                                }
-                                gate_fee={parseFloat(coin.gateFee || 0)}
-                                min_amount={coin.minAmount}
-                                asset_precision={coin.precision}
-                                action={this.state.action}
-                                is_available={coin.isAvailable}
-                                /* CryptoBridge */
-                                required_confirmations={
-                                    coin.requiredConfirmations
-                                }
-                                deposit_fee_enabled={
-                                    coin.depositFeeEnabled === true
-                                }
-                                deposit_fee_time_frame={
-                                    coin.depositFeeTimeframe
-                                }
-                                deposit_fee_percentage={
-                                    coin.depositFeePercentage
-                                }
-                                deposit_fee_minimum={coin.depositFeeMinimum}
-                                deposit_fee_percentage_low_amounts={
-                                    coin.depositFeePercentageLowAmounts
-                                }
-                                coin_info={coin.info}
-                            />
+                        <div
+                            style={{
+                                marginBottom: 15,
+                                marginTop: coinIsDisabled ? 30 : 0
+                            }}
+                        >
+                            {coinIsDisabled ? null : (
+                                <CryptoBridgeGatewayDepositRequest
+                                    key={`${coin.symbol}`}
+                                    gateway={provider}
+                                    issuer_account={coinIssuer.name}
+                                    account={account}
+                                    deposit_asset={assetUtils.getCleanAssetSymbol(
+                                        coin.backingCoinType
+                                    )}
+                                    deposit_asset_name={coin.name}
+                                    deposit_coin_type={coin.backingCoinType.toLowerCase()}
+                                    deposit_account={coin.depositAccount}
+                                    deposit_wallet_type={coin.walletType}
+                                    receive_asset={coin.symbol}
+                                    receive_coin_type={coin.symbol.toLowerCase()}
+                                    supports_output_memos={
+                                        coin.supportsMemos === true
+                                    }
+                                    gate_fee={parseFloat(coin.gateFee || 0)}
+                                    min_amount={coin.minAmount}
+                                    asset_precision={coin.precision}
+                                    action={this.state.action}
+                                    is_available={coin.isAvailable}
+                                    /* CryptoBridge */
+                                    required_confirmations={
+                                        coin.requiredConfirmations
+                                    }
+                                    deposit_fee_enabled={
+                                        coin.depositFeeEnabled === true
+                                    }
+                                    deposit_fee_time_frame={
+                                        coin.depositFeeTimeframe
+                                    }
+                                    deposit_fee_percentage={
+                                        coin.depositFeePercentage
+                                    }
+                                    deposit_fee_minimum={coin.depositFeeMinimum}
+                                    deposit_fee_percentage_low_amounts={
+                                        coin.depositFeePercentageLowAmounts
+                                    }
+                                    coin_info={coin.info}
+                                />
+                            )}
                             <label className="left-label">Support</label>
                             <div>
                                 <Translate content="cryptobridge.gateway.support_block" />
@@ -300,16 +347,13 @@ class CryptoBridgeGateway extends React.Component {
     }
 }
 
-export default connect(
-    CryptoBridgeGateway,
-    {
-        listenTo() {
-            return [SettingsStore];
-        },
-        getProps() {
-            return {
-                viewSettings: SettingsStore.getState().viewSettings
-            };
-        }
+export default connect(CryptoBridgeGateway, {
+    listenTo() {
+        return [SettingsStore];
+    },
+    getProps() {
+        return {
+            viewSettings: SettingsStore.getState().viewSettings
+        };
     }
-);
+});

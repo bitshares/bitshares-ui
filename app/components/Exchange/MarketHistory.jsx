@@ -1,5 +1,5 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import Immutable from "immutable";
 import Ps from "perfect-scrollbar";
 import Translate from "react-translate-component";

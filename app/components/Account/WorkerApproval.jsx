@@ -7,13 +7,14 @@ import LinkToAccountById from "../Utility/LinkToAccountById";
 import BindToChainState from "../Utility/BindToChainState";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import Icon from "components/Icon/Icon";
+import PropTypes from "prop-types";
 
 class WorkerApproval extends React.Component {
     static propTypes = {
         worker: ChainTypes.ChainObject.isRequired,
-        onAddVote: React.PropTypes.func, /// called with vote id to add
-        onRemoveVote: React.PropTypes.func, /// called with vote id to remove
-        vote_ids: React.PropTypes.object /// Set of items currently being voted for
+        onAddVote: PropTypes.func, /// called with vote id to add
+        onRemoveVote: PropTypes.func, /// called with vote id to remove
+        vote_ids: PropTypes.object /// Set of items currently being voted for
     };
 
     static defaultProps = {
@@ -119,7 +120,7 @@ class WorkerApproval extends React.Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon name="share" />
+                            <Icon name="share" title="icons.share" />
                         </a>
                     </div>
                     <div
@@ -209,9 +210,14 @@ class WorkerApproval extends React.Component {
                                     ? "checkmark-circle"
                                     : "minus-circle"
                             }
+                            title={
+                                approvalState
+                                    ? "icons.checkmark_circle.approved"
+                                    : "icons.minus_circle.disapproved"
+                            }
                         />
                     ) : (
-                        <Icon name="locked" />
+                        <Icon name="locked" title="icons.locked.action" />
                     )}
                 </td>
             </tr>

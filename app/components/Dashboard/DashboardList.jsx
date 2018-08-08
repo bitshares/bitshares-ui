@@ -15,6 +15,8 @@ import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AccountStore from "stores/AccountStore";
 import counterpart from "counterpart";
 import WalletDb from "stores/WalletDb";
+import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
 
 const starSort = function(a, b, inverse, starredAccounts) {
     let aName = a.get("name");
@@ -38,10 +40,6 @@ const starSort = function(a, b, inverse, starredAccounts) {
 };
 
 class DashboardList extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
-    };
-
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired,
         ignoredAccounts: ChainTypes.ChainAccountsList
@@ -93,14 +91,14 @@ class DashboardList extends React.Component {
     }
 
     _goAccount(name, tab) {
-        this.context.router.push(`/account/${name}`);
+        this.props.history.push(`/account/${name}`);
         SettingsActions.changeViewSetting({
             overviewTab: tab
         });
     }
 
     _createAccount() {
-        this.context.router.push("/create-account/wallet");
+        this.props.history.push("/create-account/wallet");
     }
 
     _onFilter(e) {
@@ -295,7 +293,11 @@ class DashboardList extends React.Component {
                                     isStarred
                                 )}
                             >
-                                <Icon className={starClass} name="fi-star" />
+                                <Icon
+                                    className={starClass}
+                                    name="fi-star"
+                                    title="icons.fi_star.account"
+                                />
                             </td>
                             {isContactsList
                                 ? (isHiddenAccountsList && (
@@ -305,7 +307,10 @@ class DashboardList extends React.Component {
                                               accountName
                                           )}
                                       >
-                                          <Icon name="plus-circle" />
+                                          <Icon
+                                              name="plus-circle"
+                                              title="icons.plus_circle.add_contact"
+                                          />
                                       </td>
                                   )) || (
                                       <td
@@ -314,7 +319,10 @@ class DashboardList extends React.Component {
                                               accountName
                                           )}
                                       >
-                                          <Icon name="minus-circle" />
+                                          <Icon
+                                              name="minus-circle"
+                                              title="icons.minus_circle.remove_contact"
+                                          />
                                       </td>
                                   )
                                 : null}
@@ -483,11 +491,15 @@ class DashboardList extends React.Component {
                                     <Icon
                                         className="grey-star"
                                         name="fi-star"
+                                        title="icons.fi_star.sort_accounts"
                                     />
                                 </th>
                                 {isContactsList ? (
                                     <th>
-                                        <Icon name="user" />
+                                        <Icon
+                                            name="user"
+                                            title="icons.user.account"
+                                        />
                                     </th>
                                 ) : null}
                                 <th style={{textAlign: "left"}}>ID</th>
@@ -551,6 +563,7 @@ class AccountsListWrapper extends React.Component {
         return <DashboardList {...this.props} />;
     }
 }
+AccountsListWrapper = withRouter(AccountsListWrapper);
 
 export default connect(AccountsListWrapper, {
     listenTo() {

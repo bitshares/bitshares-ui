@@ -3,11 +3,12 @@ import AccountStore from "stores/AccountStore";
 import ChainTypes from "components/Utility/ChainTypes";
 import AccountSelect from "components/Forms/AccountSelect";
 import BindToChainState from "components/Utility/BindToChainState";
+import PropTypes from "prop-types";
 
 class MyAccounts extends Component {
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList.isRequired,
-        onChange: React.PropTypes.func.isRequired
+        onChange: PropTypes.func.isRequired
     };
 
     render() {
@@ -33,4 +34,4 @@ class MyAccounts extends Component {
     }
 }
 
-export default BindToChainState(MyAccounts, {keep_updating: true});
+export default BindToChainState(MyAccounts);

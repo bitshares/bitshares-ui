@@ -1,7 +1,7 @@
 import React from "react";
-import {PropTypes} from "react";
+import PropTypes from "prop-types";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link as RealLink} from "react-router/es";
+import {Link as RealLink} from "react-router-dom";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import classNames from "classnames";
@@ -19,6 +19,16 @@ import ProposedOperation from "./ProposedOperation";
 import {ChainTypes} from "bitsharesjs/es";
 let {operations} = ChainTypes;
 import ReactTooltip from "react-tooltip";
+import moment from "moment";
+import {
+    Link,
+    DirectLink,
+    Element,
+    Events,
+    animateScroll as scroll,
+    scrollSpy,
+    scroller
+} from "react-scroll";
 import {AccountStakingInfo} from "../Account/AccountStakeCreateNew";
 
 require("./operations.scss");
@@ -44,7 +54,17 @@ class OpType extends React.Component {
         return (
             <tr>
                 <td>
-                    <span className={labelClass}>{trxType}</span>
+                    <span className={labelClass}>
+                        {trxType}
+                        {this.props.txIndex > 0 ? (
+                            <span>
+                                <Translate content="explorer.block.trx" />
+                                {this.props.txIndex}
+                            </span>
+                        ) : (
+                            ""
+                        )}
+                    </span>
                 </td>
                 <td />
             </tr>
@@ -83,6 +103,7 @@ class OperationTable extends React.Component {
                     <caption />
                     <tbody>
                         <OpType
+                            txIndex={this.props.txIndex}
                             type={this.props.type}
                             color={this.props.color}
                         />
@@ -158,8 +179,11 @@ class Transaction extends React.Component {
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
-                                <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" />
+                                <a onClick={this._toggleLock.bind(this)}>
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;
@@ -309,7 +333,7 @@ class Transaction extends React.Component {
                             </td>
                             <td>
                                 <FormattedDate
-                                    value={op[1].expiration}
+                                    value={moment.utc(op[1].expiration)}
                                     format="full"
                                     timeZoneName="short"
                                 />
@@ -971,8 +995,11 @@ class Transaction extends React.Component {
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;
-                                <a href onClick={this._toggleLock.bind(this)}>
-                                    <Icon name="locked" />
+                                <a onClick={this._toggleLock.bind(this)}>
+                                    <Icon
+                                        name="locked"
+                                        title="icons.locked.action"
+                                    />
                                 </a>
                             </td>
                         ) : null;
@@ -1946,6 +1973,99 @@ class Transaction extends React.Component {
 
                     break;
 
+                case "asset_claim_pool":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="account.name"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById asset={op[1].asset_id} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.amount"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    amount={op[1].amount_to_claim.amount}
+                                    asset={op[1].amount_to_claim.asset_id}
+                                />
+                            </td>
+                        </tr>
+                    );
+                    break;
+
+                case "asset_update_issuer":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.from"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="transfer.to"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].new_issuer} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAssetById
+                                    asset={op[1].asset_to_update}
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    break;
+
                 default:
                     console.log("unimplemented op:", op);
 
@@ -1967,6 +2087,7 @@ class Transaction extends React.Component {
 
             info.push(
                 <OperationTable
+                    txIndex={this.props.index}
                     key={opIndex}
                     opCount={opCount}
                     index={opIndex}
@@ -1979,12 +2100,7 @@ class Transaction extends React.Component {
             );
         });
 
-        return (
-            <div>
-                {/*     <h5><Translate component="span" content="explorer.block.trx" /> #{index + 1}</h5> */}
-                {info}
-            </div>
-        );
+        return <div>{info}</div>;
     }
 }
 

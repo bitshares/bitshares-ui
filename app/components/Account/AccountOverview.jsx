@@ -15,7 +15,7 @@ import SettingsActions from "actions/SettingsActions";
 import assetUtils from "common/asset_utils";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import EquivalentPrice from "../Utility/EquivalentPrice";
 import LinkToAssetById from "../Utility/LinkToAssetById";
 import utils from "common/utils";
@@ -105,9 +105,9 @@ class AccountOverview extends React.Component {
             if (aRef && bRef) {
                 let aPrice = aRef.getFinalPrice(true);
                 let bPrice = bRef.getFinalPrice(true);
-                if (!aPrice && bPrice) return 1;
-                if (aPrice && !bPrice) return -1;
-                if (!aPrice && !bPrice)
+                if (aPrice === null && bPrice !== null) return 1;
+                if (aPrice !== null && bPrice === null) return -1;
+                if (aPrice === null && bPrice === null)
                     return this.sortFunctions.alphabetic(a, b, true);
                 return this.state.sortDirection
                     ? aPrice - bPrice
@@ -178,10 +178,6 @@ class AccountOverview extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return (
             !utils.are_equal_shallow(
-                nextProps.balanceAssets,
-                this.props.balanceAssets
-            ) ||
-            !utils.are_equal_shallow(
                 nextProps.backedCoins,
                 this.props.backedCoins
             ) ||
@@ -235,11 +231,6 @@ class AccountOverview extends React.Component {
         return render ? <span>&nbsp;|&nbsp;</span> : null;
     }
 
-    _onNavigate(route, e) {
-        e.preventDefault();
-        this.props.router.push(route);
-    }
-
     triggerSend(asset) {
         this.setState({send_asset: asset}, () => {
             if (this.send_modal) this.send_modal.show();
@@ -262,6 +253,7 @@ class AccountOverview extends React.Component {
                         <PulseIcon
                             onIcon="dollar"
                             offIcon="dollar-green"
+                            title="icons.dollar.buy"
                             duration={1000}
                             className="icon-14px"
                         />
@@ -279,7 +271,11 @@ class AccountOverview extends React.Component {
                             false
                         )}
                     >
-                        <Icon name="dollar" className="icon-14px" />
+                        <Icon
+                            name="dollar"
+                            title="icons.dollar.buy"
+                            className="icon-14px"
+                        />
                     </a>
                 </span>
             ) : (
@@ -319,7 +315,11 @@ class AccountOverview extends React.Component {
                             this.refs[modalRef].show();
                         }}
                     >
-                        <Icon name="dollar" className="icon-14px" />
+                        <Icon
+                            name="dollar"
+                            title="icons.dollar.borrow"
+                            className="icon-14px"
+                        />
                     </a>
                 )
             };
@@ -354,18 +354,30 @@ class AccountOverview extends React.Component {
             /* Table content */
             directMarketLink = notCore ? (
                 <Link to={`/market/${asset.get("symbol")}_${preferredMarket}`}>
-                    <Icon name="trade" className="icon-14px" />
+                    <Icon
+                        name="trade"
+                        title="icons.trade.trade"
+                        className="icon-14px"
+                    />
                 </Link>
             ) : notCorePrefUnit ? (
                 <Link to={`/market/${asset.get("symbol")}_${preferredUnit}`}>
-                    <Icon name="trade" className="icon-14px" />
+                    <Icon
+                        name="trade"
+                        title="icons.trade.trade"
+                        className="icon-14px"
+                    />
                 </Link>
             ) : (
                 emptyCell
             );
             transferLink = (
                 <a onClick={this.triggerSend.bind(this, asset.get("id"))}>
-                    <Icon name="transfer" className="icon-14px" />
+                    <Icon
+                        name="transfer"
+                        title="icons.transfer"
+                        className="icon-14px"
+                    />
                 </a>
             );
 
@@ -376,11 +388,12 @@ class AccountOverview extends React.Component {
 
             /* Popover content */
             settleLink = (
-                <a
-                    href
-                    onClick={this._onSettleAsset.bind(this, asset.get("id"))}
-                >
-                    <Icon name="settle" className="icon-14px" />
+                <a onClick={this._onSettleAsset.bind(this, asset.get("id"))}>
+                    <Icon
+                        name="settle"
+                        title="icons.settle"
+                        className="icon-14px"
+                    />
                 </a>
             );
 
@@ -456,6 +469,7 @@ class AccountOverview extends React.Component {
                                 <Icon
                                     style={{cursor: "pointer"}}
                                     name="deposit"
+                                    title="icons.deposit.deposit"
                                     className="icon-14x"
                                     onClick={this._showDepositModal.bind(
                                         this,
@@ -485,6 +499,7 @@ class AccountOverview extends React.Component {
                                 >
                                     <Icon
                                         name="withdraw"
+                                        title="icons.withdraw"
                                         className="icon-14px"
                                     />
                                 </a>
@@ -518,6 +533,11 @@ class AccountOverview extends React.Component {
                                     includeAsset
                                         ? "cross-circle"
                                         : "plus-circle"
+                                }
+                                title={
+                                    includeAsset
+                                        ? "icons.cross_circle.hide_asset"
+                                        : "icons.plus_circle.show_asset"
                                 }
                                 className="icon-14px"
                             />
@@ -581,14 +601,20 @@ class AccountOverview extends React.Component {
                             market = "USD";
                         let preferredMarket = market
                             ? market
-                            : core_asset ? core_asset.get("symbol") : "BTS";
+                            : core_asset
+                                ? core_asset.get("symbol")
+                                : "BTS";
                         let directMarketLink = notCore ? (
                             <Link
                                 to={`/market/${asset.get(
                                     "symbol"
                                 )}_${preferredMarket}`}
                             >
-                                <Icon name="trade" className="icon-14px" />
+                                <Icon
+                                    name="trade"
+                                    title="icons.trade.trade"
+                                    className="icon-14px"
+                                />
                             </Link>
                         ) : (
                             emptyCell
@@ -636,6 +662,7 @@ class AccountOverview extends React.Component {
                                                 >
                                                     <Icon
                                                         name="dollar"
+                                                        title="icons.dollar.buy"
                                                         className="icon-14px"
                                                     />
                                                 </a>
@@ -651,6 +678,7 @@ class AccountOverview extends React.Component {
                                                 <Icon
                                                     style={{cursor: "pointer"}}
                                                     name="deposit"
+                                                    title="icons.deposit.deposit"
                                                     className="icon-14x"
                                                     onClick={this._showDepositModal.bind(
                                                         this,
@@ -710,6 +738,11 @@ class AccountOverview extends React.Component {
                                                     includeAsset
                                                         ? "cross-circle"
                                                         : "plus-circle"
+                                                }
+                                                title={
+                                                    includeAsset
+                                                        ? "icons.cross_circle.hide_asset"
+                                                        : "icons.plus_circle.show_asset"
                                                 }
                                                 className="icon-14px"
                                             />
@@ -1197,44 +1230,6 @@ class AccountOverview extends React.Component {
                                 </AccountOrders>
                             </Tab>
 
-                            {/*<Tab*/}
-                            {/*title="account.collaterals"*/}
-                            {/*subText={*/}
-                            {/*<span*/}
-                            {/*className={*/}
-                            {/*this.state.globalMarginStatus*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*{marginValue}*/}
-                            {/*</span>*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*<div className="content-block">*/}
-                            {/*<div className="generic-bordered-box">*/}
-                            {/*<MarginPositions*/}
-                            {/*preferredUnit={preferredUnit}*/}
-                            {/*className="dashboard-table"*/}
-                            {/*callOrders={call_orders}*/}
-                            {/*account={account}*/}
-                            {/*>*/}
-                            {/*<tr className="total-value">*/}
-                            {/*<td>{totalValueText}</td>*/}
-                            {/*<td />*/}
-                            {/*<td>{debtValue}</td>*/}
-                            {/*<td className="column-hide-medium">*/}
-                            {/*{collateralValue}*/}
-                            {/*</td>*/}
-                            {/*<td />*/}
-                            {/*<td>{marginValue}</td>*/}
-                            {/*<td className="column-hide-small" />*/}
-                            {/*<td className="column-hide-small" />*/}
-                            {/*<td colSpan="3" />*/}
-                            {/*</tr>*/}
-                            {/*</MarginPositions>*/}
-                            {/*</div>*/}
-                            {/*</div>*/}
-                            {/*</Tab>*/}
-
                             <Tab title="account.activity">
                                 <RecentTransactions
                                     accountsList={Immutable.fromJS([
@@ -1253,11 +1248,11 @@ class AccountOverview extends React.Component {
                             account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"
-                                    subText={
+                                    subText={String(
                                         account.get("proposals")
                                             ? account.get("proposals").size
                                             : 0
-                                    }
+                                    )}
                                 >
                                     <Proposals
                                         className="dashboard-table"
@@ -1325,10 +1320,6 @@ class AccountOverview extends React.Component {
 }
 
 AccountOverview = AssetWrapper(AccountOverview, {propNames: ["core_asset"]});
-AccountOverview = AssetWrapper(AccountOverview, {
-    propNames: ["balanceAssets"],
-    asList: true
-});
 
 export default class AccountOverviewWrapper extends React.Component {
     render() {

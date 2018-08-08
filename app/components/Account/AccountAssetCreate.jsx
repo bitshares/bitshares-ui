@@ -17,6 +17,7 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import AmountSelector from "../Utility/AmountSelector";
 import assetConstants from "chain/asset_constants";
 import {estimateFee} from "common/trxHelper";
+import PropTypes from "prop-types";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -25,7 +26,7 @@ let GRAPHENE_MAX_SHARE_SUPPLY = new big(
 class BitAssetOptions extends React.Component {
     static propTypes = {
         backingAsset: ChainTypes.ChainAsset.isRequired,
-        isUpdate: React.PropTypes.bool
+        isUpdate: PropTypes.bool
     };
 
     static defaultProps = {
@@ -55,8 +56,9 @@ class BitAssetOptions extends React.Component {
                     !asset.getIn(["bitasset", "is_prediction_market"]))
             ) {
                 if (
+                    this.props.isPredictionMarket &&
                     asset.get("precision") !==
-                    parseInt(this.props.assetPrecision, 10)
+                        parseInt(this.props.assetPrecision, 10)
                 ) {
                     this.setState({
                         error: counterpart.translate(
@@ -476,7 +478,7 @@ class AccountAssetCreate extends React.Component {
                 // Enforce uppercase
                 const symbol = target.value.toUpperCase();
                 // Enforce characters
-                let regexp = new RegExp("^[.A-Z]+$");
+                let regexp = new RegExp("^[.A-Z0-9]+$");
                 if (symbol !== "" && !regexp.test(symbol)) {
                     break;
                 }
@@ -750,7 +752,9 @@ class AccountAssetCreate extends React.Component {
                 this._onUpdateDescription.bind(this, "visible"),
                 update.description.visible
                     ? false
-                    : update.description.visible === false ? true : false
+                    : update.description.visible === false
+                        ? true
+                        : false
             )
         );
 
@@ -1211,6 +1215,9 @@ class AccountAssetCreate extends React.Component {
                                         }
                                         assetPrecision={update.precision}
                                         assetSymbol={update.symbol}
+                                        isPredictionMarket={
+                                            is_prediction_market
+                                        }
                                     />
                                 </Tab>
                             ) : null}

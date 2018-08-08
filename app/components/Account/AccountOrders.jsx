@@ -272,19 +272,19 @@ class AccountOrders extends React.Component {
                         />
                     ) : null}
                     {selectedOrders.length ? (
-                        <button className="button">
-                            <Translate
-                                content="account.reset_orders"
-                                onClick={this.resetSelected.bind(this)}
-                            />
+                        <button
+                            className="button"
+                            onClick={this.resetSelected.bind(this)}
+                        >
+                            <Translate content="account.reset_orders" />
                         </button>
                     ) : null}
                     {selectedOrders.length ? (
-                        <button className="button">
-                            <Translate
-                                content="account.submit_orders"
-                                onClick={this.cancelSelected.bind(this)}
-                            />
+                        <button
+                            className="button"
+                            onClick={this.cancelSelected.bind(this)}
+                        >
+                            <Translate content="account.submit_orders" />
                         </button>
                     ) : null}
                 </div>

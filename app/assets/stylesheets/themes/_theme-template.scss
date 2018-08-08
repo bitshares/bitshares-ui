@@ -88,6 +88,31 @@
         font-size: 12px;
     }
 
+    #unlock_wallet_modal2 {
+        .upload-button {
+            border-color: $border-color;
+            span {
+                color: $settings-select-color;
+            }
+        }
+
+        .login-select {
+            color: $primary-text-color;
+            border-color: $border-color;
+            background: $input-background
+                url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUEEhssVJbYaQAAAHVJREFUGNN1z7ERgkAUBNAHnOUQGdCDRRAaGlwFVkDgGBFeEfZAaA2MY2AL3GCogvz47e78wnVOsl4y2LpWo3IsZb0gajWbMIiyvvI6P9VGQVQb3T1WcNJJhhIkg0n3s7CAUNjPuz9NN8HhG67xJ3AyuSyffgPoxSqQfV+TFgAAAABJRU5ErkJggg==")
+                right 10px center no-repeat;
+        }
+
+        .login-label {
+            color: $primary-text-color;
+        }
+
+        .themed-input {
+            background-color: $input-background;
+        }
+    }
+
     .spinner-button-circle .circle-wrapper {
         display: inline-block;
         vertical-align: middle;
@@ -146,6 +171,18 @@
     .label.warning {
         color: $warning-color;
         border-color: $warning-color;
+    }
+
+    .nested-approval-state {
+        .tooltip {
+            text-decoration: underline dotted $primary-text-color;
+        }
+        .tooltip.error {
+            color: $alert-color;
+        }
+        .tooltip.warning {
+            color: $warning-color;
+        }
     }
 
     .label.cancel,
@@ -1085,6 +1122,12 @@
 
     .pagination {
         background-color: $panel-bg-color;
+
+        > li {
+            &.current {
+                background-color: $light-panel-bg-color;
+            }
+        }
     }
 
     .invoice {
@@ -1129,14 +1172,14 @@
     }
 
     .icon.success {
-        padding-right: 1rem;
+        padding-right: 0.5rem;
         > svg > path {
             fill: $success-color;
         }
     }
 
     .icon.error {
-        padding-right: 1rem;
+        padding-right: 0.5rem;
         > svg > path {
             fill: $warning-color;
         }
@@ -1531,6 +1574,10 @@
                 color: $negative-color !important;
             }
         }
+
+        &.clickable:hover {
+            background-color: lighten($panel-bg-color, 4%);
+        }
     }
 
     .stat-text {
@@ -1605,7 +1652,6 @@
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
 
-    .indicators,
     li.stat.clickable {
         color: $secondary-text-color;
         // &:hover{
@@ -1742,13 +1788,6 @@
             border-bottom-color: transparent;
             color: $secondary-text-color;
         }
-    }
-
-    .react-stockcharts-tooltip {
-        fill: $primary-text-color;
-    }
-    .react-stockcharts-tooltip-label {
-        fill: $link-text-color;
     }
 
     div.custom-dropdown-content {
@@ -1935,6 +1974,9 @@
                 .icon.locked > svg > path {
                     fill: $button-bg-color;
                 }
+                .icon.unlocked > svg > path {
+                    fill: $button-bg-color;
+                }
             }
             &.total-value {
                 td {
@@ -1958,6 +2000,10 @@
                     }
                 }
             }
+        }
+        > tfoot > tr > td {
+            text-align: center;
+            padding-top: 1rem;
         }
     }
 
@@ -2262,6 +2308,69 @@
             > option {
                 background-color: $light-panel-bg-color;
             }
+        }
+    }
+
+    .marketPicker {
+        background: $bg-color;
+        box-shadow: 2px 2px 5px darken($bg-color, 30%);
+        .results {
+            background: $input-background;
+            border: 1px solid $bg-color;
+        }
+    }
+
+    .qr-address-scanner {
+        &-btn {
+            background: #049cce;
+            height: 2.4rem;
+            border-radius: 0 5px 5px 0;
+            width: 40px;
+            span.icon {
+                background: transparent;
+            }
+            svg {
+                background: transparent;
+            }
+        }
+        &-divider {
+            margin: 24px 0;
+            height: 1px;
+            width: 100%;
+            background: $bg-color;
+        }
+        &-modal {
+        }
+        &-input-field {
+            border-radius: 5px 0 0 5px !important;
+        }
+
+        &-status {
+            font-size: 0.95rem;
+            margin: 24px;
+            &-title {
+                margin-bottom: 12px;
+                margin-top: 12px;
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+            &-address {
+                color: $success-color;
+            }
+            &-amount {
+                color: $success-color;
+            }
+        }
+
+        &-actions {
+            margin: 24px;
+        }
+
+        .modal {
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
     }
 }

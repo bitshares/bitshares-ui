@@ -301,7 +301,7 @@ export function requestDepositAddress({
                 reply.json().then(
                     json => {
                         delete depositRequests[body_string];
-                        // console.log( "reply: ", json )
+                        // console.log( "reply: ", json );
                         let address = {
                             address: json.inputAddress || "unknown",
                             memo: json.inputMemo,
@@ -310,14 +310,14 @@ export function requestDepositAddress({
                         if (stateCallback) stateCallback(address);
                     },
                     error => {
-                        // console.log( "error: ",error  );
+                        console.log("error: ", error);
                         delete depositRequests[body_string];
                         if (stateCallback) stateCallback(null);
                     }
                 );
             },
             error => {
-                // console.log( "error: ",error  );
+                console.log("error: ", error);
                 delete depositRequests[body_string];
                 if (stateCallback) stateCallback(null);
             }
@@ -344,12 +344,17 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
     );
 
     let allowed_outputs_by_input = {};
+    let additional_trading_pair_info = {};
     tradingPairs.forEach(pair => {
         if (!allowed_outputs_by_input[pair.inputCoinType])
             allowed_outputs_by_input[pair.inputCoinType] = {};
         allowed_outputs_by_input[pair.inputCoinType][
             pair.outputCoinType
         ] = true;
+        if (!additional_trading_pair_info[pair.inputCoinType])
+            additional_trading_pair_info[pair.inputCoinType] = [];
+
+        additional_trading_pair_info[pair.inputCoinType].push(pair);
     });
 
     let backedCoins = [];
@@ -381,6 +386,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 backingCoinType: !!gatewayStatus.singleWallet
                     ? inputCoin.backingCoinType.toUpperCase()
                     : outputCoin.walletSymbol,
+                minAmount: outputCoin.minAmount || 0,
+                maxAmount: outputCoin.maxAmount || 999999999,
                 symbol: inputCoin.walletSymbol,
                 supportsMemos: outputCoin.supportsOutputMemos,
                 depositAllowed: isDepositAllowed,
@@ -397,7 +404,9 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 depositFeeMinimum: outputCoin.depositFeeMinimum,
                 depositFeePercentageLowAmounts:
                     outputCoin.depositFeePercentageLowAmounts,
-                info: outputCoin.info
+                info: outputCoin.info,
+                tradingPairInfo:
+                    additional_trading_pair_info[outputCoin.coinType] || []
             });
         }
     });

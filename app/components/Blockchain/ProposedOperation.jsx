@@ -1,6 +1,6 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
@@ -15,33 +15,28 @@ import account_constants from "chain/account_constants";
 import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
+import PropTypes from "prop-types";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
 
-class TransactionLabel extends React.Component {
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.color !== this.props.color ||
-            nextProps.type !== this.props.type
-        );
-    }
-    render() {
-        let trxTypes = counterpart.translate("transaction.trxTypes");
-        let labelClass = classNames("label", this.props.color || "info");
-        return (
-            <span className={labelClass}>{trxTypes[ops[this.props.type]]}</span>
-        );
-    }
-}
+export const TransactionIDAndExpiry = ({id, expiration, style}) => {
+    const endDate = counterpart.localize(new Date(expiration), {
+        format: "short"
+    });
+    return (
+        <b style={style}>
+            <span>#{id} | </span>
+            <span>
+                <Translate content="proposal.expires" />: {endDate}
+            </span>
+        </b>
+    );
+};
 
 class Row extends React.Component {
-    static contextTypes = {
-        router: React.PropTypes.object.isRequired
-    };
-
     constructor(props) {
         super(props);
         this.showDetails = this.showDetails.bind(this);
@@ -49,34 +44,16 @@ class Row extends React.Component {
 
     showDetails(e) {
         e.preventDefault();
-        this.context.router.push(`/block/${this.props.block}`);
+        this.props.history.push(`/block/${this.props.block}`);
     }
 
     render() {
-        let {
-            block,
-            fee,
-            color,
-            type,
-            hideDate,
-            hideFee,
-            hideOpLabel
-        } = this.props;
+        let {id, fee, hideFee, hideExpiration, expiration} = this.props;
 
         fee.amount = parseInt(fee.amount, 10);
-        let endDate = counterpart.localize(new Date(this.props.expiration), {
-            format: "short"
-        });
 
         return (
             <div style={{padding: "5px 0", textAlign: "left"}}>
-                {hideOpLabel ? null : (
-                    <span className="left-td">
-                        <a href onClick={this.showDetails}>
-                            <TransactionLabel color={color} type={type} />
-                        </a>
-                    </span>
-                )}
                 <span>
                     {this.props.info}&nbsp;
                     {hideFee ? null : (
@@ -89,14 +66,19 @@ class Row extends React.Component {
                         </span>
                     )}
                 </span>
-                {this.props.expiration ? (
-                    <div style={{paddingTop: 5, fontSize: "0.85rem"}}>
-                        <span>#{this.props.id} | </span>
-                        <span>
-                            <Translate content="proposal.expires" />: {endDate}
-                        </span>
-                    </div>
-                ) : null}
+                {!hideExpiration &&
+                    this.props.expiration && (
+                        <TransactionIDAndExpiry
+                            id={id}
+                            expiration={expiration}
+                            style={{
+                                paddingTop: 5,
+                                fontSize: "0.85rem",
+                                paddingBottom: "0.5rem",
+                                display: "block"
+                            }}
+                        />
+                    )}
             </div>
         );
     }
@@ -114,12 +96,12 @@ class ProposedOperation extends React.Component {
     };
 
     static propTypes = {
-        op: React.PropTypes.array.isRequired,
-        current: React.PropTypes.string,
-        block: React.PropTypes.number,
-        hideDate: React.PropTypes.bool,
-        hideFee: React.PropTypes.bool,
-        csvExportMode: React.PropTypes.bool
+        op: PropTypes.array.isRequired,
+        current: PropTypes.string,
+        block: PropTypes.number,
+        hideDate: PropTypes.bool,
+        hideFee: PropTypes.bool,
+        csvExportMode: PropTypes.bool
     };
 
     // shouldComponentUpdate(nextProps) {
@@ -145,12 +127,14 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, current, block} = this.props;
+        let {op, current, block, hideExpiration} = this.props;
         let line = null,
             column = null,
             color = "info";
 
-        switch (ops[op[0]]) { // For a list of trx types, see chain_types.coffee
+        switch (
+            ops[op[0]] // For a list of trx types, see chain_types.coffee
+        ) {
             case "transfer":
                 let memoComponent = null;
 
@@ -174,11 +158,7 @@ class ProposedOperation extends React.Component {
                                 {
                                     type: "amount",
                                     value: op[1].amount,
-                                    arg: "amount",
-                                    decimalOffset:
-                                        op[1].amount.asset_id === "1.3.0"
-                                            ? 5
-                                            : null
+                                    arg: "amount"
                                 },
                                 {type: "account", value: op[1].to, arg: "to"}
                             ]}
@@ -576,14 +556,20 @@ class ProposedOperation extends React.Component {
                 color = "warning";
                 column = (
                     <span>
-                        <Translate
-                            component="span"
-                            content="proposal.asset_settle"
-                        />
-                        &nbsp;<FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
+                        <TranslateWithLinks
+                            string="proposal.asset_settle"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].account,
+                                    arg: "account"
+                                },
+                                {
+                                    type: "amount",
+                                    value: op[1].amount,
+                                    arg: "amount"
+                                }
+                            ]}
                         />
                     </span>
                 );
@@ -1098,14 +1084,20 @@ class ProposedOperation extends React.Component {
                             asset={op[1].amount_to_claim.asset_id}
                         >
                             {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="proposal.asset_claim_fees"
-                                    balance_amount={utils.format_asset(
-                                        op[1].amount_to_claim.amount,
-                                        asset
-                                    )}
-                                    asset={asset.get("symbol")}
+                                <TranslateWithLinks
+                                    string="transaction.asset_claim_fees"
+                                    keys={[
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount_to_claim,
+                                            arg: "balance_amount"
+                                        },
+                                        {
+                                            type: "asset",
+                                            value: asset.get("id"),
+                                            arg: "asset"
+                                        }
+                                    ]}
                                 />
                             )}
                         </BindToChainState.Wrapper>
@@ -1201,6 +1193,7 @@ class ProposedOperation extends React.Component {
                 hideOpLabel={this.props.hideOpLabel}
                 info={column}
                 expiration={this.props.expiration}
+                hideExpiration={hideExpiration}
             />
         ) : null;
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router/es";
+import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AssetWrapper from "../Utility/AssetWrapper";
@@ -8,7 +8,6 @@ import FormattedPrice from "../Utility/FormattedPrice";
 import AssetName from "../Utility/AssetName";
 import TimeAgo from "../Utility/TimeAgo";
 import HelpContent from "../Utility/HelpContent";
-import Icon from "../Icon/Icon";
 import assetUtils from "common/asset_utils";
 import utils from "common/utils";
 import FormattedTime from "../Utility/FormattedTime";
@@ -16,6 +15,10 @@ import {ChainStore} from "bitsharesjs/es";
 import {Apis} from "bitsharesjs-ws";
 import {Tabs, Tab} from "../Utility/Tabs";
 import {CallOrder, FeedPrice} from "common/MarketClasses";
+import Page404 from "../Page404/Page404";
+import FundFeePool from "../Account/FundFeePool";
+import AccountStore from "stores/AccountStore";
+import {connect} from "alt-react";
 
 class AssetFlag extends React.Component {
     render() {
@@ -151,7 +154,9 @@ class Asset extends React.Component {
 
     _assetType(asset) {
         return "bitasset" in asset
-            ? asset.bitasset.is_prediction_market ? "Prediction" : "Smart"
+            ? asset.bitasset.is_prediction_market
+                ? "Prediction"
+                : "Smart"
             : "Simple";
     }
 
@@ -234,10 +239,7 @@ class Asset extends React.Component {
         var issuer = ChainStore.getObject(asset.issuer, false, false);
         var issuerName = issuer ? issuer.get("name") : "";
 
-        var icon = <Icon name="asset" className="asset" size="4x" />;
-
         // Add <a to any links included in the description
-
         let description = assetUtils.parseDescription(
             asset.options.description
         );
@@ -254,7 +256,9 @@ class Asset extends React.Component {
         const core_asset = ChainStore.getAsset("1.3.0");
         let preferredMarket = description.market
             ? description.market
-            : core_asset ? core_asset.get("symbol") : "BTS";
+            : core_asset
+                ? core_asset.get("symbol")
+                : "BTS";
         if ("bitasset" in asset && asset.bitasset.is_prediction_market) {
             preferredMarket = ChainStore.getAsset(
                 asset.bitasset.options.short_backing_asset
@@ -584,6 +588,11 @@ class Asset extends React.Component {
                         </tr>
                     </tbody>
                 </table>
+                <FundFeePool
+                    asset={asset.symbol}
+                    funderAccountName={this.props.currentAccount}
+                    hideBalance
+                />
             </div>
         );
     }
@@ -1146,12 +1155,29 @@ class Asset extends React.Component {
     }
 }
 
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        const chainID = Apis.instance().chain_id;
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
+    }
+});
+
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]
 });
 
 class AssetContainer extends React.Component {
     render() {
+        if (this.props.asset === null) {
+            return <Page404 subtitle="asset_not_found_subtitle" />;
+        }
         let backingAsset = this.props.asset.has("bitasset")
             ? this.props.asset.getIn([
                   "bitasset",
@@ -1168,7 +1194,7 @@ AssetContainer = AssetWrapper(AssetContainer, {
 
 export default class AssetSymbolSplitter extends React.Component {
     render() {
-        let symbol = this.props.params.symbol;
+        let symbol = this.props.match.params.symbol.toUpperCase();
         return <AssetContainer {...this.props} asset={symbol} />;
     }
 }
