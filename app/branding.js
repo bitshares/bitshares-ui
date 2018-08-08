@@ -112,6 +112,7 @@ export function getMyMarketsQuotes() {
         "IOU.CNY",
         "KAPITAL",
         "KEXCOIN",
+        "MAI",
         "OBITS",
         "OCT",
         "OPEN.BTC",
