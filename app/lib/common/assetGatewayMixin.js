@@ -160,7 +160,7 @@ function gatewaySelector(args) {
     });
 
     return (
-        <div className="container-row">
+        <div>
             <div className="no-margin no-padding">
                 <section className="block-list">
                     <label className="left-label">

@@ -169,7 +169,7 @@ class Transaction extends React.Component {
                         );
 
                         memo = text ? (
-                            <td className="memo">{text}</td>
+                            <td className="memo" style={{wordBreak: "break-all"}}>{text}</td>
                         ) : !text && isMine ? (
                             <td>
                                 <Translate content="transfer.memo_unlock" />&nbsp;

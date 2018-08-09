@@ -357,7 +357,7 @@ class DepositModalContent extends DecimalChecker {
                                         className={"copyIcon"}
                                     />
                                 </div>
-                                <div style={{wordBreak: 'break-word'}}>
+                                <div style={{wordBreak: "break-word"}}>
                                     <Translate
                                         component="div"
                                         style={{
@@ -375,7 +375,7 @@ class DepositModalContent extends DecimalChecker {
                                     />
                                     <div
                                         className="modal__highlight"
-                                        style={{fontSize: "0.9rem"}}
+                                        style={{fontSize: "0.9rem", wordBreak: "break-all"}}
                                     >
                                         {depositAddress.address}
                                     </div>
@@ -389,7 +389,7 @@ class DepositModalContent extends DecimalChecker {
                                             className={"copyIcon"}
                                         />
                                     </div>
-                                    <div style={{wordBreak: 'break-word'}}>
+                                    <div>
                                         <Translate
                                             component="div"
                                             style={{
@@ -400,7 +400,7 @@ class DepositModalContent extends DecimalChecker {
                                             unsafe
                                             content="gateway.purchase_notice_memo"
                                         />
-                                        <div className="modal__highlight">
+                                        <div className="modal__highlight" style={{wordBreak: "break-all"}}>
                                             {depositAddress.memo}
                                         </div>
                                     </div>
