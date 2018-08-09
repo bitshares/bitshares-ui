@@ -1494,7 +1494,7 @@ class CitadelBridgeDepositRequest extends React.Component {
                     );
                 else
                     deposit_address_and_memo_element = (
-                        <span style={{wordBreak: "break-all"}}>
+                        <span>
                             {input_address_and_memo.address}
                         </span>
                     );
@@ -1541,7 +1541,7 @@ class CitadelBridgeDepositRequest extends React.Component {
                                     }
                                 />
                             </td>
-                            <td>
+                            <td style={{wordBreak: "break-all"}}>
                                 {deposit_address_and_memo_element}
                                 <br />
                                 {deposit_limit_element}
