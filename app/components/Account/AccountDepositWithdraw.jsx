@@ -132,11 +132,7 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
-    renderServices(
-        openLedgerGatewayCoins,
-        rudexGatewayCoins,
-        xbtsxGatewayCoins
-    ) {
+    renderServices(openLedgerGatewayCoins, rudexGatewayCoins, xbtsxGatewayCoins) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let {account} = this.props;
@@ -446,6 +442,8 @@ class AccountDepositWithdraw extends React.Component {
             rudexGatewayCoins,
             xbtsxGatewayCoins
         );
+
+
 
         let options = services.map((services_obj, index) => {
             return (
