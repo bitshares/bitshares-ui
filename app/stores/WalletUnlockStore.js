@@ -10,11 +10,13 @@ let ss = new ls(STORAGE_KEY);
 class WalletUnlockStore {
     constructor() {
         this.bindActions(WalletUnlockActions);
-        const storedSettings = ss.get("settings_v3");
-        let passwordLogin =
-            "passwordLogin" in storedSettings
-                ? storedSettings.passwordLogin
-                : true;
+
+        // can't use settings store due to possible initialization race conditions
+        const storedSettings = ss.get("settings_v4", {});
+        if (storedSettings.passwordLogin === undefined) {
+            storedSettings.passwordLogin = true;
+        }
+        let passwordLogin = storedSettings.passwordLogin;
         this.state = {
             locked: true,
             passwordLogin: passwordLogin

@@ -316,6 +316,8 @@
             "transfer_restricted":
                 "İhrac eden tüm transferleri onlaylamak zorunda",
             "update_owner": "Sahibi güncelle",
+            "update_owner_text":
+                "The asset owner may change the owner to another account using this form:",
             "visible": "Hide asset from search and markets",
             "white_list": "İzin listesi gerektiren dijital varlık",
             "witness_fed_asset":
@@ -624,17 +626,28 @@
             "title": "Hesaplar"
         },
         "asset": {
+            "actions": "Asset actions",
             "fee_pool": {
+                "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Ücretleri talep et",
+                "claim_pool_text":
+                    "The asset owner may withdraw funds from the fee pool using this form:",
                 "claim_text":
                     "Dijital varlık sahibi burada biriken ücretleri talep edebilir.",
                 "core_exchange_rate": "Esas Kur (CER)",
+                "fund": "Fund the fee pool",
                 "fund_text":
                     "Ücret havuzu %(asset)s olarak ödenen işlem ücretlerini %(core)s'e çevirerek   ödemek için kullanılır. Eğer ücret havuzunda para kalmazsa, ücretler artık %(asset)s olarak ödenemez ve %(core)s kullanılır ",
                 "pool_balance": "Havuz bakiyesi",
+                "pool_text":
+                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Ücret Havuzu",
                 "unclaimed_issuer_income": "Talep edilmemiş ihraççı geliri"
             },
+            "feed_producer": "Feed producer",
+            "feed_producer_text":
+                "Approved feed producers may publish a new feed using the form below:",
+            "info": "Asset info",
             "invalid": "The asset name %(name)s is invalid",
             "margin_positions": {
                 "title": "Margin positions"
@@ -878,7 +891,7 @@
         "convert_now": "Convert now",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
-		"deposit_from_wallet": "Deposit from wallet",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "Yatır",
         "deposit_address": "Deposit address",
         "deposit_history_status": {
@@ -946,7 +959,7 @@
             "support_block": "For support, please contact RuDEX at:",
             "under_construction": "Under Construction"
         },
-		"xbtsx": {
+        "xbtsx": {
             "coming_soon": "Coming soon",
             "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
             "min_amount_error": "Please enter number >= minimum",
@@ -1715,6 +1728,7 @@
             "account_whitelist": "İzin Listesine Alma",
             "all": "Tümünü göster",
             "assert": "İşlem beyanı",
+            "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Aktif ücretlerini talep et",
             "asset_claim_pool": "Claim asset fee pool",
             "asset_create": "Yeni Oluştur",
@@ -1821,6 +1835,11 @@
     "trx_error": {
         "expire":
             "Your transaction has expired without being confirmed, please try again later."
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Bu formu kullanarak satın alma siparişleri verin.",
