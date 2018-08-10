@@ -76,4 +76,5 @@ require("file-loader?name=asset-symbols/[name].png!./sth.png");
 require("file-loader?name=asset-symbols/[name].png!./kec.png");
 require("file-loader?name=asset-symbols/[name].png!./ltc.png");
 require("file-loader?name=asset-symbols/[name].png!./post.png");
-require("file-loader?name=asset-symbols/[name].png!./xbtsx.btc.png");
+require("file-loader?name=asset-symbols/[name].png!./bch.png");
+require("file-loader?name=asset-symbols/[name].png!./btg.png");
