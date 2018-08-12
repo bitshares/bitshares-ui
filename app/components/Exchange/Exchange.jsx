@@ -214,6 +214,7 @@ class Exchange extends React.Component {
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
             height: window.innerHeight,
             width: window.innerWidth,
+            hidePanel: false,
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             hidePanel: false,
@@ -1432,7 +1433,7 @@ class Exchange extends React.Component {
         ]);
 
         let actionCardIndex = 0;
-
+        
         let buyForm = isFrozen ? null : (
             <BuySell
                 key={`actionCard_${actionCardIndex++}`}
@@ -1618,7 +1619,7 @@ class Exchange extends React.Component {
                 key={`actionCard_${actionCardIndex++}`}
                 className="left-order-book no-overflow order-9"
                 style={{height: smallScreen ? 420 : "auto", padding: smallScreen ? 10 : 0}}
-                headerStyle={{paddingTop: 0, display: !smallScreen ? "display: none" : ""}}
+                headerStyle={{paddingTop: 0, width: "100%", display: !smallScreen ? "display: none" : ""}}
                 listHeight={
                     this.state.height
                         ? tabBuySell == "my-market"

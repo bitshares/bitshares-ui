@@ -51,7 +51,8 @@ let icons = [
     "filter",
     "info-circle-o",
     "zoom",
-    "people"
+    "people",
+    "fire"
 ];
 
 let iconsMap = {};
