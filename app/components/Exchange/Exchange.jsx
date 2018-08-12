@@ -7,6 +7,7 @@ import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import BuySell from "./BuySell";
 import MarketPicker from "./MarketPicker";
+import Settings from "./Settings";
 import utils from "common/utils";
 // import PriceChartD3 from "./PriceChartD3";
 import TradingViewPriceChart from "./TradingViewPriceChart";
@@ -891,21 +892,37 @@ class Exchange extends React.Component {
             showDepthChart: !this.state.showDepthChart
         });
 
+        this.refs.settingsModal.onClose();
+
         this.setState({showDepthChart: !this.state.showDepthChart});
     }
 
     _toggleMarketPicker(asset) {
         let showMarketPicker = !!asset ? true : false;
+        
+        if(showMarketPicker) {
+            this.refs.marketPicker.show();
+        }
+
         this.setState({
             showMarketPicker,
             marketPickerAsset: asset
         });
     }
 
+    _toggleSettings() {
+        if(!this.state.showSettings)
+            { this.refs.settingsModal.show(); }
+
+        this.setState({showSettings: !this.state.showSettings});
+    }
+
     _setExchangeLayout(value) {
         SettingsActions.changeViewSetting({
             exchangeLayout: value
         });
+
+        this.refs.settingsModal.onClose();
 
         this.setState({exchangeLayout: value});
     }
@@ -1599,9 +1616,9 @@ class Exchange extends React.Component {
         let myMarkets = (
             <MyMarkets
                 key={`actionCard_${actionCardIndex++}`}
-                className="left-order-book no-padding no-overflow"
-                style={{display: "block !important"}}
-                headerStyle={{paddingTop: 0, display: "none"}}
+                className="left-order-book no-overflow order-9"
+                style={{height: smallScreen ? 420 : "auto", padding: smallScreen ? 10 : 0}}
+                headerStyle={{paddingTop: 0, display: !smallScreen ? "display: none" : ""}}
                 listHeight={
                     this.state.height
                         ? tabBuySell == "my-market"
@@ -1625,7 +1642,7 @@ class Exchange extends React.Component {
                 current={`${quoteSymbol}_${baseSymbol}`}
                 location={this.props.location}
                 history={this.props.history}
-                activeTab={exchangeLayout < 3 ? tabVerticalPanel : tabBuySell}
+                activeTab={smallScreen ? "my-market" : exchangeLayout < 3 ? tabVerticalPanel : tabBuySell}
             />
         );
 
@@ -2003,13 +2020,8 @@ class Exchange extends React.Component {
                 actionCards.push(buySellTab);
             }
         } else {
-            if (exchangeLayout <= 2) {
-                actionCards.push(orderBook);
-            }
-
-            if (exchangeLayout >= 3) {
-                actionCards.push(orderBook);
-            }
+            actionCards.push(buySellTab);
+            actionCards.push(orderBook);
 
             if (exchangeLayout == 4) {
                 actionCards.push(marketHistory);
@@ -2029,6 +2041,8 @@ class Exchange extends React.Component {
             if (exchangeLayout <= 2) {
                 actionCards.push(buySellTab);
             }
+
+            actionCards.push(myMarkets);
         }
 
         return (
@@ -2049,34 +2063,40 @@ class Exchange extends React.Component {
                     latestPrice={latest && latest.getPrice()}
                     showDepthChart={showDepthChart}
                     marketStats={marketStats}
-                    exchangeLayout={exchangeLayout}
-                    onChangeLayout={this._setExchangeLayout.bind(this)}
-                    onToggleCharts={this._toggleCharts.bind(this)}
+                    selectedMarketPickerAsset={this.state.marketPickerAsset}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
+                    onToggleSettings={this._toggleSettings.bind(this)}
                     showVolumeChart={showVolumeChart}
-                    chartHeight={chartHeight}
-                    onChangeChartHeight={this.onChangeChartHeight.bind(this)}
                 />
 
                 <div className="grid-block page-layout market-layout">
-                    {!!this.state.showMarketPicker ? (
-                        <MarketPicker
-                            marketPickerAsset={this.state.marketPickerAsset}
-                            onToggleMarketPicker={this._toggleMarketPicker.bind(
-                                this
-                            )}
-                            {...this.props}
-                        />
-                    ) : null}
+                    <MarketPicker
+                        ref="marketPicker"
+                        modalId="marketPicker"
+                        marketPickerAsset={this.state.marketPickerAsset}
+                        onToggleMarketPicker={this._toggleMarketPicker.bind(
+                            this
+                        )}
+                        {...this.props}
+                    />
+                    <Settings 
+                        ref="settingsModal"
+                        modalId="settingsModal"
+                        exchangeLayout={exchangeLayout}    
+                        showDepthChart={showDepthChart}
+                        chartHeight={chartHeight}
+                        onToggleSettings={this._toggleSettings.bind(this)}
+                        onChangeChartHeight={this.onChangeChartHeight.bind(this)}
+                        onChangeLayout={this._setExchangeLayout.bind(this)}
+                        onToggleCharts={this._toggleCharts.bind(this)}
+                    />
+
                     <AccountNotifications />
                     {/* Main vertical block with content */}
 
                     {/* Left Column - Open Orders */}
                     {exchangeLayout == 1 ? (
-                        <div
-                            className="grid-block left-column shrink no-overflow"
-                            style={{height: "100%"}}
-                        >
+                        <div className="grid-block left-column shrink no-overflow">
                             {isPanelActive ? verticalPanel : null}
                             {verticalPanelToggle}
                         </div>

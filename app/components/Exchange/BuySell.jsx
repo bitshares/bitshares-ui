@@ -333,7 +333,7 @@ class BuySell extends React.Component {
                             <TranslateWithLinks
                                 string="exchange.buysell_formatter"
                                 noLink
-                                noTip={false}
+                                noTip
                                 keys={[
                                     {
                                         type: "asset",
@@ -469,7 +469,7 @@ class BuySell extends React.Component {
                     >
                         <div className="grid-block no-overflow wrap shrink">
                             <div className={containerClass} style={{paddingRight: 10}}>
-                                <div>
+                                <div className="inputAddon">
                                     <div style={{paddingBottom: 6}}>
                                         <Translate content="exchange.price" />
                                         <span style={{float: "right"}}>
@@ -490,7 +490,7 @@ class BuySell extends React.Component {
                                         </span>
                                     </div>
                                     
-                                    <Input defaultValue="0.0" id={`${type}Price`} value={price} onChange={priceChange} addonAfter={
+                                    <Input defaultValue="0" id={`${type}Price`} value={price} onChange={priceChange} addonAfter={
                                         <span>
                                             <AssetName
                                                 dataPlace="right"
@@ -504,7 +504,7 @@ class BuySell extends React.Component {
                                         </span>} 
                                     />
                                 </div>
-                                <div>
+                                <div className="inputAddon">
                                     <div style={{paddingBottom: 6}}><Translate content="transfer.amount" />
                                         <span style={{float: "right"}}>
                                             <span
@@ -540,7 +540,7 @@ class BuySell extends React.Component {
                                 
                             </div>
                             <div className={containerClass} style={{paddingRight: 10}}>
-                                <div>
+                                <div className="inputAddon">
                                     <div style={{paddingBottom: 6}}><Translate content="exchange.total" /></div>
                                     <Input 
                                         defaultValue="0.0" 
@@ -555,36 +555,33 @@ class BuySell extends React.Component {
                                         } 
                                     />
                                 </div>
-                                <div>
+                                <div className="inputAddon">
                                     <div style={{paddingBottom: 6}}><Translate content="transfer.fee" /></div>
-                                    <Input.Group>
-                                        <Input 
-                                            defaultValue="0.0" 
-                                            id={`${type}Fee`}
-                                            value={
-                                                !hasFeeBalance
-                                                    ? counterpart.translate(
-                                                            "transfer.errors.insufficient"
-                                                        )
-                                                    : fee.getAmount({real: true})
-                                            }
-                                            disabled
-                                            addonAfter={
-                                                <Select 
-                                                    disabled={feeAssets.length === 1}
-                                                    defaultValue={feeAssets.indexOf(
-                                                        this.props.feeAsset
-                                                    )}
-                                                    onChange={this.props.onChangeFeeAsset}
-                                                >
-                                                    {options}
-                                                </Select>
-                                            }
-                                        />
-                                        
-                                    </Input.Group>
+                                    <Input 
+                                        defaultValue="0.0" 
+                                        id={`${type}Fee`}
+                                        value={
+                                            !hasFeeBalance
+                                                ? counterpart.translate(
+                                                        "transfer.errors.insufficient"
+                                                    )
+                                                : fee.getAmount({real: true})
+                                        }
+                                        disabled
+                                        addonAfter={
+                                            <Select 
+                                                disabled={feeAssets.length === 1}
+                                                defaultValue={feeAssets.indexOf(
+                                                    this.props.feeAsset
+                                                )}
+                                                onChange={this.props.onChangeFeeAsset}
+                                            >
+                                                {options}
+                                            </Select>
+                                        }
+                                    />
                                 </div>
-                                <div>
+                                <div className="inputAddon">
                                     {marketFee}
                                 </div>
                             </div>
@@ -615,9 +612,9 @@ class BuySell extends React.Component {
                                     </div>
                                 </div>
                                 <div>
-                                    <div>
+                                    {/*<div>
                                         Advanced options...
-                                    </div>
+                                    </div>*/}
                                     <div >
                                         <Button 
                                             data-tip={disabledText ? disabledText : ""} 

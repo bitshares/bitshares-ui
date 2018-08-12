@@ -989,6 +989,7 @@
         "your_account": "Your account"
     },
     "global": {
+        "close": "Close",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
@@ -1604,7 +1605,7 @@
             "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
         "target_collateral_ratio":
-            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
+            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br />Sell as little as possible, but more frequent, by setting target below MCR (ex. 1.5)<br /><br />Sell more but less often by setting it higher than MCR (ex. 3)",
         "transfer_actions":
             "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position":

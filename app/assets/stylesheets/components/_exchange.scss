@@ -492,7 +492,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .market-right-padding-only {
-    padding: 0 0.6rem 0 0 !important;
+    table td:nth-last-child(1), table th:nth-last-child(1) {
+        padding: 0 0.6rem 0 0 !important;
+    }
 }
 
 .mymarkets-header {
@@ -753,12 +755,6 @@ tbody.orderbook > tr.my-order > td {
 }
 
 .marketPicker {
-    border: 1px solid black;
-    position: absolute;
-    z-index: 100;
-    width: 400px;
-    min-height: 300px;
-    padding: 10px;
 
     .marketPicker__header {
         padding: 0 5px;
@@ -823,4 +819,20 @@ tbody.orderbook > tr.my-order > td {
 .ant-tabs-nav, .ant-tabs-tab {
     margin: 0 12px 0 0 !important;
     padding: 6px 6px !important;
+}
+
+.inputAddon {
+    input { text-align: right !important; }
+    .ant-input-group-addon {
+        width: 45% !important;
+        text-align: left !important;
+    }
+}
+
+.ant-select-dropdown-menu-vertical {
+    margin-left: 0 !important;
+
+    > li {
+        padding: 1px 1px 5px 5px !important;
+    }
 }

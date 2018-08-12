@@ -1,5 +1,21 @@
 // Modals with specific width
 
+.modal#marketPicker, .modal#settingsModal {
+    position: absolute;
+    max-width: 400px;
+    padding: 0px;
+    border-radius: 0px;
+    top: 5px;
+}
+
+.modal#marketPicker {
+    left: 5px;
+}
+
+.modal#settingsModal {
+    right: 5px;
+}
+
 .modal#send_modal_header,
 .modal#send_modal_portfolio,
 .modal#simple_bridge_modal,

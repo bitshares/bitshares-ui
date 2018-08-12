@@ -848,7 +848,7 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div
+                {/*<div
                     style={this.props.headerStyle}
                     className="grid-block shrink left-orderbook-header bottom-header"
                 >
@@ -870,6 +870,14 @@ class MyMarkets extends React.Component {
                         )}
                     >
                         <Translate content="exchange.more" />
+                    </div>
+                </div>*/}
+                <div 
+                    style={this.props.headerStyle}
+                    
+                >
+                    <div className="exchange-content-header">
+                        <span><Translate content="exchange.market_name" /></span>
                     </div>
                 </div>
 
@@ -893,7 +901,7 @@ class MyMarkets extends React.Component {
                         style={{
                             width: "100%",
                             textAlign: "left",
-                            padding: "0.75rem 0.5rem"
+                            padding: "0 0.5rem 0.75rem 0.5rem"
                         }}
                     >
                         <div>
@@ -946,8 +954,8 @@ class MyMarkets extends React.Component {
                                         fontSize: "0.9rem",
                                         height: "inherit",
                                         position: "relative",
-                                        top: 1,
-                                        padding: 2
+                                        top: 5,
+                                        padding: 5
                                     }}
                                     type="text"
                                     className="no-margin market-filter-input"

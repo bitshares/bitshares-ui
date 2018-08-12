@@ -389,10 +389,12 @@ class OrderBook extends React.Component {
             }
 
             if (this.refs.vert_bids) this.refs.vert_bids.scrollTop = 0;
+        }
 
-            if (!this.props.horizontal) {
-                this.setState({autoScroll: true});
-            }
+        if (!this.props.horizontal) {
+            this.setState({autoScroll: true}, () => {
+                this.psUpdate();
+            });
         }
 
         if (
@@ -484,7 +486,9 @@ class OrderBook extends React.Component {
             flipOrderBook: !this.state.flip
         });
 
-        this.setState({flip: !this.state.flip});
+        this.setState({flip: !this.state.flip}, () => {
+            this.psUpdate();
+        });
     }
 
     _onToggleShowAll(type) {
@@ -916,7 +920,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
+                            <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {!this.state.flip
                                         ? rightHeader
@@ -1036,7 +1040,7 @@ class OrderBook extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            <div style={{paddingRight: "0.6rem"}}>
+                            <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
                                     {this.state.flip ? rightHeader : leftHeader}
                                 </table>
