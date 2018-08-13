@@ -29,6 +29,7 @@ addons:
 install:
     - npm install -g npm@6
     - npm ci
+    - sudo apt-get --yes install snapd
     - sudo snap install snapcraft --classic
 script: "./build.sh"
 after_success: "./deploy.sh"
@@ -59,3 +60,14 @@ deploy:
       on:
           repo: bitshares/bitshares-ui
           tags: true
+          condition: os = linux && branch =~ [2-9]\.[0-9]\.[0-9]{6}$
+    - provider: snap
+      snap: bitshares2-light
+      channel: edge
+      file_glob: true
+      file:
+          - build/binaries/BitShares*.snap
+      on:
+          repo: bitshares/bitshares-ui
+          tags: true
+          condition: os = linux && branch =~ [2-9]\.[0-9]\.[0-9]{6}-rc[0-9]$
