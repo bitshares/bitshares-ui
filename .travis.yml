@@ -51,7 +51,7 @@ deploy:
       on:
           repo: bitshares/bitshares-ui
           tags: true
-          condition: branch =~ /^[2-9]\.[0-9]\.[0-9]{6}/
+          condition: tag =~ /^[2-9]\.[0-9]\.[0-9]{6}/
     - provider: snap
       snap: bitshares2-light
       channel: stable
@@ -61,7 +61,7 @@ deploy:
       on:
           repo: bitshares/bitshares-ui
           tags: true
-          condition: os = linux && branch =~ /^[2-9]\.[0-9]\.[0-9]{6}$/
+          condition: os = linux AND tag =~ /^[2-9]\.[0-9]\.[0-9]{6}$/
     - provider: snap
       snap: bitshares2-light
       channel: edge
@@ -71,4 +71,4 @@ deploy:
       on:
           repo: bitshares/bitshares-ui
           tags: true
-          condition: os = linux && branch =~ /^[2-9]\.[0-9]\.[0-9]{6}-rc[0-9]$/
+          condition: os = linux AND tag =~ /^[2-9]\.[0-9]\.[0-9]{6}-rc[0-9]$/
