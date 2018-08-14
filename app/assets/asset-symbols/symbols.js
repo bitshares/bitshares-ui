@@ -18,6 +18,7 @@ require("file-loader?name=asset-symbols/[name].png!./obits.png");
 require("file-loader?name=asset-symbols/[name].png!./btsr.png");
 require("file-loader?name=asset-symbols/[name].png!./dao.png");
 require("file-loader?name=asset-symbols/[name].png!./lisk.png");
+require("file-loader?name=asset-symbols/[name].png!./mai.png");
 require("file-loader?name=asset-symbols/[name].png!./peerplays.png");
 require("file-loader?name=asset-symbols/[name].png!./icoo.png");
 require("file-loader?name=asset-symbols/[name].png!./blockpay.png");
