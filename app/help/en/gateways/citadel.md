@@ -6,4 +6,4 @@ Citadel is a gateway service built on the Bitshares Exchange. A gateway service 
 [https://citadel.li/](https://citadel.li/)
 
 ## Support
-For support, please contact Citadel support at C1T4D3L@tuta.io
+For support, please contact Citadel support at support@citadel.li
