@@ -405,7 +405,7 @@ class Asset extends React.Component {
         );
     }
 
-    renderPriceFeed(asset, sortedCallOrders) {
+    renderPriceFeed(asset) {
         var title = <Translate content="explorer.asset.price_feed.title" />;
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
@@ -798,18 +798,10 @@ class Asset extends React.Component {
                 );
             },
             collateral: function(a, b) {
-                return (
-                    (sortDirection ? 1 : -1) *
-                    (b.getCollateral().getAmount() -
-                        a.getCollateral().getAmount())
-                );
+                return (sortDirection ? 1 : -1) * (b.collateral - a.collateral);
             },
             debt: function(a, b) {
-                return (
-                    (sortDirection ? 1 : -1) *
-                    (b.amountToReceive().getAmount() -
-                        a.amountToReceive().getAmount())
-                );
+                return (sortDirection ? 1 : -1) * (b.debt - a.debt);
             },
             ratio: function(a, b) {
                 return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
@@ -907,7 +899,7 @@ class Asset extends React.Component {
     // witness for the given asset
     // the other tab is a list of the margin positions
     // for this asset (if it's a bitasset)
-    renderPriceFeedData(asset, sortedCallOrders) {
+    renderMarginPositions(asset, sortedCallOrders) {
         // first we compute the price feed tab
         var bitAsset = asset.bitasset;
         if (
@@ -1142,7 +1134,7 @@ class Asset extends React.Component {
                         className="column-hide-small"
                     >
                         <FormattedAsset
-                            amount={c.getCollateral().getAmount()}
+                            amount={c.collateral}
                             asset={c.getCollateral().asset_id}
                             hide_asset
                         />
@@ -1152,7 +1144,7 @@ class Asset extends React.Component {
                         className="column-hide-small"
                     >
                         <FormattedAsset
-                            amount={c.amountToReceive().getAmount()}
+                            amount={c.debt}
                             asset={c.amountToReceive().asset_id}
                             hide_asset
                         />
@@ -1222,12 +1214,10 @@ class Asset extends React.Component {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
         var priceFeed =
-            "bitasset" in asset
-                ? this.renderPriceFeed(asset, sortedCallOrders)
-                : null;
+            "bitasset" in asset ? this.renderPriceFeed(asset) : null;
         var priceFeedData =
             "bitasset" in asset
-                ? this.renderPriceFeedData(asset, sortedCallOrders)
+                ? this.renderMarginPositions(asset, sortedCallOrders)
                 : null;
 
         return (
