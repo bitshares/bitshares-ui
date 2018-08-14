@@ -854,6 +854,10 @@ class CallOrder {
     }
 
     _useTargetCR() {
+        // if (!!this.target_collateral_ratio &&
+        // this.getRatio() < this.target_collateral_ratio) {
+        //     console.log("Using target cr", this.target_collateral_ratio, "getRatio", this.getRatio());
+        // }
         return (
             !!this.target_collateral_ratio &&
             this.getRatio() < this.target_collateral_ratio
@@ -878,30 +882,33 @@ class CallOrder {
             newOrder.borrowers.push(order.borrower);
         }
 
+        const orderUseCR = order._useTargetCR();
+        const newOrderUseCR = newOrder._useTargetCR();
         /* Determine which debt values to use */
         let orderDebt = order.iSum
             ? order.debt
-            : order._useTargetCR()
+            : orderUseCR
                 ? order.max_debt_to_cover.getAmount()
                 : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
-            : newOrder._useTargetCR()
+            : newOrderUseCR
                 ? newOrder.max_debt_to_cover.getAmount()
                 : newOrder.amountToReceive().getAmount();
-        newOrder.debt = newOrderDebt + orderDebt;
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
-            : order._useTargetCR()
+            : orderUseCR
                 ? order.max_collateral_to_sell.getAmount()
                 : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
-            : newOrder._useTargetCR()
+            : newOrderUseCR
                 ? newOrder.max_collateral_to_sell.getAmount()
                 : newOrder.amountForSale().getAmount();
+
+        newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
         newOrder._clearCache();
 
