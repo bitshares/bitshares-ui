@@ -52,9 +52,9 @@ var Utils = {
         return inverted ? 1 / price : price;
     },
 
-    format_volume(amount) {
+    format_volume(amount, precision = 3) {
         if (amount < 10000) {
-            return this.format_number(amount, 3);
+            return this.format_number(amount, precision);
         } else if (amount < 1000000) {
             return (Math.round(amount / 10) / 100).toFixed(2) + "k";
         } else {
@@ -371,7 +371,7 @@ var Utils = {
 
         let eqValue =
             fromAsset.get("id") !== toAsset.get("id")
-                ? basePrecision * (amount / quotePrecision) / assetPrice
+                ? (basePrecision * (amount / quotePrecision)) / assetPrice
                 : amount;
 
         if (isNaN(eqValue) || !isFinite(eqValue)) {
@@ -415,7 +415,7 @@ var Utils = {
     },
 
     get_percentage(a, b) {
-        return Math.round(a / b * 100) + "%";
+        return Math.round((a / b) * 100) + "%";
     },
 
     replaceName(asset) {

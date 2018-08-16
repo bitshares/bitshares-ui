@@ -437,7 +437,7 @@
     },
     "dashboard": {
         "featured_markets": "Featured Markets",
-        "starred_markets": "Starred Markets",
+        "starred_markets": "Favorites",
         "table_empty": "No market matched",
         "top_markets": "Top Markets"
     },
@@ -1637,7 +1637,8 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "total_x_markets": "Total of %(count)s markets"
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
