@@ -10,6 +10,7 @@ import {connect} from "alt-react";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import {withRouter} from "react-router-dom";
+import sanitize from "sanitize";
 
 class CommitteeMemberCard extends React.Component {
     static propTypes = {
@@ -91,6 +92,10 @@ class CommitteeMemberRow extends React.Component {
         if (!committee_member_data) return null;
 
         let url = committee_member_data.get("url");
+        url = sanitize(url, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // filter out all HTML not in the whilelist
+        });
         url =
             url && url.length > 0 && url.indexOf("http") === -1
                 ? "http://" + url
@@ -364,7 +369,8 @@ class CommitteeMembers extends React.Component {
                     <div className="grid-block shrink">
                         <div className="grid-content">
                             <h5>
-                                <Translate content="explorer.committee_members.active" />:{" "}
+                                <Translate content="explorer.committee_members.active" />
+                                :{" "}
                                 {
                                     Object.keys(
                                         globalObject.active_committee_members
@@ -424,20 +430,23 @@ class CommitteeMembersStoreWrapper extends React.Component {
     }
 }
 
-CommitteeMembersStoreWrapper = connect(CommitteeMembersStoreWrapper, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            cardView: SettingsStore.getState().viewSettings.get(
-                "cardViewCommittee"
-            ),
-            filterCommitteeMember: SettingsStore.getState().viewSettings.get(
-                "filterCommitteeMember"
-            )
-        };
+CommitteeMembersStoreWrapper = connect(
+    CommitteeMembersStoreWrapper,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                cardView: SettingsStore.getState().viewSettings.get(
+                    "cardViewCommittee"
+                ),
+                filterCommitteeMember: SettingsStore.getState().viewSettings.get(
+                    "filterCommitteeMember"
+                )
+            };
+        }
     }
-});
+);
 
 export default CommitteeMembersStoreWrapper;

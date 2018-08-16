@@ -134,7 +134,7 @@ class Asset {
         // asset amount times a price p
         let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            temp = this.amount * p.quote.amount / p.base.amount;
+            temp = (this.amount * p.quote.amount) / p.base.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -151,7 +151,7 @@ class Asset {
                 precision: p.quote.precision
             });
         } else if (this.asset_id === p.quote.asset_id) {
-            temp = this.amount * p.base.amount / p.quote.amount;
+            temp = (this.amount * p.base.amount) / p.quote.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -277,11 +277,9 @@ class Price {
             return this[key];
         }
         let real = sameBase
-            ? this.quote.amount *
-              this.base.toSats() /
+            ? (this.quote.amount * this.base.toSats()) /
               (this.base.amount * this.quote.toSats())
-            : this.base.amount *
-              this.quote.toSats() /
+            : (this.base.amount * this.quote.toSats()) /
               (this.quote.amount * this.base.toSats());
         return (this[key] = parseFloat(real.toFixed(8))); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
@@ -856,6 +854,10 @@ class CallOrder {
     }
 
     _useTargetCR() {
+        // if (!!this.target_collateral_ratio &&
+        // this.getRatio() < this.target_collateral_ratio) {
+        //     console.log("Using target cr", this.target_collateral_ratio, "getRatio", this.getRatio());
+        // }
         return (
             !!this.target_collateral_ratio &&
             this.getRatio() < this.target_collateral_ratio
@@ -880,30 +882,33 @@ class CallOrder {
             newOrder.borrowers.push(order.borrower);
         }
 
+        const orderUseCR = order._useTargetCR();
+        const newOrderUseCR = newOrder._useTargetCR();
         /* Determine which debt values to use */
         let orderDebt = order.iSum
             ? order.debt
-            : order._useTargetCR()
+            : orderUseCR
                 ? order.max_debt_to_cover.getAmount()
                 : order.amountToReceive().getAmount();
         let newOrderDebt = newOrder.iSum
             ? newOrder.debt
-            : newOrder._useTargetCR()
+            : newOrderUseCR
                 ? newOrder.max_debt_to_cover.getAmount()
                 : newOrder.amountToReceive().getAmount();
-        newOrder.debt = newOrderDebt + orderDebt;
 
         /* Determine which collateral values to use */
         let orderCollateral = order.iSum
             ? order.collateral
-            : order._useTargetCR()
+            : orderUseCR
                 ? order.max_collateral_to_sell.getAmount()
                 : order.amountForSale().getAmount();
         let newOrderCollateral = newOrder.iSum
             ? newOrder.collateral
-            : newOrder._useTargetCR()
+            : newOrderUseCR
                 ? newOrder.max_collateral_to_sell.getAmount()
                 : newOrder.amountForSale().getAmount();
+
+        newOrder.debt = newOrderDebt + orderDebt;
         newOrder.collateral = newOrderCollateral + orderCollateral;
         newOrder._clearCache();
 

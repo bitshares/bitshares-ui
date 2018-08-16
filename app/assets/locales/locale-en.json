@@ -1,5 +1,6 @@
 {
     "account": {
+        "history_error": "Failed to download the account history, please try again",
         "accounts": "Accounts",
         "activity": "Activity",
         "advanced": "Advanced",
@@ -1438,7 +1439,7 @@
         "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
         "sync_no": "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
-        "target_collateral_ratio": "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
+        "target_collateral_ratio": "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases.<br /><br />To frequently sell small amounts, set a low target (eg. < 2)<br /><br />To sell larger amounts infrequently, set a high target (eg. > 3)",
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
@@ -1475,7 +1476,7 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download history as comma separated .csv file",
+        "csv_tip": "Download full account history as a comma separated .csv file using Cointracking.info format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",

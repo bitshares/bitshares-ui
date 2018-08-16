@@ -70,7 +70,7 @@ class WorkerApproval extends React.Component {
         if (worker.daily_pay < this.props.rest) {
             fundedPercent = 100;
         } else if (this.props.rest > 0) {
-            fundedPercent = this.props.rest / worker.daily_pay * 100;
+            fundedPercent = (this.props.rest / worker.daily_pay) * 100;
         }
 
         let startDate = counterpart.localize(
@@ -125,10 +125,7 @@ class WorkerApproval extends React.Component {
                             <Icon name="share" title="icons.share" />
                         </a>
                     </div>
-                    <div
-                        data-tip={worker.name}
-                        className="inline-block tooltip"
-                    >
+                    <div className="inline-block">
                         {worker.name}
                         <br />
                         <LinkToAccountById account={worker.worker_account} />
