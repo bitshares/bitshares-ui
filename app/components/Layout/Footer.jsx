@@ -44,6 +44,8 @@ class Footer extends React.Component {
             modal: null,
             shownOnce: false
         };
+
+        this.getNode = this.getNode.bind(this);
     }
 
     componentDidMount() {
@@ -147,11 +149,11 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node) {
+    getNode(node = {url: "", operator: ""}) {
         const {props} = this;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
-        if (!!node.country) {
+        if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
         }
 
@@ -308,15 +310,13 @@ class Footer extends React.Component {
 
         // Current Node Details
         let nodes = this.props.defaults.apiServer;
-        let getNode = this.getNode.bind(this);
+
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-
-        let activeNode = getNode(nodes[currentNodeIndex] || nodes[0]);
-
+        let activeNode = this.getNode(nodes[currentNodeIndex] || nodes[0]);
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = this.getNode(nodes[currentNodeIndex]);
         }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
@@ -467,14 +467,14 @@ class Footer extends React.Component {
                         </div>
                         {synced ? null : (
                             <div className="grid-block shrink txtlabel cancel">
-                                <Translate content="footer.nosync" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.nosync" />
+                                &nbsp; &nbsp;
                             </div>
                         )}
                         {!connected ? (
                             <div className="grid-block shrink txtlabel error">
-                                <Translate content="footer.connection" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.connection" />
+                                &nbsp; &nbsp;
                             </div>
                         ) : null}
                         {this.props.backup_recommended ? (
@@ -537,16 +537,18 @@ class Footer extends React.Component {
                                             <span className="footer-block-title">
                                                 <Translate content="footer.latency" />
                                             </span>
-                                            &nbsp;{!connected
+                                            &nbsp;
+                                            {!connected
                                                 ? "-"
                                                 : !activeNode.ping
                                                     ? "-"
-                                                    : activeNode.ping +
-                                                      "ms"}&nbsp;/&nbsp;
+                                                    : activeNode.ping + "ms"}
+                                            &nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
                                             </span>
-                                            &nbsp;#{block_height}
+                                            &nbsp;#
+                                            {block_height}
                                         </span>
                                     </div>
                                 </div>
