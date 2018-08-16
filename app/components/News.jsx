@@ -3,6 +3,7 @@ import counterpart from "counterpart";
 import {api} from "steem-js-api";
 import Translate from "react-translate-component";
 import LoadingIndicator from "./LoadingIndicator";
+import sanitize from "sanitize";
 
 const query = {tag: "bitshares.fdn", limit: 20};
 
@@ -34,7 +35,10 @@ const ReusableLink = ({data, url, isLink = false}) => (
         style={{display: "block"}}
         className={!isLink ? "primary-text" : ""}
     >
-        {data}
+        {sanitize(data, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // filter out all HTML not in the whilelist
+        })}
     </a>
 );
 
@@ -151,8 +155,7 @@ class News extends React.Component {
     componentDidMount() {
         this.updateDimensions();
         window.addEventListener("resize", this.updateDimensions);
-        api
-            .getDiscussionsByBlog(query)
+        api.getDiscussionsByBlog(query)
             .then(discussions => {
                 this.orderDiscussions(discussions);
             })

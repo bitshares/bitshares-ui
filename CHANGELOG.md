@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------
+Release 2.0.180808-rc2
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix #1752: Account with no balances crashes the GUI
+- Fix #1748: Disable release notifications in RC builds
+- Fix #1745: are_equal_shallow bug
+- Fix #1737: Make sure groupedOrder selection is used when switching chart timeframes
+
+---------------------------------------------------------------------
 Release 2.0.180808-rc1
 ---------------------------------------------------------------------
 New features

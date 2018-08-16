@@ -20,11 +20,14 @@ class MemoText extends React.Component {
         );
     }
 
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
+
     _toggleLock(e) {
         e.preventDefault();
         WalletUnlockActions.unlock()
             .then(() => {
-                console.log("unlocked");
                 ReactTooltip.rebuild();
             })
             .catch(() => {});
@@ -65,7 +68,6 @@ class MemoText extends React.Component {
                         data-tip={full_memo !== text ? full_memo : null}
                         data-place="bottom"
                         data-offset="{'bottom': 10}"
-                        data-html
                     >
                         {text}
                     </span>
@@ -83,13 +85,16 @@ class MemoTextStoreWrapper extends React.Component {
     }
 }
 
-export default connect(MemoTextStoreWrapper, {
-    listenTo() {
-        return [WalletUnlockStore];
-    },
-    getProps() {
-        return {
-            wallet_locked: WalletUnlockStore.getState().locked
-        };
+export default connect(
+    MemoTextStoreWrapper,
+    {
+        listenTo() {
+            return [WalletUnlockStore];
+        },
+        getProps() {
+            return {
+                wallet_locked: WalletUnlockStore.getState().locked
+            };
+        }
     }
-});
+);
