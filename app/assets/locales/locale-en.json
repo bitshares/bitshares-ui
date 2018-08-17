@@ -45,6 +45,8 @@
         "hide_hidden": "Active",
         "hide_ignored": "Hide hidden accounts",
         "history": "History",
+        "history_error":
+            "Failed to download the account history, please try again",
         "home": "Home",
         "hour_24": "24hr Change",
         "hour_24_short": "24hr",
@@ -485,7 +487,7 @@
     },
     "dashboard": {
         "featured_markets": "Featured Markets",
-        "starred_markets": "Starred Markets",
+        "starred_markets": "Favorites",
         "table_empty": "No market matched",
         "top_markets": "Top Markets"
     },
@@ -1617,7 +1619,7 @@
             "The current node is out of sync with the blockchain, try switching to another one",
         "sync_yes": "The current node is in sync with the blockchain",
         "target_collateral_ratio":
-            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
+            "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases.<br /><br />To frequently sell small amounts, set a low target (eg. < 2)<br /><br />To sell larger amounts infrequently, set a high target (eg. > 3)",
         "transfer_actions":
             "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position":
@@ -1658,7 +1660,8 @@
         "confirm": "Please confirm the transaction",
         "create_key": "Created a public key",
         "csv": "Export to .csv",
-        "csv_tip": "Download history as comma separated .csv file",
+        "csv_tip":
+            "Download full account history as a comma separated .csv file using Cointracking.info format",
         "custom": "Created a custom operation",
         "delta_collateral": "Collateral change",
         "delta_debt": "Debt change",
@@ -1732,6 +1735,7 @@
             "asset_update_feed_producers": "Update asset feed producers",
             "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Claim balance",
+            "bid_collateral": "Collateral bid",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Update margin",
             "committee_member_create": "Create committee member",
@@ -1739,6 +1743,8 @@
             "committee_member_update_global_parameters":
                 "Global parameters update",
             "custom": "Custom",
+            "execute_bid": "Execute bid",
+            "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Fill order",
             "limit_order_cancel": "Cancel order",
             "limit_order_create": "Place order",
@@ -1830,6 +1836,7 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
