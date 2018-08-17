@@ -35,9 +35,6 @@ class AccountsContainer extends React.Component {
                     passwordAccount: () => {
                         return AccountStore.getState().passwordAccount;
                     },
-                    lowVolumeMarkets: () => {
-                        return MarketsStore.getState().lowVolumeMarkets;
-                    },
                     currentEntry: SettingsStore.getState().viewSettings.get(
                         "dashboardEntry",
                         "accounts"

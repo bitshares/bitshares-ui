@@ -307,13 +307,16 @@ class OpenledgerGateway extends React.Component {
     }
 }
 
-export default connect(OpenledgerGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    OpenledgerGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

@@ -1,6 +1,5 @@
-import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
+import {Apis, Manager} from "bitsharesjs-ws";
 import {ChainStore} from "bitsharesjs";
-import chainIds from "chain/chainIds";
 
 // Stores
 import iDB from "idb-instance";
@@ -9,7 +8,6 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import AccountStore from "stores/AccountStore";
-import {settingsAPIs} from "api/apiConfig";
 
 import ls from "common/localStorage";
 
@@ -177,52 +175,18 @@ class RouterTransitioner {
     /**
      * Updates the latency of all target nodes
      *
-     * @param nodeUrls list of string nodes to update
-     * @returns {Promise}
-     */
-    doQuickLatencyUpdate(nodeUrls) {
-        return new Promise((resolve, reject) => {
-            let url = this._connectionManager.url;
-            let urls = this._connectionManager.urls;
-
-            if (typeof nodeUrls === "string") {
-                nodeUrls = [nodeUrls];
-            }
-            this._connectionManager.url = nodeUrls[0];
-            this._connectionManager.urls = nodeUrls.slice(1, nodeUrls.length);
-
-            this._connectionManager
-                .checkConnections()
-                .then(res => {
-                    console.log("Following nodes have been pinged:", res);
-                    // update the latencies object
-                    const apiLatencies = SettingsStore.getState().apiLatencies;
-                    for (var nodeUrl in res) {
-                        apiLatencies[nodeUrl] = res[nodeUrl];
-                    }
-                    SettingsActions.updateLatencies(apiLatencies);
-                })
-                .catch(err => {
-                    console.log("doLatencyUpdate error", err);
-                })
-                .finally(() => {
-                    this._connectionManager.url = url;
-                    this._connectionManager.urls = urls;
-                    resolve();
-                });
-        });
-    }
-
-    /**
-     * Updates the latency of all target nodes
-     *
      * @param refresh boolean true reping all existing nodes
      *                        false only reping all reachable nodes
-     * @param beSatisfiedWith integer if nodes with less than this integer latency are found, pinging is stopped
+     * @param beSatisfiedWith integer if appropriate number of nodes for each of the keys in this latency map are found, pinging is stopped.
+     *                                Values correspond to AccessSettings display (low, medium latency)
      * @param range integer ping range amount of nodes at the same time, default 5
      * @returns {Promise}
      */
-    doLatencyUpdate(refresh = true, beSatisfiedWith = 200, range = 5) {
+    doLatencyUpdate(
+        refresh = true,
+        beSatisfiedWith = {instant: 200, low: 400, medium: 800},
+        range = 5
+    ) {
         this.updateTransitionTarget(
             counterpart.translate("app_init.check_latency")
         );
@@ -247,6 +211,8 @@ class RouterTransitioner {
             }
 
             function local_ping(thiz, range = null) {
+                let counter = {instant: 0, low: 0, medium: 0};
+                let selectedOneWasPinged = false;
                 if (current < urls.length) {
                     thiz._connectionManager.url = urls[current];
                     thiz._connectionManager.urls = urls.slice(
@@ -273,21 +239,45 @@ class RouterTransitioner {
                             const apiLatencies = SettingsStore.getState()
                                 .apiLatencies;
                             for (var nodeUrl in res) {
+                                if (nodeUrl == url) {
+                                    selectedOneWasPinged = true;
+                                }
                                 apiLatencies[nodeUrl] = res[nodeUrl];
-                                // if we find a node that has less than beSatisfiedWith ms latency we stop pinging
-                                if (
-                                    beSatisfiedWith != null &&
-                                    res[nodeUrl] < beSatisfiedWith
-                                ) {
-                                    console.log(
-                                        "Found node " +
-                                            nodeUrl +
-                                            " with less than " +
-                                            beSatisfiedWith +
-                                            "ms, stopping latency update"
-                                    );
-                                    current = urls.length;
-                                    break;
+                                // we stop the pinging if
+                                //  - not autoselection and the selcted node has been pinged
+                                //  - a node that has low_latency (less than beSatisfiedWith ms) is found
+                                //  - at least 3 nodes with medium_latency have been found
+                                if (beSatisfiedWith != null) {
+                                    if (
+                                        res[nodeUrl] < beSatisfiedWith.instant
+                                    ) {
+                                        counter.instant = counter.instant + 1;
+                                    } else if (
+                                        res[nodeUrl] < beSatisfiedWith.low
+                                    ) {
+                                        counter.low = counter.low + 1;
+                                    } else if (
+                                        res[nodeUrl] < beSatisfiedWith.medium
+                                    ) {
+                                        counter.medium = counter.medium + 1;
+                                    }
+                                    if (
+                                        thiz.isAutoSelection() ||
+                                        selectedOneWasPinged
+                                    ) {
+                                        // only stop pinging if the selected one was pinged, if not autoSelect
+                                        if (
+                                            counter.instant > 0 ||
+                                            counter.low >= 2 ||
+                                            counter.medium >= 3
+                                        ) {
+                                            console.log(
+                                                "Found nodes with sufficient latency, stopping latency update"
+                                            );
+                                            current = urls.length;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                             thiz._updateLatencies(res);
@@ -307,9 +297,22 @@ class RouterTransitioner {
             }
 
             function done_pinging(thiz) {
-                thiz._connectionManager.url = url;
                 // resort the api nodes with the new pings
                 thiz._connectionManager.urls = thiz._getNodesToConnectTo();
+                if (
+                    thiz.isAutoSelection() &&
+                    url !== thiz._connectionManager.urls[0]
+                ) {
+                    thiz._connectionManager.url =
+                        thiz._connectionManager.urls[0];
+                    console.log(
+                        "auto selecting to " +
+                            thiz._connectionManager.url +
+                            " after latency update"
+                    );
+                } else {
+                    thiz._connectionManager.url = url;
+                }
                 thiz._transitionDone(resolve);
             }
             local_ping(this, range);
@@ -484,7 +487,15 @@ class RouterTransitioner {
             }
             return 0;
         });
-        // remove before release
+
+        /*
+        * We've somehow filtered out all nodes, revert to the full list of
+        * nodes in that case
+        */
+        if (!filtered.length) {
+            console.warn("No nodes length, returning all of them");
+            return this.getAllApiServers();
+        }
         return filtered;
     }
 

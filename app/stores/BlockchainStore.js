@@ -12,15 +12,29 @@ class BlockchainStore {
         this.latestTransactions = Immutable.List();
         this.rpc_connection_status = null;
         this.no_ws_connection = false;
+        this.blockHeaders = new Map();
 
         this.bindListeners({
             onGetBlock: BlockchainActions.getBlock,
             onGetLatest: BlockchainActions.getLatest,
+            onGetHeader: BlockchainActions.getHeader,
             onUpdateRpcConnectionStatus:
                 BlockchainActions.updateRpcConnectionStatus
         });
 
         this.maxBlocks = 30;
+    }
+
+    onGetHeader({header, height}) {
+        if (header && height) {
+            if (!/Z$/.test(header.timestamp)) {
+                header.timestamp += "Z";
+            }
+            header.timestamp = new Date(header.timestamp);
+            this.blockHeaders.set(height, header);
+        } else {
+            return false;
+        }
     }
 
     onGetBlock(block) {

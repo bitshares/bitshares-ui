@@ -49,15 +49,15 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]}
-                        {this.props.txIndex > 0 ? (
+                        {this.props.txIndex >= 0 ? (
                             <span>
-                                <Translate content="explorer.block.trx" />
-                                {this.props.txIndex}
+                                #{this.props.txIndex + 1}
+                                :&nbsp;
                             </span>
                         ) : (
                             ""
                         )}
+                        {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
                 <td />
@@ -169,10 +169,16 @@ class Transaction extends React.Component {
                         );
 
                         memo = text ? (
-                            <td className="memo" style={{wordBreak: "break-all"}}>{text}</td>
+                            <td
+                                className="memo"
+                                style={{wordBreak: "break-all"}}
+                            >
+                                {text}
+                            </td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -1008,7 +1014,8 @@ class Transaction extends React.Component {
                             <td>{text}</td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -1447,7 +1454,8 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td style={{fontSize: "80%"}}>
-                                {op[1].balance_owner_key.substring(0, 10)}...
+                                {op[1].balance_owner_key.substring(0, 10)}
+                                ...
                             </td>
                         </tr>
                     );

@@ -44,6 +44,8 @@ class Footer extends React.Component {
             modal: null,
             shownOnce: false
         };
+
+        this.getNode = this.getNode.bind(this);
     }
 
     componentDidMount() {
@@ -80,7 +82,9 @@ class Footer extends React.Component {
                     function(json) {
                         let oldVersion = String(json.tag_name);
                         let newVersion = String(APP_VERSION);
-                        if (oldVersion !== newVersion) {
+                        let isReleaseCandidate =
+                            APP_VERSION.indexOf("rc") !== -1;
+                        if (!isReleaseCandidate && oldVersion !== newVersion) {
                             this.setState({newVersion});
                         }
                     }.bind(this)
@@ -106,10 +110,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            window.open(
-                "http://docs.bitshares.org/bitshares/user/index.html",
-                "_blank"
-            );
+            this.props.history.push("/help");
         } else {
             guide
                 .introJs()
@@ -145,11 +146,11 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node) {
+    getNode(node = {url: "", operator: ""}) {
         const {props} = this;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
-        if (!!node.country) {
+        if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
         }
 
@@ -239,7 +240,7 @@ class Footer extends React.Component {
             // handling out of sync state within this one call
 
             let forceReconnectAfterSeconds = this._getForceReconnectAfterSeconds();
-            let askToReconnectAfterSeconds = 5;
+            let askToReconnectAfterSeconds = 10;
 
             // Trigger automatic reconnect after X seconds
             setTimeout(() => {
@@ -306,15 +307,13 @@ class Footer extends React.Component {
 
         // Current Node Details
         let nodes = this.props.defaults.apiServer;
-        let getNode = this.getNode.bind(this);
+
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-
-        let activeNode = getNode(nodes[currentNodeIndex] || nodes[0]);
-
+        let activeNode = this.getNode(nodes[currentNodeIndex] || nodes[0]);
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = this.getNode(nodes[currentNodeIndex]);
         }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
@@ -322,6 +321,8 @@ class Footer extends React.Component {
         let version = version_match
             ? `.${version_match[1]}`
             : ` ${APP_VERSION}`;
+        let rc_match = APP_VERSION.match(/-rc[0-9]$/);
+        if (rc_match) version += rc_match[0];
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
@@ -463,14 +464,14 @@ class Footer extends React.Component {
                         </div>
                         {synced ? null : (
                             <div className="grid-block shrink txtlabel cancel">
-                                <Translate content="footer.nosync" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.nosync" />
+                                &nbsp; &nbsp;
                             </div>
                         )}
                         {!connected ? (
                             <div className="grid-block shrink txtlabel error">
-                                <Translate content="footer.connection" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.connection" />
+                                &nbsp; &nbsp;
                             </div>
                         ) : null}
                         {this.props.backup_recommended ? (
@@ -533,16 +534,18 @@ class Footer extends React.Component {
                                             <span className="footer-block-title">
                                                 <Translate content="footer.latency" />
                                             </span>
-                                            &nbsp;{!connected
+                                            &nbsp;
+                                            {!connected
                                                 ? "-"
                                                 : !activeNode.ping
                                                     ? "-"
-                                                    : activeNode.ping +
-                                                      "ms"}&nbsp;/&nbsp;
+                                                    : activeNode.ping + "ms"}
+                                            &nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
                                             </span>
-                                            &nbsp;#{block_height}
+                                            &nbsp;#
+                                            {block_height}
                                         </span>
                                     </div>
                                 </div>

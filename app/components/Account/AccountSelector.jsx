@@ -5,7 +5,7 @@ import AccountImage from "../Account/AccountImage";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import Translate from "react-translate-component";
-import {ChainStore, PublicKey, ChainValidation} from "bitsharesjs";
+import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import classnames from "classnames";
@@ -101,29 +101,42 @@ class AccountSelector extends React.Component {
 
     onSelected(e) {
         this.setState({inputChanged: false});
+        this._notifyOnChange(e);
+    }
+
+    _notifyOnChange(e) {
+        let {onChange, onAccountChanged, accountName} = this.props;
+
         let _accountName = this.getVerifiedAccountName(e);
-        let _account = ChainStore.getAccount(_accountName);
-        if (_account) {
-            this.props.onChange(_accountName);
-            this.props.onAccountChanged(_account);
+
+        if (_accountName === accountName) {
+            // nothing has changed, don't notify
+            return;
+        }
+
+        // Synchronous onChange for input change
+        if (!!onChange && !!_accountName) onChange(_accountName);
+
+        // asynchronous onAccountChanged for checking on chain
+        if (!!onAccountChanged) {
+            FetchChain("getAccount", _accountName, undefined, {
+                [_accountName]: false
+            })
+                .then(_account => {
+                    if (!!_account) {
+                        onAccountChanged(_account);
+                    }
+                })
+                .catch(err => {
+                    // error fetching
+                    console.log(err);
+                });
         }
     }
 
     onInputChanged(e) {
-        let {onChange, onAccountChanged, accountName, typeahead} = this.props;
         this.setState({inputChanged: true});
-
-        let _accountName = this.getVerifiedAccountName(e);
-        let _account = ChainStore.getAccount(_accountName);
-
-        if (onChange && _accountName !== accountName) onChange(_accountName);
-
-        // None-Typeahead Component compatibility
-        // - Always returns account object
-        if (!typeahead) {
-            if (onChange) onChange(_accountName);
-            if (onAccountChanged && _account) onAccountChanged(_account);
-        }
+        this._notifyOnChange(e);
     }
 
     getVerifiedAccountName(e) {
@@ -361,8 +374,9 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{!!displayText &&
-                                        displayText}
+                                    {account && account.statusText}
+                                    &nbsp;
+                                    {!!displayText && displayText}
                                 </span>
                                 {linked_status}
                             </label>
@@ -503,16 +517,19 @@ class AccountSelector extends React.Component {
 
 AccountSelector = BindToChainState(AccountSelector);
 
-AccountSelector = connect(AccountSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            contacts: AccountStore.getState().accountContacts
-        };
+AccountSelector = connect(
+    AccountSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 export default AccountSelector;
