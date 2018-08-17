@@ -1,4 +1,32 @@
 ---------------------------------------------------------------------
+Release 2.0.180815-rc1
+---------------------------------------------------------------------
+New features
+--------
+- #1767: Add full account history csv export
+- #1738: Use block headers to display block times
+- #1493: Add missing fee ops to Fees page
+- #1751: Refactor the dashboard markets table, separate markets by quote asset
+
+Bug fixes and improvements
+--------
+- #1751: Add missing translation key and update locale files
+- #1699: Link to in-wallet help instead of docs.bitshares.org
+- Fix #1781: Update openledger contact info and fix deposit modal help
+- Fix #1770: Make sure node information defaults to sensible values
+- Fix #1758 - Tooltip on Margin Modal
+- Fix global settlement price displayed in Asset view
+- Replace misplaced tx label with #[number] in Transaction.jsx
+
+---------------------------------------------------------------------
+Release 2.0.180814
+---------------------------------------------------------------------
+Bug fixes and improvements
+--------
+- Fix #1778: Sum call orders properly
+- Fix #1779: Display debt and collateral values properly in Asset view
+
+---------------------------------------------------------------------
 Release 2.0.180808
 ---------------------------------------------------------------------
 New features

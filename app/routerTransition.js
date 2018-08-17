@@ -1,6 +1,5 @@
-import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
+import {Apis, Manager} from "bitsharesjs-ws";
 import {ChainStore} from "bitsharesjs";
-import chainIds from "chain/chainIds";
 
 // Stores
 import iDB from "idb-instance";
@@ -9,7 +8,6 @@ import WalletManagerStore from "stores/WalletManagerStore";
 import WalletDb from "stores/WalletDb";
 import SettingsStore from "stores/SettingsStore";
 import AccountStore from "stores/AccountStore";
-import {settingsAPIs} from "api/apiConfig";
 
 import ls from "common/localStorage";
 
@@ -489,7 +487,15 @@ class RouterTransitioner {
             }
             return 0;
         });
-        // remove before release
+
+        /*
+        * We've somehow filtered out all nodes, revert to the full list of
+        * nodes in that case
+        */
+        if (!filtered.length) {
+            console.warn("No nodes length, returning all of them");
+            return this.getAllApiServers();
+        }
         return filtered;
     }
 
