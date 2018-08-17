@@ -419,7 +419,7 @@ class AccountPortfolioList extends React.Component {
             let backingAsset = options && options.short_backing_asset ? ChainStore.getAsset(options.short_backing_asset) : null;
             let {isBitAsset: isAssetBitAsset} = utils.replaceName(asset);
             let {isBitAsset: isBackingBitAsset} = utils.replaceName(backingAsset);
-            
+
             let preferredAsset = ChainStore.getAsset(preferredUnit);
             this.valueRefs[asset.get("symbol")] =
                 hasBalance && !!preferredAsset
@@ -585,7 +585,8 @@ class AccountPortfolioList extends React.Component {
                                     "tooltip.settle",
                                     {
                                         asset: isAssetBitAsset ? "bit" + symbol : symbol, 
-                                        backingAsset: isBackingBitAsset ? "bit" + backingAsset.get("symbol") : backingAsset.get("symbol")
+                                        backingAsset: isBackingBitAsset ? "bit" + backingAsset.get("symbol") : backingAsset.get("symbol"),
+                                        settleDelay: options.force_settlement_delay_sec / 3600
                                     }
                                 )}
                             >
