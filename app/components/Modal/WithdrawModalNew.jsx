@@ -701,7 +701,8 @@ class WithdrawModalNew extends React.Component {
 
         let gatewayStatus = this.state.gatewayStatus[selectedGateway];
         let assetName = !!gatewayStatus.assetWithdrawlAlias
-            ? gatewayStatus.assetWithdrawlAlias[selectedAsset.toLowerCase()] || selectedAsset.toLowerCase()
+            ? gatewayStatus.assetWithdrawlAlias[selectedAsset.toLowerCase()] ||
+              selectedAsset.toLowerCase()
             : selectedAsset.toLowerCase();
 
         const intermediateAccountNameOrId = getIntermediateAccount(
