@@ -110,10 +110,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            window.open(
-                "http://docs.bitshares.org/bitshares/user/index.html",
-                "_blank"
-            );
+            this.props.history.push("/help");
         } else {
             guide
                 .introJs()
