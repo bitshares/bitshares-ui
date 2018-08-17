@@ -406,14 +406,10 @@ class AccountPortfolioList extends React.Component {
 
             {/* Asset and Backing Asset Prefixes */}
             let options = asset && asset.has("bitasset") ? asset.getIn(["bitasset", "options"]).toJS() : null;
-            let backingAsset = !!options ? ChainStore.getAsset(options.short_backing_asset) : null;
-            let {prefix: backingAssetPrefix} = utils.replaceName(backingAsset);
-            let backingAssetIsBitAsset = backingAssetPrefix === "bit";
+            let backingAsset = options && options.short_backing_asset ? ChainStore.getAsset(options.short_backing_asset) : null;
+            let {isBitAsset: isAssetBitAsset} = utils.replaceName(asset);
+            let {isBitAsset: isBackingBitAsset} = utils.replaceName(backingAsset);
 
-            let {prefix: assetPrefix} = utils.replaceName(asset);
-            let assetIsBitAsset = assetPrefix === "bit";
-
-            
             balances.push(
                 <tr key={asset.get("symbol")} style={{maxWidth: "100rem"}}>
                     <td style={{textAlign: "left"}}>
@@ -563,10 +559,8 @@ class AccountPortfolioList extends React.Component {
                                 data-tip={counterpart.translate(
                                     "tooltip.settle",
                                     {
-                                        asset: symbol, 
-                                        backingAsset: backingAsset.get("symbol"),
-                                        assetPrepend: assetIsBitAsset ? "bit" : "",
-                                        backingPrepend: backingAssetIsBitAsset ? "bit" : ""
+                                        asset: isAssetBitAsset ? "bit" + symbol : symbol, 
+                                        backingAsset: isBackingBitAsset ? "bit" + backingAsset.get("symbol") : backingAsset.get("symbol")
                                     }
                                 )}
                             >
