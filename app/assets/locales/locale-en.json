@@ -1,6 +1,5 @@
 {
     "account": {
-        "history_error": "Failed to download the account history, please try again",
         "accounts": "Accounts",
         "activity": "Activity",
         "advanced": "Advanced",
@@ -42,6 +41,7 @@
         "hide_hidden": "Active",
         "hide_ignored": "Hide hidden accounts",
         "history": "History",
+        "history_error": "Failed to download the account history, please try again",
         "home": "Home",
         "hour_24": "24hr Change",
         "hour_24_short": "24hr",
@@ -1637,8 +1637,8 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations",
-        "total_x_markets": "Total of %(count)s markets"
+        "total_x_markets": "Total of %(count)s markets",
+        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",

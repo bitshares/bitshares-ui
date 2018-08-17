@@ -498,7 +498,9 @@ class MarketsTable extends React.Component {
                                 />
                             </th>
                             {this.props.isFavorite ? null : (
-                                <th style={{textAlign: "right"}}>Quote</th>
+                                <th style={{textAlign: "right"}}>
+                                    <Translate content="account.user_issued_assets.quote_name" />
+                                </th>
                             )}
                             <th
                                 onClick={this._onToggleSort.bind(this, "price")}

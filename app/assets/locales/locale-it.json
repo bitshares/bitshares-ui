@@ -6,13 +6,11 @@
         "as_collateral": "Garanzia",
         "asset": "Asset",
         "asset_details": "Dettagli asset",
-        "bittrex_scam":
-            "Questo non è il vero account Bittrex, per favore invia al seguente account: bittrex-deposit.",
+        "bittrex_scam": "Questo non è il vero account Bittrex, per favore invia al seguente account: bittrex-deposit.",
         "bts_market": "Mercato",
         "collaterals": "Posizioni con margine",
         "confirm_asset_modal": {
-            "are_you_sure":
-                "Are you sure you want to save all changes to these tabs?",
+            "are_you_sure": "Are you sure you want to save all changes to these tabs?",
             "header": "Confirm multiple changes"
         },
         "connections": {
@@ -23,17 +21,14 @@
         "create_account": "Crea un account",
         "create_new": "Crea un nuovo account",
         "deposit": "Deposita BTS",
-        "deposit_address":
-            "Il tuo indirizzo di deposito è il nome del tuo account",
+        "deposit_address": "Il tuo indirizzo di deposito è il nome del tuo account",
         "deposit_withdraw": "Deposita/Preleva",
         "eq_value": "Valore stimato",
         "eq_value_header": "Valore ({asset})",
         "errors": {
             "invalid": "Nome account invalido",
-            "memo_missing":
-                "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page.",
-            "not_found":
-                "L'account %(name)s non esiste; sei sicuro di averlo digitato correttamente?",
+            "memo_missing": "You do not have control of the memo key for this account. In order to use a memo, please set the account memo key to a key you control using the Permissions page.",
+            "not_found": "L'account %(name)s non esiste; sei sicuro di averlo digitato correttamente?",
             "not_yours": "Non il tuo account",
             "unknown": "Account sconosciuto"
         },
@@ -46,23 +41,19 @@
         "hide_hidden": "Attivi",
         "hide_ignored": "Nascondi account nascosti",
         "history": "Storico",
+        "history_error": "Failed to download the account history, please try again",
         "home": "Home",
         "hour_24": "Variazione in 24h",
         "hour_24_short": "24h",
         "id": "ID Account",
         "identicon": "Identicon",
         "ignore": "Nascondi",
-        "in_open":
-            "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
-        "in_open_value":
-            "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
+        "in_open": "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
+        "in_open_value": "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
         "intro_text_1": "Il tuo Exchange decentralizzato",
-        "intro_text_2":
-            "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
-        "intro_text_3":
-            "<b>Il DEX</b> permette anche la creazione di asset generati dagli utenti (user-issued assets, UIA), con cui si può fare trading con altri UIA o altri asset trustless sulla piattaforma.  Un distributore molto noto sul DEX è <b>OpenLedger</b>, che offre una gamma di asset che include BTC, ETH, STEEM, DASH, LTC, DOGE e molti altri",
-        "intro_text_4":
-            "Ciò garantisce ai trader di criptovalute un unico mix di trading tradizionale e decentralizzato, il tutto con la familiare interfaccia di un exchange. Buon trading!",
+        "intro_text_2": "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
+        "intro_text_3": "<b>Il DEX</b> permette anche la creazione di asset generati dagli utenti (user-issued assets, UIA), con cui si può fare trading con altri UIA o altri asset trustless sulla piattaforma.  Un distributore molto noto sul DEX è <b>OpenLedger</b>, che offre una gamma di asset che include BTC, ETH, STEEM, DASH, LTC, DOGE e molti altri",
+        "intro_text_4": "Ciò garantisce ai trader di criptovalute un unico mix di trading tradizionale e decentralizzato, il tutto con la familiare interfaccia di un exchange. Buon trading!",
         "intro_text_title": "Benvenuto su BitShares",
         "login_with": "Login with",
         "market_actions": "Operazioni di mercato",
@@ -86,8 +77,7 @@
             "membership_expiration": "Scadenza Membership",
             "network_percentage": "Rete",
             "referral_link": "Il tuo referral link",
-            "referral_text":
-                "Comunica questo link alle persone a cui vuoi segnalare BitShares",
+            "referral_text": "Comunica questo link alle persone a cui vuoi segnalare BitShares",
             "referrals": "Referral",
             "referrer": "Affiliate Referrer",
             "registrar": "Registrar",
@@ -107,18 +97,15 @@
         "name_input": {
             "name_is_taken": "Questo nome account è già stato preso.",
             "not_found": "Account non trovato.",
-            "premium_name_faucet":
-                "Questo è un nome premium che non è supportato da questo faucet. Per favore inserisci un nome regolare che contiene almeno un trattino, un numero o nessuna vocale.",
-            "premium_name_warning":
-                "Questo è un nome premium che costa di più di un nome contenente un trattino (-) o un numero."
+            "premium_name_faucet": "Questo è un nome premium che non è supportato da questo faucet. Per favore inserisci un nome regolare che contiene almeno un trattino, un numero o nessuna vocale.",
+            "premium_name_warning": "Questo è un nome premium che costa di più di un nome contenente un trattino (-) o un numero."
         },
         "new_user": "Nuovo utente?",
         "no_orders": "Nessun ordine aperto",
         "no_price": "Valore sconosciuto",
         "open_orders": "Ordini aperti",
         "optional": {
-            "formatter":
-                "Optionally, {restore_link} or create an account using the {restore_form}.",
+            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
             "restore_form": "advanced form",
             "restore_link": "restore your account"
         },
@@ -128,8 +115,7 @@
             "num_witnesses": "Numero desiderato di witness"
         },
         "orders": "Ordini",
-        "other_scam":
-            "Questo account non è noto come ufficiale, per favore verifica la destinazione prima di effettuare il trasferimento",
+        "other_scam": "Questo account non è noto come ufficiale, per favore verifica la destinazione prima di effettuare il trasferimento",
         "overview": "Panoramica",
         "password_login": "Login con password",
         "pay": "Invia a",
@@ -151,15 +137,13 @@
             "key_viewer": "Visualizzatore chiave privata",
             "memo_key": "Chiave memo",
             "memo_public_key": "Chiave pubblica memo",
-            "memo_warning":
-                "ATTENZIONE: Se sostituisci la chiave dei memo, non sarai in grado di leggere i vecchi memo quando fai il login con la tua password, e a meno che tu non importi la nuova chiave privata dei memo nel tuo vecchio portafoglio, quel portafoglio non potrà decodificare i nuovi memo",
+            "memo_warning": "ATTENZIONE: Se sostituisci la chiave dei memo, non sarai in grado di leggere i vecchi memo quando fai il login con la tua password, e a meno che tu non importi la nuova chiave privata dei memo nel tuo vecchio portafoglio, quel portafoglio non potrà decodificare i nuovi memo",
             "new_active": "Nuova chiave attiva",
             "new_memo": "Nuova chiave memo",
             "new_owner": "Nuova chiave proprietario",
             "owner": "Permessi proprietario",
             "password_model": "Modalità account",
-            "password_model_1":
-                "Se vuoi essere in grado di effettuare il login dovunque tramite password e nome account, puoi usare questa pagina per aggiungere nuove chiavi ai tuoi permessi. Se vuoi anche rimuovere le chiavi originali, puoi farlo nella schede permessi attivi/proprietario.",
+            "password_model_1": "Se vuoi essere in grado di effettuare il login dovunque tramite password e nome account, puoi usare questa pagina per aggiungere nuove chiavi ai tuoi permessi. Se vuoi anche rimuovere le chiavi originali, puoi farlo nella schede permessi attivi/proprietario.",
             "password_model_2": "Aggiungi chiavi generate tramite password",
             "private": "Chiave privata (WIF - Wallet Import Format)",
             "public": "Chiave pubblica",
@@ -174,18 +158,15 @@
             "type": "Tipo",
             "use_text": "Usa",
             "valid_pub": "Chiave Pubblica Valida",
-            "warning1":
-                "Il peso totale %(weights_total)s dei permessi attivi dovrebbe essere uguale o maggiore della soglia %(threshold)s",
-            "warning2":
-                "Il peso totale %(weights_total)s dei permessi del proprietario dovrebbe essere uguale o maggiore della soglia %(threshold)s",
+            "warning1": "Il peso totale %(weights_total)s dei permessi attivi dovrebbe essere uguale o maggiore della soglia %(threshold)s",
+            "warning2": "Il peso totale %(weights_total)s dei permessi del proprietario dovrebbe essere uguale o maggiore della soglia %(threshold)s",
             "warning3": "L'account è già nella lista",
             "warning4": "La chiave è già nella lista",
             "weight": "Peso"
         },
         "permissions": "Permessi",
         "please_create_account": "Per favore crea un account",
-        "polo_scam":
-            "Questo non è il vero account Poloniex, per favore invia al seguente account: poloniexwallet.",
+        "polo_scam": "Questo non è il vero account Poloniex, per favore invia al seguente account: poloniexwallet.",
         "portfolio": "Il mio Portfolio",
         "propose_from": "Proponi da",
         "qty": "Qtà",
@@ -207,13 +188,10 @@
             "entermessage": "Enter message here",
             "errorverifying": "An error occured while verifying the message",
             "invalidformat": "Signed message format can't be recognized",
-            "invalidkey":
-                "Private key could not be obtained, is the public key valid?",
-            "invalidsignature":
-                "The content of the message could not be validated against the signature",
+            "invalidkey": "Private key could not be obtained, is the public key valid?",
+            "invalidsignature": "The content of the message could not be validated against the signature",
             "invaliduser": "Account of the message sender is invalid",
-            "keymismatch":
-                "Given public key of the sender doesn't to the one stored in the senders account",
+            "keymismatch": "Given public key of the sender doesn't to the one stored in the senders account",
             "menuitem": "Signed Messages",
             "sign": "Sign",
             "signing": "Signing, please wait ...",
@@ -226,8 +204,7 @@
         },
         "submit_orders": "Submit",
         "total": "Totale ({asset})",
-        "total_estimate":
-            "Questa è una stima del valore di tutti i tuoi asset, inclusi asset nascosti, ordini aperti, debito e garanzia. La stima è ottenuta usando informazioni in tempo reale dalla blockchain, e potrebbe non essere del tutto accurata.",
+        "total_estimate": "Questa è una stima del valore di tutti i tuoi asset, inclusi asset nascosti, ordini aperti, debito e garanzia. La stima è ottenuta usando informazioni in tempo reale dalla blockchain, e potrebbe non essere del tutto accurata.",
         "total_value": "Valore totale",
         "trade": "Trading",
         "transactions": {
@@ -249,14 +226,11 @@
             "base_name": "Asset di base",
             "bitasset_opts": "Opzioni SmartCoin",
             "cer_warning_1": "Avviso",
-            "cer_warning_2":
-                "Assicurati che il tuo core exchange rate sia maggiore del prezzo di mercato, altrimenti le persone compreranno il tuo token dal mercato e prosciugheranno il tuo fee pool tramite arbitraggio implicito. Il core exchange rate dovrebbe essere aggiornato regolarmente per riflettere il prezzo di mercato del tuo asset.",
+            "cer_warning_2": "Assicurati che il tuo core exchange rate sia maggiore del prezzo di mercato, altrimenti le persone compreranno il tuo token dal mercato e prosciugheranno il tuo fee pool tramite arbitraggio implicito. Il core exchange rate dovrebbe essere aggiornato regolarmente per riflettere il prezzo di mercato del tuo asset.",
             "charge_market_fee": "Abilita commissione di mercato",
-            "committee_fed_asset":
-                "Permetti ai committee members di fornire feed",
+            "committee_fed_asset": "Permetti ai committee members di fornire feed",
             "condition": "Condizione (massimo 60 caratteri)",
-            "conflict_feed":
-                "Cannot allow witnesses and committee members to provide feeds simultaneously",
+            "conflict_feed": "Cannot allow witnesses and committee members to provide feeds simultaneously",
             "core_exchange_rate": "Tasso di cambio centrale",
             "current_issuer": "Account proprietario corrente",
             "decimals": "Numero di decimali",
@@ -265,72 +239,55 @@
             "disable_confidential": "Disabilita transazioni private",
             "disable_force_settle": "Disabilita settling obbligato",
             "error_invalid": "Quell'asset non può essere usato",
-            "error_precision":
-                "Quell'asset non ha la stessa precisione di %(asset)s",
+            "error_precision": "Quell'asset non ha la stessa precisione di %(asset)s",
             "exists": "Questo asset esiste sempre",
             "expiry": "Data risoluzione mercato",
             "feed_lifetime_sec": "Feed lifetime in minuti",
-            "feed_not_allowed_1":
-                "Cannot set feed producers on a witness- or committee-fed asset",
-            "feed_not_allowed_2":
-                "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
+            "feed_not_allowed_1": "Cannot set feed producers on a witness- or committee-fed asset",
+            "feed_not_allowed_2": "Please disable the flags called 'Allow witnesses to provide feeds' and 'Allow committee members to provide feeds' in order to allow manual definition of feed producers",
             "feed_producers": "Feed producers",
             "flags": "Flag",
-            "force_settlement_delay_sec":
-                "Ritardo per i settlement obbligati (minuti)",
-            "force_settlement_offset_percent":
-                "Deviazione percentuale dei settlement obbligati",
-            "global_settle":
-                "Consenti all'erogatore di obbligare un settling globale",
+            "force_settlement_delay_sec": "Ritardo per i settlement obbligati (minuti)",
+            "force_settlement_offset_percent": "Deviazione percentuale dei settlement obbligati",
+            "global_settle": "Consenti all'erogatore di obbligare un settling globale",
             "id": "ID",
-            "invalid_market_pair":
-                "Preferred market pairing can not be the same market",
+            "invalid_market_pair": "Preferred market pairing can not be the same market",
             "issued_assets": "Asset emessi",
             "market": "Coppia di mercato preferita",
             "market_fee": "Commissione di mercato",
             "max_market_fee": "Commissione di mercato massima",
-            "max_positive":
-                "La disponibilità massima deve essere un numero positivo",
+            "max_positive": "La disponibilità massima deve essere un numero positivo",
             "max_supply": "Disponibilità massima",
-            "maximum_force_settlement_volume":
-                "Massimo volume di settle obbligati (percentuale della disponibilità totale per ora)",
+            "maximum_force_settlement_volume": "Massimo volume di settle obbligati (percentuale della disponibilità totale per ora)",
             "minimum_feeds": "Minimo numero di feed",
             "mpa": "SmartCoin",
             "name": "Name Asset",
             "need_asset": "Almeno uno dei due asset deve essere %(name)s",
             "new_issuer": "Nuovo account proprietario",
             "optional": "Impostazioni opzionali",
-            "override_authority":
-                "L'erogatore può trasferire l'asset a se stesso",
-            "perm_warning":
-                "ATTENZIONE: I permessi possono solo essere disattivati, e una volta disattivati non possono più essere attivati!!",
+            "override_authority": "L'erogatore può trasferire l'asset a se stesso",
+            "perm_warning": "ATTENZIONE: I permessi possono solo essere disattivati, e una volta disattivati non possono più essere attivati!!",
             "pm": "Mercato di previsioni binarie",
             "precision": "Precisione",
-            "precision_warning":
-                "Attenzione: Il numero di decimali non può essere modificato dopo la creazione",
+            "precision_warning": "Attenzione: Il numero di decimali non può essere modificato dopo la creazione",
             "primary": "Impostazioni principali",
             "quote": "Quantità asset quotato",
             "quote_name": "Asset quotato",
             "short": "Nome breve (massimo 32 caratteri)",
             "symbol": "Simbolo",
             "to": "Emetti nell'account",
-            "too_large":
-                "La disponibilità massima è eccessiva, per favore scegli un numero più piccolo",
-            "too_many_feed":
-                "Number of feed producers exceeded the max allowed (%(max)s).",
-            "transfer_restricted":
-                "L'erogatore deve approvare tutti i trasferimenti",
+            "too_large": "La disponibilità massima è eccessiva, per favore scegli un numero più piccolo",
+            "too_many_feed": "Number of feed producers exceeded the max allowed (%(max)s).",
+            "transfer_restricted": "L'erogatore deve approvare tutti i trasferimenti",
             "update_owner": "Aggiorna proprietario",
-            "update_owner_text":
-                "The asset owner may change the owner to another account using this form:",
+            "update_owner_text": "The asset owner may change the owner to another account using this form:",
             "visible": "Nascondi asset in ricerca e mercati",
             "white_list": "Esigi che i possessori siano in white-list",
             "witness_fed_asset": "Permetti alle witness di fornire feed"
         },
         "vesting": {
             "balance_number": "Saldo #%(id)s",
-            "explain":
-                "I saldi vesting contengono tutte le commissioni (fee) guadagnate tramite il programma di affiliazione (referral program) o, per esempio, il pagamento dei worker. Essi hanno un certo periodo di vesting, durante il quale vengono man mano sbloccati finché tutti i fondi sono disponibili.",
+            "explain": "I saldi vesting contengono tutte le commissioni (fee) guadagnate tramite il programma di affiliazione (referral program) o, per esempio, il pagamento dei worker. Essi hanno un certo periodo di vesting, durante il quale vengono man mano sbloccati finché tutti i fondi sono disponibili.",
             "no_balances": "Questo account non ha saldi vesting",
             "title": "Saldi vesting"
         },
@@ -346,8 +303,7 @@
             "approve_worker": "Approva",
             "clear_proxy": "Rimuovi proxy",
             "cm_approved_by": "Membri del comitato approvati da %(account)s",
-            "cm_not_approved_by":
-                "Membri del comitato non approvati da %(account)s",
+            "cm_not_approved_by": "Membri del comitato non approvati da %(account)s",
             "committee": "Nome membro del comitato",
             "create_worker": "Crea un nuovo worker",
             "creator": "Creatore",
@@ -410,12 +366,9 @@
             "black_by": "Messo in blacklist da",
             "blacklist_authorities": "Autorità blacklist",
             "empty": "%(account)s non ha messo in whitelist alcun account.",
-            "empty_black":
-                "%(account)s non ha messo in blacklist alcun account.",
-            "empty_black_by":
-                "Nessun account ha messo %(account)s in blacklist.",
-            "empty_white_by":
-                "Nessun account ha messo %(account)s in whitelist.",
+            "empty_black": "%(account)s non ha messo in blacklist alcun account.",
+            "empty_black_by": "Nessun account ha messo %(account)s in blacklist.",
+            "empty_white_by": "Nessun account ha messo %(account)s in whitelist.",
             "title": "Whitelist",
             "white_by": "Messo in whitelist da",
             "whitelist_authorities": "Autorità whitelist"
@@ -423,11 +376,9 @@
     },
     "app_init": {
         "browser": "Browser non supportato",
-        "browser_text":
-            "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
+        "browser_text": "Il browser che stai usando non è stato pienamente testato per il supporto del portafoglio BitShares. Raccomandiamo caldamente di fare il backup del tuo portafoglio e importarlo usando il browser Chrome finché non avremo avuto il tempo di testare appieno il tuo browser. Usalo a tuo rischio.",
         "check_latency": "Running latency checks...",
-        "check_latency_feedback":
-            "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
+        "check_latency_feedback": "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Connesso",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -446,20 +397,14 @@
         "coll_ratio_target": "Target Ratio",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
-            "below":
-                "Il tuo collateral ratio è inferiore a %(mr)s, che non è consentito.",
-            "below_info":
-                "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
-            "below_ratio_mcr_update":
-                "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
-            "close":
-                "Il tuo collateral ratio è vicino a %(mr)s che significa che questa posizione rischia di essere chiamata con margine se il prezzo scende.",
+            "below": "Il tuo collateral ratio è inferiore a %(mr)s, che non è consentito.",
+            "below_info": "Your position is below the required maintenance collateral ratio! Increasing collateral ratio is allowed, debt can only be decreased.",
+            "below_ratio_mcr_update": "Your collateral ratio is blow your original %(ocr)s. Only increased ratio is allowed on margin called orders",
+            "close": "Il tuo collateral ratio è vicino a %(mr)s che significa che questa posizione rischia di essere chiamata con margine se il prezzo scende.",
             "collateral": "Saldo di garanzia insufficiente",
-            "increased_debt_on_margin_call":
-                "You increased your debt, which is not allowed when updating a margin called position"
+            "increased_debt_on_margin_call": "You increased your debt, which is not allowed when updating a margin called position"
         },
-        "maximize_debt_set_ratio_slider":
-            "You must set a collateral ratio before being able to maximize debt",
+        "maximize_debt_set_ratio_slider": "You must set a collateral ratio before being able to maximize debt",
         "no_valid": "Nessun feed valido per %(asset_symbol)s",
         "pay_max_debt": "Pay Max Debt",
         "target_collateral_ratio": "Target Collateral Ratio",
@@ -473,15 +418,12 @@
     },
     "cancel": "Annulla",
     "connection": {
-        "automatic_reconnect":
-            " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
+        "automatic_reconnect": " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
         "manual_ping": "Go to ping nodes",
         "manual_reconnect": "Reconnect now",
-        "out_of_sync":
-            "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
+        "out_of_sync": "Your connection has been out of sync for %(out_of_sync_seconds)s seconds.",
         "title_out_of_sync": "Connection out of sync",
-        "want_to_reconnect":
-            "If the connection can be recovered this message will disappear automatically."
+        "want_to_reconnect": "If the connection can be recovered this message will disappear automatically."
     },
     "counterpart": {
         "formats": {
@@ -509,8 +451,7 @@
         "borrow": "Prendi in prestito",
         "borrow_short": "Borrow",
         "buy": "Compra",
-        "buy_description":
-            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Compra almeno",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
@@ -518,14 +459,10 @@
         "chart_height": "Chart height (pixels)",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
-        "confirm_buy":
-            "Il tuo ordine è %(diff)s volte più alto dell'offerta più bassa, sei sicuro?",
-        "confirm_no_orders_buy":
-            "Stai facendo un ordine di acquisto in un mercato senza ordini di vendita attivi. Sei sicuro di voler continuare?",
-        "confirm_no_orders_sell":
-            "Stai facendo un ordine di vendita in un mercato senza ordini di acquisto attivi. Sei sicuro di voler continuare?",
-        "confirm_sell":
-            "Il tuo ordine è %(diff)s volte più basso della domanda più alta, sei sicuro?",
+        "confirm_buy": "Il tuo ordine è %(diff)s volte più alto dell'offerta più bassa, sei sicuro?",
+        "confirm_no_orders_buy": "Stai facendo un ordine di acquisto in un mercato senza ordini di vendita attivi. Sei sicuro di voler continuare?",
+        "confirm_no_orders_sell": "Stai facendo un ordine di vendita in un mercato senza ordini di acquisto attivi. Sei sicuro di voler continuare?",
+        "confirm_sell": "Il tuo ordine è %(diff)s volte più basso della domanda più alta, sei sicuro?",
         "core_rate": "Tasso di commissione",
         "custom_quote": "Add a custom quote",
         "deposit": "Deposit",
@@ -548,8 +485,7 @@
         "lowest_ask": "Offerta (ask) più bassa",
         "maintenance": "Prezzo Maintenance Call",
         "market": "Mercato",
-        "market_frozen":
-            "Il proprietario di %(asset)s ha disabilitato il trading in questo mercato.",
+        "market_frozen": "Il proprietario di %(asset)s ha disabilitato il trading in questo mercato.",
         "market_name": "I miei mercati",
         "market_picker": {
             "filter_by_issuer": "Filter by issuer",
@@ -594,8 +530,7 @@
         "rsi": "Relative Strength Index",
         "search": "Cerca qui altri mercati",
         "sell": "Vendi",
-        "sell_description":
-            "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "settings": "Opzioni grafico",
         "settle": "Settlement",
         "settle_orders": "Ordini settle",
@@ -634,23 +569,18 @@
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Riscuoti commissioni",
-                "claim_pool_text":
-                    "The asset owner may withdraw funds from the fee pool using this form:",
-                "claim_text":
-                    "L'erogatore dell'asset può riscuotere qui eventuali commissioni accumulate.",
+                "claim_pool_text": "The asset owner may withdraw funds from the fee pool using this form:",
+                "claim_text": "L'erogatore dell'asset può riscuotere qui eventuali commissioni accumulate.",
                 "core_exchange_rate": "Core exchange rate (CER)",
                 "fund": "Fund the fee pool",
-                "fund_text":
-                    "Il fee pool è usato per pagare le commissioni in %(core)s convertendo automaticamente le commissioni in %(asset)s a %(core)s. Se il fee pool esaurisce i fondi, le commissioni non possono più essere pagate in %(asset)s e saranno di default in %(core)s",
+                "fund_text": "Il fee pool è usato per pagare le commissioni in %(core)s convertendo automaticamente le commissioni in %(asset)s a %(core)s. Se il fee pool esaurisce i fondi, le commissioni non possono più essere pagate in %(asset)s e saranno di default in %(core)s",
                 "pool_balance": "Saldo del pool",
-                "pool_text":
-                    "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
+                "pool_text": "The fee pool is used to pay fees in %(core)s by converting the fee in %(asset)s to %(core)s. If the fee pool runs out of funds, fees may no longer be paid in %(asset)s and will default to %(core)s.<br/><br/>The core exchange rate is the price at which %(asset)s are converted to %(core)s.",
                 "title": "Fee Pool",
                 "unclaimed_issuer_income": "Reddito dell'erogatore non riscosso"
             },
             "feed_producer": "Feed producer",
-            "feed_producer_text":
-                "Approved feed producers may publish a new feed using the form below:",
+            "feed_producer_text": "Approved feed producers may publish a new feed using the form below:",
             "info": "Asset info",
             "invalid": "Il nome di asset %(name)s non è valido",
             "margin_positions": {
@@ -669,10 +599,8 @@
             "price_feed": {
                 "force_settlement_offset": "Force settlement offset",
                 "global_settlement_price": "Global settlement price",
-                "maintenance_collateral_ratio":
-                    "Rapporto di garanzia di mantenimento (MCR)",
-                "maximum_short_squeeze_ratio":
-                    "Massimo short sqeeze ratio (MSSR)",
+                "maintenance_collateral_ratio": "Rapporto di garanzia di mantenimento (MCR)",
+                "maximum_short_squeeze_ratio": "Massimo short sqeeze ratio (MSSR)",
                 "settlement_delay": "Settlement delay",
                 "settlement_price": "Prezzo di settlement",
                 "title": "Price Feed"
@@ -698,8 +626,7 @@
             "whitelist": {
                 "blacklist_authorities": "Autorita blacklist",
                 "blacklist_markets": "Blacklist mercato",
-                "enable_flag":
-                    "Il flag 'whitelist' deve essere abilitato per impostare le autorità whitelist",
+                "enable_flag": "Il flag 'whitelist' deve essere abilitato per impostare le autorità whitelist",
                 "whitelist_authorities": "Autorità whitelist",
                 "whitelist_markets": "Whitelist mercato"
             }
@@ -780,10 +707,8 @@
             "type": "Tipo di commissione"
         },
         "proposals": {
-            "authority_depth_warning":
-                "This proposal may not get approved because this permission exceeds the maximum authority depth.",
-            "children_authority_depth_warning":
-                "This proposal may not get approved because a permission exceeds the maximum authority depth.",
+            "authority_depth_warning": "This proposal may not get approved because this permission exceeds the maximum authority depth.",
+            "children_authority_depth_warning": "This proposal may not get approved because a permission exceeds the maximum authority depth.",
             "failed": "Failed",
             "failed_execute": "Approved, failed to execute.",
             "pending": "Pending",
@@ -807,24 +732,17 @@
         },
         "workers": {
             "create": "Crea una nuova worker proposal",
-            "create_text_1":
-                "Per creare il nuovo worker, per favore riempi il seguente form. Il worker sarà creato usando il tuo account correntemente attivo, che deve già essere un membro a vita.",
-            "create_text_2":
-                "Valuta attentamente i parametri che scegli, dal momento che non possono essere modificati una volta che hai pubblicato il tuo worker.",
+            "create_text_1": "Per creare il nuovo worker, per favore riempi il seguente form. Il worker sarà creato usando il tuo account correntemente attivo, che deve già essere un membro a vita.",
+            "create_text_2": "Valuta attentamente i parametri che scegli, dal momento che non possono essere modificati una volta che hai pubblicato il tuo worker.",
             "daily_pay": "Paga giornaliera (BTS)",
-            "date_text":
-                "La data d'inizio dovrebbe essere almeno una settimana nel futuro, in modo da dare alle persone il tempo di scoprire, valutare e votare per il tuo worker.",
-            "name_text":
-                "Il nome del tuo worker dovrebbe essere breve e descrittivo, tipo: 'Scopo del worker - Nome Account'",
-            "pay_text":
-                "La paga giornaliera specifica quanto quanto vuoi essere pagato al giorno, ed è specificata in BTS. Attualmente, è buona norma definire il salario in USD/CNY, e impegnarsi a bruciare qualunque surplus che ottieni per via della crescita del prezzo di BTS. Finché il tuo worker è attivo e dispone di voti a sufficienza da stare sopra il Refund Worker, riceverai questa paga giornaliera.",
+            "date_text": "La data d'inizio dovrebbe essere almeno una settimana nel futuro, in modo da dare alle persone il tempo di scoprire, valutare e votare per il tuo worker.",
+            "name_text": "Il nome del tuo worker dovrebbe essere breve e descrittivo, tipo: 'Scopo del worker - Nome Account'",
+            "pay_text": "La paga giornaliera specifica quanto quanto vuoi essere pagato al giorno, ed è specificata in BTS. Attualmente, è buona norma definire il salario in USD/CNY, e impegnarsi a bruciare qualunque surplus che ottieni per via della crescita del prezzo di BTS. Finché il tuo worker è attivo e dispone di voti a sufficienza da stare sopra il Refund Worker, riceverai questa paga giornaliera.",
             "period": "Durata worker",
             "title": "Nome del worker",
-            "url_text":
-                "Dovresti fornire un sito web, un documento github o Google doc che spieghi in dettaglio lo scopo del worker e come intendi utilizzare la paga del worker.",
+            "url_text": "Dovresti fornire un sito web, un documento github o Google doc che spieghi in dettaglio lo scopo del worker e come intendi utilizzare la paga del worker.",
             "vesting_pay": "Periodo di vesting del salario (giorni)",
-            "vesting_text":
-                "Il periodo di vesting definisce il numero di giorni che i guadagni del worker dovranno maturare (vest) prima di poter essere interamente riscossi.",
+            "vesting_text": "Il periodo di vesting definisce il numero di giorni che i guadagni del worker dovranno maturare (vest) prima di poter essere interamente riscossi.",
             "website": "Sito web"
         }
     },
@@ -848,11 +766,9 @@
         "update_available": "AGGIORNAMENTO DISPONIBILE"
     },
     "gateway": {
-        "add_funds":
-            "Aggiungi fondi rapidamente e facilmente al tuo account BitShares <strong>%(account)s</strong>. Questo servizio è fornito da Openledger.",
+        "add_funds": "Aggiungi fondi rapidamente e facilmente al tuo account BitShares <strong>%(account)s</strong>. Questo servizio è fornito da Openledger.",
         "address": "Address",
-        "address_with_memo":
-            "%(address)s <span class=\"blocktrades-with-memo\">con memo</span> %(memo)s",
+        "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">con memo</span> %(memo)s",
         "agreement": {
             "hint": "I have read and agreed to",
             "name": "《Service Agreement》",
@@ -867,14 +783,10 @@
         "asset_to_withdraw": "Asset da prelevare:",
         "asset_unavailable": "The gateway for %(asset)s is not in service",
         "assets": {
-            "bit":
-                "<br/>bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
-            "bitcny":
-                "<br/><br/>bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
-            "open":
-                "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Openledger.",
-            "trade":
-                "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades."
+            "bit": "<br/>bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
+            "bitcny": "<br/><br/>bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
+            "open": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Openledger.",
+            "trade": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades."
         },
         "balance": "Saldo attuale",
         "balance_asset": "Saldo %(asset)s attuale",
@@ -882,8 +794,7 @@
         "bitkapital_text": "Scegli un asset da depositare o prelevare:",
         "bitkapital_withdraw": "Stai prelevando",
         "bridge": "Bridge",
-        "bridge_text":
-            "Un bridge ti permette discambiare un asset verso un altro, ad esempio BTC in BTS.",
+        "bridge_text": "Un bridge ti permette discambiare un asset verso un altro, ad esempio BTC in BTS.",
         "calc": "Calcolo in corso",
         "choose_deposit": "Per favore seleziona la valuta che vuoi depositare",
         "choose_withdraw": "Per favore seleziona la valuta che vuoi prelevare",
@@ -904,23 +815,17 @@
         },
         "deposit_inst": "Istruzioni per il deposito",
         "deposit_limit": "Limite di deposito",
-        "deposit_notice_delay":
-            "(new address can be generated once per 5 minutes)",
+        "deposit_notice_delay": "(new address can be generated once per 5 minutes)",
         "deposit_summary": "Riepilogo deposito",
-        "deposit_to":
-            "Per favore invia i tuoi %(asset)s all'indirizzo seguente",
-        "deposit_warning":
-            "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
-        "deposit_warning_memo":
-            "Deposit %(asset)s must contains memo, otherwise it won't be credited",
+        "deposit_to": "Per favore invia i tuoi %(asset)s all'indirizzo seguente",
+        "deposit_warning": "Sending any other currency to the %(asset)s address will result in the loss of your deposit",
+        "deposit_warning_memo": "Deposit %(asset)s must contains memo, otherwise it won't be credited",
         "fee": "Commissione Gateway",
         "fiat": "Fiat",
-        "fiat_text":
-            "I depositi e i prelievi in valuta legale sono forniti da CCEDK. Per iniziare devi completare la procedura di registrazione. Sono disponibili le seguenti conversioni:",
+        "fiat_text": "I depositi e i prelievi in valuta legale sono forniti da CCEDK. Per iniziare devi completare la procedura di registrazione. Sono disponibili le seguenti conversioni:",
         "frozen": "The user account %(account)s was frozen",
         "gateway": "Gateway",
-        "gateway_text":
-            "Scegli qui se vuoi effettuare un deposito o un prelievo",
+        "gateway_text": "Scegli qui se vuoi effettuare un deposito o un prelievo",
         "generate": "Genera",
         "generate_new": "Ottieni un nuovo indirizzo",
         "generate_new_memo": "Get new memo",
@@ -937,19 +842,14 @@
         "meta": {
             "open_website": "Apri sito web"
         },
-        "min_deposit_warning_amount":
-            "Minimum Deposit: %(minDeposit)s %(coin)s",
-        "min_deposit_warning_asset":
-            "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Limit Reached",
         "please_generate_address": "Please, get new address ",
         "purchase": "Acquista %(asset)s",
-        "purchase_1":
-            "Acquista %(outputAsset)s rapidamente e facilmente usando %(inputAsset)s da un portafoglio esterno. Questo servizio è fornito da <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
-        "purchase_notice":
-            "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
-        "purchase_notice_memo":
-            "Memo <b>required</b> for proper routing to your account",
+        "purchase_1": "Acquista %(outputAsset)s rapidamente e facilmente usando %(inputAsset)s da un portafoglio esterno. Questo servizio è fornito da <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
+        "purchase_notice": "%(inputAsset)s sent to this address will show up as %(outputAsset)s",
+        "purchase_notice_memo": "Memo <b>required</b> for proper routing to your account",
         "receive_account": "Account ricevente:",
         "recent_deposit": "Depositi recenti",
         "recent_withdraw": "Prelievi recenti",
@@ -968,29 +868,19 @@
         "symbol": "Simbolo",
         "time": "Time",
         "title": "Deposito & Prelievo",
-        "transaction_history_info":
-            " %(amount)s %(assetName)s with trancation id: %(txid)s ",
-        "unavailable":
-            "Il servizio di gateway per questo asset non è al momento disponibile, riprova più tardi",
-        "unavailable_OPEN":
-            "Il Gateway OpenLedger non è disponibile o non risponde",
-        "unavailable_RUDEX":
-            "Il Gateway RuDEX non è disponibile o non risponde",
-        "unavailable_TRADE":
-            "Il Bridge Blocktrades non è disponibile o non risponde",
-        "unavailable_bridge":
-            "Il servizio di bridge per questo asset non è al momento disponibile, riprova più tardi",
-        "use_copy_button":
-            "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
-        "user_unavailable":
-            "User informaction is current unavailable, please try again later",
-        "valid_address":
-            "Per favore inserisci un indirizzo %(coin_type)s valido",
+        "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
+        "unavailable": "Il servizio di gateway per questo asset non è al momento disponibile, riprova più tardi",
+        "unavailable_OPEN": "Il Gateway OpenLedger non è disponibile o non risponde",
+        "unavailable_RUDEX": "Il Gateway RuDEX non è disponibile o non risponde",
+        "unavailable_TRADE": "Il Bridge Blocktrades non è disponibile o non risponde",
+        "unavailable_bridge": "Il servizio di bridge per questo asset non è al momento disponibile, riprova più tardi",
+        "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
+        "user_unavailable": "User informaction is current unavailable, please try again later",
+        "valid_address": "Per favore inserisci un indirizzo %(coin_type)s valido",
         "website": "Visita il sito web",
         "withdraw": "Prelievo",
         "withdraw_coin": "Preleva %(coin)s (%(symbol)s)",
-        "withdraw_funds":
-            "Stai per ritirare fondi dal tuo account BitShares verso il tuo conto %(asset)s esterno.",
+        "withdraw_funds": "Stai per ritirare fondi dal tuo account BitShares verso il tuo conto %(asset)s esterno.",
         "withdraw_history_status": {
             "audited": "auditting completed",
             "auditing": "withdraw auditing",
@@ -1002,11 +892,9 @@
         },
         "withdraw_inst": "Istruzioni per il prelievo",
         "withdraw_now": "Preleva adesso",
-        "withdraw_placeholder":
-            "Per favore inserisci il tuo indirizzo %(asset)s",
+        "withdraw_placeholder": "Per favore inserisci il tuo indirizzo %(asset)s",
         "withdraw_summary": "Riepilogo prelievo",
-        "withdraw_to":
-            "Clicca il pulsante sotto per iniziare un prelievo di %(asset)s",
+        "withdraw_to": "Clicca il pulsante sotto per iniziare un prelievo di %(asset)s",
         "your_account": "Il tuo account"
     },
     "global": {
@@ -1032,8 +920,7 @@
         "help": "Aiuto",
         "lock": "Log out (blocca il portafoglio)",
         "lock_short": "Log out",
-        "locked_tip":
-            "<br/>Clicca per fare il login e sbloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
+        "locked_tip": "<br/>Clicca per fare il login e sbloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
         "logout": "Logout",
         "payments": "Invia",
         "payments_beta": "Send (Beta)",
@@ -1043,8 +930,7 @@
         "unlock": "Log in (sblocca il portafoglio)",
         "unlock_password": "Log in usando una password",
         "unlock_short": "Login",
-        "unlocked_tip":
-            "<br/>Clicca per fare il logout e bloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
+        "unlocked_tip": "<br/>Clicca per fare il logout e bloccare il tuo portafoglio.<br/><br/>Chiudere la finestra del browser effettuerà automaticamente il log out.",
         "update_asset": "Aggiorna Asset"
     },
     "icons": {
@@ -1158,8 +1044,7 @@
     },
     "incognito": {
         "mode": "Private/Incognito:",
-        "warning":
-            "If you close your browser without backing up your wallet, you will lose this account permanently."
+        "warning": "If you close your browser without backing up your wallet, you will lose this account permanently."
     },
     "languages": {
         "de": "Deutsch",
@@ -1184,13 +1069,10 @@
         "title": "Mercati"
     },
     "migration": {
-        "announcement_1":
-            "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
+        "announcement_1": "In an effort to provide enhanced security for the web-based wallet, we are migrating it, effective immediately to the address below. Please be sure to update any bookmarks you may have.",
         "text_1": "Local wallet detected",
-        "text_2":
-            "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
-        "text_3":
-            "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
+        "text_2": "Please backup your wallet now and restore the backup file to <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a>, which will be your new address for the web wallet. Thanks for your continued support.",
+        "text_3": "Please use <a href='https://wallet.bitshares.org' target='blank' rel='noopener noreferrer'>https://wallet.bitshares.org</a> from now on, your existing credentials will let you login there as well.",
         "title": "Notice"
     },
     "modal": {
@@ -1202,8 +1084,7 @@
         "confirmation": {
             "accept": "Sì",
             "cancel": "No",
-            "title":
-                "L'indirizzo che hai inserito non sembra valido, sei sicuro di voler continuare con il prelievo?"
+            "title": "L'indirizzo che hai inserito non sembra valido, sei sicuro di voler continuare con il prelievo?"
         },
         "convert": {
             "amount": "Quantità da convertire",
@@ -1213,8 +1094,7 @@
             "address_generation_error": "Unable to generate address",
             "amount": "Quantità da depositare",
             "asset": "Asset",
-            "bts_transfer_description":
-                "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
+            "bts_transfer_description": "It's easy to receive BTS from anywhere. As long as BTS is sent to your account name it will show up in your wallet. This QR code also contains your account name.",
             "cancel": "Cancel",
             "close": "Close",
             "header": "Deposit to %(account_name)s",
@@ -1243,8 +1123,7 @@
             "pay_with": "Paga con account"
         },
         "qrcode": {
-            "input_message":
-                "Inserisci una password usata per crittografare il codice QR.<br />Una password vuota mostrerà un codice QR in chiaro.",
+            "input_message": "Inserisci una password usata per crittografare il codice QR.<br />Una password vuota mostrerà un codice QR in chiaro.",
             "label": "qrcode",
             "title": "Codice QR della chiave privata"
         },
@@ -1256,8 +1135,7 @@
         },
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
-            "header_propose":
-                "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
+            "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
         },
         "settle": {
             "amount": "Quantità di cui fare settlement",
@@ -1278,8 +1156,7 @@
             "header": "Withdraw (beta)",
             "memo": "Memo",
             "no_estimate": "No estimate available for this object",
-            "no_gateways":
-                "Sorry, but there are no gateways available to handle this withdrawal",
+            "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Preleva",
             "submit_beta": "Withdraw (beta)",
@@ -1310,62 +1187,47 @@
     },
     "operation": {
         "annual_upgrade_account": "{account} è stato promosso a membro annuale",
-        "asset_claim_pool":
-            "{account} claimed {amount} from asset {asset}'s fee pool",
+        "asset_claim_pool": "{account} claimed {amount} from asset {asset}'s fee pool",
         "asset_create": "{account} ha creato l'asset {asset}",
-        "asset_fund_fee_pool":
-            "{account} ha finanziato il fee pool di {asset} con {amount}",
-        "asset_global_settle":
-            "{account} ha richiesto il settlement globale di {asset} a {price}",
+        "asset_fund_fee_pool": "{account} ha finanziato il fee pool di {asset} con {amount}",
+        "asset_global_settle": "{account} ha richiesto il settlement globale di {asset} a {price}",
         "asset_issue": "{account} ha emesso {amount} a {to}",
         "asset_reserve": "{account} ha riservato (bruciato) {amount}",
         "asset_settle": "{account} ha richiesto il settlement di {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
         "asset_update": "{account} ha aggiornato l'asset {asset}",
-        "asset_update_feed_producers":
-            "{account} ha aggiornato i produttori di feed per l'asset {asset}",
-        "asset_update_issuer":
-            "{from_account} transferred {asset} to {to_account}",
+        "asset_update_feed_producers": "{account} ha aggiornato i produttori di feed per l'asset {asset}",
+        "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} ha riscosso un saldo di {amount}",
         "blacklisted_by": "{lister} ha messo in blacklist l'account {listee}",
-        "call_order_update":
-            "{account} ha cambiato il debito {debtSymbol} di {debt} e la garanzia di {collateral}",
-        "committee_member_update_global_parameters":
-            "{account} ha aggiornato i parametri globali del comitato",
+        "call_order_update": "{account} ha cambiato il debito {debtSymbol} di {debt} e la garanzia di {collateral}",
+        "committee_member_update_global_parameters": "{account} ha aggiornato i parametri globali del comitato",
         "fill_order_buy": "{account} ha acquistato {amount} per {price}",
         "fill_order_sell": "{account} ha venduto {amount} per {price}",
-        "lifetime_upgrade_account":
-            "{account} è stato promosso a membro a vita",
-        "limit_order_buy":
-            "{account} ha fatto un ordine per comprare {amount} a {price}",
+        "lifetime_upgrade_account": "{account} è stato promosso a membro a vita",
+        "limit_order_buy": "{account} ha fatto un ordine per comprare {amount} a {price}",
         "limit_order_cancel": "{account} ha annullato l'ordine #%(order)s",
-        "limit_order_sell":
-            "{account} ha fatto un ordine per vendere {amount} a {price}",
+        "limit_order_sell": "{account} ha fatto un ordine per vendere {amount} a {price}",
         "no_recent": "Nessuna transazione recente",
         "override_transfer": "{issuer} ha trasferito {amount} da {from} a {to}",
         "pending": "in attesa da %(blocks)s blocchi",
         "proposal_create": "{account} ha creato una proposta di transazione",
         "proposal_delete": "{account} ha rimosso una proposta di transazione",
-        "proposal_update":
-            "{account} ha aggiornato una proposta di transazione",
+        "proposal_update": "{account} ha aggiornato una proposta di transazione",
         "publish_feed": "{account} ha pubblicato un feed price di {price}",
         "reg_account": "{registrar} ha registrato l'account {new_account}",
         "set_proxy": "{account} ha scelto {proxy} come suo proxy di voto",
         "transfer": "{from} ha inviato {amount} a {to}",
-        "transfer_account":
-            "L'ownership di {account} è stata transferita a {to}",
+        "transfer_account": "L'ownership di {account} è stata transferita a {to}",
         "unlisted_by": "{lister} ha delistato l'account {listee}",
         "update_account": "{account} ha aggiornato i dati del suo account",
-        "vesting_balance_withdraw":
-            "{account} ha ritirato un saldo vesting di {amount}",
+        "vesting_balance_withdraw": "{account} ha ritirato un saldo vesting di {amount}",
         "whitelisted_by": "{lister} ha messo in whitelist l'account {listee}",
-        "witness_create":
-            "{account} è stato promosso per diventare una witness",
+        "witness_create": "{account} è stato promosso per diventare una witness",
         "witness_pay": "Ha ritirato il salario di witness verso l'account",
         "witness_receive": "Ha ricevuto la witness dalla witness",
         "witness_update": "{account} ha aggiornato i suoi dati di witness",
-        "worker_create":
-            "{account} ha creato una worker proposal con un salario giornaliero di {pay}"
+        "worker_create": "{account} ha creato una worker proposal con un salario giornaliero di {pay}"
     },
     "page404": {
         "asset_not_found_subtitle": "That asset does not exist",
@@ -1387,20 +1249,14 @@
         "asset_reserve": "Riserva (brucia) {amount} usando {account}",
         "asset_settle": "Richiedi un settlement di",
         "asset_update": "Aggiorna l'asset {asset} usando l'account {account}",
-        "call_order_update":
-            "Cambia il debito {account} {debtSymbol} di {debt} e la garanzia di {collateral}",
-        "committee_member_update_global_parameters":
-            "Aggiorna i parametri globali del comitato da {account}",
+        "call_order_update": "Cambia il debito {account} {debtSymbol} di {debt} e la garanzia di {collateral}",
+        "committee_member_update_global_parameters": "Aggiorna i parametri globali del comitato da {account}",
         "expires": "Scade",
-        "feed_producer":
-            "Aggiorna i produttori di feed per l'asset {asset} usando l'account {account}",
+        "feed_producer": "Aggiorna i produttori di feed per l'asset {asset} usando l'account {account}",
         "limit_order_buy": "Ordina l'acquisto {amount} a {price} per {account}",
-        "limit_order_create":
-            "Ordina l'acquisto di %(buy_amount)s per %(sell_amount)s per %(account)s",
-        "limit_order_sell":
-            "Ordina la vendita di {amount} a {price} per {account}",
-        "override_transfer":
-            "Trasferisci {amount} da {from} a {to} per autorità di {issuer}",
+        "limit_order_create": "Ordina l'acquisto di %(buy_amount)s per %(sell_amount)s per %(account)s",
+        "limit_order_sell": "Ordina la vendita di {amount} a {price} per {account}",
+        "override_transfer": "Trasferisci {amount} da {from} a {to} per autorità di {issuer}",
         "proposals": "Proposals",
         "reject": "Respingi",
         "status": "Stato",
@@ -1410,14 +1266,11 @@
             "active_approvals_to_remove": "Approvazioni attive da rimuovere",
             "key_approvals_to_add": "Approvazioni chiave da aggiungere",
             "key_approvals_to_remove": "Approvazioni chiave da rimuovere",
-            "owner_approvals_to_add":
-                "Approvazioni del proprietario da aggiungere",
-            "owner_approvals_to_remove":
-                "Approvazioni del proprietario da rimuovere"
+            "owner_approvals_to_add": "Approvazioni del proprietario da aggiungere",
+            "owner_approvals_to_remove": "Approvazioni del proprietario da rimuovere"
         },
         "update_account": "Aggiorna dati account per {account}",
-        "vesting_balance_withdraw":
-            "Preleva {amount} dal saldo vesting di {account}"
+        "vesting_balance_withdraw": "Preleva {amount} dal saldo vesting di {account}"
     },
     "proposal_create": {
         "expiration_time": "Data di scadenza",
@@ -1457,42 +1310,34 @@
         "backup": "Backup",
         "backup_backup": "Ripristina da un file di backup (.bin)",
         "backup_backup_short": "Restore from a backup",
-        "backup_brainkey":
-            "Ripristina utilizzando una brainkey del portafoglio",
+        "backup_brainkey": "Ripristina utilizzando una brainkey del portafoglio",
         "backup_favorites": "Restore favorites using a json file",
         "backup_favorites_error": "Could not parse JSON.",
         "backup_favorites_finish": "Import favorites",
         "backup_favorites_success": "Successfully restored market favorites",
         "backup_favoritesbtn": "Backup favorites",
-        "backup_favoritestext":
-            "Back up your favorites to restore them later after updates.",
+        "backup_favoritestext": "Back up your favorites to restore them later after updates.",
         "backup_key": "Importa chiave privata",
-        "backup_legacy":
-            "Importa un file di esportazione della chiave di BTS 0.9.3c (.json)",
+        "backup_legacy": "Importa un file di esportazione della chiave di BTS 0.9.3c (.json)",
         "backup_text": "Crea qui i backup.",
         "backupcreate_backup": "Crea backup del portafoglio",
         "backupcreate_brainkey": "Crea backup della brainkey",
         "backupcreate_favorites": "Create favorites backup",
         "browser_notifications": "Notifiche del browser",
-        "browser_notifications_additional_transfer_to_me":
-            "Notifica sui trasferimenti al mio account",
+        "browser_notifications_additional_transfer_to_me": "Notifica sui trasferimenti al mio account",
         "browser_notifications_allow": "Attivare le notifiche",
-        "browser_notifications_disabled_by_browser_notify":
-            "Your browser disabled notifications. Click to learn how enable browser notifications",
+        "browser_notifications_disabled_by_browser_notify": "Your browser disabled notifications. Click to learn how enable browser notifications",
         "cloud_login": "Login Portafoglio Cloud",
         "confirmMarketOrder": "Chiedi conferma per gli ordini di mercato",
         "confirm_no": "Mai",
-        "confirm_remove":
-            "Sei sicuro di voler rimuovere %(name)s dalla lista dei nodi disponibili?",
+        "confirm_remove": "Sei sicuro di voler rimuovere %(name)s dalla lista dei nodi disponibili?",
         "confirm_yes": "Sempre",
-        "connection_error":
-            "Impossibile connettersi con il nodo API node %(url)s; ripiegando su nodi funzionanti noti",
+        "connection_error": "Impossibile connettersi con il nodo API node %(url)s; ripiegando su nodi funzionanti noti",
         "darkTheme": "Tema scuro",
         "delete_select": "Seleziona portafoglio da rimuovere",
         "enable_wallet": "Abilità modalità portafoglio",
         "faucet_address": "Faucet",
-        "faucet_address_text":
-            "L'indirizzo del faucet è usato per pagare la commissione di registrazione dei nuovi utenti.",
+        "faucet_address_text": "L'indirizzo del faucet è usato per pagare la commissione di registrazione dei nuovi utenti.",
         "general": "Generali",
         "general_text": "Modifica le impostazioni di base.",
         "hidden_nodes": "Nodi nascosti",
@@ -1502,8 +1347,7 @@
         "lightTheme": "Tema chiaro",
         "local_wallet": "Login Portafoglio locale",
         "locale": "Cambia lingua",
-        "lookup_text":
-            "Clicca il pulsante sotto per verificare la presenza di saldi non riscossi da BTS 1.0",
+        "lookup_text": "Clicca il pulsante sotto per verificare la presenza di saldi non riscossi da BTS 1.0",
         "low_latency": "Bassa latenza",
         "medium_latency": "Media latenza",
         "midnightTheme": "Midnight",
@@ -1517,8 +1361,7 @@
         "password": "Password",
         "passwordLogin": "Fai il login usando il modalità account",
         "password_text": "Cambia la tua password.",
-        "personal_active":
-            "Your only personal node is active, to remove or modify it you must first connect to a different node",
+        "personal_active": "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
         "remove": "Rimuovi",
@@ -1526,13 +1369,10 @@
         "remove_ws": "Rimuovi Nodo",
         "reset": "Impostazioni predefinite",
         "reset_text": "Ripristina le impostazioni ai loro valori originali",
-        "reset_text_description":
-            "Ciò ripristinerà tutte le impostazioni %(generalName)s, di %(accessName)s e di %(faucetName)s",
+        "reset_text_description": "Ciò ripristinerà tutte le impostazioni %(generalName)s, di %(accessName)s e di %(faucetName)s",
         "restore": "Ripristina/Importa",
-        "restore_brainkey_text":
-            "Per effettuare il ripristino da una brainkey, dovrai creare un nuovo portafoglio. Per favore fornisci sotto una password e il nome del tuo portafoglio, quindi inserisci una brainkey.",
-        "restore_default_success":
-            "Le impostazioni sono state reimpostate con successo.",
+        "restore_brainkey_text": "Per effettuare il ripristino da una brainkey, dovrai creare un nuovo portafoglio. Per favore fornisci sotto una password e il nome del tuo portafoglio, quindi inserisci una brainkey.",
+        "restore_default_success": "Le impostazioni sono state reimpostate con successo.",
         "restore_key_count": "# di chiavi",
         "restore_text": "Ripristina da un backup o importa le chiavi.",
         "show": "mostra",
@@ -1541,112 +1381,73 @@
         "skipped": "Skipped",
         "switch": "Switch Node",
         "testnet_nodes": "Testnet",
-        "testnet_nodes_disclaimer":
-            "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
+        "testnet_nodes_disclaimer": "Availability of the testnet is not guaranteed. Establish a connection by connected manually to one of the nodes below:",
         "themes": "Tema",
         "unit": "Unità preferite per l'account",
-        "valid_node_url":
-            "L'URL del Nodo deve iniziare con ws:// oppure wss://",
+        "valid_node_url": "L'URL del Nodo deve iniziare con ws:// oppure wss://",
         "view_keys": "Vedi chiavi",
         "wallet": "Portafoglio",
-        "walletLockTimeout":
-            "Tempo di autoblocco del portafoglio (in secondi, 0 per disabilitare)",
+        "walletLockTimeout": "Tempo di autoblocco del portafoglio (in secondi, 0 per disabilitare)",
         "wallet_required": "Modalità portafoglio richiesta",
-        "wallet_required_text":
-            "Per ripristinare un backup devi prima passaere alla modalità portafoglio, cliccando il pulsante sotto",
+        "wallet_required_text": "Per ripristinare un backup devi prima passaere alla modalità portafoglio, cliccando il pulsante sotto",
         "wallet_text": "Controlla i dettagli del tuo portafoglio.",
         "wallets": "Portafogli",
         "yes": "Sì"
     },
     "sync_fail": {
-        "sub_text_1":
-            "Per favore controlla che l'ora del tuo computer sia corretta.",
-        "sub_text_2":
-            "Dopo aver sincronizzato l'ora, ricarica questa pagina.<br/><br/>Se l'ora è già impostata correttamente, il server API che stai utilizzando potrebbe essere fuori sincrono. In questo caso, prova ad utilizzare un altro server dalla lista seguente.",
+        "sub_text_1": "Per favore controlla che l'ora del tuo computer sia corretta.",
+        "sub_text_2": "Dopo aver sincronizzato l'ora, ricarica questa pagina.<br/><br/>Se l'ora è già impostata correttamente, il server API che stai utilizzando potrebbe essere fuori sincrono. In questo caso, prova ad utilizzare un altro server dalla lista seguente.",
         "title": "Sincronizzazione con il server API fallita"
     },
     "tooltip": {
-        "borrow":
-            "Prendi in prestito %(asset)s dalla rete. Ciò crea uno smart contract che blocca la tua garanzia finché o modifichi la tua posizione oppure è richiesta una chiamata a margine.",
-        "bridge_TRADE":
-            "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
-        "buy_min":
-            "Riceverai come minimo questa quantità. Se vi sono ordini corrispondenti con un prezzo inferiore rispetto a quello che hai specificato, riceverai più di questa quantità.",
-        "call_limit":
-            "Questo è il prezzo di chiamata (call price) della posizione con margine nel mercato con la più bassa garanzia.",
-        "call_price":
-            "Questo è il prezzo di chiamata della posizione. Se il prezzo di mercato scende sotto il prezzo di chiamata, la posizione sarà chiamata a margine.",
-        "close_position":
-            "Clicca qui per chiudere la sua posizione. Sarà necessario che tu abbia almeno %(amount)s %(asset)s per eseguire questa operazione.",
-        "coll_ratio":
-            "Il 'collateral ratio' della posizione è COLLATERAL * FEED PRICE / DEBT.",
+        "borrow": "Prendi in prestito %(asset)s dalla rete. Ciò crea uno smart contract che blocca la tua garanzia finché o modifichi la tua posizione oppure è richiesta una chiamata a margine.",
+        "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
+        "buy_min": "Riceverai come minimo questa quantità. Se vi sono ordini corrispondenti con un prezzo inferiore rispetto a quello che hai specificato, riceverai più di questa quantità.",
+        "call_limit": "Questo è il prezzo di chiamata (call price) della posizione con margine nel mercato con la più bassa garanzia.",
+        "call_price": "Questo è il prezzo di chiamata della posizione. Se il prezzo di mercato scende sotto il prezzo di chiamata, la posizione sarà chiamata a margine.",
+        "close_position": "Clicca qui per chiudere la sua posizione. Sarà necessario che tu abbia almeno %(amount)s %(asset)s per eseguire questa operazione.",
+        "coll_ratio": "Il 'collateral ratio' della posizione è COLLATERAL * FEED PRICE / DEBT.",
         "copy_password": "Clicca qui per copiare la password negli appunti",
         "copy_tip": "Clicca per copiare il testo",
-        "cr_danger":
-            "Questa posizione è chiamata a margine in questo momento. Considera la possibilità di aggiungere garanzia per portare il 'collateral ratio' sopra %(mr)s, oppure di chiudere la posizione.",
-        "cr_warning":
-            "Questa posizione ha un basso livello di garanzia, e sarà chiamata a margine se il 'collateral ratio' scende sotto %(mr)s. Valuta se vuoi aggiungere ulteriore garanzia o chiudere la posizione.",
-        "deposit_tip":
-            "Per completare il deposito, vai al tuo portafoglio %(asset)s ed effettua un trasferimento all'indirizzo mostrato in questa pagina. Riceverai il deposito non appena il trasferimento sarà confermato. Se viene mostrato un memo, è essenziale che tu lo includa nel tuo trasferimento.",
-        "disconnected":
-            "Non sei connesso a un nodo API, prova a ricaricare o a scegliere un nuovo punto di accesso nelle Impostazioni",
+        "cr_danger": "Questa posizione è chiamata a margine in questo momento. Considera la possibilità di aggiungere garanzia per portare il 'collateral ratio' sopra %(mr)s, oppure di chiudere la posizione.",
+        "cr_warning": "Questa posizione ha un basso livello di garanzia, e sarà chiamata a margine se il 'collateral ratio' scende sotto %(mr)s. Valuta se vuoi aggiungere ulteriore garanzia o chiudere la posizione.",
+        "deposit_tip": "Per completare il deposito, vai al tuo portafoglio %(asset)s ed effettua un trasferimento all'indirizzo mostrato in questa pagina. Riceverai il deposito non appena il trasferimento sarà confermato. Se viene mostrato un memo, è essenziale che tu lo includa nel tuo trasferimento.",
+        "disconnected": "Non sei connesso a un nodo API, prova a ricaricare o a scegliere un nuovo punto di accesso nelle Impostazioni",
         "feed_price": "This is the current external feed price",
-        "filter_ops":
-            "Usa questa lista per filtrare il tuo storico secondo il tipo di operazione.",
+        "filter_ops": "Usa questa lista per filtrare il tuo storico secondo il tipo di operazione.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
         "gateway": "Gateways back desposits by 100% real assets",
-        "generate":
-            "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
+        "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
         "hide_asset": "Clicca qui per nascondere quest'asset da questa lista.",
         "latest_price": "Questo è l'ultimo prezzo visto in questo mercato.",
-        "login":
-            "Questo portafoglio BitShares non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
-        "margin_price":
-            "Questo è il prezzo massimo che una posizione con margine può essere tenuta a pagare in caso di chiamata. È anche detto Squeeze Price.",
-        "market_fee":
-            "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
-        "memo_tip":
-            "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
+        "login": "Questo portafoglio BitShares non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
+        "margin_price": "Questo è il prezzo massimo che una posizione con margine può essere tenuta a pagare in caso di chiamata. È anche detto Squeeze Price.",
+        "market_fee": "Il proprietario di %(asset)s addebita una commissione di mercato del %(percent)s%% per gli ordini di acquisto. Questa commissione sarà dedotta dalla quantità che ricevi quando l'ordine è eseguito, e non è pagata quando l'ordine viene creato.",
+        "memo_tip": "Puoi includere qualsiasi messaggio nel campo 'memo'. Il memo è facoltativo, ma in genere richiesto per i trasferimenti verso un exchange.",
         "no_groups_available": "No groupings available using this API server",
-        "no_price":
-            "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",
-        "over_limit":
-            "The bridge does not have enough of the desired asset for this buy order",
-        "propose_scam":
-            "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
+        "no_price": "Non c'è nessun prezzo disponibile per questo asset che possa essere usato per stimarne il valore.",
+        "over_limit": "The bridge does not have enough of the desired asset for this buy order",
+        "propose_scam": "Questa proposta è stata creata da un noto ciarlatano, non approvarla!",
         "propose_tip": "Propose another user to initiate a transaction",
-        "proxy_remove":
-            "You have a proxy set, to remove it simply clear this input field",
-        "proxy_search":
-            "Search for an account to be used as your proxy for voting",
-        "settle":
-            "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in BTS dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
-        "settle_price":
-            "Questo è il prezzo a cui i settle order saranno eseguiti.",
-        "show_asset":
-            "Clicca qui per mostrare quest'asset nella lista principale.",
-        "show_block":
-            "Clicca qui per mostrare il blocco #%(block)s in cui questa transazione è avvenuta.",
-        "sign_owner":
-            "Se sei il proprietario di questo account, per favore metti una spunta per assicurare che la transazione sia firmata correttamente. Ciò è necessario solo se stai usando l'account proprietario e tale account non è incluso tra i permessi attivi.",
-        "sync_no":
-            "Il nodo corrente non è sincronizzato con la blockchain, prova a passare a un altro",
+        "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
+        "proxy_search": "Search for an account to be used as your proxy for voting",
+        "settle": "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in BTS dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
+        "settle_price": "Questo è il prezzo a cui i settle order saranno eseguiti.",
+        "show_asset": "Clicca qui per mostrare quest'asset nella lista principale.",
+        "show_block": "Clicca qui per mostrare il blocco #%(block)s in cui questa transazione è avvenuta.",
+        "sign_owner": "Se sei il proprietario di questo account, per favore metti una spunta per assicurare che la transazione sia firmata correttamente. Ciò è necessario solo se stai usando l'account proprietario e tale account non è incluso tra i permessi attivi.",
+        "sync_no": "Il nodo corrente non è sincronizzato con la blockchain, prova a passare a un altro",
         "sync_yes": "Il nodo corrente è sincronizzato con la blockchain",
-        "target_collateral_ratio":
-            "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
-        "transfer_actions":
-            "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
-        "update_position":
-            "Clicca qui per aggiornare la tua posizione. Puoi cambiare il debito e/o i livelli di garanzia della tua posizione in qualunque momento.",
-        "withdraw_address":
-            "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
+        "target_collateral_ratio": "Setting a target collateral ratio can help with not selling all of the posision at once.<br /><br /><strong>Sell as little by setting target below MCR (ex. 1.5)</strong><br /><br /><strong>Sell as little but decrease possible margin calls again by setting it higher than MCR (ex. 3)",
+        "transfer_actions": "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
+        "update_position": "Clicca qui per aggiornare la tua posizione. Puoi cambiare il debito e/o i livelli di garanzia della tua posizione in qualunque momento.",
+        "withdraw_address": "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
         "withdraw_full": "Clicca per prelevare l'intero saldo"
     },
     "transaction": {
         "amount_sell": "Quantità da vendere",
-        "asset_claim_fees":
-            "ha riscosso %(balance_amount)s in commissioni dal fee pool di %(asset)s",
+        "asset_claim_fees": "ha riscosso %(balance_amount)s in commissioni dal fee pool di %(asset)s",
         "asset_reserve": "quantità di asset riservata",
         "at": "a",
         "balance_id": "ID saldo",
@@ -1659,8 +1460,7 @@
         "bond_pay_collateral": "Ha pagato una garanzia di",
         "borrow_amount": "Debito",
         "borrower": "Debitore",
-        "broadcast_fail":
-            "Il tentativo di trasmettere la transazione è fallito: %(message)s",
+        "broadcast_fail": "Il tentativo di trasmettere la transazione è fallito: %(message)s",
         "broadcast_success": "La transazione è stata trasmessa",
         "broadcasting": "Trasmissione transazione..",
         "broadcasting_short": "Trasmissione in corso..",
@@ -1697,8 +1497,7 @@
             "membership_annual_fee": "Membership annuale",
             "membership_lifetime_fee": "Membership a vita",
             "premium_fee": "Tariffa per i nomi Premium",
-            "price_per_kbyte":
-                "Prezzo per KByte della dimensione della transazione",
+            "price_per_kbyte": "Prezzo per KByte della dimensione della transazione",
             "symbol3": "Simboli con 3 caratteri",
             "symbol4": "Simboli con 4 caratteri"
         },
@@ -1748,16 +1547,14 @@
             "asset_settle_cancel": "Cancel asset settlement",
             "asset_update": "Aggiorna asset",
             "asset_update_bitasset": "Aggiorna SmartCoin",
-            "asset_update_feed_producers":
-                "Aggiorna produttori di feed per l'asset",
+            "asset_update_feed_producers": "Aggiorna produttori di feed per l'asset",
             "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Riscuoti saldo",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Aggiorna margine",
             "committee_member_create": "Crea membro del comitato",
             "committee_member_update": "Aggiorna membro del comitato",
-            "committee_member_update_global_parameters":
-                "Aggiornamento parametri globali",
+            "committee_member_update_global_parameters": "Aggiornamento parametri globali",
             "custom": "Personalizzato",
             "fill_order": "Completa ordine",
             "limit_order_cancel": "Annulla un ordine",
@@ -1788,14 +1585,10 @@
             "white_and_black_listed": "In whitelist e in blacklist",
             "white_listed": "In whitelist"
         },
-        "withdraw_permission_claim":
-            "Ha richiesto il permesso di prelevare per l'account",
-        "withdraw_permission_create":
-            "Ha dato il permesso di prelevare per l'account",
-        "withdraw_permission_delete":
-            "Ha rimosso il permesso di prelevare per l'account",
-        "withdraw_permission_update":
-            "Ha aggiornato il permesso di prelevare per l'account"
+        "withdraw_permission_claim": "Ha richiesto il permesso di prelevare per l'account",
+        "withdraw_permission_create": "Ha dato il permesso di prelevare per l'account",
+        "withdraw_permission_delete": "Ha rimosso il permesso di prelevare per l'account",
+        "withdraw_permission_update": "Ha aggiornato il permesso di prelevare per l'account"
     },
     "transfer": {
         "again": "EFFETTUA UN ALTRO TRASFERIMENTO",
@@ -1813,16 +1606,12 @@
         "errors": {
             "balance": "Il bilancio finale deve essere maggiore di 0",
             "insufficient": "Fondi insufficienti",
-            "memo_error":
-                "The transfer memo parsing error, please try again later.",
-            "memo_length_error":
-                "The transfer memo length exceed, please check",
+            "memo_error": "The transfer memo parsing error, please try again later.",
+            "memo_length_error": "The transfer memo length exceed, please check",
             "minimum_amount": "Minimum withdraw amount: %(amount)s %(symbol)s",
-            "noFeeBalance":
-                "Il tuo saldo è insufficiente per pagare le commissioni usando questo asset, per favre scegli un altro asset per pagare le commissioni",
+            "noFeeBalance": "Il tuo saldo è insufficiente per pagare le commissioni usando questo asset, per favre scegli un altro asset per pagare le commissioni",
             "noFunds": "No funds",
-            "noPoolBalance":
-                "Questo asset ha un saldo insuffciente nel fee pool per pagare le commissioni. Per favore informa il proprietario dell'asset o seleziona un altro asset per pagare le commissioni.",
+            "noPoolBalance": "Questo asset ha un saldo insuffciente nel fee pool per pagare le commissioni. Per favore informa il proprietario dell'asset o seleziona un altro asset per pagare le commissioni.",
             "pos": "La quantità deve essere positiva",
             "precision": "Minimum withdraw precision value: %(precision)s",
             "req": "Campo richiesto",
@@ -1832,60 +1621,45 @@
         "final": "Saldo finale",
         "from": "Da",
         "header": "Dettagli trasferimento",
-        "header_subheader":
-            "Transfers are used for sending funds to other BitShares Account Holders",
+        "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
         "memo": "Memo / Messaggio",
-        "memo_unlock":
-            "Sblocca il tuo portafoglio per visualizzare questo memo",
+        "memo_unlock": "Sblocca il tuo portafoglio per visualizzare questo memo",
         "optional": "Opzionale",
         "pay_from": "Paga da",
         "see": "VEDI I MIEI TRASFERIMENTI",
         "send": "Invia",
         "to": "A",
-        "warn_name_unable_read_memo":
-            "Attenzione: %(name)s non sarà in grado di leggere questo memo"
+        "warn_name_unable_read_memo": "Attenzione: %(name)s non sarà in grado di leggere questo memo"
     },
     "trx_error": {
-        "expire":
-            "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."
+        "expire": "La tua transazione è scaduta senza essere stata confermata; per favore riprova più tardi."
     },
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Inserisci ordini di acquisto utilizzando questo modulo.",
-        "buy_orders":
-            "Visualizza tutti gli ordini di acquisto per questo mercato.",
-        "chart_tool_duration":
-            "Raggruppa i dati commerciali utilizzando intervalli diversi.",
-        "chart_tool_indicators":
-            "Aggiungi indicatori tecnici al grafico dei prezzi per identificare le opportunità di trading.",
-        "chart_tool_zoom":
-            "Regola il grafico dei prezzi per mostrare più o meno la cronologia dei prezzi.",
-        "create_cloud_wallet":
-            "Accedi al portafoglio cloud utilizzando un nome account e una password.",
-        "create_local_wallet":
-            "Crea un portafoglio locale e scarica tutte le chiavi private ad esso appartenenti.",
-        "depth_chart":
-            "Utilizzare una tabella di profondità del mercato per mostrare l'offerta e la domanda a prezzi diversi.",
+        "buy_orders": "Visualizza tutti gli ordini di acquisto per questo mercato.",
+        "chart_tool_duration": "Raggruppa i dati commerciali utilizzando intervalli diversi.",
+        "chart_tool_indicators": "Aggiungi indicatori tecnici al grafico dei prezzi per identificare le opportunità di trading.",
+        "chart_tool_zoom": "Regola il grafico dei prezzi per mostrare più o meno la cronologia dei prezzi.",
+        "create_cloud_wallet": "Accedi al portafoglio cloud utilizzando un nome account e una password.",
+        "create_local_wallet": "Crea un portafoglio locale e scarica tutte le chiavi private ad esso appartenenti.",
+        "depth_chart": "Utilizzare una tabella di profondità del mercato per mostrare l'offerta e la domanda a prezzi diversi.",
         "done_label": "Fatto",
-        "favourite_button":
-            "Segna questa coppia come preferita nella tua lista dei mercati.",
-        "find_markets_tab":
-            "Questa scheda ti consente di cercare e aggiungere ulteriori mercati alla scheda I miei mercati.",
+        "favourite_button": "Segna questa coppia come preferita nella tua lista dei mercati.",
+        "find_markets_tab": "Questa scheda ti consente di cercare e aggiungere ulteriori mercati alla scheda I miei mercati.",
         "language_flag": "Scegli tra 9 lingue diverse da utilizzare nel DEX.",
         "my_markets_tab": "Questa scheda elenca i mercati di uso comune.",
         "next_label": "Prossimo",
         "prev_label": "Indietro",
-        "price_chart":
-            "Visualizza l'azione del prezzo di una risorsa utilizzando la tabella dei prezzi.",
-        "restore_account":
-            "Ripristina un portafoglio utilizzando il tuo file di backup.",
+        "price_chart": "Visualizza l'azione del prezzo di una risorsa utilizzando la tabella dei prezzi.",
+        "restore_account": "Ripristina un portafoglio utilizzando il tuo file di backup.",
         "sell_form": "Inserisci ordini di vendita utilizzando questo modulo.",
-        "sell_orders":
-            "Visualizza tutti gli ordini di vendita per questo mercato.",
+        "sell_orders": "Visualizza tutti gli ordini di vendita per questo mercato.",
         "skip_label": "Saltare",
         "switch_button": "Cambia le coppie di trading usando questo pulsante."
     },
@@ -1897,44 +1671,33 @@
         "ask_to_select_wallet": "Please select a key file",
         "back": "Back",
         "backup_brainkey": "Backup della brainkey",
-        "backup_explain":
-            "Cliccando il seguente tasto verrà generato un file di backup con estensione .bin. Questo file è crittografato con la password del tuo portafoglio, e contiene tutte le chiavi private per i tuoi account. Può essere usato per ripristinare il tuo portafoglio, o spostarlo su un altro computer/browser.",
+        "backup_explain": "Cliccando il seguente tasto verrà generato un file di backup con estensione .bin. Questo file è crittografato con la password del tuo portafoglio, e contiene tutte le chiavi private per i tuoi account. Può essere usato per ripristinare il tuo portafoglio, o spostarlo su un altro computer/browser.",
         "backup_login": "Backup & login",
-        "backup_new_account":
-            "Congratulazioni, hai appena creato un nuovo account! È fortemente consigliato effettuare adesso il backup del tuo portafoglio. Senza un backup, non c'è nessun modo per recuperare il tuo portafoglio se succede qualcosa al tuo computer.",
-        "backup_warning":
-            "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
+        "backup_new_account": "Congratulazioni, hai appena creato un nuovo account! È fortemente consigliato effettuare adesso il backup del tuo portafoglio. Senza un backup, non c'è nessun modo per recuperare il tuo portafoglio se succede qualcosa al tuo computer.",
+        "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Cerca saldi",
         "balance_claims": "Riscossione Saldi",
         "brainkey": "Brainkey",
-        "brainkey_backed_up":
-            "Il backup di questa brainkey è stato effettuato l'ultima volta",
-        "brainkey_not_backed_up":
-            "Non è mai stato effettuato il backup di questa brainkey",
+        "brainkey_backed_up": "Il backup di questa brainkey è stato effettuato l'ultima volta",
+        "brainkey_not_backed_up": "Non è mai stato effettuato il backup di questa brainkey",
         "brainkey_not_verified": "Questa brainkey non è verificata",
-        "brainkey_reset_success":
-            "Numero di sequenza resettato. Per provocare l'aggiornamento delle tue chiavi private, ricarica il tuo browser, quindi sblocca il portafoglio.",
+        "brainkey_reset_success": "Numero di sequenza resettato. Per provocare l'aggiornamento delle tue chiavi private, ricarica il tuo browser, quindi sblocca il portafoglio.",
         "brainkey_seq_reset": "Resetta il numero di sequenza della brainkey",
         "brainkey_seq_reset_button": "Resetta ora",
-        "brainkey_seq_reset_text":
-            "Usa questo per resettare il numero di sequenza usato per derivare le chiavi private dalla brainkey del portafoglio.<br />Può essere usato per forzare l'aggiornamento delle chiavi private del portafoglio.",
-        "brainkey_w1":
-            "Per completare il backup, stampa questo o prendine nota per iscritto.",
-        "brainkey_w2":
-            "Chiunque abbia accesso alla tua chiave di recupero avrà",
+        "brainkey_seq_reset_text": "Usa questo per resettare il numero di sequenza usato per derivare le chiavi private dalla brainkey del portafoglio.<br />Può essere usato per forzare l'aggiornamento delle chiavi private del portafoglio.",
+        "brainkey_w1": "Per completare il backup, stampa questo o prendine nota per iscritto.",
+        "brainkey_w2": "Chiunque abbia accesso alla tua chiave di recupero avrà",
         "brainkey_w3": "accesso ai fondi in questo portafoglio.",
         "bts_09_export": "File di esportazione chiavi BTS 0.9.3c (.json)",
         "cancel": "Annulla",
         "change": "Cambia a %(name)s",
-        "change_backup":
-            "Adesso che hai cambiato la tua password, ti consigliamo fortemente di effettuare un nuovo backup.",
+        "change_backup": "Adesso che hai cambiato la tua password, ti consigliamo fortemente di effettuare un nuovo backup.",
         "change_password": "Cambia password",
         "change_success": "Password cambiata con successo!",
         "change_wallet": "Cambia portafoglio",
         "claim_balance": "Riscuoti saldo",
         "claim_balances": "Riscuoti saldi",
-        "claim_later":
-            "Dopo aver importato le chiavi, puoi riscuotere questi saldi su un account di tua scelta.",
+        "claim_later": "Dopo aver importato le chiavi, puoi riscuotere questi saldi su un account di tua scelta.",
         "confirm": "Password portafoglio (conferma)",
         "confirm_error": "La conferma non corrisponde alla password",
         "confirm_password": "Conferma password",
@@ -1942,28 +1705,22 @@
         "console": "Console gestione portafoglio",
         "create": "Crea",
         "create_a": "Crea un nuovo account",
-        "create_account_password_text":
-            "Le chiavi per questo nuovo account saranno derivate usando la tua password. <strong>Niente è memorizzato nel browser o in un server centrale, quindi devi assicurarti di non dimenticare questa password!!</strong> Conservala usando un password manager, o mettendola per iscritto manualmente.",
-        "create_account_text":
-            "Il nome account che scegli deve essere unico, dal momento che sarà registrato pubblicamente sulla blockchain e sarà il tuo identificatore per ogni tua transazione.",
+        "create_account_password_text": "Le chiavi per questo nuovo account saranno derivate usando la tua password. <strong>Niente è memorizzato nel browser o in un server centrale, quindi devi assicurarti di non dimenticare questa password!!</strong> Conservala usando un password manager, o mettendola per iscritto manualmente.",
+        "create_account_text": "Il nome account che scegli deve essere unico, dal momento che sarà registrato pubblicamente sulla blockchain e sarà il tuo identificatore per ogni tua transazione.",
         "create_backup": "Crea backup",
         "create_backup_of": "Crea backup adesso",
-        "create_importkeys_text":
-            "Per importare le chiavi, devi prima creare un portafoglio per contenerle. Completa la finestra di dialogo sotto per creare un nuovo portafoglio.",
+        "create_importkeys_text": "Per importare le chiavi, devi prima creare un portafoglio per contenerle. Completa la finestra di dialogo sotto per creare un nuovo portafoglio.",
         "create_password": "Crea un nuovo account usando una password",
         "create_success": "Il tuo portafoglio è stato creato",
-        "create_text":
-            "Il portafoglio BitShares è memorizzato nel tuo browser, non nel cloud. Un portafoglio può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
+        "create_text": "Il portafoglio BitShares è memorizzato nel tuo browser, non nel cloud. Un portafoglio può contenere diversi account e può essere trasferito facilmente tra browser e computer diversi usando un file di backup.",
         "create_w_a": "Crea un portafoglio e un account",
         "create_wallet": "Crea nuovo portafoglio",
         "create_wallet_backup": "Crea nuovo portafoglio da un backup",
         "current_pass": "Password attuale",
         "custom_brainkey": "Usa una brainkey personalizzata (avanzato)",
         "delete_confirm_line1": "Sei ASSOLUTAMENTE sicuro?",
-        "delete_confirm_line2":
-            "Terribili cose inaspettate accadranno se non leggi quanto segue!",
-        "delete_confirm_line3":
-            "Questa azione NON PUÒ essere annullata, e se non hai un backup questo poprtafoglio sarà perso definitivamente.",
+        "delete_confirm_line2": "Terribili cose inaspettate accadranno se non leggi quanto segue!",
+        "delete_confirm_line3": "Questa azione NON PUÒ essere annullata, e se non hai un backup questo poprtafoglio sarà perso definitivamente.",
         "delete_confirm_line4": "Sì, cancella il portafoglio %(name)s",
         "delete_wallet": "Cancella portafoglio",
         "delete_wallet_name": "Cancella portafoglio (%(name)s)",
@@ -1973,25 +1730,21 @@
         "download": "Scarica",
         "enter_password": "Inserisci password",
         "existing_password": "Password esistente",
-        "first_account_paid":
-            "Dal momento che questo è il tuo primo account, un faucet pagherà la tua tassa di registrazione.",
+        "first_account_paid": "Dal momento che questo è il tuo primo account, un faucet pagherà la tua tassa di registrazione.",
         "generated": "Password generata",
         "go_get_started": "Vedi i suggerimenti per iniziare",
-        "has_wallet":
-            "Quando crei il tuo primo account BitShares, un portafoglio BitShares viene creato automaticamente e memorizzato nel tuo browser. Questo portafoglio è crittografato con la tua password, e contiene tutte le chiavi private che appartengono al tuo account. È molto importante che dedichi il tempo necessario per creare un backup di questo portafoglio, dopo la creazione!",
+        "has_wallet": "Quando crei il tuo primo account BitShares, un portafoglio BitShares viene creato automaticamente e memorizzato nel tuo browser. Questo portafoglio è crittografato con la tua password, e contiene tutte le chiavi private che appartengono al tuo account. È molto importante che dedichi il tempo necessario per creare un backup di questo portafoglio, dopo la creazione!",
         "import_20_notice1": "Importa prima il tuo BACKUP BTS 2.0+",
         "import_20_notice2": "(se ne hai uno)",
         "import_backup": "Importa backup BitShares 2.0 (file .bin)",
-        "import_backup_choose":
-            "Seleziona il tuo file di backup nella finestra di dialogo sotto. Farlo è sicuro perché il file non è mai caricato online e non lascia il tuo browser.",
+        "import_backup_choose": "Seleziona il tuo file di backup nella finestra di dialogo sotto. Farlo è sicuro perché il file non è mai caricato online e non lascia il tuo browser.",
         "import_balance": "Importa saldo/i",
         "import_bts": "Importa un'esportazione chiavi BTS 0.9.3c",
         "import_bts1": "Importa da BitShares 0.9.3c",
         "import_key_success": "%(count)s chiavi importate con successo.",
         "import_keys": "Importa chiavi",
         "import_keys_tool": "Strumento di importazione delle chiavi",
-        "import_pass_match":
-            "La password corrisponde. Decifrazione del backup in corso...",
+        "import_pass_match": "La password corrisponde. Decifrazione del backup in corso...",
         "import_password": "Inserisci la password del file di importazione",
         "import_private_key": "Importa una chiave privata",
         "invalid_format": "Formato invalido",
@@ -2002,15 +1755,12 @@
         "link_deposit": "Depositi",
         "link_transfer": "Trasferimenti",
         "loading_balances": "Ricerca in corso di saldi non riscossi",
-        "local_switch":
-            "Local wallet detected matching the given password, switching to local wallet mode",
+        "local_switch": "Local wallet detected matching the given password, switching to local wallet mode",
         "login_type": "Selezione tipo di login",
-        "must_be_ltm":
-            "L'account che paga la tassa di registrazione deve essere un membro a vita per effettuare tale operazione.",
+        "must_be_ltm": "L'account che paga la tassa di registrazione deve essere un membro a vita per effettuare tale operazione.",
         "name": "Nome portafoglio",
         "need_backup": "Questo portafoglio ha bisogno di un backup",
-        "never_backed_up":
-            "Non è mai stato eseguito un backup di questo portafoglio; dovresti creare un backup adesso!",
+        "never_backed_up": "Non è mai stato eseguito un backup di questo portafoglio; dovresti creare un backup adesso!",
         "new_confirm": "Conferma nuova password",
         "new_password": "Nuova password",
         "new_wallet": "Nuovo portafoglio",
@@ -2019,29 +1769,20 @@
         "no_balance": "Nessun saldo non riscosso trovato",
         "no_wallet": "Non hai ancora un portafoglio",
         "noneed_backup": "Non è necessario un file di backup",
-        "not_first_account":
-            "Dal momento che hai già un account, devi pagare tu stesso per la tua iscrizione. Per questo scopo, il tuo account deve avere una membership a vita, che può essere acquistata nella pagina Account.",
+        "not_first_account": "Dal momento che hai già un account, devi pagare tu stesso per la tua iscrizione. Per questo scopo, il tuo account deve avere una membership a vita, che può essere acquistata nella pagina Account.",
         "ok_done": "OK, portami alla dashboard",
         "pass_incorrect": "Password incorretta",
-        "pass_length":
-            "La password deve contenere almeno %(minLength)s caratteri. Idealmente dovresti usarne 20 o più, e una combinazione di numeri, caratteri speciali e lettere.",
+        "pass_length": "La password deve contenere almeno %(minLength)s caratteri. Idealmente dovresti usarne 20 o più, e una combinazione di numeri, caratteri speciali e lettere.",
         "password": "Password portafoglio",
-        "password_crucial":
-            "Se non lo hai ancora fatto, è essenziale che dedichi adesso il tempo necessario per annotarla, che sia su carta, in un password manager, o altrove. Se la perdi o la dimentichi il tuo account sarà perso per sempre, <strong>non possiamo aiutarti a recuperarlo</strong>.",
-        "password_lose_warning":
-            "<strong>IMPORTANTE: Se dimentichi la tua password, non potrai più accedere al tuo account, e non possiamo cambiare o recuperare la tua password! Assicurati di memorizzarla o di prenderne nota per iscritto!</strong>",
+        "password_crucial": "Se non lo hai ancora fatto, è essenziale che dedichi adesso il tempo necessario per annotarla, che sia su carta, in un password manager, o altrove. Se la perdi o la dimentichi il tuo account sarà perso per sempre, <strong>non possiamo aiutarti a recuperarlo</strong>.",
+        "password_lose_warning": "<strong>IMPORTANTE: Se dimentichi la tua password, non potrai più accedere al tuo account, e non possiamo cambiare o recuperare la tua password! Assicurati di memorizzarla o di prenderne nota per iscritto!</strong>",
         "password_model": "Modalità account",
-        "password_model_1":
-            "La modalità account usa una password in combinazione con il tuo nome account per generare al volo le tue chiavi private. Ti limita al login con un solo account alla volta, in cambio di facilità e convenienza d'uso.",
-        "password_model_2":
-            "La modalità account ti permette di fare il login dovunque usando solo il tuo nome account e la password, ma <strong> la tua password è vulnerabile ad attacchi di forza bruta, che significa che è importante usare una password molto lunga, idealmente 20 caratteri o più!</strong>",
-        "password_model_3":
-            "<li>Account singolo</li><li>Login facile</li><li>Sicurezza moderata</li>",
+        "password_model_1": "La modalità account usa una password in combinazione con il tuo nome account per generare al volo le tue chiavi private. Ti limita al login con un solo account alla volta, in cambio di facilità e convenienza d'uso.",
+        "password_model_2": "La modalità account ti permette di fare il login dovunque usando solo il tuo nome account e la password, ma <strong> la tua password è vulnerabile ad attacchi di forza bruta, che significa che è importante usare una password molto lunga, idealmente 20 caratteri o più!</strong>",
+        "password_model_3": "<li>Account singolo</li><li>Login facile</li><li>Sicurezza moderata</li>",
         "password_show": "Mostrami la mia password",
-        "paste_private":
-            "Incolla qui le chiavi private (Wallet Import Format - WIF)",
-        "pwd4brainkey":
-            "Inserisci la tua password per mostrare la tua brainkey",
+        "paste_private": "Incolla qui le chiavi private (Wallet Import Format - WIF)",
+        "pwd4brainkey": "Inserisci la tua password per mostrare la tua brainkey",
         "ready_to_restore": "Pronto al ripristino",
         "reenter_brainkey": "Reinserisci brainkey",
         "reset": "Reset",
@@ -2063,26 +1804,19 @@
         "tips_account": "Vedi il tuo nuovo account",
         "tips_dashboard": "Vedi la tua dashboard",
         "tips_deposit": "Effetta un deposito",
-        "tips_explore":
-            "Ora che hai creato con successo un account e scaricato il backup, è il momento di iniziare. Clicca su uno dei collegamenti a sinistra per iniziare a esplorare.",
-        "tips_explore_pass":
-            "Adesso che hai creato con successo un account e fatto il backup della password, è il momento di iniziare. Clicca su uno dei collegamenti a sinistra per iniziare a esplorare.",
-        "tips_header":
-            "Puoi trovare gli stessi collegamenti anche nel menu in alto, e nel menu a tendina di fianco al nome del tuo account.",
-        "tips_login":
-            "IMPORTANTE: Non vi è nessuna funzionalità di login/logout, sblocchi semplicemente il tuo portafoglio quando vuoi fare una transazione.",
+        "tips_explore": "Ora che hai creato con successo un account e scaricato il backup, è il momento di iniziare. Clicca su uno dei collegamenti a sinistra per iniziare a esplorare.",
+        "tips_explore_pass": "Adesso che hai creato con successo un account e fatto il backup della password, è il momento di iniziare. Clicca su uno dei collegamenti a sinistra per iniziare a esplorare.",
+        "tips_header": "Puoi trovare gli stessi collegamenti anche nel menu in alto, e nel menu a tendina di fianco al nome del tuo account.",
+        "tips_login": "IMPORTANTE: Non vi è nessuna funzionalità di login/logout, sblocchi semplicemente il tuo portafoglio quando vuoi fare una transazione.",
         "tips_settings": "Cambia le impostazioni",
         "tips_transfer": "Effettua un trasferimento",
         "title": "Portafoglio",
         "totals": "Totali asset",
         "unclaimed": "Saldi non riscossi che appartengono a queste chiavi",
         "unclaimed_vesting": "Non riscosso (vesting)",
-        "understand_1":
-            "Ho capito che non potrò recuperare la mia password se la perdo o me ne dimentico",
-        "understand_2":
-            "L'ho messa per iscritto o salvato in altro modo la mia password",
-        "understand_3":
-            "Ho capito che perderò l'accesso ai miei fondi se perdo la mia password",
+        "understand_1": "Ho capito che non potrò recuperare la mia password se la perdo o me ne dimentico",
+        "understand_2": "L'ho messa per iscritto o salvato in altro modo la mia password",
+        "understand_3": "Ho capito che perderò l'accesso ai miei fondi se perdo la mia password",
         "use_different": "Use different file",
         "use_password": "Usa la modalità account",
         "use_wallet": "Usa la modalità portafoglio",
@@ -2092,30 +1826,21 @@
         "verify_prior_backup": "Verifica backup preesistente",
         "wallet_browser": "Il tuo Browser Web è il tuo portafoglio",
         "wallet_created": "Portafoglio creato",
-        "wallet_crucial":
-            "Il portafoglio è <strong>memorizzato solo</strong> nel tuo browser, pertanto è cruciale che crei un file di backup che ti permetterà di recuperare il portafoglio se i dati del tuo browser sono persi! <strong>Nessun altro potrà aiutarti a recuperare il portafoglio se perdi il file di backup.</strong>",
-        "wallet_exist":
-            "Un portafoglio con questo nome esiste già, scegli un altro nome",
-        "wallet_exist_with_name":
-            "il portafoglio (%(name)s) esiste, scegli un altro nome",
-        "wallet_lose_warning":
-            "<strong>IMPORTANTE: Se perdi il tuo portafoglio o la password ti sarà impossibile accedere ai tuoi fondi. Assicurati di conservare il backup in un posto sicuro, e memorizza oppure metti per iscritto la tua password!</strong>",
+        "wallet_crucial": "Il portafoglio è <strong>memorizzato solo</strong> nel tuo browser, pertanto è cruciale che crei un file di backup che ti permetterà di recuperare il portafoglio se i dati del tuo browser sono persi! <strong>Nessun altro potrà aiutarti a recuperare il portafoglio se perdi il file di backup.</strong>",
+        "wallet_exist": "Un portafoglio con questo nome esiste già, scegli un altro nome",
+        "wallet_exist_with_name": "il portafoglio (%(name)s) esiste, scegli un altro nome",
+        "wallet_lose_warning": "<strong>IMPORTANTE: Se perdi il tuo portafoglio o la password ti sarà impossibile accedere ai tuoi fondi. Assicurati di conservare il backup in un posto sicuro, e memorizza oppure metti per iscritto la tua password!</strong>",
         "wallet_model": "Modalità portafoglio",
-        "wallet_model_1":
-            "La modalità portafoglio memorizza il portafoglio nel tuo browser. È crittografato con una password di tua scelta, e se ne può fare un backup usando una brainkey oppure un file binario cifrato che contiene tutte le chiavi private. La modalità portafoglio ti permette di usare diversi account simultaneamente.",
-        "wallet_model_2":
-            "La modalità portafoglio è la più sicura, ma è limitata al tuo computer e al tuo browser corrente. Per spostare il portafoglio su un altro browser o computer, puoi utilizzare il file di backup o la brainkey.",
-        "wallet_model_3":
-            "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
-        "wallet_move":
-            "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
+        "wallet_model_1": "La modalità portafoglio memorizza il portafoglio nel tuo browser. È crittografato con una password di tua scelta, e se ne può fare un backup usando una brainkey oppure un file binario cifrato che contiene tutte le chiavi private. La modalità portafoglio ti permette di usare diversi account simultaneamente.",
+        "wallet_model_2": "La modalità portafoglio è la più sicura, ma è limitata al tuo computer e al tuo browser corrente. Per spostare il portafoglio su un altro browser o computer, puoi utilizzare il file di backup o la brainkey.",
+        "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
+        "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
         "wallet_password": "Fai il login dovunque usando la tua password"
     },
     "winex": {
         "gateway": {
             "click_getaddress": "Please get deposit address",
-            "deposit_warning":
-                "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
             "fee": "Gateway Fee",
             "get_deposit_address": "get deposit address",
             "support_block": "For support, please contact Winex at:"
