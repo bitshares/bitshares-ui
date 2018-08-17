@@ -1,6 +1,5 @@
-import {Apis, Manager, ChainConfig} from "bitsharesjs-ws";
+import {Apis, Manager} from "bitsharesjs-ws";
 import {ChainStore} from "bitsharesjs";
-import chainIds from "chain/chainIds";
 
 // Stores
 import iDB from "idb-instance";
@@ -87,9 +86,7 @@ class RouterTransitioner {
 
             // set auto selection flag
             this._autoSelection =
-                SettingsStore.getSetting("apiServer").indexOf(
-                    "fake.automatic-selection"
-                ) !== -1;
+                this._getLastNode().indexOf("fake.automatic-selection") !== -1;
 
             this._initConnectionManager(urls);
 
@@ -115,15 +112,25 @@ class RouterTransitioner {
         });
     }
 
-    /**
-     * Called when connection to a node has been established
-     *
-     * @param resolveOrReject
-     * @private
-     */
-    _transitionDone(resolveOrReject) {
-        resolveOrReject();
-        this._willTransitionToInProgress = false;
+    isAutoSelection() {
+        return this._autoSelection;
+    }
+
+    isTransitionInProgress() {
+        return !!this._willTransitionToInProgress;
+    }
+
+    getTransitionTarget() {
+        if (this.isTransitionInProgress())
+            return this._willTransitionToInProgress;
+        return null;
+    }
+
+    updateTransitionTarget(update) {
+        this._willTransitionToInProgress = update;
+        if (this._statusCallback != null) {
+            this._statusCallback(update);
+        }
     }
 
     /**
@@ -170,11 +177,16 @@ class RouterTransitioner {
      *
      * @param refresh boolean true reping all existing nodes
      *                        false only reping all reachable nodes
-     * @param beSatisfiedWith integer if nodes with less than this integer latency are found, pinging is stopped
+     * @param beSatisfiedWith integer if appropriate number of nodes for each of the keys in this latency map are found, pinging is stopped.
+     *                                Values correspond to AccessSettings display (low, medium latency)
      * @param range integer ping range amount of nodes at the same time, default 5
      * @returns {Promise}
      */
-    doLatencyUpdate(refresh = true, beSatisfiedWith = 200, range = 5) {
+    doLatencyUpdate(
+        refresh = true,
+        beSatisfiedWith = {instant: 200, low: 400, medium: 800},
+        range = 5
+    ) {
         this.updateTransitionTarget(
             counterpart.translate("app_init.check_latency")
         );
@@ -195,10 +207,12 @@ class RouterTransitioner {
             if (range == null) {
                 range = this._connectionManager.urls.length;
             } else {
-                SettingsActions.updateLatencies({});
+                this._clearLatencies();
             }
 
             function local_ping(thiz, range = null) {
+                let counter = {instant: 0, low: 0, medium: 0};
+                let selectedOneWasPinged = false;
                 if (current < urls.length) {
                     thiz._connectionManager.url = urls[current];
                     thiz._connectionManager.urls = urls.slice(
@@ -225,23 +239,48 @@ class RouterTransitioner {
                             const apiLatencies = SettingsStore.getState()
                                 .apiLatencies;
                             for (var nodeUrl in res) {
+                                if (nodeUrl == url) {
+                                    selectedOneWasPinged = true;
+                                }
                                 apiLatencies[nodeUrl] = res[nodeUrl];
-                                // if we find a node that has less than beSatisfiedWith ms latency we stop pinging
-                                if (
-                                    beSatisfiedWith != null &&
-                                    res[nodeUrl] < beSatisfiedWith
-                                ) {
-                                    console.log(
-                                        "Found node " +
-                                            nodeUrl +
-                                            " with less than " +
-                                            beSatisfiedWith +
-                                            "ms, stopping latency update"
-                                    );
-                                    current = urls.length;
+                                // we stop the pinging if
+                                //  - not autoselection and the selcted node has been pinged
+                                //  - a node that has low_latency (less than beSatisfiedWith ms) is found
+                                //  - at least 3 nodes with medium_latency have been found
+                                if (beSatisfiedWith != null) {
+                                    if (
+                                        res[nodeUrl] < beSatisfiedWith.instant
+                                    ) {
+                                        counter.instant = counter.instant + 1;
+                                    } else if (
+                                        res[nodeUrl] < beSatisfiedWith.low
+                                    ) {
+                                        counter.low = counter.low + 1;
+                                    } else if (
+                                        res[nodeUrl] < beSatisfiedWith.medium
+                                    ) {
+                                        counter.medium = counter.medium + 1;
+                                    }
+                                    if (
+                                        thiz.isAutoSelection() ||
+                                        selectedOneWasPinged
+                                    ) {
+                                        // only stop pinging if the selected one was pinged, if not autoSelect
+                                        if (
+                                            counter.instant > 0 ||
+                                            counter.low >= 2 ||
+                                            counter.medium >= 3
+                                        ) {
+                                            console.log(
+                                                "Found nodes with sufficient latency, stopping latency update"
+                                            );
+                                            current = urls.length;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
-                            SettingsActions.updateLatencies(apiLatencies);
+                            thiz._updateLatencies(res);
                         })
                         .catch(err => {
                             console.log("doLatencyUpdate error", err);
@@ -258,13 +297,52 @@ class RouterTransitioner {
             }
 
             function done_pinging(thiz) {
-                thiz._connectionManager.url = url;
                 // resort the api nodes with the new pings
                 thiz._connectionManager.urls = thiz._getNodesToConnectTo();
-                resolve();
+                if (
+                    thiz.isAutoSelection() &&
+                    url !== thiz._connectionManager.urls[0]
+                ) {
+                    thiz._connectionManager.url =
+                        thiz._connectionManager.urls[0];
+                    console.log(
+                        "auto selecting to " +
+                            thiz._connectionManager.url +
+                            " after latency update"
+                    );
+                } else {
+                    thiz._connectionManager.url = url;
+                }
+                thiz._transitionDone(resolve);
             }
             local_ping(this, range);
         });
+    }
+
+    _clearLatencies() {
+        SettingsActions.updateLatencies({});
+    }
+
+    _updateLatencies(mapOfPings, force = true) {
+        const apiLatencies = SettingsStore.getState().apiLatencies;
+        for (let node in mapOfPings) {
+            if (!force && node in apiLatencies) {
+                continue;
+            }
+            apiLatencies[node] = mapOfPings[node];
+        }
+        SettingsActions.updateLatencies(apiLatencies);
+    }
+
+    /**
+     * Called when connection to a node has been established
+     *
+     * @param resolveOrReject
+     * @private
+     */
+    _transitionDone(resolveOrReject) {
+        resolveOrReject();
+        this._willTransitionToInProgress = false;
     }
 
     _initConnectionManager(urls = null) {
@@ -300,27 +378,6 @@ class RouterTransitioner {
 
     _onConnectionClose() {
         // Possibly do something about auto reconnect attempts here
-    }
-
-    isAutoSelection() {
-        return this._autoSelection;
-    }
-
-    isTransitionInProgress() {
-        return !!this._willTransitionToInProgress;
-    }
-
-    updateTransitionTarget(update) {
-        this._willTransitionToInProgress = update;
-        if (this._statusCallback != null) {
-            this._statusCallback(update);
-        }
-    }
-
-    getTransitionTarget() {
-        if (this.isTransitionInProgress())
-            return this._willTransitionToInProgress;
-        return null;
     }
 
     /**
@@ -430,7 +487,15 @@ class RouterTransitioner {
             }
             return 0;
         });
-        // remove before release
+
+        /*
+        * We've somehow filtered out all nodes, revert to the full list of
+        * nodes in that case
+        */
+        if (!filtered.length) {
+            console.warn("No nodes length, returning all of them");
+            return this.getAllApiServers();
+        }
         return filtered;
     }
 
@@ -446,6 +511,32 @@ class RouterTransitioner {
     }
 
     /**
+     * Get the node that the user has chosen to connect to / has been able to connect to through fallback
+     *
+     * @returns {*}
+     * @private
+     */
+    _getLastNode() {
+        return SettingsStore.getSetting("apiServer");
+    }
+
+    /**
+     * Set the node that the user wants to connect to / has fallen back to due to connection error
+     *
+     * @param url
+     * @private
+     */
+    _setLastNode(url) {
+        // only update settings if changed
+        if (SettingsStore.getSetting("apiServer") !== url) {
+            SettingsActions.changeSetting({
+                setting: "apiServer",
+                value: url
+            });
+        }
+    }
+
+    /**
      * Returns the the one last url node connected to, with fallback the lowest latency one if
      *    > there was no last connection
      *    > if security is not suitable fallback to the lowest latency one
@@ -456,25 +547,24 @@ class RouterTransitioner {
      * @private
      */
     _getFirstToTry(urls) {
-        let connectionString = SettingsStore.getSetting("apiServer");
+        let tryThisNode = this._getLastNode();
         // fallback to the best of the pre-defined URLs ...
 
         // ... if there is no preset connectionString fallback to lowest latency
-        if (!connectionString) connectionString = urls[0];
+        if (!tryThisNode) tryThisNode = urls[0];
 
         // ... if auto selection is on (is also ensured in initConnection, but we don't want to ping
         //     a unreachable url)
         if (this.isAutoSelection()) {
-            connectionString = urls[0];
-            console.log("auto selecting to " + connectionString);
+            tryThisNode = urls[0];
+            console.log("auto selecting to " + tryThisNode);
         }
 
         // ... if insecure websocket url is used when using secure protocol
         //    (the list urls only contains matching ones)
-        if (!this._apiUrlSecuritySuitable(connectionString))
-            connectionString = urls[0];
+        if (!this._apiUrlSecuritySuitable(tryThisNode)) tryThisNode = urls[0];
 
-        return connectionString;
+        return tryThisNode;
     }
 
     /**
@@ -508,10 +598,7 @@ class RouterTransitioner {
                 .connectWithFallback(true)
                 .then(() => {
                     if (!this.isAutoSelection()) {
-                        SettingsActions.changeSetting({
-                            setting: "apiServer",
-                            value: this._connectionManager.url
-                        });
+                        this._setLastNode(this._connectionManager.url);
                     }
                     this._onConnect(resolve, reject);
                 })
@@ -533,10 +620,7 @@ class RouterTransitioner {
             // in case switches manually, reset the settings so we dont connect to
             // a faulty node twice. If connection is established, onConnect sets the settings again
             if (!this.isAutoSelection()) {
-                SettingsActions.changeSetting({
-                    setting: "apiServer",
-                    value: ""
-                });
+                this._setLastNode("");
             }
             this._attemptReconnect(resolve, reject);
         }
@@ -606,23 +690,14 @@ class RouterTransitioner {
                     `${Apis.instance().url} does not support the orders api`
                 );
             let currentUrl = Apis.instance().url;
-            SettingsActions.changeSetting({
-                setting: "activeNode",
-                value: currentUrl
-            });
-            if (!this.isAutoSelection())
-                SettingsActions.changeSetting({
-                    setting: "apiServer",
-                    value: currentUrl
-                });
-            const apiLatencies = SettingsStore.getState().apiLatencies;
-            if (!(currentUrl in apiLatencies)) {
-                // the ping calculated here does not reflect the same ping as in checkConnection from ConnectionManager,
-                // thus updating would be "unfair" and also is confusing in UI
-                apiLatencies[currentUrl] =
-                    new Date().getTime() - this._connectionStart;
-                SettingsActions.updateLatencies(apiLatencies);
-            }
+            if (!this.isAutoSelection()) this._setLastNode(currentUrl);
+
+            // the ping calculated here does not reflect the same ping as in checkConnection from ConnectionManager,
+            // thus always updating would be "unfair" and also is confusing in UI
+            let mapOfPings = {};
+            mapOfPings[currentUrl] =
+                new Date().getTime() - this._connectionStart;
+            this._updateLatencies(mapOfPings, false);
         }
         const currentChain = Apis.instance().chain_id;
         const chainChanged = this._oldChain !== currentChain;

@@ -63,6 +63,10 @@ span.icon-10x {
     fill: black;
 }
 
+.icon.rotate45 > svg {
+    transform: rotate(45deg);
+}
+
 .icon.rotate90 > svg {
     transform: rotate(90deg);
 }

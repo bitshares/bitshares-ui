@@ -212,9 +212,23 @@ function estimateFee(op_type, options, globalObject, data = {}) {
         return _feeCache[cacheKey];
     }
     let op_code = operations[op_type];
-    let currentFees = globalObject
-        .getIn(["parameters", "current_fees", "parameters", op_code, 1])
-        .toJS();
+    let currentFees = globalObject.getIn([
+        "parameters",
+        "current_fees",
+        "parameters",
+        op_code,
+        1
+    ]);
+    /* Default to transfer fees if the op is missing in globalObject */
+    if (!currentFees)
+        currentFees = globalObject.getIn([
+            "parameters",
+            "current_fees",
+            "parameters",
+            0,
+            1
+        ]);
+    currentFees = currentFees.toJS();
 
     let fee = 0;
     if (currentFees.fee) {

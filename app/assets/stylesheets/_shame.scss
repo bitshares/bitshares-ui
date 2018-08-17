@@ -57,6 +57,12 @@ hr {
     padding: 0 !important;
 }
 
+@include breakpoint(small only) {
+    .small-no-padding {
+        padding: 0 !important;
+    }
+}
+
 .no-margin {
     margin: 0 !important;
 }

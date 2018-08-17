@@ -172,7 +172,7 @@ class FormattedAsset extends React.Component {
                         </span>
                     ) : (
                         <span className="currency" onClick={this.togglePopover}>
-                            {" "}
+                            &nbsp;
                             <AssetName
                                 noTip={this.props.noTip}
                                 noPrefix={this.props.noPrefix}

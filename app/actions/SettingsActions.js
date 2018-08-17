@@ -76,6 +76,10 @@ class SettingsActions {
     modifyPreferedBases(payload) {
         return payload;
     }
+
+    updateUnits() {
+        return true;
+    }
 }
 
 export default alt.createActions(SettingsActions);

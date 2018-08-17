@@ -134,7 +134,7 @@ class Asset {
         // asset amount times a price p
         let temp, amount;
         if (this.asset_id === p.base.asset_id) {
-            temp = this.amount * p.quote.amount / p.base.amount;
+            temp = (this.amount * p.quote.amount) / p.base.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -151,7 +151,7 @@ class Asset {
                 precision: p.quote.precision
             });
         } else if (this.asset_id === p.quote.asset_id) {
-            temp = this.amount * p.base.amount / p.quote.amount;
+            temp = (this.amount * p.base.amount) / p.quote.amount;
             amount = Math.floor(temp);
             /*
             * Sometimes prices are inexact for the relevant amounts, in the case
@@ -213,8 +213,22 @@ class Price {
             throw new Error("Base and Quote assets must be different");
         }
 
-        base = base.clone();
-        quote = quote.clone();
+        if (
+            !base.asset_id ||
+            !("amount" in base) ||
+            !quote.asset_id ||
+            !("amount" in quote)
+        ) {
+            throw new Error("Invalid Price inputs");
+        }
+
+        this.base = base.clone();
+        this.quote = quote.clone();
+
+        this.setPriceFromReal(real);
+    }
+
+    setPriceFromReal(real, base = this.base, quote = this.quote) {
         if (real && typeof real === "number") {
             /*
             * In order to make large numbers work properly, we assume numbers
@@ -236,22 +250,12 @@ class Price {
                 numRatio = 1;
             }
 
-            base.amount = frac.numerator * numRatio;
-            quote.amount = frac.denominator * denRatio;
+            base.setAmount({sats: frac.numerator * numRatio});
+            quote.setAmount({sats: frac.denominator * denRatio});
         } else if (real === 0) {
-            base.amount = 0;
-            quote.amount = 0;
+            base.setAmount({sats: 0});
+            quote.setAmount({sats: 0});
         }
-
-        if (
-            !base.asset_id ||
-            !("amount" in base) ||
-            !quote.asset_id ||
-            !("amount" in quote)
-        )
-            throw new Error("Invalid Price inputs");
-        this.base = base;
-        this.quote = quote;
     }
 
     getUnits() {
@@ -273,11 +277,9 @@ class Price {
             return this[key];
         }
         let real = sameBase
-            ? this.quote.amount *
-              this.base.toSats() /
+            ? (this.quote.amount * this.base.toSats()) /
               (this.base.amount * this.quote.toSats())
-            : this.base.amount *
-              this.quote.toSats() /
+            : (this.base.amount * this.quote.toSats()) /
               (this.quote.amount * this.base.toSats());
         return (this[key] = parseFloat(real.toFixed(8))); // toFixed and parseFloat helps avoid floating point errors for really big or small numbers
     }
@@ -612,20 +614,25 @@ class CallOrder {
             throw new Error("CallOrder missing inputs");
         }
 
+        this.isSum = false;
         this.order = order;
         this.assets = assets;
         this.market_base = market_base;
         this.is_prediction_market = is_prediction_market;
+        /* inverted = price in collateral / debt, !inverted = price in debt / collateral */
         this.inverted = market_base === order.call_price.base.asset_id;
         this.id = order.id;
         this.borrower = order.borrower;
         this.borrowers = [order.borrower];
+        this.target_collateral_ratio = order.target_collateral_ratio
+            ? order.target_collateral_ratio / 1000
+            : null;
         /* Collateral asset type is call_price.base.asset_id */
-        this.for_sale = parseInt(order.collateral, 10);
-        this.for_sale_id = order.call_price.base.asset_id;
+        this.collateral = parseInt(order.collateral, 10);
+        this.collateral_id = order.call_price.base.asset_id;
         /* Debt asset type is call_price.quote.asset_id */
-        this.to_receive = parseInt(order.debt, 10);
-        this.to_receive_id = order.call_price.quote.asset_id;
+        this.debt = parseInt(order.debt, 10);
+        this.debt_id = order.call_price.quote.asset_id;
 
         let base = new Asset({
             asset_id: order.call_price.base.asset_id,
@@ -638,15 +645,20 @@ class CallOrder {
             precision: assets[order.call_price.quote.asset_id].precision
         });
 
+        this.precisionsRatio =
+            precisionToRatio(assets[this.debt_id].precision) /
+            precisionToRatio(assets[this.collateral_id].precision);
+
         /*
         * The call price is DEBT * MCR / COLLATERAL. This calculation is already
         * done by the witness_node before returning the orders so it is not necessary
         * to deal with the MCR (maintenance collateral ratio) here.
         */
         this.call_price = new Price({
-            base: this.inverted ? quote : base,
-            quote: this.inverted ? base : quote
+            base: base,
+            quote: quote
         });
+        if (this.inverted) this.call_price = this.call_price.invert();
 
         if (feed.base.asset_id !== this.call_price.base.asset_id) {
             throw new Error(
@@ -655,6 +667,11 @@ class CallOrder {
         }
 
         this.feed_price = feed;
+
+        /* BSIP38 implementation */
+        this.assignMaxDebtAndCollateral();
+
+        this.expiration = {toLocaleString: () => null};
     }
 
     clone(f = this.feed_price) {
@@ -721,10 +738,96 @@ class CallOrder {
     getCollateral() {
         if (this._collateral) return this._collateral;
         return (this._collateral = new Asset({
-            amount: this.for_sale,
-            asset_id: this.for_sale_id,
-            precision: this.assets[this.for_sale_id].precision
+            amount: this.collateral,
+            asset_id: this.collateral_id,
+            precision: this.assets[this.collateral_id].precision
         }));
+    }
+
+    _getMaxCollateralToSell() {
+        /*
+        BSIP38: https://github.com/bitshares/bsips/blob/master/bsip-0038.md
+        * max_amount_to_sell = (debt * target_CR - collateral * feed_price)
+        * / (target_CR * match_price - feed_price)
+        */
+        if (
+            this.target_collateral_ratio &&
+            this.getRatio() < this.target_collateral_ratio
+        ) {
+            let feed_price = this._getFeedPrice();
+            let match_price = this._getMatchPrice();
+            let nominator =
+                this.debt * this.target_collateral_ratio -
+                this.collateral * feed_price;
+            let denominator =
+                this.target_collateral_ratio * match_price - feed_price;
+            return nominator / denominator;
+        } else {
+            return this.collateral;
+        }
+    }
+
+    _getMaxDebtToCover() {
+        let max_collateral_to_sell = this._getMaxCollateralToSell();
+        let match_price = this._getMatchPrice();
+        return max_collateral_to_sell * match_price;
+    }
+
+    /* Returns satoshi feed price in consistent units of debt/collateral */
+    _getFeedPrice() {
+        return (
+            (this.inverted
+                ? this.getFeedPrice()
+                : this.feed_price.invert().toReal()) * this.precisionsRatio
+        );
+    }
+
+    /* Returns satoshi match price in consistent units of debt/collateral */
+    _getMatchPrice() {
+        return (
+            (this.inverted
+                ? this.getSqueezePrice()
+                : parseFloat((1 / this.getSqueezePrice()).toFixed(8))) *
+            this.precisionsRatio
+        );
+    }
+
+    assignMaxDebtAndCollateral() {
+        if (!this.target_collateral_ratio) return;
+        let match_price = this._getMatchPrice();
+        let max_debt_to_cover = this._getMaxDebtToCover(),
+            max_debt_to_cover_int;
+        /*
+        * We may calculate like this: if max_debt_to_cover has no fractional
+        * component (e.g. 5.00 as opposed to 5.23), plus it by one Satoshi;
+        * otherwise, round it up. An effectively same approach is to round
+        * down then add one Satoshi onto the result:
+        */
+        if (Math.round(max_debt_to_cover) !== max_debt_to_cover) {
+            max_debt_to_cover_int = Math.floor(max_debt_to_cover) + 1;
+        }
+
+        /*
+        * With max_debt_to_cover_int in integer, max_amount_to_sell_int in
+        * integer can be calculated as: max_amount_to_sell_int =
+        * round_up(max_debt_to_cover_int / match_price)
+        */
+        let max_collateral_to_sell_int = Math.ceil(
+            max_debt_to_cover_int / match_price
+        );
+
+        /* Assign to Assets */
+        this.max_debt_to_cover = new Asset({
+            amount: max_debt_to_cover_int,
+            asset_id: this.debt_id,
+            precision: this.assets[this.debt_id].precision
+        });
+
+        this.max_collateral_to_sell = new Asset({
+            amount: max_collateral_to_sell_int,
+            asset_id: this.collateral_id,
+            precision: this.assets[this.collateral_id].precision
+        });
     }
 
     /*
@@ -735,25 +838,41 @@ class CallOrder {
     * collateral will be sold to cover the debt
     */
     amountForSale(isBid = this.isBid()) {
+        /*
+        BSIP38:
+        * max_amount_to_sell = (debt * target_CR - collateral * feed_price)
+        * / (target_CR * match_price - feed_price)
+        */
         if (this._for_sale) return this._for_sale;
-        // return this._for_sale = new Asset({
-        //     asset_id: this.for_sale_id,
-        //     amount: this.for_sale,
-        //     precision: this.assets[this.for_sale_id].precision
-        // });
+        if (this._useTargetCR() || this.isSum) {
+            return (this._for_sale = this.max_collateral_to_sell);
+        }
         return (this._for_sale = this.amountToReceive().times(
             this.feed_price.getSqueezePrice(),
             isBid
         ));
     }
 
+    _useTargetCR() {
+        // if (!!this.target_collateral_ratio &&
+        // this.getRatio() < this.target_collateral_ratio) {
+        //     console.log("Using target cr", this.target_collateral_ratio, "getRatio", this.getRatio());
+        // }
+        return (
+            !!this.target_collateral_ratio &&
+            this.getRatio() < this.target_collateral_ratio
+        );
+    }
+
     amountToReceive() {
         if (this._to_receive) return this._to_receive;
-        // return this._to_receive = this.amountForSale().times(this.feed_price.getSqueezePrice(), isBid);
+        if (this._useTargetCR() || this.isSum) {
+            return (this._to_receive = this.max_debt_to_cover);
+        }
         return (this._to_receive = new Asset({
-            asset_id: this.to_receive_id,
-            amount: this.to_receive,
-            precision: this.assets[this.to_receive_id].precision
+            asset_id: this.debt_id,
+            amount: this.debt,
+            precision: this.assets[this.debt_id].precision
         }));
     }
 
@@ -762,9 +881,52 @@ class CallOrder {
         if (newOrder.borrowers.indexOf(order.borrower) === -1) {
             newOrder.borrowers.push(order.borrower);
         }
-        newOrder.to_receive += order.to_receive;
-        newOrder.for_sale += order.for_sale;
+
+        const orderUseCR = order._useTargetCR();
+        const newOrderUseCR = newOrder._useTargetCR();
+        /* Determine which debt values to use */
+        let orderDebt = order.iSum
+            ? order.debt
+            : orderUseCR
+                ? order.max_debt_to_cover.getAmount()
+                : order.amountToReceive().getAmount();
+        let newOrderDebt = newOrder.iSum
+            ? newOrder.debt
+            : newOrderUseCR
+                ? newOrder.max_debt_to_cover.getAmount()
+                : newOrder.amountToReceive().getAmount();
+
+        /* Determine which collateral values to use */
+        let orderCollateral = order.iSum
+            ? order.collateral
+            : orderUseCR
+                ? order.max_collateral_to_sell.getAmount()
+                : order.amountForSale().getAmount();
+        let newOrderCollateral = newOrder.iSum
+            ? newOrder.collateral
+            : newOrderUseCR
+                ? newOrder.max_collateral_to_sell.getAmount()
+                : newOrder.amountForSale().getAmount();
+
+        newOrder.debt = newOrderDebt + orderDebt;
+        newOrder.collateral = newOrderCollateral + orderCollateral;
         newOrder._clearCache();
+
+        /* Assign max collateral to sell and max debt to buy as the summed amounts */
+        newOrder.max_debt_to_cover = new Asset({
+            amount: newOrder.debt,
+            asset_id: this.debt_id,
+            precision: this.assets[this.debt_id].precision
+        });
+
+        newOrder.max_collateral_to_sell = new Asset({
+            amount: newOrder.collateral,
+            asset_id: this.collateral_id,
+            precision: this.assets[this.collateral_id].precision
+        });
+
+        newOrder.isSum = true;
+
         return newOrder;
     }
 
@@ -781,8 +943,8 @@ class CallOrder {
         return (
             this.call_price.ne(order.call_price) ||
             this.feed_price.ne(order.feed_price) ||
-            this.to_receive !== order.to_receive ||
-            this.for_sale !== order.for_sale
+            this.debt !== order.debt ||
+            this.collateral !== order.collateral
         );
     }
 
@@ -815,15 +977,15 @@ class CallOrder {
 
     getRatio() {
         return (
-            this.getCollateral().getAmount({real: true}) /
-            this.amountToReceive().getAmount({real: true}) /
-            this.getFeedPrice()
+            this.collateral / // CORE
+            (this.debt / // DEBT
+                this._getFeedPrice()) // DEBT/CORE
         );
     }
 
     getStatus() {
         const mr =
-            this.assets[this.to_receive_id].bitasset.current_feed
+            this.assets[this.debt_id].bitasset.current_feed
                 .maintenance_collateral_ratio / 1000;
         const cr = this.getRatio();
 

@@ -5,17 +5,18 @@ import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes} from "bitsharesjs";
-import TransitionWrapper from "../Utility/TransitionWrapper";
+import {ChainTypes as grapheneChainTypes, FetchChain} from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import cnames from "classnames";
 import PropTypes from "prop-types";
-
+import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
-const alignRight = {textAlign: "right"};
+import report from "bitshares-report";
+import LoadingIndicator from "../LoadingIndicator";
+const ops = Object.keys(operations);
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -25,9 +26,9 @@ function compareOps(b, a) {
     }
 }
 
-function textContent(n) {
-    return n ? `"${n.textContent.replace(/[\s\t\r\n]/gi, " ")}"` : "";
-}
+// function textContent(n) {
+//     return n ? `"${n.textContent.replace(/[\s\t\r\n]/gi, " ")}"` : "";
+// }
 
 class RecentTransactions extends React.Component {
     static propTypes = {
@@ -49,10 +50,11 @@ class RecentTransactions extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            limit: props.limit || 20,
-            csvExport: false,
+            limit: props.limit,
+            fetchingAccountHistory: false,
             headerHeight: 85,
-            filter: "all"
+            filter: "all",
+            accountHistoryError: false
         };
     }
 
@@ -104,7 +106,8 @@ class RecentTransactions extends React.Component {
         if (this.props.maxHeight !== nextProps.maxHeight) return true;
         if (
             nextState.limit !== this.state.limit ||
-            nextState.csvExport !== this.state.csvExport
+            nextState.fetchingAccountHistory !==
+                this.state.fetchingAccountHistory
         )
             return true;
         for (let key = 0; key < nextProps.accountsList.length; ++key) {
@@ -114,50 +117,6 @@ class RecentTransactions extends React.Component {
                 return true;
         }
         return false;
-    }
-
-    componentDidUpdate() {
-        if (this.state.csvExport) {
-            this.state.csvExport = false;
-            const csv_export_container = document.getElementById(
-                "csv_export_container"
-            );
-            const nodes = csv_export_container.childNodes;
-            let csv = "";
-            for (const n of nodes) {
-                //console.log("-- RecentTransactions._downloadCSV -->", n);
-                const cn = n.childNodes;
-                if (csv !== "") csv += "\n";
-                csv += [
-                    textContent(cn[0]),
-                    textContent(cn[1]),
-                    textContent(cn[2]),
-                    textContent(cn[3])
-                ].join(",");
-            }
-            var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
-            var today = new Date();
-            saveAs(
-                blob,
-                "btshist-" +
-                    today.getFullYear() +
-                    "-" +
-                    ("0" + (today.getMonth() + 1)).slice(-2) +
-                    "-" +
-                    ("0" + today.getDate()).slice(-2) +
-                    "-" +
-                    ("0" + today.getHours()).slice(-2) +
-                    ("0" + today.getMinutes()).slice(-2) +
-                    ".csv"
-            );
-        }
-
-        if (!this.props.fullHeight) {
-            let t = this.refs.transactions;
-            ps.update(t);
-
-            this._setHeaderHeight();
-        }
     }
 
     _onIncreaseLimit() {
@@ -214,8 +173,72 @@ class RecentTransactions extends React.Component {
         return history;
     }
 
-    _downloadCSV() {
-        this.setState({csvExport: true});
+    async _generateCSV() {
+        this.setState({fetchingAccountHistory: true});
+        let start = 0,
+            limit = 150;
+        let account = this.props.accountsList[0].get("id");
+        let accountName = (await FetchChain("getAccount", account)).get("name");
+        let recordData = {};
+
+        while (true) {
+            let res = await report.getAccountHistoryES(account, limit, start);
+            if (!res.length) break;
+
+            await report.resolveBlockTimes(res);
+
+            /* Before parsing results we need to know the asset info (precision) */
+            await report.resolveAssets(res);
+
+            res.map(function(record) {
+                const trx_id = record.id;
+                // let timestamp = api.getBlock(record.block_num);
+                const type = ops[record.op[0]];
+                const data = record.op[1];
+
+                switch (type) {
+                    default:
+                        recordData[trx_id] = {
+                            timestamp: new Date(record.block_time),
+                            type,
+                            data
+                        };
+                }
+            });
+
+            start += res.length;
+        }
+        if (!Object.keys(recordData).length) {
+            return this.setState({
+                fetchingAccountHistory: false,
+                accountHistoryError: true
+            });
+        }
+        recordData = report.groupEntries(recordData);
+        let parsedData = report.parseData(recordData, account, accountName);
+        let csvString = "";
+        for (let line of parsedData) {
+            csvString += line.join(",") + "\n";
+        }
+        let blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
+        let today = new Date();
+        saveAs(
+            blob,
+            "btshist-" +
+                today.getFullYear() +
+                "-" +
+                ("0" + (today.getMonth() + 1)).slice(-2) +
+                "-" +
+                ("0" + today.getDate()).slice(-2) +
+                "-" +
+                ("0" + today.getHours()).slice(-2) +
+                ("0" + today.getMinutes()).slice(-2) +
+                ".csv"
+        );
+        this.setState({
+            fetchingAccountHistory: false,
+            accountHistoryError: null
+        });
     }
 
     _onChangeFilter(e) {
@@ -298,14 +321,14 @@ class RecentTransactions extends React.Component {
                       </td>
                   </tr>
               ];
-        display_history.push(
+        let action = (
             <tr className="total-value" key="total_value">
                 <td style={{textAlign: "center"}}>
                     {historyCount > 0 ? (
                         <span>
                             <a
                                 className="inline-block"
-                                onClick={this._downloadCSV.bind(this)}
+                                onClick={this._generateCSV.bind(this)}
                                 data-tip={counterpart.translate(
                                     "transaction.csv_tip"
                                 )}
@@ -321,7 +344,7 @@ class RecentTransactions extends React.Component {
                     ) : null}
                 </td>
                 <td className="column-hide-tiny" />
-                <td colSpan="2" style={{textAlign: "center"}}>
+                <td style={{textAlign: "center"}}>
                     &nbsp;{(this.props.showMore &&
                         historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (
@@ -334,6 +357,7 @@ class RecentTransactions extends React.Component {
                         </a>
                     ) : null}
                 </td>
+                <td />
             </tr>
         );
 
@@ -374,6 +398,14 @@ class RecentTransactions extends React.Component {
                                 ) : null}
                             </div>
                         </div>
+                        {this.state.accountHistoryError && (
+                            <div
+                                className="has-error"
+                                style={{paddingLeft: "0.75rem"}}
+                            >
+                                <Translate content="account.history_error" />
+                            </div>
+                        )}
                     </div>
                     <div
                         className="box-content grid-block no-margin"
@@ -386,7 +418,8 @@ class RecentTransactions extends React.Component {
                         }
                         ref="transactions"
                     >
-                        <table
+                        <PaginatedList
+                            withTransition
                             className={
                                 "table table-striped " +
                                 (compactView ? "compact" : "") +
@@ -394,8 +427,7 @@ class RecentTransactions extends React.Component {
                                     ? " dashboard-table table-hover"
                                     : "")
                             }
-                        >
-                            <thead>
+                            header={
                                 <tr>
                                     <th
                                         className="column-hide-tiny"
@@ -412,45 +444,17 @@ class RecentTransactions extends React.Component {
                                     <th style={alignLeft}>
                                         <Translate content="account.transactions.info" />
                                     </th>
-                                    <th style={alignLeft}>
+                                    <th>
                                         <Translate content="account.transactions.time" />
                                     </th>
                                 </tr>
-                            </thead>
-                            <TransitionWrapper
-                                component="tbody"
-                                transitionName="newrow"
-                            >
-                                {display_history}
-                            </TransitionWrapper>
-                        </table>
+                            }
+                            rows={display_history}
+                            label="utility.total_x_operations"
+                            extraRow={action}
+                        />
                     </div>
-                    {historyCount > 0 &&
-                        this.state.csvExport && (
-                            <div
-                                id="csv_export_container"
-                                style={{display: "none"}}
-                            >
-                                <div>
-                                    <div>DATE</div>
-                                    <div>OPERATION</div>
-                                    <div>MEMO</div>
-                                    <div>AMOUNT</div>
-                                </div>
-                                {history.map(o => {
-                                    return (
-                                        <Operation
-                                            key={o.id}
-                                            op={o.op}
-                                            result={o.result}
-                                            block={o.block_num}
-                                            inverted={false}
-                                            csvExportMode
-                                        />
-                                    );
-                                })}
-                            </div>
-                        )}
+                    {this.state.fetchingAccountHistory && <LoadingIndicator />}
                 </div>
             </div>
         );

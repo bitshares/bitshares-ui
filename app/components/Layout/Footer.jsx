@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
-import ConfirmModal from "../Modal/ConfirmModal";
+import ChoiceModal from "../Modal/ChoiceModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
@@ -44,6 +44,8 @@ class Footer extends React.Component {
             modal: null,
             shownOnce: false
         };
+
+        this.getNode = this.getNode.bind(this);
     }
 
     componentDidMount() {
@@ -80,7 +82,9 @@ class Footer extends React.Component {
                     function(json) {
                         let oldVersion = String(json.tag_name);
                         let newVersion = String(APP_VERSION);
-                        if (oldVersion !== newVersion) {
+                        let isReleaseCandidate =
+                            APP_VERSION.indexOf("rc") !== -1;
+                        if (!isReleaseCandidate && oldVersion !== newVersion) {
                             this.setState({newVersion});
                         }
                     }.bind(this)
@@ -106,10 +110,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            window.open(
-                "http://docs.bitshares.org/bitshares/user/index.html",
-                "_blank"
-            );
+            this.props.history.push("/help");
         } else {
             guide
                 .introJs()
@@ -145,15 +146,18 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node) {
+    getNode(node = {url: "", operator: ""}) {
         const {props} = this;
 
+        let title = node.operator + " " + !!node.location ? node.location : "";
+        if ("country" in node) {
+            title = node.country + (!!title ? " - " + title : "");
+        }
+
         return {
-            name: node.location || "Unknown location",
+            name: title,
             url: node.url,
-            up: node.url in props.apiLatencies,
-            ping: props.apiLatencies[node.url],
-            hidden: !!node.hidden
+            ping: props.apiLatencies[node.url]
         };
     }
 
@@ -235,8 +239,8 @@ class Footer extends React.Component {
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
             // handling out of sync state within this one call
 
-            let forceReconnectAfterSeconds = 60;
-            let askToReconnectAfterSeconds = 5;
+            let forceReconnectAfterSeconds = this._getForceReconnectAfterSeconds();
+            let askToReconnectAfterSeconds = 10;
 
             // Trigger automatic reconnect after X seconds
             setTimeout(() => {
@@ -256,51 +260,12 @@ class Footer extends React.Component {
                 );
                 setTimeout(() => {
                     // Only ask the user once, and only continue if still out of sync
-                    let out_of_sync_seconds = this.getBlockTimeDelta();
                     if (
                         this.getBlockTimeDelta() > 3 &&
                         this.confirmOutOfSync.shownOnce == false
                     ) {
                         this.confirmOutOfSync.shownOnce = true;
-                        this.confirmOutOfSync.modal.show(
-                            <div>
-                                <Translate
-                                    content="connection.title_out_of_sync"
-                                    out_of_sync_seconds={parseInt(
-                                        out_of_sync_seconds
-                                    )}
-                                    component="h2"
-                                />
-                                <br />
-                                <br />
-                                <Translate
-                                    content="connection.out_of_sync"
-                                    out_of_sync_seconds={parseInt(
-                                        out_of_sync_seconds
-                                    )}
-                                />
-                                <br />
-                                <br />
-                                <Translate content="connection.want_to_reconnect" />
-                                {routerTransitioner.isAutoSelection() && (
-                                    <Translate
-                                        content="connection.automatic_reconnect"
-                                        reconnect_in_seconds={parseInt(
-                                            forceReconnectAfterSeconds
-                                        )}
-                                    />
-                                )}
-                                <br />
-                                <br />
-                                <br />
-                            </div>,
-                            <Translate content="connection.manual_reconnect" />,
-                            () => {
-                                if (!this.props.synced) {
-                                    this._triggerReconnect(false);
-                                }
-                            }
-                        );
+                        this.confirmOutOfSync.modal.show();
                     }
                 }, askToReconnectAfterSeconds * 1000);
             }
@@ -308,6 +273,10 @@ class Footer extends React.Component {
             this._closeOutOfSyncModal();
             this.confirmOutOfSync.shownOnce = false;
         }
+    }
+
+    _getForceReconnectAfterSeconds() {
+        return 60;
     }
 
     _triggerReconnect(honorManualSelection = true) {
@@ -338,15 +307,13 @@ class Footer extends React.Component {
 
         // Current Node Details
         let nodes = this.props.defaults.apiServer;
-        let getNode = this.getNode.bind(this);
+
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-
-        let activeNode = getNode(nodes[currentNodeIndex] || nodes[0]);
-
+        let activeNode = this.getNode(nodes[currentNodeIndex] || nodes[0]);
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = this.getNode(nodes[currentNodeIndex]);
         }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
@@ -354,6 +321,8 @@ class Footer extends React.Component {
         let version = version_match
             ? `.${version_match[1]}`
             : ` ${APP_VERSION}`;
+        let rc_match = APP_VERSION.match(/-rc[0-9]$/);
+        if (rc_match) version += rc_match[0];
         let updateStyles = {display: "inline-block", verticalAlign: "top"};
         let logoProps = {};
 
@@ -364,20 +333,62 @@ class Footer extends React.Component {
                 {!!routerTransitioner &&
                     routerTransitioner.isTransitionInProgress() && (
                         <LoadingIndicator
-                            loadingText={counterpart.translate(
-                                "app_init.connecting",
-                                {
-                                    server: routerTransitioner.getTransitionTarget()
-                                }
-                            )}
+                            loadingText={routerTransitioner.getTransitionTarget()}
                         />
                     )}
-                <ConfirmModal
+                <ChoiceModal
                     modalId="footer_out_of_sync"
                     ref={thiz => {
                         this.confirmOutOfSync.modal = thiz;
                     }}
-                />
+                    choices={[
+                        {
+                            translationKey: "connection.manual_reconnect",
+                            callback: () => {
+                                if (!this.props.synced) {
+                                    this._triggerReconnect(false);
+                                }
+                            }
+                        },
+                        {
+                            translationKey: "connection.manual_ping",
+                            callback: () => {
+                                if (!this.props.synced) {
+                                    this.onAccess();
+                                }
+                            }
+                        }
+                    ]}
+                >
+                    <div>
+                        <Translate
+                            content="connection.title_out_of_sync"
+                            out_of_sync_seconds={parseInt(
+                                this.getBlockTimeDelta()
+                            )}
+                            component="h2"
+                        />
+                        <br />
+                        <br />
+                        <Translate
+                            content="connection.out_of_sync"
+                            out_of_sync_seconds={parseInt(
+                                this.getBlockTimeDelta()
+                            )}
+                        />
+                        <br />
+                        <br />
+                        <Translate content="connection.want_to_reconnect" />
+                        {routerTransitioner.isAutoSelection() && (
+                            <Translate
+                                content="connection.automatic_reconnect"
+                                reconnect_in_seconds={parseInt(
+                                    this._getForceReconnectAfterSeconds()
+                                )}
+                            />
+                        )}
+                    </div>
+                </ChoiceModal>
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">
@@ -453,14 +464,14 @@ class Footer extends React.Component {
                         </div>
                         {synced ? null : (
                             <div className="grid-block shrink txtlabel cancel">
-                                <Translate content="footer.nosync" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.nosync" />
+                                &nbsp; &nbsp;
                             </div>
                         )}
                         {!connected ? (
                             <div className="grid-block shrink txtlabel error">
-                                <Translate content="footer.connection" />&nbsp;
-                                &nbsp;
+                                <Translate content="footer.connection" />
+                                &nbsp; &nbsp;
                             </div>
                         ) : null}
                         {this.props.backup_recommended ? (
@@ -523,16 +534,18 @@ class Footer extends React.Component {
                                             <span className="footer-block-title">
                                                 <Translate content="footer.latency" />
                                             </span>
-                                            &nbsp;{!connected
+                                            &nbsp;
+                                            {!connected
                                                 ? "-"
                                                 : !activeNode.ping
                                                     ? "-"
-                                                    : activeNode.ping +
-                                                      "ms"}&nbsp;/&nbsp;
+                                                    : activeNode.ping + "ms"}
+                                            &nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
                                             </span>
-                                            &nbsp;#{block_height}
+                                            &nbsp;#
+                                            {block_height}
                                         </span>
                                     </div>
                                 </div>
