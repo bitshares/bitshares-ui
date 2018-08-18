@@ -42,6 +42,7 @@ class ButtonWithdraw extends React.Component {
             )
         ) {
             if (
+                !!this.props.amount_to_withdraw &&
                 !(this.props.amount_to_withdraw.indexOf(" ") >= 0) &&
                 !isNaN(this.props.amount_to_withdraw) &&
                 this.props.amount_to_withdraw > 0 &&
@@ -1494,9 +1495,7 @@ class CitadelBridgeDepositRequest extends React.Component {
                     );
                 else
                     deposit_address_and_memo_element = (
-                        <span>
-                            {input_address_and_memo.address}
-                        </span>
+                        <span>{input_address_and_memo.address}</span>
                     );
                 //<span><span className="blocktrades-with-memo">with memo</span> {input_address_and_memo.memo}</span>;
 
