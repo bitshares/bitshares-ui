@@ -2,7 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import Icon from "../../components/Icon/Icon";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
-import {getWalletURL} from "../../branding";
+import {Link} from "react-router-dom";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -24,17 +24,6 @@ function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     });
 
     return coinToGatewayMapping;
-}
-
-function _openGatewaySite() {
-    let {selectedGateway, gatewayStatus} = this.state;
-    let win = window.open(
-        getWalletURL() +
-            "/#/help/gateways/" +
-            gatewayStatus[selectedGateway].name.toLowerCase().replace("-", ""),
-        "_blank"
-    );
-    win.focus();
 }
 
 function _getNumberAvailableGateways() {
@@ -159,6 +148,11 @@ function gatewaySelector(args) {
             );
     });
 
+    let supportLink = !!selectedGateway
+        ? "/help/gateways/" +
+          gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
+        : null;
+
     return (
         <div className="container-row">
             <div className="no-margin no-padding">
@@ -166,13 +160,13 @@ function gatewaySelector(args) {
                     <label className="left-label">
                         <Translate content="modal.deposit_withdraw.gateway" />
                         {selectedGateway ? (
-                            <span style={{cursor: "pointer"}}>
-                                &nbsp;<Icon
+                            <Link to={supportLink} style={{cursor: "pointer"}}>
+                                &nbsp;
+                                <Icon
                                     name="question-circle"
                                     title="icons.question_circle"
-                                    onClick={_openGatewaySite.bind(this)}
                                 />
-                            </span>
+                            </Link>
                         ) : null}
                         <span className="floatRight error-msg">
                             {!error &&

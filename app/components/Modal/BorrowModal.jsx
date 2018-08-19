@@ -6,6 +6,7 @@ import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
+import ReactTooltip from "react-tooltip";
 import BindToChainState from "../Utility/BindToChainState";
 import ReactTooltip from "react-tooltip";
 import FormattedAsset from "../Utility/FormattedAsset";

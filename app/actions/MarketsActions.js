@@ -68,17 +68,19 @@ class MarketsActions {
                     lastFetched: new Date()
                 };
 
-                marketStatsQueue.push({
-                    promise: Apis.instance()
-                        .db_api()
-                        .exec("get_ticker", [
-                            second.get("id"),
-                            first.get("id")
-                        ]),
-                    market: marketName,
-                    base: second,
-                    quote: first
-                });
+                if (Apis.instance().db_api()) {
+                    marketStatsQueue.push({
+                        promise: Apis.instance()
+                            .db_api()
+                            .exec("get_ticker", [
+                                second.get("id"),
+                                first.get("id")
+                            ]),
+                        market: marketName,
+                        base: second,
+                        quote: first
+                    });
+                }
 
                 if (!marketStatsQueueActive) {
                     marketStatsQueueActive = true;

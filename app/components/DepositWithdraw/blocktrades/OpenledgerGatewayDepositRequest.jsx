@@ -15,7 +15,7 @@ import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 
-class BlockTradesGatewayDepositRequest extends React.Component {
+class OpenledgerGatewayDepositRequest extends React.Component {
     static propTypes = {
         url: PropTypes.string,
         gateway: PropTypes.string,
@@ -348,7 +348,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -381,7 +382,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
@@ -520,7 +522,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -555,7 +558,8 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button
@@ -601,4 +605,4 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 }
 
-export default BindToChainState(BlockTradesGatewayDepositRequest);
+export default BindToChainState(OpenledgerGatewayDepositRequest);
