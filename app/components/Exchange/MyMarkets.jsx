@@ -872,14 +872,15 @@ class MyMarkets extends React.Component {
                         <Translate content="exchange.more" />
                     </div>
                 </div>*/}
-                <div 
-                    style={this.props.headerStyle}
-                    
-                >
-                    <div className="exchange-content-header">
-                        <span><Translate content="exchange.market_name" /></span>
+                {this.props.noHeader ? null :
+                    <div 
+                        style={this.props.headerStyle}
+                    >
+                        <div className="exchange-content-header">
+                            <span><Translate content="exchange.market_name" /></span>
+                        </div>
                     </div>
-                </div>
+                }
 
                 {this.props.controls ? (
                     <div

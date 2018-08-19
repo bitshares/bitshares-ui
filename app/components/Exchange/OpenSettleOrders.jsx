@@ -67,11 +67,11 @@ class SettleOrderRow extends React.Component {
 
         return (
             <tr style={{paddingRight: 5}}>
-                <td style={{textAlign: "right", width: "25%"}}>
+                <td style={{textAlign: "right"}}>
                     {utils.format_number(price, quote.get("precision"))}{" "}
                     {amountSymbol}
                 </td>
-                <td style={{textAlign: "right", width: "25%"}}>
+                <td style={{textAlign: "right"}}>
                     {utils.format_number(
                         order[
                             !order.isBid() ? "amountForSale" : "amountToReceive"
@@ -79,7 +79,7 @@ class SettleOrderRow extends React.Component {
                         quote.get("precision")
                     )}
                 </td>
-                <td style={{textAlign: "right", width: "25%"}}>
+                <td style={{textAlign: "right"}}>
                     {utils.format_number(
                         order[
                             !order.isBid() ? "amountToReceive" : "amountForSale"
@@ -88,7 +88,7 @@ class SettleOrderRow extends React.Component {
                     )}
                 </td>
                 <td
-                    style={{textAlign: "right", width: "25%"}}
+                    style={{textAlign: "right", whiteSpace: "nowrap"}}
                     className="tooltip"
                     data-tip={new Date(order.settlement_date)}
                 >
@@ -144,7 +144,15 @@ class OpenSettleOrders extends React.Component {
                 })
                 .toArray();
         } else {
-            return null;
+            return (
+                <tbody>
+                    <tr>
+                        <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                            <Translate content="account.no_orders" />
+                        </td>
+                    </tr>
+                </tbody>
+            );
         }
 
         return (

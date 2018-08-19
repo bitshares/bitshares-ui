@@ -1,0 +1,45 @@
+/* Ant Design SCSS Overrides 
+*/
+
+/* Exchange Overrides */
+
+.ant-tabs-bar {
+    margin: 0 0 10px !important;
+}
+
+.ant-tabs-nav, .ant-tabs-tab {
+    margin: 0 12px 0 0 !important;
+    padding: 6px 6px !important;
+}
+
+.inputAddon {
+    input { text-align: right !important; }
+    padding-bottom: 10px;
+    .ant-input-group-addon {
+        width: 45% !important;
+        text-align: left !important;
+    }
+}
+
+.ant-select-dropdown-menu-vertical {
+    margin-left: 0 !important;
+
+    > li {
+        padding: 1px 1px 5px 5px !important;
+    }
+}
+
+.ant-collapse {
+    width: 100%;
+}
+
+.ant-collapse-content > .ant-collapse-content-box {
+    padding: 0px !important;
+}
+
+/* Modal Overrides */
+label.ant-checkbox-wrapper {
+    > span {
+        text-transform: none;
+    }
+}

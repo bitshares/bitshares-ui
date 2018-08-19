@@ -180,7 +180,7 @@ export default class ExchangeHeader extends React.Component {
                                 <div
                                     style={{
                                         padding: "0 5px",
-                                        fontSize: "18px",
+                                        fontSize: this.props.tinyScreen ? "13px" : "18px",
                                         marginTop: "1px"
                                     }}
                                 >
@@ -363,6 +363,7 @@ export default class ExchangeHeader extends React.Component {
                                     <ExchangeHeaderCollateral
                                         object={collOrderObject}
                                         account={account}
+                                        className="hide-order-1"
                                     />
                                 ) : null}
                                 {lowestCallPrice && showCallLimit ? (
@@ -400,7 +401,7 @@ export default class ExchangeHeader extends React.Component {
                             <ul className="market-stats stats top-stats">
                                 <li
                                     className="stressed-stat input clickable"
-                                    style={{padding: "16px"}}
+                                    style={{padding: "16px 16px 16px 0px"}}
                                     onClick={this.props.onToggleSettings.bind(this)}
                                 >
                                     <AntIcon

@@ -480,10 +480,9 @@ class MarketPicker extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(
-            (!!this.props.quoteAsset && !!nextProps.quoteAsset && this.props.quoteAsset !== nextProps.quoteAsset) 
-            || (!!this.props.baseAsset && !!nextProps.baseAsset && this.props.baseAsset !== nextProps.baseAsset)
-        ){
-            console.log("Closing On Props!");
+            this.props.quoteAsset.get("id") !== nextProps.quoteAsset.get("id")
+            || this.props.baseAsset.get("id") !== nextProps.baseAsset.get("id")
+        ) {
             this.onClose();
         }
     }

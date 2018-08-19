@@ -473,7 +473,7 @@ class MyOpenOrders extends React.Component {
             const orders = this._getOrders();
             let emptyRow = (
                 <tr>
-                    <td style={{textAlign: "center"}} colSpan="5">
+                    <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
                         <Translate content="account.no_orders" />
                     </td>
                 </tr>
@@ -558,11 +558,11 @@ class MyOpenOrders extends React.Component {
 
         return (
             <div
-                style={{marginBottom: "15px"}}
+                style={this.props.style}
                 key="open_orders"
                 className={this.props.className}
             >
-                <div className="exchange-padded" style={{paddingBottom: "1.2rem"}}>
+                <div className={this.props.innerClass} style={this.props.innerStyle}>
                     {this.props.noHeader ? null : 
                     <div style={this.props.headerStyle} className="exchange-content-header">
                         {activeTab == "my_orders" ?
@@ -620,7 +620,7 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", minHeight: 260, maxHeight: 260, lineHeight: "13px"}}
+                        style={{overflow: "hidden", minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, lineHeight: "13px"}}
                     >
                         <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}

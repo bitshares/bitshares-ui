@@ -603,6 +603,11 @@ table thead tr th.mymarkets-header {
         display: none !important;
     }
 }
+@media (max-width: 1340px) {
+    .hide-order-6 {
+        display: none !important;
+    }
+}
 
 .no-data {
     position: relative;
@@ -811,28 +816,3 @@ tbody.orderbook > tr.my-order > td {
     z-index: 100;
 }
 
-// TEMPORARY ANT CHANGES
-.ant-tabs-bar {
-    margin: 0 0 10px !important;
-}
-
-.ant-tabs-nav, .ant-tabs-tab {
-    margin: 0 12px 0 0 !important;
-    padding: 6px 6px !important;
-}
-
-.inputAddon {
-    input { text-align: right !important; }
-    .ant-input-group-addon {
-        width: 45% !important;
-        text-align: left !important;
-    }
-}
-
-.ant-select-dropdown-menu-vertical {
-    margin-left: 0 !important;
-
-    > li {
-        padding: 1px 1px 5px 5px !important;
-    }
-}

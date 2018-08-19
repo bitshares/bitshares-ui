@@ -45,7 +45,7 @@ class BlockDate extends React.Component {
                 className: tooltip ? "tooltip" : "",
                 "data-tip": tooltip ? block.timestamp : ""
             },
-            <span>
+            <span style={{whiteSpace: "nowrap"}}>
                 {counterpart.localize(block.timestamp, {type: "date", format})}
             </span>
         );

@@ -834,6 +834,9 @@ class OrderBook extends React.Component {
 
                 wrapperClass = exchangeLayout == 4 ? "medium-12 large-12 xlarge-8" : wrapperClass;
                 innerClass = exchangeLayout == 4 ? "medium-6 large-6 xlarge-6" : innerClass;
+
+                wrapperClass = exchangeLayout == 5 ? "medium-12 large-8 xlarge-8" : wrapperClass;
+                innerClass = exchangeLayout == 5 ? "medium-12 large-6 xlarge-6" : innerClass;
             } else {
                 innerClass = exchangeLayout <= 2 ? "medium-6 large-6 xlarge-12" : innerClass;
 
@@ -842,6 +845,9 @@ class OrderBook extends React.Component {
 
                 wrapperClass = exchangeLayout == 4 ? "medium-12 large-12 xlarge-12" : wrapperClass;
                 innerClass = exchangeLayout == 4 ? "medium-12 large-6 xlarge-6" : innerClass;
+
+                wrapperClass = exchangeLayout == 5 ? "medium-12 large-12 xlarge-8" : wrapperClass;
+                innerClass = exchangeLayout == 5 ? "medium-12 large-6 xlarge-6" : innerClass;
             }
 
             return (
@@ -855,11 +861,12 @@ class OrderBook extends React.Component {
                     <div
                         className={classnames(
                             "small-12 middle-content",
+                            this.props.innerClass,
                             innerClass,
                             this.state.flip ? "order-1" : "order-2"
                         )}
                     >
-                        <div className="exchange-padded">
+                        <div>
                             <div
                                 className="exchange-content-header ask"
                                 data-intro={counterpart.translate(
@@ -933,7 +940,8 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210
+                                    maxHeight: 210,
+                                    lineHeight: "13px"
                                 }}
                             >
                                 <table
@@ -975,11 +983,12 @@ class OrderBook extends React.Component {
                     <div
                         className={classnames(
                             "middle-content",
+                            this.props.innerClass,
                             innerClass,
                             this.state.flip ? "order-2" : "order-1"
                         )}
                     >
-                        <div className="exchange-padded">
+                        <div>
                             <div
                                 className="exchange-content-header bid"
                                 data-intro={counterpart.translate(
@@ -1051,7 +1060,8 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210
+                                    maxHeight: 210,
+                                    lineHeight: "13px"
                                 }}
                             >
                                 <table

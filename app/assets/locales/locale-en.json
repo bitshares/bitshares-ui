@@ -113,7 +113,7 @@
                 "This is a premium name which is more expensive than a name containing a dash (-) or a number."
         },
         "new_user": "New user?",
-        "no_orders": "No open orders",
+        "no_orders": "No orders",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -501,6 +501,7 @@
         "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy": "Buy",
+        "buy_sell": "Buy/Sell",
         "buy_quick": "Quick Buy",
         "buy_description":
             "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
@@ -540,10 +541,11 @@
         "latest": "Latest",
         "layout": {
             "title": "Layout",
-            "1": "Layout 1",
-            "2": "Layout 2",
-            "3": "Layout 3",
-            "4": "Layout 4"
+            "1": "Horizontal Orderbook Left",
+            "2": "Horizontal Orderbook Right",
+            "3": "Vertical Orderbook, Combined Details",
+            "4": "Vertical Orderbook, Separated Details",
+            "5": "Vertical Orderbook, Original Layout"
         },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
@@ -577,6 +579,7 @@
         "no_bids": "No bids",
         "no_data": "No data",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "Market Depth",
         "others": "Others",
         "overbought": "Overbought",

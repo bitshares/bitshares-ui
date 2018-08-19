@@ -175,10 +175,18 @@ class MarketHistory extends React.Component {
                 })
                 .toArray();
         }
-        
+
+        let emptyRow = (
+            <tr>
+                <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                    <Translate content="account.no_orders" />
+                </td>
+            </tr>
+        );
+
         return (
             <div className={cnames(this.props.className)}>
-                <div className="exchange-padded" style={{paddingBottom: "1.2rem"}}>
+                <div className={this.props.innerClass} style={this.props.innerStyle}>
                     {this.props.noHeader ? null : 
                     <div
                         style={this.props.headerStyle}
@@ -233,7 +241,7 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{minHeight: 260, maxHeight: 260, overflow: "hidden", lineHeight: "13px"}}
+                        style={{minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, overflow: "hidden", lineHeight: "13px"}}
                     >
                         <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
                             <TransitionWrapper
@@ -241,7 +249,7 @@ class MarketHistory extends React.Component {
                                 transitionName="newrow"
                                 className="orderbook"
                             >
-                                {historyRows}
+                                {!!historyRows && historyRows.length > 0 ? historyRows : emptyRow}
                             </TransitionWrapper>
                         </table>
                     </div>

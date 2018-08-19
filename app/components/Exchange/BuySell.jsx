@@ -316,7 +316,7 @@ class BuySell extends React.Component {
                 ? !this.props.isPanelActive 
                     ? "small-12 medium-6 large-6 xlarge-6" 
                     : "small-12 medium-6 large-12 xlarge-6" 
-            : this.props.exchangeLayout >= 3 
+            : this.props.exchangeLayout >= 3 && this.props.exchangeLayout <= 4
                 ? !this.props.isPanelActive 
                     ? "small-12 medium-6 large-6 xlarge-6" 
                     : "small-12 medium-12 xlarge-12"
@@ -377,87 +377,6 @@ class BuySell extends React.Component {
                         ) : (
                             "null"
                         )}
-                        {
-                            <div
-                                onClick={this.props.onToggleOpen}
-                                className="float-right clickable hide-for-xlarge"
-                                style={{paddingLeft: 10}}
-                            >
-                                {caret}
-                            </div>
-                        }
-                        {this.props.currentBridges ? (
-                            <div className="float-right buy-sell-deposit">
-                                <a onClick={this._onBuy.bind(this)}>
-                                    <TranslateWithLinks
-                                        string="exchange.buysell_formatter"
-                                        noLink
-                                        keys={[
-                                            {
-                                                type: "asset",
-                                                value: this.props[
-                                                    isBid ? "base" : "quote"
-                                                ].get("symbol"),
-                                                arg: "asset"
-                                            },
-                                            {
-                                                type: "translate",
-                                                value: "exchange.buy",
-                                                arg: "direction"
-                                            }
-                                        ]}
-                                    />
-                                </a>
-                            </div>
-                        ) : null}
-                        {this.props.backedCoin ? (
-                            <div className="float-right buy-sell-deposit">
-                                <a onClick={this._onDeposit.bind(this)}>
-                                    <TranslateWithLinks
-                                        string="exchange.buysell_formatter"
-                                        noLink
-                                        keys={[
-                                            {
-                                                type: "asset",
-                                                value: this.props[
-                                                    isBid ? "base" : "quote"
-                                                ].get("symbol"),
-                                                arg: "asset"
-                                            },
-                                            {
-                                                type: "translate",
-                                                value: "exchange.deposit",
-                                                arg: "direction"
-                                            }
-                                        ]}
-                                    />
-                                </a>
-                            </div>
-                        ) : null}
-                        {this.props.onBorrow ? (
-                            <div className="float-right buy-sell-deposit">
-                                <a onClick={this.props.onBorrow}>
-                                    <TranslateWithLinks
-                                        string="exchange.buysell_formatter"
-                                        noLink
-                                        keys={[
-                                            {
-                                                type: "asset",
-                                                value: this.props[
-                                                    isBid ? "base" : "quote"
-                                                ].get("symbol"),
-                                                arg: "asset"
-                                            },
-                                            {
-                                                type: "translate",
-                                                value: "exchange.borrow",
-                                                arg: "direction"
-                                            }
-                                        ]}
-                                    />
-                                </a>
-                            </div>
-                        ) : null}
                     </div> : null}
 
                     <form
@@ -465,6 +384,7 @@ class BuySell extends React.Component {
                             (!this.props.isOpen ? "hide-container " : "") +
                             "order-form"
                         }
+                        style={{fontSize: "14px"}}
                         noValidate
                     >
                         <div className="grid-block no-overflow wrap shrink">
@@ -615,7 +535,7 @@ class BuySell extends React.Component {
                                     {/*<div>
                                         Advanced options...
                                     </div>*/}
-                                    <div >
+                                    <div>
                                         <Button 
                                             data-tip={disabledText ? disabledText : ""} 
                                             data-place="top"
@@ -627,11 +547,11 @@ class BuySell extends React.Component {
                                         >
                                             {isBid ? "Buy" : "Sell"}
                                         </Button>
-                                        <Button
+                                        {/* <Button
                                             style={{margin: 5}}
                                         >
                                             Clear
-                                        </Button>
+                                        </Button> */}
                                         {this.props.backedCoin ? (
                                             <Button 
                                                 style={{margin: 5}}

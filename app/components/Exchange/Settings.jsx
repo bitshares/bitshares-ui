@@ -81,6 +81,9 @@ class Settings extends React.Component {
                                     {<option value="4">
                                         {counterpart.translate("exchange.layout.4")}
                                     </option>}
+                                    {<option value="5">
+                                        {counterpart.translate("exchange.layout.5")}
+                                    </option>}
                                 </select>
                             </li>
                         </ul>
