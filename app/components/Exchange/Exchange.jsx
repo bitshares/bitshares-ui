@@ -23,9 +23,7 @@ import SettingsActions from "actions/SettingsActions";
 import cnames from "classnames";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
-import ConfirmOrderModal from "./ConfirmOrderModal";
 import ExchangeHeader from "./ExchangeHeader";
-import Translate from "react-translate-component";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {Apis} from "bitsharesjs-ws";
 import {checkFeeStatusAsync} from "common/trxHelper";
@@ -1316,14 +1314,6 @@ class Exchange extends React.Component {
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
-        /* Layout Definitions
-        *
-        * 1: Vertical Order Book A
-        * 2: Vertical Order Book B
-        * 3: Horizontal Order Book A
-        * 4: Horizontal Order Book B
-        */
-
         let base = null,
             quote = null,
             accountBalance = null,
@@ -1654,7 +1644,7 @@ class Exchange extends React.Component {
                 current={`${quoteSymbol}_${baseSymbol}`}
                 location={this.props.location}
                 history={this.props.history}
-                activeTab={smallScreen ? "my-market" : exchangeLayout < 3 || exchangeLayout > 4 ? tabVerticalPanel : tabBuySell}
+                activeTab={smallScreen ? "my-market" : exchangeLayout < 3 || exchangeLayout > 4 ? tabVerticalPanel ? tabVerticalPanel : "my-market" : tabBuySell}
             />
         );
 

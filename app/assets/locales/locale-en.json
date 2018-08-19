@@ -545,7 +545,7 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Chart options",
+        "settings": "Settings",
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",
