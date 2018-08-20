@@ -62,7 +62,7 @@ class MarketPickerWrapper extends React.Component {
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
-
+        
         this.setState({
             inputValue: e.target.value.trim(),
             activeSearch: true,
@@ -73,7 +73,12 @@ class MarketPickerWrapper extends React.Component {
         });
 
         /* Don't lookup invalid asset names */
-        if (!isValidName) return;
+        if (!isValidName) {
+            this.setState({
+                activeSearch: false
+            });
+            return; 
+        }
 
         if (this.state.inputValue !== toFind) {
             this.timer && clearTimeout(this.timer);
@@ -92,6 +97,7 @@ class MarketPickerWrapper extends React.Component {
         this.getAssetList(quote, 10, gatewayAssets);
 
         this.setState({
+            activeSearch: false,
             lookupQuote: quote
         });
     }
