@@ -1432,7 +1432,7 @@
         "propose_tip": "Propose another user to initiate a transaction",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "Sona erdirme işlemi dijital varlıklarınızı 24 saatlik bir gecikme ile o anki fiyat üzerinden BTS'ye dönüştürmenizi sağlar",
+        "settle": "Sona erdirme işlemi dijital varlıklarınızı %(settleDelay)s saatlik bir gecikme ile o anki fiyat üzerinden %(backingAsset)s'ye dönüştürmenizi sağlar",
         "settle_price": "Sona erdirilen emirlerin gerçekleşeceği fiyat",
         "show_asset": "Bu dijital varlığı ana listede göstermek için tıklayın.",
         "show_block": "İşlemin gerçekleşmiş olduğu #%(block)s numaralı bloğa bakmak için buraya tıklayın.",

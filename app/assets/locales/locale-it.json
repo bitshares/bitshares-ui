@@ -1432,7 +1432,7 @@
         "propose_tip": "Propose another user to initiate a transaction",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in BTS dopo un'attesa di 24 ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
+        "settle": "Il settling ti permetterà di convertire le tue disponibilità di %(asset)s in %(backingAsset)s dopo un'attesa di %(settleDelay)s ore, ad un prezzo uguale al prezzo di mercato in quel momento.",
         "settle_price": "Questo è il prezzo a cui i settle order saranno eseguiti.",
         "show_asset": "Clicca qui per mostrare quest'asset nella lista principale.",
         "show_block": "Clicca qui per mostrare il blocco #%(block)s in cui questa transazione è avvenuta.",

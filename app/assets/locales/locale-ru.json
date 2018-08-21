@@ -1432,7 +1432,7 @@
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "Погашение позволит Вам обменять Ваши %(asset)s на BTS с задержкой в 24 часа по цене, равной цене котировки на момент погашения.",
+        "settle": "Погашение позволит Вам обменять Ваши %(asset)s на %(backingAsset)s с задержкой в %(settleDelay)s часа по цене, равной цене котировки на момент погашения.",
         "settle_price": "Это цена, при которой будут исполнятся ордера на погашение.",
         "show_asset": "Нажмите здесь, чтобы отобразить этот актив в основном списке.",
         "show_block": "Нажмите здесь, чтобы увидеть блок #%(block)s, в котором произведена транзакция.",

@@ -1432,7 +1432,7 @@
         "propose_tip": "提议另一个用户发起交易",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
+        "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "清算单执行时将使用的价格",
         "show_asset": "在主列表中显示资产",
         "show_block": "显示收录交易的区块 #%(block)s 的信息",

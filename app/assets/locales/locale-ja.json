@@ -1432,7 +1432,7 @@
         "propose_tip": "別のユーザーからトランザクションを提案する",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "精算により、保有する%(asset)sを24時間の遅延後にBTSにその時点のフィード価格で変換できます。",
+        "settle": "精算により、保有する%(asset)sを%(settleDelay)s時間の遅延後に%(backingAsset)sにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",
         "show_asset": "メインリストにこのアセットを表示するにはここをクリックしてください。",
         "show_block": "この取引が発生したブロック#%(block)sを見るにはここをクリックしてください。",
