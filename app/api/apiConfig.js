@@ -416,7 +416,7 @@ export const settingsAPIs = {
             contact: "telegram:clockworkgr"
         },
         {
-            url: "wss://bts.to0l.cn:4443/ws",
+            url: "wss://bts.liuye.tech:4443/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Shandong",
