@@ -19,6 +19,7 @@ import {
 } from "lib/common/assetGatewayMixin";
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
+import CryptoLinkFormatter from "../Utility/CryptoLinkFormatter";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -253,6 +254,9 @@ class DepositModalContent extends DecimalChecker {
                           false
                       );
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
+
+        // append parameters
+        let uri = CryptoLinkFormatter.generate();
 
         const QR = isAddressValid ? (
             <div className="QR">
