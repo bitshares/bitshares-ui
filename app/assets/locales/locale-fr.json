@@ -1103,7 +1103,7 @@
             "submit_beta": "Deposit (beta)"
         },
         "deposit_withdraw": {
-            "disabled": "Gateway service disabled",
+            "disabled": "%(gateway)s gateway service disabled",
             "gateway": "Gateway",
             "no_gateway_available": "No gateway available",
             "select_gateway": "Please select a gateway operator",
