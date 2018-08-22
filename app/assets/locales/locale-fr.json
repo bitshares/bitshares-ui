@@ -41,6 +41,7 @@
         "hide_hidden": "Active",
         "hide_ignored": "Hide hidden accounts",
         "history": "Historique",
+        "history_error": "Failed to download the account history, please try again",
         "home": "Home",
         "hour_24": "24hrs",
         "hour_24_short": "24hrs",
@@ -1102,7 +1103,7 @@
             "submit_beta": "Deposit (beta)"
         },
         "deposit_withdraw": {
-            "disabled": "Gateway service disabled",
+            "disabled": "%(gateway)s gateway service disabled",
             "gateway": "Gateway",
             "no_gateway_available": "No gateway available",
             "select_gateway": "Please select a gateway operator",
@@ -1549,12 +1550,15 @@
             "asset_update_feed_producers": "Mise à jour des flux",
             "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Récuperation de solde",
+            "bid_collateral": "Collateral bid",
             "blind_transfer": "Blinded transfer",
             "call_order_update": "Mise à jour d'ordre à découvert",
             "committee_member_create": "Création de délégué",
             "committee_member_update": "Update committee member",
             "committee_member_update_global_parameters": "Mise à jour des parametres globaux",
             "custom": "Spécial",
+            "execute_bid": "Execute bid",
+            "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Execution d'ordre",
             "limit_order_cancel": "Annulation d'ordre à limite",
             "limit_order_create": "Ordre à limite",
@@ -1636,6 +1640,7 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

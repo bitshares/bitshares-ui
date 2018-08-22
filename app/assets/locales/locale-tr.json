@@ -41,6 +41,7 @@
         "hide_hidden": "Gizle",
         "hide_ignored": "Gizle",
         "history": "Geçmiş",
+        "history_error": "Failed to download the account history, please try again",
         "home": "Başa dön",
         "hour_24": "24 Saat",
         "hour_24_short": "24 Saat",
@@ -1102,7 +1103,7 @@
             "submit_beta": "Deposit (beta)"
         },
         "deposit_withdraw": {
-            "disabled": "Gateway service disabled",
+            "disabled": "%(gateway)s gateway service disabled",
             "gateway": "Gateway",
             "no_gateway_available": "No gateway available",
             "select_gateway": "Please select a gateway operator",
@@ -1549,12 +1550,15 @@
             "asset_update_feed_producers": "Fiyat kaynağı hesabı güncelleme",
             "asset_update_issuer": "Update asset issuer",
             "balance_claim": "Bakiye talebi",
+            "bid_collateral": "Collateral bid",
             "blind_transfer": "Kör transfer",
             "call_order_update": "Marjin güncelleme",
             "committee_member_create": "Kurul üyesi oluşturma",
             "committee_member_update": "Kurul üyesini güncelle",
             "committee_member_update_global_parameters": "Genel değişkenleri güncelleme",
             "custom": "Kişiye özel",
+            "execute_bid": "Execute bid",
+            "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Gerçekleşen emir",
             "limit_order_cancel": "İptal edilen emir",
             "limit_order_create": "Emir girişi",
@@ -1636,6 +1640,7 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

@@ -52,9 +52,9 @@ var Utils = {
         return inverted ? 1 / price : price;
     },
 
-    format_volume(amount) {
+    format_volume(amount, precision = 3) {
         if (amount < 10000) {
-            return this.format_number(amount, 3);
+            return this.format_number(amount, precision);
         } else if (amount < 1000000) {
             return (Math.round(amount / 10) / 100).toFixed(2) + "k";
         } else {

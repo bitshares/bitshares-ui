@@ -86,77 +86,90 @@ export function getMyMarketsBases() {
  * @returns {[string]}
  */
 export function getMyMarketsQuotes() {
-    return [
-        "BTS",
-        //
-        "BKT",
-        "BLOCKPAY",
-        "BRIDGE.BCO",
-        "BRIDGE.BTC",
-        "BRIDGE.MONA",
-        "BRIDGE.ZNY",
-        "BTC",
-        "BTSR",
-        "BTWTY",
-        "CADASTRAL",
-        "CNY",
-        "CVCOIN",
-        "EUR",
-        "GDEX.BTC",
-        "GDEX.BTO",
-        "GDEX.EOS",
-        "GDEX.ETH",
-        "GOLD",
-        "HERO",
-        "ICOO",
-        "IOU.CNY",
-        "KAPITAL",
-        "KEXCOIN",
-        "OBITS",
-        "OCT",
-        "OPEN.BTC",
-        "OPEN.DASH",
-        "OPEN.DGD",
-        "OPEN.DOGE",
-        "OPEN.EOS",
-        "OPEN.ETH",
-        "OPEN.EURT",
-        "OPEN.GAME",
-        "OPEN.GRC",
-        "OPEN.INCNT",
-        "OPEN.KRM",
-        "OPEN.LISK",
-        "OPEN.LTC",
-        "OPEN.MAID",
-        "OPEN.MKR",
-        "OPEN.NEO",
-        "OPEN.OMG",
-        "OPEN.SBD",
-        "OPEN.STEEM",
-        "OPEN.TUSD",
-        "OPEN.USDT",
-        "OPEN.WAVES",
-        "OPEN.ZEC",
-        "OPEN.ZRX",
-        "OPEN.EOSDAC",
-        "PPY",
-        "RUBLE",
-        "RUDEX.DCT",
-        "RUDEX.GBG",
-        "RUDEX.GOLOS",
-        "RUDEX.KRM",
-        "RUDEX.MUSE",
-        "RUDEX.SBD",
-        "RUDEX.STEEM",
-        "SILVER",
-        "SMOKE",
-        "STEALTH",
-        "USD",
-        "WIN.ETC",
-        "WIN.ETH",
-        "WIN.HSR",
-        "YOYOW"
-    ];
+    let tokens = {
+        nativeTokens: [
+            "BTC",
+            "BTS",
+            "CNY",
+            "EUR",
+            "GOLD",
+            "KRW",
+            "RUBLE",
+            "SILVER",
+            "USD"
+        ],
+        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
+        gdexTokens: ["GDEX.BTC", "GDEX.BTO", "GDEX.EOS", "GDEX.ETH"],
+        openledgerTokens: [
+            "OBITS",
+            "OPEN.BTC",
+            "OPEN.DASH",
+            "OPEN.DGD",
+            "OPEN.DOGE",
+            "OPEN.EOS",
+            "OPEN.EOSDAC",
+            "OPEN.ETH",
+            "OPEN.EURT",
+            "OPEN.GAME",
+            "OPEN.GRC",
+            "OPEN.INCNT",
+            "OPEN.KRM",
+            "OPEN.LISK",
+            "OPEN.LTC",
+            "OPEN.MAID",
+            "OPEN.MKR",
+            "OPEN.NEO",
+            "OPEN.OMG",
+            "OPEN.SBD",
+            "OPEN.STEEM",
+            "OPEN.TUSD",
+            "OPEN.USDT",
+            "OPEN.WAVES",
+            "OPEN.XMR",
+            "OPEN.ZEC",
+            "OPEN.ZRX"
+        ],
+        rudexTokens: [
+            "PPY",
+            "RUDEX.DCT",
+            "RUDEX.DGB",
+            "RUDEX.GBG",
+            "RUDEX.GOLOS",
+            "RUDEX.KRM",
+            "RUDEX.MUSE",
+            "RUDEX.SBD",
+            "RUDEX.STEEM",
+            "RUDEX.TT"
+        ],
+        winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
+        otherTokens: [
+            "BKT",
+            "BLOCKPAY",
+            "BTWTY",
+            "TWENTIX",
+            "BTSR",
+            "CADASTRAL",
+            "CVCOIN",
+            "HEMPSWEET",
+            "HERO",
+            "HERTZ",
+            "ICOO",
+            "IOU.CNY",
+            "KAPITAL",
+            "KEXCOIN",
+            "OCT",
+            "SMOKE",
+            "STEALTH",
+            "YOYOW",
+            "ZEPH"
+        ]
+    };
+
+    let allTokens = [];
+    for (let type in tokens) {
+        allTokens = allTokens.concat(tokens[type]);
+    }
+    return allTokens;
 }
 
 /**
@@ -164,7 +177,7 @@ export function getMyMarketsQuotes() {
  *
  * @returns {list of string tuples}
  */
-export function getFeaturedMarkets() {
+export function getFeaturedMarkets(quotes = []) {
     return [
         ["USD", "BTS"],
         ["USD", "OPEN.BTC"],
@@ -239,7 +252,10 @@ export function getFeaturedMarkets() {
         ["BTS", "RUDEX.DGB"],
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"]
-    ];
+    ].filter(a => {
+        if (!quotes.length) return true;
+        return quotes.indexOf(a[0]) !== -1;
+    });
 }
 
 /**

@@ -21,7 +21,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import {ChainValidation, ChainStore} from "bitsharesjs";
 import debounceRender from "react-debounce-render";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import {gatewayPrefixes} from "common/gateways";
+import {getPossibleGatewayPrefixes, gatewayPrefixes} from "common/gateways";
 import QuoteSelectionModal from "./QuoteSelectionModal";
 
 class MarketGroup extends React.Component {
@@ -554,14 +554,8 @@ class MyMarkets extends React.Component {
             myMarketFilter,
             activeMarketTab
         } = this.state;
-        const possibleGatewayAssets = gatewayPrefixes.reduce(
-            (assets, prefix) => {
-                preferredBases.forEach(a => {
-                    assets.push(`${prefix}.${a}`);
-                });
-                return assets;
-            },
-            []
+        const possibleGatewayAssets = getPossibleGatewayPrefixes(
+            preferredBases
         );
 
         let bases = this._getBases();

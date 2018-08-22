@@ -44,6 +44,8 @@ class Footer extends React.Component {
             modal: null,
             shownOnce: false
         };
+
+        this.getNode = this.getNode.bind(this);
     }
 
     componentDidMount() {
@@ -108,10 +110,7 @@ class Footer extends React.Component {
         var theme = SettingsStore.getState().settings.get("themes");
 
         if (hintData.length == 0) {
-            window.open(
-                "http://docs.bitshares.org/bitshares/user/index.html",
-                "_blank"
-            );
+            this.props.history.push("/help");
         } else {
             guide
                 .introJs()
@@ -147,11 +146,11 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node) {
+    getNode(node = {url: "", operator: ""}) {
         const {props} = this;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
-        if (!!node.country) {
+        if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
         }
 
@@ -308,15 +307,13 @@ class Footer extends React.Component {
 
         // Current Node Details
         let nodes = this.props.defaults.apiServer;
-        let getNode = this.getNode.bind(this);
+
         let currentNodeIndex = this.getCurrentNodeIndex.call(this);
-
-        let activeNode = getNode(nodes[currentNodeIndex] || nodes[0]);
-
+        let activeNode = this.getNode(nodes[currentNodeIndex] || nodes[0]);
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = getNode(nodes[currentNodeIndex]);
+            activeNode = this.getNode(nodes[currentNodeIndex]);
         }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");

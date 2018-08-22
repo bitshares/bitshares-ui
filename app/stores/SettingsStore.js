@@ -530,10 +530,14 @@ class SettingsStore {
 
     onChangeMarketDirection(payload) {
         for (let key in payload) {
-            this.marketDirections = this.marketDirections.set(
-                key,
-                payload[key]
-            );
+            if (payload[key]) {
+                this.marketDirections = this.marketDirections.set(
+                    key,
+                    payload[key]
+                );
+            } else {
+                this.marketDirections = this.marketDirections.delete(key);
+            }
         }
         ss.set("marketDirections", this.marketDirections.toJS());
     }

@@ -234,9 +234,18 @@ module.exports = function(env) {
                 }
             }
         },
-        devtool: env.noUgly || !env.prod ? "cheap-module-source-map" : "none",
+        devtool:
+            env.noUgly || !env.prod
+                ? "inline-cheap-module-source-map"
+                : "cheap-source-map",
         module: {
             rules: [
+                {
+                    // Test for a polyfill (or any file) and it won't be included in your
+                    // bundle
+                    test: /node-fetch/,
+                    use: "null-loader"
+                },
                 {
                     test: /\.jsx$/,
                     include: [
@@ -272,6 +281,11 @@ module.exports = function(env) {
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.mjs$/,
+                    include: /node_modules/,
+                    type: "javascript/auto"
                 },
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
@@ -366,6 +380,10 @@ module.exports = function(env) {
                 moment$: path.resolve(
                     root_dir,
                     "node_modules/moment/moment.js"
+                ),
+                bitsharesjs$: path.resolve(
+                    root_dir,
+                    "node_modules/bitsharesjs/"
                 ),
                 "bitshares-ui-style-guide$": path.resolve(
                     root_dir,

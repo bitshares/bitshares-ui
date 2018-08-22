@@ -91,9 +91,6 @@ class MarketsStore {
             }
         }
         this.allMarketStats = Immutable.Map(allMarketStats);
-        this.lowVolumeMarkets = Immutable.Map(
-            marketStorage.get("lowVolumeMarkets", {})
-        );
         this.onlyStars = marketStorage.get("onlyStars", false);
 
         this.baseAsset = {
@@ -424,7 +421,6 @@ class MarketsStore {
 
         if (result.fillOrders) {
             result.fillOrders.forEach(fill => {
-                console.log("fill:", fill, JSON.stringify(fill));
                 this.activeMarketHistory = this.activeMarketHistory.add(
                     new FillOrder(fill[0][1], assets, this.quoteAsset.get("id"))
                 );
@@ -463,16 +459,6 @@ class MarketsStore {
                 "volumeQuote",
                 stats.volumeQuote
             );
-            if (stats.volumeBase) {
-                this.lowVolumeMarkets = this.lowVolumeMarkets.delete(
-                    result.market
-                );
-            } else {
-                this.lowVolumeMarkets = this.lowVolumeMarkets.set(
-                    result.market,
-                    true
-                );
-            }
         }
 
         if (callsChanged || limitsChanged) {
@@ -507,8 +493,6 @@ class MarketsStore {
             // Update depth chart data
             this._depthChart();
         }
-
-        marketStorage.set("lowVolumeMarkets", this.lowVolumeMarkets.toJS());
 
         this.marketReady = true;
         this.emitChange();

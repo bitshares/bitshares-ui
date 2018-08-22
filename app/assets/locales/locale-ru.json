@@ -41,6 +41,7 @@
         "hide_hidden": "Активные",
         "hide_ignored": "Не отображать скрытые аккаунты",
         "history": "История",
+        "history_error": "Failed to download the account history, please try again",
         "home": "Домой",
         "hour_24": "Изменения за сутки",
         "hour_24_short": "24ч",
@@ -1549,12 +1550,15 @@
             "asset_update_feed_producers": "Обновление производителей котировок актива",
             "asset_update_issuer": "Обновить эмитента актива",
             "balance_claim": "Взыскание баланса",
+            "bid_collateral": "Collateral bid",
             "blind_transfer": "Слепой перевод",
             "call_order_update": "Обновление залога",
             "committee_member_create": "Создание члена комитета",
             "committee_member_update": "Обновление члена комитета",
             "committee_member_update_global_parameters": "Обновление глобальных параметров",
             "custom": "Специальная",
+            "execute_bid": "Execute bid",
+            "fba_distribute": "Fee backed asset distribution",
             "fill_order": "Исполнение ордера",
             "limit_order_cancel": "Отмена ордера",
             "limit_order_create": "Размещение ордера",
@@ -1636,6 +1640,7 @@
     "utility": {
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
+        "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

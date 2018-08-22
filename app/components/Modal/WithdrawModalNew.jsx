@@ -894,9 +894,11 @@ class WithdrawModalNew extends React.Component {
                 : backingAsset.minAmount;
         } else if (backingAsset) {
             minWithdraw =
-                backingAsset.gateFee * 2 ||
-                0 + backingAsset.transactionFee ||
-                0;
+                "gateFee" in backingAsset
+                    ? backingAsset.gateFee * 2 ||
+                      0 + backingAsset.transactionFee ||
+                      0
+                    : 0;
         }
 
         if (backingAsset && backingAsset.maxAmount) {
@@ -1244,7 +1246,13 @@ class WithdrawModalNew extends React.Component {
                                                 <input
                                                     type="text"
                                                     disabled
-                                                    value={backingAsset.gateFee}
+                                                    value={
+                                                        !!backingAsset &&
+                                                        "gateFee" in
+                                                            backingAsset
+                                                            ? backingAsset.gateFee
+                                                            : 0
+                                                    }
                                                 />
 
                                                 <div className="form-label select floating-dropdown">

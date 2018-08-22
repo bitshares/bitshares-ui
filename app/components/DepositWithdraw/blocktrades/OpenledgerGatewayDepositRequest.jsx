@@ -15,7 +15,7 @@ import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 
-class BlockTradesGatewayDepositRequest extends React.Component {
+class OpenledgerGatewayDepositRequest extends React.Component {
     static propTypes = {
         url: PropTypes.string,
         gateway: PropTypes.string,
@@ -605,4 +605,4 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 }
 
-export default BindToChainState(BlockTradesGatewayDepositRequest);
+export default BindToChainState(OpenledgerGatewayDepositRequest);
