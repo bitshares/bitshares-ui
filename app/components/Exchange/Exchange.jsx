@@ -1618,7 +1618,7 @@ class Exchange extends React.Component {
             <MyMarkets
                 key={`actionCard_${actionCardIndex++}`}
                 className="left-order-book no-overflow order-9"
-                style={{minWidth: 350, height: smallScreen ? 680 : "auto", padding: smallScreen ? 10 : 0}}
+                style={{minWidth: 350, height: smallScreen ? 680 : "calc(100vh - 230px)", padding: smallScreen ? 10 : 0}}
                 headerStyle={{paddingTop: 0, width: "100%", display: !smallScreen ? "display: none" : ""}}
                 noHeader={exchangeLayout == 4 && smallScreen ? false : true}
                 listHeight={
