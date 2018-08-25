@@ -1061,6 +1061,19 @@ class MyMarkets extends React.Component {
                 )}
 
                 <ul className="mymarkets-tabs" style={{marginBottom: 0}}>
+                    {/* Quote edit tab */}
+                    {myMarketTab && (
+                        <li
+                            key="quote_edit"
+                            style={{textTransform: "uppercase"}}
+                            onClick={() => {
+                                ZfApi.publish("quote_selection", "open");
+                            }}
+                            className="mymarkets-tab"
+                        >
+                            &nbsp;+&nbsp;
+                        </li>
+                    )}
                     {!myMarketTab && !this.state.inputValue
                         ? null
                         : preferredBases.map((base, index) => {
@@ -1097,19 +1110,7 @@ class MyMarkets extends React.Component {
                         </li>
                     ) : null}
 
-                    {/* Quote edit tab */}
-                    {myMarketTab && (
-                        <li
-                            key="quote_edit"
-                            style={{textTransform: "uppercase"}}
-                            onClick={() => {
-                                ZfApi.publish("quote_selection", "open");
-                            }}
-                            className="mymarkets-tab"
-                        >
-                            &nbsp;+&nbsp;
-                        </li>
-                    )}
+                    
                 </ul>
 
                 <div

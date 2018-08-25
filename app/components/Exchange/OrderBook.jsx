@@ -835,8 +835,8 @@ class OrderBook extends React.Component {
                 wrapperClass = exchangeLayout == 4 ? "medium-12 large-12 xlarge-8" : wrapperClass;
                 innerClass = exchangeLayout == 4 ? "medium-6 large-6 xlarge-6" : innerClass;
 
-                wrapperClass = exchangeLayout == 5 ? "medium-12 large-8 xlarge-8" : wrapperClass;
-                innerClass = exchangeLayout == 5 ? "medium-12 large-6 xlarge-6" : innerClass;
+                wrapperClass = exchangeLayout == 5 ? "small-12 medium-12 large-8 xlarge-8" : wrapperClass;
+                innerClass = exchangeLayout == 5 ? "small-12 medium-6 large-6 xlarge-6" : innerClass;
             } else {
                 innerClass = exchangeLayout <= 2 ? "medium-6 large-6 xlarge-12" : innerClass;
 

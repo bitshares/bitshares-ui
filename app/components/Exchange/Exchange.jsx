@@ -1543,7 +1543,7 @@ class Exchange extends React.Component {
                     : exchangeLayout >= 5 || smallScreen 
                         ? hidePanel 
                             ? "medium-6 large-4 xlarge-4"
-                            : "medium-6 large-6 xlarge-4"
+                            : "medium-12 large-6 xlarge-4"
                     : "medium-12 xlarge-12",
                     this.state.flipBuySell
                         ? `order-${buySellTop ? 1 : 2} xlarge-order-${buySellTop ? 1 : 5} buy-form`
@@ -1699,12 +1699,13 @@ class Exchange extends React.Component {
                         ? "medium-12 large-6 xlarge-6" 
                         : "medium-12 large-12 xlarge-12 no-padding"
                 )}
-                style={{paddingLeft: 5, paddingRight: 5}}
+                style={{paddingLeft: 5}}
             >
                 <Tabs
                     defaultActiveKey="buy"
                     activeKey={tabBuySell}
                     onChange={this._setTabBuySell.bind(this)}
+                    style={{padding: "0px !important", margin: "0px !important"}}
                 >
                     <Tabs.TabPane
                         tab={

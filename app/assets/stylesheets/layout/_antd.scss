@@ -4,12 +4,20 @@
 /* Exchange Overrides */
 
 .ant-tabs-bar {
-    margin: 0 0 10px !important;
+    margin: 0 0 0px !important;
 }
 
 .ant-tabs-nav, .ant-tabs-tab {
     margin: 0 12px 0 0 !important;
     padding: 6px 6px !important;
+}
+
+.ant-tabs-nav.ant-tabs-nav-animated {
+    margin-right: 0px !important;
+}
+
+.ant-tabs.ant-tabs-top.ant-tabs-line {
+    width: 100%;
 }
 
 .inputAddon {
