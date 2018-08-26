@@ -132,7 +132,11 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
-    renderServices(openLedgerGatewayCoins, rudexGatewayCoins, xbtsxGatewayCoins) {
+    renderServices(
+        openLedgerGatewayCoins,
+        rudexGatewayCoins,
+        xbtsxGatewayCoins
+    ) {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let {account} = this.props;
@@ -443,8 +447,6 @@ class AccountDepositWithdraw extends React.Component {
             xbtsxGatewayCoins
         );
 
-
-
         let options = services.map((services_obj, index) => {
             return (
                 <option key={index} value={index}>
@@ -573,35 +575,38 @@ class DepositStoreWrapper extends React.Component {
     }
 }
 
-export default connect(DepositStoreWrapper, {
-    listenTo() {
-        return [AccountStore, SettingsStore, GatewayStore];
-    },
-    getProps() {
-        return {
-            account: AccountStore.getState().currentAccount,
-            viewSettings: SettingsStore.getState().viewSettings,
-            openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
-                "OPEN",
-                []
-            ),
-            rudexBackedCoins: GatewayStore.getState().backedCoins.get(
-                "RUDEX",
-                []
-            ),
-            blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
-                "TRADE",
-                []
-            ),
-            winexBackedCoins: GatewayStore.getState().backedCoins.get(
-                "WIN",
-                []
-            ),
-            xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
-                "XBTSX",
-                []
-            ),
-            servicesDown: GatewayStore.getState().down || {}
-        };
+export default connect(
+    DepositStoreWrapper,
+    {
+        listenTo() {
+            return [AccountStore, SettingsStore, GatewayStore];
+        },
+        getProps() {
+            return {
+                account: AccountStore.getState().currentAccount,
+                viewSettings: SettingsStore.getState().viewSettings,
+                openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "OPEN",
+                    []
+                ),
+                rudexBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "RUDEX",
+                    []
+                ),
+                blockTradesBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "TRADE",
+                    []
+                ),
+                winexBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "WIN",
+                    []
+                ),
+                xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "XBTSX",
+                    []
+                ),
+                servicesDown: GatewayStore.getState().down || {}
+            };
+        }
     }
-});
+);
