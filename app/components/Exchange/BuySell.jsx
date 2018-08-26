@@ -170,10 +170,10 @@ class BuySell extends React.Component {
                 data-tip={counterpart.translate("tooltip.market_fee", {percent: baseMarketFeePercent,asset: (basePrefix || "") + baseName})}
                 className="grid-block no-overflow wrap shrink"
             >
-                <div className="small-4 buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" /> ({baseMarketFeePercent})
+                <div className="small-3 buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />, {baseMarketFeePercent}
                 </div>
-                <div className="inputAddon small-8">
+                <div className="inputAddon small-9">
                     <Input 
                         defaultValue="0.0"
                         id="baseMarketFee"
@@ -196,10 +196,10 @@ class BuySell extends React.Component {
                 data-tip={counterpart.translate("tooltip.market_fee", {percent: quoteMarketFeePercent, asset: (quotePrefix || "") + quoteName})}
                 className="grid-block no-overflow wrap shrink"
             >
-                <div className="small-4 buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" /> ({quoteMarketFeePercent})
+                <div className="small-3 buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />, {quoteMarketFeePercent}
                 </div>
-                <div className="inputAddon small-8">
+                <div className="inputAddon small-9">
                     <Input 
                         defaultValue="0.0"
                         id="quoteMarketFee"
@@ -493,12 +493,6 @@ class BuySell extends React.Component {
                                 <div className="grid-block no-overflow wrap shrink">
                                     <Translate className="small-3 buy-sell-label" content="transaction.expiration" />
                                     <div className="small-9 expiration-datetime-picker">
-                                        <select
-                                            onChange={this.props.onExpirationTypeChange}
-                                            value={this.props.expirationType}
-                                        >
-                                            {expirationsOptionsList}
-                                        </select>
                                         {this.props.expirationType === "SPECIFIC" ? (
                                             <DatePicker
                                                 pickerPosition={"bottom center"}
@@ -510,6 +504,13 @@ class BuySell extends React.Component {
                                                 onChange={this.props.onExpirationCustomChange}
                                             />
                                         ) : null}
+                                        <select
+                                            onChange={this.props.onExpirationTypeChange}
+                                            value={this.props.expirationType}
+                                        >
+                                            {expirationsOptionsList}
+                                        </select>
+                                        
                                     </div>
                                 </div>
                                 <div className="grid-block no-overflow wrap shrink">

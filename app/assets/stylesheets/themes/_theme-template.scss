@@ -2287,7 +2287,7 @@
     .expiration-datetime-picker {
         width: 100%;
         > div {
-            float: right;
+            float: left;
         }
         input {
             width: 160px;
@@ -2297,22 +2297,20 @@
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            text-align: right;
-            font-size: 0.9rem;
+            font-size: 90%;
             height: 28px;
             &:hover {
                 background: transparent;
             }
         }
         select {
-            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 0.9rem;
+            font-size: 90%;
             height: 28px;
             margin: 0 0 1px;
 
