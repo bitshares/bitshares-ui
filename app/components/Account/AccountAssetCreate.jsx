@@ -52,8 +52,7 @@ class BitAssetOptions extends React.Component {
         if (asset) {
             if (
                 asset.get("id") === "1.3.0" ||
-                (asset.get("bitasset_data_id") &&
-                    !asset.getIn(["bitasset", "is_prediction_market"]))
+                !asset.getIn(["bitasset", "is_prediction_market"])
             ) {
                 if (
                     this.props.isPredictionMarket &&
@@ -713,7 +712,8 @@ class AccountAssetCreate extends React.Component {
                             <td style={{border: "none", width: "80%"}}>
                                 <Translate
                                     content={`account.user_issued_assets.${key}`}
-                                />:
+                                />
+                                :
                             </td>
                             <td style={{border: "none"}}>
                                 <div
@@ -767,7 +767,8 @@ class AccountAssetCreate extends React.Component {
                             <td style={{border: "none", width: "80%"}}>
                                 <Translate
                                     content={`account.user_issued_assets.${key}`}
-                                />:
+                                />
+                                :
                             </td>
                             <td style={{border: "none"}}>
                                 <div
@@ -901,7 +902,8 @@ class AccountAssetCreate extends React.Component {
                                                         content={
                                                             "account.user_issued_assets.mpa"
                                                         }
-                                                    />:
+                                                    />
+                                                    :
                                                 </td>
                                                 <td style={{border: "none"}}>
                                                     <div
@@ -938,7 +940,8 @@ class AccountAssetCreate extends React.Component {
                                                             content={
                                                                 "account.user_issued_assets.pm"
                                                             }
-                                                        />:
+                                                        />
+                                                        :
                                                     </td>
                                                     <td
                                                         style={{border: "none"}}
@@ -1074,9 +1077,8 @@ class AccountAssetCreate extends React.Component {
                                                 </span>
                                                 <span>
                                                     {" "}
-                                                    {update.symbol}/{core.get(
-                                                        "symbol"
-                                                    )}
+                                                    {update.symbol}/
+                                                    {core.get("symbol")}
                                                 </span>
                                             </h5>
                                         </div>
@@ -1094,8 +1096,8 @@ class AccountAssetCreate extends React.Component {
                                     </div>
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {createFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {createFee}
                                         </p>
                                     }
                                 </div>
@@ -1258,7 +1260,8 @@ class AccountAssetCreate extends React.Component {
                                                                 width: "80%"
                                                             }}
                                                         >
-                                                            <Translate content="account.user_issued_assets.charge_market_fee" />:
+                                                            <Translate content="account.user_issued_assets.charge_market_fee" />
+                                                            :
                                                         </td>
                                                         <td
                                                             style={{
