@@ -272,7 +272,9 @@ class MarketsTable extends React.Component {
     update(nextProps = null) {
         let props = nextProps || this.props;
         let showFlip = props.forceDirection;
-        let markets = props.markets
+
+        if(props.markets && props.markets.size > 0) {
+            let markets = props.markets
             .toArray()
             .map(market => {
                 let quote = ChainStore.getAsset(market.quote);
@@ -292,7 +294,8 @@ class MarketsTable extends React.Component {
                 };
             })
             .filter(a => a !== null);
-        this.setState({showFlip, markets});
+            this.setState({showFlip, markets});
+        }
     }
 
     _toggleShowHidden(val) {
