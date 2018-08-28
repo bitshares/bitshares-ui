@@ -944,14 +944,9 @@
             }
         }
     }
-    ul.button-group, ul.button-group.segmented {
+    ul.button-group.segmented {
         > li.is-active > a {
-            background: $button-bg-color;
-            color: $primary-text-color;
-            border-bottom: 1px solid $button-bg-color;
-        }
-        > li > a {
-            background: $secondary-button-bg-color;
+            background: $input-background;
             color: $primary-text-color;
             border-bottom: 1px solid $button-bg-color;
         }
