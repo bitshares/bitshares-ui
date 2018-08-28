@@ -50,10 +50,28 @@ class BitAssetOptions extends React.Component {
 
     _onFoundBackingAsset(asset) {
         if (asset) {
-            if (
-                asset.get("id") === "1.3.0" ||
-                !asset.getIn(["bitasset", "is_prediction_market"])
-            ) {
+            let backing =
+                asset.get("bitasset") &&
+                ChainStore.getAsset(
+                    asset.getIn(["bitasset", "options", "short_backing_asset"])
+                );
+            let backing_backing =
+                backing &&
+                backing.get("bitasset") &&
+                ChainStore.getAsset(
+                    backing.getIn([
+                        "bitasset",
+                        "options",
+                        "short_backing_asset"
+                    ])
+                );
+            if (backing_backing && backing_backing !== "1.3.0") {
+                this.setState({
+                    error: counterpart.translate(
+                        "account.user_issued_assets.error_too_deep"
+                    )
+                });
+            } else if (!asset.getIn(["bitasset", "is_prediction_market"])) {
                 if (
                     this.props.isPredictionMarket &&
                     asset.get("precision") !==
