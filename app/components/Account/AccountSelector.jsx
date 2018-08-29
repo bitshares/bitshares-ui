@@ -115,7 +115,8 @@ class AccountSelector extends React.Component {
         }
 
         // Synchronous onChange for input change
-        if (!!onChange && !!_accountName) onChange(_accountName);
+        if (!!onChange && (!!_accountName || _accountName === ""))
+            onChange(_accountName);
 
         // asynchronous onAccountChanged for checking on chain
         if (!!onAccountChanged) {
