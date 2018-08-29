@@ -395,14 +395,16 @@ class AccountVoting extends React.Component {
     }
 
     onProxyAccountFound(proxy_account) {
-        this.setState(
-            {
-                proxy_account_id: proxy_account ? proxy_account.get("id") : ""
-            },
-            () => {
-                this.updateAccountData(this.props);
-            }
-        );
+        const proxy_account_id = proxy_account ? proxy_account.get("id") : "";
+        if (this.state.proxy_account_id !== proxy_account_id)
+            this.setState(
+                {
+                    proxy_account_id
+                },
+                () => {
+                    this.updateAccountData(this.props);
+                }
+            );
     }
 
     onClearProxy() {
