@@ -422,7 +422,7 @@ class App extends React.Component {
         }
 
         return (
-            <div id="dummy2"
+            <div id="dummy3"
                 style={{backgroundColor: !theme ? "#2a2a2a" : null}}
                 className={theme}
             >
