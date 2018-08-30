@@ -9,6 +9,7 @@ env:
 cache:
   directories:
     - "node_modules"
+    - "build"
 
 install:
   - pip install --user awscli
@@ -25,6 +26,7 @@ jobs:
         - npm run build-testnet
     - stage: deploy
       script:
+        - ls -la .
         - aws s3 cp ./build/dist/ s3://$S3_BUCKET_NAME/ --recursive
 
 # language: node_js
