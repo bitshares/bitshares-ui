@@ -26,4 +26,6 @@ jobs:
         - npm run build-testnet
     - stage: deploy
       script:
-        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME/
+        - ls -la ./build/dist/
+        - cat ./build/dist/index.html
+        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME/ --delete
