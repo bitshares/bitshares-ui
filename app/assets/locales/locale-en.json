@@ -148,6 +148,7 @@
             "private": "Private key (WIF - Wallet Import Format)",
             "public": "Public key",
             "publish": "Save",
+            "remove_proxy": "Remove proxy",
             "remove_text": "Remove",
             "reset": "Reset",
             "save": "Save Changes",
