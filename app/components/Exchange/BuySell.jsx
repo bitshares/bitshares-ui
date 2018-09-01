@@ -17,7 +17,6 @@ import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
 import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
-import Icon from "../Icon/Icon";
 import {
     Button,
     Input,
@@ -174,8 +173,8 @@ class BuySell extends React.Component {
                     <Translate content="explorer.asset.summary.market_fee" />, {baseMarketFeePercent}
                 </div>
                 <div className="inputAddon small-9">
-                    <Input 
-                        defaultValue="0.0"
+                    <ExchangeInput 
+                        placeholder="0.0"
                         id="baseMarketFee"
                         value={baseFee}
                         addonAfter={
@@ -200,8 +199,8 @@ class BuySell extends React.Component {
                     <Translate content="explorer.asset.summary.market_fee" />, {quoteMarketFeePercent}
                 </div>
                 <div className="inputAddon small-9">
-                    <Input 
-                        defaultValue="0.0"
+                    <ExchangeInput 
+                        placeholder="0.0"
                         id="quoteMarketFee"
                         value={quoteFee}
                         addonAfter={
@@ -400,19 +399,25 @@ class BuySell extends React.Component {
                                 <div className="grid-block no-overflow wrap shrink">
                                     <Translate className="small-3 buy-sell-label" content="exchange.price" />
                                     <div className="inputAddon small-9">
-                                        <Input  defaultValue="0" id={`${type}Price`} value={price} onChange={priceChange} 
+                                        <ExchangeInput 
+                                            id={`${type}Price`}
+                                            value={price}
+                                            onChange={priceChange}
+                                            autoComplete="off"
+                                            placeholder="0.0"
                                             addonAfter={
-                                            <span style={{fontSize: "75%"}}>
-                                                <AssetName
-                                                    dataPlace="right"
-                                                    name={base.get("symbol")}
-                                                />
-                                                &nbsp;/&nbsp;
-                                                <AssetName
-                                                    dataPlace="right"
-                                                    name={quote.get("symbol")}
-                                                />
-                                            </span>} 
+                                                <span style={{fontSize: "75%"}}>
+                                                    <AssetName
+                                                        dataPlace="right"
+                                                        name={base.get("symbol")}
+                                                    />
+                                                    &nbsp;/&nbsp;
+                                                    <AssetName
+                                                        dataPlace="right"
+                                                        name={quote.get("symbol")}
+                                                    />
+                                                </span>
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -420,11 +425,12 @@ class BuySell extends React.Component {
                                     {/*  */}
                                     <Translate className="small-3 buy-sell-label" content="transfer.amount" />
                                     <div className="inputAddon small-9">
-                                        <Input 
-                                            defaultValue="0.0" 
+                                        <ExchangeInput 
                                             id={`${type}Amount`}
                                             value={amount}
                                             onChange={amountChange}
+                                            autoComplete="off"
+                                            placeholder="0.0" 
                                             addonAfter={
                                                 <span style={{fontSize: "75%"}}>
                                                     <AssetName
@@ -439,11 +445,12 @@ class BuySell extends React.Component {
                                 <div className="grid-block no-overflow wrap shrink">
                                     <Translate className="small-3 buy-sell-label" content="exchange.total" />
                                     <div className="inputAddon small-9">
-                                        <Input 
-                                            defaultValue="0.0" 
+                                        <ExchangeInput 
                                             id={`${type}Total`}
                                             value={total}
                                             onChange={totalChange}
+                                            autoComplete="off"
+                                            placeholder="0.0" 
                                             addonAfter={
                                                 <span style={{fontSize: "75%"}}>
                                                     <AssetName
@@ -458,9 +465,9 @@ class BuySell extends React.Component {
                                 <div className="grid-block no-overflow wrap shrink">
                                     <Translate className="small-3 buy-sell-label" content="transfer.fee" />
                                     <div className="inputAddon small-9">
-                                        <Input 
-                                            defaultValue="0.0" 
+                                        <ExchangeInput 
                                             id={`${type}Fee`}
+                                            placeholder="0.0" 
                                             value={
                                                 !hasFeeBalance
                                                     ? counterpart.translate(
@@ -569,9 +576,6 @@ class BuySell extends React.Component {
                                     </div>
                                 </div>
                                 <div style={{marginTop: 10}}>
-                                    {/*<div>
-                                        Advanced options...
-                                    </div>*/}
                                     <div>
                                         <Button 
                                             data-tip={disabledText ? disabledText : ""} 
@@ -586,6 +590,7 @@ class BuySell extends React.Component {
                                         </Button>
                                         {/* <Button
                                             style={{margin: 5}}
+                                            onClick={this.props.clearForm.bind(this, isBid)}
                                         >
                                             Clear
                                         </Button> */}
@@ -593,22 +598,7 @@ class BuySell extends React.Component {
                                             <Button 
                                                 style={{margin: 5}}
                                                 onClick={this._onDeposit.bind(this)}>
-                                                    <TranslateWithLinks
-                                                        string="exchange.buysell_formatter"
-                                                        noLink
-                                                        keys={[
-                                                            {
-                                                                type: "asset",
-                                                                value: isBid ? base.get("symbol") : quote.get("symbol"),
-                                                                arg: "asset"
-                                                            },
-                                                            {
-                                                                type: "translate",
-                                                                value: "exchange.deposit",
-                                                                arg: "direction"
-                                                            }
-                                                        ]}
-                                                    />
+                                                <Translate content="exchange.deposit" />
                                             </Button>
                                         ) : null}
                                         {this.props.onBorrow ? (
@@ -616,22 +606,7 @@ class BuySell extends React.Component {
                                                 style={{margin: 5}}
                                                 onClick={this.props.onBorrow}
                                             >
-                                                <TranslateWithLinks
-                                                    string="exchange.buysell_formatter"
-                                                    noLink
-                                                    keys={[
-                                                        {
-                                                            type: "asset",
-                                                            value: isBid ? base.get("symbol") : quote.get("symbol"),
-                                                            arg: "asset"
-                                                        },
-                                                        {
-                                                            type: "translate",
-                                                            value: "exchange.borrow",
-                                                            arg: "direction"
-                                                        }
-                                                    ]}
-                                                />
+                                                <Translate content="exchange.borrow" />
                                             </Button>
                                         ) : null}
                                         {this.props.currentBridges ? (
@@ -639,22 +614,7 @@ class BuySell extends React.Component {
                                                 style={{margin: 5}}
                                                 onClick={this._onBuy.bind(this)}
                                             >
-                                                <TranslateWithLinks
-                                                    string="exchange.buysell_formatter"
-                                                    noLink
-                                                    keys={[
-                                                        {
-                                                            type: "asset",
-                                                            value: isBid ? base.get("symbol") : quote.get("symbol"),
-                                                            arg: "asset"
-                                                        },
-                                                        {
-                                                            type: "translate",
-                                                            value: "exchange.buy_quick",
-                                                            arg: "direction"
-                                                        }
-                                                    ]}
-                                                />
+                                                <Translate content="exchange.buy_quick" />
                                             </Button>
                                         ) : null}
                                     </div> 

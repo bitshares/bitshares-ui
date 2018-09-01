@@ -3,8 +3,24 @@
 
 /* Exchange Overrides */
 
+.ant-tabs {
+    line-height: 1 !important;
+}
+
+.ant-btn {
+    padding: 0 19px !important;
+}
+
+.ant-input-wrapper.ant-input-group input {
+    border-radius: 5px 0px 0px 5px !important;
+}
+
+.ant-input:focus {
+    box-shadow: 0 !important;
+}
+
 .ant-tabs-bar {
-    margin: 0 0 0px !important;
+    margin: 0 0 3px 0 !important;
 }
 
 .ant-tabs-nav, .ant-tabs-tab {
@@ -17,12 +33,12 @@
 }
 
 .ant-tabs.ant-tabs-top.ant-tabs-line {
-    width: 100%;
+    width: 100% !important;
 }
 
 .inputAddon {
     input { text-align: right !important; }
-    padding-bottom: 10px;
+    padding-bottom: 10px !important;
     .ant-input-group-addon {
         width: 45% !important;
         text-align: left !important;
@@ -38,7 +54,7 @@
 }
 
 .ant-collapse {
-    width: 100%;
+    width: 100% !important;
 }
 
 .ant-collapse-content > .ant-collapse-content-box {
@@ -48,6 +64,6 @@
 /* Modal Overrides */
 label.ant-checkbox-wrapper {
     > span {
-        text-transform: none;
+        text-transform: none !important;
     }
 }

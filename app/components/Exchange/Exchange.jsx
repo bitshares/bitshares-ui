@@ -1,45 +1,40 @@
+import {Apis} from "bitsharesjs-ws";
+import {ChainStore, FetchChain} from "bitsharesjs";
+import {
+    Tabs,
+    Collapse,
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
+import cnames from "classnames";
+import translator from "counterpart";
+import guide from "intro.js";
+import {debounce} from "lodash-es";
+import moment from "moment";
+import Ps from "perfect-scrollbar";
 import React from "react";
 import PropTypes from "prop-types";
+import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
+import notify from "actions/NotificationActions";
+import assetUtils from "common/asset_utils";
+import market_utils from "common/market_utils";
+import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
+import {checkFeeStatusAsync} from "common/trxHelper";
+import utils from "common/utils";
+import BuySell from "./BuySell";
+import ExchangeHeader from "./ExchangeHeader";
 import {MyOpenOrders} from "./MyOpenOrders";
 import {OrderBook, GroupOrderLimitSelector} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
-import BuySell from "./BuySell";
 import MarketPicker from "./MarketPicker";
 import Settings from "./Settings";
-import utils from "common/utils";
-// import PriceChartD3 from "./PriceChartD3";
 import TradingViewPriceChart from "./TradingViewPriceChart";
-import assetUtils from "common/asset_utils";
 import DepthHighChart from "./DepthHighChart";
-import {debounce} from "lodash-es";
-import BorrowModal from "../Modal/BorrowModal";
-import notify from "actions/NotificationActions";
-import AccountNotifications from "../Notifier/NotifierContainer";
-import Ps from "perfect-scrollbar";
-import {ChainStore, FetchChain} from "bitsharesjs";
-import SettingsActions from "actions/SettingsActions";
-import cnames from "classnames";
-import market_utils from "common/market_utils";
-import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
-import ExchangeHeader from "./ExchangeHeader";
-import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {Apis} from "bitsharesjs-ws";
-import {checkFeeStatusAsync} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
-import moment from "moment";
-import guide from "intro.js";
-import translator from "counterpart";
-import {
-    Tabs,
-    Button,
-    Collapse,
-    Icon as AntIcon
-} from "bitshares-ui-style-guide";
-import Icon from "../Icon/Icon";
-import classnames from "classnames";
-const counterpart = require("counterpart");
+import BorrowModal from "../Modal/BorrowModal";
+import AccountNotifications from "../Notifier/NotifierContainer";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -162,8 +157,7 @@ class Exchange extends React.Component {
         }
     };
 
-    _initialState(props) {
-        let ws = props.viewSettings;
+    _initialOrderState(props) {
         let bid = {
             forSaleText: "",
             toReceiveText: "",
@@ -193,6 +187,13 @@ class Exchange extends React.Component {
         };
         ask.price = new Price({base: ask.for_sale, quote: ask.to_receive});
 
+        return {ask, bid};
+    }
+
+    _initialState(props) {
+        let ws = props.viewSettings;
+        let {ask, bid} = this._initialOrderState(props);
+
         return {
             history: [],
 
@@ -214,10 +215,9 @@ class Exchange extends React.Component {
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
             height: window.innerHeight,
             width: window.innerWidth,
-            hidePanel: false,
+            hidePanel: ws.get("hidePanle", false),
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
-            hidePanel: false,
             showMarketPicker: false
         };
     }
@@ -688,11 +688,31 @@ class Exchange extends React.Component {
                             level: "error"
                         });
                 }
-                // console.log("order success");
+                console.log("order success");
+                this._clearForms();
             })
             .catch(e => {
                 console.log("order failed:", e);
             });
+    }
+
+    /***
+     * Clear forms
+     * @string: type
+     */
+    _clearForms(type) {
+        let {ask, bid} = this._initialOrderState(this.props);
+        
+        if(!type) {
+            this.setState({
+                bid, 
+                ask
+            });
+        } else if(type == "ask") {
+            this.setState({ask});
+        } else if(type == "bid") {
+            this.setState({bid});
+        }
     }
 
     _createPredictionShort(feeID) {
@@ -866,6 +886,10 @@ class Exchange extends React.Component {
 
     _togglePanel() {
         this.setState({
+            hidePanel: !this.state.hidePanel
+        });
+
+        SettingsActions.changeViewSetting({
             hidePanel: !this.state.hidePanel
         });
     }
@@ -1457,8 +1481,8 @@ class Exchange extends React.Component {
                             : "medium-12 large-6 xlarge-4"
                     : "medium-12 xlarge-12",
                     this.state.flipBuySell
-                        ? `order-${buySellTop ? 2 : 3} xlarge-order-${buySellTop ? 2 : 5} sell-form`
-                        : `order-${buySellTop ? 1 : 2} xlarge-order-${buySellTop ? 1 : 4} buy-form`
+                        ? `order-${buySellTop ? 2 : 3} large-order-${buySellTop ? 2 : 5} sell-form`
+                        : `order-${buySellTop ? 1 : 2} large-order-${buySellTop ? 1 : 4} buy-form`
                 )}
                 type="bid"
                 hideHeader={exchangeLayout < 5 || smallScreen ? true : false}
@@ -1482,6 +1506,7 @@ class Exchange extends React.Component {
                 priceChange={this._onInputPrice.bind(this, "bid")}
                 setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputSell.bind(this, "bid", false)}
+                clearForm={this._clearForms.bind(this, "bid")}
                 balance={baseBalance}
                 balanceId={base.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(
@@ -1546,8 +1571,8 @@ class Exchange extends React.Component {
                             : "medium-12 large-6 xlarge-4"
                     : "medium-12 xlarge-12",
                     this.state.flipBuySell
-                        ? `order-${buySellTop ? 1 : 2} xlarge-order-${buySellTop ? 1 : 5} buy-form`
-                        : `order-${buySellTop ? 2 : 3} xlarge-order-${buySellTop ? 2 : 4} sell-form`
+                        ? `order-${buySellTop ? 2 : 3} large-order-${buySellTop ? 2 : 5} sell-form`
+                        : `order-${buySellTop ? 1 : 2} large-order-${buySellTop ? 1 : 4} buy-form`
                 )}
                 type="ask"
                 hideHeader={exchangeLayout < 5 || smallScreen ? true : false}
@@ -1571,6 +1596,7 @@ class Exchange extends React.Component {
                 priceChange={this._onInputPrice.bind(this, "ask")}
                 setPrice={this._currentPriceClick.bind(this)}
                 totalChange={this._onInputReceive.bind(this, "ask", true)}
+                clearForm={this._clearForms.bind(this, "ask")}
                 balance={quoteBalance}
                 balanceId={quote.get("id")}
                 onSubmit={this._createLimitOrderConfirm.bind(
@@ -1614,12 +1640,14 @@ class Exchange extends React.Component {
             />
         );
 
+        tabVerticalPanel = tabVerticalPanel == "order_book" && exchangeLayout == 5 ? "my-market" : tabVerticalPanel;
+
         let myMarkets = (
             <MyMarkets
                 key={`actionCard_${actionCardIndex++}`}
                 className="left-order-book no-overflow order-9"
                 style={{minWidth: 350, height: smallScreen ? 680 : "calc(100vh - 230px)", padding: smallScreen ? 10 : 0}}
-                headerStyle={{paddingTop: 0, width: "100%", display: !smallScreen ? "display: none" : ""}}
+                headerStyle={{width: "100%", display: !smallScreen ? "display: none" : ""}}
                 noHeader={exchangeLayout == 4 && smallScreen ? false : true}
                 listHeight={
                     this.state.height
@@ -1690,10 +1718,12 @@ class Exchange extends React.Component {
             />
         );
 
+        tabBuySell = smallScreen && (tabBuySell != "buy" || tabBuySell != "sell") ? "buy" : tabBuySell;
+        
         let buySellTab = (
             <div
                 key={`actionCard_${actionCardIndex++}`}
-                className={classnames(
+                className={cnames(
                     "small-12 ",
                     exchangeLayout <= 2 
                         ? "medium-12 large-6 xlarge-6" 
@@ -1760,10 +1790,10 @@ class Exchange extends React.Component {
                         {sellForm}
                     </Tabs.TabPane>
                     {exchangeLayout >= 3 && !smallScreen ? (
-                        <Tabs.TabPane tab={counterpart.translate("exchange.market_name")} key="my-market" />
+                        <Tabs.TabPane tab={translator.translate("exchange.market_name")} key="my-market" />
                     ) : null}
                     {exchangeLayout >= 3 && !smallScreen ? (
-                        <Tabs.TabPane tab={counterpart.translate("exchange.more")} key="find-market" />
+                        <Tabs.TabPane tab={translator.translate("exchange.more")} key="find-market" />
                     ) : null}
                 </Tabs>
             </div>
@@ -1786,9 +1816,9 @@ class Exchange extends React.Component {
                             activeKey={tabVerticalPanel}
                             onChange={this._setTabVerticalPanel.bind(this)}
                         >
-                            {exchangeLayout <= 2 ? <Tabs.TabPane tab={counterpart.translate("exchange.order_book")} key="order_book" /> : null}
-                            <Tabs.TabPane tab={counterpart.translate("exchange.market_name")} key="my-market" />
-                            <Tabs.TabPane tab={counterpart.translate("exchange.more")} key="find-market" />
+                            {exchangeLayout <= 2 ? <Tabs.TabPane tab={translator.translate("exchange.order_book")} key="order_book" /> : null}
+                            <Tabs.TabPane tab={translator.translate("exchange.market_name")} key="my-market" />
+                            <Tabs.TabPane tab={translator.translate("exchange.more")} key="find-market" />
                         </Tabs>
                     </div>
                     {exchangeLayout <= 2 && tabVerticalPanel == "order_book" ? orderBook : null}
@@ -1811,10 +1841,7 @@ class Exchange extends React.Component {
                             </div>
                         </div>
                     ) : null}
-                    {tabVerticalPanel == "my-market" ||
-                    tabVerticalPanel == "find-market"
-                        ? myMarkets
-                        : null}
+                    {tabVerticalPanel == "my-market" || tabVerticalPanel == "find-market" ? myMarkets : null}
                 </div>
             );
         } else if (exchangeLayout >= 3 || exchangeLayout <= 4) {
@@ -1862,7 +1889,6 @@ class Exchange extends React.Component {
                 innerClass={!tinyScreen ? "exchange-padded" : ""}
                 innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
                 noHeader={exchangeLayout != 4 ? true : false}
-                headerStyle={{paddingTop: exchangeLayout == 5 ? 22 : 0}}
                 history={activeMarketHistory}
                 currentAccount={currentAccount}
                 myHistory={currentAccount.get("history")}
@@ -1892,7 +1918,6 @@ class Exchange extends React.Component {
                 innerClass={!tinyScreen ? "exchange-padded" : ""}
                 innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
                 noHeader={exchangeLayout != 4 ? true : false}
-                headerStyle={{paddingTop: exchangeLayout == 5 ? 22 : 0}}
                 history={activeMarketHistory}
                 currentAccount={currentAccount}
                 myHistory={currentAccount.get("history")}
@@ -1911,7 +1936,7 @@ class Exchange extends React.Component {
             <MyOpenOrders
                 key={`actionCard_${actionCardIndex++}`}
                 style={{marginBottom: !tinyScreen ? 15 : 0}}
-                className={classnames(
+                className={cnames(
                     exchangeLayout == 4
                         ? isPanelActive
                             ? "medium-12 large-6 xlarge-6"
@@ -1923,7 +1948,6 @@ class Exchange extends React.Component {
                 innerClass={!tinyScreen ? "exchange-padded" : ""}
                 innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
                 noHeader={exchangeLayout != 4 ? true : false}
-                headerStyle={{paddingTop: exchangeLayout == 5 ? 22 : 0}}
                 orders={marketLimitOrders}
                 settleOrders={marketSettleOrders}
                 currentAccount={currentAccount}
@@ -1947,7 +1971,7 @@ class Exchange extends React.Component {
             <MyOpenOrders
                 key={`actionCard_${actionCardIndex++}`}
                 style={{marginBottom: !tinyScreen ? 15 : 0}}
-                className={classnames(
+                className={cnames(
                     exchangeLayout == 4
                         ? isPanelActive
                             ? "medium-12 large-6 xlarge-6"
@@ -1959,7 +1983,6 @@ class Exchange extends React.Component {
                 innerClass={!tinyScreen ? "exchange-padded" : ""}
                 innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
                 noHeader={exchangeLayout != 4 ? true : false}
-                headerStyle={{paddingTop: exchangeLayout == 5 ? 22 : 0}}
                 orders={marketLimitOrders}
                 settleOrders={marketSettleOrders}
                 currentAccount={currentAccount}
@@ -2000,17 +2023,17 @@ class Exchange extends React.Component {
                     activeKey={tabTrades}
                     onChange={this._setTabTrades.bind(this)}
                 >
-                    <Tabs.TabPane tab={counterpart.translate("exchange.history")} key="history">
+                    <Tabs.TabPane tab={translator.translate("exchange.history")} key="history">
                         {marketHistory}
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={counterpart.translate("exchange.my_history")} key="my_history">
+                    <Tabs.TabPane tab={translator.translate("exchange.my_history")} key="my_history">
                         {myMarketHistory}
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={counterpart.translate("exchange.my_orders")} key="my_orders">
+                    <Tabs.TabPane tab={translator.translate("exchange.my_orders")} key="my_orders">
                         {myOpenOrders}
                     </Tabs.TabPane>
                     {marketSettleOrders.size > 0 ? (
-                        <Tabs.TabPane tab={counterpart.translate("exchange.settle_orders")} key="open_settlement">
+                        <Tabs.TabPane tab={translator.translate("exchange.settle_orders")} key="open_settlement">
                             {settlementOrders}
                         </Tabs.TabPane>
                     ) : null}
@@ -2034,10 +2057,10 @@ class Exchange extends React.Component {
                     activeKey={tabTrades}
                     onChange={this._setTabTrades.bind(this)}
                 >
-                    <Tabs.TabPane tab={counterpart.translate("exchange.my_history")} key="my_history">
+                    <Tabs.TabPane tab={translator.translate("exchange.my_history")} key="my_history">
                         {myMarketHistory}
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab={counterpart.translate("exchange.history")} key="history">
+                    <Tabs.TabPane tab={translator.translate("exchange.history")} key="history">
                         {marketHistory}
                     </Tabs.TabPane>
                 </Tabs>
@@ -2059,11 +2082,11 @@ class Exchange extends React.Component {
                     activeKey={tabOrders}
                     onChange={this._setTabOrders.bind(this)}
                 >
-                    <Tabs.TabPane tab={counterpart.translate("exchange.my_orders")} key="my_orders">
+                    <Tabs.TabPane tab={translator.translate("exchange.my_orders")} key="my_orders">
                         {myOpenOrders}
                     </Tabs.TabPane>
                     {marketSettleOrders.size > 0 ? (
-                        <Tabs.TabPane tab={counterpart.translate("exchange.settle_orders")} key="open_settlement">
+                        <Tabs.TabPane tab={translator.translate("exchange.settle_orders")} key="open_settlement">
                             {settlementOrders}
                         </Tabs.TabPane>
                     ) : null}
@@ -2206,31 +2229,31 @@ class Exchange extends React.Component {
         } else {
             actionCards = (
                 <Collapse defaultActiveKey={["1"]}>
-                    <Collapse.Panel header={counterpart.translate("exchange.price_history")}>
+                    <Collapse.Panel header={translator.translate("exchange.price_history")}>
                         {tradingViewChart}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.order_depth")} key="2">
+                    <Collapse.Panel header={translator.translate("exchange.order_depth")} key="2">
                         {deptHighChart}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.buy_sell")} key="3">
+                    <Collapse.Panel header={translator.translate("exchange.buy_sell")} key="3">
                         {buySellTab}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.order_book")} key="4">
+                    <Collapse.Panel header={translator.translate("exchange.order_book")} key="4">
                         {orderBook}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.history")} key="5">
+                    <Collapse.Panel header={translator.translate("exchange.history")} key="5">
                         {marketHistory}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.settle_orders")} key="6">
+                    <Collapse.Panel header={translator.translate("exchange.settle_orders")} key="6">
                         {settlementOrders}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.my_history")} key="7">
+                    <Collapse.Panel header={translator.translate("exchange.my_history")} key="7">
                         {myMarketHistory}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.my_orders")} key="8">
+                    <Collapse.Panel header={translator.translate("exchange.my_orders")} key="8">
                         {myOpenOrders}
                     </Collapse.Panel>
-                    <Collapse.Panel header={counterpart.translate("exchange.market_name")} key="9">
+                    <Collapse.Panel header={translator.translate("exchange.market_name")} key="9">
                         {myMarkets}
                     </Collapse.Panel>
                 </Collapse>
