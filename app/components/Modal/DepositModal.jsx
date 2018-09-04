@@ -9,7 +9,6 @@ import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
-import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
     gatewaySelector,
@@ -255,13 +254,12 @@ class DepositModalContent extends DecimalChecker {
                       );
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
 
-        // append parameters
-        let uri = CryptoLinkFormatter.generate();
-
         const QR = isAddressValid ? (
-            <div className="QR">
-                <QRCode size={140} value={depositAddress.address} />
-            </div>
+            <CryptoLinkFormatter
+                size={140}
+                address={depositAddress.address}
+                asset={selectedAsset}
+            />
         ) : (
             <div>
                 <Icon

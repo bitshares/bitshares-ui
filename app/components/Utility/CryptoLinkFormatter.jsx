@@ -1,89 +1,134 @@
 import React from "react";
+import PropTypes from "prop-types";
+import QRCode from "qrcode.react";
+
 /**
  *  Given an asset name, amount and label generates uri for its refilling
  *
  */
 
 class CryptoLinkFormatter extends React.Component {
-    static params = {};
-    static currentAsset = "";
+    static assetTemplates = {};
+
+    static propTypes = {
+        asset: PropTypes.string,
+        address: PropTypes.string,
+        amount: PropTypes.number,
+        message: PropTypes.string,
+        size: PropTypes.number
+    };
+
+    static defaultProps = {
+        size: 140
+    };
 
     constructor(params) {
         super(params);
 
-        this.state = {
-            assetTemplates: {
-                BTC: {
-                    query: "bitcoin:{address}?",
-                    params: {
-                        amount: {
-                            bind: "amount",
-                            optional: false
-                        },
-                        message: {
-                            bind: "message",
-                            optional: true
-                        }
+        this.assetTemplates = {
+            BTC: {
+                template: "bitcoin:{address}",
+                params: [
+                    {
+                        bind: "amount"
+                    },
+                    {
+                        bind: "message"
                     }
-                },
-                LTC: {
-                    query: "litecoin:{address}?",
-                    params: {
-                        amount: {
-                            bind: "amount",
-                            optional: false
-                        },
-                        message: {
-                            bind: "message",
-                            optional: true
-                        }
+                ]
+            },
+            LTC: {
+                template: "litecoin:{address}",
+                params: [
+                    {
+                        bind: "amount"
+                    },
+                    {
+                        bind: "message"
                     }
-                },
-                ETH: {
-                    query: "ethereum:{address}?",
-                    params: {
-                        value: {
-                            bind: "amount",
-                            optional: false
-                        },
-                        message: {
-                            bind: "message",
-                            optional: true
-                        }
+                ]
+            },
+            ETH: {
+                template: "ethereum:{address}",
+                params: [
+                    {
+                        name: "value", // name of the parameter. if not provided - bind param name would be set as name
+                        bind: "amount" // actual param value got from components props
+                    },
+                    {
+                        bind: "message"
                     }
-                },
-                BCH: {
-                    query: "bitcoincash:{address}?",
-                    params: {
-                        amount: {
-                            bind: "amount",
-                            optional: false
-                        },
-                        message: {
-                            bind: "message",
-                            optional: true
-                        }
+                ]
+            },
+            BCH: {
+                template: "bitcoincash:{address}",
+                params: [
+                    {
+                        bind: "amount"
+                    },
+                    {
+                        bind: "message"
                     }
-                }
+                ]
             }
         };
     }
 
-    static bind(name, value) {
-        this.params[name] = value;
-    }
+    render() {
+        let {size, asset} = this.props;
 
-    static generate() {
-        if (this.currentAsset == "") {
-            console.log("cant generate deposit uri: asset not selected");
-            return false;
+        let conf = this.props;
+
+        let assetTemplate = this.assetTemplates[asset];
+
+        var error = false;
+
+        // template handling
+        let link = assetTemplate.template.replace(/{([a-zA-Z0-9]+)}/g, function(
+            match,
+            tokenName
+        ) {
+            if (tokenName in conf) {
+                return conf[tokenName];
+            } else {
+                return true;
+            }
+        });
+
+        if (error) {
+            return "";
         }
 
-        let assetTemplate = this.assetTemplates[this.currentAsset];
+        // query param handling
+        if (assetTemplate.params.length > 0) {
+            let parameters = [];
 
-        // generate uri using template above
+            assetTemplate.params.forEach(function(parameter) {
+                var name = "";
 
-        return "";
+                if (typeof parameter["name"] != "undefined") {
+                    name = parameter["name"];
+                }
+
+                if (name == "") {
+                    name = parameter["bind"];
+                }
+
+                if (typeof value != "undefined") {
+                    parameters.push(name + "=" + conf[parameter["bind"]]);
+                }
+            });
+
+            if (parameters.length > 0) {
+                link += "?" + parameters.join("&");
+            }
+        }
+
+        return (
+            <div className="QR">
+                <QRCode size={size} value={link} />
+            </div>
+        );
     }
 }
 
