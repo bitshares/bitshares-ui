@@ -8,8 +8,9 @@ import {
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
-    citadelAPIs,
-    gdex2APIs
+    gdex2APIs,
+    xbtsxAPIs,
+    citadelAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 
@@ -71,6 +72,20 @@ export const availableGateways = {
         name: "GDEX",
         baseAPI: gdex2APIs,
         isEnabled: allowedGateway("GDEX"),
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    XBTSX: {
+        id: "XBTSX",
+        name: "XBTSX",
+        baseAPI: xbtsxAPIs,
+        isEnabled: true, //allowedGateway("XBTSX"),
+        isSimple: true,
+        selected: false,
+        simpleAssetGateway: false,
+        addressValidatorMethod: "POST",
         options: {
             enabled: false,
             selected: false

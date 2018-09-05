@@ -78,6 +78,11 @@ export const gdexAPIs = {
     WITHDRAW_RULE: "/gateway/withdraw/rule"
 };
 
+export const xbtsxAPIs = {
+    BASE: "https://apis.xbts.io/api/v1",
+    COINS_LIST: "/coin"
+};
+
 export const nodeRegions = [
     // region of the node follows roughly https://en.wikipedia.org/wiki/Subregion#/media/File:United_Nations_geographical_subregions.png
     "Northern Europe",
@@ -426,7 +431,7 @@ export const settingsAPIs = {
             contact: "telegram:clockworkgr"
         },
         {
-            url: "wss://bts.to0l.cn:4443/ws",
+            url: "wss://bts.liuye.tech:4443/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Shandong",

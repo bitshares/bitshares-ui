@@ -173,7 +173,13 @@ function gatewaySelector(args) {
                             selectedGateway &&
                             gatewayStatus[selectedGateway] &&
                             !gatewayStatus[selectedGateway].options.enabled ? (
-                                <Translate content="modal.deposit_withdraw.disabled" />
+                                <Translate
+                                    content="modal.deposit_withdraw.disabled"
+                                    with={{
+                                        gateway:
+                                            gatewayStatus[selectedGateway].name
+                                    }}
+                                />
                             ) : null}
                             {error ? (
                                 <Translate content="modal.deposit_withdraw.wallet_error" />

@@ -811,6 +811,7 @@
         "convert_now": "Обменять сейчас",
         "copy_address": "Скопировать адрес",
         "copy_memo": "Скопировать примечание",
+        "deposit_from_wallet": "Депозит из кошелька",
         "deposit": "Пополнить счет",
         "deposit_address": "Адрес депозита",
         "deposit_history_status": {
@@ -865,6 +866,14 @@
             "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
             "min_amount_error": "Пожалуйста введите число >= минимума",
             "support_block": "Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
+            "under_construction": "Технические работы"
+        },
+        "xbtsx": {
+            "coming_soon": "Скоро",
+            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Пожалуйста введите число >= минимума",
+            "support_block":
+                "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
             "under_construction": "Технические работы"
         },
         "scan_qr": "Сканировать QR-код",
@@ -1440,7 +1449,7 @@
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "Погашение позволит Вам обменять Ваши %(asset)s на BTS с задержкой в 24 часа по цене, равной цене котировки на момент погашения.",
+        "settle": "Погашение позволит Вам обменять Ваши %(asset)s на %(backingAsset)s с задержкой в %(settleDelay)s часа по цене, равной цене котировки на момент погашения.",
         "settle_price": "Это цена, при которой будут исполнятся ордера на погашение.",
         "show_asset": "Нажмите здесь, чтобы отобразить этот актив в основном списке.",
         "show_block": "Нажмите здесь, чтобы увидеть блок #%(block)s, в котором произведена транзакция.",
