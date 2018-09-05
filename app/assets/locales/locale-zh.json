@@ -728,7 +728,8 @@
             "pay": "每块奖励",
             "rank": "排名",
             "table": "表格视图",
-            "title": "见证人"
+            "title": "见证人",
+            "filter_by_name": "按名称过滤"
         },
         "workers": {
             "create": "创建一个新的预算项目提案",
@@ -804,6 +805,7 @@
         "convert_now": "兑换",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "充值",
         "deposit_address": "充值地址",
         "deposit_history_status": {
@@ -858,6 +860,13 @@
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
             "min_amount_error": "请输入大于最小金额的数量",
             "support_block": "请联系 RuDEX 获取客户支持：",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 XBTS 获取客户支持：",
             "under_construction": "Under Construction"
         },
         "scan_qr": "扫描二维码，手机支付",
@@ -1103,7 +1112,7 @@
             "submit_beta": "Deposit (beta)"
         },
         "deposit_withdraw": {
-            "disabled": "Gateway service disabled",
+            "disabled": "%(gateway)s gateway service disabled",
             "gateway": "Gateway",
             "no_gateway_available": "No gateway available",
             "select_gateway": "Please select a gateway operator",
@@ -1432,7 +1441,7 @@
         "propose_tip": "提议另一个用户发起交易",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
-        "settle": "使用清算功能，你可以在24小时后以当时的清算价将你的 %(asset)s 资产转换为对应抵押资产",
+        "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "清算单执行时将使用的价格",
         "show_asset": "在主列表中显示资产",
         "show_block": "显示收录交易的区块 #%(block)s 的信息",

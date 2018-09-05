@@ -70,7 +70,7 @@ class WorkerApproval extends React.Component {
         if (worker.daily_pay < this.props.rest) {
             fundedPercent = 100;
         } else if (this.props.rest > 0) {
-            fundedPercent = (this.props.rest / worker.daily_pay) * 100;
+            fundedPercent = this.props.rest / worker.daily_pay * 100;
         }
 
         let startDate = counterpart.localize(

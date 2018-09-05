@@ -221,12 +221,19 @@ class AccountVoting extends React.Component {
         );
     }
 
+    onRemoveProxy = () => {
+        this.publish(null);
+    };
+
     onPublish() {
+        this.publish(this.state.proxy_account_id);
+    }
+
+    publish(new_proxy_id) {
         let updated_account = this.props.account.toJS();
         let updateObject = {account: updated_account.id};
         let new_options = {memo_key: updated_account.options.memo_key};
         // updated_account.new_options = updated_account.options;
-        let new_proxy_id = this.state.proxy_account_id;
         new_options.voting_account = new_proxy_id ? new_proxy_id : "1.2.5";
         new_options.num_witness = this.state.witnesses.size;
         new_options.num_committee = this.state.committee.size;
@@ -395,14 +402,16 @@ class AccountVoting extends React.Component {
     }
 
     onProxyAccountFound(proxy_account) {
-        this.setState(
-            {
-                proxy_account_id: proxy_account ? proxy_account.get("id") : ""
-            },
-            () => {
-                this.updateAccountData(this.props);
-            }
-        );
+        const proxy_account_id = proxy_account ? proxy_account.get("id") : "";
+        if (this.state.proxy_account_id !== proxy_account_id)
+            this.setState(
+                {
+                    proxy_account_id
+                },
+                () => {
+                    this.updateAccountData(this.props);
+                }
+            );
     }
 
     onClearProxy() {
@@ -503,7 +512,8 @@ class AccountVoting extends React.Component {
     }
 
     render() {
-        let {workerTableIndex} = this.state;
+        let {workerTableIndex, prev_proxy_account_id} = this.state;
+        const accountHasProxy = !!prev_proxy_account_id;
         let preferredUnit = this.props.settings.get("unit") || "1.3.0";
         let hasProxy = !!this.state.proxy_account_id; // this.props.account.getIn(["options", "voting_account"]) !== "1.2.5";
         let publish_buttons_class = cnames("button", {
@@ -673,6 +683,15 @@ class AccountVoting extends React.Component {
                 >
                     <Translate content="account.perm.reset" />
                 </button>
+                {accountHasProxy && (
+                    <button
+                        className={"button"}
+                        onClick={this.onRemoveProxy}
+                        tabIndex={9}
+                    >
+                        <Translate content="account.perm.remove_proxy" />
+                    </button>
+                )}
             </span>
         );
 
