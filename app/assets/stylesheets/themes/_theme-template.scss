@@ -1,6 +1,9 @@
 @import "../utils/utils";
+@import "./../style-guide-fixes";
 
 @mixin theme(
+    $explorer-tab-content-background-color,
+    $tab-content-background-color,
     $primary-text-color,
     $bg-color,
     $dark-text-color,
@@ -46,9 +49,43 @@
     $main-content-margin-block-bg-color,
     $modal-bg-color,
     $mobile-input-bg,
-    $incognito-bg
+    $incognito-bg,
+    $explorer--witnesses--info-bg,
+    $explorer--witnesses--info-border,
+    $explorer--witnesses--info-table-title-color,
+    $explorer--witnesses--info-table-text-color,
+    $explorer--assets--bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    .explore-witness--info {
+        width: 100%;
+
+        border: 1px solid $explorer--witnesses--info-border;
+        background: $explorer--witnesses--info-bg;
+
+        padding: 12px;
+        border-radius: 5px;
+
+        table {
+            width: 100%;
+
+            thead {
+                th {
+                    font-weight: 400;
+                    color: $explorer--witnesses--info-table-title-color;
+                    font-size: 14px;
+                    padding-bottom: 8px;
+                }
+            }
+
+            tbody {
+                td {
+                    color: $explorer--witnesses--info-table-text-color;
+                }
+            }
+        }
+    }
 
     #incognito {
         background: $incognito-bg;
@@ -840,14 +877,14 @@
         border-color: $error-text-color;
     }
 
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    textarea,
-    input[role="combobox"],
-    select[role="combobox"] {
+    input[type="text"]#{$ant-fix},
+    input[type="password"]#{$ant-fix},
+    input[type="email"]#{$ant-fix},
+    input[type="number"]#{$ant-fix},
+    input[type="search"]#{$ant-fix},
+    textarea#{$ant-fix},
+    input[role="combobox"]#{$ant-fix},
+    select[role="combobox"]#{$ant-fix} {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -970,7 +1007,7 @@
     }
 
     .tab-content {
-        background-color: lighten($account-header, 4%);
+        background-color: $tab-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -981,8 +1018,8 @@
                 }
             }
         }
-        &.tab-no-background {
-            background-color: inherit;
+        &.explorer-tab-content {
+            background-color: $explorer-tab-content-background-color;
         }
     }
 

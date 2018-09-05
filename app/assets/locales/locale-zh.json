@@ -728,7 +728,8 @@
             "pay": "每块奖励",
             "rank": "排名",
             "table": "表格视图",
-            "title": "见证人"
+            "title": "见证人",
+            "filter_by_name": "按名称过滤"
         },
         "workers": {
             "create": "创建一个新的预算项目提案",

@@ -728,7 +728,8 @@
             "pay": "Blok başına ödeme",
             "rank": "Sıralama",
             "table": "Tablo görünümü",
-            "title": "Tanıklar"
+            "title": "Tanıklar",
+            "filter_by_name": "İsme Göre Filtrele"
         },
         "workers": {
             "create": "Create a new worker proposal",
