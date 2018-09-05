@@ -345,8 +345,8 @@ class RecentTransactions extends React.Component {
                 </td>
                 <td className="column-hide-tiny" />
                 <td style={{textAlign: "center"}}>
-                    &nbsp;{(this.props.showMore &&
-                        historyCount > this.props.limit) ||
+                    &nbsp;
+                    {(this.props.showMore && historyCount > this.props.limit) ||
                     (20 && limit < historyCount) ? (
                         <a onClick={this._onIncreaseLimit.bind(this)}>
                             <Icon

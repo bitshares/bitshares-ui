@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.180815-rc1",
+    "version": "2.0.180815",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -50,6 +50,7 @@
         "package": "build -p never",
         "package-no-ugly": "build -p never",
         "package-deb": "npm run prepackage && build  -p never --linux deb",
+        "package-snap": "npm run prepackage && build  -p never --linux snap",
         "package-win": "npm run prepackage && build  -p never --windows",
         "package-mac": "npm run prepackage && build  -p never --mac dmg",
         "postpackage": "node write_digest.js"
@@ -120,7 +121,8 @@
             "category": "Finance",
             "target": [
                 "deb",
-                "AppImage"
+                "AppImage",
+                "snap"
             ],
             "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
         },

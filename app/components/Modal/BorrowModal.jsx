@@ -246,15 +246,17 @@ class BorrowModalContent extends React.Component {
         let collateral;
 
         if (this.state.lockedCR) {
-            short_amount = (this.state.collateral * feed_price / ratio).toFixed(
-                this.props.backing_asset.get("precision")
-            );
+            short_amount = (
+                (this.state.collateral * feed_price) /
+                ratio
+            ).toFixed(this.props.backing_asset.get("precision"));
             collateral = this.state.collateral;
         } else {
             short_amount = this.state.short_amount;
-            collateral = (this.state.short_amount / feed_price * ratio).toFixed(
-                this.props.backing_asset.get("precision")
-            );
+            collateral = (
+                (this.state.short_amount / feed_price) *
+                ratio
+            ).toFixed(this.props.backing_asset.get("precision"));
         }
 
         let newState = {
@@ -288,7 +290,7 @@ class BorrowModalContent extends React.Component {
                     utils.get_asset_precision(this.props.backing_asset) +
                     initialCollateral -
                     10,
-                this.state.short_amount / this._getFeedPrice() * 1000.0
+                (this.state.short_amount / this._getFeedPrice()) * 1000.0
             )
         );
 
@@ -316,8 +318,7 @@ class BorrowModalContent extends React.Component {
             initialCollateral -
             10;
         const short_amount =
-            maximumCollateral /
-            this.state.collateral_ratio *
+            (maximumCollateral / this.state.collateral_ratio) *
             this._getFeedPrice();
 
         const newState = {
@@ -791,7 +792,8 @@ class BorrowModalContent extends React.Component {
                             >
                                 <div className="borrow-price-feeds">
                                     <span className="borrow-price-label">
-                                        <Translate content="transaction.feed_price" />:&nbsp;
+                                        <Translate content="transaction.feed_price" />
+                                        :&nbsp;
                                     </span>
                                     <FormattedPrice
                                         noPopOver
@@ -853,7 +855,8 @@ class BorrowModalContent extends React.Component {
                                     }
                                 >
                                     <span className="borrow-price-label">
-                                        <Translate content="exchange.your_price" />:&nbsp;
+                                        <Translate content="exchange.your_price" />
+                                        :&nbsp;
                                     </span>
                                     {this.state.newPosition ? (
                                         <FormattedPrice
@@ -992,7 +995,8 @@ class BorrowModalContent extends React.Component {
                                 >
                                     <span>
                                         <label>
-                                            <Translate content="borrow.target_collateral_ratio" />&nbsp;&nbsp;
+                                            <Translate content="borrow.target_collateral_ratio" />
+                                            &nbsp;&nbsp;
                                             <span
                                                 data-place="top"
                                                 data-html={true}
