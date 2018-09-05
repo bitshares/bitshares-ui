@@ -19,7 +19,6 @@ import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import {
     Button,
-    Input,
     Select
 } from 'bitshares-ui-style-guide'
 
@@ -215,8 +214,21 @@ class BuySell extends React.Component {
 
         var emptyCell = (
             <div style={{visibility: "hidden"}} className="grid-block no-overflow wrap shrink">
-                <div className="small-3">-</div>
-                <div className="small-9"><Input /></div>
+                <div className="small-3 buy-sell-label">
+                    <Translate content="explorer.asset.summary.market_fee" />
+                </div>
+                <div className="inputAddon small-9">
+                    <ExchangeInput 
+                        placeholder="0.0"
+                        id="emptyPlaceholder"
+                        value="0"
+                        addonAfter={
+                            <span style={{fontSize: "75%"}}>
+                                <AssetName style={{width: 100}} noTip name={quote.get("symbol")} />
+                            </span>
+                        }
+                    />
+                </div>
             </div>
         );
 
@@ -226,7 +238,9 @@ class BuySell extends React.Component {
                 ? quoteMarketFee
                 : !isBid && baseMarketFee
                     ? baseMarketFee
-                    : emptyCell;
+                    : quoteMarketFee || baseMarketFee 
+                        ? emptyCell : null;
+
         let hasBalance = isBid
             ? balanceAmount.getAmount({real: true}) >= parseFloat(total)
             : balanceAmount.getAmount({real: true}) >= parseFloat(amount);
@@ -296,22 +310,7 @@ class BuySell extends React.Component {
             balanceToAdd = balanceAmount;
         }
 
-        let {name, prefix} = utils.replaceName(
-            this.props[isBid ? "base" : "quote"]
-        );
-        let buyBorrowDepositName = (prefix ? prefix : "") + name;
-
-        const translator = require("counterpart");
-
-        let dataIntro = null;
-
-        if (type == "bid") {
-            dataIntro = translator.translate("walkthrough.buy_form");
-        }
-
-        if (type == "ask") {
-            dataIntro = translator.translate("walkthrough.sell_form");
-        }
+        let dataIntro = isBid ? counterpart.translate("walkthrough.buy_form") : counterpart.translate("walkthrough.sell_form");
 
         const expirationsOptionsList = Object.keys(this.props.expirations).map(
             (key, i) => (
@@ -324,9 +323,7 @@ class BuySell extends React.Component {
         // datepicker puts on the end of body so it's out of theme scope
         // so theme is used on wrapperClassName
         const theme = SettingsStore.getState().settings.get("themes");
-
         const minExpirationDate = moment();
-
         const containerClass = "small-12";
 
         return (

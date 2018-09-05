@@ -352,7 +352,9 @@ class MyMarkets extends React.Component {
             this._lookupAssets("OPEN.", true);
         }
 
-        if(this.state.activeTab !== nextProps.activeTab) {
+        if(this.state.activeTab !== nextState.activeTab) {
+            this._changeTab(nextState.activeTab);
+        } else if(!nextProps.tabHeader && this.state.activeTab !== nextProps.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
 
@@ -841,7 +843,7 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                {/*<div
+                {this.props.tabHeader ? <div
                     style={this.props.headerStyle}
                     className="grid-block shrink left-orderbook-header bottom-header"
                 >
@@ -864,8 +866,8 @@ class MyMarkets extends React.Component {
                     >
                         <Translate content="exchange.more" />
                     </div>
-                </div>*/}
-                {this.props.noHeader ? null :
+                </div> : null}
+                {this.props.noHeader || this.props.tabHeader ? null :
                     <div 
                         style={this.props.headerStyle}
                     >
