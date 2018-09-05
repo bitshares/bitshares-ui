@@ -728,7 +728,8 @@
             "pay": "초당 지불액",
             "rank": "순위",
             "table": "테이블뷰",
-            "title": "증인"
+            "title": "증인",
+            "filter_by_name": "이름으로 필터링"
         },
         "workers": {
             "create": "Create a new worker proposal",

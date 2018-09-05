@@ -728,7 +728,8 @@
             "pay": "Pay-per-block",
             "rank": "Rank",
             "table": "Table view",
-            "title": "Témoins"
+            "title": "Témoins",
+            "filter_by_name": "Filter By Name"
         },
         "workers": {
             "create": "Create a new worker proposal",

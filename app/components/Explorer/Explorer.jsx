@@ -86,7 +86,7 @@ class Explorer extends React.Component {
                 setting="explorer-tabs"
                 className="account-tabs"
                 tabsClass="account-overview bordered-header content-block"
-                contentClass="tab-content padding"
+                contentClass="tab-content explorer-tab-content padding"
             >
                 {tabs}
             </Tabs>

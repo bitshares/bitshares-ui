@@ -728,7 +728,8 @@
             "pay": "Pago por bloque",
             "rank": "Puesto",
             "table": "Ver tabla",
-            "title": "Testigos"
+            "title": "Testigos",
+            "filter_by_name": "Filtrar por nombre"
         },
         "workers": {
             "create": "Crear una nueva propuesta de trabajador",

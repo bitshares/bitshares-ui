@@ -728,7 +728,8 @@
             "pay": "Paga-per-blocco",
             "rank": "Posizione",
             "table": "Visualizzazione a tabella",
-            "title": "Witness"
+            "title": "Witness",
+            "filter_by_name": "Filtrer par nom"
         },
         "workers": {
             "create": "Crea una nuova worker proposal",

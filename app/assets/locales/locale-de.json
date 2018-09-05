@@ -728,7 +728,8 @@
             "pay": "Bezahlung pro Block",
             "rank": "Rang",
             "table": "Tabellenansicht",
-            "title": "Witnesses"
+            "title": "Witnesses",
+            "filter_by_name": "Nach Name filtern"
         },
         "workers": {
             "create": "Create a new worker proposal",
