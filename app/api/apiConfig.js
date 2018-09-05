@@ -17,7 +17,8 @@ export const openledgerAPIs = {
     TRADING_PAIRS: "/trading-pairs",
     DEPOSIT_LIMIT: "/deposit-limits",
     ESTIMATE_OUTPUT: "/estimate-output-amount",
-    ESTIMATE_INPUT: "/estimate-input-amount"
+    ESTIMATE_INPUT: "/estimate-input-amount",
+    RPC_URL: "https://openledger.info/api/"
 };
 
 export const rudexAPIs = {
@@ -420,7 +421,7 @@ export const settingsAPIs = {
             contact: "telegram:clockworkgr"
         },
         {
-            url: "wss://bts.to0l.cn:4443/ws",
+            url: "wss://bts.liuye.tech:4443/ws",
             region: "Eastern Asia",
             country: "China",
             location: "Shandong",
@@ -478,6 +479,5 @@ export const settingsAPIs = {
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
-    TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu",
-    RPC_URL: "https://openledger.info/api/"
+    TESTNET_FAUCET: "https://faucet.testnet.bitshares.eu"
 };

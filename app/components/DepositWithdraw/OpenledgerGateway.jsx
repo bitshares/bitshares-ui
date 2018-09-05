@@ -1,5 +1,5 @@
 import React from "react";
-import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
+import OpenledgerGatewayDepositRequest from "../DepositWithdraw/blocktrades/OpenledgerGatewayDepositRequest";
 import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
@@ -9,10 +9,9 @@ import {
     TransactionWrapper
 } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
-import cnames from "classnames";
 import LoadingIndicator from "../LoadingIndicator";
 
-class BlockTradesGateway extends React.Component {
+class OpenledgerGateway extends React.Component {
     constructor(props) {
         super();
 
@@ -140,7 +139,7 @@ class BlockTradesGateway extends React.Component {
             openledger: {
                 name: coin.intermediateAccount,
                 id: "1.2.96397",
-                support: "https://openledger.io"
+                support: "https://dex.openledger.io"
             }
         };
 
@@ -159,7 +158,8 @@ class BlockTradesGateway extends React.Component {
                             >
                                 <Translate
                                     content={"gateway.choose_" + action}
-                                />:{" "}
+                                />
+                                :{" "}
                             </label>
                             <select
                                 className="external-coin-types bts-select"
@@ -216,7 +216,7 @@ class BlockTradesGateway extends React.Component {
                 {!coin ? null : (
                     <div>
                         <div style={{marginBottom: 15}}>
-                            <BlockTradesGatewayDepositRequest
+                            <OpenledgerGatewayDepositRequest
                                 key={`${provider}.${coin.symbol}`}
                                 gateway={provider}
                                 issuer_account={issuer.name}
@@ -307,13 +307,16 @@ class BlockTradesGateway extends React.Component {
     }
 }
 
-export default connect(BlockTradesGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    OpenledgerGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

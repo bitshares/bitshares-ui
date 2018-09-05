@@ -6,6 +6,7 @@ import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
+import ReactTooltip from "react-tooltip";
 import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
@@ -95,6 +96,10 @@ class BorrowModalContent extends React.Component {
                 }
             };
         }
+    }
+
+    componentDidUpdate() {
+        ReactTooltip.rebuild();
     }
 
     componentDidMount() {
@@ -989,7 +994,7 @@ class BorrowModalContent extends React.Component {
                                         <label>
                                             <Translate content="borrow.target_collateral_ratio" />&nbsp;&nbsp;
                                             <span
-                                                className="tooltip"
+                                                data-place="top"
                                                 data-html={true}
                                                 data-tip={counterpart.translate(
                                                     "tooltip.target_collateral_ratio"

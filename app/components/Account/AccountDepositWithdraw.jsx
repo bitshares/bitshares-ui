@@ -6,7 +6,7 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import BlockTradesGateway from "../DepositWithdraw/BlockTradesGateway";
+import OpenledgerGateway from "../DepositWithdraw/OpenledgerGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
 import BlockTradesBridgeDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesBridgeDepositRequest";
@@ -14,7 +14,7 @@ import HelpContent from "../Utility/HelpContent";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
-import {settingsAPIs} from "api/apiConfig";
+import {openledgerAPIs} from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
@@ -186,7 +186,7 @@ class AccountDepositWithdraw extends React.Component {
 
                     {olService === "gateway" &&
                     openLedgerGatewayCoins.length ? (
-                        <BlockTradesGateway
+                        <OpenledgerGateway
                             account={account}
                             coins={openLedgerGatewayCoins}
                             provider="openledger"
@@ -204,12 +204,12 @@ class AccountDepositWithdraw extends React.Component {
                             </div>
 
                             <OpenLedgerFiatDepositWithdrawal
-                                rpc_url={settingsAPIs.RPC_URL}
+                                rpc_url={openledgerAPIs.RPC_URL}
                                 account={account}
                                 issuer_account="openledger-fiat"
                             />
                             <OpenLedgerFiatTransactionHistory
-                                rpc_url={settingsAPIs.RPC_URL}
+                                rpc_url={openledgerAPIs.RPC_URL}
                                 account={account}
                             />
                         </div>

@@ -94,4 +94,13 @@ export const availableGateways = {
 
 export const gatewayPrefixes = Object.keys(availableGateways);
 
+export function getPossibleGatewayPrefixes(bases) {
+    return gatewayPrefixes.reduce((assets, prefix) => {
+        bases.forEach(a => {
+            assets.push(`${prefix}.${a}`);
+        });
+        return assets;
+    }, []);
+}
+
 export default availableGateways;
