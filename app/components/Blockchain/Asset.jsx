@@ -1253,21 +1253,18 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(
-    Asset,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps() {
-            return {
-                currentAccount:
-                    AccountStore.getState().currentAccount ||
-                    AccountStore.getState().passwordAccount
-            };
-        }
+Asset = connect(Asset, {
+    listenTo() {
+        return [AccountStore];
+    },
+    getProps() {
+        return {
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
+        };
     }
-);
+});
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]

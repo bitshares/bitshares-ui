@@ -313,7 +313,11 @@ class Footer extends React.Component {
         if (activeNode.url == autoSelectAPI) {
             let nodeUrl = props.activeNode;
             currentNodeIndex = this.getNodeIndexByURL.call(this, nodeUrl);
-            activeNode = this.getNode(nodes[currentNodeIndex]);
+            if (!!currentNodeIndex) {
+                activeNode = this.getNode(nodes[currentNodeIndex]);
+            } else {
+                activeNode = this.getNode(nodes[0]);
+            }
         }
 
         let block_height = this.props.dynGlobalObject.get("head_block_number");
