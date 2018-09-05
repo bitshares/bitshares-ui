@@ -253,7 +253,8 @@ class AccountStore extends BaseStore {
         let myActiveAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
         return new Promise((resolve, reject) => {
-            iDB.load_data("linked_accounts")
+            iDB
+                .load_data("linked_accounts")
                 .then(data => {
                     this.state.linkedAccounts = Immutable.fromJS(
                         data || []
