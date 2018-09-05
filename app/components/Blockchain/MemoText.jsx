@@ -85,16 +85,13 @@ class MemoTextStoreWrapper extends React.Component {
     }
 }
 
-export default connect(
-    MemoTextStoreWrapper,
-    {
-        listenTo() {
-            return [WalletUnlockStore];
-        },
-        getProps() {
-            return {
-                wallet_locked: WalletUnlockStore.getState().locked
-            };
-        }
+export default connect(MemoTextStoreWrapper, {
+    listenTo() {
+        return [WalletUnlockStore];
+    },
+    getProps() {
+        return {
+            wallet_locked: WalletUnlockStore.getState().locked
+        };
     }
-);
+});

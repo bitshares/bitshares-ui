@@ -804,6 +804,7 @@
         "convert_now": "兑换",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "充值",
         "deposit_address": "充值地址",
         "deposit_history_status": {
@@ -858,6 +859,13 @@
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
             "min_amount_error": "请输入大于最小金额的数量",
             "support_block": "请联系 RuDEX 获取客户支持：",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 XBTS 获取客户支持：",
             "under_construction": "Under Construction"
         },
         "scan_qr": "扫描二维码，手机支付",

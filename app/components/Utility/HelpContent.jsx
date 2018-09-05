@@ -66,7 +66,8 @@ class HelpContent extends React.Component {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
-        req.keys()
+        req
+            .keys()
             .filter(a => {
                 return (
                     a.indexOf(`/${locale}/`) !== -1 || a.indexOf("/en/") !== -1

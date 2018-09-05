@@ -804,6 +804,7 @@
         "convert_now": "今すぐ変換",
         "copy_address": "アドレスをコピー",
         "copy_memo": "メモをコピー",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "入金",
         "deposit_address": "入金アドレス",
         "deposit_history_status": {
@@ -858,6 +859,13 @@
             "min_amount": "最低数量: %(minAmount)s %(symbol)s",
             "min_amount_error": "数字を入力してください >= minimum",
             "support_block": "サポートについては、RuDEXまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
+        "xbtsx": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、XBTSまでご連絡ください。:",
             "under_construction": "工事中"
         },
         "scan_qr": "QRをスキャン",

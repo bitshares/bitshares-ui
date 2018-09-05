@@ -804,6 +804,7 @@
         "convert_now": "Convertir ahora",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "Depositar",
         "deposit_address": "Dirección de depósito",
         "deposit_history_status": {
@@ -858,6 +859,13 @@
             "min_amount": "Monto minimo: %(minAmount)s %(symbol)s",
             "min_amount_error": "Por favor ingrese número >= mínimo",
             "support_block": "Para soporte, póngase en contacto con RuDEX en:",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact XBTS at:",
             "under_construction": "Under Construction"
         },
         "scan_qr": "Escanear QR",
