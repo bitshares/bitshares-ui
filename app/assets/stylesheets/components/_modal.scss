@@ -1,5 +1,12 @@
 // Modals with specific width
 
+#marketPicker.modal, #settingsModal.modal {
+    position: absolute;
+    max-width: 400px;
+    padding: 0px;
+    border-radius: 0px;
+}
+
 .modal#send_modal_header,
 .modal#send_modal_portfolio,
 .modal#simple_bridge_modal,
@@ -135,9 +142,3 @@
     text-transform: none !important;
 }
 
-// Ant Overrides
-label.ant-checkbox-wrapper {
-    > span {
-        text-transform: none;
-    }
-}
