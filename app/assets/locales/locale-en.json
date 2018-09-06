@@ -1,5 +1,7 @@
 {
     "account": {
+        "history_error":
+            "Failed to download the account history, please try again",
         "accounts": "Accounts",
         "activity": "Activity",
         "advanced": "Advanced",
@@ -101,7 +103,7 @@
             "premium_name_warning": "This is a premium name which is more expensive than a name containing a dash (-) or a number."
         },
         "new_user": "New user?",
-        "no_orders": "No open orders",
+        "no_orders": "No orders",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -453,7 +455,10 @@
         "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy": "Buy",
-        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_sell": "Buy/Sell",
+        "buy_quick": "Quick Buy",
+        "buy_description":
+            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
@@ -484,6 +489,14 @@
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
         "latest": "Latest",
+        "layout": {
+            "title": "Layout",
+            "1": "Horizontal Orderbook Left",
+            "2": "Horizontal Orderbook Right",
+            "3": "Vertical Orderbook, Combined Details",
+            "4": "Vertical Orderbook, Separated Details",
+            "5": "Vertical Orderbook, Original Layout"
+        },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
@@ -515,6 +528,7 @@
         "no_bids": "No bids",
         "no_data": "No data",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "Market Depth",
         "others": "Others",
         "overbought": "Overbought",
@@ -533,12 +547,12 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Chart options",
+        "settings": "Settings",
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",
-        "show_asks": "Show all asks",
-        "show_bids": "Show all bids",
+        "show_asks": "Show all %(ordercount)s asks",
+        "show_bids": "Show all %(ordercount)s bids",
         "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
@@ -909,6 +923,7 @@
         "your_account": "Your account"
     },
     "global": {
+        "close": "Close",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",
@@ -1652,6 +1667,11 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
+        "total_x_operations": "Total of %(count)s operations"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
