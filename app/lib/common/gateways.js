@@ -9,7 +9,8 @@ import {
     openledgerAPIs,
     cryptoBridgeAPIs,
     gdex2APIs,
-    xbtsxAPIs
+    xbtsxAPIs,
+    citadelAPIs
 } from "api/apiConfig";
 import {allowedGateway} from "branding";
 
@@ -85,6 +86,18 @@ export const availableGateways = {
         selected: false,
         simpleAssetGateway: false,
         addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    CITADEL: {
+        id: "CITADEL",
+        name: "CITADEL",
+        baseAPI: citadelAPIs,
+        isEnabled: true,
+        selected: false,
+        assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {
             enabled: false,
             selected: false

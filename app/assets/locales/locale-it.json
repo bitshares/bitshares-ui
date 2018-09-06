@@ -799,8 +799,15 @@
         "calc": "Calcolo in corso",
         "choose_deposit": "Per favore seleziona la valuta che vuoi depositare",
         "choose_withdraw": "Per favore seleziona la valuta che vuoi prelevare",
+        "citadel": {
+            "coming_soon": "Prossimamente",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Per favore inserisci un numero >= minimo",
+            "support_block": "Per supporto, contatta citadel.li a:",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "Contact Blocktrades",
-        "convert": "Conversione interna",
+        "convert": "Quantità minima: %(minAmount)s %(symbol)s",
         "convert_coin": "Converti in %(coin)s (%(symbol)s)",
         "convert_now": "Converti adesso",
         "copy_address": "Copy address",

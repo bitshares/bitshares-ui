@@ -815,6 +815,13 @@
         "calc": "Calculating",
         "choose_deposit": "Please select the coin you would like to deposit",
         "choose_withdraw": "Please select the coin you would like to withdraw",
+        "citadel": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact citadel.li at:",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "Contact Blocktrades",
         "convert": "Internal conversion",
         "convert_coin": "Convert to %(coin)s (%(symbol)s)",
@@ -898,6 +905,7 @@
         "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
         "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
         "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+        "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
         "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
         "user_unavailable": "User informaction is current unavailable, please try again later",
