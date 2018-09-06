@@ -84,62 +84,63 @@ class CryptoLinkFormatter extends React.Component {
 
     render() {
         let {size, asset} = this.props;
-
         let conf = this.props;
-
         let assetTemplate = this.assetTemplates[asset];
 
         var error = false;
+        if (typeof assetTemplate != "undefined") {
+            // template handling
+            let link = assetTemplate.template.replace(
+                /{([a-zA-Z0-9]+)}/g,
+                function(match, tokenName) {
+                    if (tokenName in conf) {
+                        return conf[tokenName];
+                    } else {
+                        // some variable required by template was not found  - can't proceed next
+                        error = true;
+                        return true;
+                    }
+                }
+            );
 
-        // template handling
-        let link = assetTemplate.template.replace(/{([a-zA-Z0-9]+)}/g, function(
-            match,
-            tokenName
-        ) {
-            if (tokenName in conf) {
-                return conf[tokenName];
-            } else {
-                // some variable required by template was not found  - can't proceed next
-                error = true;
-                return true;
+            // if error encountered - its better not to show any broken qr
+            if (error) {
+                return "";
             }
-        });
 
-        // if error encountered - its better not to show any broken qr
-        if (error) {
+            // query param handling
+            if (assetTemplate.params.length > 0) {
+                let parameters = [];
+
+                assetTemplate.params.forEach(function(parameter) {
+                    var name = "";
+
+                    if (typeof parameter["name"] != "undefined") {
+                        name = parameter["name"];
+                    }
+
+                    if (name == "") {
+                        name = parameter["bind"];
+                    }
+
+                    if (typeof conf[parameter["bind"]] !== "undefined") {
+                        parameters.push(name + "=" + conf[parameter["bind"]]);
+                    }
+                });
+
+                if (parameters.length > 0) {
+                    link += "?" + parameters.join("&");
+                }
+            }
+
+            return (
+                <div className="QR">
+                    <QRCode size={size} value={link} />
+                </div>
+            );
+        } else {
             return "";
         }
-
-        // query param handling
-        if (assetTemplate.params.length > 0) {
-            let parameters = [];
-
-            assetTemplate.params.forEach(function(parameter) {
-                var name = "";
-
-                if (typeof parameter["name"] != "undefined") {
-                    name = parameter["name"];
-                }
-
-                if (name == "") {
-                    name = parameter["bind"];
-                }
-
-                if (typeof value != "undefined") {
-                    parameters.push(name + "=" + conf[parameter["bind"]]);
-                }
-            });
-
-            if (parameters.length > 0) {
-                link += "?" + parameters.join("&");
-            }
-        }
-
-        return (
-            <div className="QR">
-                <QRCode size={size} value={link} />
-            </div>
-        );
     }
 }
 
