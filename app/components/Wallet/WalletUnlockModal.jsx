@@ -34,6 +34,7 @@ import {
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
+import ErrorActions from "actions/ErrorActions";
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -53,6 +54,10 @@ class WalletUnlockModal extends React.Component {
             stopAskingForBackup: false
         };
     };
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("WalletUnlockModal", error, errorInfo);
+    }
 
     componentWillReceiveProps(np) {
         const {walletSelected, restoringBackup, accountName} = this.state;

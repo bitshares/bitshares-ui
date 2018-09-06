@@ -8,6 +8,7 @@ import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
 import notify from "actions/NotificationActions";
+import ErrorActions from "actions/ErrorActions";
 
 class IssueModal extends React.Component {
     static propTypes = {
@@ -22,6 +23,10 @@ class IssueModal extends React.Component {
             to_id: null,
             memo: ""
         };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("IssueModal", error, errorInfo);
     }
 
     onAmountChanged({amount}) {

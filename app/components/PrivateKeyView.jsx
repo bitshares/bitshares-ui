@@ -7,6 +7,7 @@ import Translate from "react-translate-component";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import QrcodeModal from "./Modal/QrcodeModal";
 import PropTypes from "prop-types";
+import ErrorActions from "actions/ErrorActions";
 
 export default class PrivateKeyView extends Component {
     static propTypes = {
@@ -24,6 +25,10 @@ export default class PrivateKeyView extends Component {
 
     reset() {
         this.setState(this._getInitialState());
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("PrivateKeyView", error, errorInfo);
     }
 
     componentDidMount() {

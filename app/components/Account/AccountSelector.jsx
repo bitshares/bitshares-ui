@@ -115,7 +115,8 @@ class AccountSelector extends React.Component {
         }
 
         // Synchronous onChange for input change
-        if (!!onChange && !!_accountName) onChange(_accountName);
+        if (!!onChange && (!!_accountName || _accountName === ""))
+            onChange(_accountName);
 
         // asynchronous onAccountChanged for checking on chain
         if (!!onAccountChanged) {
@@ -374,8 +375,9 @@ class AccountSelector extends React.Component {
                                 )}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
-                                    {account && account.statusText}&nbsp;{!!displayText &&
-                                        displayText}
+                                    {account && account.statusText}
+                                    &nbsp;
+                                    {!!displayText && displayText}
                                 </span>
                                 {linked_status}
                             </label>
@@ -516,16 +518,19 @@ class AccountSelector extends React.Component {
 
 AccountSelector = BindToChainState(AccountSelector);
 
-AccountSelector = connect(AccountSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            contacts: AccountStore.getState().accountContacts
-        };
+AccountSelector = connect(
+    AccountSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 export default AccountSelector;

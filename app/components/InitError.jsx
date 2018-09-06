@@ -7,6 +7,7 @@ import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
 import counterpart from "counterpart";
+import ErrorActions from "actions/ErrorActions";
 
 const optionalApis = {enableCrypto: true, enableOrders: true};
 class InitError extends React.Component {
@@ -17,6 +18,10 @@ class InitError extends React.Component {
         ) {
             SettingsActions.showWS(nextProps.apiServer);
         }
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("InitError", error, errorInfo);
     }
 
     triggerModal(e) {
@@ -170,19 +175,22 @@ class InitError extends React.Component {
     }
 }
 
-export default connect(InitError, {
-    listenTo() {
-        return [BlockchainStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            rpc_connection_status: BlockchainStore.getState()
-                .rpc_connection_status,
-            apis: SettingsStore.getState().defaults.apiServer,
-            apiServer: SettingsStore.getState().settings.get("apiServer"),
-            defaultConnection: SettingsStore.getState().defaultSettings.get(
-                "apiServer"
-            )
-        };
+export default connect(
+    InitError,
+    {
+        listenTo() {
+            return [BlockchainStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                rpc_connection_status: BlockchainStore.getState()
+                    .rpc_connection_status,
+                apis: SettingsStore.getState().defaults.apiServer,
+                apiServer: SettingsStore.getState().settings.get("apiServer"),
+                defaultConnection: SettingsStore.getState().defaultSettings.get(
+                    "apiServer"
+                )
+            };
+        }
     }
-});
+);

@@ -5,11 +5,16 @@ import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
+import ErrorActions from "actions/ErrorActions";
 
 class ConfirmModal extends React.Component {
     constructor() {
         super();
         this.state = {show: true};
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("ConfirmModal", error, errorInfo);
     }
 
     shouldComponentUpdate(nextProps, nextState) {

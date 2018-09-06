@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import cname from "classnames";
 import {hash, key} from "bitsharesjs";
+import ErrorActions from "actions/ErrorActions";
 
 var dictionary_set;
 
@@ -24,6 +25,10 @@ export default class BrainkeyInput extends Component {
         };
     }
 
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BrainkeyInput", error, errorInfo);
+    }
+
     componentWillMount() {
         if (!__ELECTRON__) {
             fetch(`${__BASE_URL__}dictionary.json`)
@@ -36,6 +41,7 @@ export default class BrainkeyInput extends Component {
                     });
                 })
                 .catch(err => {
+                    ErrorActions.setError("BrainkeyInput", error);
                     console.log("fetch dictionary error:", err);
                 });
         } else {

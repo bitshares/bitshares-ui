@@ -10,6 +10,7 @@ import WalletDb from "stores/WalletDb";
 import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
+import ErrorActions from "actions/ErrorActions";
 import {ChainStore} from "bitsharesjs";
 
 export const finalRequiredPerms = (
@@ -47,6 +48,10 @@ class ProposalApproveModal extends React.Component {
             owner: null,
             payee: null
         };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("ProposalApproveModal", error, errorInfo);
     }
 
     onActiveAccount(accountMap, keyMap, type, account) {

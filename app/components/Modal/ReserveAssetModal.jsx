@@ -7,11 +7,16 @@ import AssetActions from "actions/AssetActions";
 import {ChainStore} from "bitsharesjs";
 import {Asset} from "common/MarketClasses";
 import AssetWrapper from "../Utility/AssetWrapper";
+import ErrorActions from "actions/ErrorActions";
 
 class ReserveAssetModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("ReserveAssetModal", error, errorInfo);
     }
 
     componentWillReceiveProps(np) {

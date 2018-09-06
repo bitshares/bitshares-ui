@@ -40,6 +40,7 @@ import {
     WithdrawAddresses
 } from "lib/common/gatewayMethods";
 import AmountSelector from "components/Utility/AmountSelector";
+import ErrorActions from "actions/ErrorActions";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs";
@@ -136,6 +137,10 @@ class WithdrawModalNew extends React.Component {
         }
 
         return {selectedAsset, selectedGateway, gateFee};
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("WithdrawModalNew", error, errorInfo);
     }
 
     componentWillReceiveProps(np) {

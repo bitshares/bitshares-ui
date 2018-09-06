@@ -8,6 +8,7 @@ import {Apis} from "bitsharesjs-ws";
 import Icon from "./Icon/Icon";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import counterpart from "counterpart";
+import ErrorActions from "actions/ErrorActions";
 import AccessSettings from "./Settings/AccessSettings";
 
 class SyncError extends React.Component {
@@ -24,6 +25,10 @@ class SyncError extends React.Component {
         setTimeout(() => {
             this.onReloadClick();
         }, 50);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("SyncError", error, errorInfo);
     }
 
     onReloadClick(e) {
@@ -104,22 +109,25 @@ class SyncError extends React.Component {
     }
 }
 
-SyncError = connect(SyncError, {
-    listenTo() {
-        return [BlockchainStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            rpc_connection_status: BlockchainStore.getState()
-                .rpc_connection_status,
-            apis: SettingsStore.getState().defaults.apiServer,
-            apiServer: SettingsStore.getState().settings.get("apiServer"),
-            defaultConnection: SettingsStore.getState().defaultSettings.get(
-                "apiServer"
-            ),
-            apiLatencies: SettingsStore.getState().apiLatencies
-        };
+SyncError = connect(
+    SyncError,
+    {
+        listenTo() {
+            return [BlockchainStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                rpc_connection_status: BlockchainStore.getState()
+                    .rpc_connection_status,
+                apis: SettingsStore.getState().defaults.apiServer,
+                apiServer: SettingsStore.getState().settings.get("apiServer"),
+                defaultConnection: SettingsStore.getState().defaultSettings.get(
+                    "apiServer"
+                ),
+                apiLatencies: SettingsStore.getState().apiLatencies
+            };
+        }
     }
-});
+);
 
 export default SyncError;

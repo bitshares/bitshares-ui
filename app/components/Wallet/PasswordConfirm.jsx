@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import Immutable from "immutable";
 import cname from "classnames";
 import PropTypes from "prop-types";
+import ErrorActions from "actions/ErrorActions";
 
 export default class PasswordConfirm extends Component {
     static propTypes = {
@@ -25,6 +26,10 @@ export default class PasswordConfirm extends Component {
         if (this.refs.firstPassword) {
             this.refs.firstPassword.focus();
         }
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("PasswordConfirm", error, errorInfo);
     }
 
     formChange(event) {

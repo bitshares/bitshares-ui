@@ -18,6 +18,7 @@ import WalletDb from "stores/WalletDb";
 import FormattedPrice from "../Utility/FormattedPrice";
 import counterpart from "counterpart";
 import HelpContent from "../Utility/HelpContent";
+import ErrorActions from "actions/ErrorActions";
 import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs";
 import {List} from "immutable";
@@ -100,6 +101,10 @@ class BorrowModalContent extends React.Component {
 
     componentDidUpdate() {
         ReactTooltip.rebuild();
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BorrowModalContent", error, errorInfo);
     }
 
     componentDidMount() {

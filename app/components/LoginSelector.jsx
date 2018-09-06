@@ -14,6 +14,8 @@ import CreateAccount from "./Account/CreateAccount";
 import CreateAccountPassword from "./Account/CreateAccountPassword";
 import {Route} from "react-router-dom";
 import {getWalletName, getLogo} from "branding";
+import ErrorActions from "actions/ErrorActions";
+
 var logo = getLogo();
 
 const FlagImage = ({flag, width = 50, height = 50}) => {
@@ -53,6 +55,10 @@ class LoginSelector extends React.Component {
     // )
     //     this.props.history.push("/account/" + this.props.currentAccount);
     // }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("LoginSelector", error, errorInfo);
+    }
 
     componentWillMount() {
         isIncognito(incognito => {
@@ -232,15 +238,18 @@ class LoginSelector extends React.Component {
     }
 }
 
-export default connect(LoginSelector, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+export default connect(
+    LoginSelector,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);

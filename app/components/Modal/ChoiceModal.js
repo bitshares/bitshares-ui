@@ -4,6 +4,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
+import ErrorActions from "actions/ErrorActions";
 import counterpart from "counterpart";
 
 class ChoiceModal extends React.Component {
@@ -22,6 +23,10 @@ class ChoiceModal extends React.Component {
         this.state = {
             show: false
         };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("ChoiceModal", error, errorInfo);
     }
 
     show() {

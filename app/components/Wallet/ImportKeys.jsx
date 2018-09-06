@@ -16,6 +16,7 @@ import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions";
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal";
 import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore";
+import ErrorActions from "actions/ErrorActions";
 
 import GenesisFilter from "chain/GenesisFilter";
 
@@ -39,6 +40,10 @@ class ImportKeys extends Component {
     static defaultProps = {
         privateKey: true
     };
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("ImportKeys", error, errorInfo);
+    }
 
     _getInitialState(keep_file_name = false) {
         return {
@@ -683,7 +688,7 @@ class ImportKeys extends Component {
                                     <span>
                                         Filtering{" "}
                                         {Math.round(
-                                            status.count / status.total * 100
+                                            (status.count / status.total) * 100
                                         )}{" "}
                                         %{" "}
                                     </span>
@@ -742,9 +747,11 @@ class ImportKeys extends Component {
                     {!import_ready ? null : (
                         <span>
                             {" "}
-                            (<a onClick={this.reset.bind(this)}>
+                            (
+                            <a onClick={this.reset.bind(this)}>
                                 <Translate content="wallet.reset" />
-                            </a>)
+                            </a>
+                            )
                         </span>
                     )}
                 </div>
@@ -810,13 +817,15 @@ class ImportKeys extends Component {
                                             <Translate content="wallet.bts_09_export" />
                                             {this.state.no_file ? null : (
                                                 <span>
-                                                    &nbsp; (<a
+                                                    &nbsp; (
+                                                    <a
                                                         onClick={this.reset.bind(
                                                             this
                                                         )}
                                                     >
                                                         Reset
-                                                    </a>)
+                                                    </a>
+                                                    )
                                                 </span>
                                             )}
                                         </label>
@@ -940,15 +949,18 @@ class ImportKeys extends Component {
     }
 }
 
-ImportKeys = connect(ImportKeys, {
-    listenTo() {
-        return [ImportKeysStore];
-    },
-    getProps() {
-        return {
-            importing: ImportKeysStore.getState().importing
-        };
+ImportKeys = connect(
+    ImportKeys,
+    {
+        listenTo() {
+            return [ImportKeysStore];
+        },
+        getProps() {
+            return {
+                importing: ImportKeysStore.getState().importing
+            };
+        }
     }
-});
+);
 
 export default ImportKeys;

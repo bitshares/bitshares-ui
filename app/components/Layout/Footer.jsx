@@ -12,12 +12,15 @@ import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import ReportModal from "../Modal/ReportModal";
 import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import ChoiceModal from "../Modal/ChoiceModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import ReportStore from "stores/ReportStore";
+import ReportActions from "actions/ReportActions";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
 import {getWalletName} from "branding";
@@ -57,6 +60,13 @@ class Footer extends React.Component {
         ifvisible.on("wakeup", function() {
             ensure();
         });
+
+        console.stdlog = console.log.bind(console);
+        console.logs = [];
+        console.log = function() {
+            console.logs.push(Array.from(arguments));
+            console.stdlog.apply(console, arguments);
+        };
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -298,6 +308,38 @@ class Footer extends React.Component {
             });
         }
     }
+
+    // report() {
+    //     ReportActions.open();
+    //     console.log('test')
+    // }
+
+    _showSend(e) {
+        e.preventDefault();
+        if (this.send_modal) this.send_modal.show();
+        // this._closeDropdown();
+    }
+
+    _showReport(e) {
+        console.log("click to button for open modal");
+        e.preventDefault();
+        if (this.reportModal) this.reportModal.show();
+        // this._closeDropdown();
+    }
+
+    // _renderReportModal=()=> {
+    //     console.log('click to button for open modal')
+    //     return (
+    //         <ReportModal
+    //             id="report_modal"
+    //             refCallback={e => {
+    //                 if (e) this.reportModal = e;
+    //             }}
+    //             // from_name={this.props.account.get("name")}
+    //             asset_id={this.state.send_asset || "1.3.0"}
+    //         />
+    //     );
+    // }
 
     render() {
         const autoSelectAPI = "wss://fake.automatic-selection.com";
@@ -549,7 +591,16 @@ class Footer extends React.Component {
                                         </span>
                                     </div>
                                 </div>
+
                                 <div className="grid-block">
+                                    <div
+                                        className="introjs-launcher"
+                                        onClick={e => {
+                                            this._showReport(e);
+                                        }}
+                                    >
+                                        <Translate content="modal.report.button" />
+                                    </div>
                                     <div
                                         className="introjs-launcher"
                                         onClick={() => {
@@ -592,6 +643,21 @@ class Footer extends React.Component {
                 >
                     <Translate content="global.help" />
                 </div>
+                {/* <SendModal
+                    id="send_modal_header"
+                    refCallback={e => {
+                        if (e) this.send_modal = e;
+                    }}
+                    from_name={currentAccount}
+                /> */}
+                <ReportModal
+                    id="report_modal"
+                    refCallback={e => {
+                        if (e) this.reportModal = e;
+                    }}
+                    // from_name={this.props.account.get("name")}
+                    // asset_id={this.state.send_asset || "1.3.0"}
+                />
             </div>
         );
     }

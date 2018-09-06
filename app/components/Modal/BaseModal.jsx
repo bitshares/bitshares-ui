@@ -5,6 +5,8 @@ import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 
+import ErrorActions from "actions/ErrorActions";
+
 import {getLogo} from "branding";
 var logo = getLogo();
 
@@ -21,6 +23,10 @@ class BaseModal extends React.Component {
         }.bind(this);
 
         document.addEventListener("keydown", this.modalEscapeListener);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BaseModal", error, errorInfo);
     }
 
     componentWillUnmount() {
