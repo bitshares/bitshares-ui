@@ -489,11 +489,11 @@ export const settingsAPIs = {
         },
         {
             url: "wss://citadel.li/node",
-            location: "Island"
-        },
-        {
-            url: "ws://citadel2miawoaqw.onion/node",
-            location: "Citadel Tor"
+            region: "Western Europe",
+            country: "Iceland",
+            location: "Reykjavik",
+            operator: "CITADEL",
+            contact: "email:citadel.li;support"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,
