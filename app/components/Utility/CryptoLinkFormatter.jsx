@@ -27,12 +27,16 @@ class CryptoLinkFormatter extends React.Component {
 
         this.assetTemplates = {
             BTC: {
-                template: "bitcoin:{address}",
+                template: "bitcoin:{address}", // template of the link with optional variables - {address} or other component's properties names in curly braces
                 params: [
+                    // list of parameters appended to link above in the manner of HTTP GET query parameters : ?name=value&name2=value2
                     {
-                        bind: "amount"
+                        // parameters now supports two props: optional `name` - parameter's name (if its not equal to bound property name) and `bind` - actual property of the component
+                        // name: "value"
+                        bind: "amount" // components property name, value of which would be assigned to this parameter. In this particullary case we would get &amount=<component's `amount` property value>
                     },
                     {
+                        // message=<message>
                         bind: "message"
                     }
                 ]
@@ -41,9 +45,11 @@ class CryptoLinkFormatter extends React.Component {
                 template: "litecoin:{address}",
                 params: [
                     {
+                        // &amount=<amount>
                         bind: "amount"
                     },
                     {
+                        // &message=<message>
                         bind: "message"
                     }
                 ]
@@ -52,10 +58,12 @@ class CryptoLinkFormatter extends React.Component {
                 template: "ethereum:{address}",
                 params: [
                     {
+                        // &value=<amount>
                         name: "value", // name of the parameter. if not provided - bind param name would be set as name
                         bind: "amount" // actual param value got from components props
                     },
                     {
+                        // &message=<message>
                         bind: "message"
                     }
                 ]
@@ -91,10 +99,13 @@ class CryptoLinkFormatter extends React.Component {
             if (tokenName in conf) {
                 return conf[tokenName];
             } else {
+                // some variable required by template was not found  - can't proceed next
+                error = true;
                 return true;
             }
         });
 
+        // if error encountered - its better not to show any broken qr
         if (error) {
             return "";
         }
