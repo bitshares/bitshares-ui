@@ -11,8 +11,8 @@ class CryptoLinkFormatter extends React.Component {
     static assetTemplates = {};
 
     static propTypes = {
-        asset: PropTypes.string,
-        address: PropTypes.string,
+        asset: PropTypes.string.isRequired,
+        address: PropTypes.string.isRequired,
         amount: PropTypes.number,
         message: PropTypes.string,
         size: PropTypes.number
