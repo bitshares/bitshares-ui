@@ -643,13 +643,6 @@ class Footer extends React.Component {
                 >
                     <Translate content="global.help" />
                 </div>
-                {/* <SendModal
-                    id="send_modal_header"
-                    refCallback={e => {
-                        if (e) this.send_modal = e;
-                    }}
-                    from_name={currentAccount}
-                /> */}
                 <ReportModal
                     id="report_modal"
                     refCallback={e => {

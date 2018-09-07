@@ -12,6 +12,7 @@ import {
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
 import ErrorActions from "actions/ErrorActions";
+import Screenshot from "lib/common/Screenshot";
 
 import {connect} from "alt-react";
 
@@ -117,6 +118,11 @@ class ReportModal extends React.Component {
         // }
     }
 
+    takeScreenshot = () => {
+        console.log("takeScreenshot");
+        // Screenshot();
+    };
+
     render() {
         let {open, hidden, memo} = this.state;
 
@@ -158,6 +164,13 @@ class ReportModal extends React.Component {
                                     />
                                 </div>
                             ) : null}
+
+                            <div
+                                className="introjs-launcher"
+                                onClick={this.takeScreenshot}
+                            >
+                                <Translate content="Сделать скрин" />
+                            </div>
                         </div>
                     </div>
                 </BaseModal>
