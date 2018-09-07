@@ -153,7 +153,8 @@ class FeaturedMarkets extends React.Component {
                 ["BTS", "HERTZ"]
             ],
             "39f5e2ed": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]],
-            "2821abbb": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
+            "2821abbb": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]],
+            "92e31f3a": [["TEST", "PEG.FAKEUSD"], ["TEST", "BTWTY"]]
         };
 
         let chainID = Apis.instance().chain_id;
