@@ -27,6 +27,8 @@ import {Route, Switch} from "react-router-dom";
 // Nested route components
 import Page404 from "./components/Page404/Page404";
 
+
+
 const Exchange = Loadable({
     loader: () =>
         import(/* webpackChunkName: "exchange" */ "./components/Exchange/ExchangeContainer"),
@@ -420,7 +422,7 @@ class App extends React.Component {
         }
 
         return (
-            <div
+            <div id="dummy5"
                 style={{backgroundColor: !theme ? "#2a2a2a" : null}}
                 className={theme}
             >
