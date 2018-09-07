@@ -1,7 +1,5 @@
 {
     "account": {
-        "history_error":
-            "Failed to download the account history, please try again",
         "accounts": "Accounts",
         "activity": "Activity",
         "advanced": "Advanced",
@@ -491,11 +489,11 @@
         "latest": "Latest",
         "layout": {
             "title": "Layout",
-            "1": "Horizontal Orderbook Left",
-            "2": "Horizontal Orderbook Right",
-            "3": "Vertical Orderbook, Combined Details",
-            "4": "Vertical Orderbook, Separated Details",
-            "5": "Vertical Orderbook, Original Layout"
+            "1": "Horiz. Orderbook Left",
+            "2": "Horiz. Orderbook Right",
+            "3": "Vert. Orderbook, Combined Details",
+            "4": "Vert. Orderbook, Separated Details",
+            "5": "Vert. Orderbook, Original"
         },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
@@ -547,7 +545,7 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Settings",
+        "settings": "Personalize",
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",
@@ -569,7 +567,8 @@
         "volume_24": "24hr Volume",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
-        "zoom_all": "All"
+        "zoom_all": "All",
+        "quick_deposit": "Quick Deposit"
     },
     "explorer": {
         "account": {
@@ -803,7 +802,12 @@
             "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
             "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
             "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-            "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades."
+            "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
+            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "rudex": "",
+            "xbts": "",
+            "win": ""
         },
         "balance": "Current balance",
         "balance_asset": "Current %(asset)s balance",
@@ -1675,11 +1679,6 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
-    },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
