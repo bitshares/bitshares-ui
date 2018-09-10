@@ -11,6 +11,7 @@ import {
     checkBalance,
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
+import LoadingIndicator from "../LoadingIndicator";
 import ErrorActions from "actions/ErrorActions";
 import Screenshot from "lib/common/Screenshot";
 
@@ -35,25 +36,11 @@ class ReportModal extends React.Component {
 
     getInitialState() {
         return {
-            from_name: "",
-            to_name: "",
-            from_account: null,
-            to_account: null,
-            orig_account: null,
-            amount: "",
-            asset_id: null,
-            asset: null,
+            open: false,
+            loadingImage: false,
             memo: "",
-            error: null,
-            knownScammer: null,
-            propose: false,
-            propose_account: "",
-            feeAsset: null,
-            fee_asset_id: "1.3.0",
-            feeAmount: new Asset({amount: 0}),
-            feeStatus: {},
-            maxAmount: false,
-            hidden: false
+            hidden: false,
+            errorCopySuccess: false
         };
     }
 
@@ -73,25 +60,10 @@ class ReportModal extends React.Component {
         this.setState(
             {
                 open: false,
-                from_name: "",
-                to_name: "",
-                from_account: null,
-                to_account: null,
-                orig_account: null,
-                amount: "",
-                asset_id: null,
-                asset: null,
+                loadingImage: false,
                 memo: "",
-                error: null,
-                knownScammer: null,
-                propose: false,
-                propose_account: "",
-                feeAsset: null,
-                fee_asset_id: "1.3.0",
-                feeAmount: new Asset({amount: 0}),
-                feeStatus: {},
-                maxAmount: false,
-                hidden: false
+                hidden: false,
+                errorCopySuccess: false
             },
             () => {
                 if (publishClose) ZfApi.publish(this.props.id, "close");
@@ -118,13 +90,50 @@ class ReportModal extends React.Component {
         // }
     }
 
-    takeScreenshot = () => {
-        console.log("takeScreenshot");
-        // Screenshot();
+    downloadScreenshot = () => {
+        this.setState({
+            loadingImage: true
+        });
+
+        // Take screenshot
+        Screenshot(() => {
+            this.setState({
+                loadingImage: false
+            });
+        });
+    };
+
+    getErrors = cb => {
+        ErrorActions.getErrors().then(data => {
+            this.setState(
+                {
+                    memo: JSON.stringify(data)
+                },
+                () => {
+                    if (typeof cb == "function") {
+                        cb();
+                    }
+                }
+            );
+        });
+    };
+
+    copyErrors = () => {
+        this.getErrors(() => {
+            const copyText = document.getElementById("errorsText");
+            copyText.select();
+            document.execCommand("copy");
+
+            alert("Copied the text: " + copyText.value);
+
+            this.setState({
+                errorCopySuccess: true
+            });
+        });
     };
 
     render() {
-        let {open, hidden, memo} = this.state;
+        let {open, hidden, memo, loadingImage, errorCopySuccess} = this.state;
 
         return !open ? null : (
             <div id="report_modal" className={hidden || !open ? "hide" : ""}>
@@ -147,6 +156,7 @@ class ReportModal extends React.Component {
                                 content="transfer.memo"
                             />
                             <textarea
+                                id="errorsText"
                                 style={{marginBottom: 0}}
                                 rows="3"
                                 value={memo}
@@ -164,14 +174,49 @@ class ReportModal extends React.Component {
                                     />
                                 </div>
                             ) : null}
-
-                            <div
-                                className="introjs-launcher"
-                                onClick={this.takeScreenshot}
-                            >
-                                <Translate content="Сделать скрин" />
+                        </div>
+                        <div className="content-block transfer-input">
+                            <div className="no-margin no-padding">
+                                <div
+                                    className="small-6"
+                                    style={{
+                                        display: "inline-block",
+                                        paddingRight: "10px"
+                                    }}
+                                >
+                                    <div
+                                        className="button primary"
+                                        onClick={this.downloadScreenshot}
+                                    >
+                                        <Translate content="modal.report.takeScreenshot" />
+                                    </div>
+                                </div>
+                                <div
+                                    className="small-6"
+                                    style={{
+                                        display: "inline-block",
+                                        paddingRight: "10px"
+                                    }}
+                                >
+                                    <div
+                                        className="button primary"
+                                        onClick={this.copyErrors}
+                                    >
+                                        <Translate content="modal.report.copyErrors" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        {loadingImage && (
+                            <div style={{textAlign: "center"}}>
+                                <LoadingIndicator type="three-bounce" />
+                            </div>
+                        )}
+                        {errorCopySuccess && (
+                            <p>
+                                <Translate content="modal.report.copySuccess" />
+                            </p>
+                        )}
                     </div>
                 </BaseModal>
             </div>

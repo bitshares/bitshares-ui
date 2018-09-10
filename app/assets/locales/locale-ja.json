@@ -1163,7 +1163,10 @@
             "withdraw": "出金"
         },
         "report": {
-            "button": "レポートについてのレポート"
+            "button": "レポートについてのレポート",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {

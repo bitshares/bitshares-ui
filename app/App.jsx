@@ -476,6 +476,7 @@ class App extends React.Component {
                         {/* <ReportModal /> */}
                         <BrowserSupportModal ref="browser_modal" />
                     </div>
+                    <div id="screenshot" />
                 </BodyClassName>
             </div>
         );

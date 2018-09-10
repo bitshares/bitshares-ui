@@ -1163,7 +1163,10 @@
             "withdraw": "Withdraw"
         },
         "report": {
-            "button": "Report about report"
+            "button": "Report about errors",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {

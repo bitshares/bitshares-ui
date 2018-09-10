@@ -5,9 +5,13 @@ class ErrorActions {
         const newData = {
             directory,
             error,
-            errorInfo
+            length
         };
-        const errors = this.getErrors() || [];
+        let errors = [];
+
+        this.getErrors().then(data => {
+            errors = data;
+        });
 
         if (errors.length == 20) {
             errors.slice(0, 1);
@@ -25,7 +29,9 @@ class ErrorActions {
     }
 
     getErrors() {
-        return JSON.parse(localStorage.getItem("errors"));
+        return new Promise(resolve => {
+            resolve(JSON.parse(localStorage.getItem("errors")));
+        });
     }
 }
 
