@@ -101,7 +101,7 @@
             "premium_name_warning": "This is a premium name which is more expensive than a name containing a dash (-) or a number."
         },
         "new_user": "New user?",
-        "no_orders": "No open orders",
+        "no_orders": "No orders",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -241,6 +241,7 @@
             "disable_force_settle": "Disable force settling",
             "error_invalid": "That asset may not be used",
             "error_precision": "That asset does not have the same precision as %(asset)s",
+            "error_too_deep": "May not create a bitasset backed by a bitasset backed by a bitasset",
             "exists": "That asset already exists",
             "expiry": "Market resolution date",
             "feed_lifetime_sec": "Feed lifetime in minutes",
@@ -452,7 +453,10 @@
         "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy": "Buy",
-        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_sell": "Buy/Sell",
+        "buy_quick": "Quick Buy",
+        "buy_description":
+            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
@@ -483,6 +487,14 @@
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
         "latest": "Latest",
+        "layout": {
+            "title": "Layout",
+            "1": "Horiz. Orderbook Left",
+            "2": "Horiz. Orderbook Right",
+            "3": "Vert. Orderbook, Combined Details",
+            "4": "Vert. Orderbook, Separated Details",
+            "5": "Vert. Orderbook, Original"
+        },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
@@ -514,6 +526,7 @@
         "no_bids": "No bids",
         "no_data": "No data",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "Market Depth",
         "others": "Others",
         "overbought": "Overbought",
@@ -532,12 +545,12 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Chart options",
+        "settings": "Personalize",
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",
-        "show_asks": "Show all asks",
-        "show_bids": "Show all bids",
+        "show_asks": "Show all %(ordercount)s asks",
+        "show_bids": "Show all %(ordercount)s bids",
         "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
@@ -554,7 +567,8 @@
         "volume_24": "24hr Volume",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
-        "zoom_all": "All"
+        "zoom_all": "All",
+        "quick_deposit": "Quick Deposit"
     },
     "explorer": {
         "account": {
@@ -729,7 +743,8 @@
             "pay": "Pay-per-block",
             "rank": "Rank",
             "table": "Table view",
-            "title": "Witnesses"
+            "title": "Witnesses",
+            "filter_by_name": "Filter By Name"
         },
         "workers": {
             "create": "Create a new worker proposal",
@@ -787,7 +802,12 @@
             "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
             "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
             "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-            "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades."
+            "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
+            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "rudex": "",
+            "xbts": "",
+            "win": ""
         },
         "balance": "Current balance",
         "balance_asset": "Current %(asset)s balance",
@@ -805,6 +825,7 @@
         "convert_now": "Convert now",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "Deposit",
         "deposit_address": "Deposit address",
         "deposit_history_status": {
@@ -861,6 +882,13 @@
             "support_block": "For support, please contact RuDEX at:",
             "under_construction": "Under Construction"
         },
+        "xbtsx": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact XBTS at:",
+            "under_construction": "Under Construction"
+        },
         "scan_qr": "Scan QR",
         "service": "Transfer Service",
         "status": "Status",
@@ -899,6 +927,7 @@
         "your_account": "Your account"
     },
     "global": {
+        "close": "Close",
         "cancel": "Cancel",
         "confirm": "Confirm",
         "help": "Help",

@@ -21,3 +21,4 @@
     - [OpenLedger](gateways/openledger.md)
     - [Rudex](gateways/rudex.md)
     - [CryptoBridge](gateways/cryptobridge.md)
+	- [XBTSX](gateways/xbtsx.md)

@@ -418,7 +418,7 @@ class AccountPortfolioList extends React.Component {
                 /* Asset and Backing Asset Prefixes */
             }
             let options =
-                asset && asset.has("bitasset")
+                asset && asset.getIn(["bitasset", "options"])
                     ? asset.getIn(["bitasset", "options"]).toJS()
                     : null;
             let backingAsset =
@@ -587,7 +587,7 @@ class AccountPortfolioList extends React.Component {
                         )}
                     </td>
                     <td>
-                        {isBitAsset ? (
+                        {isBitAsset && backingAsset ? (
                             <div
                                 className="inline-block"
                                 data-place="bottom"
