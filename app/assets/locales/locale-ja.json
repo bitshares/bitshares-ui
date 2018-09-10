@@ -799,6 +799,13 @@
         "calc": "計算中",
         "choose_deposit": "入金したいコインを選択してください",
         "choose_withdraw": "出金したいコインを選択してください",
+        "citadel": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、citadel.li までご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "contact_TRADE": "Blocktradesに連絡する",
         "convert": "内部変換",
         "convert_coin": "%(coin)s (%(symbol)s) に変換",
