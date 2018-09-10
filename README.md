@@ -135,7 +135,7 @@ Available for browsing on https://staging.bitshares.org/
 ### Master (stable)
 When all issues to the current RC, `staging` branch is released to the stable `master` branch.
 
-Available for browsing on https://wallet.bitshares.eu/, which is the official reference wallet for Bitshares.
+Available for browsing on https://wallet.bitshares.org/, which is the official reference wallet for Bitshares.
 
 
 ## Coding style guideline
