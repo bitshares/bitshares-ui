@@ -11,6 +11,37 @@ import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
+import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
+
+const WorthLessSettlementWarning = withWorthLessSettlementFlag(
+    ({worthLessSettlement, asset, shortBackingAsset}) => {
+        switch (worthLessSettlement) {
+            case true:
+                return (
+                    <TranslateWithLinks
+                        string="exchange.worth_less_settlement_warning"
+                        keys={[
+                            {
+                                type: "link",
+                                value: `/market/${asset.get(
+                                    "symbol"
+                                )}_${shortBackingAsset.get("symbol")}`,
+                                translation: "exchange.market",
+                                arg: "market_link"
+                            }
+                        ]}
+                    />
+                );
+            case undefined:
+                return (
+                    <Translate content="exchange.checking_for_worth_less_settlement" />
+                );
+            default:
+                return null;
+        }
+    }
+);
 
 class ModalContent extends React.Component {
     static propTypes = {
@@ -100,7 +131,8 @@ class ModalContent extends React.Component {
 
         let balanceText = (
             <span>
-                <Translate content="exchange.balance" />:&nbsp;
+                <Translate content="exchange.balance" />
+                :&nbsp;
                 {currentBalance ? (
                     <BalanceComponent balance={currentBalance} />
                 ) : (
@@ -117,6 +149,7 @@ class ModalContent extends React.Component {
                     content="modal.settle.title"
                     asset={asset.get("symbol")}
                 />
+                <WorthLessSettlementWarning asset={assetID} />
                 <div className="grid-container " style={{paddingTop: "2rem"}}>
                     <div className="content-block">
                         <AmountSelector
