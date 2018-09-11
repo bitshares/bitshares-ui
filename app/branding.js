@@ -142,6 +142,19 @@ export function getMyMarketsQuotes() {
             "RUDEX.TT"
         ],
         winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
+        xbtsxTokens: [
+            "XBTSX.STH",
+            "XBTSX.POST",
+            "XBTSX.DOGE",
+            "XBTSX.BTC",
+            "XBTSX.LTC",
+            "XBTSX.DASH",
+            "XBTSX.KEC",
+            "XBTSX.BCH",
+            "XBTSX.BTG",
+            "XBTSX.XSPEC",
+            "XBTSX.NVC"
+        ],
         otherTokens: [
             "BKT",
             "BLOCKPAY",
@@ -250,6 +263,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.SCR"],
         ["BTS", "RUDEX.ETH"],
         ["BTS", "RUDEX.DGB"],
+        ["BTS", "XBTSX.STH"],
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"]
     ].filter(a => {
@@ -264,7 +278,16 @@ export function getFeaturedMarkets(quotes = []) {
  * @returns {[string,string,string,string,string,string,string]}
  */
 export function getAssetNamespaces() {
-    return ["TRADE.", "OPEN.", "METAEX.", "BRIDGE.", "RUDEX.", "GDEX.", "WIN."];
+    return [
+        "TRADE.",
+        "OPEN.",
+        "METAEX.",
+        "BRIDGE.",
+        "RUDEX.",
+        "GDEX.",
+        "WIN.",
+        "XBTSX."
+    ];
 }
 
 /**
@@ -282,7 +305,10 @@ export function getAssetHideNamespaces() {
  * @returns {boolean}
  */
 export function allowedGateway(gateway) {
-    return ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX"].indexOf(gateway) >= 0;
+    return (
+        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX"].indexOf(gateway) >=
+        0
+    );
 }
 
 export function getSupportedLanguages() {

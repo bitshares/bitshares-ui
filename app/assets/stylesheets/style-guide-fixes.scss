@@ -1,0 +1,12 @@
+$ant-fix: ':not([class*="ant-"])';
+
+.ant-form-item {
+    .ant-form-item-label {
+        label {
+            text-transform: none;
+            font-family: Roboto, sans-serif;
+            font-weight: 400;
+            display: inline;
+        }
+    }
+}

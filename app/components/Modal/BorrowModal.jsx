@@ -6,8 +6,8 @@ import BaseModal from "./BaseModal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
-import ReactTooltip from "react-tooltip";
 import BindToChainState from "../Utility/BindToChainState";
+import ReactTooltip from "react-tooltip";
 import FormattedAsset from "../Utility/FormattedAsset";
 import utils from "common/utils";
 import classNames from "classnames";
@@ -1003,8 +1003,9 @@ class BorrowModalContent extends React.Component {
                                             <Translate content="borrow.target_collateral_ratio" />
                                             &nbsp;&nbsp;
                                             <span
-                                                data-place="top"
+                                                className="disabled-link"
                                                 data-html={true}
+                                                data-place="top"
                                                 data-tip={counterpart.translate(
                                                     "tooltip.target_collateral_ratio"
                                                 )}

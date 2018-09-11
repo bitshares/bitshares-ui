@@ -9,7 +9,6 @@ import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
-import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
     gatewaySelector,
@@ -20,6 +19,7 @@ import {
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import ErrorActions from "actions/ErrorActions";
+import CryptoLinkFormatter from "../Utility/CryptoLinkFormatter";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -114,7 +114,8 @@ class DepositModalContent extends DecimalChecker {
                 selectedAsset.toLowerCase(),
             outputAddress: account,
             url: url,
-            stateCallback: this.addDepositAddress
+            stateCallback: this.addDepositAddress,
+            selectedGateway: selectedGateway
         };
     }
 
@@ -260,9 +261,11 @@ class DepositModalContent extends DecimalChecker {
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
 
         const QR = isAddressValid ? (
-            <div className="QR">
-                <QRCode size={140} value={depositAddress.address} />
-            </div>
+            <CryptoLinkFormatter
+                size={140}
+                address={depositAddress.address}
+                asset={selectedAsset}
+            />
         ) : (
             <div>
                 <Icon
@@ -361,7 +364,7 @@ class DepositModalContent extends DecimalChecker {
                                         className={"copyIcon"}
                                     />
                                 </div>
-                                <div>
+                                <div style={{wordBreak: "break-word"}}>
                                     <Translate
                                         component="div"
                                         style={{
@@ -379,7 +382,10 @@ class DepositModalContent extends DecimalChecker {
                                     />
                                     <div
                                         className="modal__highlight"
-                                        style={{fontSize: "0.9rem"}}
+                                        style={{
+                                            fontSize: "0.9rem",
+                                            wordBreak: "break-all"
+                                        }}
                                     >
                                         {depositAddress.address}
                                     </div>
@@ -404,7 +410,10 @@ class DepositModalContent extends DecimalChecker {
                                             unsafe
                                             content="gateway.purchase_notice_memo"
                                         />
-                                        <div className="modal__highlight">
+                                        <div
+                                            className="modal__highlight"
+                                            style={{wordBreak: "break-all"}}
+                                        >
                                             {depositAddress.memo}
                                         </div>
                                     </div>

@@ -704,8 +704,11 @@ class WithdrawModalNew extends React.Component {
             feeAmount
         } = this.state;
 
-        let assetName = selectedAsset.toLowerCase();
         let gatewayStatus = this.state.gatewayStatus[selectedGateway];
+        let assetName = !!gatewayStatus.assetWithdrawlAlias
+            ? gatewayStatus.assetWithdrawlAlias[selectedAsset.toLowerCase()] ||
+              selectedAsset.toLowerCase()
+            : selectedAsset.toLowerCase();
 
         const intermediateAccountNameOrId = getIntermediateAccount(
             withdrawalCurrency.symbol,
@@ -996,7 +999,7 @@ class WithdrawModalNew extends React.Component {
 
                     {/*QUANTITY*/}
                     {assetAndGateway || isBTS ? (
-                        <div>
+                        <div style={{marginBottom: "1em"}}>
                             {preferredCurrency ? (
                                 <div
                                     style={{

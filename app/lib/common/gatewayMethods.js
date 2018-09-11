@@ -274,8 +274,15 @@ export function requestDepositAddress({
     outputCoinType,
     outputAddress,
     url = openledgerAPIs.BASE,
-    stateCallback
+    stateCallback,
+    selectedGateway
 }) {
+    let gatewayStatus = availableGateways[selectedGateway];
+    inputCoinType = !!gatewayStatus.assetWithdrawlAlias
+        ? gatewayStatus.assetWithdrawlAlias[inputCoinType.toLowerCase()] ||
+          inputCoinType.toLowerCase()
+        : inputCoinType;
+
     let body = {
         inputCoinType,
         outputCoinType,

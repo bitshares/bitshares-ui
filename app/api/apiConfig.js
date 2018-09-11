@@ -45,6 +45,16 @@ export const widechainAPIs = {
     DEPOSIT_HISTORY: "/latelyRecharge"
 };
 
+export const citadelAPIs = {
+    BASE: "https://citadel.li/trade",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
 export const gdex2APIs = {
     BASE: "https://api.gdex.io/adjust",
     COINS_LIST: "/coins",
@@ -66,6 +76,11 @@ export const gdexAPIs = {
     GET_USER_INFO: "/gateway/user/getUserInfo",
     USER_AGREEMENT: "/gateway/user/isAgree",
     WITHDRAW_RULE: "/gateway/withdraw/rule"
+};
+
+export const xbtsxAPIs = {
+    BASE: "https://apis.xbts.io/api/v1",
+    COINS_LIST: "/coin"
 };
 
 export const nodeRegions = [
@@ -471,6 +486,14 @@ export const settingsAPIs = {
             location: "Paris",
             operator: "Witness: zapata42-witness",
             contact: "telegram:Zapata_42"
+        },
+        {
+            url: "wss://citadel.li/node",
+            region: "Western Europe",
+            country: "Iceland",
+            location: "Reykjavik",
+            operator: "CITADEL",
+            contact: "email:citadel.li;support"
         }
     ],
     DEFAULT_FAUCET: getFaucet().url,

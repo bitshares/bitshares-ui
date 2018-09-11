@@ -728,7 +728,8 @@
             "pay": "Paga-per-blocco",
             "rank": "Posizione",
             "table": "Visualizzazione a tabella",
-            "title": "Witness"
+            "title": "Witness",
+            "filter_by_name": "Filtrer par nom"
         },
         "workers": {
             "create": "Crea una nuova worker proposal",
@@ -798,12 +799,20 @@
         "calc": "Calcolo in corso",
         "choose_deposit": "Per favore seleziona la valuta che vuoi depositare",
         "choose_withdraw": "Per favore seleziona la valuta che vuoi prelevare",
+        "citadel": {
+            "coming_soon": "Prossimamente",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Per favore inserisci un numero >= minimo",
+            "support_block": "Per supporto, contatta citadel.li a:",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "Contact Blocktrades",
-        "convert": "Conversione interna",
+        "convert": "Quantità minima: %(minAmount)s %(symbol)s",
         "convert_coin": "Converti in %(coin)s (%(symbol)s)",
         "convert_now": "Converti adesso",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "Deposito",
         "deposit_address": "Deposit address",
         "deposit_history_status": {
@@ -858,6 +867,13 @@
             "min_amount": "Quantità minima: %(minAmount)s %(symbol)s",
             "min_amount_error": "Per favore inserisci un numero >= minimo",
             "support_block": "Per supporto, contatta RuDEX a:",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact XBTS at:",
             "under_construction": "Under Construction"
         },
         "scan_qr": "Scandisci QR",
@@ -1647,6 +1663,11 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
+        "total_x_operations": "Total of %(count)s operations"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

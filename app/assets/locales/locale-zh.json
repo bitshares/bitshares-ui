@@ -728,7 +728,8 @@
             "pay": "每块奖励",
             "rank": "排名",
             "table": "表格视图",
-            "title": "见证人"
+            "title": "见证人",
+            "filter_by_name": "按名称过滤"
         },
         "workers": {
             "create": "创建一个新的预算项目提案",
@@ -798,12 +799,20 @@
         "calc": "计算中",
         "choose_deposit": "请选择充值的币种",
         "choose_withdraw": "请选择提现的币种",
+        "citadel": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 citadel.li 获取客户支持：",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "联系 Blocktrades",
         "convert": "内部兑换",
         "convert_coin": "兑换成 %(coin)s (%(symbol)s)",
         "convert_now": "兑换",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "充值",
         "deposit_address": "充值地址",
         "deposit_history_status": {
@@ -858,6 +867,13 @@
             "min_amount": "最小金额：%(minAmount)s %(symbol)s",
             "min_amount_error": "请输入大于最小金额的数量",
             "support_block": "请联系 RuDEX 获取客户支持：",
+            "under_construction": "Under Construction"
+        },
+        "xbtsx": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 XBTS 获取客户支持：",
             "under_construction": "Under Construction"
         },
         "scan_qr": "扫描二维码，手机支付",
