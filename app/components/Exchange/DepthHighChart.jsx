@@ -20,8 +20,7 @@ class DepthHighChart extends React.Component {
             settleCheck ||
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.height !== this.props.height ||
-            nextProps.isPanelActive !== this.props.isPanelActive ||
-            nextProps.exchangeLayout !== this.props.exchangeLayout ||
+            nextProps.leftOrderBook !== this.props.leftOrderBook ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||
             nextProps.hasPrediction !== this.props.hasPrediction ||
@@ -37,7 +36,7 @@ class DepthHighChart extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (
             this.refs.depthChart &&
-            nextProps.exchangeLayout !== this.props.exchangeLayout
+            nextProps.verticalOrderbook !== this.props.verticalOrderbook
         ) {
             this.reflowChart(100);
         }
@@ -419,7 +418,7 @@ class DepthHighChart extends React.Component {
         } else {
             return (
                 <div className="grid-content no-overflow no-padding middle-content">
-                    <div className="exchange-bordered" style={{margin: 0}}>
+                    <div className="exchange-bordered" style={{margin: 10}}>
                         <div className="exchange-content-header">
                             {this.props.noText ? null : (
                                 <span className="bid-total">
