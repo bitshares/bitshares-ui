@@ -1555,12 +1555,12 @@ class Exchange extends React.Component {
                     "is_prediction_market"
                 ])}
                 onFlip={
-                    !this.state.flipBuySell
-                        ? this._flipBuySell.bind(this)
-                        : null
+                    this.state._flipBuySell
+                        ? null
+                        : this._flipBuySell.bind(this)
                 }
                 onTogglePosition={
-                    this.state.buySellTop
+                    !this.state._toggleBuySellPosition
                         ? this._toggleBuySellPosition.bind(this)
                         : null
                 }
@@ -1592,9 +1592,8 @@ class Exchange extends React.Component {
                             : "medium-12 large-6 xlarge-4"
                     : "medium-12 xlarge-12",
                     this.state.flipBuySell
-                        ? `order-${buySellTop ? 1 : 2} large-order-${buySellTop ? 1 : 4} buy-form`
-                        : `order-${buySellTop ? 2 : 3} large-order-${buySellTop ? 2 : 5} sell-form`
-                        
+                        ? `order-${buySellTop ? 2 : 3} large-order-${buySellTop ? 2 : 5} sell-form`
+                        : `order-${buySellTop ? 1 : 2} large-order-${buySellTop ? 1 : 4} buy-form`
                 )}
                 type="ask"
                 hideHeader={exchangeLayout < 5 || smallScreen ? true : false}
@@ -1648,12 +1647,12 @@ class Exchange extends React.Component {
                     "is_prediction_market"
                 ])}
                 onFlip={
-                    this.state.flipBuySell
+                    !this.state._flipBuySell
                         ? this._flipBuySell.bind(this)
                         : null
                 }
                 onTogglePosition={
-                    this.state.buySellTop
+                    !this.state._toggleBuySellPosition
                         ? this._toggleBuySellPosition.bind(this)
                         : null
                 }
@@ -1735,12 +1734,6 @@ class Exchange extends React.Component {
                 groupedAsks={groupedAsks}
                 exchangeLayout={exchangeLayout}
                 isPanelActive={isPanelActive}
-                onTogglePosition={
-                    !this.state.buySellTop
-                        ? this._toggleBuySellPosition.bind(this)
-                        : null
-                }
-                smallScreen={smallScreen}
             />
         );
 
