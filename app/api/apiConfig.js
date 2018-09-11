@@ -148,12 +148,6 @@ export const settingsAPIs = {
             contact: "telegram:mtopenledger"
         },
         {
-            url: "wss://bitshares.nu/ws",
-            location: "Stockholm",
-            region: "Northern Europe",
-            country: "Sweden"
-        },
-        {
             url: "wss://bit.btsabc.org/ws",
             region: "Eastern Asia",
             country: "China",
@@ -171,8 +165,137 @@ export const settingsAPIs = {
         },
         {
             url: "wss://japan.bitshares.apasia.tech/ws",
+            location: "Tokyo",
             country: "Japan",
             region: "Southeastern Asia",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://status200.bitshares.apasia.tech/ws",
+            location: "New Jersey",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+         {
+            url: "wss://new-york.bitshares.apasia.tech/ws",
+            location: "New York",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://dallas.bitshares.apasia.tech/ws",
+            location: "Dallas",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://chicago.bitshares.apasia.tech/ws",
+            location: "Chicago",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://atlanta.bitshares.apasia.tech/ws",
+            location: "Atlanta",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://us-la.bitshares.apasia.tech/ws",
+            location: "Los Angeles",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://seattle.bitshares.apasia.tech/ws",
+            location: "Seattle",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://miami.bitshares.apasia.tech/ws",
+            location: "Miami",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://valley.bitshares.apasia.tech/ws",
+            location: "Silicone Valley",
+            country: "U.S.A.",
+            region: "Central America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://canada6.daostreet.com",
+            location: "Toronto",
+            country: "Canada",
+            region: "Northern America",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://bitshares.nu/ws",
+            location: "Stockholm",
+            region: "Northern Europe",
+            country: "Sweden",
+            operator: "APAsia",
+            contact: "telegram:StaflunD"
+        },
+        {
+            url: "wss://api.open-asset.tech/ws",
+            location: "Frankfurt",
+            region: "Western Europe",
+            country: "Germany",
+            operator: "APAsia",
+            contact: "telegram:StaflunD"
+        },
+        {
+            url: "wss://france.bitshares.apasia.tech/ws",
+            location: "Paris",
+            country: "France",
+            region: "Western Europe",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://england.bitshares.apasia.tech/ws",
+            location: "London",
+            country: "England",
+            region: "Northern Europe",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://france.bitshares.apasia.tech/ws",
+            location: "Amsterdam",
+            country: "Holland",
+            region: "Northern Europe",
+            operator: "APAsia",
+            contact: "telegram:murda_ra"
+        },
+         {
+            url: "wss://australia.bitshares.apasia.tech/ws",
+            location: "Sidney",
+            country: "Australia",
+            region: "Australia",
             operator: "APAsia",
             contact: "telegram:murda_ra"
         },
