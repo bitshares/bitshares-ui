@@ -23,7 +23,8 @@
     margin: 0 0 3px 0 !important;
 }
 
-.ant-tabs-nav, .ant-tabs-tab {
+.ant-tabs-nav,
+.ant-tabs-tab {
     margin: 0 12px 0 0 !important;
     padding: 6px 6px !important;
 }
@@ -37,7 +38,9 @@
 }
 
 .inputAddon {
-    input { text-align: right !important; }
+    input {
+        text-align: right !important;
+    }
     padding-bottom: 10px !important;
     .ant-input-group-addon {
         width: 45% !important;

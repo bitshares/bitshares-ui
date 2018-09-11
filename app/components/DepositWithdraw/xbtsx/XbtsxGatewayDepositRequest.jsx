@@ -318,7 +318,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -356,7 +357,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="left-label">
                             <b>
@@ -377,8 +379,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                     textTransform: "uppercase"
                                                 }}
                                                 content="gateway.address"
-                                            />:{" "}
-                                            <b>{deposit_address_fragment}</b>
+                                            />
+                                            : <b>{deposit_address_fragment}</b>
                                         </td>
                                     </tr>
                                     {deposit_memo ? (
@@ -390,7 +392,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                             "uppercase"
                                                     }}
                                                     content="gateway.memo"
-                                                />: <b>{deposit_memo}</b>
+                                                />
+                                                : <b>{deposit_memo}</b>
                                             </td>
                                         </tr>
                                     ) : null}
@@ -514,7 +517,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -549,7 +553,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button

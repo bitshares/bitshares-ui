@@ -1,5 +1,5 @@
 import {connect} from "alt-react";
-import {Button} from 'bitshares-ui-style-guide'
+import {Button} from "bitshares-ui-style-guide";
 import {ChainStore, ChainValidation} from "bitsharesjs";
 import counterpart from "counterpart";
 import {debounce} from "lodash-es";
@@ -62,7 +62,7 @@ class MarketPickerWrapper extends React.Component {
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
-        
+
         this.setState({
             inputValue: e.target.value.trim(),
             activeSearch: true,
@@ -77,7 +77,7 @@ class MarketPickerWrapper extends React.Component {
             this.setState({
                 activeSearch: false
             });
-            return; 
+            return;
         }
 
         if (this.state.inputValue !== toFind) {
@@ -248,7 +248,7 @@ class MarketPickerWrapper extends React.Component {
                               <span style={{float: "right"}}>
                                   <Link
                                       onClick={() => {
-                                            this.props.onClose.bind(this)
+                                          this.props.onClose.bind(this);
                                       }}
                                       to={
                                           quoteSymbol == marketPickerAsset
@@ -335,7 +335,8 @@ class MarketPickerWrapper extends React.Component {
                     />
                 </div>
                 <div className="marketPicker__subHeader">
-                    <Translate content="exchange.market_picker.sub_title" />&nbsp;
+                    <Translate content="exchange.market_picker.sub_title" />
+                    &nbsp;
                     <Link
                         to={`/asset/${marketPickerAsset}`}
                         style={{
@@ -450,17 +451,14 @@ class MarketPickerWrapper extends React.Component {
                         <LoadingIndicator type="three-bounce" />
                     </div>
                 ) : null}
-                
+
                 <div className="results">
                     <ul ref="results" style={{marginLeft: 0}}>
                         {!this.state.activeSearch ? marketsList : null}
                     </ul>
                 </div>
 
-                <Button 
-                    type="primary"
-                    onClick={this.props.onClose.bind(this)}
-                >
+                <Button type="primary" onClick={this.props.onClose.bind(this)}>
                     <Translate content="global.close" />
                 </Button>
             </div>
@@ -485,14 +483,15 @@ class MarketPicker extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(
-            this.props.quoteAsset.get("id") !== nextProps.quoteAsset.get("id")
-            || this.props.baseAsset.get("id") !== nextProps.baseAsset.get("id")
+        if (
+            this.props.quoteAsset.get("id") !==
+                nextProps.quoteAsset.get("id") ||
+            this.props.baseAsset.get("id") !== nextProps.baseAsset.get("id")
         ) {
             this.onClose();
         }
     }
-    
+
     show() {
         this.setState({open: true}, () => {
             ZfApi.publish(this.props.modalId, "open");
@@ -500,15 +499,13 @@ class MarketPicker extends React.Component {
     }
 
     onClose() {
-        this.setState({open: false}, () => { 
-            this.props.onToggleMarketPicker(null)
+        this.setState({open: false}, () => {
+            this.props.onToggleMarketPicker(null);
         });
     }
 
     render() {
-        return !this.state.open 
-            ? null 
-            : 
+        return !this.state.open ? null : (
             <BaseModal
                 id={this.props.modalId}
                 overlay={true}
@@ -519,22 +516,26 @@ class MarketPicker extends React.Component {
             >
                 <MarketPickerWrapper
                     onClose={this.onClose.bind(this)}
-                    {...this.props} 
+                    {...this.props}
                 />
-            </BaseModal>;
+            </BaseModal>
+        );
     }
 }
 
-MarketPickerWrapper = connect(MarketPickerWrapper, {
-    listenTo() {
-        return [AssetStore];
-    },
-    getProps() {
-        return {
-            searchAssets: AssetStore.getState().assets,
-            assetsLoading: AssetStore.getState().assetsLoading
-        };
+MarketPickerWrapper = connect(
+    MarketPickerWrapper,
+    {
+        listenTo() {
+            return [AssetStore];
+        },
+        getProps() {
+            return {
+                searchAssets: AssetStore.getState().assets,
+                assetsLoading: AssetStore.getState().assetsLoading
+            };
+        }
     }
-});
+);
 
 export default MarketPicker;

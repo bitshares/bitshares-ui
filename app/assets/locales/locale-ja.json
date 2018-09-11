@@ -1177,6 +1177,12 @@
             "submit": "出金",
             "submit_beta": "出金 (ベータ)",
             "withdraw": "出金"
+        },
+        "report": {
+            "button": "レポートについてのレポート",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {

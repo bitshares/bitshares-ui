@@ -5,6 +5,8 @@ import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 
+import ErrorActions from "actions/ErrorActions";
+
 import {getLogo} from "branding";
 var logo = getLogo();
 
@@ -21,6 +23,10 @@ class BaseModal extends React.Component {
         }.bind(this);
 
         document.addEventListener("keydown", this.modalEscapeListener);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BaseModal", error, errorInfo);
     }
 
     componentWillUnmount() {
@@ -52,48 +58,48 @@ class BaseModal extends React.Component {
                 className={className}
                 overlayClose={overlayClose}
             >
-            {!noHeaderContainer ?
-                <div className="modal-header">
-                    {!noCloseBtn && (
-                        <Trigger close={id}>
-                            <a href="#" className="close-button">
-                                &times;
-                            </a>
-                        </Trigger>
-                    )}
-                    {!noLogo &&
-                        (leftHeader ? (
-                            <img src={logo} />
-                        ) : (
-                            <div className="modal__logo">
+                {!noHeaderContainer ? (
+                    <div className="modal-header">
+                        {!noCloseBtn && (
+                            <Trigger close={id}>
+                                <a href="#" className="close-button">
+                                    &times;
+                                </a>
+                            </Trigger>
+                        )}
+                        {!noLogo &&
+                            (leftHeader ? (
                                 <img src={logo} />
-                            </div>
-                        ))}
-                    {!noHeader &&
-                        modalHeader &&
-                        (leftHeader ? (
-                            <b
-                                style={{
-                                    paddingLeft: "0.8rem",
-                                    fontSize: "1.3rem",
-                                    position: "relative",
-                                    top: "0.4rem"
-                                }}
-                            >
-                                <Translate content={modalHeader} />
-                            </b>
-                        ) : (
-                            <div className="text-center">
-                                <div className="modal__title">
-                                    <Translate
-                                        component="h4"
-                                        content={modalHeader}
-                                    />
+                            ) : (
+                                <div className="modal__logo">
+                                    <img src={logo} />
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        {!noHeader &&
+                            modalHeader &&
+                            (leftHeader ? (
+                                <b
+                                    style={{
+                                        paddingLeft: "0.8rem",
+                                        fontSize: "1.3rem",
+                                        position: "relative",
+                                        top: "0.4rem"
+                                    }}
+                                >
+                                    <Translate content={modalHeader} />
+                                </b>
+                            ) : (
+                                <div className="text-center">
+                                    <div className="modal__title">
+                                        <Translate
+                                            component="h4"
+                                            content={modalHeader}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
                     </div>
-                : null}
+                ) : null}
                 {!noHeader && leftHeader && <hr />}
                 <div className="modal-content">{children}</div>
             </Modal>

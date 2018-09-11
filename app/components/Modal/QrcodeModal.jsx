@@ -5,6 +5,7 @@ import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import QRCode from "qrcode.react";
 import {Aes} from "bitsharesjs";
+import ErrorActions from "actions/ErrorActions";
 
 class QrcodeModal extends React.Component {
     constructor(props) {
@@ -14,6 +15,10 @@ class QrcodeModal extends React.Component {
         this.onKeyDown = this.onKeyDown.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.onClose = this.onClose.bind(this);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("QrcodeModal", error, errorInfo);
     }
 
     _getInitialState() {

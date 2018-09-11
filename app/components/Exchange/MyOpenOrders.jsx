@@ -24,7 +24,13 @@ import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
-        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, leftAlign} = this.props;
+        let {
+            baseSymbol,
+            quoteSymbol,
+            dashboard,
+            isMyAccount,
+            leftAlign
+        } = this.props;
 
         return !dashboard ? (
             <thead>
@@ -160,7 +166,11 @@ class OrderRow extends React.Component {
                     {valueSymbol}
                 </td>
                 <td
-                    style={{width: "25%", textAlign: "right", whiteSpace: "nowrap"}}
+                    style={{
+                        width: "25%",
+                        textAlign: "right",
+                        whiteSpace: "nowrap"
+                    }}
                     className="tooltip"
                     data-tip={order.expiration.toLocaleString()}
                 >
@@ -344,10 +354,10 @@ class MyOpenOrders extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.activeTab !== this.state.activeTab) {
+        if (nextProps.activeTab !== this.state.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
-        
+
         return (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
@@ -468,12 +478,21 @@ class MyOpenOrders extends React.Component {
                 ? true
                 : false;
 
-        {/* Users Open Orders Tab (default) */}
+        {
+            /* Users Open Orders Tab (default) */
+        }
         if (!activeTab || activeTab == "my_orders") {
             const orders = this._getOrders();
             let emptyRow = (
                 <tr>
-                    <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                    <td
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 4,
+                            fontStyle: "italic"
+                        }}
+                        colSpan="5"
+                    >
                         <Translate content="account.no_orders" />
                     </td>
                 </tr>
@@ -542,7 +561,9 @@ class MyOpenOrders extends React.Component {
             );
         }
 
-        {/* Open Settle Orders */}
+        {
+            /* Open Settle Orders */
+        }
         if (activeTab && activeTab == "open_settlement") {
             contentContainer = (
                 <OpenSettleOrders
@@ -562,16 +583,23 @@ class MyOpenOrders extends React.Component {
                 key="open_orders"
                 className={this.props.className}
             >
-                <div className={this.props.innerClass} style={this.props.innerStyle}>
-                    {this.props.noHeader ? null : 
-                    <div style={this.props.headerStyle} className="exchange-content-header">
-                        {activeTab == "my_orders" ?
-                            <Translate content="exchange.my_orders" />
-                            : null}
-                        {activeTab == "open_settlement" ?
-                            <Translate content="exchange.settle_orders" />
-                            : null}
-                    </div>}
+                <div
+                    className={this.props.innerClass}
+                    style={this.props.innerStyle}
+                >
+                    {this.props.noHeader ? null : (
+                        <div
+                            style={this.props.headerStyle}
+                            className="exchange-content-header"
+                        >
+                            {activeTab == "my_orders" ? (
+                                <Translate content="exchange.my_orders" />
+                            ) : null}
+                            {activeTab == "open_settlement" ? (
+                                <Translate content="exchange.settle_orders" />
+                            ) : null}
+                        </div>
+                    )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
@@ -620,7 +648,12 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, lineHeight: "13px"}}
+                        style={{
+                            overflow: "hidden",
+                            minHeight: !this.props.tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            lineHeight: "13px"
+                        }}
                     >
                         <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}

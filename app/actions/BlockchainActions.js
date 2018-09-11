@@ -20,6 +20,10 @@ class BlockchainActions {
                         },
                         height
                     });
+                })
+                .catch(error => {
+                    console.log("We have error with getHeader mathod: ", error);
+                    reject(error);
                 });
         };
     }
@@ -46,6 +50,7 @@ class BlockchainActions {
                             "Error in BlockchainActions.getLatest: ",
                             error
                         );
+                        reject(error);
                     });
             }
         };
@@ -66,6 +71,7 @@ class BlockchainActions {
                 })
                 .catch(error => {
                     console.log("Error in BlockchainActions.getBlock: ", error);
+                    reject(error);
                 });
         };
     }

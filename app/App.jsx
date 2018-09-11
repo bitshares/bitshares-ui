@@ -11,6 +11,7 @@ import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
+import ReportModal from "./components/Modal/ReportModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
@@ -472,8 +473,10 @@ class App extends React.Component {
                         <TransactionConfirm />
                         <BrowserNotifications />
                         <WalletUnlockModal />
+                        {/* <ReportModal /> */}
                         <BrowserSupportModal ref="browser_modal" />
                     </div>
+                    <div id="screenshot" />
                 </BodyClassName>
             </div>
         );

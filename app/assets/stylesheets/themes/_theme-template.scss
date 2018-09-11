@@ -297,7 +297,8 @@
         }
     }
 
-    .modal#marketPicker, .modal#settingsModal {
+    .modal#marketPicker,
+    .modal#settingsModal {
         background-color: $bg-color;
         border: 1px solid black;
     }
@@ -374,7 +375,8 @@
             > ul {
                 border-bottom: 1px solid $panel-bg-color;
 
-                > li.active, li:hover {
+                > li.active,
+                li:hover {
                     border-bottom: 3px solid lightblue;
                 }
             }
@@ -1302,7 +1304,6 @@
     .exchange-content-header {
         color: $light-text-color;
         background-color: transparent !important;
-
     }
     // .block-content-header {
     // //text-transform: uppercase;
@@ -1495,14 +1496,12 @@
         cursor: pointer;
     }
 
-
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
 
     .table.no-stripes > tbody > tr {
         background-color: transparent;
-        
     }
 
     //bottom stats

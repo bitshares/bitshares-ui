@@ -29,7 +29,6 @@ div#CenterContent {
                 cursor: default;
             }
         }
-        
     }
 
     > .left-column {
@@ -88,7 +87,7 @@ div#CenterContent {
         padding-bottom: 4px;
     }
 
-    .sticky-table-container  {
+    .sticky-table-container {
         width: 100%;
     }
 }
@@ -494,7 +493,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .market-right-padding-only {
-    table td:nth-last-child(1), table th:nth-last-child(1) {
+    table td:nth-last-child(1),
+    table th:nth-last-child(1) {
         padding: 0 0.6rem 0 0 !important;
     }
 }
@@ -544,7 +544,8 @@ table thead tr th.mymarkets-header {
 }
 
 .table-no-padding {
-    tr, td { 
+    tr,
+    td {
         padding: 0px !important;
     }
 }
@@ -758,7 +759,6 @@ tbody.orderbook > tr.my-order > td {
 }
 
 .marketPicker {
-
     .marketPicker__header {
         padding: 0 5px;
         margin-top: 1px;
@@ -813,4 +813,3 @@ tbody.orderbook > tr.my-order > td {
 .tether-element {
     z-index: 100;
 }
-

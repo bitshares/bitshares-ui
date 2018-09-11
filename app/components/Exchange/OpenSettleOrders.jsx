@@ -19,9 +19,8 @@ class TableHeader extends React.Component {
                         <br />
                         {baseSymbol ? (
                             <span className="header-sub-title">
-                                (<AssetName name={baseSymbol} />/<AssetName
-                                    name={quoteSymbol}
-                                />)
+                                (<AssetName name={baseSymbol} />/
+                                <AssetName name={quoteSymbol} />)
                             </span>
                         ) : null}
                     </th>
@@ -147,7 +146,14 @@ class OpenSettleOrders extends React.Component {
             return (
                 <tbody>
                     <tr>
-                        <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                        <td
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 4,
+                                fontStyle: "italic"
+                            }}
+                            colSpan="5"
+                        >
                             <Translate content="account.no_orders" />
                         </td>
                     </tr>

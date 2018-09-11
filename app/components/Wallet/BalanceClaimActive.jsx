@@ -13,6 +13,7 @@ import BalanceClaimSelector from "components/Wallet/BalanceClaimSelector";
 import WalletActions from "actions/WalletActions";
 import MyAccounts from "components/Forms/MyAccounts";
 import Translate from "react-translate-component";
+import ErrorActions from "actions/ErrorActions";
 
 class BalanceClaimActive extends Component {
     componentWillMount() {
@@ -20,6 +21,10 @@ class BalanceClaimActive extends Component {
         let keySeq = keys.keySeq();
         BalanceClaimActiveActions.setPubkeys(keySeq);
         this.existing_keys = keySeq;
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BalanceClaimActive", error, errorInfo);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -47,7 +52,8 @@ class BalanceClaimActive extends Component {
                 <div>
                     <br />
                     <h5>
-                        <Translate content="wallet.loading_balances" />&hellip;
+                        <Translate content="wallet.loading_balances" />
+                        &hellip;
                     </h5>
                     <br />
                     <LoadingIndicator type="three-bounce" />
@@ -142,15 +148,18 @@ class BalanceClaimActive extends Component {
     }
 }
 
-BalanceClaimActive = connect(BalanceClaimActive, {
-    listenTo() {
-        return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
-    },
-    getProps() {
-        let props = BalanceClaimActiveStore.getState();
-        props.account_refs = AccountRefsStore.getAccountRefs();
-        return props;
+BalanceClaimActive = connect(
+    BalanceClaimActive,
+    {
+        listenTo() {
+            return [BalanceClaimActiveStore, AccountRefsStore, PrivateKeyStore];
+        },
+        getProps() {
+            let props = BalanceClaimActiveStore.getState();
+            props.account_refs = AccountRefsStore.getAccountRefs();
+            return props;
+        }
     }
-});
+);
 
 export default BalanceClaimActive;

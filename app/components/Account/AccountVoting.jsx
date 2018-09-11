@@ -998,9 +998,11 @@ class AccountVoting extends React.Component {
                                                     style={{textAlign: "left"}}
                                                 >
                                                     <Translate content="account.votes.total_budget" />{" "}
-                                                    (<AssetName
+                                                    (
+                                                    <AssetName
                                                         name={preferredUnit}
-                                                    />)
+                                                    />
+                                                    )
                                                 </th>
                                                 <th
                                                     colSpan="2"
@@ -1084,9 +1086,11 @@ class AccountVoting extends React.Component {
                                                         fontSize: "0.8rem"
                                                     }}
                                                 >
-                                                    (<AssetName
+                                                    (
+                                                    <AssetName
                                                         name={preferredUnit}
-                                                    />)
+                                                    />
+                                                    )
                                                 </div>
                                             </th>
                                             {workerTableIndex === 2 ||
@@ -1101,9 +1105,11 @@ class AccountVoting extends React.Component {
                                                             fontSize: "0.8rem"
                                                         }}
                                                     >
-                                                        (<AssetName
+                                                        (
+                                                        <AssetName
                                                             name={preferredUnit}
-                                                        />)
+                                                        />
+                                                        )
                                                     </div>
                                                 </th>
                                             )}

@@ -22,6 +22,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
+import ErrorActions from "actions/ErrorActions";
 
 class SendModal extends React.Component {
     constructor(props) {
@@ -40,6 +41,10 @@ class SendModal extends React.Component {
                 this.setState({hidden: false});
             }
         });
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("SendModal", error, errorInfo);
     }
 
     getInitialState() {
@@ -229,6 +234,7 @@ class SendModal extends React.Component {
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
+
         if (!asset || !from_account) return;
         this._updateFee();
         const balanceID = from_account.getIn(["balances", asset.get("id")]);
@@ -238,7 +244,9 @@ class SendModal extends React.Component {
         ]);
         if (!asset || !from_account) return;
         if (!balanceID) return this.setState({balanceError: true});
+
         let balanceObject = ChainStore.getObject(balanceID);
+
         let feeBalanceObject = feeBalanceID
             ? ChainStore.getObject(feeBalanceID)
             : null;
@@ -298,6 +306,7 @@ class SendModal extends React.Component {
 
     _setTotal(asset_id, balance_id) {
         const {feeAmount} = this.state;
+
         let balanceObject = ChainStore.getObject(balance_id);
         let transferAsset = ChainStore.getObject(asset_id);
 
@@ -548,7 +557,8 @@ class SendModal extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />:{" "}
+                        />
+                        :{" "}
                         <span
                             className={_error}
                             style={{
@@ -911,17 +921,20 @@ class SendModalConnectWrapper extends React.Component {
     }
 }
 
-SendModalConnectWrapper = connect(SendModalConnectWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps(props) {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            tabIndex: props.tabIndex || 0
-        };
+SendModalConnectWrapper = connect(
+    SendModalConnectWrapper,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps(props) {
+            return {
+                currentAccount: AccountStore.getState().currentAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                tabIndex: props.tabIndex || 0
+            };
+        }
     }
-});
+);
 
 export default SendModalConnectWrapper;

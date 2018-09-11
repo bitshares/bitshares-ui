@@ -18,6 +18,7 @@ import {
 } from "lib/common/assetGatewayMixin";
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
+import ErrorActions from "actions/ErrorActions";
 import CryptoLinkFormatter from "../Utility/CryptoLinkFormatter";
 
 class DepositModalContent extends DecimalChecker {
@@ -61,6 +62,10 @@ class DepositModalContent extends DecimalChecker {
         } else {
             this.setState({selectedAsset: "BTS"});
         }
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("DepositModalContent", error, errorInfo);
     }
 
     shouldComponentUpdate(np, ns) {
@@ -377,7 +382,10 @@ class DepositModalContent extends DecimalChecker {
                                     />
                                     <div
                                         className="modal__highlight"
-                                        style={{fontSize: "0.9rem", wordBreak: "break-all"}}
+                                        style={{
+                                            fontSize: "0.9rem",
+                                            wordBreak: "break-all"
+                                        }}
                                     >
                                         {depositAddress.address}
                                     </div>
@@ -402,7 +410,10 @@ class DepositModalContent extends DecimalChecker {
                                             unsafe
                                             content="gateway.purchase_notice_memo"
                                         />
-                                        <div className="modal__highlight" style={{wordBreak: "break-all"}}>
+                                        <div
+                                            className="modal__highlight"
+                                            style={{wordBreak: "break-all"}}
+                                        >
                                             {depositAddress.memo}
                                         </div>
                                     </div>

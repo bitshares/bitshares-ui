@@ -157,7 +157,13 @@ class AccountDepositWithdraw extends React.Component {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let {account} = this.props;
-        let {olService, btService, rudexService, xbtsxService, citadelService} = this.state;
+        let {
+            olService,
+            btService,
+            rudexService,
+            xbtsxService,
+            citadelService
+        } = this.state;
         serList.push({
             name: "Openledger (OPEN.X)",
             template: (

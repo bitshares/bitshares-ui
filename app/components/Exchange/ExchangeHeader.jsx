@@ -9,7 +9,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
-import {Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -24,7 +24,7 @@ export default class ExchangeHeader extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             selectedMarketPickerAsset: nextProps.selectedMarketPickerAsset
-        })
+        });
     }
 
     shouldComponentUpdate(nextProps) {
@@ -180,7 +180,9 @@ export default class ExchangeHeader extends React.Component {
                                 <div
                                     style={{
                                         padding: "0 5px",
-                                        fontSize: this.props.tinyScreen ? "13px" : "18px",
+                                        fontSize: this.props.tinyScreen
+                                            ? "13px"
+                                            : "18px",
                                         marginTop: "1px"
                                     }}
                                 >
@@ -402,7 +404,9 @@ export default class ExchangeHeader extends React.Component {
                                 <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px 16px 16px 0px"}}
-                                    onClick={this.props.onToggleSettings.bind(this)}
+                                    onClick={this.props.onToggleSettings.bind(
+                                        this
+                                    )}
                                 >
                                     <AntIcon
                                         type="setting"

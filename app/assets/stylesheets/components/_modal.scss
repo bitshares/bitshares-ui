@@ -1,6 +1,7 @@
 // Modals with specific width
 
-#marketPicker.modal, #settingsModal.modal {
+#marketPicker.modal,
+#settingsModal.modal {
     position: absolute;
     max-width: 400px;
     padding: 0px;
@@ -141,4 +142,3 @@
 #simple_bridge_modal_ask label {
     text-transform: none !important;
 }
-

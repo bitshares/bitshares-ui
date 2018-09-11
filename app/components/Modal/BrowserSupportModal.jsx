@@ -3,9 +3,14 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import BaseModal from "./BaseModal";
+import ErrorActions from "actions/ErrorActions";
 import {getWalletName} from "branding";
 
 export default class BrowserSupportModal extends React.Component {
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BrowserSupportModal", error, errorInfo);
+    }
+
     show() {
         ZfApi.publish("browser_modal", "open");
     }

@@ -3,6 +3,7 @@ import BaseModal from "components/Modal/BaseModal";
 import QrReader from "react-qr-reader";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PropTypes from "prop-types";
+import ErrorActions from "actions/ErrorActions";
 
 class QRScanner extends React.Component {
     modalId = "qr_scanner_modal";
@@ -22,6 +23,10 @@ class QRScanner extends React.Component {
 
         this.handleClick = this.handleClick.bind(this);
         this.handleClose = this.handleClose.bind(this);
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("QRScanner", error, errorInfo);
     }
 
     handleClick() {

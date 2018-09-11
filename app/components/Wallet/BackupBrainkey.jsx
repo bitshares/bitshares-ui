@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
 import {hash} from "bitsharesjs";
+import ErrorActions from "actions/ErrorActions";
 
 export default class BackupBrainkey extends Component {
     constructor() {
@@ -17,6 +18,10 @@ export default class BackupBrainkey extends Component {
             brainkey: null,
             invalid_password: false
         };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("BackupBrainkey", error, errorInfo);
     }
 
     render() {

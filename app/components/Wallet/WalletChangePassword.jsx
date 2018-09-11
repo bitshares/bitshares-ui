@@ -7,6 +7,7 @@ import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import ErrorActions from "actions/ErrorActions";
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -29,6 +30,10 @@ export default class WalletChangePassword extends Component {
                 console.error(error);
                 notify.error("Unable to change password: " + error);
             });
+    }
+
+    componentDidCatch(error, errorInfo) {
+        ErrorActions.setError("WalletChangePassword", error, errorInfo);
     }
 
     onOldPassword(old_password) {
