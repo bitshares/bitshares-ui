@@ -168,7 +168,7 @@ export const settingsAPIs = {
             location: "Tokyo",
             country: "Japan",
             region: "Southeastern Asia",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -176,7 +176,7 @@ export const settingsAPIs = {
             location: "New Jersey",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
          {
@@ -184,7 +184,7 @@ export const settingsAPIs = {
             location: "New York",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -192,7 +192,7 @@ export const settingsAPIs = {
             location: "Dallas",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -200,7 +200,7 @@ export const settingsAPIs = {
             location: "Chicago",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -208,7 +208,7 @@ export const settingsAPIs = {
             location: "Atlanta",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -216,7 +216,7 @@ export const settingsAPIs = {
             location: "Los Angeles",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -224,7 +224,7 @@ export const settingsAPIs = {
             location: "Seattle",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -232,7 +232,7 @@ export const settingsAPIs = {
             location: "Miami",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -240,7 +240,7 @@ export const settingsAPIs = {
             location: "Silicone Valley",
             country: "U.S.A.",
             region: "Central America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -248,7 +248,7 @@ export const settingsAPIs = {
             location: "Toronto",
             country: "Canada",
             region: "Northern America",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -256,7 +256,7 @@ export const settingsAPIs = {
             location: "Stockholm",
             region: "Northern Europe",
             country: "Sweden",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:StaflunD"
         },
         {
@@ -264,7 +264,7 @@ export const settingsAPIs = {
             location: "Frankfurt",
             region: "Western Europe",
             country: "Germany",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:StaflunD"
         },
         {
@@ -272,7 +272,7 @@ export const settingsAPIs = {
             location: "Paris",
             country: "France",
             region: "Western Europe",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -280,7 +280,7 @@ export const settingsAPIs = {
             location: "London",
             country: "England",
             region: "Northern Europe",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -288,7 +288,7 @@ export const settingsAPIs = {
             location: "Amsterdam",
             country: "Holland",
             region: "Northern Europe",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
          {
@@ -296,7 +296,7 @@ export const settingsAPIs = {
             location: "Sidney",
             country: "Australia",
             region: "Australia",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
@@ -599,7 +599,7 @@ export const settingsAPIs = {
             region: "TESTNET - Northern America",
             country: "U.S.A.",
             location: "Dallas",
-            operator: "APAsia",
+            operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
         {
