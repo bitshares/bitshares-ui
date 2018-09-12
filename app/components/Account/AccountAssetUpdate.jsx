@@ -447,7 +447,6 @@ class AccountAssetUpdate extends React.Component {
                 break;
 
             default:
-                bitasset_opts[value] = parseInt(e.target.value, 10);
                 break;
         }
 

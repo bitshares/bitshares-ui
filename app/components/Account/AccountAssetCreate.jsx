@@ -50,11 +50,29 @@ class BitAssetOptions extends React.Component {
 
     _onFoundBackingAsset(asset) {
         if (asset) {
-            if (
-                asset.get("id") === "1.3.0" ||
-                (asset.get("bitasset_data_id") &&
-                    !asset.getIn(["bitasset", "is_prediction_market"]))
-            ) {
+            let backing =
+                asset.get("bitasset") &&
+                ChainStore.getAsset(
+                    asset.getIn(["bitasset", "options", "short_backing_asset"])
+                );
+            let backing_backing =
+                backing &&
+                backing.get("bitasset") &&
+                ChainStore.getAsset(
+                    backing.getIn([
+                        "bitasset",
+                        "options",
+                        "short_backing_asset"
+                    ])
+                );
+            if (backing_backing && backing_backing !== "1.3.0") {
+                this.setState({
+                    error: counterpart.translate(
+                        "account.user_issued_assets.error_too_deep"
+                    )
+                });
+                this.props.onUpdate("invalid", true);
+            } else if (!asset.getIn(["bitasset", "is_prediction_market"])) {
                 if (
                     this.props.isPredictionMarket &&
                     asset.get("precision") !==
@@ -66,8 +84,10 @@ class BitAssetOptions extends React.Component {
                             {asset: this.props.assetSymbol}
                         )
                     });
+                    this.props.onUpdate("invalid", true);
                 } else {
                     this.props.onUpdate("short_backing_asset", asset.get("id"));
+                    this.props.onUpdate("invalid", false);
                 }
             } else {
                 this.setState({
@@ -75,7 +95,10 @@ class BitAssetOptions extends React.Component {
                         "account.user_issued_assets.error_invalid"
                     )
                 });
+                this.props.onUpdate("invalid", true);
             }
+        } else {
+            this.props.onUpdate("invalid", true);
         }
     }
 
@@ -364,7 +387,7 @@ class AccountAssetCreate extends React.Component {
     }
 
     onChangeBitAssetOpts(value, e) {
-        let {bitasset_opts} = this.state;
+        let {bitasset_opts, errors} = this.state;
 
         switch (value) {
             case "force_settlement_offset_percent":
@@ -392,12 +415,19 @@ class AccountAssetCreate extends React.Component {
                 bitasset_opts[value] = e;
                 break;
 
+            case "invalid":
+                errors.invalid_bitasset = e;
+                break;
+
             default:
                 bitasset_opts[value] = e.target.value;
                 break;
         }
 
-        this.forceUpdate();
+        let isValid =
+            !errors.symbol && !errors.max_supply && !errors.invalid_bitasset;
+
+        this.setState({isValid: isValid, errors: errors});
     }
 
     _onUpdateInput(value, e) {
@@ -504,9 +534,8 @@ class AccountAssetCreate extends React.Component {
     }
 
     _validateEditFields(new_state) {
-        let errors = {
-            max_supply: null
-        };
+        let {errors} = this.state;
+        errors.max_supply = null;
 
         errors.symbol = ChainValidation.is_valid_symbol_error(new_state.symbol);
         let existingAsset = ChainStore.getAsset(new_state.symbol);
@@ -536,7 +565,8 @@ class AccountAssetCreate extends React.Component {
             );
         }
 
-        let isValid = !errors.symbol && !errors.max_supply;
+        let isValid =
+            !errors.symbol && !errors.max_supply && !errors.invalid_bitasset;
 
         this.setState({isValid: isValid, errors: errors});
     }

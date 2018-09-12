@@ -909,6 +909,7 @@ class MyMarkets extends React.Component {
                                     />
                                 </span>
                             </label>
+                            <br />
                         </div>
                         <div className="search-wrapper">
                             <form>

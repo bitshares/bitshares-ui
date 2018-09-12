@@ -61,7 +61,7 @@ class DashboardPage extends React.Component {
                                                     }}
                                                     src={`${__BASE_URL__}asset-symbols/${q
                                                         .replace(
-                                                            "BTC",
+                                                            /^BTC/,
                                                             "OPEN.BTC"
                                                         )
                                                         .toLowerCase()}.png`}

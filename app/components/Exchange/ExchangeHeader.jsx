@@ -399,7 +399,7 @@ export default class ExchangeHeader extends React.Component {
                             </ul>
                             <ul className="market-stats stats top-stats">
                                 <li
-                                    className="stressed-stat input clickable"
+                                    className="stressed-stat input clickable hide-order-0"
                                     style={{padding: "16px"}}
                                     onClick={() => {
                                         ZfApi.publish("chart_options", "open");
