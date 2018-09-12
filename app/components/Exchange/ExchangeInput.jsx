@@ -1,4 +1,5 @@
 import React from "react";
+import {Input} from 'bitshares-ui-style-guide'
 
 export class DecimalChecker extends React.Component {
     onPaste(e) {
@@ -39,7 +40,7 @@ class ExchangeInput extends DecimalChecker {
 
     render() {
         return (
-            <input
+            <Input
                 ref="input"
                 type="text"
                 {...this.props}

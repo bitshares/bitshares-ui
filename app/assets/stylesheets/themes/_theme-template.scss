@@ -1,6 +1,9 @@
 @import "../utils/utils";
+@import "./../style-guide-fixes";
 
 @mixin theme(
+    $explorer-tab-content-background-color,
+    $tab-content-background-color,
     $primary-text-color,
     $bg-color,
     $dark-text-color,
@@ -46,9 +49,44 @@
     $main-content-margin-block-bg-color,
     $modal-bg-color,
     $mobile-input-bg,
-    $incognito-bg
+    $incognito-bg,
+    $explorer--witnesses--info-bg,
+    $explorer--witnesses--info-border,
+    $explorer--witnesses--info-table-title-color,
+    $explorer--witnesses--info-table-text-color,
+    $explorer--assets--bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    .explore-witness--info {
+        width: 100%;
+
+        border: 1px solid $explorer--witnesses--info-border;
+        background: $explorer--witnesses--info-bg;
+
+        padding: 12px;
+        border-radius: 5px;
+
+        table {
+            width: 100%;
+
+            thead {
+                th {
+                    font-weight: 400;
+                    color: $explorer--witnesses--info-table-title-color;
+                    font-size: 14px;
+                    padding-bottom: 8px;
+                }
+            }
+
+            tbody {
+                td {
+                    color: $explorer--witnesses--info-table-text-color;
+                }
+            }
+        }
+    }
+
     #incognito {
         background: $incognito-bg;
     }
@@ -258,6 +296,12 @@
             background-color: $button-bg-color;
         }
     }
+
+    .modal#marketPicker, .modal#settingsModal {
+        background-color: $bg-color;
+        border: 1px solid black;
+    }
+
     .modal {
         @include color($light-text-color, $account-cells);
         .modal__highlight {
@@ -325,6 +369,17 @@
     }
     .page-layout {
         background-color: lighten($account-header, 4%);
+
+        .column-header {
+            > ul {
+                border-bottom: 1px solid $panel-bg-color;
+
+                > li.active, li:hover {
+                    border-bottom: 3px solid lightblue;
+                }
+            }
+        }
+
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -344,7 +399,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: darken($bg-color, 4%);
+            background-color: $panel-bg-color;
         }
     }
     .asset-prefix {
@@ -740,20 +795,22 @@
     .has-error textarea {
         border-color: $error-text-color;
     }
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    textarea,
-    input[role="combobox"],
-    select[role="combobox"] {
+    input[type="text"]#{$ant-fix},
+    input[type="password"]#{$ant-fix},
+    input[type="email"]#{$ant-fix},
+    input[type="number"]#{$ant-fix},
+    input[type="search"]#{$ant-fix},
+    textarea#{$ant-fix},
+    input[role="combobox"]#{$ant-fix},
+    select[role="combobox"]#{$ant-fix},
+    .buy-sell-container .ant-input {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
         &:hover,
         &:focus,
-        &:active {
+        &:active,
+        &:disabled {
             background-color: $input-background;
         }
         &:focus {
@@ -863,7 +920,7 @@
         }
     }
     .tab-content {
-        background-color: lighten($account-header, 4%);
+        background-color: $tab-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -874,8 +931,8 @@
                 }
             }
         }
-        &.tab-no-background {
-            background-color: inherit;
+        &.explorer-tab-content {
+            background-color: $explorer-tab-content-background-color;
         }
     }
     // Exchange
@@ -1237,16 +1294,15 @@
             color: $secondary-text-color;
         }
     }
+
+    div.exchange-content-header {
+        background-color: transparent !important;
+    }
+
     .exchange-content-header {
         color: $light-text-color;
-        background-color: $header-color !important;
-        border-bottom: 1px solid $button-bg-color;
-        &.bid {
-            border-bottom: 1px solid $bid-color;
-        }
-        &.ask {
-            border-bottom: 1px solid $ask-color;
-        }
+        background-color: transparent !important;
+
     }
     // .block-content-header {
     // //text-transform: uppercase;
@@ -1376,7 +1432,8 @@
     }
     .stats .stressed-stat {
         padding: 10px 0;
-        font-size: 18px;
+        font-size: 16px;
+
         &.is-call {
             color: $call-color !important;
         }
@@ -1438,13 +1495,17 @@
         cursor: pointer;
     }
 
-    div.exchange-content-header {
-        background-color: $header-color !important;
-    }
+
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
-    // bottom stats
+
+    .table.no-stripes > tbody > tr {
+        background-color: transparent;
+        
+    }
+
+    //bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1906,10 +1967,6 @@
         color: $bs-blue;
         cursor: pointer;
     }
-    .order-2 .flip-arrow,
-    .order-5 .flip-arrow {
-        display: none;
-    }
     .order-book-button-h svg > path {
         fill: #fff;
         &:hover {
@@ -2001,47 +2058,37 @@
         }
     }
     .expiration-datetime-picker {
-        width: 225px;
+        width: 100%;
         > div {
-            float: right;
+            float: left;
         }
         input {
             width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
-            background: transparent;
+            background: transparent !important;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            text-align: right;
-            font-size: 0.9rem;
+            font-size: 90%;
             height: 28px;
             &:hover {
-                background: transparent;
+                background: transparent !important;
             }
         }
         select {
-            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 0.9rem;
+            font-size: 90%;
             height: 28px;
             margin: 0 0 1px;
             > option {
                 background-color: $light-panel-bg-color;
             }
-        }
-    }
-    .marketPicker {
-        background: $bg-color;
-        box-shadow: 2px 2px 5px darken($bg-color, 30%);
-        .results {
-            background: $input-background;
-            border: 1px solid $bg-color;
         }
     }
     .qr-address-scanner {
@@ -2111,6 +2158,31 @@
                 background-color: $light-panel-bg-color;
             }
         }
+    }
+
+    .table-highlight-hover {
+        tr:hover {
+            background-color: $settings-select-bg !important;
+        }
+    }
+
+    .table thead {
+        background-color: $header-color !important;
+    }
+
+    /* Ant Design Hacks */
+    .ant-select-arrow {
+        color: $light-text-color !important;
+    }
+
+    .ant-select-selection-selected-value {
+        color: $light-text-color !important;
+    }
+
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 }
 .rc-time-picker-panel {

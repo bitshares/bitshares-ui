@@ -1,10 +1,11 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.180815-rc1",
+    "version": "2.0.180912-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
+        "BitShares UI worker",
         "James Calfee",
         "Dan Larimer",
         "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
@@ -50,6 +51,7 @@
         "package": "build -p never",
         "package-no-ugly": "build -p never",
         "package-deb": "npm run prepackage && build  -p never --linux deb",
+        "package-snap": "npm run prepackage && build  -p never --linux snap",
         "package-win": "npm run prepackage && build  -p never --windows",
         "package-mac": "npm run prepackage && build  -p never --mac dmg",
         "postpackage": "node write_digest.js"
@@ -120,7 +122,8 @@
             "category": "Finance",
             "target": [
                 "deb",
-                "AppImage"
+                "AppImage",
+                "snap"
             ],
             "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
         },
@@ -135,7 +138,7 @@
         "alt-react": "git+https://github.com/bitshares/react.git",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#02a57452198f9c9b7218f38868045df599b005a5",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#1cadac0d6ccced4f23f230d54c3e87bf7b7dd973",
         "bitsharesjs": "^1.8.0",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",

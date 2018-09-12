@@ -728,7 +728,8 @@
             "pay": "Bezahlung pro Block",
             "rank": "Rang",
             "table": "Tabellenansicht",
-            "title": "Witnesses"
+            "title": "Witnesses",
+            "filter_by_name": "Nach Name filtern"
         },
         "workers": {
             "create": "Create a new worker proposal",
@@ -798,6 +799,13 @@
         "calc": "Calculating",
         "choose_deposit": "Please select the coin you would like to deposit",
         "choose_withdraw": "Please select the coin you would like to withdraw",
+        "citadel": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact citadel.li at:",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "Contact Blocktrades",
         "convert": "Internal conversion",
         "convert_coin": "Convert to %(coin)s (%(symbol)s)",
@@ -1649,6 +1657,11 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
+        "total_x_operations": "Total of %(count)s operations"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

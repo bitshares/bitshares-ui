@@ -728,7 +728,8 @@
             "pay": "1ブロックあたりの報酬",
             "rank": "ランク",
             "table": "テーブルビュー",
-            "title": "証人"
+            "title": "証人",
+            "filter_by_name": "名前でフィルタリングする"
         },
         "workers": {
             "create": "新しいワーカー提案を作成する",
@@ -798,6 +799,13 @@
         "calc": "計算中",
         "choose_deposit": "入金したいコインを選択してください",
         "choose_withdraw": "出金したいコインを選択してください",
+        "citadel": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、citadel.li までご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "contact_TRADE": "Blocktradesに連絡する",
         "convert": "内部変換",
         "convert_coin": "%(coin)s (%(symbol)s) に変換",
@@ -1649,6 +1657,11 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
+        "total_x_operations": "Total of %(count)s operations"
+    },
+    "utility": {
+        "total_x_assets": "Total of %(count)s assets",
+        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
