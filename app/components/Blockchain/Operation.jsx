@@ -865,9 +865,15 @@ class Operation extends React.Component {
             case "proposal_delete":
                 column = (
                     <span>
-                        <Translate
-                            component="span"
-                            content="transaction.proposal_delete"
+                        <TranslateWithLinks
+                            string="operation.proposal_delete"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].fee_paying_account,
+                                    arg: "account"
+                                }
+                            ]}
                         />
                     </span>
                 );

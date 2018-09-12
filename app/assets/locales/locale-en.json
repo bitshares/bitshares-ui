@@ -390,6 +390,10 @@
         "understand": "I understand",
         "ws_status": "Full node connection status"
     },
+    "boolean": {
+        "true": "True",
+        "false": "False"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -455,8 +459,7 @@
         "buy": "Buy",
         "buy_sell": "Buy/Sell",
         "buy_quick": "Quick Buy",
-        "buy_description":
-            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
@@ -1154,6 +1157,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "reject": "Reject proposal",
+                "delete": "Delete proposal"
+            },
             "approval_add": "Approval to add",
             "approval_remove": "Approval to remove",
             "key_approval_add": "Key approval to add",
@@ -1289,6 +1297,7 @@
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "delete": "Delete",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",
@@ -1316,6 +1325,9 @@
         "id": "Proposal object id",
         "proposed_operations": "Proposed operations",
         "review_period": "Review period begin"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "Propose",
     "qr_address_scanner": {
