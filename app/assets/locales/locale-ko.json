@@ -1659,11 +1659,6 @@
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations"
-    },
     "walkthrough": {
         "buy_form": "이 양식을 사용하여 구매 주문을하십시오.",
         "buy_orders": "이 시장에 대한 모든 구매 주문을보십시오.",

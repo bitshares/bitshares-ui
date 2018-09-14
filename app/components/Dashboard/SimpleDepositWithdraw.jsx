@@ -901,9 +901,10 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     render() {
         return !this.state.open ? null : (
             <BaseModal
-                id={this.props.modalId}
+                className="test"
                 onClose={this.onClose.bind(this)}
                 overlay={true}
+                id={this.props.modalId}
             >
                 {this.state.open ? (
                     <DepositWithdrawContent

@@ -1659,11 +1659,6 @@
         "total_x_markets": "Total of %(count)s markets",
         "total_x_operations": "Total of %(count)s operations"
     },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations"
-    },
     "walkthrough": {
         "buy_form": "Platzieren Sie Kaufaufträge über dieses Formular.",
         "buy_orders": "Sehen Sie alle Kaufaufträge für diesen Markt an.",

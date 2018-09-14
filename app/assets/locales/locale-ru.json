@@ -1661,11 +1661,6 @@
         "total_x_markets": "Всего %(count)s рынков",
         "total_x_operations": "Всего %(count)s операций"
     },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations"
-    },
     "walkthrough": {
         "buy_form": "Разместить заявки на покупку, используя эту форму.",
         "buy_orders": "Просмотреть все заявки на покупку для этого рынка.",

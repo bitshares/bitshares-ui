@@ -343,21 +343,6 @@ class MyMarkets extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        /* Trigger a lookup when switching tabs to find-market */
-        if (
-            this.state.activeTab !== "find-market" &&
-            nextState.activeTab === "find-market" &&
-            !nextProps.searchAssets.size
-        ) {
-            this._lookupAssets("OPEN.", true);
-        }
-
-        if(this.state.activeTab !== nextState.activeTab) {
-            this._changeTab(nextState.activeTab);
-        } else if(!nextProps.tabHeader && this.state.activeTab !== nextProps.activeTab) {
-            this._changeTab(nextProps.activeTab);
-        }
-
         return (
             !Immutable.is(nextProps.searchAssets, this.props.searchAssets) ||
             !Immutable.is(nextProps.markets, this.props.markets) ||
@@ -409,14 +394,6 @@ class MyMarkets extends React.Component {
         Ps.initialize(historyContainer);
 
         this._setMinWidth();
-
-        if (this.state.activeTab === "find-market") {
-            this._lookupAssets("OPEN.", true);
-        }
-
-        if(this.state.activeTab !== this.props.activeTab) {
-            this._changeTab(this.props.activeTab);
-        }
     }
 
     componentWillUnmount() {
@@ -833,7 +810,7 @@ class MyMarkets extends React.Component {
 
         let listStyle = {
             minWidth: this.state.minWidth,
-            minHeight: "6rem",
+            minHeight: "6rem"
         };
         if (listHeight) {
             listStyle.height = listHeight;
@@ -843,7 +820,7 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                {this.props.tabHeader ? <div
+                <div
                     style={this.props.headerStyle}
                     className="grid-block shrink left-orderbook-header bottom-header"
                 >
@@ -866,16 +843,7 @@ class MyMarkets extends React.Component {
                     >
                         <Translate content="exchange.more" />
                     </div>
-                </div> : null}
-                {this.props.noHeader || this.props.tabHeader ? null :
-                    <div 
-                        style={this.props.headerStyle}
-                    >
-                        <div className="exchange-content-header">
-                            <span><Translate content="exchange.market_name" /></span>
-                        </div>
-                    </div>
-                }
+                </div>
 
                 {this.props.controls ? (
                     <div
@@ -897,7 +865,7 @@ class MyMarkets extends React.Component {
                         style={{
                             width: "100%",
                             textAlign: "left",
-                            padding: "0 0.5rem 0.75rem 0.5rem"
+                            padding: "0.75rem 0.5rem"
                         }}
                     >
                         <div>
@@ -941,6 +909,7 @@ class MyMarkets extends React.Component {
                                     />
                                 </span>
                             </label>
+                            <br />
                         </div>
                         <div className="search-wrapper">
                             <form>
@@ -950,8 +919,8 @@ class MyMarkets extends React.Component {
                                         fontSize: "0.9rem",
                                         height: "inherit",
                                         position: "relative",
-                                        top: 5,
-                                        padding: 5
+                                        top: 1,
+                                        padding: 2
                                     }}
                                     type="text"
                                     className="no-margin market-filter-input"
@@ -1062,39 +1031,34 @@ class MyMarkets extends React.Component {
                     </div>
                 )}
 
-                <ul className="mymarkets-tabs" style={{marginBottom: 0}}>
-                    {/* Quote edit tab */}
-                    {myMarketTab && (
+                <ul className="mymarkets-tabs">
+                    {myMarketTab &&
+                        preferredBases.map((base, index) => {
+                            if (!base) return null;
+                            return (
+                                <li
+                                    key={base}
+                                    onClick={this.toggleActiveMarketTab.bind(
+                                        this,
+                                        index
+                                    )}
+                                    className={cnames("mymarkets-tab", {
+                                        active: activeMarketTab === index
+                                    })}
+                                >
+                                    {base}
+                                </li>
+                            );
+                        })}
+                    {!myMarketTab ? (
                         <li
-                            key="quote_edit"
-                            style={{textTransform: "uppercase"}}
-                            onClick={() => {
-                                ZfApi.publish("quote_selection", "open");
-                            }}
-                            className="mymarkets-tab"
+                            className={cnames("mymarkets-tab", {
+                                active: true
+                            })}
                         >
-                            &nbsp;+&nbsp;
+                            {this.state.activeFindBase}
                         </li>
-                    )}
-                    {!myMarketTab && !this.state.inputValue
-                        ? null
-                        : preferredBases.map((base, index) => {
-                        if (!base) return null;
-                        return (
-                            <li
-                                key={base}
-                                onClick={this.toggleActiveMarketTab.bind(
-                                    this,
-                                    index
-                                )}
-                                className={cnames("mymarkets-tab", {
-                                    active: activeMarketTab === index
-                                })}
-                            >
-                                {base}
-                            </li>
-                        );
-                    })}
+                    ) : null}
                     {myMarketTab && hasOthers ? (
                         <li
                             key={"others"}
@@ -1112,7 +1076,19 @@ class MyMarkets extends React.Component {
                         </li>
                     ) : null}
 
-                    
+                    {/* Quote edit tab */}
+                    {myMarketTab && (
+                        <li
+                            key="quote_edit"
+                            style={{textTransform: "uppercase"}}
+                            onClick={() => {
+                                ZfApi.publish("quote_selection", "open");
+                            }}
+                            className="mymarkets-tab"
+                        >
+                            &nbsp;+&nbsp;
+                        </li>
+                    )}
                 </ul>
 
                 <div
