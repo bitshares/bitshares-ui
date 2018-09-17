@@ -450,6 +450,7 @@ class App extends React.Component {
                         history={this.props.history}
                         showExtendedLogPopup={this.state.showExtendedLogPopup}
                         onClose={this.onClose}
+                        extendedLogText={this.props.extendeLogText}
                     />
                     <ReactTooltip
                         ref="tooltip"

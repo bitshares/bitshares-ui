@@ -50,11 +50,30 @@ class AppInit extends React.Component {
             apiConnected: false,
             apiError: false,
             syncError: null,
-            status: ""
+            status: "",
+            extendeLogText: []
         };
+        this.saveExtendedLog = this.saveExtendedLog.bind(this);
+    }
+
+    componentDidCatch(error) {
+        this.saveExtendedLog(error.stack);
     }
 
     componentWillMount() {
+        var thiz = this;
+        console.log = function() {
+            thiz.saveExtendedLog(arguments[0]);
+        };
+        console.warn = function() {
+            thiz.saveExtendedLog(arguments[0]);
+        };
+        console.error = function() {
+            thiz.saveExtendedLog(arguments[0]);
+        };
+        console.info = function() {
+            thiz.saveExtendedLog(arguments[0]);
+        };
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
@@ -93,6 +112,18 @@ class AppInit extends React.Component {
 
     _statusCallback(status) {
         this.setState({status});
+    }
+
+    saveExtendedLog(logText) {
+        var maxlogslength = 20;
+        var logState = this.state.extendeLogText;
+        if (this.state.extendeLogText.length > maxlogslength) {
+            logState.splice(0, 1);
+        }
+        if (logText.indexOf(logState[this.state.extendeLogText.length - 1])) {
+            logState.push(logText);
+            this.setState({extendeLogText: logState});
+        }
     }
 
     render() {
@@ -135,20 +166,26 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(AppInit, {
-    listenTo() {
-        return [IntlStore, WalletManagerStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            locale: IntlStore.getState().currentLocale,
-            walletMode:
-                !SettingsStore.getState().settings.get("passwordLogin") ||
-                !!WalletManagerStore.getState().current_wallet,
-            theme: SettingsStore.getState().settings.get("themes"),
-            apiServer: SettingsStore.getState().settings.get("activeNode", "")
-        };
+AppInit = connect(
+    AppInit,
+    {
+        listenTo() {
+            return [IntlStore, WalletManagerStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                locale: IntlStore.getState().currentLocale,
+                walletMode:
+                    !SettingsStore.getState().settings.get("passwordLogin") ||
+                    !!WalletManagerStore.getState().current_wallet,
+                theme: SettingsStore.getState().settings.get("themes"),
+                apiServer: SettingsStore.getState().settings.get(
+                    "activeNode",
+                    ""
+                )
+            };
+        }
     }
-});
+);
 AppInit = supplyFluxContext(alt)(AppInit);
 export default hot(module)(AppInit);
