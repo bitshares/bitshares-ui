@@ -17,6 +17,7 @@ import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import ChoiceModal from "../Modal/ChoiceModal";
+import ExtendedLogModal from "../Modal/ExtendedLogModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
@@ -37,15 +38,20 @@ class Footer extends React.Component {
 
         this.state = {
             showNodesPopup: false,
-            showConnectingPopup: false
+            showConnectingPopup: false,
+            showExtendedLogPopup: false
         };
 
         this.confirmOutOfSync = {
             modal: null,
             shownOnce: false
         };
-
+        this.extendedLog = {
+            modal: null,
+            shownOnce: false
+        };
         this.getNode = this.getNode.bind(this);
+        this.onClose = this.props.onClose;
     }
 
     componentDidMount() {
@@ -68,6 +74,23 @@ class Footer extends React.Component {
             nextProps.synced !== this.props.synced ||
             nextState.showNodesPopup !== this.state.showNodesPopup
         );
+    }
+    componentWillReceiveProps(recivedProps) {
+        if (
+            recivedProps.showExtendedLogPopup !==
+            this.state.showExtendedLogPopup
+        ) {
+            this.setState({
+                showExtendedLogPopup: !this.state.showExtendedLogPopup
+            });
+        }
+
+        if (this.state.showExtendedLogPopup) {
+            this._showExtendedLog();
+        } else {
+            this.props.onClose();
+            this.extendedLog.shownOnce = false;
+        }
     }
 
     checkNewVersionAvailable() {
@@ -299,6 +322,15 @@ class Footer extends React.Component {
         }
     }
 
+    _showExtendedLog() {
+        this.extendedLog.shownOnce = true;
+        this.extendedLog.modal.show();
+    }
+    _getConsoleReport() {
+        console.log(window);
+        let temp = 5;
+    }
+
     render() {
         const autoSelectAPI = "wss://fake.automatic-selection.com";
         const {state, props} = this;
@@ -331,7 +363,6 @@ class Footer extends React.Component {
         let logoProps = {};
 
         this._ensureConnectivity();
-
         return (
             <div>
                 {!!routerTransitioner &&
@@ -393,6 +424,26 @@ class Footer extends React.Component {
                         )}
                     </div>
                 </ChoiceModal>
+                <ExtendedLogModal
+                    modalId="footer_extended_log"
+                    ref={thiz => {
+                        this.extendedLog.modal = thiz;
+                    }}
+                    choices={[
+                        {
+                            translationKey: "extended_log.advanced_report",
+                            callback: () => {}
+                        },
+                        {
+                            translationKey: "extended_log.console_report",
+                            callback: () => {
+                                this._getConsoleReport();
+                            }
+                        }
+                    ]}
+                >
+                    <div>EXTENDEDLOG</div>
+                </ExtendedLogModal>
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
                         <div className="grid-block">

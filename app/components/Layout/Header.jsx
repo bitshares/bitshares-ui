@@ -54,6 +54,7 @@ class Header extends React.Component {
         this._toggleAccountDropdownMenu = this._toggleAccountDropdownMenu.bind(
             this
         );
+        this.getExtendedLog = props.getExtendedLog.bind(this);
         this._toggleDropdownMenu = this._toggleDropdownMenu.bind(this);
         this._closeDropdown = this._closeDropdown.bind(this);
         this._closeDropdownSubmenu = this._closeDropdownSubmenu.bind(this);
@@ -1165,6 +1166,10 @@ class Header extends React.Component {
                                 enableDepositWithdraw={enableDepositWithdraw}
                                 showDeposit={this._showDeposit.bind(this)}
                                 showWithdraw={this._showWithdraw.bind(this)}
+                                getExtendedLog={this.getExtendedLog}
+                                closeExtendedLogModal={
+                                    this.closeExtendedLogModal
+                                }
                                 toggleDropdownSubmenu={this._toggleDropdownSubmenu.bind(
                                     this,
                                     SUBMENUS.SETTINGS
@@ -1197,41 +1202,44 @@ class Header extends React.Component {
     }
 }
 
-Header = connect(Header, {
-    listenTo() {
-        return [
-            AccountStore,
-            WalletUnlockStore,
-            WalletManagerStore,
-            SettingsStore,
-            GatewayStore
-        ];
-    },
-    getProps() {
-        const chainID = Apis.instance().chain_id;
-        return {
-            backedCoins: GatewayStore.getState().backedCoins,
-            myActiveAccounts: AccountStore.getState().myActiveAccounts,
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            locked: WalletUnlockStore.getState().locked,
-            current_wallet: WalletManagerStore.getState().current_wallet,
-            lastMarket: SettingsStore.getState().viewSettings.get(
-                `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`
-            ),
-            starredAccounts: AccountStore.getState().starredAccounts,
-            passwordLogin: SettingsStore.getState().settings.get(
-                "passwordLogin"
-            ),
-            currentLocale: SettingsStore.getState().settings.get("locale"),
-            hiddenAssets: SettingsStore.getState().hiddenAssets,
-            settings: SettingsStore.getState().settings,
-            locales: SettingsStore.getState().defaults.locale,
-            contacts: AccountStore.getState().accountContacts
-        };
+Header = connect(
+    Header,
+    {
+        listenTo() {
+            return [
+                AccountStore,
+                WalletUnlockStore,
+                WalletManagerStore,
+                SettingsStore,
+                GatewayStore
+            ];
+        },
+        getProps() {
+            const chainID = Apis.instance().chain_id;
+            return {
+                backedCoins: GatewayStore.getState().backedCoins,
+                myActiveAccounts: AccountStore.getState().myActiveAccounts,
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                locked: WalletUnlockStore.getState().locked,
+                current_wallet: WalletManagerStore.getState().current_wallet,
+                lastMarket: SettingsStore.getState().viewSettings.get(
+                    `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`
+                ),
+                starredAccounts: AccountStore.getState().starredAccounts,
+                passwordLogin: SettingsStore.getState().settings.get(
+                    "passwordLogin"
+                ),
+                currentLocale: SettingsStore.getState().settings.get("locale"),
+                hiddenAssets: SettingsStore.getState().hiddenAssets,
+                settings: SettingsStore.getState().settings,
+                locales: SettingsStore.getState().defaults.locale,
+                contacts: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
 
 export default withRouter(Header);

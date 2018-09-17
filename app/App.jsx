@@ -133,13 +133,16 @@ class App extends React.Component {
             syncFail,
             incognito: false,
             incognitoWarningDismissed: false,
-            height: window && window.innerHeight
+            height: window && window.innerHeight,
+            showExtendedLogPopup: false
         };
 
         this._rebuildTooltips = this._rebuildTooltips.bind(this);
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
         this._getWindowHeight = this._getWindowHeight.bind(this);
+        this.getExtendedLog = this.getExtendedLog.bind(this);
+        this.onClose = this.onClose.bind(this);
     }
 
     componentWillUnmount() {
@@ -305,6 +308,14 @@ class App extends React.Component {
     //     this.refs.notificationSystem.addNotification(params);
     // }
 
+    getExtendedLog() {
+        this.setState({showExtendedLogPopup: true});
+    }
+
+    onClose() {
+        this.setState({showExtendedLogPopup: false});
+    }
+
     render() {
         let {incognito, incognitoWarningDismissed} = this.state;
         let {walletMode, theme, location, match, ...others} = this.props;
@@ -325,7 +336,12 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
-                    <Header height={this.state.height} {...others} />
+                    <Header
+                        height={this.state.height}
+                        {...others}
+                        getExtendedLog={this.getExtendedLog}
+                        closeExtendedLogModal={this.closeExtendedLogModal}
+                    />
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">
                             <Switch>
@@ -432,6 +448,8 @@ class App extends React.Component {
                     <Footer
                         synced={this.state.synced}
                         history={this.props.history}
+                        showExtendedLogPopup={this.state.showExtendedLogPopup}
+                        onClose={this.onClose}
                     />
                     <ReactTooltip
                         ref="tooltip"

@@ -121,7 +121,9 @@ export default class DropDownMenu extends React.Component {
                 {!isMyAccount && showAccountLinks ? (
                     <li
                         className="divider"
-                        onClick={this[isContact ? "_onRemoveContact" : "_onAddContact"].bind(this)}
+                        onClick={this[
+                            isContact ? "_onRemoveContact" : "_onAddContact"
+                        ].bind(this)}
                     >
                         <div className="table-cell">
                             <Icon
@@ -386,6 +388,19 @@ export default class DropDownMenu extends React.Component {
                     </div>
                     <div className="table-cell">
                         <Translate content="header.help" />
+                    </div>
+                </li>
+
+                <li
+                    className="extendedLog"
+                    onClick={this.props.getExtendedLog}
+                    onMouseLeave={this.props.closeExtendedLogModal}
+                >
+                    <div className="table-cell">
+                        <Icon size="2x" />
+                    </div>
+                    <div className="table-cell">
+                        <Translate content="account.log" />
                     </div>
                 </li>
 
