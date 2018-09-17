@@ -98,7 +98,6 @@ class AccountActions {
                             "We have error with transfer mathod: ",
                             error
                         );
-                        reject(error);
                     });
             };
         } catch (error) {
@@ -140,7 +139,6 @@ class AccountActions {
                         "We have error with createAccount mathod: ",
                         error
                     );
-                    reject(error);
                 });
         };
     }
@@ -171,7 +169,6 @@ class AccountActions {
                         "We have error with createAccountWithPassword mathod: ",
                         error
                     );
-                    reject(error);
                 });
         };
     }

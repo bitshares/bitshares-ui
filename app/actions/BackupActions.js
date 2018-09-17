@@ -45,7 +45,6 @@ export function backup(backup_pubkey) {
                 })
                 .catch(error => {
                     console.log("We have error with backup mathod: ", error);
-                    reject(error);
                 })
         );
     });
@@ -78,7 +77,6 @@ export function restore(backup_wif, backup, wallet_name) {
                 })
                 .catch(error => {
                     console.log("We have error with restore mathod: ", error);
-                    reject(error);
                 })
         );
     });

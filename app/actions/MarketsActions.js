@@ -543,7 +543,7 @@ class MarketsActions {
                                 error
                             );
                             dispatch({unSub: false, market: subID});
-                            reject();
+                            reject(error);
                         });
                 });
             }
@@ -772,7 +772,6 @@ class MarketsActions {
                         "Error in MarketsActions.settleOrderUpdate: ",
                         error
                     );
-                    reject(error);
                 });
         };
     }
