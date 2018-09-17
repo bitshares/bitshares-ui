@@ -21,6 +21,7 @@ class ExtendedLogModal extends React.Component {
         this.state = {
             show: false
         };
+        this.onClose = this.onClose.bind(this);
     }
 
     show() {
@@ -30,16 +31,20 @@ class ExtendedLogModal extends React.Component {
 
     confirmClicked(callback, e) {
         e.preventDefault();
-        ZfApi.publish(this.props.modalId, "close");
-        setTimeout(() => {
-            this.setState({show: false});
-        }, 500);
         callback();
+    }
+
+    onClose() {
+        this.props.clearExtendedLogText;
     }
 
     render() {
         return (
-            <BaseModal id={this.props.modalId} overlay={true}>
+            <BaseModal
+                id={this.props.modalId}
+                overlay={true}
+                onClose={this.onClose}
+            >
                 {this.state.show && (
                     <div className="grid-block vertical">
                         {this.props.content}
@@ -72,6 +77,13 @@ class ExtendedLogModal extends React.Component {
                                     <Translate content="account.perm.cancel" />
                                 </div>
                             </Trigger>
+                            <div>
+                                <textarea
+                                    id="extended_log_text"
+                                    rows="20"
+                                    value={this.props.extendedLogText}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}

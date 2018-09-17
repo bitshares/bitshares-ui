@@ -39,7 +39,8 @@ class Footer extends React.Component {
         this.state = {
             showNodesPopup: false,
             showConnectingPopup: false,
-            showExtendedLogPopup: false
+            showExtendedLogPopup: false,
+            extendedLogText: []
         };
 
         this.confirmOutOfSync = {
@@ -326,9 +327,13 @@ class Footer extends React.Component {
         this.extendedLog.shownOnce = true;
         this.extendedLog.modal.show();
     }
+
     _getConsoleReport() {
-        console.log(window);
-        let temp = 5;
+        this.setState({extendedLogText: this.props.extendedLogText});
+    }
+
+    clearExtendedLogText() {
+        this.setState({extendedLogText: []});
     }
 
     render() {
@@ -432,7 +437,9 @@ class Footer extends React.Component {
                     choices={[
                         {
                             translationKey: "extended_log.advanced_report",
-                            callback: () => {}
+                            callback: () => {
+                                this.clearExtendedLogText();
+                            }
                         },
                         {
                             translationKey: "extended_log.console_report",
@@ -441,8 +448,10 @@ class Footer extends React.Component {
                             }
                         }
                     ]}
+                    extendedLogText={this.state.extendedLogText}
+                    clearExtendedLogText={this.clearExtendedLogText()}
                 >
-                    <div>EXTENDEDLOG</div>
+                    <div>EXTENDED LOG</div>
                 </ExtendedLogModal>
                 <div className="show-for-medium grid-block shrink footer">
                     <div className="align-justify grid-block">
