@@ -870,27 +870,65 @@ class Operation extends React.Component {
                 break;
 
             case "proposal_update":
+                const fields = [
+                    "active_approvals_to_add",
+                    "active_approvals_to_remove",
+                    "owner_approvals_to_add",
+                    "owner_approvals_to_remove",
+                    "key_approvals_to_add",
+                    "key_approvals_to_remove"
+                ];
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="operation.proposal_update"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].fee_paying_account,
-                                    arg: "account"
-                                },
-                                {
-                                    value: (
-                                        <ShortObjectId
-                                            objectId={op[1].proposal}
-                                        />
-                                    ),
-                                    arg: "proposal"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <div>
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.proposal_update"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].fee_paying_account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        value: (
+                                            <ShortObjectId
+                                                objectId={op[1].proposal}
+                                            />
+                                        ),
+                                        arg: "proposal"
+                                    }
+                                ]}
+                            />
+                        </span>
+                        <div className="proposal-update">
+                            {fields.map(field => {
+                                if (op[1][field].length) {
+                                    return (
+                                        <div key={field}>
+                                            <Translate
+                                                content={`proposal.updated.${field}`}
+                                            />
+                                            <ul>
+                                                {op[1][field].map(value => {
+                                                    return (
+                                                        <li key={value}>
+                                                            {field.startsWith(
+                                                                "key"
+                                                            )
+                                                                ? value
+                                                                : this.linkToAccount(
+                                                                      value
+                                                                  )}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
+                                    );
+                                } else return null;
+                            })}
+                        </div>
+                    </div>
                 );
                 break;
 
