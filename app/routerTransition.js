@@ -292,7 +292,7 @@ class RouterTransitioner {
             url: connectionString,
             urls: urls,
             closeCb: this._onConnectionClose.bind(this),
-            optionalApis: {enableOrders: !__TESTNET__ && !__DEVNET__},
+            optionalApis: {enableOrders: true},
             urlChangeCallback: url => {
                 console.log("fallback to new url:", url);
                 SettingsActions.changeSetting({
