@@ -446,6 +446,10 @@ class AccountAssetUpdate extends React.Component {
                 bitasset_opts[value] = e;
                 break;
 
+            case "minimum_feeds":
+                bitasset_opts[value] = parseInt(e.target.value, 10);
+                break;
+
             default:
                 break;
         }
