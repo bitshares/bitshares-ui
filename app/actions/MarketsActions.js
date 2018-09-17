@@ -766,6 +766,13 @@ class MarketsActions {
                     dispatch({
                         settles: result
                     });
+                })
+                .catch(error => {
+                    console.log(
+                        "Error in MarketsActions.settleOrderUpdate: ",
+                        error
+                    );
+                    reject(error);
                 });
         };
     }

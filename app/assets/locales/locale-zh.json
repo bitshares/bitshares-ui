@@ -1177,6 +1177,12 @@
             "submit": "提现",
             "submit_beta": "Withdraw (beta)",
             "withdraw": "Withdraw"
+        },
+        "report": {
+            "button": "Report about errors",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {

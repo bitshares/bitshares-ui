@@ -87,11 +87,19 @@ class AccountActions {
                     memo,
                     propose_account,
                     fee_asset_id
-                }).then(result => {
-                    // console.log( "transfer result: ", result )
+                })
+                    .then(result => {
+                        // console.log( "transfer result: ", result )
 
-                    dispatch(result);
-                });
+                        dispatch(result);
+                    })
+                    .catch(error => {
+                        console.log(
+                            "We have error with transfer mathod: ",
+                            error
+                        );
+                        reject(error);
+                    });
             };
         } catch (error) {
             console.log(
@@ -122,10 +130,18 @@ class AccountActions {
                 referrer,
                 referrer_percent,
                 refcode
-            ).then(() => {
-                dispatch(account_name);
-                return account_name;
-            });
+            )
+                .then(() => {
+                    dispatch(account_name);
+                    return account_name;
+                })
+                .catch(error => {
+                    console.log(
+                        "We have error with createAccount mathod: ",
+                        error
+                    );
+                    reject(error);
+                });
         };
     }
 
@@ -145,10 +161,18 @@ class AccountActions {
                 referrer,
                 referrer_percent,
                 refcode
-            ).then(() => {
-                dispatch(account_name);
-                return account_name;
-            });
+            )
+                .then(() => {
+                    dispatch(account_name);
+                    return account_name;
+                })
+                .catch(error => {
+                    console.log(
+                        "We have error with createAccountWithPassword mathod: ",
+                        error
+                    );
+                    reject(error);
+                });
         };
     }
 

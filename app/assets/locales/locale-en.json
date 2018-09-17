@@ -455,8 +455,7 @@
         "buy": "Buy",
         "buy_sell": "Buy/Sell",
         "buy_quick": "Quick Buy",
-        "buy_description":
-            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
@@ -1199,6 +1198,12 @@
             "submit": "Withdraw",
             "submit_beta": "Withdraw (beta)",
             "withdraw": "Withdraw"
+        },
+        "report": {
+            "button": "Report about errors",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {

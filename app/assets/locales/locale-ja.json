@@ -1177,6 +1177,12 @@
             "submit": "出金",
             "submit_beta": "出金 (ベータ)",
             "withdraw": "出金"
+        },
+        "report": {
+            "button": "レポートについてのレポート",
+            "takeScreenshot": "Take screenshot",
+            "copyErrors": "Copy errors",
+            "copySuccess": "Copy ended"
         }
     },
     "news": {
@@ -1657,11 +1663,6 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
-    },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
         "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {

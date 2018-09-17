@@ -14,6 +14,7 @@ import LoadingIndicator from "./components/LoadingIndicator";
 import InitError from "./components/InitError";
 import SyncError from "./components/SyncError";
 import counterpart from "counterpart";
+import LogsActions from "actions/LogsActions";
 
 /*
 * Electron does not support browserHistory, so we need to use hashHistory.
@@ -54,7 +55,41 @@ class AppInit extends React.Component {
         };
     }
 
+    componentDidCatch(error, errorInfo) {
+        LogsActions.setLog({
+            type: "query",
+            log: {error, errorInfo}
+        });
+    }
+
     componentWillMount() {
+        const saveLog = (type, log) => {
+            LogsActions.setLog({type, log: Array.from(log)});
+            console[`str${type}`].apply(console, arguments);
+        };
+
+        console.strlog = console.log.bind(console);
+        console.strerror = console.error.bind(console);
+        console.strwarn = console.warn.bind(console);
+        console.strinfo = console.info.bind(console);
+
+        console.log = function() {
+            saveLog("log", arguments);
+        };
+        console.warn = function() {
+            saveLog("warn", arguments);
+        };
+        console.error = function() {
+            saveLog("error", arguments);
+        };
+        console.info = function() {
+            saveLog("info", arguments);
+        };
+
+        window.onerror = function(errorMsg, url, lineNumber) {
+            saveLog("window.onerror", {errorMsg, url, lineNumber});
+        };
+
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
                 this.setState({
@@ -135,20 +170,26 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(AppInit, {
-    listenTo() {
-        return [IntlStore, WalletManagerStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            locale: IntlStore.getState().currentLocale,
-            walletMode:
-                !SettingsStore.getState().settings.get("passwordLogin") ||
-                !!WalletManagerStore.getState().current_wallet,
-            theme: SettingsStore.getState().settings.get("themes"),
-            apiServer: SettingsStore.getState().settings.get("activeNode", "")
-        };
+AppInit = connect(
+    AppInit,
+    {
+        listenTo() {
+            return [IntlStore, WalletManagerStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                locale: IntlStore.getState().currentLocale,
+                walletMode:
+                    !SettingsStore.getState().settings.get("passwordLogin") ||
+                    !!WalletManagerStore.getState().current_wallet,
+                theme: SettingsStore.getState().settings.get("themes"),
+                apiServer: SettingsStore.getState().settings.get(
+                    "activeNode",
+                    ""
+                )
+            };
+        }
     }
-});
+);
 AppInit = supplyFluxContext(alt)(AppInit);
 export default hot(module)(AppInit);
