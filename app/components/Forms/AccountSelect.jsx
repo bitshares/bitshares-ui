@@ -44,7 +44,9 @@ export default class AccountSelect extends React.Component {
         var selected_account = this.props.selected;
         var placeholder = this.props.placeholder || this.default_placeholder;
         var ikey;
-        if (this.props.list_size > 1) {
+        if (account_names.length === 1) {
+            placeholder = null;
+        } else if (this.props.list_size > 1) {
             placeholder = (
                 <option value="" disabled>
                     {placeholder}
