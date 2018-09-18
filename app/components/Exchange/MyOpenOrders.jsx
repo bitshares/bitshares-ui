@@ -362,7 +362,7 @@ class MyOpenOrders extends React.Component {
             }
             if (contentContainer) contentContainer.scrollTop = 0;
         }
-        
+
         return (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
@@ -390,7 +390,7 @@ class MyOpenOrders extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let contentContainer = this.refs.container;
-        
+
         if(nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
             Ps.destroy(contentContainer);
         }
@@ -587,9 +587,9 @@ class MyOpenOrders extends React.Component {
             }
 
             contentContainer = (
-                <TransitionWrapper 
+                <TransitionWrapper
                     ref="contentTransition"
-                    component="tbody" 
+                    component="tbody"
                     transitionName="newrow"
                 >
                     {rows.length ? rows : emptyRow}

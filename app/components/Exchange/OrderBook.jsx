@@ -12,7 +12,7 @@ import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
 import {
-    Select, 
+    Select,
     Icon as AntIcon
 } from "bitshares-ui-style-guide";
 
@@ -43,8 +43,8 @@ class OrderRows extends React.Component {
                     : noOrders || (
                         <div className="sticky-table-row">
                             <td className="cell no-orders" colSpan="3">
-                                {isBid 
-                                    ? <Translate content="exchange.no_bids" /> 
+                                {isBid
+                                    ? <Translate content="exchange.no_bids" />
                                     : <Translate content="exchange.no_asks" />
                                 }
                             </td>
@@ -318,15 +318,15 @@ class GroupOrderLimitSelector extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(props) { 
-        return {groupLimit: props.currentGroupOrderLimit}; 
+    static getDerivedStateFromProps(props) {
+        return {groupLimit: props.currentGroupOrderLimit};
     }
 
     render() {
         const noGroupsAvailable = this.props.trackedGroupsConfig.length === 0;
         const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
             key => (
-                this.props.globalSettingsSelector ? 
+                this.props.globalSettingsSelector ?
                     <Select.Option value={key} key={key}>
                         {`${key / 100}%`}
                     </Select.Option>
@@ -340,7 +340,7 @@ class GroupOrderLimitSelector extends React.Component {
         if(this.props.globalSettingsSelector) {
             return (
                 <Select
-                    placeholder="Select option" 
+                    placeholder="Select option"
                     style={{width: "100%"}}
                     value={this.props.currentGroupOrderLimit}
                     disabled={noGroupsAvailable}
@@ -394,8 +394,8 @@ class OrderBook extends React.Component {
             rowCount: 20,
             autoScroll: props.autoScroll,
         };
-        this.verticalStickyTable = React.createRef(); 
-        this.centerText = React.createRef(); 
+        this.verticalStickyTable = React.createRef();
+        this.centerText = React.createRef();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -419,7 +419,7 @@ class OrderBook extends React.Component {
 
         if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllBids != this.state.showAllBids) {
             let bidsContainer = this.refs.hor_bids;
-            if(!nextState.showAllBids) { 
+            if(!nextState.showAllBids) {
                 Ps.destroy(bidsContainer);
             } else {
                 Ps.initialize(bidsContainer);
@@ -475,12 +475,12 @@ class OrderBook extends React.Component {
             this.psUpdate();
         }
 
-        this.centerVerticalScrollBar(); 
+        this.centerVerticalScrollBar();
     }
 
     queryStickyTable = query => {
-        return this.verticalStickyTable.current.table.querySelector(query); 
-    }; 
+        return this.verticalStickyTable.current.table.querySelector(query);
+    };
 
     verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
 
@@ -498,32 +498,32 @@ class OrderBook extends React.Component {
     }
 
     centerVerticalScrollBar() {
-        if (!this.props.horizontal && this.state.autoScroll) { 
-            // Center vertical scroll bar 
-            const scrollableContainer = this.queryStickyTable( 
-                "#sticky-table-y-wrapper" 
+        if (!this.props.horizontal && this.state.autoScroll) {
+            // Center vertical scroll bar
+            const scrollableContainer = this.queryStickyTable(
+                "#sticky-table-y-wrapper"
             );
-            const header = this.queryStickyTable("#sticky-table-header"); 
-            const centerTextContainer = this.centerText.current; 
-            const singleAskHeight = elemHeight( 
-                this.queryStickyTable(".order-row") 
+            const header = this.queryStickyTable("#sticky-table-header");
+            const centerTextContainer = this.centerText.current;
+            const singleAskHeight = elemHeight(
+                this.queryStickyTable(".order-row")
             );
 
             let asks = this.props.currentGroupOrderLimit !== 0
                 ? this.props.groupedAsks
                 : this.props.combinedAsks;
 
-            const asksHeight = asks.length * singleAskHeight; 
+            const asksHeight = asks.length * singleAskHeight;
 
-            const scrollableContainerHeight = 
-                elemHeight(scrollableContainer) - elemHeight(header); 
+            const scrollableContainerHeight =
+                elemHeight(scrollableContainer) - elemHeight(header);
 
-            const scrollTo = 
-                asksHeight + 
-                elemHeight(centerTextContainer) / 2 - 
-                scrollableContainerHeight / 2; 
+            const scrollTo =
+                asksHeight +
+                elemHeight(centerTextContainer) / 2 -
+                scrollableContainerHeight / 2;
 
-            scrollableContainer.scrollTop = scrollTo; 
+            scrollableContainer.scrollTop = scrollTo;
         }
     }
 
@@ -592,7 +592,7 @@ class OrderBook extends React.Component {
      */
 
     toggleAutoScroll = () => {
-        this.setState({autoScroll: !this.state.autoScroll}); 
+        this.setState({autoScroll: !this.state.autoScroll});
     };
 
     /***
@@ -1210,7 +1210,7 @@ class OrderBook extends React.Component {
                     <StickyTable
                         stickyColumnCount={0}
                         className="order-table table"
-                        ref={this.verticalStickyTable} 
+                        ref={this.verticalStickyTable}
                     >
                         <div className="sticky-table-row top-header">
                             <div className="cell header-cell left">
@@ -1295,8 +1295,8 @@ class OrderBook extends React.Component {
                                                         }
                                                         style={{marginLeft: 0}}
                                                     />&nbsp;
-                                                    {currentGroupOrderLimit == 0 ? 
-                                                        null : 
+                                                    {currentGroupOrderLimit == 0 ?
+                                                        null :
                                                         <Icon
                                                             name="grouping"
                                                             className="icon-14px"

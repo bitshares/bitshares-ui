@@ -77,7 +77,7 @@ class MarketHistory extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let historyContainer = this.refs.history;
-        
+
         if(nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
             Ps.destroy(historyContainer);
         }
@@ -242,10 +242,10 @@ class MarketHistory extends React.Component {
                             style={this.props.headerStyle}
                             className="exchange-content-header"
                         >
-                            {activeTab === "my_history" ? 
+                            {activeTab === "my_history" ?
                                 <Translate content="exchange.my_history" />
                                 : null}
-                            {activeTab === "history" ? 
+                            {activeTab === "history" ?
                                 <Translate content="exchange.history" />
                                 : null}
                         </div>

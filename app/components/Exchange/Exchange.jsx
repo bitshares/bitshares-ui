@@ -272,7 +272,7 @@ class Exchange extends React.Component {
     /*
     * Force re-rendering component when state changes.
     * This is required for an updated value of component width
-    * 
+    *
     * It will trigger a re-render twice
     * - Once when state is changed
     * - Once when forceReRender is set to false
@@ -298,7 +298,7 @@ class Exchange extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         this._forceRender(np, ns);
-        
+
         if (!np.marketReady && !this.props.marketReady) {
             return false;
         }
@@ -316,7 +316,7 @@ class Exchange extends React.Component {
         for (let key in ns.panelTabsActive) {
             stateChanged = !utils.are_equal_shallow(ns.panelTabsActive[key], this.state.panelTabsActive[key]);
         }
-        return propsChanged || 
+        return propsChanged ||
             stateChanged ||
             !utils.are_equal_shallow(ns, this.state);
     }
@@ -899,14 +899,14 @@ class Exchange extends React.Component {
         {
             e.preventDefault();
             groupLimit = parseInt(e.target.value);
-        }    
+        }
 
         if (typeof(e) == "number")
             groupLimit = parseInt(e);
-        
-        
+
+
         MarketsActions.changeCurrentGroupLimit(groupLimit);
-        
+
         if (groupLimit !== this.props.currentGroupOrderLimit) {
             MarketsActions.changeCurrentGroupLimit(groupLimit);
             let currentSub = this.props.sub.split("_");
@@ -961,14 +961,14 @@ class Exchange extends React.Component {
     }
 
     /**
-     * 
+     *
      * @param {string} panel - Panel to toggle
      */
     _togglePanel(panel) {
         if (!panel) return;
 
         let newState = [];
-        
+
         this.state.activePanels.forEach(a => {
             if (a !== panel) {
                 newState.push(a);
@@ -987,7 +987,7 @@ class Exchange extends React.Component {
             activePanels: newState
         });
     }
-   
+
     _toggleChart(value) {
         this.setState({
             chartType: value
@@ -1056,8 +1056,8 @@ class Exchange extends React.Component {
     }
 
     _toggleSettings() {
-        if(!this.state.showSettings) { 
-            this.refs.settingsModal.show(); 
+        if(!this.state.showSettings) {
+            this.refs.settingsModal.show();
         }
 
         this.setState({showSettings: !this.state.showSettings});
@@ -1507,10 +1507,10 @@ class Exchange extends React.Component {
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
         let centerContainerWidth = 0;
-        if(this.refs.center) { 
-            centerContainerWidth = this.refs.center.clientWidth; 
+        if(this.refs.center) {
+            centerContainerWidth = this.refs.center.clientWidth;
         }
-        
+
 
         let base = null,
             quote = null,
@@ -1647,9 +1647,9 @@ class Exchange extends React.Component {
                 styles={{paddingRight: mirrorPanels ? 15 : 0}}
                 className={cnames(
                     verticalOrderForm && !smallScreen ? "" :
-                        centerContainerWidth > 1200 
+                        centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
                     "small-12 no-padding middle-content",
@@ -1718,7 +1718,7 @@ class Exchange extends React.Component {
                 }
                 moveOrderForm={
                     !smallScreen && (!this.state.flipBuySell || verticalOrderForm)
-                        ? this._moveOrderForm.bind(this) 
+                        ? this._moveOrderForm.bind(this)
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
@@ -1746,9 +1746,9 @@ class Exchange extends React.Component {
                 styles={{paddingRight: mirrorPanels ? 15 : 0}}
                 className={cnames(
                     verticalOrderForm && !smallScreen ? "" :
-                        centerContainerWidth > 1200 
+                        centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
                     "small-12 no-padding middle-content",
@@ -1808,7 +1808,7 @@ class Exchange extends React.Component {
                     "is_prediction_market"
                 ])}
                 onFlip={
-                    this.state.flipBuySell 
+                    this.state.flipBuySell
                         ? this._flipBuySell.bind(this)
                         : null
                 }
@@ -1819,7 +1819,7 @@ class Exchange extends React.Component {
                 }
                 moveOrderForm={
                     !smallScreen && (this.state.flipBuySell || verticalOrderForm)
-                        ? this._moveOrderForm.bind(this) 
+                        ? this._moveOrderForm.bind(this)
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
@@ -1924,7 +1924,7 @@ class Exchange extends React.Component {
             // Doesn't scale backwards
             // panelWidth = this.refs.order_book.refs.vertical_sticky_table.scrollData.scrollWidth;
             // panelWidth = 350;
-        // } 
+        // }
 
         panelWidth = 350;
 
@@ -1932,12 +1932,12 @@ class Exchange extends React.Component {
             <MarketHistory
                 key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
-                    panelTabs["history"] == 0 
-                        ? centerContainerWidth > 1200 
+                    panelTabs["history"] == 0
+                        ? centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
-                                : "" 
+                                : ""
                         : "medium-12",
                     "no-padding no-overflow middle-content small-12 order-6",
                 )}
@@ -1962,12 +1962,12 @@ class Exchange extends React.Component {
             <MarketHistory
                 key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
-                    panelTabs["my_history"] == 0 
-                        ? centerContainerWidth > 1200 
+                    panelTabs["my_history"] == 0
+                        ? centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
-                                : "" 
+                                : ""
                         : "medium-12",
                     "no-padding no-overflow middle-content small-12 order-5",
                 )}
@@ -1993,12 +1993,12 @@ class Exchange extends React.Component {
                 key={`actionCard_${actionCardIndex++}`}
                 style={{marginBottom: !tinyScreen ? 15 : 0}}
                 className={cnames(
-                    panelTabs["my_orders"] == 0 
-                        ? centerContainerWidth > 1200 
+                    panelTabs["my_orders"] == 0
+                        ? centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
-                                : "" 
+                                : ""
                         : "medium-12",
                     "no-padding no-overflow middle-content small-12 order-7",
                 )}
@@ -2029,12 +2029,12 @@ class Exchange extends React.Component {
                 key={`actionCard_${actionCardIndex++}`}
                 style={{marginBottom: !tinyScreen ? 15 : 0}}
                 className={cnames(
-                    panelTabs["open_settlement"] == 0 
-                        ? centerContainerWidth > 1200 
+                    panelTabs["open_settlement"] == 0
+                        ? centerContainerWidth > 1200
                             ? "medium-6 large-6 xlarge-4"
-                            :  centerContainerWidth > 800 
+                            :  centerContainerWidth > 800
                                 ? "medium-6"
-                                : "" 
+                                : ""
                         : "medium-12",
                     "no-padding no-overflow middle-content small-12 order-8",
                 )}
@@ -2211,7 +2211,7 @@ class Exchange extends React.Component {
         let groupStandalone = [];
 
         Object.keys(panelTabs).map((a) => {
-            if(panelTabs[a] == 0) { 
+            if(panelTabs[a] == 0) {
                 // Handle Standalone Settings
                 if(a == "my_history") {
                     groupStandalone.push(myMarketHistory);
@@ -2229,14 +2229,14 @@ class Exchange extends React.Component {
                     groupStandalone.push(settlementOrders);
                 }
             } else {
-                if (a == "my_history") { 
+                if (a == "my_history") {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane tab={translator.translate("exchange.my_history")} key="my_history">
                             {myMarketHistory}
                         </Tabs.TabPane>
                     );
                 }
-    
+
                 if (a == "history") {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane tab={translator.translate("exchange.history")} key="history">
@@ -2244,7 +2244,7 @@ class Exchange extends React.Component {
                         </Tabs.TabPane>
                     );
                 }
-    
+
                 if (a == "my_orders") {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane tab={translator.translate("exchange.my_orders")} key="my_orders">
@@ -2252,7 +2252,7 @@ class Exchange extends React.Component {
                         </Tabs.TabPane>
                     );
                 }
-    
+
                 if (a == "open_settlement") {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane tab={translator.translate("exchange.settle_orders")} key="open_settlement">
@@ -2278,16 +2278,16 @@ class Exchange extends React.Component {
                 key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
                     verticalOrderBook || verticalOrderForm ? "" : "xlarge-order-2",
-                    centerContainerWidth > 1200 
+                    centerContainerWidth > 1200
                         ? "medium-6 large-6 xlarge-4"
-                        :  centerContainerWidth > 800 
+                        :  centerContainerWidth > 800
                             ? "medium-6"
                             : "",
                     "small-12 order-5"
                 )}
                 style={{paddingRight: 5}}
             >
-                <Tabs 
+                <Tabs
                     activeKey={panelTabsActive[1]}
                     onChange={this._setPanelTabInGroup.bind(this,1)}
                 >
@@ -2300,16 +2300,16 @@ class Exchange extends React.Component {
             <div
                 key={`actionCard_${actionCardIndex++}`}
                 className={cnames(
-                    centerContainerWidth > 1200 
+                    centerContainerWidth > 1200
                         ? "medium-6 large-6 xlarge-4"
-                        :  centerContainerWidth > 800 
+                        :  centerContainerWidth > 800
                             ? "medium-6"
                             : "",
                     "small-12 order-6"
                 )}
                 style={{paddingRight: 5}}
             >
-                <Tabs 
+                <Tabs
                     activeKey={panelTabsActive[2]}
                     onChange={this._setPanelTabInGroup.bind(this,2)}
                 >
@@ -2343,11 +2343,11 @@ class Exchange extends React.Component {
             actionCards.push(myMarkets);
         } else {
             actionCards = (
-                <Collapse 
-                    activeKey={this.state.mobileKey} 
+                <Collapse
+                    activeKey={this.state.mobileKey}
                     onChange={this._onChangeMobilePanel.bind(this)}
                 >
-                    {chartType && chartType == "price_chart" ? 
+                    {chartType && chartType == "price_chart" ?
                         <Collapse.Panel header={translator.translate("exchange.price_history")} key="tradingViewChart">
                             {tradingViewChart}
                         </Collapse.Panel>
@@ -2440,7 +2440,7 @@ class Exchange extends React.Component {
             if((!mirrorPanels && leftPanel) || (mirrorPanels && rightPanel)) { enableToggleLeft = true; }
             if((!mirrorPanels && rightPanel) || (mirrorPanels && leftPanel)) { enableToggleRight = true; }
 
-            leftPanelContainer = 
+            leftPanelContainer =
                 <div className="grid-block left-column shrink no-overflow">
                     {activePanels.includes("left") ? mirrorPanels ? rightPanel : leftPanel : null}
                     {enableToggleLeft ? (
@@ -2459,7 +2459,7 @@ class Exchange extends React.Component {
                 </div>
             ;
 
-            rightPanelContainer = 
+            rightPanelContainer =
                 <div className="grid-block left-column shrink no-overflow">
                     {enableToggleRight ? (
                         <div

@@ -44,11 +44,11 @@ class BuySell extends React.Component {
         };
     }
 
-    
+
     /*
     * Force re-rendering component when state changes.
     * This is required for an updated value of component width
-    * 
+    *
     * It will trigger a re-render twice
     * - Once when state is changed
     * - Once when forceReRender is set to false
@@ -135,7 +135,7 @@ class BuySell extends React.Component {
 
         let clientWidth = this.refs.order_form ? this.refs.order_form.clientWidth : 0;
         let singleColumnForm = clientWidth < 450 ? true : false;
-        
+
         let amount, price, total;
 
         if (this.props.amount) amount = this.props.amount;
@@ -188,9 +188,9 @@ class BuySell extends React.Component {
         const {name: baseName, prefix: basePrefix} = utils.replaceName(
             this.props.base
         );
-        var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? 
+        var baseMarketFee = baseFlagBooleans["charge_market_fee"] ?
             verticalOrderForm ?
-                <div 
+                <div
                     data-tip={counterpart.translate("tooltip.market_fee", {percent: baseMarketFeePercent,asset: (basePrefix || "") + baseName})}
                     className="grid-block no-overflow wrap shrink"
                 >
@@ -198,7 +198,7 @@ class BuySell extends React.Component {
                         <Translate content="explorer.asset.summary.market_fee" />, {baseMarketFeePercent}
                     </div>
                     <div className="inputAddon small-12">
-                        <ExchangeInput 
+                        <ExchangeInput
                             placeholder="0.0"
                             id="baseMarketFee"
                             defaultValue={baseFee}
@@ -211,7 +211,7 @@ class BuySell extends React.Component {
                     </div>
                 </div>
                 : singleColumnForm ?
-                    <div 
+                    <div
                         data-tip={counterpart.translate("tooltip.market_fee", {percent: baseMarketFeePercent,asset: (basePrefix || "") + baseName})}
                         className="grid-block no-overflow wrap shrink"
                     >
@@ -219,7 +219,7 @@ class BuySell extends React.Component {
                             <Translate content="explorer.asset.summary.market_fee" />, {baseMarketFeePercent}
                         </div>
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 placeholder="0.0"
                                 id="baseMarketFee"
                                 defaultValue={baseFee}
@@ -232,7 +232,7 @@ class BuySell extends React.Component {
                         </div>
                     </div>
                     :
-                    <div 
+                    <div
                         data-tip={counterpart.translate("tooltip.market_fee", {percent: baseMarketFeePercent,asset: (basePrefix || "") + baseName})}
                         className="grid-block no-overflow wrap shrink"
                     >
@@ -240,7 +240,7 @@ class BuySell extends React.Component {
                             <Translate content="explorer.asset.summary.market_fee" />, {baseMarketFeePercent}
                         </div>
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 placeholder="0.0"
                                 id="baseMarketFee"
                                 defaultValue={baseFee}
@@ -257,9 +257,9 @@ class BuySell extends React.Component {
         const {name: quoteName, prefix: quotePrefix} = utils.replaceName(
             this.props.quote
         );
-        var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? 
-            verticalOrderForm ? 
-                <div 
+        var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ?
+            verticalOrderForm ?
+                <div
                     data-tip={counterpart.translate("tooltip.market_fee", {percent: quoteMarketFeePercent, asset: (quotePrefix || "") + quoteName})}
                     className="grid-block no-overflow wrap shrink"
                 >
@@ -267,7 +267,7 @@ class BuySell extends React.Component {
                         <Translate content="explorer.asset.summary.market_fee" />, {quoteMarketFeePercent}
                     </div>
                     <div className="inputAddon small-12">
-                        <ExchangeInput 
+                        <ExchangeInput
                             placeholder="0.0"
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
@@ -280,7 +280,7 @@ class BuySell extends React.Component {
                     </div>
                 </div>
                 : singleColumnForm ? (
-                    <div 
+                    <div
                         data-tip={counterpart.translate("tooltip.market_fee", {percent: quoteMarketFeePercent, asset: (quotePrefix || "") + quoteName})}
                         className="grid-block no-overflow wrap shrink"
                     >
@@ -288,7 +288,7 @@ class BuySell extends React.Component {
                             <Translate content="explorer.asset.summary.market_fee" />, {quoteMarketFeePercent}
                         </div>
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 placeholder="0.0"
                                 id="quoteMarketFee"
                                 defaultValue={quoteFee}
@@ -301,7 +301,7 @@ class BuySell extends React.Component {
                         </div>
                     </div>
                 ) : (
-                    <div 
+                    <div
                         data-tip={counterpart.translate("tooltip.market_fee", {percent: quoteMarketFeePercent, asset: (quotePrefix || "") + quoteName})}
                         className="grid-block no-overflow wrap shrink"
                     >
@@ -309,7 +309,7 @@ class BuySell extends React.Component {
                             <Translate content="explorer.asset.summary.market_fee" />, {quoteMarketFeePercent}
                         </div>
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 placeholder="0.0"
                                 id="quoteMarketFee"
                                 defaultValue={quoteFee}
@@ -440,12 +440,12 @@ class BuySell extends React.Component {
 
         // OrderForm is in panel
         if (verticalOrderForm) {
-            formContent = 
+            formContent =
                 <div className={containerClass}>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-12 buy-sell-label" content="exchange.price" />
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Price`}
                                 value={price}
                                 onChange={priceChange}
@@ -471,12 +471,12 @@ class BuySell extends React.Component {
                         {/*  */}
                         <Translate className="small-12 buy-sell-label" content="transfer.amount" />
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Amount`}
                                 value={amount}
                                 onChange={amountChange}
                                 autoComplete="off"
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName
@@ -484,19 +484,19 @@ class BuySell extends React.Component {
                                             name={quote.get("symbol")}
                                         />
                                     </span>
-                                } 
+                                }
                             />
                         </div>
                     </div>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-12 buy-sell-label" content="exchange.total" />
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Total`}
                                 value={total}
                                 onChange={totalChange}
                                 autoComplete="off"
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName
@@ -504,16 +504,16 @@ class BuySell extends React.Component {
                                             name={base.get("symbol")}
                                         />
                                     </span>
-                                } 
+                                }
                             />
                         </div>
                     </div>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-12 buy-sell-label" content="transfer.fee" />
                         <div className="inputAddon small-12">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Fee`}
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 defaultValue={
                                     !hasFeeBalance
                                         ? counterpart.translate(
@@ -523,7 +523,7 @@ class BuySell extends React.Component {
                                 }
                                 disabled
                                 addonAfter={
-                                    <Select 
+                                    <Select
                                         style={{width: 100, fontSize: "75%"}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
@@ -540,12 +540,12 @@ class BuySell extends React.Component {
                     {marketFee}
                 </div>;
         } else {
-            formContent = singleColumnForm ? 
+            formContent = singleColumnForm ?
                 <div className={containerClass}>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-3 buy-sell-label" content="exchange.price" />
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Price`}
                                 value={price}
                                 onChange={priceChange}
@@ -571,12 +571,12 @@ class BuySell extends React.Component {
                         {/*  */}
                         <Translate className="small-3 buy-sell-label" content="transfer.amount" />
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Amount`}
                                 value={amount}
                                 onChange={amountChange}
                                 autoComplete="off"
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName
@@ -584,19 +584,19 @@ class BuySell extends React.Component {
                                             name={quote.get("symbol")}
                                         />
                                     </span>
-                                } 
+                                }
                             />
                         </div>
                     </div>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-3 buy-sell-label" content="exchange.total" />
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Total`}
                                 value={total}
                                 onChange={totalChange}
                                 autoComplete="off"
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName
@@ -604,16 +604,16 @@ class BuySell extends React.Component {
                                             name={base.get("symbol")}
                                         />
                                     </span>
-                                } 
+                                }
                             />
                         </div>
                     </div>
                     <div className="grid-block no-overflow wrap shrink">
                         <Translate className="small-3 buy-sell-label" content="transfer.fee" />
                         <div className="inputAddon small-9">
-                            <ExchangeInput 
+                            <ExchangeInput
                                 id={`${type}Fee`}
-                                placeholder="0.0" 
+                                placeholder="0.0"
                                 value={
                                     !hasFeeBalance
                                         ? counterpart.translate(
@@ -623,7 +623,7 @@ class BuySell extends React.Component {
                                 }
                                 disabled
                                 addonAfter={
-                                    <Select 
+                                    <Select
                                         style={{width: 100, fontSize: "75%"}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
@@ -658,15 +658,15 @@ class BuySell extends React.Component {
                                             currentPriceObject.sellPrice()
                                         )}
                                     >
-                                        <PriceText 
-                                            price={currentPrice} 
-                                            quote={quote} 
+                                        <PriceText
+                                            price={currentPrice}
+                                            quote={quote}
                                             base={base} />{" "}
                                     </span>
                                 </div>
                             </div>
                             <div className="inputAddon small-11">
-                                <ExchangeInput 
+                                <ExchangeInput
                                     id={`${type}Price`}
                                     value={price}
                                     onChange={priceChange}
@@ -712,14 +712,14 @@ class BuySell extends React.Component {
                                     </span>
                                 </div>
                             </div>
-                            
+
                             <div className="inputAddon small-12">
-                                <ExchangeInput 
+                                <ExchangeInput
                                     id={`${type}Total`}
                                     value={total}
                                     onChange={totalChange}
                                     autoComplete="off"
-                                    placeholder="0.0" 
+                                    placeholder="0.0"
                                     addonAfter={
                                         <span style={{fontSize: "75%"}}>
                                             <AssetName
@@ -727,7 +727,7 @@ class BuySell extends React.Component {
                                                 name={base.get("symbol")}
                                             />
                                         </span>
-                                    } 
+                                    }
                                 />
                             </div>
                         </div>
@@ -738,12 +738,12 @@ class BuySell extends React.Component {
                             {/*  */}
                             <Translate className="small-3 buy-sell-label" content="transfer.amount" />
                             <div className="inputAddon small-11">
-                                <ExchangeInput 
+                                <ExchangeInput
                                     id={`${type}Amount`}
                                     value={amount}
                                     onChange={amountChange}
                                     autoComplete="off"
-                                    placeholder="0.0" 
+                                    placeholder="0.0"
                                     addonAfter={
                                         <span style={{fontSize: "75%"}}>
                                             <AssetName
@@ -751,16 +751,16 @@ class BuySell extends React.Component {
                                                 name={quote.get("symbol")}
                                             />
                                         </span>
-                                    } 
+                                    }
                                 />
                             </div>
                         </div>
                         <div className="small-6">
                             <Translate className="small-3 buy-sell-label" content="transfer.fee" />
                             <div className="inputAddon small-12">
-                                <ExchangeInput 
+                                <ExchangeInput
                                     id={`${type}Fee`}
-                                    placeholder="0.0" 
+                                    placeholder="0.0"
                                     defaultValue={
                                         !hasFeeBalance
                                             ? counterpart.translate(
@@ -770,7 +770,7 @@ class BuySell extends React.Component {
                                     }
                                     disabled
                                     addonAfter={
-                                        <Select 
+                                        <Select
                                             style={{width: 100, fontSize: "75%"}}
                                             disabled={feeAssets.length === 1}
                                             defaultValue={feeAssets.indexOf(
@@ -790,7 +790,7 @@ class BuySell extends React.Component {
         }
 
         return (
-            <div 
+            <div
                 className={cnames(this.props.className)}
                 style={this.props.styles}
             >
@@ -843,7 +843,7 @@ class BuySell extends React.Component {
                                 &#8645;
                             </span>
                         ) : null}
-                        {this.props.moveOrderForm ? ( 
+                        {this.props.moveOrderForm ? (
                             <Icon
                                 onClick={this.props.moveOrderForm}
                                 name="thumb-tack"
@@ -863,15 +863,15 @@ class BuySell extends React.Component {
                         noValidate
                     >
                         <div className="grid-block no-overflow wrap shrink">
-                            {this.props.moveOrderForm && verticalOrderForm ? 
-                                <div 
+                            {this.props.moveOrderForm && verticalOrderForm ?
+                                <div
                                     style={{width: "100%", textAlign: "right"}}
                                     onClick={this.props.moveOrderForm}
                                 >
                                     <Icon
                                         name="thumb-tack"
                                         className="icon-18px order-book-button-v"
-                                        
+
                                     />
                                 </div> : null}
                             {formContent}
@@ -900,7 +900,7 @@ class BuySell extends React.Component {
                                     ) : null}
                                 </div>
                             </div>
-                            {!singleColumnForm ? 
+                            {!singleColumnForm ?
                                 <div className="small-6">
                                     {marketFee}
                                 </div> : null}
