@@ -3,6 +3,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
+import MarketLink from "../Utility/MarketLink";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import BalanceComponent from "../Utility/BalanceComponent";
@@ -23,11 +24,12 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
                         string="exchange.worth_less_settlement_warning"
                         keys={[
                             {
-                                type: "link",
-                                value: `/market/${asset.get(
-                                    "symbol"
-                                )}_${shortBackingAsset.get("symbol")}`,
-                                translation: "exchange.market",
+                                value: (
+                                    <MarketLink
+                                        base={asset.get("id")}
+                                        quote={shortBackingAsset.get("id")}
+                                    />
+                                ),
                                 arg: "market_link"
                             }
                         ]}
