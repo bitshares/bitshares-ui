@@ -10,8 +10,6 @@ import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import PriceText from "../Utility/PriceText";
 import AssetName from "../Utility/AssetName";
-import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
-import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Asset} from "common/MarketClasses";
 import ExchangeInput from "./ExchangeInput";
 import assetUtils from "common/asset_utils";
@@ -20,7 +18,7 @@ import moment from "moment";
 import {
     Button,
     Select
-} from 'bitshares-ui-style-guide'
+} from "bitshares-ui-style-guide";
 
 class BuySell extends React.Component {
     static propTypes = {
@@ -75,15 +73,7 @@ class BuySell extends React.Component {
         this.props.priceChange({target: {value: price.toString()}});
     }
 
-    _onDeposit(e) {
-        e.preventDefault();
-        this.refs.deposit_modal.show();
-    }
 
-    _onBuy(e) {
-        e.preventDefault();
-        this.refs.bridge_modal.show();
-    }
 
     render() {
         let {
@@ -103,15 +93,9 @@ class BuySell extends React.Component {
             feeAsset,
             feeAssets,
             hasFeeBalance,
-            backedCoin,
             hideHeader
         } = this.props;
         let amount, price, total;
-        let caret = this.props.isOpen ? (
-            <span>&#9660;</span>
-        ) : (
-            <span>&#9650;</span>
-        );
 
         if (this.props.amount) amount = this.props.amount;
         if (this.props.price) price = this.props.price;
@@ -140,17 +124,17 @@ class BuySell extends React.Component {
         const quoteFee = !amount
             ? 0
             : Math.min(
-                  maxQuoteMarketFee.getAmount({real: true}),
-                  amount *
-                      quote.getIn(["options", "market_fee_percent"]) /
-                      10000
-              ).toFixed(maxQuoteMarketFee.precision);
+                maxQuoteMarketFee.getAmount({real: true}),
+                amount *
+                quote.getIn(["options", "market_fee_percent"]) /
+                10000
+            ).toFixed(maxQuoteMarketFee.precision);
         const baseFee = !amount
             ? 0
             : Math.min(
-                  maxBaseMarketFee.getAmount({real: true}),
-                  total * base.getIn(["options", "market_fee_percent"]) / 10000
-              ).toFixed(maxBaseMarketFee.precision);
+                maxBaseMarketFee.getAmount({real: true}),
+                total * base.getIn(["options", "market_fee_percent"]) / 10000
+            ).toFixed(maxBaseMarketFee.precision);
         const baseFlagBooleans = assetUtils.getFlagBooleans(
             base.getIn(["options", "flags"]),
             base.has("bitasset_data_id")
@@ -464,8 +448,8 @@ class BuySell extends React.Component {
                                             value={
                                                 !hasFeeBalance
                                                     ? counterpart.translate(
-                                                            "transfer.errors.insufficient"
-                                                        )
+                                                        "transfer.errors.insufficient"
+                                                    )
                                                     : fee.getAmount({real: true})
                                             }
                                             disabled
@@ -535,7 +519,7 @@ class BuySell extends React.Component {
                                             <AssetName 
                                                 name={base.get("symbol")}
                                                 noTip
-                                                />
+                                            />
                                                 /
                                             <AssetName 
                                                 name={quote.get("symbol")} 
@@ -590,7 +574,7 @@ class BuySell extends React.Component {
                                         {this.props.backedCoin ? (
                                             <Button 
                                                 style={{margin: 5}}
-                                                onClick={this._onDeposit.bind(this)}>
+                                                onClick={this.props.onDeposit.bind(this)}>
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
                                         ) : null}
@@ -605,7 +589,7 @@ class BuySell extends React.Component {
                                         {this.props.currentBridges ? (
                                             <Button 
                                                 style={{margin: 5}}
-                                                onClick={this._onBuy.bind(this)}
+                                                onClick={this.props.onBuy.bind(this)}
                                             >
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
@@ -651,33 +635,6 @@ class BuySell extends React.Component {
                         </div>
                     </form>
                 </div>
-                <SimpleDepositWithdraw
-                    ref="deposit_modal"
-                    action="deposit"
-                    fiatModal={false}
-                    account={this.props.currentAccount.get("name")}
-                    sender={this.props.currentAccount.get("id")}
-                    asset={this.props[isBid ? "base" : "quote"].get("id")}
-                    modalId={
-                        "simple_deposit_modal" + (type === "bid" ? "" : "_ask")
-                    }
-                    balances={[this.props.balance]}
-                    {...backedCoin}
-                />
-
-                {/* Bridge modal */}
-                <SimpleDepositBlocktradesBridge
-                    ref="bridge_modal"
-                    action="deposit"
-                    account={this.props.currentAccount.get("name")}
-                    sender={this.props.currentAccount.get("id")}
-                    asset={this.props.balanceId}
-                    modalId={
-                        "simple_bridge_modal" + (type === "bid" ? "" : "_ask")
-                    }
-                    balances={[this.props.balance]}
-                    bridges={this.props.currentBridges}
-                />
             </div>
         );
     }

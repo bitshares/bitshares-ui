@@ -24,7 +24,7 @@ export default class ExchangeHeader extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             selectedMarketPickerAsset: nextProps.selectedMarketPickerAsset
-        })
+        });
     }
 
     shouldComponentUpdate(nextProps) {
@@ -73,9 +73,7 @@ export default class ExchangeHeader extends React.Component {
             marketReady,
             latestPrice,
             marketStats,
-            showDepthChart,
             account,
-            exchangeLayout
         } = this.props;
 
         const baseSymbol = baseAsset.get("symbol");

@@ -11,7 +11,10 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {
+    Select, 
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
 
 /**
  * @array: orderRows
@@ -135,31 +138,31 @@ class OrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                  order.amountToReceive().getAmount({real: true}),
-                  quote.get("precision")
-              )
+                order.amountToReceive().getAmount({real: true}),
+                quote.get("precision")
+            )
             : utils.format_number(
-                  order.amountForSale().getAmount({real: true}),
-                  quote.get("precision")
-              );
+                order.amountForSale().getAmount({real: true}),
+                quote.get("precision")
+            );
         let value = isBid
             ? utils.format_number(
-                  order.amountForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                order.amountForSale().getAmount({real: true}),
+                base.get("precision")
+            )
             : utils.format_number(
-                  order.amountToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                order.amountToReceive().getAmount({real: true}),
+                base.get("precision")
+            );
         let total = isBid
             ? utils.format_number(
-                  order.totalForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                order.totalForSale().getAmount({real: true}),
+                base.get("precision")
+            )
             : utils.format_number(
-                  order.totalToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                order.totalToReceive().getAmount({real: true}),
+                base.get("precision")
+            );
 
         return (
             <tr
@@ -257,31 +260,31 @@ class GroupedOrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                  order.amountToReceive().getAmount({real: true}),
-                  quote.get("precision")
-              )
+                order.amountToReceive().getAmount({real: true}),
+                quote.get("precision")
+            )
             : utils.format_number(
-                  order.amountForSale().getAmount({real: true}),
-                  quote.get("precision")
-              );
+                order.amountForSale().getAmount({real: true}),
+                quote.get("precision")
+            );
         let value = isBid
             ? utils.format_number(
-                  order.amountForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                order.amountForSale().getAmount({real: true}),
+                base.get("precision")
+            )
             : utils.format_number(
-                  order.amountToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                order.amountToReceive().getAmount({real: true}),
+                base.get("precision")
+            );
         let total = isBid
             ? utils.format_number(
-                  order.totalForSale().getAmount({real: true}),
-                  base.get("precision")
-              )
+                order.totalForSale().getAmount({real: true}),
+                base.get("precision")
+            )
             : utils.format_number(
-                  order.totalToReceive().getAmount({real: true}),
-                  base.get("precision")
-              );
+                order.totalToReceive().getAmount({real: true}),
+                base.get("precision")
+            );
 
         return (
             <tr onClick={this.props.onClick}>
@@ -315,39 +318,63 @@ class GroupOrderLimitSelector extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({groupLimit: this.props.currentGroupOrderLimit});
+        if(this.props.currentGroupOrderLimit !== nextProps.currentGroupOrderLimit) {
+            this.setState({groupLimit: nextProps.currentGroupOrderLimit});
+        }
     }
 
     render() {
         const noGroupsAvailable = this.props.trackedGroupsConfig.length === 0;
         const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
             key => (
-                <option value={key} key={key}>
-                    {`${key / 100}%`}
-                </option>
+                this.props.globalSettingsSelector ? 
+                    <Select.Option value={key} key={key}>
+                        {`${key / 100}%`}
+                    </Select.Option>
+                    :
+                    <option value={key} key={key}>
+                        {`${key / 100}%`}
+                    </option>
             )
         );
 
-        return (
-            <select
-                dir="rtl"
-                value={this.state.groupLimit}
-                onChange={this.props.handleGroupOrderLimitChange}
-                data-tip={
-                    noGroupsAvailable
-                        ? translator.translate("tooltip.no_groups_available")
-                        : null
-                }
-                style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
-            >
-                <Translate
-                    content="exchange.group_order_limit"
-                    component="option"
-                    value="0"
-                />
-                {trackedGroupsOptionsList}
-            </select>
-        );
+        if(this.props.globalSettingsSelector) {
+            return (
+                <Select
+                    placeholder="Select option" 
+                    style={{width: "100%"}}
+                    value={this.props.currentGroupOrderLimit}
+                    disabled={noGroupsAvailable}
+                    onChange={this.props.handleGroupOrderLimitChange.bind(this)}
+                >
+                    <Select.Option value={0}>
+                        <Translate content="settings.disabled" />
+                    </Select.Option>
+                    {trackedGroupsOptionsList}
+                </Select>
+            );
+        } else {
+            return (
+                <select
+                    value={this.state.groupLimit}
+                    onChange={this.props.handleGroupOrderLimitChange}
+                    data-tip={
+                        noGroupsAvailable
+                            ? translator.translate("tooltip.no_groups_available")
+                            : null
+                    }
+                    className="settings-select"
+                    style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
+                >
+                    <Translate
+                        content="exchange.group_order_limit"
+                        component="option"
+                        value="0"
+                    />
+                    {trackedGroupsOptionsList}
+                </select>
+            );
+        }
     }
 }
 
@@ -360,11 +387,35 @@ class OrderBook extends React.Component {
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
-            autoScroll: true
+            autoScroll: props.autoScroll,
         };
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
+        if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllAsks != this.state.showAllAsks) {
+            let asksContainer = this.refs.hor_asks;
+            if(!nextState.showAllAsks) {
+                Ps.destroy(asksContainer);
+            } else {
+                Ps.initialize(asksContainer);
+                this.psUpdate();
+            }
+            this.refs.askTransition.resetAnimation();
+            if (this.refs.hor_asks) this.refs.hor_asks.scrollTop = 0;
+        }
+
+        if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllBids != this.state.showAllBids) {
+            let bidsContainer = this.refs.hor_bids;
+            if(!nextState.showAllBids) { 
+                Ps.destroy(bidsContainer);
+            } else {
+                Ps.initialize(bidsContainer);
+                this.psUpdate();
+            }
+            this.refs.bidTransition.resetAnimation();
+            if (this.refs.hor_bids) this.refs.hor_bids.scrollTop = 0;
+        }
+
         if (!nextProps.marketReady) return false;
         return true;
     }
@@ -389,7 +440,13 @@ class OrderBook extends React.Component {
         }
 
         if (!this.props.horizontal) {
-            this.setState({autoScroll: true}, () => {
+            this.setState({autoScroll: this.state.autoScroll}, () => {
+                this.psUpdate();
+            });
+        }
+
+        if(this.props.autoScroll !== nextProps.autoScroll) {
+            this.setState({autoScroll: nextProps.autoScroll}, () => {
                 this.psUpdate();
             });
         }
@@ -408,6 +465,24 @@ class OrderBook extends React.Component {
                 this.psUpdate();
             });
         }
+
+        let bidsContainer = this.refs.hor_bids;
+        let asksContainer = this.refs.hor_asks;
+
+        if(this.props.horizontal && nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
+            Ps.destroy(bidsContainer);
+            Ps.destroy(asksContainer);
+        }
+
+        if(this.props.horizontal && nextProps.hideScrollbars !== this.props.hideScrollbars && !nextProps.hideScrollbars) {
+            Ps.initialize(bidsContainer);
+            Ps.initialize(asksContainer);
+            this.refs.askTransition.resetAnimation();
+            this.refs.bidTransition.resetAnimation();
+            if (asksContainer) asksContainer.scrollTop = 0;
+            if (bidsContainer) bidsContainer.scrollTop = 0;
+            this.psUpdate();
+        }
     }
 
     queryStickyTable = query =>
@@ -420,10 +495,12 @@ class OrderBook extends React.Component {
             Ps.initialize(this.verticalScrollBar());
             this.centerVerticalScrollBar();
         } else {
-            let bidsContainer = this.refs.hor_bids;
-            Ps.initialize(bidsContainer);
-            let asksContainer = this.refs.hor_asks;
-            Ps.initialize(asksContainer);
+            if(!this.props.hideScrollbars) {
+                let bidsContainer = this.refs.hor_bids;
+                Ps.initialize(bidsContainer);
+                let asksContainer = this.refs.hor_asks;
+                Ps.initialize(asksContainer);
+            }
         }
     }
 
@@ -441,7 +518,9 @@ class OrderBook extends React.Component {
                 centeringOffset;
 
             this.offset = scrollableContainer.scrollTop - scrollTo;
-        }
+        } 
+
+
     }
 
     centerVerticalScrollBar() {
@@ -971,7 +1050,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210,
+                                    maxHeight: 260,
                                     lineHeight: "13px"
                                 }}
                             >
@@ -989,7 +1068,7 @@ class OrderBook extends React.Component {
                                     </TransitionWrapper>
                                 </table>
                             </div>
-                            {totalAsksLength > rowCount ? (
+                            {totalAsksLength > 11 ? (
                                 <div className="orderbook-showall">
                                     <a
                                         onClick={this._onSetShowAll.bind(
@@ -1101,7 +1180,7 @@ class OrderBook extends React.Component {
                                 style={{
                                     paddingRight: "0.6rem",
                                     overflow: "hidden",
-                                    maxHeight: 210,
+                                    maxHeight: 260,
                                     lineHeight: "13px"
                                 }}
                             >
@@ -1187,55 +1266,55 @@ class OrderBook extends React.Component {
                                     colSpan="3"
                                 >
                                     <div className="orderbook-latest-price">
-                                        <div className="text-center spread">
-                                            {!!spread && (
-                                                <span
-                                                    className="clickable left"
-                                                    onClick={
-                                                        this
-                                                            .toggleSpreadValue
-                                                    }
-                                                >
-                                                    <Translate content="exchange.spread" />{" "}
-                                                    <span className="spread-value">
-                                                        {spread}
-                                                    </span>
-                                                </span>
-                                            )}
-                                            <Icon
-                                                className="lock-unlock clickable"
-                                                onClick={
-                                                    this.toggleAutoScroll
-                                                }
-                                                name={
-                                                    this.state.autoScroll
-                                                        ? "locked"
-                                                        : "unlocked"
-                                                }
-                                                title={
-                                                    this.state.autoScroll
-                                                        ? "icons.locked.enable_auto_scroll"
-                                                        : "icons.unlocked.disable_auto_scroll"
-                                                }
-                                            />&nbsp;
-                                            <AntIcon 
-                                                style={{fontSize: 20, marginRight: 10}}
-                                                className="clickable"
-                                                type="retweet"
-                                                onClick={
-                                                    this.toggleOrderBook
-                                                } 
-                                            />
-                                            {!!this.props.latest && (
-                                                <span className="right">
-                                                    <Translate content="exchange.latest" />{" "}
+                                        <div>
+                                            <div className="text-center spread">
+                                                {!!spread && (
                                                     <span
-                                                        className={
-                                                            this.props
-                                                                .changeClass
+                                                        className="clickable left"
+                                                        onClick={
+                                                            this
+                                                                .toggleSpreadValue
                                                         }
                                                     >
-                                                        <PriceText
+                                                        <Translate className="orderbook-center-title" content="exchange.spread" />{" "}
+                                                        <span className="spread-value">
+                                                            {spread}
+                                                        </span>
+                                                    </span>
+                                                )}
+                                                <span style={{width: 50}}>
+                                                    <Icon
+                                                        className="lock-unlock clickable"
+                                                        onClick={
+                                                            this.toggleAutoScroll
+                                                        }
+                                                        name={
+                                                            this.state.autoScroll
+                                                                ? "locked"
+                                                                : "unlocked"
+                                                        }
+                                                        title={
+                                                            this.state.autoScroll
+                                                                ? "icons.unlocked.disable_auto_scroll"
+                                                                : "icons.locked.enable_auto_scroll"
+                                                        }
+                                                    />&nbsp;
+                                                    <AntIcon 
+                                                        style={{fontSize: 20}}
+                                                        type="retweet"
+                                                        onClick={
+                                                            this.toggleOrderBook
+                                                        } 
+                                                    />
+                                                </span>
+                                                {!!this.props.latest && (
+                                                    <span className="right">
+                                                        <span
+                                                            className={
+                                                                !this.props.changeClass ? "spread-value" : this.props.changeClass
+                                                            }
+                                                        >
+                                                            <PriceText
                                                                 price={
                                                                     this.props
                                                                         .latest
@@ -1249,8 +1328,18 @@ class OrderBook extends React.Component {
                                                                         .quote
                                                                 }
                                                             />
+                                                        </span>
                                                     </span>
-                                                </span>
+                                                )}
+                                            </div>
+                                            {currentGroupOrderLimit == 0 ? null : (
+                                                <div className="text-center" style={{paddingTop: 5}}>
+                                                    <Translate 
+                                                        component="span"
+                                                        content="exchange.order_grouping"
+                                                        orderlimit={currentGroupOrderLimit / 100}
+                                                    />
+                                                </div>
                                             )}
                                         </div>
                                     </div>

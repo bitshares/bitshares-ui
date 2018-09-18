@@ -207,7 +207,6 @@ form.order-form {
             padding-right: $scrollBarSpacePadding;
         }
         .text-center.spread {
-            color: grey;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -233,7 +232,7 @@ form.order-form {
     }
     .order-table-container {
         width: 100%;
-        height: calc(100% - 6rem);
+        height: calc(100% - 3.3rem);
     }
     .top-header {
         text-align: right;
@@ -345,10 +344,6 @@ ul.market-stats {
     /*border-right: 1px solid $border-color;*/
     min-height: 42px;
     margin-left: 25px;
-}
-
-.bottom-stats li {
-    // border-right: 1px solid $border-color;
 }
 
 .stats .stat {

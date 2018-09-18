@@ -578,6 +578,12 @@
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
+    .header-container .anticon {
+        color: $primary-text-color !important;
+        background-color: $primary-text-color !important;
+        fill: $primary-text-color !important;
+    }
+
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -1374,8 +1380,6 @@
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            @include RobotoMedium;
-            font-size: 13px;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1385,6 +1389,9 @@
     }
     .left-order-book {
         background-color: $bg-color;
+        .orderbook-center-title {
+            color: $inactive-text-color;
+        }
         .spread .spread-value {
             color: $primary-text-color;
         }
