@@ -764,7 +764,8 @@
     },
     "extended_log": {
         "advanced_report": "Advanced report",
-        "console_report": "Console report"
+        "console_report": "Console report",
+        "copy_logs": "Copy Logs"
     },
     "fees": {
         "title": "Fee Schedule"

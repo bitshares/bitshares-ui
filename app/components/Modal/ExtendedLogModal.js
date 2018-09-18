@@ -19,9 +19,9 @@ class ExtendedLogModal extends React.Component {
     constructor() {
         super();
         this.state = {
-            show: false
+            show: false,
+            showSaveButton: false
         };
-        this.onClose = this.onClose.bind(this);
     }
 
     show() {
@@ -34,8 +34,10 @@ class ExtendedLogModal extends React.Component {
         callback();
     }
 
-    onClose() {
-        this.props.clearExtendedLogText;
+    copyToClipboard() {
+        const textElement = document.getElementById("extended_log_text");
+        textElement.select();
+        document.execCommand("copy");
     }
 
     render() {
@@ -43,7 +45,7 @@ class ExtendedLogModal extends React.Component {
             <BaseModal
                 id={this.props.modalId}
                 overlay={true}
-                onClose={this.onClose}
+                onClose={this.props.onClose}
             >
                 {this.state.show && (
                     <div className="grid-block vertical">
@@ -81,9 +83,22 @@ class ExtendedLogModal extends React.Component {
                                 <textarea
                                     id="extended_log_text"
                                     rows="20"
-                                    value={this.props.extendedLogText}
+                                    value={this.props.extendedLogText.join(
+                                        " \n"
+                                    )}
                                 />
                             </div>
+                            <a
+                                className="button primary"
+                                onClick={this.copyToClipboard}
+                                style={{
+                                    display: this.props.showSaveButton
+                                        ? ""
+                                        : "none"
+                                }}
+                            >
+                                <Translate content="extended_log.copy_logs" />
+                            </a>
                         </div>
                     </div>
                 )}

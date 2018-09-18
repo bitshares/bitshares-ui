@@ -40,7 +40,8 @@ class Footer extends React.Component {
             showNodesPopup: false,
             showConnectingPopup: false,
             showExtendedLogPopup: false,
-            extendedLogText: []
+            extendedLogText: [],
+            showsaveButton: false
         };
 
         this.confirmOutOfSync = {
@@ -76,21 +77,21 @@ class Footer extends React.Component {
             nextState.showNodesPopup !== this.state.showNodesPopup
         );
     }
-    componentWillReceiveProps(recivedProps) {
-        if (
-            recivedProps.showExtendedLogPopup !==
-            this.state.showExtendedLogPopup
-        ) {
-            this.setState({
-                showExtendedLogPopup: !this.state.showExtendedLogPopup
-            });
-        }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.showExtendedLogPopup !== prevState.showExtendedLogPopup) {
+            return {
+                showExtendedLogPopup: nextProps.showExtendedLogPopup
+            };
+        }
+        return null;
+    }
+
+    componentDidUpdate() {
         if (this.state.showExtendedLogPopup) {
+            this.clearExtendedLogText();
             this._showExtendedLog();
-        } else {
-            this.props.onClose();
-            this.extendedLog.shownOnce = false;
+            this.onClose();
         }
     }
 
@@ -329,11 +330,17 @@ class Footer extends React.Component {
     }
 
     _getConsoleReport() {
-        this.setState({extendedLogText: this.props.extendedLogText});
+        this.setState({
+            extendedLogText: this.props.extendedLogText,
+            showSaveButton: true
+        });
     }
 
     clearExtendedLogText() {
-        this.setState({extendedLogText: []});
+        this.setState({
+            extendedLogText: [],
+            showSaveButton: false
+        });
     }
 
     render() {
@@ -449,7 +456,8 @@ class Footer extends React.Component {
                         }
                     ]}
                     extendedLogText={this.state.extendedLogText}
-                    clearExtendedLogText={this.clearExtendedLogText()}
+                    showSaveButton={this.state.showSaveButton}
+                    onClose={this.props.onClose}
                 >
                     <div>EXTENDED LOG</div>
                 </ExtendedLogModal>

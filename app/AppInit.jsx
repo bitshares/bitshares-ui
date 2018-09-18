@@ -61,18 +61,26 @@ class AppInit extends React.Component {
     }
 
     componentWillMount() {
-        var thiz = this;
+        const thiz = this;
+        const _log = console.log;
+        const _error = console.error;
+        const _warn = console.warn;
+        const _info = console.info;
         console.log = function() {
-            thiz.saveExtendedLog(arguments[0]);
+            thiz.saveExtendedLog(arguments);
+            _log.apply(console, arguments);
         };
         console.warn = function() {
-            thiz.saveExtendedLog(arguments[0]);
+            thiz.saveExtendedLog(arguments);
+            _warn.apply(console, arguments);
         };
         console.error = function() {
-            thiz.saveExtendedLog(arguments[0]);
+            thiz.saveExtendedLog(arguments);
+            _error.apply(console, arguments);
         };
         console.info = function() {
-            thiz.saveExtendedLog(arguments[0]);
+            thiz.saveExtendedLog(arguments);
+            _info.apply(console, arguments);
         };
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
@@ -115,13 +123,18 @@ class AppInit extends React.Component {
     }
 
     saveExtendedLog(logText) {
-        var maxlogslength = 20;
-        var logState = this.state.extendeLogText;
+        const maxlogslength = 20;
+        const logState = this.state.extendeLogText;
+        var text = "";
+
+        for (const value of logText) {
+            text += JSON.stringify(value).slice(1, -1);
+        }
         if (this.state.extendeLogText.length > maxlogslength) {
             logState.splice(0, 1);
         }
-        if (logText.indexOf(logState[this.state.extendeLogText.length - 1])) {
-            logState.push(logText);
+        if (text.indexOf(logState[this.state.extendeLogText.length - 1])) {
+            logState.push(text);
             this.setState({extendeLogText: logState});
         }
     }
