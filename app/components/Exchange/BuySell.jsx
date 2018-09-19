@@ -328,7 +328,7 @@ class BuySell extends React.Component {
 
         return (
             <div className={this.props.className}>
-                <div className="buy-sell-container" style={{padding: 5}}>
+                <div className="buy-sell-container">
                     {!hideHeader ? <div
                         className={"exchange-content-header " + type}
                         data-intro={dataIntro}
@@ -366,7 +366,9 @@ class BuySell extends React.Component {
                                 {" "}
                                 &#8646;
                             </span>
-                        ) : null}
+                        ) : (
+                            "null"
+                        )}
                         {this.props.onTogglePosition ? (
                             <span
                                 onClick={this.props.onTogglePosition}
@@ -376,7 +378,9 @@ class BuySell extends React.Component {
                                 {" "}
                                 &#8645;
                             </span>
-                        ) : null}
+                        ) : (
+                            "null"
+                        )}
                     </div> : null}
 
                     <form
@@ -591,7 +595,7 @@ class BuySell extends React.Component {
                                             <Button 
                                                 style={{margin: 5}}
                                                 onClick={this._onDeposit.bind(this)}>
-                                                <Translate content="exchange.quick_deposit" />
+                                                <Translate content="exchange.deposit" />
                                             </Button>
                                         ) : null}
                                         {this.props.onBorrow ? (
@@ -607,7 +611,7 @@ class BuySell extends React.Component {
                                                 style={{margin: 5}}
                                                 onClick={this._onBuy.bind(this)}
                                             >
-                                                <Translate content="exchange.quick_deposit" />
+                                                <Translate content="exchange.buy_quick" />
                                             </Button>
                                         ) : null}
                                     </div> 
