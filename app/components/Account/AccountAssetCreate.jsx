@@ -42,10 +42,13 @@ class BitAssetOptions extends React.Component {
     }
 
     _onInputBackingAsset(asset) {
-        this.setState({
-            backingAsset: asset.toUpperCase(),
-            error: null
-        });
+        if (this.props.disableBackingAssetChange)
+            this.props.disabledBackingAssetChangeCallback();
+        else
+            this.setState({
+                backingAsset: asset.toUpperCase(),
+                error: null
+            });
     }
 
     _onFoundBackingAsset(asset) {
