@@ -1146,7 +1146,7 @@
             "actions": {
                 "approve": "Approve proposal",
                 "reject": "Reject proposal",
-                "delete": "Delete proposal"
+                "delete": "Permanently reject proposal"
             },
             "approval_add": "Approval to add",
             "approval_remove": "Approval to remove",
@@ -1283,7 +1283,7 @@
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
-        "delete": "Delete",
+        "delete": "Permanently reject",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",

@@ -154,7 +154,7 @@ class Transfer extends React.Component {
     }
 
     _checkFeeStatus(account = this.state.from_account) {
-        if (!account) return;
+        if (!account || !account.get("balances")) return;
 
         const assets = Object.keys(account.get("balances").toJS()).sort(
             utils.sortID
@@ -427,9 +427,11 @@ class Transfer extends React.Component {
             from_error = (
                 <span>
                     {counterpart.translate("account.errors.not_yours")}
-                    &nbsp;(<a onClick={this.onPropose.bind(this, true)}>
+                    &nbsp;(
+                    <a onClick={this.onPropose.bind(this, true)}>
                         {counterpart.translate("propose")}
-                    </a>)
+                    </a>
+                    )
                 </span>
             );
         }
@@ -463,7 +465,8 @@ class Transfer extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />:{" "}
+                        />
+                        :{" "}
                         <BalanceComponent
                             balance={account_balances[current_asset_id]}
                         />
@@ -729,15 +732,18 @@ class Transfer extends React.Component {
     }
 }
 
-export default connect(Transfer, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            contactsList: AccountStore.getState().accountContacts
-        };
+export default connect(
+    Transfer,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount: AccountStore.getState().currentAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                contactsList: AccountStore.getState().accountContacts
+            };
+        }
     }
-});
+);
