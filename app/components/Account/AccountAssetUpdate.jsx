@@ -24,10 +24,18 @@ import AssetFeedProducers from "./AssetFeedProducers";
 import BaseModal from "components/Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
+import notify from "actions/NotificationActions";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
 );
+
+const disabledBackingAssetChangeCallback = () =>
+    notify.error(
+        counterpart.translate(
+            "account.user_issued_assets.invalid_backing_asset_change"
+        )
+    );
 
 class AccountAssetUpdate extends React.Component {
     static propTypes = {
@@ -446,6 +454,10 @@ class AccountAssetUpdate extends React.Component {
                 bitasset_opts[value] = e;
                 break;
 
+            case "minimum_feeds":
+                bitasset_opts[value] = parseInt(e.target.value, 10);
+                break;
+
             default:
                 break;
         }
@@ -682,8 +694,35 @@ class AccountAssetUpdate extends React.Component {
         this._validateEditFields({});
     }
 
+    _getCurrentSupply() {
+        const {asset, getDynamicObject} = this.props;
+
+        return (
+            getDynamicObject &&
+            getDynamicObject(asset.get("dynamic_asset_data_id")).get(
+                "current_supply"
+            )
+        );
+    }
+
     _onPermissionChange(key) {
-        let booleans = this.state.permissionBooleans;
+        const {isBitAsset, permissionBooleans} = this.state;
+
+        const disabled = !assetUtils.getFlagBooleans(
+            this.props.asset.getIn(["options", "issuer_permissions"]),
+            isBitAsset
+        )[key];
+
+        if (this._getCurrentSupply() > 0 && disabled) {
+            notify.error(
+                counterpart.translate(
+                    "account.user_issued_assets.invalid_permissions_change"
+                )
+            );
+            return;
+        }
+
+        let booleans = permissionBooleans;
         booleans[key] = !booleans[key];
         this.setState({
             permissionBooleans: booleans
@@ -768,7 +807,8 @@ class AccountAssetUpdate extends React.Component {
                             <td style={{border: "none", width: "80%"}}>
                                 <Translate
                                     content={`account.user_issued_assets.${key}`}
-                                />:
+                                />
+                                :
                             </td>
                             <td style={{border: "none"}}>
                                 <div
@@ -824,7 +864,8 @@ class AccountAssetUpdate extends React.Component {
                                 <td style={{border: "none", width: "80%"}}>
                                     <Translate
                                         content={`account.user_issued_assets.${key}`}
-                                    />:
+                                    />
+                                    :
                                 </td>
                                 <td style={{border: "none"}}>
                                     <div
@@ -1086,7 +1127,8 @@ class AccountAssetUpdate extends React.Component {
                                         </div>
                                         <div>
                                             <h5>
-                                                <Translate content="exchange.price" />:{" "}
+                                                <Translate content="exchange.price" />
+                                                :{" "}
                                                 <FormattedPrice
                                                     style={{fontWeight: "bold"}}
                                                     quote_amount={
@@ -1119,8 +1161,8 @@ class AccountAssetUpdate extends React.Component {
 
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {updateFee}
                                         </p>
                                     }
                                 </div>
@@ -1160,8 +1202,8 @@ class AccountAssetUpdate extends React.Component {
                                 >
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {updateFee}
                                         </p>
                                     }
                                 </AssetWhitelist>
@@ -1275,8 +1317,8 @@ class AccountAssetUpdate extends React.Component {
 
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {updateFee}
                                         </p>
                                     }
                                 </div>
@@ -1300,11 +1342,17 @@ class AccountAssetUpdate extends React.Component {
                                                 "precision"
                                             )}
                                             assetSymbol={asset.get("symbol")}
+                                            disableBackingAssetChange={
+                                                this._getCurrentSupply() > 0
+                                            }
+                                            disabledBackingAssetChangeCallback={
+                                                disabledBackingAssetChangeCallback
+                                            }
                                         />
                                         {
                                             <p>
-                                                <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                                {updateFee}
+                                                <Translate content="account.user_issued_assets.approx_fee" />
+                                                : {updateFee}
                                             </p>
                                         }
                                     </div>
@@ -1326,8 +1374,8 @@ class AccountAssetUpdate extends React.Component {
                                     {permissions}
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {updateFee}
                                         </p>
                                     }
                                 </div>
@@ -1359,7 +1407,8 @@ class AccountAssetUpdate extends React.Component {
                                                                 width: "80%"
                                                             }}
                                                         >
-                                                            <Translate content="account.user_issued_assets.charge_market_fee" />:
+                                                            <Translate content="account.user_issued_assets.charge_market_fee" />
+                                                            :
                                                         </td>
                                                         <td
                                                             style={{
@@ -1443,8 +1492,8 @@ class AccountAssetUpdate extends React.Component {
                                     {flags}
                                     {
                                         <p>
-                                            <Translate content="account.user_issued_assets.approx_fee" />:{" "}
-                                            {updateFee}
+                                            <Translate content="account.user_issued_assets.approx_fee" />
+                                            : {updateFee}
                                         </p>
                                     }
                                     {errors.conflict_producer ? (

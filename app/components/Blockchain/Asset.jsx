@@ -610,7 +610,7 @@ class Asset extends React.Component {
                         content="explorer.asset.feed_producer_text"
                     />
                     <AssetPublishFeed
-                        base={asset.id}
+                        asset={asset.id}
                         account={this.props.currentAccount}
                         currentOwner={asset.issuer}
                     />
@@ -1253,18 +1253,21 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(Asset, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+Asset = connect(
+    Asset,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]

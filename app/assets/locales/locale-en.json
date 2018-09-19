@@ -253,7 +253,9 @@
             "force_settlement_offset_percent": "Percent offset of forced settlements",
             "global_settle": "Allow issuer to force a global settling",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Preferred market pairing can not be the same market",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "Issued Assets",
             "market": "Preferred market pairing",
             "market_fee": "Market fee",
@@ -390,6 +392,10 @@
         "understand": "I understand",
         "ws_status": "Full node connection status"
     },
+    "boolean": {
+        "true": "True",
+        "false": "False"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -461,6 +467,7 @@
         "chart_height": "Chart height (pixels)",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
         "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
@@ -553,6 +560,7 @@
         "vol_short": "Vol",
         "volume": "Volume",
         "volume_24": "24hr Volume",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All"
@@ -801,6 +809,13 @@
         "calc": "Calculating",
         "choose_deposit": "Please select the coin you would like to deposit",
         "choose_withdraw": "Please select the coin you would like to withdraw",
+        "citadel": {
+            "coming_soon": "Coming soon",
+            "min_amount": "Minimum amount: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Please enter number >= minimum",
+            "support_block": "For support, please contact citadel.li at:",
+            "under_construction": "Under Construction"
+        },
         "contact_TRADE": "Contact Blocktrades",
         "convert": "Internal conversion",
         "convert_coin": "Convert to %(coin)s (%(symbol)s)",
@@ -884,6 +899,7 @@
         "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
         "unavailable_RUDEX": "The RuDEX Gateway is down or not responding",
         "unavailable_TRADE": "The Blocktrades Bridge is down or not responding",
+        "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_bridge": "The bridge service for this asset is currently down, please try again later",
         "use_copy_button": "PLEASE USE COPY BUTTON TO MAKE COPY OF ADDRESS OR MEMO ON THIS PAGE",
         "user_unavailable": "User informaction is current unavailable, please try again later",
@@ -1127,6 +1143,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "reject": "Reject proposal",
+                "delete": "Permanently reject proposal"
+            },
             "approval_add": "Approval to add",
             "approval_remove": "Approval to remove",
             "key_approval_add": "Key approval to add",
@@ -1222,9 +1243,9 @@
         "no_recent": "No recent transactions",
         "override_transfer": "{issuer} transferred {amount} from {from} to {to}",
         "pending": "pending %(blocks)s blocks",
-        "proposal_create": "{account} created a proposed transaction",
-        "proposal_delete": "{account} deleted a proposed transaction",
-        "proposal_update": "{account} updated a proposed transaction",
+        "proposal_create": "{account} created the proposed transaction {proposal}",
+        "proposal_delete": "{account} deleted the proposed transaction {proposal}",
+        "proposal_update": "{account} updated the proposed transaction {proposal}",
         "publish_feed": "{account} published feed price of {price}",
         "reg_account": "{registrar} registered the account {new_account}",
         "set_proxy": "{account} set {proxy} as their voting proxy",
@@ -1262,6 +1283,7 @@
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "delete": "Permanently reject",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",
@@ -1280,6 +1302,14 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "update_account": "Update account data for {account}",
         "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
     },
@@ -1289,6 +1319,9 @@
         "id": "Proposal object id",
         "proposed_operations": "Proposed operations",
         "review_period": "Review period begin"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "Propose",
     "qr_address_scanner": {
