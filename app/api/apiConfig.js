@@ -284,9 +284,9 @@ export const settingsAPIs = {
             contact: "telegram:murda_ra"
         },
         {
-            url: "wss://france.bitshares.apasia.tech/ws",
+            url: "wss://holland.bitshares.apasia.tech/ws",
             location: "Amsterdam",
-            country: "Holland",
+            country: "Netherlands",
             region: "Northern Europe",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
@@ -599,6 +599,14 @@ export const settingsAPIs = {
             region: "TESTNET - Northern America",
             country: "U.S.A.",
             location: "Dallas",
+            operator: "Flash Infrastructure Worker",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://testnet-eu.bitshares.apasia.tech/ws",
+            region: "TESTNET - Northern Europe",
+            country: "Netherlands",
+            location: "Amsterdam",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
