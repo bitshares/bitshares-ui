@@ -1920,6 +1920,9 @@
     .footer {
         padding-right: 0;
     }
+    .tab-no-background {
+        background-color: transparent !important;
+    }
     .header-container {
         background-color: $account-background;
         .menu-dropdown-wrapper {
