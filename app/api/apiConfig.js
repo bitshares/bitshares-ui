@@ -284,7 +284,7 @@ export const settingsAPIs = {
             contact: "telegram:murda_ra"
         },
         {
-            url: "wss://holland.bitshares.apasia.tech/ws",
+            url: "wss://netherlands.bitshares.apasia.tech/ws",
             location: "Amsterdam",
             country: "Netherlands",
             region: "Northern Europe",
