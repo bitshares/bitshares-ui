@@ -36,13 +36,6 @@ require("./json-inspector.scss");
 let ops = Object.keys(operations);
 let listings = Object.keys(account_constants.account_listing);
 
-const TranslateBoolean = ({value, ...otherProps}) => (
-    <Translate
-        content={`boolean.${value ? "true" : "false"}`}
-        {...otherProps}
-    />
-);
-
 class OpType extends React.Component {
     shouldComponentUpdate(nextProps) {
         return nextProps.type !== this.props.type;
@@ -1803,48 +1796,7 @@ class Transaction extends React.Component {
 
                     break;
 
-                case "proposal_delete":
-                    color = "cancel";
-                    rows.push(
-                        <tr key={key++}>
-                            <td>
-                                <Translate
-                                    component="span"
-                                    content="proposal_create.fee_paying_account"
-                                />
-                            </td>
-                            <td>
-                                {this.linkToAccount(op[1].fee_paying_account)}
-                            </td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr key={key++}>
-                            <td>
-                                <Translate
-                                    component="span"
-                                    content="proposal_delete.using_owner_authority"
-                                />
-                            </td>
-                            <td>
-                                <TranslateBoolean
-                                    value={op[1].using_owner_authority}
-                                />
-                            </td>
-                        </tr>
-                    );
-                    rows.push(
-                        <tr key={key++}>
-                            <td>
-                                <Translate
-                                    component="span"
-                                    content="proposal_create.id"
-                                />
-                            </td>
-                            <td>{op[1].proposal}</td>
-                        </tr>
-                    );
-                    break;
+                // proposal_delete
 
                 case "asset_claim_fees":
                     color = "success";
