@@ -179,9 +179,7 @@ class AppInit extends React.Component {
     }
 }
 
-AppInit = connect(
-    AppInit,
-    {
+AppInit = connect(AppInit, {
         listenTo() {
             return [IntlStore, WalletManagerStore, SettingsStore];
         },
