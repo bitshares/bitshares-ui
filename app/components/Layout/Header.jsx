@@ -1202,9 +1202,7 @@ class Header extends React.Component {
     }
 }
 
-Header = connect(
-    Header,
-    {
+Header = connect(Header, {
         listenTo() {
             return [
                 AccountStore,
