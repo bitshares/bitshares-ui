@@ -392,6 +392,10 @@
         "understand": "I understand",
         "ws_status": "Full node connection status"
     },
+    "boolean": {
+        "true": "True",
+        "false": "False"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -1157,6 +1161,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "reject": "Reject proposal",
+                "delete": "Delete proposal"
+            },
             "approval_add": "Approval to add",
             "approval_remove": "Approval to remove",
             "key_approval_add": "Key approval to add",
@@ -1253,9 +1262,9 @@
         "no_recent": "No recent transactions",
         "override_transfer": "{issuer} transferred {amount} from {from} to {to}",
         "pending": "pending %(blocks)s blocks",
-        "proposal_create": "{account} created a proposed transaction",
-        "proposal_delete": "{account} deleted a proposed transaction",
-        "proposal_update": "{account} updated a proposed transaction",
+        "proposal_create": "{account} created the proposed transaction {proposal}",
+        "proposal_delete": "{account} deleted the proposed transaction {proposal}",
+        "proposal_update": "{account} updated the proposed transaction {proposal}",
         "publish_feed": "{account} published feed price of {price}",
         "reg_account": "{registrar} registered the account {new_account}",
         "set_proxy": "{account} set {proxy} as their voting proxy",
@@ -1293,6 +1302,7 @@
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "delete": "Delete",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",
@@ -1311,6 +1321,14 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "update_account": "Update account data for {account}",
         "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
     },
@@ -1320,6 +1338,9 @@
         "id": "Proposal object id",
         "proposed_operations": "Proposed operations",
         "review_period": "Review period begin"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "Propose",
     "qr_address_scanner": {
