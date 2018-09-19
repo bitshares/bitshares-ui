@@ -14,7 +14,7 @@ import CreateAccount from "./Account/CreateAccount";
 import CreateAccountPassword from "./Account/CreateAccountPassword";
 import {Route} from "react-router-dom";
 import {getWalletName, getLogo} from "branding";
-import {Select} from "bitshares-ui-style-guide";
+import {Select, Row, Col, Icon} from "bitshares-ui-style-guide";
 var logo = getLogo();
 
 const FlagImage = ({flag, width = 50, height = 50}) => {
@@ -133,13 +133,21 @@ class LoginSelector extends React.Component {
                             <div className="shrink text-center">
                                 <div className="grp-menu-item overflow-visible account-drop-down">
                                     <div
-                                        className="grp-menu-item overflow-visible"
+                                        className="grp-menu-item overflow-visible login-selector--language-select"
                                         style={{margin: "0 auto"}}
                                         data-intro={translator.translate(
                                             "walkthrough.language_flag"
                                         )}
                                     >
-                                        {flagDropdown}
+                                        <Row className="login-selector--language-select--wrapper">
+                                            <Col span={4}>
+                                                <Icon
+                                                    type="global"
+                                                    className="login-selector--language-select--icon"
+                                                />
+                                            </Col>
+                                            <Col span={20}>{flagDropdown}</Col>
+                                        </Row>
                                     </div>
                                 </div>
                             </div>
