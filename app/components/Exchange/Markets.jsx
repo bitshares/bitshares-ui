@@ -40,11 +40,10 @@ class Markets extends React.Component {
                 <MyMarkets
                     style={{width: "100%", padding: 20}}
                     listHeight={
-                        this.state.height ? this.state.height : null
+                        this.state.height ? this.state.height - 82 : null
                     }
                     className="no-overflow"
                     headerStyle={{paddingTop: 0, borderTop: "none"}}
-                    tabHeader={true}
                     columns={[
                         {name: "star", index: 1},
                         {name: "market", index: 2},
