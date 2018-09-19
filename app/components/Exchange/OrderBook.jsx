@@ -872,7 +872,6 @@ class OrderBook extends React.Component {
 
             return (
                 <div
-                    style={{marginRight: this.props.smallScreen ? 10 : 0}}
                     className={cnames(
                         this.props.wrapperClass,
                         wrapperClass,
@@ -931,16 +930,6 @@ class OrderBook extends React.Component {
                                             />
                                         ) : null}
                                     </div>
-                                ) : null}
-                                {this.props.onTogglePosition ? (
-                                    <span
-                                        onClick={this.props.onTogglePosition}
-                                        style={{cursor: "pointer", fontSize: "1rem"}}
-                                        className="flip-arrow"
-                                    >
-                                        {" "}
-                                        &#8645;
-                                    </span>
                                 ) : null}
                                 <div
                                     style={{lineHeight: "16px"}}
@@ -1064,20 +1053,7 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
-                                {this.props.onTogglePosition ? (
-                                    <span
-                                        onClick={this.props.onTogglePosition}
-                                        style={{cursor: "pointer", fontSize: "1rem"}}
-                                        className="flip-arrow"
-                                    >
-                                        {" "}
-                                        &#8645;
-                                    </span>
-                                ) : null}
-                                <div 
-                                    style={{lineHeight: "16px"}}
-                                    className="float-right header-sub-title"
-                                >
+                                <div className="float-right header-sub-title">
                                     <Translate content="exchange.volume" />
                                     <span>: </span>
                                     {utils.format_number(

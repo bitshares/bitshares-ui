@@ -802,15 +802,13 @@
     input[type="search"]#{$ant-fix},
     textarea#{$ant-fix},
     input[role="combobox"]#{$ant-fix},
-    select[role="combobox"]#{$ant-fix},
-    .buy-sell-container .ant-input {
+    select[role="combobox"]#{$ant-fix} {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
         &:hover,
         &:focus,
-        &:active,
-        &:disabled {
+        &:active {
             background-color: $input-background;
         }
         &:focus {
@@ -1967,6 +1965,10 @@
         color: $bs-blue;
         cursor: pointer;
     }
+    .order-2 .flip-arrow,
+    .order-5 .flip-arrow {
+        display: none;
+    }
     .order-book-button-h svg > path {
         fill: #fff;
         &:hover {
@@ -2066,14 +2068,14 @@
             width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
-            background: transparent !important;
+            background: transparent;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
             font-size: 90%;
             height: 28px;
             &:hover {
-                background: transparent !important;
+                background: transparent;
             }
         }
         select {
@@ -2177,12 +2179,6 @@
 
     .ant-select-selection-selected-value {
         color: $light-text-color !important;
-    }
-
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 }
 .rc-time-picker-panel {
