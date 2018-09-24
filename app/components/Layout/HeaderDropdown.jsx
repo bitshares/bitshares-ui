@@ -121,7 +121,9 @@ export default class DropDownMenu extends React.Component {
                 {!isMyAccount && showAccountLinks ? (
                     <li
                         className="divider"
-                        onClick={this[isContact ? "_onRemoveContact" : "_onAddContact"].bind(this)}
+                        onClick={this[
+                            isContact ? "_onRemoveContact" : "_onAddContact"
+                        ].bind(this)}
                     >
                         <div className="table-cell">
                             <Icon
@@ -185,131 +187,94 @@ export default class DropDownMenu extends React.Component {
                     </div>
                 </li>
 
-                <li
-                    className={cnames({
-                        active: active.indexOf("/transfer") !== -1,
-                        disabled: !showAccountLinks
-                    })}
-                    onClick={this.props.onNavigate.bind(this, "/transfer")}
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="transfer"
-                            title="icons.transfer"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="header.payments_legacy" />
-                    </div>
-                </li>
-
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
+                {[
+                    {
+                        icon: {
+                            name: "transfer",
+                            title: "icons.transfer"
                         },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.onNavigate.bind(
-                                  this,
-                                  "/deposit-withdraw"
-                              )
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="deposit"
-                            title="icons.deposit.deposit"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="gateway.deposit" />
-                    </div>
-                </li>
-
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
+                        disabled: !showAccountLinks,
+                        mainText: "header.payments",
+                        mainCallback: this.props.showSend,
+                        subText: "header.payments_legacy",
+                        subURL: "/transfer"
+                    },
+                    {
+                        icon: {
+                            name: "deposit",
+                            title: "icons.deposit.deposit"
                         },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.showDeposit
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="deposit"
-                            title="icons.deposit.deposit"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.deposit.submit_beta" />
-                    </div>
-                </li>
-
-                <li
-                    className={cnames(
-                        {
-                            active: active.indexOf("/deposit-withdraw") !== -1
+                        disabled: !enableDepositWithdraw,
+                        mainText: "modal.deposit.submit",
+                        mainCallback: this.props.showDeposit,
+                        subText: "header.deposit_legacy",
+                        subURL: "/deposit-withdraw"
+                    },
+                    {
+                        icon: {
+                            name: "withdraw",
+                            title: "icons.withdraw"
                         },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.onNavigate.bind(
-                                  this,
-                                  "/deposit-withdraw"
-                              )
+                        disabled: !enableDepositWithdraw,
+                        mainText: "modal.withdraw.submit",
+                        mainCallback: this.props.showWithdraw,
+                        subText: "header.withdraw_legacy",
+                        subURL: "/deposit-withdraw"
                     }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="withdraw"
-                            title="icons.withdraw"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.withdraw.submit" />
-                    </div>
-                </li>
-
-                <li
-                    className={cnames(
-                        "divider",
+                ].map(
+                    (
                         {
-                            active: active.indexOf("/deposit-withdraw") !== -1
+                            icon,
+                            subURL,
+                            disabled,
+                            mainText,
+                            subText,
+                            mainCallback
                         },
-                        {disabled: !enableDepositWithdraw}
-                    )}
-                    onClick={
-                        !enableDepositWithdraw
-                            ? () => {}
-                            : this.props.showWithdraw
-                    }
-                >
-                    <div className="table-cell">
-                        <Icon
-                            size="2x"
-                            name="withdraw"
-                            title="icons.withdraw"
-                        />
-                    </div>
-                    <div className="table-cell">
-                        <Translate content="modal.withdraw.submit_beta" />
-                    </div>
-                </li>
+                        index
+                    ) => (
+                        <li
+                            key={index}
+                            className={cnames({
+                                active: active.indexOf(subURL) !== -1,
+                                disabled
+                            })}
+                            onClick={
+                                disabled
+                                    ? event => {
+                                          event.stopPropagation();
+                                      }
+                                    : mainCallback
+                            }
+                        >
+                            <div className="table-cell">
+                                <Icon size="2x" {...icon} />
+                            </div>
+                            <div className="table-cell">
+                                <Translate content={mainText} />{" "}
+                                <span
+                                    onClick={
+                                        disabled
+                                            ? () => {}
+                                            : event => {
+                                                  event.stopPropagation();
+                                                  this.props.onNavigate.bind(
+                                                      this,
+                                                      subURL
+                                                  )(event);
+                                              }
+                                    }
+                                    className={cnames(
+                                        "header-dropdown-sub-link",
+                                        {enabled: !disabled}
+                                    )}
+                                >
+                                    <Translate content={subText} />
+                                </span>
+                            </div>
+                        </li>
+                    )
+                )}
 
                 <li
                     className={cnames(
