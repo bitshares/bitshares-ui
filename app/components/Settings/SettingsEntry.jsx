@@ -64,6 +64,21 @@ export default class SettingsEntry extends React.Component {
 
                 break;
 
+            case "unit":
+                value = selected;
+                options = defaults.map(entry => {
+                    let unitKey = entry;
+                    let value = unitKey;
+
+                    return (
+                        <option key={entry} value={entry}>
+                            {value}
+                        </option>
+                    );
+                });
+
+                break;
+
             case "themes":
                 value = selected;
                 options = defaults.map(entry => {
