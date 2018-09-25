@@ -1,26 +1,21 @@
-import localStorage from "./localStorage";
-let bitSharesStorage = Component => {
-    // Return Component if no localStorage is available
-    if (!localStorage) return Component;
+import ls from "./localStorage";
+let bitSharesStorage = Storage => {
+    // Return Storage if no localStorage is available
+    if (!ls) return Storage;
 
-    let name =
-        Component.displayName ||
-        Component.constructor.displayName ||
-        Component.constructor.name;
+    const STORAGE_KEY = "__graphene__";
+    let ss = new ls(STORAGE_KEY);
+    if (Storage.persist("true")) {
+        ss.set = null;
+    }
 
-    class bitSharesStorage extends Component {
-        componentWillMount() {
-            this.setState(JSON.parse(localStorage.getItem(name)));
-        }
-
-        componentWillUpdate(nextProps, nextState) {
-            localStorage.setItem(name, JSON.stringify(nextState));
+    class BitSharesStorage extends Storage {
+        constructor() {
+            super(ss);
         }
     }
 
-    bitSharesStorage.displayName = name;
-
-    return bitSharesStorage;
+    return BitSharesStorage;
 };
 
 export default bitSharesStorage;

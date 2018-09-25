@@ -12,6 +12,7 @@ import {
     getMyMarketsQuotes,
     getUnits
 } from "branding";
+import bitSharesStorage from "../lib/common/bitSharesStorage";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
@@ -22,7 +23,7 @@ let ss = new ls(STORAGE_KEY);
  * SettingsStore takes care of maintaining user set settings values and notifies all listeners
  */
 class SettingsStore {
-    constructor() {
+    constructor(ss) {
         this.exportPublicMethods({
             init: this.init.bind(this),
             getSetting: this.getSetting.bind(this),
@@ -59,6 +60,7 @@ class SettingsStore {
         this.initDone = false;
 
         this.settings = Immutable.Map(this._getSetting());
+        this.ss = ss;
 
         // deprecated to support existing code
         this.defaultSettings = Immutable.Map(this._getDefaultSetting());
@@ -292,7 +294,7 @@ class SettingsStore {
         if (settings == null) {
             settings = this.settings.toJS();
         }
-        ss.set("settings_v4", this._replaceDefaults("saving", settings));
+        this.ss.set("settings_v4", this._replaceDefaults("saving", settings));
     }
 
     /**
@@ -483,15 +485,15 @@ class SettingsStore {
             case "faucet_address":
                 if (payload.value.indexOf("testnet") === -1) {
                     this.mainnet_faucet = payload.value;
-                    ss.set("mainnet_faucet", payload.value);
+                    this.ss.set("mainnet_faucet", payload.value);
                 } else {
                     this.testnet_faucet = payload.value;
-                    ss.set("testnet_faucet", payload.value);
+                    this.ss.set("testnet_faucet", payload.value);
                 }
                 break;
 
             case "walletLockTimeout":
-                ss.set("lockTimeout", payload.value);
+                this.ss.set("lockTimeout", payload.value);
                 break;
 
             case "activeNode":
@@ -525,7 +527,7 @@ class SettingsStore {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
 
-        ss.set("viewSettings_v1", this.viewSettings.toJS());
+        this.ss.set("viewSettings_v1", this.viewSettings.toJS());
     }
 
     onChangeMarketDirection(payload) {
@@ -539,7 +541,7 @@ class SettingsStore {
                 this.marketDirections = this.marketDirections.delete(key);
             }
         }
-        ss.set("marketDirections", this.marketDirections.toJS());
+        this.ss.setss.set("marketDirections", this.marketDirections.toJS());
     }
 
     onHideAsset(payload) {
@@ -553,7 +555,7 @@ class SettingsStore {
             }
         }
 
-        ss.set("hiddenAssets", this.hiddenAssets.toJS());
+        this.ss.set("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     onHideMarket(payload) {
@@ -567,7 +569,7 @@ class SettingsStore {
             }
         }
 
-        ss.set("hiddenMarkets", this.hiddenMarkets.toJS());
+        this.ss.set("hiddenMarkets", this.hiddenMarkets.toJS());
     }
 
     onAddStarMarket(market) {
@@ -578,7 +580,7 @@ class SettingsStore {
                 base: market.base
             });
 
-            ss.set(this.starredKey, this.starredMarkets.toJS());
+            this.ss.setss.set(this.starredKey, this.starredMarkets.toJS());
         } else {
             return false;
         }
@@ -594,7 +596,7 @@ class SettingsStore {
         } else {
             this.userMarkets = this.userMarkets.delete(marketID);
         }
-        ss.set(this.marketsKey, this.userMarkets.toJS());
+        this.ss.set(this.marketsKey, this.userMarkets.toJS());
     }
 
     onRemoveStarMarket(market) {
@@ -602,12 +604,12 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
-        ss.set(this.starredKey, this.starredMarkets.toJS());
+        this.ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
     onClearStarredMarkets() {
         this.starredMarkets = Immutable.Map({});
-        ss.set(this.starredKey, this.starredMarkets.toJS());
+        this.ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
     onAddWS(ws) {
@@ -615,24 +617,24 @@ class SettingsStore {
             ws = {url: ws, location: null};
         }
         this.defaults.apiServer.push(ws);
-        ss.set("defaults_v1", this.defaults);
+        this.ss.set("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
         this.defaults.apiServer.splice(index, 1);
-        ss.set("defaults_v1", this.defaults);
+        this.ss.set("defaults_v1", this.defaults);
     }
 
     onHideWS(url) {
         let node = this.defaults.apiServer.find(node => node.url === url);
         node.hidden = true;
-        ss.set("defaults_v1", this.defaults);
+        this.ss.set("defaults_v1", this.defaults);
     }
 
     onShowWS(url) {
         let node = this.defaults.apiServer.find(node => node.url === url);
         node.hidden = false;
-        ss.set("defaults_v1", this.defaults);
+        this.ss.set("defaults_v1", this.defaults);
     }
 
     onClearSettings(resolve) {
@@ -661,7 +663,7 @@ class SettingsStore {
     }
 
     onUpdateLatencies(latencies) {
-        ss.set("apiLatencies", latencies);
+        this.ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
     }
 
@@ -670,13 +672,13 @@ class SettingsStore {
     }
 
     setLastBudgetObject(value) {
-        ss.set(this._getChainKey("lastBudgetObject"), value);
+        this.ss.set(this._getChainKey("lastBudgetObject"), value);
     }
 
     setExchangeSettings(key, value) {
         this.exchange = this.exchange.set(key, value);
 
-        ss.set("exchange", this.exchange.toJS());
+        this.ss.set("exchange", this.exchange.toJS());
     }
 
     getExchangeSettings(key) {
@@ -719,7 +721,7 @@ class SettingsStore {
             this.defaultMarkets = Immutable.Map(defaultMarkets);
         }
 
-        ss.set(this.basesKey, this.preferredBases.toArray());
+        this.ss.set(this.basesKey, this.preferredBases.toArray());
     }
 
     onUpdateUnits() {
@@ -730,4 +732,7 @@ class SettingsStore {
     }
 }
 
-export default alt.createStore(SettingsStore, "SettingsStore");
+export default alt.createStore(
+    bitSharesStorage(SettingsStore),
+    "SettingsStore"
+);
