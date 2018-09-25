@@ -830,6 +830,7 @@ class AccountPortfolioList extends React.Component {
                                         )}
                                     </td>
                                     <td>{emptyCell}</td>
+                                    <td>{emptyCell}</td>
                                     <td
                                         style={{textAlign: "center"}}
                                         className="column-hide-small"
