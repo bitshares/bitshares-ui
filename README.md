@@ -88,22 +88,21 @@ Clone this repository, run `docker-compose up` and visit localhost:8080
 
 
 ## Contributing
-Please work off the staging branch and make pull requests to that branch. The master branch will only be updated for new releases.
+Please work off the develop branch and make pull requests to that branch. The master branch will only be updated for new releases.
 
-The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2018-02-bitshares-ui). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
+The Bitshares UI team is supported by this [worker](https://www.bitshares.foundation/workers/2018-08-bitshares-ui). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
 
 If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help. You may also join [BitShares on Discord](https://discord.gg/GsjQfAJ)
 
-- Coordinator: Bill Butler, @billbutler
+- Project Manager: Magnus Anderson, @startail
+- Issue and Funds Coordinator: Bill Butler, @billbutler
 - Lead Developer: Sigve Kvalsvik, @sigvek
-- Developer: Calvin Froedge, @calvin
-- Code Review: Fabian Schuh, @xeroc
 
 ## Development process
 
 - New issues will, after enough discussion and clarification, be assigned an estimate time to complete, as well as assigned to the next unstarted milestone, by a project coordinator.
 - Milestones are numbered YYMMDD and refer to the **anticipated release date of the next Release Candidate**.
-- Release Candidates sits 1 milestone period (2 weeks) for evaluation by the public before release
+- Release Candidates sits 1-2 weeks for evaluation by the public before release
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
 - We pay **bounties** for issues that have been estimated. An estimated issue is prefixed with a number in brackets like this: `[2] An nasty bug`. In this example, the bug is valued at two hours ($125 per hour). If you fix this issue according to these guidelines and your PR is accepted, this will earn you $250 bitUSD. You must have a Bitshares wallet and a Bitshares account to receive payment.

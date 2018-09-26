@@ -3,6 +3,7 @@ import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
+import MarketLink from "../Utility/MarketLink";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
 import BalanceComponent from "../Utility/BalanceComponent";
@@ -11,6 +12,38 @@ import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
+import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
+
+const WorthLessSettlementWarning = withWorthLessSettlementFlag(
+    ({worthLessSettlement, asset, shortBackingAsset}) => {
+        switch (worthLessSettlement) {
+            case true:
+                return (
+                    <TranslateWithLinks
+                        string="exchange.worth_less_settlement_warning"
+                        keys={[
+                            {
+                                value: (
+                                    <MarketLink
+                                        base={asset.get("id")}
+                                        quote={shortBackingAsset.get("id")}
+                                    />
+                                ),
+                                arg: "market_link"
+                            }
+                        ]}
+                    />
+                );
+            case undefined:
+                return (
+                    <Translate content="exchange.checking_for_worth_less_settlement" />
+                );
+            default:
+                return null;
+        }
+    }
+);
 
 class ModalContent extends React.Component {
     static propTypes = {
@@ -118,6 +151,7 @@ class ModalContent extends React.Component {
                     content="modal.settle.title"
                     asset={asset.get("symbol")}
                 />
+                <WorthLessSettlementWarning asset={assetID} />
                 <div className="grid-container " style={{paddingTop: "2rem"}}>
                     <div className="content-block">
                         <AmountSelector

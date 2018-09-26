@@ -154,7 +154,7 @@ class Transfer extends React.Component {
     }
 
     _checkFeeStatus(account = this.state.from_account) {
-        if (!account) return;
+        if (!account || !account.get("balances")) return;
 
         const assets = Object.keys(account.get("balances").toJS()).sort(
             utils.sortID
