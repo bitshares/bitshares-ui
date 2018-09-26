@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import ls from "common/localStorage";
+import ls from "common/bitSharesStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
 import {
@@ -12,7 +12,6 @@ import {
     getMyMarketsQuotes,
     getUnits
 } from "branding";
-import bitSharesStorage from "../lib/common/bitSharesStorage";
 
 const CORE_ASSET = "BTS"; // Setting this to BTS to prevent loading issues when used with BTS chain which is the most usual case currently
 
@@ -23,7 +22,7 @@ let ss = new ls(STORAGE_KEY);
  * SettingsStore takes care of maintaining user set settings values and notifies all listeners
  */
 class SettingsStore {
-    constructor(ss) {
+    constructor() {
         this.exportPublicMethods({
             init: this.init.bind(this),
             getSetting: this.getSetting.bind(this),
@@ -60,7 +59,6 @@ class SettingsStore {
         this.initDone = false;
 
         this.settings = Immutable.Map(this._getSetting());
-        this.ss = ss;
 
         // deprecated to support existing code
         this.defaultSettings = Immutable.Map(this._getDefaultSetting());
@@ -294,7 +292,7 @@ class SettingsStore {
         if (settings == null) {
             settings = this.settings.toJS();
         }
-        this.ss.set("settings_v4", this._replaceDefaults("saving", settings));
+        ss.set("settings_v4", this._replaceDefaults("saving", settings));
     }
 
     /**
@@ -485,15 +483,15 @@ class SettingsStore {
             case "faucet_address":
                 if (payload.value.indexOf("testnet") === -1) {
                     this.mainnet_faucet = payload.value;
-                    this.ss.set("mainnet_faucet", payload.value);
+                    ss.set("mainnet_faucet", payload.value);
                 } else {
                     this.testnet_faucet = payload.value;
-                    this.ss.set("testnet_faucet", payload.value);
+                    ss.set("testnet_faucet", payload.value);
                 }
                 break;
 
             case "walletLockTimeout":
-                this.ss.set("lockTimeout", payload.value);
+                ss.set("lockTimeout", payload.value);
                 break;
 
             case "activeNode":
@@ -527,7 +525,7 @@ class SettingsStore {
             this.viewSettings = this.viewSettings.set(key, payload[key]);
         }
 
-        this.ss.set("viewSettings_v1", this.viewSettings.toJS());
+        ss.set("viewSettings_v1", this.viewSettings.toJS());
     }
 
     onChangeMarketDirection(payload) {
@@ -541,7 +539,7 @@ class SettingsStore {
                 this.marketDirections = this.marketDirections.delete(key);
             }
         }
-        this.ss.setss.set("marketDirections", this.marketDirections.toJS());
+        ss.set("marketDirections", this.marketDirections.toJS());
     }
 
     onHideAsset(payload) {
@@ -555,7 +553,7 @@ class SettingsStore {
             }
         }
 
-        this.ss.set("hiddenAssets", this.hiddenAssets.toJS());
+        ss.set("hiddenAssets", this.hiddenAssets.toJS());
     }
 
     onHideMarket(payload) {
@@ -569,7 +567,7 @@ class SettingsStore {
             }
         }
 
-        this.ss.set("hiddenMarkets", this.hiddenMarkets.toJS());
+        ss.set("hiddenMarkets", this.hiddenMarkets.toJS());
     }
 
     onAddStarMarket(market) {
@@ -580,7 +578,7 @@ class SettingsStore {
                 base: market.base
             });
 
-            this.ss.setss.set(this.starredKey, this.starredMarkets.toJS());
+            ss.set(this.starredKey, this.starredMarkets.toJS());
         } else {
             return false;
         }
@@ -596,7 +594,7 @@ class SettingsStore {
         } else {
             this.userMarkets = this.userMarkets.delete(marketID);
         }
-        this.ss.set(this.marketsKey, this.userMarkets.toJS());
+        ss.set(this.marketsKey, this.userMarkets.toJS());
     }
 
     onRemoveStarMarket(market) {
@@ -604,12 +602,12 @@ class SettingsStore {
 
         this.starredMarkets = this.starredMarkets.delete(marketID);
 
-        this.ss.set(this.starredKey, this.starredMarkets.toJS());
+        ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
     onClearStarredMarkets() {
         this.starredMarkets = Immutable.Map({});
-        this.ss.set(this.starredKey, this.starredMarkets.toJS());
+        ss.set(this.starredKey, this.starredMarkets.toJS());
     }
 
     onAddWS(ws) {
@@ -617,24 +615,24 @@ class SettingsStore {
             ws = {url: ws, location: null};
         }
         this.defaults.apiServer.push(ws);
-        this.ss.set("defaults_v1", this.defaults);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onRemoveWS(index) {
         this.defaults.apiServer.splice(index, 1);
-        this.ss.set("defaults_v1", this.defaults);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onHideWS(url) {
         let node = this.defaults.apiServer.find(node => node.url === url);
         node.hidden = true;
-        this.ss.set("defaults_v1", this.defaults);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onShowWS(url) {
         let node = this.defaults.apiServer.find(node => node.url === url);
         node.hidden = false;
-        this.ss.set("defaults_v1", this.defaults);
+        ss.set("defaults_v1", this.defaults);
     }
 
     onClearSettings(resolve) {
@@ -663,7 +661,7 @@ class SettingsStore {
     }
 
     onUpdateLatencies(latencies) {
-        this.ss.set("apiLatencies", latencies);
+        ss.set("apiLatencies", latencies);
         this.apiLatencies = latencies;
     }
 
@@ -672,13 +670,13 @@ class SettingsStore {
     }
 
     setLastBudgetObject(value) {
-        this.ss.set(this._getChainKey("lastBudgetObject"), value);
+        ss.set(this._getChainKey("lastBudgetObject"), value);
     }
 
     setExchangeSettings(key, value) {
         this.exchange = this.exchange.set(key, value);
 
-        this.ss.set("exchange", this.exchange.toJS());
+        ss.set("exchange", this.exchange.toJS());
     }
 
     getExchangeSettings(key) {
@@ -721,7 +719,7 @@ class SettingsStore {
             this.defaultMarkets = Immutable.Map(defaultMarkets);
         }
 
-        this.ss.set(this.basesKey, this.preferredBases.toArray());
+        ss.set(this.basesKey, this.preferredBases.toArray());
     }
 
     onUpdateUnits() {
@@ -732,7 +730,4 @@ class SettingsStore {
     }
 }
 
-export default alt.createStore(
-    bitSharesStorage(SettingsStore),
-    "SettingsStore"
-);
+export default alt.createStore(SettingsStore, "SettingsStore");

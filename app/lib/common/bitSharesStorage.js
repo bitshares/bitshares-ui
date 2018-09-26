@@ -1,21 +1,14 @@
-import ls from "./localStorage";
-let bitSharesStorage = Storage => {
-    // Return Storage if no localStorage is available
-    if (!ls) return Storage;
-
-    const STORAGE_KEY = "__graphene__";
-    let ss = new ls(STORAGE_KEY);
-    if (Storage.persist("true")) {
-        ss.set = null;
+import localStorage from "./localStorage";
+let bitSharesStorage = key => {
+    // Return Component if no localStorage is available
+    let bs = new localStorage(key);
+    const persist = false;
+    if (persist) {
+        bs.set = value => {
+            return value;
+        };
     }
-
-    class BitSharesStorage extends Storage {
-        constructor() {
-            super(ss);
-        }
-    }
-
-    return BitSharesStorage;
+    return bs;
 };
 
 export default bitSharesStorage;
