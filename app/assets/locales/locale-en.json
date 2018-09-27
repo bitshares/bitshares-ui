@@ -894,6 +894,7 @@
         "symbol": "Symbol",
         "time": "Time",
         "title": "Deposit & Withdraw",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
         "unavailable": "The gateway service for this asset is currently down, please try again later",
         "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
@@ -950,8 +951,9 @@
         "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",
         "logout": "Logout",
         "payments": "Send",
-        "payments_beta": "Send (Beta)",
-        "payments_legacy": "Send (legacy)",
+        "payments_legacy": "or Legacy Send",
+        "deposit_legacy": "or Legacy Deposit",
+        "withdraw_legacy": "or Legacy Withdraw",
         "settings": "Settings",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
@@ -1126,8 +1128,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
-            "submit": "Deposit",
-            "submit_beta": "Deposit (beta)"
+            "submit": "Deposit"
         },
         "deposit_withdraw": {
             "disabled": "%(gateway)s gateway service disabled",
@@ -1185,13 +1186,12 @@
             "estimated_value": "Estimated Value",
             "fee": "Fee",
             "gateway_fee": "Gateway Fee",
-            "header": "Withdraw (beta)",
+            "header": "Withdraw",
             "memo": "Memo",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Withdraw",
-            "submit_beta": "Withdraw (beta)",
             "withdraw": "Withdraw"
         }
     },
@@ -1638,6 +1638,7 @@
         "withdraw_permission_update": "Updated withdrawal permission for account"
     },
     "transfer": {
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "again": "MAKE ANOTHER TRANSFER",
         "amount": "Quantity",
         "available": "Available",

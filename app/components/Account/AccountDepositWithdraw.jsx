@@ -25,6 +25,9 @@ import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
+import DepositModal from "../Modal/DepositModal";
+import WithdrawModal from "../Modal/WithdrawModalNew";
+import TranslateWithLinks from "../Utility/TranslateWithLinks";
 
 class AccountDepositWithdraw extends React.Component {
     static propTypes = {
@@ -157,7 +160,13 @@ class AccountDepositWithdraw extends React.Component {
         //let services = ["Openledger (OPEN.X)", "BlockTrades (TRADE.X)", "Transwiser", "BitKapital"];
         let serList = [];
         let {account} = this.props;
-        let {olService, btService, rudexService, xbtsxService, citadelService} = this.state;
+        let {
+            olService,
+            btService,
+            rudexService,
+            xbtsxService,
+            citadelService
+        } = this.state;
         serList.push({
             name: "Openledger (OPEN.X)",
             template: (
@@ -539,6 +548,54 @@ class AccountDepositWithdraw extends React.Component {
                     className={this.props.contained ? "" : "grid-content"}
                     style={{paddingTop: "2rem"}}
                 >
+                    <div className="grid-block vertical medium-horizontal no-margin no-padding">
+                        <div style={{paddingBottom: "1rem"}}>
+                            <DepositModal
+                                ref="deposit_modal"
+                                modalId="deposit_modal_new"
+                                account={this.props.currentAccount}
+                                backedCoins={this.props.backedCoins}
+                            />
+                            <WithdrawModal
+                                ref="withdraw_modal"
+                                modalId="withdraw_modal_new"
+                                backedCoins={this.props.backedCoins}
+                            />
+                            <TranslateWithLinks
+                                string="gateway.phase_out_warning"
+                                keys={[
+                                    {
+                                        arg: "deposit_modal_link",
+                                        value: (
+                                            <a
+                                                onClick={() => {
+                                                    if (this.refs.deposit_modal)
+                                                        this.refs.deposit_modal.show();
+                                                }}
+                                            >
+                                                <Translate content="modal.deposit.submit" />
+                                            </a>
+                                        )
+                                    },
+                                    {
+                                        arg: "withdraw_modal_link",
+                                        value: (
+                                            <a
+                                                onClick={() => {
+                                                    if (
+                                                        this.refs.withdraw_modal
+                                                    )
+                                                        this.refs.withdraw_modal.show();
+                                                }}
+                                            >
+                                                <Translate content="modal.withdraw.submit" />
+                                            </a>
+                                        )
+                                    }
+                                ]}
+                            />
+                        </div>
+                    </div>
                     <Translate content="gateway.title" component="h2" />
                     <div className="grid-block vertical medium-horizontal no-margin no-padding">
                         <div className="medium-6 show-for-medium">
@@ -645,8 +702,12 @@ export default connect(
         },
         getProps() {
             return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount,
                 account: AccountStore.getState().currentAccount,
                 viewSettings: SettingsStore.getState().viewSettings,
+                backedCoins: GatewayStore.getState().backedCoins,
                 openLedgerBackedCoins: GatewayStore.getState().backedCoins.get(
                     "OPEN",
                     []
