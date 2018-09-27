@@ -70,7 +70,7 @@ class Explorer extends React.Component {
             <Tabs
                 activeKey={this.props.location.pathname}
                 animated={false}
-                style={{display: "table", height: "100%"}}
+                style={{display: "table", height: "100%", width: "100%"}}
                 onChange={onChange}
             >
                 {this.state.tabs.map(tab => {
