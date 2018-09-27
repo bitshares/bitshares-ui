@@ -1,14 +1,20 @@
 import localStorage from "./localStorage";
-let bitSharesStorage = key => {
-    // Return Component if no localStorage is available
-    let bs = new localStorage(key);
-    const persist = false;
-    if (persist) {
-        bs.set = value => {
-            return value;
-        };
+
+class bitSharesStorage extends localStorage {
+    constructor(key, persist) {
+        super(key);
+        this.originset = this.set;
+        this.set = this._set;
+        this.persist = persist;
     }
-    return bs;
-};
+
+    _set = value => {
+        if (this.persist) {
+            return value;
+        } else {
+            return this.originset(value);
+        }
+    };
+}
 
 export default bitSharesStorage;
