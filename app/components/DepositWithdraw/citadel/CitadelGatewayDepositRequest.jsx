@@ -14,6 +14,7 @@ import {blockTradesAPIs, openledgerAPIs, citadelAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 class CitadelGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -55,25 +56,6 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
-        this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
-    }
-
-    _copy(e) {
-        try {
-            if (this.state.clipboardText)
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-            else
-                e.clipboardData.setData(
-                    "text/plain",
-                    counterpart
-                        .translate("gateway.use_copy_button")
-                        .toUpperCase()
-                );
-            e.preventDefault();
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     _getDepositObject() {
@@ -92,10 +74,6 @@ class CitadelGatewayDepositRequest extends React.Component {
             account: this.props.account.get("name"),
             stateCallback: this.addDepositAddress
         });
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener("copy", this._copy);
     }
 
     componentWillReceiveProps(np) {
@@ -143,16 +121,6 @@ class CitadelGatewayDepositRequest extends React.Component {
 
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-    toClipboard(clipboardText) {
-        try {
-            this.setState({clipboardText}, () => {
-                document.execCommand("copy");
-            });
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     render() {
@@ -334,7 +302,8 @@ class CitadelGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -367,7 +336,8 @@ class CitadelGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
@@ -388,26 +358,19 @@ class CitadelGatewayDepositRequest extends React.Component {
                                 style={{paddingTop: 10}}
                             >
                                 {deposit_address_fragment ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_address" />
-                                    </div>
+                                    <CopyToClipboard text={clipboardText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_address" />
+                                            cidatel
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {memoText ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            memoText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_memo" />
-                                    </div>
+                                    <CopyToClipboard text={memoText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_memo" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 <button
                                     className={"button spinner-button-circle"}
@@ -506,7 +469,8 @@ class CitadelGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -541,7 +505,8 @@ class CitadelGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button
