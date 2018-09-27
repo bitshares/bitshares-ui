@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
+import DisableCopyText from "../DisableCopyText";
 import RuDexWithdrawModal from "./RuDexWithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -325,13 +326,27 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     <tr>
                                         <td>
                                             ADDRESS:{" "}
-                                            <b>{deposit_address_fragment}</b>
+                                            <b>
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    {deposit_address_fragment}
+                                                </DisableCopyText>
+                                            </b>
                                         </td>
                                     </tr>
                                     {deposit_memo ? (
                                         <tr>
                                             <td>
-                                                MEMO: <b>{deposit_memo}</b>
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    MEMO: <b>{deposit_memo}</b>
+                                                </DisableCopyText>
                                             </td>
                                         </tr>
                                     ) : null}

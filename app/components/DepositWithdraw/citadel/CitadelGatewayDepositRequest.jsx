@@ -12,6 +12,7 @@ import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
 import {blockTradesAPIs, openledgerAPIs, citadelAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
+import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import CopyToClipboard from "react-copy-to-clipboard";
@@ -346,11 +347,25 @@ class CitadelGatewayDepositRequest extends React.Component {
                             {emptyAddressDeposit ? (
                                 <Translate content="gateway.please_generate_address" />
                             ) : (
-                                deposit_address_fragment
+                                <DisableCopyText
+                                    replaceCopyText={counterpart.translate(
+                                        "gateway.use_copy_button"
+                                    )}
+                                >
+                                    deposit_address_fragment
+                                </DisableCopyText>
                             )}
                             <div>
                                 {deposit_memo && (
-                                    <span>memo: {deposit_memo}</span>
+                                    <span>
+                                        <DisableCopyText
+                                            replaceCopyText={counterpart.translate(
+                                                "gateway.use_copy_button"
+                                            )}
+                                        >
+                                            memo: {deposit_memo}
+                                        </DisableCopyText>
+                                    </span>
                                 )}
                             </div>
                             <div

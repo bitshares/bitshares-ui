@@ -13,6 +13,7 @@ import {requestDepositAddress} from "lib/common/XbtsxMethods";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "lib/common/utils";
+import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
@@ -348,7 +349,16 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                 }}
                                                 content="gateway.address"
                                             />
-                                            : <b>{deposit_address_fragment}</b>
+                                            :{" "}
+                                            <DisableCopyText
+                                                replaceCopyText={counterpart.translate(
+                                                    "gateway.use_copy_button"
+                                                )}
+                                            >
+                                                <b>
+                                                    {deposit_address_fragment}
+                                                </b>
+                                            </DisableCopyText>
                                         </td>
                                     </tr>
                                     {deposit_memo ? (
@@ -361,7 +371,14 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                     }}
                                                     content="gateway.memo"
                                                 />
-                                                : <b>{deposit_memo}</b>
+                                                :{" "}
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    <b> {deposit_memo} </b>
+                                                </DisableCopyText>
                                             </td>
                                         </tr>
                                     ) : null}
@@ -375,7 +392,6 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     <CopyToClipboard text={clipboardText}>
                                         <div className="button">
                                             <Translate content="gateway.copy_address" />
-                                            xbtsx
                                         </div>
                                     </CopyToClipboard>
                                 ) : null}
