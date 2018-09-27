@@ -51,27 +51,54 @@ class AppInit extends React.Component {
             apiConnected: false,
             apiError: false,
             syncError: null,
-            status: ""
+            status: "",
+            extendeLogText: []
         };
     }
 
-    componentDidCatch(error, errorInfo) {
-        LogsActions.setLog({
+    componentDidCatch(error) {
+        this.saveExtendedLog({
             type: "query",
-            log: {error, errorInfo}
+            log: [error]
         });
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        LogsActions.setLog(nextState.extendeLogText);
+    }
+    saveExtendedLog(type, logText) {
+        const maxlogslength = 19;
+        const logState = this.state.extendeLogText;
+        var text = "";
+
+        for (const value of logText) {
+            text += value;
+        }
+        text = ["~ ", type, ": ", text].join("");
+        if (this.state.extendeLogText.length > maxlogslength) {
+            logState.splice(0, 1);
+        }
+        if (text.indexOf(logState[this.state.extendeLogText.length])) {
+            logState.push(text);
+            this.setState({extendeLogText: logState});
+        }
+    }
     componentWillMount() {
+        LogsActions.getLogs().then(data => {
+            this.setState({extendeLogText: data});
+        });
+        const thiz = this;
         const saveLog = (type, log) => {
-            LogsActions.setLog({type, log: Array.from(log)});
-            console[`str${type}`].apply(console, arguments);
+            thiz.saveExtendedLog(type, Array.from(log));
+            console[`str${type}`].apply(console, log);
         };
 
         console.strlog = console.log.bind(console);
         console.strerror = console.error.bind(console);
         console.strwarn = console.warn.bind(console);
         console.strinfo = console.info.bind(console);
+        console.strtimeEnd = console.timeEnd.bind(console);
+        console.strdebug = console.debug.bind(console);
 
         console.log = function() {
             saveLog("log", arguments);
@@ -85,9 +112,11 @@ class AppInit extends React.Component {
         console.info = function() {
             saveLog("info", arguments);
         };
-
-        window.onerror = function(errorMsg, url, lineNumber) {
-            saveLog("window.onerror", {errorMsg, url, lineNumber});
+        console.timeEnd = function() {
+            saveLog("timeEnd", arguments);
+        };
+        console.debug = function() {
+            saveLog("debug", arguments);
         };
 
         willTransitionTo(true, this._statusCallback.bind(this))

@@ -34,7 +34,7 @@ class ReportModal extends React.Component {
         return {
             open: false,
             loadingImage: false,
-            memo: "",
+            memo: [],
             hidden: false,
             logsCopySuccess: false
         };
@@ -48,7 +48,7 @@ class ReportModal extends React.Component {
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value});
+        this.setState({memo: [e.target.value]});
     }
 
     onClose = (publishClose = true) => {
@@ -57,7 +57,7 @@ class ReportModal extends React.Component {
             {
                 open: false,
                 loadingImage: false,
-                memo: "",
+                memo: [],
                 hidden: false,
                 logsCopySuccess: false
             },
@@ -83,7 +83,7 @@ class ReportModal extends React.Component {
     getLogs = () => {
         LogsActions.getLogs().then(data => {
             this.setState({
-                memo: JSON.stringify(data)
+                memo: data
             });
         });
     };
@@ -124,8 +124,8 @@ class ReportModal extends React.Component {
                             <textarea
                                 id="logsText"
                                 style={{marginBottom: 0}}
-                                rows="3"
-                                value={memo}
+                                rows="20"
+                                value={memo.join(" \n")}
                                 onChange={this.onMemoChanged.bind(this)}
                             />
                             {/* warning */}

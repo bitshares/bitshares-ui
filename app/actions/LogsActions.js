@@ -1,20 +1,9 @@
 import alt from "alt-instance";
 
 class LogsActions {
-    setLog(log) {
-        return this.getLogs().then(data => {
-            let logs = data || [];
-
-            if (logs.length == 20) {
-                logs.splice(0, 1);
-            }
-
-            logs.push(log);
-
-            localStorage.setItem("logs", JSON.stringify(logs));
-        });
+    async setLog(log) {
+        return await localStorage.setItem("logs", JSON.stringify(log));
     }
-
     getLogs() {
         return new Promise(resolve => {
             resolve(JSON.parse(localStorage.getItem("logs")));
