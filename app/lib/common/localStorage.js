@@ -167,6 +167,19 @@ class InRamLocalStorage extends AbstractLocalStorage {
     }
 }
 
+var enforceLocalStorageType = null;
+
+/**
+ * Allow the wallet to switch the storage type (e.g. for private sessions)
+ * @param type
+ */
+export const setLocalStorageType = type => {
+    if (type !== "inram" && type !== "persistant") {
+        throw "Please choose inram or persistant storage type";
+    }
+    enforceLocalStorageType = type;
+};
+
 /**
  * Storage that allows switching between persistant and inram implementation
  */
@@ -175,23 +188,41 @@ class DynamicLocalStorage extends AbstractLocalStorage {
         super(prefix);
 
         // default is persistant storage, but if that is not available use inram
-        this.useInRam();
-        console.log("Using ", this._impl);
+        if (null === ls) {
+            this.useInRam();
+        } else {
+            this.usePersistant();
+        }
+    }
+
+    _switchIfNecessary() {
+        if (enforceLocalStorageType == null) {
+            return;
+        }
+        if (enforceLocalStorageType == "inram") {
+            this.useInRam();
+        } else {
+            this.usePersistant();
+        }
     }
 
     _get(key) {
+        this._switchIfNecessary();
         return this._impl._get(key);
     }
 
     _set(key, object) {
+        this._switchIfNecessary();
         this._impl._set(key, object);
     }
 
     _remove(key) {
+        this._switchIfNecessary();
         this._impl._remove(key);
     }
 
     _has(key) {
+        this._switchIfNecessary();
         return this._impl._has(key);
     }
 
