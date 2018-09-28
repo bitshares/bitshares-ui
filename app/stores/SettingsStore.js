@@ -2,7 +2,7 @@ import alt from "alt-instance";
 import SettingsActions from "actions/SettingsActions";
 import IntlActions from "actions/IntlActions";
 import Immutable, {fromJS} from "immutable";
-import ls from "common/bitSharesStorage";
+import ls from "common/localStorage";
 import {Apis} from "bitsharesjs-ws";
 import {settingsAPIs} from "api/apiConfig";
 import {
