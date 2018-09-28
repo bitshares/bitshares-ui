@@ -1,17 +1,35 @@
 import ls, {ls_key_exists} from "./localStorageImpl";
 
 /**
- * Initialize localStorage. Default is to use persistant implementation
+ * Abstract interface for local storage. Provides get, set, has and remove. Actual implementation must override
+ * _get, _set, _has and _remove.
+ *
+ * @author Stefan Schießl, Alexander Verevkin
  */
 class AbstractLocalStorage {
     constructor(prefix) {
         this._storage_prefix = prefix;
     }
 
+    /**
+     * Add the prefix for the key
+     *
+     * @param key
+     * @returns {*}
+     * @private
+     */
     _translateKey(key) {
         return this._storage_prefix + key;
     }
 
+    /**
+     * Checks if the underlying storage has the key, and if so and it has a valid value, returns it.
+     * Otherwise default value is returned.
+     *
+     * @param key
+     * @param defaultValue
+     * @returns {*}
+     */
     get(key, defaultValue = {}) {
         key = this._translateKey(key);
         try {
@@ -30,41 +48,80 @@ class AbstractLocalStorage {
         }
     }
 
+    /**
+     * Internal getter to access the actual implementation, only for derived classes
+     *
+     * @param key
+     * @private
+     */
     _get(key) {
         throw Error("Needs implementation");
     }
 
+    /**
+     * Stringifies the given value and stores it associated to the given key
+     *
+     * @param key
+     * @param object
+     */
     set(key, object) {
-        key = this._translateKey(key);
         if (object && object.toJS) {
             object = object.toJS();
         }
-        this._set(key, JSON.stringify(object));
+        this._set(this._translateKey(key), JSON.stringify(object));
     }
 
+    /**
+     * Internal setter to access the actual implementation, only for derived classes
+     *
+     * @param key
+     * @private
+     */
     _set(key) {
         throw Error("Needs implementation");
     }
 
+    /**
+     * Removes the key from the storage
+     *
+     * @param key
+     */
     remove(key) {
-        key = this._translateKey(key);
-        this._remove(key);
+        this._remove(this._translateKey(key));
     }
 
+    /**
+     * Check if the key is present in the storage
+     * @param key
+     */
     has(key) {
-        key = this._translateKey(key);
-        this._has(key);
+        this._has(this._translateKey(key));
     }
 
+    /**
+     * Internal remove to access the actual implementation, only for derived classes
+     *
+     * @param key
+     * @private
+     */
     _remove(key) {
         throw Error("Needs implementation");
     }
 
+    /**
+     * Internal has  to access the actual implementation, only for derived classes
+     *
+     * @param key
+     * @private
+     */
     _has(key) {
         throw Error("Needs implementation");
     }
 }
 
+/**
+ * Persistant storage that access the typically known as localStorage implementation of modern browsers
+ */
 class PersistantLocalStorage extends AbstractLocalStorage {
     _get(key) {
         return JSON.parse(ls.getItem(key));
@@ -83,6 +140,9 @@ class PersistantLocalStorage extends AbstractLocalStorage {
     }
 }
 
+/**
+ * Storage that keeps everything in a local variable that is only kept in ram
+ */
 class InRamLocalStorage extends AbstractLocalStorage {
     constructor(prefix) {
         super(prefix);
@@ -107,6 +167,9 @@ class InRamLocalStorage extends AbstractLocalStorage {
     }
 }
 
+/**
+ * Storage that allows switching between persistant and inram implementation
+ */
 class DynamicLocalStorage extends AbstractLocalStorage {
     constructor(prefix) {
         super(prefix);
@@ -141,11 +204,7 @@ class DynamicLocalStorage extends AbstractLocalStorage {
     }
 }
 
-/**
- * LocalStorage should be a singleton, wrap it
- * @param key
- * @returns {DynamicLocalStorage}
- */
+// LocalStorage should be a singleton, wrap it
 const _localStorageCache = {};
 const localStorage = prefix => {
     if (!(prefix in _localStorageCache)) {
