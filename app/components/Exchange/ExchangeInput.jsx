@@ -1,9 +1,10 @@
 import React from "react";
+import {Input} from "bitshares-ui-style-guide";
 
 export class DecimalChecker extends React.Component {
     onPaste(e) {
-        var pasteValue = e.clipboardData.getData("text");
-
+        var pasteValue = e.clipboardData.getData("text").replace(/,/g,".");
+        
         var decimal = pasteValue.match(/\./g);
         var decimalCount = decimal ? decimal.length : 0;
         if (decimalCount > 1) e.preventDefault();
@@ -13,7 +14,7 @@ export class DecimalChecker extends React.Component {
     onKeyPress(e) {
         if (!e.nativeEvent.ctrlKey) {
             // allow copy-paste
-
+            
             if (e.key === "." && e.target.value === "") e.target.value = "0";
             var nextValue = e.target.value + e.key;
             var decimal = nextValue.match(/\./g);
@@ -38,15 +39,28 @@ class ExchangeInput extends DecimalChecker {
     }
 
     render() {
-        return (
-            <input
-                ref="input"
-                type="text"
-                {...this.props}
-                onPaste={this.onPaste.bind(this)}
-                onKeyPress={this.onKeyPress.bind(this)}
-            />
-        );
+        // Backwards Compatibility for the time of transition
+        if(this.props.useAnt) {
+            return (
+                <Input
+                    ref="input"
+                    type="text"
+                    {...this.props}
+                    onPaste={this.onPaste.bind(this)}
+                    onKeyPress={this.onKeyPress.bind(this)}
+                />
+            );
+        } else {
+            return (
+                <input
+                    ref="input"
+                    type="text"
+                    {...this.props}
+                    onPaste={this.onPaste.bind(this)}
+                    onKeyPress={this.onKeyPress.bind(this)}
+                />
+            );
+        }
     }
 }
 

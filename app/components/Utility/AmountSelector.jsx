@@ -7,6 +7,7 @@ import counterpart from "counterpart";
 import AssetWrapper from "./AssetWrapper";
 import utils from "common/utils";
 import PropTypes from "prop-types";
+import {Input} from "bitshares-ui-style-guide";
 
 class AssetSelector extends React.Component {
     static propTypes = {
@@ -106,16 +107,18 @@ class AmountSelector extends React.Component {
 
         return (
             <div className="amount-selector" style={this.props.style}>
-                <label className="right-label">
+                {this.props.label ? <label className="right-label">
                     {this.props.display_balance}
-                </label>
-                <Translate
+                </label> : null}
+                {this.props.label ? <Translate
                     className="left-label"
-                    component="label"
+                    component="h6"
+                    style={{margin: 0}}
                     content={this.props.label}
-                />
+                /> : null}
+
                 <div className="inline-label input-wrapper">
-                    <input
+                    <Input
                         disabled={this.props.disabled}
                         type="text"
                         value={value || ""}
@@ -123,7 +126,6 @@ class AmountSelector extends React.Component {
                         onChange={this._onChange.bind(this)}
                         tabIndex={this.props.tabIndex}
                     />
-
                     <div className="form-label select floating-dropdown">
                         {this.props.isPrice ? (
                             <div className="dropdown-wrapper inactive">

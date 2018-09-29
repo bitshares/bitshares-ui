@@ -141,7 +141,7 @@ class Dropdown extends React.Component {
                         (this.props.upperCase ? " upper-case" : "")
                     }
                 >
-                    <div style={{paddingRight: 15}}>
+                    <div>
                         {value ? value : <span className="hidden">A</span>}
                     </div>
                     <ul
