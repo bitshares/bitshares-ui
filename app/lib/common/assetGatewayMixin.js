@@ -1,8 +1,4 @@
-import React from "react";
-import Translate from "react-translate-component";
-import Icon from "../../components/Icon/Icon";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
-import {Link} from "react-router-dom";
 
 function _getCoinToGatewayMapping(boolCheck = "depositAllowed") {
     let coinToGatewayMapping = {};
@@ -127,105 +123,7 @@ function _onAssetSelected(
     return {selectedAsset, selectedGateway};
 }
 
-function gatewaySelector(args) {
-    let {
-        selectedGateway,
-        gatewayStatus,
-        nAvailableGateways,
-        error,
-        onGatewayChanged
-    } = args;
-
-    let selectGatewayList = Object.keys(gatewayStatus).map((key, i) => {
-        if (gatewayStatus[key].options.enabled)
-            return (
-                <option
-                    value={gatewayStatus[key].id}
-                    key={gatewayStatus[key].id}
-                >
-                    {gatewayStatus[key].name}
-                </option>
-            );
-    });
-
-    let supportLink = !!selectedGateway
-        ? "/help/gateways/" +
-          gatewayStatus[selectedGateway].name.toLowerCase().replace("-", "")
-        : null;
-
-    return (
-        <div>
-            <div className="no-margin no-padding">
-                <section className="block-list">
-                    <label className="left-label">
-                        <Translate content="modal.deposit_withdraw.gateway" />
-                        {selectedGateway ? (
-                            <Link to={supportLink} style={{cursor: "pointer"}}>
-                                &nbsp;
-                                <Icon
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
-                            </Link>
-                        ) : null}
-                        <span className="floatRight error-msg">
-                            {!error &&
-                            selectedGateway &&
-                            gatewayStatus[selectedGateway] &&
-                            !gatewayStatus[selectedGateway].options.enabled ? (
-                                <Translate
-                                    content="modal.deposit_withdraw.disabled"
-                                    with={{
-                                        gateway:
-                                            gatewayStatus[selectedGateway].name
-                                    }}
-                                />
-                            ) : null}
-                            {error ? (
-                                <Translate content="modal.deposit_withdraw.wallet_error" />
-                            ) : null}
-                            {!selectedGateway && nAvailableGateways == 0 ? (
-                                <Translate content="modal.deposit_withdraw.no_gateway_available" />
-                            ) : null}
-                        </span>
-                    </label>
-
-                    <div className="inline-label input-wrapper">
-                        <select
-                            role="combobox"
-                            className="selectWrapper"
-                            value={!selectedGateway ? "" : selectedGateway}
-                            onChange={onGatewayChanged}
-                            id="gatewaySelector"
-                            style={{cursor: "default"}}
-                        >
-                            {!selectedGateway && nAvailableGateways != 0 ? (
-                                <Translate
-                                    component="option"
-                                    value=""
-                                    content="modal.deposit_withdraw.select_gateway"
-                                />
-                            ) : null}
-                            {selectGatewayList}
-                        </select>
-                        <Icon
-                            name="chevron-down"
-                            title="icons.chevron_down.gateways"
-                            style={{
-                                position: "absolute",
-                                right: "10px",
-                                top: "10px"
-                            }}
-                        />
-                    </div>
-                </section>
-            </div>
-        </div>
-    );
-}
-
 export {
-    gatewaySelector,
     _getNumberAvailableGateways,
     _onAssetSelected,
     _getCoinToGatewayMapping

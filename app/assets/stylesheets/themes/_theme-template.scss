@@ -561,6 +561,12 @@
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
+    }
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -2085,12 +2091,11 @@
             border: 1px solid $bg-color;
         }
     }
+
     .qr-address-scanner {
         &-btn {
             background: #049cce;
-
-            height: 2.4rem;
-            border-radius: 0 5px 5px 0;
+            height: 30px;
             width: 40px;
             span.icon {
                 background: transparent;
@@ -2104,11 +2109,6 @@
             height: 1px;
             width: 100%;
             background: $bg-color;
-        }
-        &-modal {
-        }
-        &-input-field {
-            border-radius: 5px 0 0 5px !important;
         }
         &-status {
             font-size: 0.95rem;
@@ -2152,6 +2152,35 @@
                 background-color: $light-panel-bg-color;
             }
         }
+    }
+
+    /* Ant Design Hacks */
+    .ant-select-arrow {
+        color: $light-text-color !important;
+    }
+
+    .ant-select-selection-selected-value {
+        color: $light-text-color !important;
+    }
+
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
+        background-color: $input-background;
+        color: $primary-text-color;
+        &:hover,
+        &:focus,
+        &:active,
+        &:disabled {
+            color: $primary-text-color;
+            background-color: $input-background;
+        }
+        
+    }
+
+    .ant-input-group-addon {
+        padding: 0 !important;
     }
 }
 .rc-time-picker-panel {

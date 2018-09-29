@@ -25,7 +25,6 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import QRScanner from "../QRAddressScanner";
 import counterpart from "counterpart";
 import {
-    gatewaySelector,
     _getNumberAvailableGateways,
     _onAssetSelected,
     _getCoinToGatewayMapping
@@ -44,8 +43,10 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AccountSelector from "components/Account/AccountSelector";
 import {ChainStore} from "bitsharesjs";
 const gatewayBoolCheck = "withdrawalAllowed";
+import {Input} from "bitshares-ui-style-guide";
 
 import {getAssetAndGateway, getIntermediateAccount} from "common/gatewayUtils";
+import GatewaySelector from "../Utility/GatewaySelector";
 
 class WithdrawModalNew extends React.Component {
     constructor(props) {
@@ -335,11 +336,11 @@ class WithdrawModalNew extends React.Component {
             quantity === 0
                 ? true
                 : checkBalance(
-                      quantity,
-                      fromAsset,
-                      this.state.feeAmount,
-                      withdrawBalance
-                  );
+                    quantity,
+                    fromAsset,
+                    this.state.feeAmount,
+                    withdrawBalance
+                );
 
         let {fee_asset_types} = this._getAvailableAssets();
         return {
@@ -530,13 +531,21 @@ class WithdrawModalNew extends React.Component {
         );
     }
 
-    onAssetSelected(value, asset) {
+    onAssetSelected(coinItems, selected) {
+        let asset;
+
+        coinItems.map(a => {
+            if (a.id == selected) {
+                asset = a;
+            } 
+        });
+
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
-            value,
+            asset.label,
             gatewayBoolCheck
         );
-        let address = WithdrawAddresses.getLast(value.toLowerCase());
+        let address = WithdrawAddresses.getLast(asset.label.toLowerCase());
         this.setState(
             {
                 selectedAsset,
@@ -551,8 +560,16 @@ class WithdrawModalNew extends React.Component {
         );
     }
 
-    onAssetChanged(value) {
-        value = value.toUpperCase();
+    onAssetChanged(coinItems, selected) {
+        let asset;
+
+        coinItems.map(a => {
+            if (a.id == selected) {
+                asset = a;
+            } 
+        });
+
+        let value = asset.label.toUpperCase();
 
         let stateObj = {};
 
@@ -577,8 +594,7 @@ class WithdrawModalNew extends React.Component {
         this.setState(stateObj);
     }
 
-    onGatewayChanged(e) {
-        let selectedGateway = e.target.value;
+    onGatewayChanged(selectedGateway) {
         this.setState({selectedGateway}, () => {
             this.setState(this._getAssetPairVariables(), this.updateFee);
         });
@@ -609,7 +625,7 @@ class WithdrawModalNew extends React.Component {
     }
 
     onAddressChanged(e) {
-        let {value} = e.target;
+        let value = e.target.value;
         this.validateAddress(value);
         this.setState({address: value}, this._updateFee);
     }
@@ -889,11 +905,11 @@ class WithdrawModalNew extends React.Component {
         if (backingAsset && backingAsset.minAmount) {
             minWithdraw = !!backingAsset.precision
                 ? utils.format_number(
-                      backingAsset.minAmount /
-                          utils.get_asset_precision(backingAsset.precision),
-                      backingAsset.precision,
-                      false
-                  )
+                    backingAsset.minAmount /
+                        utils.get_asset_precision(backingAsset.precision),
+                    backingAsset.precision,
+                    false
+                )
                 : backingAsset.minAmount;
         } else if (backingAsset) {
             minWithdraw =
@@ -937,16 +953,16 @@ class WithdrawModalNew extends React.Component {
         let maxAvailable =
             convertedBalance && this.state.withdrawalCurrency
                 ? new Asset({
-                      real: convertedBalance,
-                      asset_id: this.state.withdrawalCurrency.id,
-                      precision: this.state.withdrawalCurrency.precision
-                  })
+                    real: convertedBalance,
+                    asset_id: this.state.withdrawalCurrency.id,
+                    precision: this.state.withdrawalCurrency.precision
+                })
                 : new Asset({
-                      amount: 0,
-                      asset_id: this.state.withdrawalCurrency
-                          ? this.state.withdrawalCurrency.id
-                          : undefined
-                  });
+                    amount: 0,
+                    asset_id: this.state.withdrawalCurrency
+                        ? this.state.withdrawalCurrency.id
+                        : undefined
+                });
         if (this.state.feeAmount.asset_id === maxAvailable.asset_id) {
             maxAvailable.minus(this.state.feeAmount);
         }
@@ -975,22 +991,18 @@ class WithdrawModalNew extends React.Component {
                         <Translate content="modal.withdraw.no_gateways" />
                     ) : null}
 
-                    {/*GATEWAY SELECTION*/}
-                    <div style={{marginBottom: "1em"}}>
-                        {selectedGateway
-                            ? gatewaySelector.call(this, {
-                                  selectedGateway,
-                                  gatewayStatus,
-                                  nAvailableGateways,
-                                  availableGateways:
-                                      coinToGatewayMapping[selectedAsset],
-                                  error: false,
-                                  onGatewayChanged: this.onGatewayChanged.bind(
-                                      this
-                                  )
-                              })
-                            : null}
-                    </div>
+                    {selectedAsset 
+                        ? <GatewaySelector 
+                            style={{marginBottom: "1em"}}
+                            selectedGateway={selectedGateway}
+                            gatewayStatus={gatewayStatus}
+                            allowedGateways={coinToGatewayMapping[selectedAsset]}
+                            nAvailableGateways={nAvailableGateways}
+                            error={false}
+                            onGatewayChanged={this.onGatewayChanged.bind(this)}
+                        /> 
+                        : null
+                    }
 
                     {/*QUANTITY*/}
                     {assetAndGateway || isBTS ? (
@@ -1039,144 +1051,147 @@ class WithdrawModalNew extends React.Component {
                                 </div>
                             ) : null}
                             <label className="left-label">
-                                <Translate content="modal.withdraw.quantity" />
+                                <Translate component="h6" style={{margin: 0}} content="modal.withdraw.quantity" />
                             </label>
                             <ExchangeInput
                                 value={quantity ? quantity : ""}
                                 onChange={this.onQuantityChanged.bind(this)}
                                 onFocus={onFocus}
                                 onBlur={onBlur}
+                                useAnt={true}
                                 placeholder={counterpart.translate(
                                     "gateway.limit_withdraw_asset",
                                     {
                                         min: !minWithdraw ? 0 : minWithdraw,
                                         max: !maxWithdraw
                                             ? counterpart.translate(
-                                                  "gateway.limit_withdraw_asset_none"
-                                              )
+                                                "gateway.limit_withdraw_asset_none"
+                                            )
                                             : maxWithdraw
                                     }
                                 )}
                             />
-                            {canCoverWithdrawal &&
-                            minWithdraw &&
-                            quantity &&
-                            quantity < minWithdraw ? (
-                                <Translate
-                                    component="div"
-                                    className="error-msg"
-                                    style={{
-                                        position: "absolute",
-                                        marginTop: -12,
-                                        right: 0,
-                                        textTransform: "uppercase",
-                                        fontSize: 13
-                                    }}
-                                    content="gateway.limit_withdraw_asset_min"
-                                    min={minWithdraw}
-                                    coin={selectedGateway + "." + selectedAsset}
-                                />
-                            ) : null}
-                            {canCoverWithdrawal &&
-                            maxWithdraw &&
-                            quantity &&
-                            quantity > maxWithdraw ? (
-                                <Translate
-                                    component="div"
-                                    className="error-msg"
-                                    style={{
-                                        position: "absolute",
-                                        marginTop: -12,
-                                        right: 0,
-                                        textTransform: "uppercase",
-                                        fontSize: 13
-                                    }}
-                                    content="gateway.limit_withdraw_asset_max"
-                                    max={maxWithdraw}
-                                    coin={selectedGateway + "." + selectedAsset}
-                                />
-                            ) : null}
-                            {(assetAndGateway || isBTS) &&
-                            !canCoverWithdrawal ? (
-                                <Translate
-                                    content="modal.withdraw.cannot_cover"
-                                    component="div"
-                                    className="error-msg"
-                                    style={{
-                                        position: "absolute",
-                                        marginTop: -12,
-                                        right: 0,
-                                        textTransform: "uppercase",
-                                        fontSize: 13
-                                    }}
-                                />
-                            ) : null}
                         </div>
                     ) : null}
-
-                    {/*ESTIMATED VALUE*/}
-                    {/*
-                (assetAndGateway || quantity) && !isBTS ?
-                <div>
-                <label className="left-label"><Translate content="modal.withdraw.estimated_value" /> ({preferredCurrency})</label>
-                <ExchangeInput value={userEstimate != null ? userEstimate : estimatedValue} onChange={this.onEstimateChanged.bind(this)} onFocus={onFocus} onBlur={onBlur} />
-                </div> :
-                null
-            */}
+                    {canCoverWithdrawal &&
+                        minWithdraw &&
+                        quantity &&
+                        quantity < minWithdraw ? (
+                            <Translate
+                                component="div"
+                                className="error-msg"
+                                style={{
+                                    position: "absolute",
+                                    marginTop: -12,
+                                    right: 0,
+                                    textTransform: "uppercase",
+                                    fontSize: 13
+                                }}
+                                content="gateway.limit_withdraw_asset_min"
+                                min={minWithdraw}
+                                coin={selectedGateway + "." + selectedAsset}
+                            />
+                        ) : null}
+                    {canCoverWithdrawal &&
+                        maxWithdraw &&
+                        quantity &&
+                        quantity > maxWithdraw ? (
+                            <Translate
+                                component="div"
+                                className="error-msg"
+                                style={{
+                                    position: "absolute",
+                                    marginTop: -12,
+                                    right: 0,
+                                    textTransform: "uppercase",
+                                    fontSize: 13
+                                }}
+                                content="gateway.limit_withdraw_asset_max"
+                                max={maxWithdraw}
+                                coin={selectedGateway + "." + selectedAsset}
+                            />
+                        ) : null}
+                    {(assetAndGateway || isBTS) &&
+                        !canCoverWithdrawal ? (
+                            <Translate
+                                content="modal.withdraw.cannot_cover"
+                                component="div"
+                                className="error-msg"
+                                style={{
+                                    position: "absolute",
+                                    marginTop: -12,
+                                    right: 0,
+                                    textTransform: "uppercase",
+                                    fontSize: 13
+                                }}
+                            />
+                        ) : null}
 
                     {/*WITHDRAW ADDRESS*/}
                     {assetAndGateway && !isBTS ? (
                         <div style={{marginBottom: "1em"}}>
                             <label className="left-label">
                                 <Translate
-                                    component="span"
+                                    component="h6"
+                                    style={{margin: 0}}
                                     content="modal.withdraw.address"
                                 />
                             </label>
-                            {addressError ? (
-                                <div
-                                    className="has-error"
-                                    style={{
-                                        position: "absolute",
-                                        right: "1em",
-                                        marginTop: "-30px"
-                                    }}
-                                >
-                                    <Translate content="modal.withdraw.address_not_valid" />
-                                </div>
-                            ) : null}
-                            <div className="blocktrades-select-dropdown">
+                            
+                            <div>
                                 <div className="inline-label">
-                                    <input
+                                    <Input
                                         type="text"
                                         value={address}
-                                        onChange={this.onAddressChanged.bind(
-                                            this
-                                        )}
-                                        className="qr-address-scanner-input-field"
-                                        autoComplete="off"
+                                        onChange={this.onAddressChanged.bind(this)}
+                                        addonAfter={
+                                            <QRScanner
+                                                label="Scan"
+                                                onSuccess={this.handleQrScanSuccess}
+                                            />
+                                        }
                                     />
-                                    {storedAddresses.length > 1 ? (
-                                        <span
-                                            onClick={this.onDropDownList.bind(
-                                                this
-                                            )}
-                                        >
-                                            &#9660;
-                                        </span>
-                                    ) : null}
-                                    <QRScanner
-                                        label="Scan"
-                                        onSuccess={this.handleQrScanSuccess}
-                                    />
+                                    {/* 
+                                        Disabled Stored Address History
+                                        Requires ANT Update
+                                        {storedAddresses.length > 1 ? (
+                                            <span
+                                                onClick={this.onDropDownList.bind(
+                                                    this
+                                                )}
+                                            >
+                                                &#9660;
+                                            </span>
+                                        ) : null} 
+                                    */}
                                 </div>
                             </div>
-                            <div className="blocktrades-position-options">
-                                {this._renderStoredAddresses.call(this)}
-                            </div>
+                            
+
+                            {/* 
+                                Disabled Stored Address History
+                                Requires ANT Update
+                                <div className="blocktrades-position-options">
+                                    {this._renderStoredAddresses.call(this)}
+                                </div> 
+                            */}
                         </div>
                     ) : null}
-
+                    {addressError ? (
+                        <Translate
+                            component="div"
+                            className="has-error"
+                            style={{
+                                position: "absolute",
+                                marginTop: -12,
+                                right: 0,
+                                textTransform: "uppercase",
+                                fontSize: 13
+                            }}
+                            content="modal.withdraw.address_not_valid" 
+                        />
+                    ) : null}
+                    
                     {isBTS ? (
                         <div style={{marginBottom: "1em"}}>
                             <AccountSelector
@@ -1211,15 +1226,16 @@ class WithdrawModalNew extends React.Component {
 
                     {/*FEE & GATEWAY FEE*/}
                     {assetAndGateway || isBTS ? (
-                        <div className="double-row">
-                            <div className="no-margin no-padding">
-                                <div
-                                    className="small-6"
-                                    style={{paddingRight: 10}}
-                                >
-                                    {/* Withdraw amount */}
+                        <div className="grid-block no-padding wrap">
+                            <div style={{paddingRight: 5, paddingBottom: 15}} className="no-margin no-overflow small-12 medium-6">
+                                <div>
+                                    <label className="left-label">
+                                        <Translate component="h6" style={{margin: 0}} content="transfer.fee" />
+                                    </label>
+                                </div>
+                                {/* Withdraw amount */}
+                                <div>
                                     <AmountSelector
-                                        label="transfer.fee"
                                         disabled={true}
                                         amount={this.state.feeAmount.getAmount({
                                             real: true
@@ -1229,50 +1245,47 @@ class WithdrawModalNew extends React.Component {
                                         assets={fee_asset_types}
                                         //tabIndex={tabIndex++}
                                     />
-                                    {/*!this.state.hasBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noFeeBalance" /></p> : null*/}
-                                    {/*!this.state.hasPoolBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noPoolBalance" /></p> : null*/}
                                 </div>
-                                <div
-                                    className="small-6"
-                                    style={{paddingLeft: 10}}
-                                >
-                                    {/* Gate fee */}
-                                    {gateFee ? (
-                                        <div
-                                            className="amount-selector right-selector"
-                                            style={{paddingBottom: 20}}
-                                        >
-                                            <label className="left-label">
-                                                <Translate content="gateway.fee" />
-                                            </label>
-                                            <div className="inline-label input-wrapper">
-                                                <input
-                                                    type="text"
-                                                    disabled
-                                                    value={
-                                                        !!backingAsset &&
-                                                        "gateFee" in
-                                                            backingAsset
-                                                            ? backingAsset.gateFee
-                                                            : 0
-                                                    }
-                                                />
-
-                                                <div className="form-label select floating-dropdown">
-                                                    <div className="dropdown-wrapper inactive">
-                                                        <div>
-                                                            {selectedAsset}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : null}
-                                </div>
+                                {/*!this.state.hasBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noFeeBalance" /></p> : null*/}
+                                {/*!this.state.hasPoolBalance ? <p className="has-error no-margin" style={{paddingTop: 10}}><Translate content="transfer.errors.noPoolBalance" /></p> : null*/}
                             </div>
+                            {/* Gate fee */}
+                            {gateFee ? (
+                                <div className="no-margin no-overflow small-12 medium-6">
+                                    <div>
+                                        <label className="left-label">
+                                            <Translate component="h6" style={{margin: 0}} content="gateway.fee" />
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <Input
+                                            type="text"
+                                            disabled
+                                            value={
+                                                !!backingAsset &&
+                                                "gateFee" in
+                                                    backingAsset
+                                                    ? backingAsset.gateFee
+                                                    : 0
+                                            }
+                                            addonAfter={
+                                                <span 
+                                                    style={{
+                                                        background: "transparent", 
+                                                        paddingRight: 10, 
+                                                        paddingLeft: 10}}
+                                                >
+                                                    {selectedAsset}
+                                                </span>
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            ) : null}
                         </div>
                     ) : null}
                 </div>
+
                 {/*Submit Buttons*/}
                 <div
                     style={{
