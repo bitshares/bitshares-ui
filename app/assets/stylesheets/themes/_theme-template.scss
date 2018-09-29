@@ -561,6 +561,12 @@
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
+    }
     .grp-menu-item button {
         &:hover,
         &:focus,
