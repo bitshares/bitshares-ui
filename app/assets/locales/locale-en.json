@@ -1131,7 +1131,7 @@
             "submit": "Deposit"
         },
         "deposit_withdraw": {
-            "disabled": "%(gateway)s gateway service disabled",
+            "disabled": "Gateway service disabled",
             "gateway": "Gateway",
             "no_gateway_available": "No gateway available",
             "select_gateway": "Please select a gateway operator",

@@ -11,7 +11,6 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
-    gatewaySelector,
     _getNumberAvailableGateways,
     _onAssetSelected,
     _getCoinToGatewayMapping
@@ -19,6 +18,7 @@ import {
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
 import CryptoLinkFormatter from "../Utility/CryptoLinkFormatter";
+import GatewaySelector from "../Utility/GatewaySelector";
 
 class DepositModalContent extends DecimalChecker {
     constructor() {
@@ -67,28 +67,36 @@ class DepositModalContent extends DecimalChecker {
         return !utils.are_equal_shallow(ns, this.state);
     }
 
-    onGatewayChanged(e) {
-        if (!e.target.value) return;
-        this._getDepositAddress(this.state.selectedAsset, e.target.value);
+    onGatewayChanged(value) {
+        if (!value) return;
+        this._getDepositAddress(this.state.selectedAsset, value);
     }
 
-    onAssetSelected(asset, assetDetails) {
-        if (assetDetails.gateway == "")
-            return this.setState({selectedAsset: asset, selectedGateway: null});
+    onAssetSelected(coinItems, selected) {
+        let asset;
 
-        let {selectedAsset, selectedGateway} = _onAssetSelected.call(
-            this,
-            asset,
-            "depositAllowed",
-            (availableGateways, balancesByGateway) => {
-                if (availableGateways && availableGateways.length == 1)
-                    return availableGateways[0]; //autoselect gateway if exactly 1 item
-                return null;
+        coinItems.map(a => {
+            if (a.id == selected) {
+                asset = a;
+            } 
+        });
+
+        if (asset.label == "BTS") {
+            return this.setState({selectedAsset: asset.label, selectedGateway: null});
+        } else {
+            let {selectedAsset, selectedGateway} = _onAssetSelected.call(
+                this,
+                asset.label,
+                "depositAllowed",
+                (availableGateways) => {
+                    if (availableGateways && availableGateways.length == 1)
+                        return availableGateways[0]; //autoselect gateway if exactly 1 item
+                    return null;
+                }
+            );
+            if (selectedGateway) {
+                this._getDepositAddress(selectedAsset, selectedGateway);
             }
-        );
-
-        if (selectedGateway) {
-            this._getDepositAddress(selectedAsset, selectedGateway);
         }
     }
 
@@ -296,6 +304,11 @@ class DepositModalContent extends DecimalChecker {
                 </div>
                 <div className="modal__body">
                     <div className="container-row">
+                        <label className="left-label">
+                            <h6 style={{margin: 0}}>
+                                <Translate content="gateway.asset" />
+                            </h6>
+                        </label>
                         <div className="no-margin no-padding">
                             <div className="inline-label input-wrapper">
                                 <DepositWithdrawAssetSelector
@@ -307,15 +320,16 @@ class DepositModalContent extends DecimalChecker {
                         </div>
                     </div>
 
-                    {usingGateway && selectedAsset
-                        ? gatewaySelector.call(this, {
-                              selectedGateway,
-                              gatewayStatus,
-                              nAvailableGateways,
-                              error: depositAddress && depositAddress.error,
-                              onGatewayChanged: this.onGatewayChanged.bind(this)
-                          })
-                        : null}
+                    {usingGateway && selectedAsset 
+                        ? <GatewaySelector 
+                            selectedGateway={selectedGateway}
+                            gatewayStatus={gatewayStatus}
+                            nAvailableGateways={nAvailableGateways}
+                            error={depositAddress && depositAddress.error}
+                            onGatewayChanged={this.onGatewayChanged.bind(this)}
+                        /> 
+                        : null
+                    }
 
                     {!fetchingAddress ? (
                         (!usingGateway ||
@@ -325,17 +339,17 @@ class DepositModalContent extends DecimalChecker {
                                     .enabled)) &&
                         isAddressValid &&
                         !depositAddress.memo ? (
-                            <div
-                                className="container-row"
-                                style={{textAlign: "center"}}
-                            >
-                                {QR}
-                            </div>
-                        ) : null
+                                <div
+                                    className="container-row"
+                                    style={{textAlign: "center"}}
+                                >
+                                    {QR}
+                                </div>
+                            ) : null
                     ) : (
                         <div
                             className="container-row"
-                            style={{textAlign: "center"}}
+                            style={{textAlign: "center", paddingTop: 10}}
                         >
                             <LoadingIndicator type="three-bounce" />
                         </div>
@@ -343,55 +357,23 @@ class DepositModalContent extends DecimalChecker {
                     {selectedGateway &&
                     gatewayStatus[selectedGateway].options.enabled &&
                     isAddressValid ? (
-                        <div className="container-row">
-                            <Translate
-                                className="grid-block container-row maxDeposit"
-                                style={{fontSize: "1rem"}}
-                                content="gateway.min_deposit_warning_amount"
-                                minDeposit={minDeposit || 0}
-                                coin={selectedAsset}
-                            />
+                            <div className="container-row">
+                                <Translate
+                                    className="grid-block container-row maxDeposit"
+                                    style={{fontSize: "1rem"}}
+                                    content="gateway.min_deposit_warning_amount"
+                                    minDeposit={minDeposit || 0}
+                                    coin={selectedAsset}
+                                />
 
-                            <div className="grid-block container-row">
-                                <div style={{paddingRight: "1rem"}}>
-                                    <CopyButton
-                                        text={depositAddress.address}
-                                        className={"copyIcon"}
-                                    />
-                                </div>
-                                <div style={{wordBreak: "break-word"}}>
-                                    <Translate
-                                        component="div"
-                                        style={{
-                                            fontSize: "0.8rem",
-                                            fontWeight: "bold",
-                                            paddingBottom: "0.3rem"
-                                        }}
-                                        content="gateway.purchase_notice"
-                                        inputAsset={selectedAsset}
-                                        outputAsset={
-                                            selectedGateway +
-                                            "." +
-                                            selectedAsset
-                                        }
-                                    />
-                                    <div
-                                        className="modal__highlight"
-                                        style={{fontSize: "0.9rem", wordBreak: "break-all"}}
-                                    >
-                                        {depositAddress.address}
-                                    </div>
-                                </div>
-                            </div>
-                            {depositAddress.memo ? (
                                 <div className="grid-block container-row">
                                     <div style={{paddingRight: "1rem"}}>
                                         <CopyButton
-                                            text={depositAddress.memo}
+                                            text={depositAddress.address}
                                             className={"copyIcon"}
                                         />
                                     </div>
-                                    <div>
+                                    <div style={{wordBreak: "break-word"}}>
                                         <Translate
                                             component="div"
                                             style={{
@@ -399,24 +381,56 @@ class DepositModalContent extends DecimalChecker {
                                                 fontWeight: "bold",
                                                 paddingBottom: "0.3rem"
                                             }}
-                                            unsafe
-                                            content="gateway.purchase_notice_memo"
+                                            content="gateway.purchase_notice"
+                                            inputAsset={selectedAsset}
+                                            outputAsset={
+                                                selectedGateway +
+                                                "." +
+                                                selectedAsset
+                                            }
                                         />
-                                        <div className="modal__highlight" style={{wordBreak: "break-all"}}>
-                                            {depositAddress.memo}
+                                        <div
+                                            className="modal__highlight"
+                                            style={{fontSize: "0.9rem", wordBreak: "break-all"}}
+                                        >
+                                            {depositAddress.address}
                                         </div>
                                     </div>
                                 </div>
-                            ) : null}
-                            <Translate
-                                component="span"
-                                style={{fontSize: "0.8rem"}}
-                                content="gateway.min_deposit_warning_asset"
-                                minDeposit={minDeposit || 0}
-                                coin={selectedAsset}
-                            />
-                        </div>
-                    ) : null}
+                                {depositAddress.memo ? (
+                                    <div className="grid-block container-row">
+                                        <div style={{paddingRight: "1rem"}}>
+                                            <CopyButton
+                                                text={depositAddress.memo}
+                                                className={"copyIcon"}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Translate
+                                                component="div"
+                                                style={{
+                                                    fontSize: "0.8rem",
+                                                    fontWeight: "bold",
+                                                    paddingBottom: "0.3rem"
+                                                }}
+                                                unsafe
+                                                content="gateway.purchase_notice_memo"
+                                            />
+                                            <div className="modal__highlight" style={{wordBreak: "break-all"}}>
+                                                {depositAddress.memo}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null}
+                                <Translate
+                                    component="span"
+                                    style={{fontSize: "0.8rem"}}
+                                    content="gateway.min_deposit_warning_asset"
+                                    minDeposit={minDeposit || 0}
+                                    coin={selectedAsset}
+                                />
+                            </div>
+                        ) : null}
                     {!usingGateway ? (
                         <div className="container-row deposit-directly">
                             <h2

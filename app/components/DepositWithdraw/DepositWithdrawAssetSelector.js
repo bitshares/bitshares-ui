@@ -1,9 +1,9 @@
+import {Select} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 import React from "react";
 import {connect} from "alt-react";
-import BindToChainState from "../Utility/BindToChainState";
 import GatewayStore from "stores/GatewayStore";
-import TypeAhead from "../Utility/TypeAhead";
-import counterpart from "counterpart";
+import BindToChainState from "../Utility/BindToChainState";
 
 class DepositWithdrawAssetSelector extends React.Component {
     constructor(props) {
@@ -65,13 +65,27 @@ class DepositWithdrawAssetSelector extends React.Component {
                 ? "gateway.asset_search_withdraw"
                 : "gateway.asset_search_deposit";
 
+        let coinOptions = "";
+        coinOptions = coinItems.map(item => {
+            return (
+                <Select.Option value={item.id} key={item.id}>
+                    {item.id}
+                </Select.Option>
+            );
+        });
+
         return (
-            <TypeAhead
-                items={coinItems}
-                {...this.props}
-                inputProps={{placeholder: counterpart.translate(i18n)}}
-                label="gateway.asset"
-            />
+            <Select 
+                placeholder={counterpart.translate(i18n)}
+                showSearch 
+                optionFilterProp="children" 
+                style={{width: "100%"}} 
+                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                onSelect={this.props.onSelect.bind(this, coinItems)}
+                onChange={this.props.onSelect.bind(this, coinItems)}
+            >
+                {coinOptions}
+            </Select>
         );
     }
 }
