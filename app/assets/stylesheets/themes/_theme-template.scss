@@ -1985,7 +1985,7 @@
         display: none;
     }
 
-    @include breakpoint(large) {
+    @include breakpoint(medium) {
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;

@@ -23,7 +23,7 @@ import {
  */
 class OrderRows extends React.Component {
     static propTypes = {
-        orderRows: PropTypes.object.isRequired,
+        orderRows: PropTypes.array.isRequired,
         noOrders: PropTypes.bool.isRequired,
         isBid: PropTypes.bool.isRequired
     };
@@ -46,7 +46,7 @@ class OrderRows extends React.Component {
                                 {isBid ? "No bids" : "No asks"}
                             </td>
                         </div>
-                      )}
+                    )}
             </TransitionWrapper>
         );
     }
@@ -60,7 +60,8 @@ class OrderBookRowVertical extends React.Component {
             np.index !== this.props.index ||
             np.currentAccount !== this.props.currentAccount ||
             np.isPanelActive !== this.props.isPanelActive ||
-            np.exchangeLayout !== this.props.exchangeLayout
+            np.exchangeLayout !== this.props.exchangeLayout ||
+            np.horizontal !== this.props.horizontal
         );
     }
 
@@ -502,9 +503,7 @@ class OrderBook extends React.Component {
     }
 
     getSnapshotBeforeUpdate() {
-        console.log("++");
         if (!this.props.horizontal && this.state.autoScroll) {
-            console.log("+++");
             // Center vertical scroll bar
             const scrollableContainer = this.queryStickyTable(
                 "#sticky-table-y-wrapper"
@@ -522,12 +521,13 @@ class OrderBook extends React.Component {
                 scrollableContainerHeight / 2;
 
             scrollableContainer.scrollTop = scrollTo;
+        } else {
+            return null;
         }
     }
 
     psUpdate() {
         if (!this.props.horizontal) {
-            console.log("CENTER SCROLLBAR");
             Ps.update(this.verticalScrollBar());
         } else {
             let bidsContainer = this.refs.hor_bids;
@@ -629,8 +629,6 @@ class OrderBook extends React.Component {
             orderBookReversed,
             groupedBids,
             groupedAsks,
-            exchangeLayout,
-            isPanelActive
         } = this.props;
         let {
             showAllAsks,
@@ -638,6 +636,7 @@ class OrderBook extends React.Component {
             rowCount,
             displaySpreadAsPercentage
         } = this.state;
+
         const noOrders = !lowestAsk.sell_price && !highestBid.sell_price;
         const hasAskAndBids = !!(lowestAsk.sell_price && highestBid.sell_price);
         const spread =
@@ -904,88 +903,19 @@ class OrderBook extends React.Component {
                 </thead>
             );
 
-            let wrapperClass = "xlarge-8";
-            let innerClass = "";
+            let wrapperClass = this.props.wrapperClass;
+            let innerClass = this.props.innerClass;
 
-            if (!isPanelActive) {
-                innerClass =
-                    exchangeLayout <= 2
-                        ? "medium-12 large-12 xlarge-6"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 3
-                        ? "medium-12 large-6 xlarge-8"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 3
-                        ? "medium-12 large-12 xlarge-6"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 4
-                        ? "medium-12 large-12 xlarge-8"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 4
-                        ? "medium-6 large-6 xlarge-6"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 5
-                        ? "small-12 medium-12 large-8 xlarge-8"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 5
-                        ? "small-12 medium-6 large-6 xlarge-6"
-                        : innerClass;
-            } else {
-                innerClass =
-                    exchangeLayout <= 2
-                        ? "medium-6 large-6 xlarge-12"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 3
-                        ? "medium-12 large-12 xlarge-5"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 3
-                        ? "medium-12 large-6 xlarge-12"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 4
-                        ? "medium-12 large-12 xlarge-12"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 4
-                        ? "medium-12 large-6 xlarge-6"
-                        : innerClass;
-
-                wrapperClass =
-                    exchangeLayout == 5
-                        ? "medium-12 large-12 xlarge-8"
-                        : wrapperClass;
-                innerClass =
-                    exchangeLayout == 5
-                        ? "medium-12 large-6 xlarge-6"
-                        : innerClass;
-            }
 
             return (
                 <div
                     style={{marginRight: this.props.smallScreen ? 10 : 0}}
                     className={cnames(
-                        this.props.wrapperClass,
                         wrapperClass,
-                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink"
                     )}
                 >
                     <div
                         className={cnames(
-                            "small-12 middle-content",
-                            this.props.innerClass,
                             innerClass,
                             this.state.flip ? "order-1" : "order-2"
                         )}
@@ -1016,6 +946,7 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
+
                                     </div>
                                 ) : null}
                                 {this.state.flip ? (
@@ -1046,6 +977,17 @@ class OrderBook extends React.Component {
                                     >
                                         {" "}
                                         &#8645;
+                                    </span>
+                                ) : null}
+                                {this.state.flip ? (
+                                    <span
+                                        className="order-book-button-v"
+                                        onClick={this.props.moveOrderBook}
+                                    >
+                                        <Icon
+                                            name="thumb-tack"
+                                            className="icon-14px"
+                                        />
                                     </span>
                                 ) : null}
                                 <div
@@ -1119,8 +1061,6 @@ class OrderBook extends React.Component {
 
                     <div
                         className={cnames(
-                            "middle-content",
-                            this.props.innerClass,
                             innerClass,
                             this.state.flip ? "order-2" : "order-1"
                         )}
@@ -1181,6 +1121,17 @@ class OrderBook extends React.Component {
                                     >
                                         {" "}
                                         &#8645;
+                                    </span>
+                                ) : null}
+                                {!this.state.flip ? (
+                                    <span
+                                        className="order-book-button-v"
+                                        onClick={this.props.moveOrderBook}
+                                    >
+                                        <Icon
+                                            name="thumb-tack"
+                                            className="icon-14px"
+                                        />
                                     </span>
                                 ) : null}
                                 <div
@@ -1303,23 +1254,21 @@ class OrderBook extends React.Component {
                                     <div className="orderbook-latest-price">
                                         <div>
                                             <div className="text-center spread">
-                                                {!!spread && (
-                                                    <span
-                                                        className="clickable left"
-                                                        onClick={
-                                                            this
-                                                                .toggleSpreadValue
-                                                        }
-                                                    >
-                                                        <Translate className="orderbook-center-title" content="exchange.spread" />{" "}
-                                                        <span className="spread-value">
-                                                            {spread}
-                                                        </span>
+                                                <span
+                                                    className="clickable left"
+                                                    onClick={
+                                                        this
+                                                            .toggleSpreadValue
+                                                    }
+                                                >
+                                                    <Translate className="orderbook-center-title" content="exchange.spread" />{" "}
+                                                    <span className="spread-value">
+                                                        {!!spread ? spread : "0"}
                                                     </span>
-                                                )}
-                                                <span style={{width: 50}}>
+                                                </span>
+                                                <span style={{width: 75}}>
                                                     <Icon
-                                                        className="lock-unlock clickable"
+                                                        className="lock-unlock clickable "
                                                         onClick={
                                                             this.toggleAutoScroll
                                                         }
@@ -1333,6 +1282,12 @@ class OrderBook extends React.Component {
                                                                 ? "icons.unlocked.disable_auto_scroll"
                                                                 : "icons.locked.enable_auto_scroll"
                                                         }
+                                                    />&nbsp;
+                                                    <Icon
+                                                        onClick={this.props.moveOrderBook}
+                                                        name="thumb-tack"
+                                                        className="icon-14px order-book-button-v"
+                                                        style={{marginLeft: 0}}
                                                     />&nbsp;
                                                     <AntIcon 
                                                         style={{fontSize: 20}}
