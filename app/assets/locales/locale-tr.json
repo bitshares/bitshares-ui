@@ -457,6 +457,7 @@
         "call": "Çağrı Fiyatı",
         "change": "Değişim",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",

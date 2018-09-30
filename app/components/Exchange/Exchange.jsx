@@ -221,12 +221,14 @@ class Exchange extends React.Component {
             hidePanel: ws.get("hidePanel", false),
             autoScroll: ws.get("global_AutoScroll", true),
             hideScrollbars: ws.get("hideScrollbars", false),
+            hideChart: ws.get("hideChart", false),
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
             activePanels: ws.get("activePanels", ["left","right"]),
             mobileKey: [""],
-            forceReRender: 0
+            forceReRender: 0,
+            panelWidth: 0
         };
     }
 
@@ -984,6 +986,17 @@ class Exchange extends React.Component {
         });
     }
 
+    _toggleChart() {
+        let newState = !this.state.hideChart;
+        this.setState({
+            hideChart: newState
+        });
+
+        SettingsActions.changeViewSetting({
+            hideChart: newState
+        });
+    }
+
     _flipBuySell() {
         this.setState({
             flipBuySell: !this.state.flipBuySell
@@ -1473,9 +1486,11 @@ class Exchange extends React.Component {
             tabOrders,
             hidePanel,
             hideScrollbars,
+            hideChart,
             modalType,
             autoScroll,
             activePanels,
+            panelWidth
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
@@ -1823,6 +1838,7 @@ class Exchange extends React.Component {
 
         let orderBook = tinyScreen && !this.state.mobileKey.includes("orderBook") ? null : (
             <OrderBook
+                ref="order_book"
                 key={`actionCard_${actionCardIndex++}`}
                 latest={latest && latest.getPrice()}
                 changeClass={changeClass}
@@ -1878,6 +1894,12 @@ class Exchange extends React.Component {
                 autoScroll={autoScroll}
             />
         );
+
+        if (this.refs.order_book && this.refs.order_book.refs.center_text) {
+            // Doesn't scale backwards
+            // panelWidth = this.refs.order_book.refs.vertical_sticky_table.scrollData.scrollWidth;
+            panelWidth = 350;
+        } 
 
         let marketHistory = tinyScreen && !this.state.mobileKey.includes("marketHistory") ? null : (
             <MarketHistory
@@ -2011,7 +2033,7 @@ class Exchange extends React.Component {
             />
         );
 
-        let tradingViewChart = tinyScreen && !this.state.mobileKey.includes("tradingViewChart") ? null : (
+        let tradingViewChart = hideChart || showDepthChart || (tinyScreen && !this.state.mobileKey.includes("tradingViewChart")) ? null : (
             <TradingViewPriceChart
                 locale={this.props.locale}
                 dataFeed={this.props.dataFeed}
@@ -2031,7 +2053,7 @@ class Exchange extends React.Component {
             />
         );
 
-        let deptHighChart = tinyScreen && !this.state.mobileKey.includes("deptHighChart") ? null : (
+        let deptHighChart = hideChart || !showDepthChart || (tinyScreen && !this.state.mobileKey.includes("deptHighChart")) ? null : (
             <DepthHighChart
                 marketReady={marketReady}
                 orders={marketLimitOrders}
@@ -2372,7 +2394,7 @@ class Exchange extends React.Component {
                 leftPanel = (
                     <div
                         className="left-order-book no-padding no-overflow"
-                        style={{display: "block", height: "calc(100vh - 170px)", width: 350}}
+                        style={{display: "block", height: "calc(100vh - 170px)", width: panelWidth}}
                     >
                         {orderBook}
                     </div>
@@ -2511,8 +2533,10 @@ class Exchange extends React.Component {
                         trackedGroupsConfig={trackedGroupsConfig}
                         currentGroupOrderLimit={currentGroupOrderLimit}
                         hideScrollbars={hideScrollbars}
+                        hideChart={hideChart}
                         onToggleScrollbars={this._toggleScrollbars.bind(this)}
                         onSetAutoscroll={this._setAutoscroll.bind(this)}
+                        onToggleChart={this._toggleChart.bind(this)}
                     />
 
                     <AccountNotifications />

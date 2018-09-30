@@ -289,6 +289,8 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getCurrentBalance() {
+        return 0; // FIXME: Needs Fix
+
         return this.props.balances.find(b => {
             return b && b.get("asset_type") === this.props.asset.get("id");
         });

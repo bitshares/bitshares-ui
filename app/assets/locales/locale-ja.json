@@ -457,6 +457,7 @@
         "call": "コール価格",
         "change": "変化",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",

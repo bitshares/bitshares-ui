@@ -457,6 +457,7 @@
         "call": "Precio de Rescate (Call Price)",
         "change": "cambio",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Tu pedido es %(diff)s veces más alto que la demanda más baja, ¿estás seguro?",

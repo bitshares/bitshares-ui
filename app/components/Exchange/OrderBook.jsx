@@ -346,9 +346,15 @@ class GroupOrderLimitSelector extends React.Component {
                     disabled={noGroupsAvailable}
                     onChange={this.props.handleGroupOrderLimitChange.bind(this)}
                 >
-                    <Select.Option value={0}>
-                        <Translate content="settings.disabled" />
-                    </Select.Option>
+                    {noGroupsAvailable ?
+                        <Select.Option value={0}>
+                            <Translate content="tooltip.no_groups_available" />
+                        </Select.Option>
+                        :
+                        <Select.Option value={0}>
+                            <Translate content="settings.disabled" />
+                        </Select.Option>
+                    }
                     {trackedGroupsOptionsList}
                 </Select>
             );
@@ -909,6 +915,7 @@ class OrderBook extends React.Component {
 
             return (
                 <div
+                    ref="order_book"
                     style={{marginRight: this.props.smallScreen ? 10 : 0}}
                     className={cnames(
                         wrapperClass,

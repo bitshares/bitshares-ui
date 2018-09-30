@@ -457,6 +457,7 @@
         "call": "콜 가격",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",

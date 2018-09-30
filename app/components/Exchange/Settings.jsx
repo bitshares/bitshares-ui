@@ -145,6 +145,22 @@ class Settings extends React.Component {
                     />
                     <Translate component="h5" content="settings.global_settings" />
                     <header>
+                        <Translate content="exchange.chart_hide" />
+                    </header>
+                    <Select 
+                        placeholder={counterpart.translate("settings.placeholder_select")}
+                        style={{width: "100%"}}
+                        value={this.props.hideChart ? 1 : 0}
+                        onSelect={this.props.onToggleChart.bind(this)}
+                    >
+                        <Select.Option value={0}>
+                            <Translate content="settings.no" />
+                        </Select.Option>
+                        <Select.Option value={1}>
+                            <Translate content="settings.yes" />
+                        </Select.Option>
+                    </Select>
+                    <header>
                         <Translate content="settings.orderbook_grouping" />
                     </header>
                     <ul>

@@ -457,6 +457,7 @@
         "call": "平仓触发价",
         "change": "涨跌幅",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "你的委单价格超出最低卖出价 %(diff)s 倍，确定下单吗？",
