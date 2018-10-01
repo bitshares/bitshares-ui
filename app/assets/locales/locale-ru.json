@@ -1182,8 +1182,11 @@
         "report": {
             "button": "Отчет об ошибке",
             "takeScreenshot": "Сделать скриншот",
-            "copyErrors": "Скопировать ошибки",
-            "copySuccess": "Копирование завершено"
+            "copyLog": "Скопировать ошибки",
+            "copySuccess": "Копирование завершено",
+            "showLog": "Показать лог",
+            "hideLog": "спрятать лог",
+            "explanatory_text": "Some explanatory text"
         }
     },
     "news": {

@@ -1181,8 +1181,11 @@
         "report": {
             "button": "レポートについてのレポート",
             "takeScreenshot": "Take screenshot",
-            "copyErrors": "Copy errors",
-            "copySuccess": "Copy ended"
+            "copyLog": "Copy Log",
+            "copySuccess": "Copy ended",
+            "showLog": "Show Log",
+            "hideLog": "Hide Log",
+            "explanatory_text": "Some explanatory text"
         }
     },
     "news": {

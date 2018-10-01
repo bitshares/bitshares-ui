@@ -14,6 +14,7 @@ import {
 import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
 import Screenshot from "lib/common/Screenshot";
+import CopyButton from "../Utility/CopyButton";
 
 import {connect} from "alt-react";
 
@@ -28,6 +29,7 @@ class ReportModal extends React.Component {
                 this.setState({hidden: false});
             }
         });
+        this.showLog = this.showLog.bind(this);
     }
 
     getInitialState() {
@@ -36,7 +38,8 @@ class ReportModal extends React.Component {
             loadingImage: false,
             memo: [],
             hidden: false,
-            logsCopySuccess: false
+            logsCopySuccess: false,
+            showLog: false
         };
     }
 
@@ -59,7 +62,8 @@ class ReportModal extends React.Component {
                 loadingImage: false,
                 memo: [],
                 hidden: false,
-                logsCopySuccess: false
+                logsCopySuccess: false,
+                showLog: false
             },
             () => {
                 if (publishClose) ZfApi.publish(this.props.id, "close");
@@ -83,7 +87,7 @@ class ReportModal extends React.Component {
     getLogs = () => {
         LogsActions.getLogs().then(data => {
             this.setState({
-                memo: data
+                memo: data.join("\n")
             });
         });
     };
@@ -98,6 +102,10 @@ class ReportModal extends React.Component {
         });
     };
 
+    showLog() {
+        this.setState({showLog: !this.state.showLog});
+    }
+
     render() {
         let {open, hidden, memo, loadingImage, logsCopySuccess} = this.state;
 
@@ -110,24 +118,35 @@ class ReportModal extends React.Component {
                 >
                     <div className="grid-block vertical no-overflow">
                         {/*  M E M O  */}
-                        <div className="content-block transfer-input">
-                            {memo && memo.length ? (
-                                <label className="right-label">
-                                    {memo.length}
-                                </label>
-                            ) : null}
+                        <div className="raw">
+                            <label className="right-label">
+                                <CopyButton text={this.state.memo} />
+                            </label>
+
                             <Translate
                                 className="left-label tooltip"
                                 component="label"
                                 content="transfer.memo"
                             />
-                            <textarea
-                                id="logsText"
-                                style={{marginBottom: 0}}
-                                rows="20"
-                                value={memo.join(" \n")}
-                                onChange={this.onMemoChanged.bind(this)}
-                            />
+                        </div>
+                        <div className="raw">
+                            {this.state.showLog ? (
+                                <textarea
+                                    id="logsText"
+                                    style={{
+                                        marginBottom: 0
+                                    }}
+                                    rows="20"
+                                    value={memo}
+                                    onChange={this.onMemoChanged.bind(this)}
+                                />
+                            ) : (
+                                <Translate
+                                    className="left-label"
+                                    component="label"
+                                    content="modal.report.explanatory_text"
+                                />
+                            )}
                             {/* warning */}
                             {this.state.propose ? (
                                 <div
@@ -166,9 +185,13 @@ class ReportModal extends React.Component {
                                 >
                                     <div
                                         className="button primary"
-                                        onClick={this.copyLogs}
+                                        onClick={this.showLog}
                                     >
-                                        <Translate content="modal.report.copyErrors" />
+                                        {this.state.showLog ? (
+                                            <Translate content="modal.report.hideLog" />
+                                        ) : (
+                                            <Translate content="modal.report.showLog" />
+                                        )}
                                     </div>
                                 </div>
                             </div>
