@@ -681,7 +681,8 @@ class DepositWithdrawContent extends DecimalChecker {
                             className="help-tooltip"
                             content="gateway.deposit_to"
                             asset={assetName}
-                        />:
+                        />
+                        :
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
                         </label>
@@ -797,7 +798,8 @@ class DepositWithdrawContent extends DecimalChecker {
                 <label style={{fontSize: "1rem"}}>
                     {counterpart.translate("gateway.balance_asset", {
                         asset: assetName
-                    })}:
+                    })}
+                    :
                     <span className="inline-label">
                         <input
                             disabled

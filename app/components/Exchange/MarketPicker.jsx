@@ -61,7 +61,7 @@ class MarketPickerWrapper extends React.Component {
     _onInputName(getBackedAssets, e) {
         let toFind = e.target.value.trim().toUpperCase();
         let isValidName = !ChainValidation.is_valid_symbol_error(toFind, true);
-        
+
         this.setState({
             inputValue: e.target.value.trim(),
             activeSearch: true,
@@ -76,7 +76,7 @@ class MarketPickerWrapper extends React.Component {
             this.setState({
                 activeSearch: false
             });
-            return; 
+            return;
         }
 
         if (this.state.inputValue !== toFind) {
@@ -335,7 +335,8 @@ class MarketPickerWrapper extends React.Component {
                     />
                 </div>
                 <div className="marketPicker__subHeader">
-                    <Translate content="exchange.market_picker.sub_title" />&nbsp;
+                    <Translate content="exchange.market_picker.sub_title" />
+                    &nbsp;
                     <Link
                         to={`/asset/${marketPickerAsset}`}
                         style={{
@@ -465,16 +466,19 @@ class MarketPicker extends React.Component {
     }
 }
 
-MarketPicker = connect(MarketPicker, {
-    listenTo() {
-        return [AssetStore];
-    },
-    getProps() {
-        return {
-            searchAssets: AssetStore.getState().assets,
-            assetsLoading: AssetStore.getState().assetsLoading
-        };
+MarketPicker = connect(
+    MarketPicker,
+    {
+        listenTo() {
+            return [AssetStore];
+        },
+        getProps() {
+            return {
+                searchAssets: AssetStore.getState().assets,
+                assetsLoading: AssetStore.getState().assetsLoading
+            };
+        }
     }
-});
+);
 
 export default MarketPicker;

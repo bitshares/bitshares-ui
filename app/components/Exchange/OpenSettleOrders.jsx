@@ -19,9 +19,8 @@ class TableHeader extends React.Component {
                         <br />
                         {baseSymbol ? (
                             <span className="header-sub-title">
-                                (<AssetName name={baseSymbol} />/<AssetName
-                                    name={quoteSymbol}
-                                />)
+                                (<AssetName name={baseSymbol} />/
+                                <AssetName name={quoteSymbol} />)
                             </span>
                         ) : null}
                     </th>
