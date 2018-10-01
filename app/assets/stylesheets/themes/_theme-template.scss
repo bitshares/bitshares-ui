@@ -2184,10 +2184,11 @@
         .login-selector--language-select--icon {
             font-size: 18px;
             margin-top: 7px;
+            margin-right: 7px;
             color: $link-text-color;
         }
         .login-selector--language-select--wrapper {
-            margin-left: -63px; // center language select for width icon takes
+            margin-left: 0; // center language select for width icon takes
         }
     }
 }

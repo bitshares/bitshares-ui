@@ -90,7 +90,7 @@ class LoginSelector extends React.Component {
                 filterOption={this.languagesFilter}
                 value={this.state.currentLocale}
                 onChange={this.handleLanguageSelect}
-                style={{width: "200px", marginBottom: "16px"}}
+                style={{marginBottom: "16px"}}
             >
                 {this.state.locales.map(locale => (
                     <Select.Option
