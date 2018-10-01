@@ -37,7 +37,6 @@ class BaseModal extends React.Component {
             className,
             modalHeader,
             noCloseBtn,
-            noHeaderContainer,
             noLogo,
             noHeader,
             children,
@@ -52,7 +51,6 @@ class BaseModal extends React.Component {
                 className={className}
                 overlayClose={overlayClose}
             >
-            {!noHeaderContainer ?
                 <div className="modal-header">
                     {!noCloseBtn && (
                         <Trigger close={id}>
@@ -92,8 +90,7 @@ class BaseModal extends React.Component {
                                 </div>
                             </div>
                         ))}
-                    </div>
-                : null}
+                </div>
                 {!noHeader && leftHeader && <hr />}
                 <div className="modal-content">{children}</div>
             </Modal>

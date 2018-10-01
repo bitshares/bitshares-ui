@@ -873,8 +873,7 @@
             "coming_soon": "Скоро",
             "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
             "min_amount_error": "Пожалуйста введите число >= минимума",
-            "support_block":
-                "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
+            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
             "under_construction": "Технические работы"
         },
         "scan_qr": "Сканировать QR-код",
@@ -1660,11 +1659,6 @@
         "total_x_items": "Всего из %(count)s позиций",
         "total_x_markets": "Всего %(count)s рынков",
         "total_x_operations": "Всего %(count)s операций"
-    },
-    "utility": {
-        "total_x_assets": "Total of %(count)s assets",
-        "total_x_items": "Total of %(count)s items",
-        "total_x_operations": "Total of %(count)s operations"
     },
     "walkthrough": {
         "buy_form": "Разместить заявки на покупку, используя эту форму.",

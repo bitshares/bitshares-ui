@@ -370,18 +370,6 @@
     }
     .page-layout {
         background-color: lighten($account-header, 4%);
-
-        .column-header {
-            > ul {
-                border-bottom: 1px solid $panel-bg-color;
-
-                > li.active,
-                li:hover {
-                    border-bottom: 3px solid lightblue;
-                }
-            }
-        }
-
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -401,7 +389,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: $panel-bg-color;
+            background-color: darken($bg-color, 4%);
         }
     }
     .asset-prefix {
@@ -579,6 +567,12 @@
     }
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
+    }
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
     }
     .grp-menu-item button {
         &:hover,
@@ -1294,14 +1288,16 @@
             color: $secondary-text-color;
         }
     }
-
-    div.exchange-content-header {
-        background-color: transparent !important;
-    }
-
     .exchange-content-header {
         color: $light-text-color;
-        background-color: transparent !important;
+        background-color: $header-color !important;
+        border-bottom: 1px solid $button-bg-color;
+        &.bid {
+            border-bottom: 1px solid $bid-color;
+        }
+        &.ask {
+            border-bottom: 1px solid $ask-color;
+        }
     }
     // .block-content-header {
     // //text-transform: uppercase;
@@ -1431,8 +1427,7 @@
     }
     .stats .stressed-stat {
         padding: 10px 0;
-        font-size: 16px;
-
+        font-size: 18px;
         &.is-call {
             color: $call-color !important;
         }
@@ -1494,15 +1489,13 @@
         cursor: pointer;
     }
 
+    div.exchange-content-header {
+        background-color: $header-color !important;
+    }
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
-
-    .table.no-stripes > tbody > tr {
-        background-color: transparent;
-    }
-
-    //bottom stats
+    // bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1940,6 +1933,9 @@
     .footer {
         padding-right: 0;
     }
+    .tab-no-background {
+        background-color: transparent !important;
+    }
     .header-container {
         background-color: $account-background;
         .menu-dropdown-wrapper {
@@ -2059,9 +2055,9 @@
         }
     }
     .expiration-datetime-picker {
-        width: 100%;
+        width: 225px;
         > div {
-            float: left;
+            float: right;
         }
         input {
             width: 160px;
@@ -2071,25 +2067,35 @@
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            font-size: 90%;
+            text-align: right;
+            font-size: 0.9rem;
             height: 28px;
             &:hover {
                 background: transparent;
             }
         }
         select {
+            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 90%;
+            font-size: 0.9rem;
             height: 28px;
             margin: 0 0 1px;
             > option {
                 background-color: $light-panel-bg-color;
             }
+        }
+    }
+    .marketPicker {
+        background: $bg-color;
+        box-shadow: 2px 2px 5px darken($bg-color, 30%);
+        .results {
+            background: $input-background;
+            border: 1px solid $bg-color;
         }
     }
     .qr-address-scanner {
@@ -2159,25 +2165,6 @@
                 background-color: $light-panel-bg-color;
             }
         }
-    }
-
-    .table-highlight-hover {
-        tr:hover {
-            background-color: $settings-select-bg !important;
-        }
-    }
-
-    .table thead {
-        background-color: $header-color !important;
-    }
-
-    /* Ant Design Hacks */
-    .ant-select-arrow {
-        color: $light-text-color !important;
-    }
-
-    .ant-select-selection-selected-value {
-        color: $light-text-color !important;
     }
 
     .login-selector--language-select {
