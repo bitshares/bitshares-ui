@@ -296,6 +296,13 @@
             background-color: $button-bg-color;
         }
     }
+
+    .modal#marketPicker,
+    .modal#settingsModal {
+        background-color: $bg-color;
+        border: 1px solid black;
+    }
+
     .modal {
         @include color($light-text-color, $account-cells);
         .modal__highlight {
@@ -560,6 +567,12 @@
     }
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
+    }
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
     }
     .grp-menu-item button {
         &:hover,
@@ -1920,6 +1933,9 @@
     .footer {
         padding-right: 0;
     }
+    .tab-no-background {
+        background-color: transparent !important;
+    }
     .header-container {
         background-color: $account-background;
         .menu-dropdown-wrapper {
@@ -2148,6 +2164,18 @@
             > option {
                 background-color: $light-panel-bg-color;
             }
+        }
+    }
+
+    .login-selector--language-select {
+        .login-selector--language-select--icon {
+            font-size: 18px;
+            margin-top: 7px;
+            margin-right: 7px;
+            color: $link-text-color;
+        }
+        .login-selector--language-select--wrapper {
+            margin-left: 0; // center language select for width icon takes
         }
     }
 }
