@@ -241,6 +241,12 @@ module.exports = function(env) {
         module: {
             rules: [
                 {
+                    // Test for a polyfill (or any file) and it won't be included in your
+                    // bundle
+                    test: /node-fetch/,
+                    use: "null-loader"
+                },
+                {
                     test: /\.jsx$/,
                     include: [
                         path.join(root_dir, "app"),
@@ -275,6 +281,11 @@ module.exports = function(env) {
                             }
                         }
                     ]
+                },
+                {
+                    test: /\.mjs$/,
+                    include: /node_modules/,
+                    type: "javascript/auto"
                 },
                 {test: /\.coffee$/, loader: "coffee-loader"},
                 {
@@ -365,9 +376,14 @@ module.exports = function(env) {
             extensions: [".js", ".jsx", ".coffee", ".json"],
             mainFields: ["module", "jsnext:main", "browser", "main"],
             alias: {
+                sanitize$: "xss",
                 moment$: path.resolve(
                     root_dir,
                     "node_modules/moment/moment.js"
+                ),
+                bitsharesjs$: path.resolve(
+                    root_dir,
+                    "node_modules/bitsharesjs/"
                 ),
                 "bitshares-ui-style-guide$": path.resolve(
                     root_dir,

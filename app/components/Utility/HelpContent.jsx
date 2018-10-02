@@ -4,6 +4,7 @@ import counterpart from "counterpart";
 import utils from "common/utils";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
+import sanitize from "sanitize";
 
 let req = require.context("../../help", true, /\.md/);
 let HelpData = {};
@@ -29,6 +30,11 @@ function split_into_sections(str) {
 
 function adjust_links(str) {
     return str.replace(/\<a\shref\=\"(.+?)\"/gi, (match, text) => {
+        text = sanitize(text, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // filter out all HTML not in the whilelist
+        });
+
         if (text.indexOf((__HASH_HISTORY__ ? "#" : "") + "/") === 0)
             return `<a href="${text}" onclick="_onClickLink(event)"`;
         if (text.indexOf("http") === 0)
@@ -97,6 +103,11 @@ class HelpContent extends React.Component {
         return str.replace(/(\{.+?\})/gi, (match, text) => {
             let key = text.substr(1, text.length - 2);
             let value = this.props[key] !== undefined ? this.props[key] : text;
+            if (value && typeof value === "string")
+                value = sanitize(value, {
+                    whiteList: [], // empty, means filter out all tags
+                    stripIgnoreTag: true // filter out all HTML not in the whilelist
+                });
             if (value.amount && value.asset)
                 value = utils.format_asset(
                     value.amount,
@@ -106,6 +117,7 @@ class HelpContent extends React.Component {
                 );
             if (value.date) value = utils.format_date(value.date);
             if (value.time) value = utils.format_time(value.time);
+
             return value;
         });
     }

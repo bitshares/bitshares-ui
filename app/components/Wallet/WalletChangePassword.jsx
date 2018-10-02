@@ -147,7 +147,7 @@ class WalletPassword extends Component {
                                 "wallet.current_pass"
                             )}
                             type="password"
-                            id="current-password"
+                            id="password"
                             autoComplete="current-password"
                             onChange={this.formChange.bind(this)}
                             value={this.state.password}

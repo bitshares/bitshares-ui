@@ -1,23 +1,24 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
-import BaseModal from "../../Modal/BaseModal";
+import XbtsxWithdrawModal from "./XbtsxWithdrawModal";
+import Modal from "react-foundation-apps/src/modal";
+import Trigger from "react-foundation-apps/src/trigger";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
+import XbtsxDepositAddressCache from "lib/common/XbtsxDepositAddressCache";
+import {requestDepositAddress} from "lib/common/XbtsxMethods";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
-import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
-import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
-import LoadingIndicator from "components/LoadingIndicator";
+import utils from "lib/common/utils";
 import counterpart from "counterpart";
+import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
 
-class BlockTradesGatewayDepositRequest extends React.Component {
+class XbtsxGatewayDepositRequest extends React.Component {
     static propTypes = {
-        url: PropTypes.string,
         gateway: PropTypes.string,
         deposit_coin_type: PropTypes.string,
         deposit_asset_name: PropTypes.string,
@@ -31,26 +32,20 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         deprecated_in_favor_of: ChainTypes.ChainAsset,
         deprecated_message: PropTypes.string,
         action: PropTypes.string,
-        supports_output_memos: PropTypes.bool.isRequired
-    };
-
-    static defaultProps = {
-        autosubscribe: false
+        supports_output_memos: PropTypes.bool.isRequired,
+        min_amount: PropTypes.number,
+        deposit_fee: PropTypes.number,
+        withdraw_fee: PropTypes.number,
+        asset_precision: PropTypes.number
     };
 
     constructor(props) {
         super(props);
-
-        let urls = {
-            blocktrades: blockTradesAPIs.BASE,
-            openledger: openledgerAPIs.BASE
-        };
+        this.deposit_address_cache = new XbtsxDepositAddressCache();
 
         this.state = {
-            receive_address: null,
-            url: props.url || urls[props.gateway],
-            loading: false,
-            emptyAddressDeposit: false
+            account_name: null,
+            receive_address: null
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -77,56 +72,36 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
     _getDepositObject() {
         return {
+            walletType: this.props.deposit_wallet_type,
             inputCoinType: this.props.deposit_coin_type,
             outputCoinType: this.props.receive_coin_type,
             outputAddress: this.props.account.get("name"),
-            url: this.state.url,
             stateCallback: this.addDepositAddress
         };
     }
 
-    componentWillMount() {
-        getDepositAddress({
-            coin: this.props.receive_coin_type,
-            account: this.props.account.get("name"),
-            stateCallback: this.addDepositAddress
-        });
-    }
+    // componentWillMount() {
+    //     let account_name = this.props.account.get("name");
+    //
+    //     // let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
+    // }
 
     componentWillUnmount() {
         document.removeEventListener("copy", this._copy);
     }
 
-    componentWillReceiveProps(np) {
-        if (np.account !== this.props.account) {
-            getDepositAddress({
-                coin: np.receive_coin_type,
-                account: np.account.get("name"),
-                stateCallback: this.addDepositAddress
-            });
-        }
-    }
-
     addDepositAddress(receive_address) {
-        if (receive_address.error) {
-            receive_address.error.message === "no_address"
-                ? this.setState({emptyAddressDeposit: true})
-                : this.setState({emptyAddressDeposit: false});
-        }
-
+        let account_name = this.props.account.get("name");
+        // this.deposit_address_cache.cacheInputAddress(
+        //     this.props.gateway,
+        //     account_name,
+        //     this.props.deposit_coin_type,
+        //     this.props.receive_coin_type,
+        //     receive_address.address,
+        //     receive_address.memo
+        // );
+        this.setState({account_name});
         this.setState({receive_address});
-        this.setState({
-            loading: false
-        });
-        this.setState({receive_address});
-    }
-
-    requestDepositAddressLoad() {
-        this.setState({
-            loading: true,
-            emptyAddressDeposit: false
-        });
-        requestDepositAddress(this._getDepositObject());
     }
 
     getWithdrawModalId() {
@@ -155,8 +130,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
     }
 
     render() {
-        const isDeposit = this.props.action === "deposit";
-        let emptyRow = <LoadingIndicator />;
+        let emptyRow = <div style={{display: "none", minHeight: 150}} />;
         if (
             !this.props.account ||
             !this.props.issuer_account ||
@@ -166,9 +140,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
 
         let account_balances_object = this.props.account.get("balances");
 
-        const {gateFee} = this.props;
-
-        let balance = "0 " + this.props.receive_asset.get("symbol");
+        // let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of) {
             let has_nonzero_balance = false;
             let balance_object_id = account_balances_object.get(
@@ -184,26 +156,24 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             if (!has_nonzero_balance) return emptyRow;
         }
 
-        // let account_balances = account_balances_object.toJS();
-        // let asset_types = Object.keys(account_balances);
-        // if (asset_types.length > 0) {
-        //     let current_asset_id = this.props.receive_asset.get("id");
-        //     if( current_asset_id )
-        //     {
-        //         balance = (<span><Translate component="span" content="transfer.available"/>: <BalanceComponent balance={account_balances[current_asset_id]}/></span>);
-        //     }
-        // }
-
-        let receive_address = this.state.receive_address;
-        let {emptyAddressDeposit} = this.state;
-        let indicatorButtonAddr = this.state.loading;
+        let receive_address = null;
+        let prev_account_name = this.state.account_name;
+        if (prev_account_name === this.props.account.get("name"))
+            receive_address = this.state.receive_address;
 
         if (!receive_address) {
-            return (
-                <div style={{margin: "3rem"}}>
-                    <LoadingIndicator type="three-bounce" />
-                </div>
-            );
+            let account_name = this.props.account.get("name");
+            // receive_address = this.deposit_address_cache.getCachedInputAddress(
+            //     this.props.gateway,
+            //     account_name,
+            //     this.props.deposit_coin_type,
+            //     this.props.receive_coin_type
+            // );
+        }
+
+        if (!receive_address) {
+            requestDepositAddress(this._getDepositObject());
+            return emptyRow;
         }
 
         let withdraw_modal_id = this.getWithdrawModalId();
@@ -216,16 +186,24 @@ class BlockTradesGatewayDepositRequest extends React.Component {
         // else
         // {
         let clipboardText = "";
+        let payFromWallet =
+            "sth:" +
+            receive_address.address +
+            "?vendorField=" +
+            this.props.account.get("name");
+        var showPayFromWallet = false;
+        if (this.props.deposit_asset === "STH") {
+            showPayFromWallet = true;
+        }
+
         let memoText;
         if (this.props.deposit_account) {
             deposit_address_fragment = (
                 <span>{this.props.deposit_account}</span>
             );
-            clipboardText =
-                this.props.receive_coin_type +
-                ":" +
-                this.props.account.get("name");
-            deposit_memo = <span>{clipboardText}</span>;
+            clipboardText = this.props.deposit_account;
+            memoText = "dex:" + this.props.account.get("name");
+            deposit_memo = <span>{memoText}</span>;
             var withdraw_memo_prefix = this.props.deposit_coin_type + ":";
         } else {
             if (receive_address.memo) {
@@ -246,25 +224,16 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             var withdraw_memo_prefix = "";
         }
 
-        if (
-            !this.props.isAvailable ||
-            ((isDeposit && !this.props.deposit_account && !receive_address) ||
-                (receive_address && receive_address.address === "unknown"))
-        ) {
-            return (
-                <div>
-                    <Translate
-                        className="txtlabel cancel"
-                        content="gateway.unavailable"
-                        component="h4"
-                    />
-                </div>
-            );
-        }
+        let minDeposit = utils.format_number(
+            this.props.min_amount /
+                utils.get_asset_precision(this.props.asset_precision),
+            this.props.asset_precision,
+            false
+        );
 
-        if (isDeposit) {
+        if (this.props.action === "deposit") {
             return (
-                <div className="Blocktrades__gateway grid-block no-padding no-margin">
+                <div className="rudex__gateway grid-block no-padding no-margin">
                     <div className="small-12 medium-5">
                         <Translate
                             component="h4"
@@ -288,6 +257,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                             {this.props.deposit_asset}
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <Translate
                                             component="td"
@@ -371,6 +341,11 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 </tbody>
                             </table>
                         </div>
+                        {!memoText ? (
+                            <div className="QR">
+                                <QRCode size={128} value={clipboardText} />
+                            </div>
+                        ) : null}
                     </div>
                     <div className="small-12 medium-7">
                         <Translate
@@ -383,20 +358,44 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 asset={this.props.deposit_asset}
                             />:
                         </label>
-                        <label className="fz_12 left-label">
-                            <Translate content="gateway.deposit_notice_delay" />
+                        <label className="left-label">
+                            <b>
+                                <Translate
+                                    content="gateway.xbtsx.min_amount"
+                                    minAmount={minDeposit}
+                                    symbol={this.props.deposit_coin_type}
+                                />
+                            </b>
                         </label>
-                        <div>
-                            {emptyAddressDeposit ? (
-                                <Translate content="gateway.please_generate_address" />
-                            ) : (
-                                deposit_address_fragment
-                            )}
-                            <div>
-                                {deposit_memo && (
-                                    <span>memo: {deposit_memo}</span>
-                                )}
-                            </div>
+                        <div style={{padding: "10px 0", fontSize: "1.1rem"}}>
+                            <table className="table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <Translate
+                                                style={{
+                                                    textTransform: "uppercase"
+                                                }}
+                                                content="gateway.address"
+                                            />:{" "}
+                                            <b>{deposit_address_fragment}</b>
+                                        </td>
+                                    </tr>
+                                    {deposit_memo ? (
+                                        <tr>
+                                            <td>
+                                                <Translate
+                                                    style={{
+                                                        textTransform:
+                                                            "uppercase"
+                                                    }}
+                                                    content="gateway.memo"
+                                                />: <b>{deposit_memo}</b>
+                                            </td>
+                                        </tr>
+                                    ) : null}
+                                </tbody>
+                            </table>
                             <div
                                 className="button-group"
                                 style={{paddingTop: 10}}
@@ -423,30 +422,25 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                         <Translate content="gateway.copy_memo" />
                                     </div>
                                 ) : null}
-                                <button
-                                    className={"button spinner-button-circle"}
-                                    onClick={this.requestDepositAddressLoad.bind(
-                                        this
-                                    )}
-                                >
-                                    {indicatorButtonAddr ? (
-                                        <LoadingIndicator type="circle" />
-                                    ) : null}
-                                    <Translate content="gateway.generate_new" />
-                                </button>
+                                {showPayFromWallet ? (
+                                    <a className="button" href={payFromWallet}>
+                                        <Translate content="gateway.deposit_from_wallet" />{" "}
+                                        {this.props.deposit_asset}
+                                    </a>
+                                ) : null}
                             </div>
                             <Translate
                                 className="has-error fz_14"
                                 component="p"
                                 content="gateway.min_deposit_warning_amount"
-                                minDeposit={this.props.gateFee * 2}
+                                minDeposit={minDeposit}
                                 coin={this.props.deposit_asset}
                             />
                             <Translate
                                 className="has-error fz_14"
                                 component="p"
                                 content="gateway.min_deposit_warning_asset"
-                                minDeposit={this.props.gateFee * 2}
+                                minDeposit={minDeposit}
                                 coin={this.props.deposit_asset}
                             />
                         </div>
@@ -455,7 +449,7 @@ class BlockTradesGatewayDepositRequest extends React.Component {
             );
         } else {
             return (
-                <div className="Blocktrades__gateway grid-block no-padding no-margin">
+                <div className="rudex__gateway grid-block no-padding no-margin">
                     <div className="small-12 medium-5">
                         <Translate
                             component="h4"
@@ -567,16 +561,19 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <BaseModal id={withdraw_modal_id} overlay={true}>
+                    <Modal id={withdraw_modal_id} overlay={true}>
+                        <Trigger close={withdraw_modal_id}>
+                            <a href="#" className="close-button">
+                                &times;
+                            </a>
+                        </Trigger>
                         <br />
                         <div className="grid-block vertical">
-                            <WithdrawModalBlocktrades
+                            <XbtsxWithdrawModal
                                 account={this.props.account.get("name")}
                                 issuer={this.props.issuer_account.get("name")}
                                 asset={this.props.receive_asset.get("symbol")}
-                                url={this.state.url}
                                 output_coin_name={this.props.deposit_asset_name}
-                                gateFee={gateFee}
                                 output_coin_symbol={this.props.deposit_asset}
                                 output_coin_type={this.props.deposit_coin_type}
                                 output_wallet_type={
@@ -587,6 +584,9 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 }
                                 memo_prefix={withdraw_memo_prefix}
                                 modal_id={withdraw_modal_id}
+                                min_amount={this.props.min_amount}
+                                withdraw_fee={this.props.withdraw_fee}
+                                asset_precision={this.props.asset_precision}
                                 balance={
                                     this.props.account.get("balances").toJS()[
                                         this.props.receive_asset.get("id")
@@ -594,11 +594,13 @@ class BlockTradesGatewayDepositRequest extends React.Component {
                                 }
                             />
                         </div>
-                    </BaseModal>
+                    </Modal>
                 </div>
             );
         }
     }
 }
 
-export default BindToChainState(BlockTradesGatewayDepositRequest);
+export default BindToChainState(XbtsxGatewayDepositRequest, {
+    keep_updating: true
+});

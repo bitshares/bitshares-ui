@@ -1,249 +1,25 @@
 import React from "react";
 import {connect} from "alt-react";
-import {Link} from "react-router-dom";
 import {ChainStore} from "bitsharesjs";
 import Translate from "react-translate-component";
 import cnames from "classnames";
 import MarketsStore from "stores/MarketsStore";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
-import ChainTypes from "../Utility/ChainTypes";
-import Icon from "../Icon/Icon";
-import AssetName from "../Utility/AssetName";
-import BindToChainState from "../Utility/BindToChainState";
-import MarketsActions from "actions/MarketsActions";
 import utils from "common/utils";
-import market_utils from "common/market_utils";
-
-class MarketRow extends React.Component {
-    static propTypes = {
-        quote: ChainTypes.ChainAsset.isRequired,
-        base: ChainTypes.ChainAsset.isRequired
-    };
-
-    static defaultProps = {
-        tempComponent: "tr"
-    };
-
-    constructor() {
-        super();
-
-        this.statsInterval = null;
-        this.state = {
-            imgError: false
-        };
-    }
-
-    shouldComponentUpdate(np, ns) {
-        return (
-            utils.check_market_stats(np.marketStats, this.props.marketStats) ||
-            np.base.get("id") !== this.props.base.get("id") ||
-            np.quote.get("id") !== this.props.quote.get("id") ||
-            np.visible !== this.props.visible ||
-            ns.imgError !== this.state.imgError ||
-            np.starredMarkets.size !== this.props.starredMarkets.size
-        );
-    }
-
-    componentWillMount() {
-        this._setInterval();
-    }
-
-    componentWillUnmount() {
-        this._clearInterval();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (
-            nextProps.base.get("id") !== this.props.base.get("id") ||
-            nextProps.quote.get("id") !== this.props.quote.get("id")
-        ) {
-            this._clearInterval();
-            this._setInterval(nextProps);
-        }
-    }
-
-    _setInterval(nextProps = null) {
-        let {base, quote} = nextProps || this.props;
-        this.statsChecked = new Date();
-        this.statsInterval = MarketsActions.getMarketStatsInterval(
-            35 * 1000,
-            base,
-            quote
-        );
-    }
-
-    _clearInterval() {
-        if (this.statsInterval) this.statsInterval();
-    }
-
-    _onError(imgName) {
-        if (!this.state.imgError) {
-            this.refs[imgName.toLowerCase()].src = "asset-symbols/bts.png";
-            this.setState({
-                imgError: true
-            });
-        }
-    }
-
-    _toggleFavoriteMarket(quote, base) {
-        let marketID = `${quote}_${base}`;
-        if (!this.props.starredMarkets.has(marketID)) {
-            SettingsActions.addStarMarket(quote, base);
-        } else {
-            SettingsActions.removeStarMarket(quote, base);
-        }
-    }
-
-    render() {
-        let {
-            base,
-            quote,
-            marketStats,
-            isHidden,
-            inverted,
-            visible,
-            handleHide,
-            handleFlip
-        } = this.props;
-
-        function getImageName(asset) {
-            let symbol = asset.get("symbol");
-            if (
-                symbol === "OPEN.BTC" ||
-                symbol === "GDEX.BTC" ||
-                symbol === "RUDEX.BTC"
-            )
-                return symbol;
-            let imgName = asset.get("symbol").split(".");
-            return imgName.length === 2 ? imgName[1] : imgName[0];
-        }
-        let imgName = getImageName(quote);
-        let changeClass = !marketStats
-            ? ""
-            : parseFloat(marketStats.change) > 0
-                ? "change-up"
-                : parseFloat(marketStats.change) < 0
-                    ? "change-down"
-                    : "";
-
-        let marketID = `${quote.get("symbol")}_${base.get("symbol")}`;
-
-        const starClass = this.props.starredMarkets.has(marketID)
-            ? "gold-star"
-            : "grey-star";
-
-        return (
-            <tr style={{display: visible ? "" : "none"}}>
-                <td>
-                    <div
-                        onClick={this._toggleFavoriteMarket.bind(
-                            this,
-                            quote.get("symbol"),
-                            base.get("symbol")
-                        )}
-                    >
-                        <Icon
-                            style={{cursor: "pointer"}}
-                            className={starClass}
-                            name="fi-star"
-                            title="icons.fi_star.market"
-                        />
-                    </div>
-                </td>
-                <td style={{textAlign: "left"}}>
-                    <Link
-                        to={`/market/${this.props.quote.get(
-                            "symbol"
-                        )}_${this.props.base.get("symbol")}`}
-                    >
-                        <img
-                            ref={imgName.toLowerCase()}
-                            className="column-hide-small"
-                            onError={this._onError.bind(this, imgName)}
-                            style={{maxWidth: 20, marginRight: 10}}
-                            src={`${__BASE_URL__}asset-symbols/${imgName.toLowerCase()}.png`}
-                        />
-                        <AssetName dataPlace="top" name={quote.get("symbol")} />{" "}
-                        :{" "}
-                        <AssetName dataPlace="top" name={base.get("symbol")} />
-                    </Link>
-                </td>
-                <td style={{textAlign: "right"}}>
-                    {marketStats && marketStats.price
-                        ? utils.price_text(
-                              marketStats.price.toReal(),
-                              quote,
-                              base
-                          )
-                        : null}
-                </td>
-                <td
-                    style={{textAlign: "right"}}
-                    className={cnames(changeClass)}
-                >
-                    {!marketStats ? null : marketStats.change}%
-                </td>
-                <td className="column-hide-small" style={{textAlign: "right"}}>
-                    {!marketStats
-                        ? null
-                        : utils.format_volume(
-                              marketStats.volumeBase,
-                              base.get("precision")
-                          )}
-                </td>
-                {inverted === null ? null : (
-                    <td className="column-hide-small">
-                        <a onClick={handleFlip}>
-                            <Icon name="shuffle" title="icons.shuffle" />
-                        </a>
-                    </td>
-                )}
-                <td>
-                    <a
-                        style={{marginRight: 0}}
-                        className={isHidden ? "action-plus" : "order-cancel"}
-                        onClick={handleHide}
-                    >
-                        <Icon
-                            name={isHidden ? "plus-circle" : "cross-circle"}
-                            title={
-                                isHidden
-                                    ? "icons.plus_circle.show_market"
-                                    : "icons.cross_circle.hide_market"
-                            }
-                            className="icon-14px"
-                        />
-                    </a>
-                </td>
-            </tr>
-        );
-    }
-}
-
-MarketRow = BindToChainState(MarketRow);
-MarketRow = connect(MarketRow, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps(props) {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats.get(
-                props.marketId
-            ),
-            starredMarkets: SettingsStore.getState().starredMarkets
-        };
-    }
-});
+import PaginatedList from "../Utility/PaginatedList";
+import MarketsRow from "./MarketsRow";
 
 class MarketsTable extends React.Component {
     constructor() {
         super();
         this.state = {
             filter: "",
-            showFlip: true,
+            showFlip: false,
             showHidden: false,
-            markets: []
+            markets: [],
+            sortBy: "volumeQuote",
+            sortDirection: true
         };
 
         this.update = this.update.bind(this);
@@ -254,7 +30,7 @@ class MarketsTable extends React.Component {
     }
 
     componentWillMount() {
-        -this.update();
+        this.update();
         ChainStore.subscribe(this.update);
     }
 
@@ -262,54 +38,40 @@ class MarketsTable extends React.Component {
         ChainStore.unsubscribe(this.update);
     }
 
+    _onToggleSort(key) {
+        if (key === this.state.sortBy) {
+            return this.setState({sortDirection: !this.state.sortDirection});
+        }
+        this.setState({sortBy: key});
+    }
+
     update(nextProps = null) {
         let props = nextProps || this.props;
-        let showFlip = !props.forceDirection || props.handleFlip;
-        let markets = props.markets
-            .map(pair => {
-                let [first, second] = pair;
+        let showFlip = props.forceDirection;
 
-                if (props.forceDirection) {
-                    let key = `${first}_${second}`;
-                    return {
-                        key,
-                        inverted: showFlip ? false : null,
-                        marketId: key,
-                        quote: first,
-                        base: second,
-                        isHidden: props.hiddenMarkets.includes(key)
-                    };
-                } else {
-                    let {
-                        marketName: key,
-                        first: quote,
-                        second: base
-                    } = market_utils.getMarketName(
-                        ChainStore.getAsset(first),
-                        ChainStore.getAsset(second)
-                    );
-                    if (!quote || !base) return null;
-
-                    let inverted = props.marketDirections.get(key);
-                    if (inverted) {
-                        [quote, base] = [base, quote];
-                    }
+        if (props.markets && props.markets.size > 0) {
+            let markets = props.markets
+                .toArray()
+                .map(market => {
+                    let quote = ChainStore.getAsset(market.quote);
+                    let base = ChainStore.getAsset(market.base);
+                    if (!base || !quote) return null;
+                    let marketName = `${market.base}_${market.quote}`;
 
                     return {
-                        key,
-                        inverted,
-                        marketId: `${quote.get("symbol")}_${base.get(
-                            "symbol"
-                        )}`,
-                        quote: quote.get("symbol"),
-                        base: base.get("symbol"),
-                        isHidden: props.hiddenMarkets.includes(key)
+                        key: marketName,
+                        inverted: undefined,
+                        quote: market.quote,
+                        base: market.base,
+                        isHidden: props.hiddenMarkets.includes(marketName),
+                        isFavorite: props.isFavorite,
+                        marketStats: props.allMarketStats.get(marketName, {}),
+                        isStarred: this.props.starredMarkets.has(marketName)
                     };
-                }
-            })
-            .filter(a => a !== null);
-
-        this.setState({showFlip, markets});
+                })
+                .filter(a => a !== null);
+            this.setState({showFlip, markets});
+        }
     }
 
     _toggleShowHidden(val) {
@@ -347,6 +109,64 @@ class MarketsTable extends React.Component {
         let {markets, showFlip, showHidden, filter} = this.state;
 
         const marketRows = markets
+            .filter(m => {
+                if (!!filter || m.isStarred) return true;
+                if (
+                    this.props.onlyLiquid &&
+                    (m.marketStats && "volumeBase" in m.marketStats)
+                ) {
+                    return !!m.marketStats.volumeBase;
+                } else {
+                    return true;
+                }
+            })
+            .sort((a, b) => {
+                const {sortBy, sortDirection} = this.state;
+
+                switch (sortBy) {
+                    case "price":
+                        if (a.marketStats.price && b.marketStats.price) {
+                            if (sortDirection) {
+                                return (
+                                    b.marketStats.price.toReal() -
+                                    a.marketStats.price.toReal()
+                                );
+                            }
+
+                            return (
+                                a.marketStats.price.toReal() -
+                                b.marketStats.price.toReal()
+                            );
+                        }
+                        break;
+
+                    case "change":
+                        if (sortDirection) {
+                            return (
+                                parseFloat(b.marketStats[sortBy]) -
+                                parseFloat(a.marketStats[sortBy])
+                            );
+                        } else {
+                            return (
+                                parseFloat(a.marketStats[sortBy]) -
+                                parseFloat(b.marketStats[sortBy])
+                            );
+                        }
+
+                        break;
+
+                    default:
+                        if (sortDirection) {
+                            return (
+                                b.marketStats[sortBy] - a.marketStats[sortBy]
+                            );
+                        } else {
+                            return (
+                                a.marketStats[sortBy] - b.marketStats[sortBy]
+                            );
+                        }
+                }
+            })
             .map(row => {
                 let visible = true;
 
@@ -401,9 +221,8 @@ class MarketsTable extends React.Component {
                 if (!visible) return null;
 
                 return (
-                    <MarketRow
+                    <MarketsRow
                         {...row}
-                        visible={visible}
                         handleHide={this._handleHide.bind(
                             this,
                             row,
@@ -414,6 +233,7 @@ class MarketsTable extends React.Component {
                             row,
                             !row.inverted
                         )}
+                        starredMarkets={this.props.starredMarkets}
                     />
                 );
             })
@@ -428,6 +248,7 @@ class MarketsTable extends React.Component {
                             onChange={this._handleFilterInput.bind(this)}
                         />
                     </div>
+
                     <div className="selector inline-block">
                         <div
                             className={cnames("inline-block", {
@@ -446,9 +267,32 @@ class MarketsTable extends React.Component {
                             <Translate content="account.show_hidden" />
                         </div>
                     </div>
+
+                    <div style={{paddingTop: "0.5rem"}}>
+                        <label
+                            style={{margin: "3px 0 0", width: "fit-content"}}
+                        >
+                            <input
+                                style={{position: "relative", top: 3}}
+                                className="no-margin"
+                                type="checkbox"
+                                checked={this.props.onlyLiquid}
+                                onChange={() => {
+                                    SettingsActions.changeViewSetting({
+                                        onlyLiquid: !this.props.onlyLiquid
+                                    });
+                                }}
+                            />
+                            <span style={{paddingLeft: "0.4rem"}}>
+                                <Translate content="exchange.show_only_liquid" />
+                            </span>
+                        </label>
+                    </div>
                 </div>
-                <table className="table dashboard-table table-hover">
-                    <thead>
+                <PaginatedList
+                    style={{paddingLeft: 0, paddingRight: 0}}
+                    className="table dashboard-table table-hover"
+                    header={
                         <tr>
                             <th style={{textAlign: "left", width: "75px"}} />
                             <th style={{textAlign: "left"}}>
@@ -457,14 +301,42 @@ class MarketsTable extends React.Component {
                                     content="account.asset"
                                 />
                             </th>
-                            <th style={{textAlign: "right"}}>
+                            {this.props.isFavorite ? null : (
+                                <th style={{textAlign: "right"}}>
+                                    <Translate content="account.user_issued_assets.quote_name" />
+                                </th>
+                            )}
+                            <th
+                                onClick={this._onToggleSort.bind(this, "price")}
+                                className={cnames(
+                                    "column-hide-small is-sortable",
+                                    {"is-active": this.state.sortBy === "price"}
+                                )}
+                                style={{textAlign: "right"}}
+                            >
                                 <Translate content="exchange.price" />
                             </th>
-                            <th style={{textAlign: "right"}}>
+                            <th
+                                onClick={this._onToggleSort.bind(
+                                    this,
+                                    "change"
+                                )}
+                                className={cnames("is-sortable", {
+                                    "is-active": this.state.sortBy === "change"
+                                })}
+                                style={{textAlign: "right"}}
+                            >
                                 <Translate content="account.hour_24_short" />
                             </th>
                             <th
-                                className="column-hide-small"
+                                onClick={this._onToggleSort.bind(
+                                    this,
+                                    "volumeQuote"
+                                )}
+                                className={cnames("is-sortable", {
+                                    "is-active":
+                                        this.state.sortBy === "volumeQuote"
+                                })}
                                 style={{textAlign: "right"}}
                             >
                                 <Translate content="exchange.volume" />
@@ -484,33 +356,45 @@ class MarketsTable extends React.Component {
                                 />
                             </th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {!marketRows.length && (
+                    }
+                    rows={
+                        !marketRows.length ? (
                             <tr className="table-empty">
                                 <td colSpan={showFlip ? 7 : 6}>
                                     <Translate content="dashboard.table_empty" />
                                 </td>
                             </tr>
-                        )}
-                        {marketRows}
-                    </tbody>
-                </table>
+                        ) : (
+                            marketRows
+                        )
+                    }
+                    pageSize={25}
+                    label="utility.total_x_markets"
+                    leftPadding="1.5rem"
+                />
             </div>
         );
     }
 }
 
-export default connect(MarketsTable, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        let {marketDirections, hiddenMarkets} = SettingsStore.getState();
-
-        return {
-            marketDirections,
-            hiddenMarkets
-        };
+export default connect(
+    MarketsTable,
+    {
+        listenTo() {
+            return [SettingsStore, MarketsStore];
+        },
+        getProps() {
+            let {marketDirections, hiddenMarkets} = SettingsStore.getState();
+            return {
+                marketDirections,
+                hiddenMarkets,
+                allMarketStats: MarketsStore.getState().allMarketStats,
+                starredMarkets: SettingsStore.getState().starredMarkets,
+                onlyLiquid: SettingsStore.getState().viewSettings.get(
+                    "onlyLiquid",
+                    true
+                )
+            };
+        }
     }
-});
+);

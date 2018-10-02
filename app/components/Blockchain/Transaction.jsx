@@ -36,6 +36,13 @@ require("./json-inspector.scss");
 let ops = Object.keys(operations);
 let listings = Object.keys(account_constants.account_listing);
 
+const TranslateBoolean = ({value, ...otherProps}) => (
+    <Translate
+        content={`boolean.${value ? "true" : "false"}`}
+        {...otherProps}
+    />
+);
+
 class OpType extends React.Component {
     shouldComponentUpdate(nextProps) {
         return nextProps.type !== this.props.type;
@@ -49,15 +56,15 @@ class OpType extends React.Component {
             <tr>
                 <td>
                     <span className={labelClass}>
-                        {trxTypes[ops[this.props.type]]}
-                        {this.props.txIndex > 0 ? (
+                        {this.props.txIndex >= 0 ? (
                             <span>
-                                <Translate content="explorer.block.trx" />
-                                {this.props.txIndex}
+                                #{this.props.txIndex + 1}
+                                :&nbsp;
                             </span>
                         ) : (
                             ""
                         )}
+                        {trxTypes[ops[this.props.type]]}
                     </span>
                 </td>
                 <td />
@@ -169,10 +176,16 @@ class Transaction extends React.Component {
                         );
 
                         memo = text ? (
-                            <td className="memo">{text}</td>
+                            <td
+                                className="memo"
+                                style={{wordBreak: "break-all"}}
+                            >
+                                {text}
+                            </td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -1008,7 +1021,8 @@ class Transaction extends React.Component {
                             <td>{text}</td>
                         ) : !text && isMine ? (
                             <td>
-                                <Translate content="transfer.memo_unlock" />&nbsp;
+                                <Translate content="transfer.memo_unlock" />
+                                &nbsp;
                                 <a onClick={this._toggleLock.bind(this)}>
                                     <Icon
                                         name="locked"
@@ -1447,7 +1461,8 @@ class Transaction extends React.Component {
                                 />
                             </td>
                             <td style={{fontSize: "80%"}}>
-                                {op[1].balance_owner_key.substring(0, 10)}...
+                                {op[1].balance_owner_key.substring(0, 10)}
+                                ...
                             </td>
                         </tr>
                     );
@@ -1788,7 +1803,48 @@ class Transaction extends React.Component {
 
                     break;
 
-                // proposal_delete
+                case "proposal_delete":
+                    color = "cancel";
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="proposal_create.fee_paying_account"
+                                />
+                            </td>
+                            <td>
+                                {this.linkToAccount(op[1].fee_paying_account)}
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="proposal_delete.using_owner_authority"
+                                />
+                            </td>
+                            <td>
+                                <TranslateBoolean
+                                    value={op[1].using_owner_authority}
+                                />
+                            </td>
+                        </tr>
+                    );
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="proposal_create.id"
+                                />
+                            </td>
+                            <td>{op[1].proposal}</td>
+                        </tr>
+                    );
+                    break;
 
                 case "asset_claim_fees":
                     color = "success";

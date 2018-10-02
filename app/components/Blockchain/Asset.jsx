@@ -279,7 +279,6 @@ class Asset extends React.Component {
         }
 
         let {name, prefix} = utils.replaceName(originalAsset);
-
         return (
             <div style={{overflow: "visible"}}>
                 <HelpContent
@@ -406,7 +405,7 @@ class Asset extends React.Component {
         );
     }
 
-    renderPriceFeed(asset, sortedCallOrders) {
+    renderPriceFeed(asset) {
         var title = <Translate content="explorer.asset.price_feed.title" />;
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
@@ -611,7 +610,7 @@ class Asset extends React.Component {
                         content="explorer.asset.feed_producer_text"
                     />
                     <AssetPublishFeed
-                        base={asset.id}
+                        asset={asset.id}
                         account={this.props.currentAccount}
                         currentOwner={asset.issuer}
                     />
@@ -736,17 +735,21 @@ class Asset extends React.Component {
         var whiteLists = permissionBooleans["white_list"] ? (
             <span>
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_authorities" />:
-                &nbsp;{this.renderAuthorityList(options.blacklist_authorities)}
+                <Translate content="explorer.asset.permissions.blacklist_authorities" />
+                : &nbsp;
+                {this.renderAuthorityList(options.blacklist_authorities)}
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_markets" />:
-                &nbsp;{this.renderMarketList(asset, options.blacklist_markets)}
+                <Translate content="explorer.asset.permissions.blacklist_markets" />
+                : &nbsp;
+                {this.renderMarketList(asset, options.blacklist_markets)}
                 <br />
-                <Translate content="explorer.asset.permissions.whitelist_authorities" />:
-                &nbsp;{this.renderAuthorityList(options.whitelist_authorities)}
+                <Translate content="explorer.asset.permissions.whitelist_authorities" />
+                : &nbsp;
+                {this.renderAuthorityList(options.whitelist_authorities)}
                 <br />
-                <Translate content="explorer.asset.permissions.whitelist_markets" />:
-                &nbsp;{this.renderMarketList(asset, options.whitelist_markets)}
+                <Translate content="explorer.asset.permissions.whitelist_markets" />
+                : &nbsp;
+                {this.renderMarketList(asset, options.whitelist_markets)}
             </span>
         ) : null;
 
@@ -795,18 +798,10 @@ class Asset extends React.Component {
                 );
             },
             collateral: function(a, b) {
-                return (
-                    (sortDirection ? 1 : -1) *
-                    (b.getCollateral().getAmount() -
-                        a.getCollateral().getAmount())
-                );
+                return (sortDirection ? 1 : -1) * (b.collateral - a.collateral);
             },
             debt: function(a, b) {
-                return (
-                    (sortDirection ? 1 : -1) *
-                    (b.amountToReceive().getAmount() -
-                        a.amountToReceive().getAmount())
-                );
+                return (sortDirection ? 1 : -1) * (b.debt - a.debt);
             },
             ratio: function(a, b) {
                 return (sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio());
@@ -815,39 +810,6 @@ class Asset extends React.Component {
 
         return this.state.callOrders.sort(
             sortFunctions[this.state.marginTableSort]
-        );
-    }
-
-    // the global settlement price is defined as the
-    // the price at which the least collateralized short
-    // 's collateral no longer enough to back the debt
-    // he/she owes. If the feed price goes above this,
-    // then
-    getGlobalSettlementPriceFromSorted(sortedCallOrders) {
-        console.log("global settlement sorted called");
-        // first get the least collateralized short position
-        if (!sortedCallOrders || sortedCallOrders.length <= 0) {
-            console.log("length array 0 passed in");
-            return null;
-        }
-        console.log("sortedCallOrders exists according to sorted get globa");
-
-        let leastColShort = sortedCallOrders[0];
-
-        // this price will happen when the CR is 1.
-        // The CR is 1 iff collateral / (debt x feed_ price) == 1
-        // Rearranging, this means that the CR is 1 iff
-        // feed_price == collateral / debt
-        let debt = leastColShort.amountToReceive().getAmount();
-        let collateral = leastColShort.getCollateral().getAmount();
-
-        return (
-            <FormattedPrice
-                base_amount={collateral}
-                base_asset={leastColShort.call_price.base.asset_id}
-                quote_amount={debt}
-                quote_asset={leastColShort.call_price.quote.asset_id}
-            />
         );
     }
 
@@ -886,8 +848,8 @@ class Asset extends React.Component {
         // The CR is 1 iff collateral / (debt x feed_ price) == 1
         // Rearranging, this means that the CR is 1 iff
         // feed_price == collateral / debt
-        let debt = leastColShort.amountToReceive().getAmount();
-        let collateral = leastColShort.getCollateral().getAmount();
+        let debt = leastColShort.debt;
+        let collateral = leastColShort.collateral;
 
         return (
             <FormattedPrice
@@ -904,7 +866,7 @@ class Asset extends React.Component {
     // witness for the given asset
     // the other tab is a list of the margin positions
     // for this asset (if it's a bitasset)
-    renderPriceFeedData(asset, sortedCallOrders) {
+    renderMarginPositions(asset, sortedCallOrders) {
         // first we compute the price feed tab
         var bitAsset = asset.bitasset;
         if (
@@ -945,24 +907,26 @@ class Asset extends React.Component {
                     </th>
                     <th style={{textAlign: "right"}}>
                         <Translate content="explorer.asset.price_feed_data.settlement_price" />
-                        <br />
-                        ({this.formattedPrice(
+                        <br />(
+                        {this.formattedPrice(
                             settlement_price_header,
                             false,
                             true
-                        )})
+                        )}
+                        )
                     </th>
                     <th
                         style={{textAlign: "right"}}
                         className="column-hide-small"
                     >
                         <Translate content="explorer.asset.price_feed_data.core_exchange_rate" />
-                        <br />
-                        ({this.formattedPrice(
+                        <br />(
+                        {this.formattedPrice(
                             core_exchange_rate_header,
                             false,
                             true
-                        )})
+                        )}
+                        )
                     </th>
                     <th style={{textAlign: "right"}}>
                         <Translate content="explorer.asset.price_feed_data.maintenance_collateral_ratio" />
@@ -1038,7 +1002,8 @@ class Asset extends React.Component {
                         <Translate content="transaction.collateral" />
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedAsset
+                                &nbsp;(
+                                <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .getCollateral()
                                         .getAmount()}
@@ -1060,7 +1025,8 @@ class Asset extends React.Component {
                         <Translate content="transaction.borrow_amount" />
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedAsset
+                                &nbsp;(
+                                <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .amountToReceive()
                                         .getAmount()}
@@ -1085,7 +1051,8 @@ class Asset extends React.Component {
                         </span>
                         {this.state.callOrders.length ? (
                             <span>
-                                &nbsp;(<FormattedPrice
+                                &nbsp;(
+                                <FormattedPrice
                                     base_amount={
                                         this.state.callOrders[0].call_price.base
                                             .amount
@@ -1104,7 +1071,8 @@ class Asset extends React.Component {
                                     }
                                     hide_value
                                     noPopOver
-                                />)
+                                />
+                                )
                             </span>
                         ) : null}
                     </th>
@@ -1133,7 +1101,7 @@ class Asset extends React.Component {
                         className="column-hide-small"
                     >
                         <FormattedAsset
-                            amount={c.getCollateral().getAmount()}
+                            amount={c.collateral}
                             asset={c.getCollateral().asset_id}
                             hide_asset
                         />
@@ -1143,7 +1111,7 @@ class Asset extends React.Component {
                         className="column-hide-small"
                     >
                         <FormattedAsset
-                            amount={c.amountToReceive().getAmount()}
+                            amount={c.debt}
                             asset={c.amountToReceive().asset_id}
                             hide_asset
                         />
@@ -1213,12 +1181,10 @@ class Asset extends React.Component {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
         var priceFeed =
-            "bitasset" in asset
-                ? this.renderPriceFeed(asset, sortedCallOrders)
-                : null;
+            "bitasset" in asset ? this.renderPriceFeed(asset) : null;
         var priceFeedData =
             "bitasset" in asset
-                ? this.renderPriceFeedData(asset, sortedCallOrders)
+                ? this.renderMarginPositions(asset, sortedCallOrders)
                 : null;
 
         return (
@@ -1287,18 +1253,21 @@ class Asset extends React.Component {
     }
 }
 
-Asset = connect(Asset, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount
-        };
+Asset = connect(
+    Asset,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
     }
-});
+);
 
 Asset = AssetWrapper(Asset, {
     propNames: ["backingAsset"]

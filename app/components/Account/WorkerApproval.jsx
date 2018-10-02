@@ -125,10 +125,7 @@ class WorkerApproval extends React.Component {
                             <Icon name="share" title="icons.share" />
                         </a>
                     </div>
-                    <div
-                        data-tip={worker.name}
-                        className="inline-block tooltip"
-                    >
+                    <div className="inline-block">
                         {worker.name}
                         <br />
                         <LinkToAccountById account={worker.worker_account} />

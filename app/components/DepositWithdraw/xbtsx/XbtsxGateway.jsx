@@ -1,5 +1,5 @@
 import React from "react";
-import BlockTradesGatewayDepositRequest from "../DepositWithdraw/blocktrades/BlockTradesGatewayDepositRequest";
+import XbtsxGatewayDepositRequest from "./XbtsxGatewayDepositRequest";
 import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
@@ -10,39 +10,29 @@ import {
 } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
 import cnames from "classnames";
-import LoadingIndicator from "../LoadingIndicator";
+import LoadingIndicator from "../../LoadingIndicator";
 
-class BlockTradesGateway extends React.Component {
+class XbtsxGateway extends React.Component {
     constructor(props) {
         super();
 
-        const action = props.viewSettings.get(
-            `${props.provider}Action`,
-            "deposit"
-        );
         this.state = {
-            activeCoin: this._getActiveCoin(props, {action}),
-            action
+            activeCoin: this._getActiveCoin(props, {action: "deposit"}),
+            action: props.viewSettings.get(`xbtsxAction`, "deposit")
         };
     }
 
     _getActiveCoin(props, state) {
         let cachedCoin = props.viewSettings.get(
-            `activeCoin_${props.provider}_${state.action}`,
+            `activeCoin_xbtsx_${state.action}`,
             null
         );
         let firstTimeCoin = null;
-        if (props.provider == "blocktrades" && state.action == "deposit") {
-            firstTimeCoin = "BTC";
+        if (state.action == "deposit") {
+            firstTimeCoin = "PPY";
         }
-        if (props.provider == "openledger" && state.action == "deposit") {
-            firstTimeCoin = "BTC";
-        }
-        if (props.provider == "blocktrades" && state.action == "withdraw") {
-            firstTimeCoin = "TRADE.BTC";
-        }
-        if (props.provider == "openledger" && state.action == "withdraw") {
-            firstTimeCoin = "OPEN.BTC";
+        if (state.action == "withdraw") {
+            firstTimeCoin = "PPY";
         }
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
@@ -56,24 +46,13 @@ class BlockTradesGateway extends React.Component {
         }
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     if (nextState.action !== this.state.action) {
-    //         this.setState({
-    //             activeCoin: this._getActiveCoin(nextProps, nextState)
-    //         });
-    //     }
-
-    //     return true;
-    // }
-
     onSelectCoin(e) {
         this.setState({
             activeCoin: e.target.value
         });
 
         let setting = {};
-        setting[`activeCoin_${this.props.provider}_${this.state.action}`] =
-            e.target.value;
+        setting[`activeCoin_xbtsx_${this.state.action}`] = e.target.value;
         SettingsActions.changeViewSetting(setting);
     }
 
@@ -85,14 +64,13 @@ class BlockTradesGateway extends React.Component {
             activeCoin: activeCoin
         });
 
-        SettingsActions.changeViewSetting({
-            [`${this.props.provider}Action`]: type
-        });
+        SettingsActions.changeViewSetting({[`xbtsxAction`]: type});
     }
 
     render() {
-        let {coins, account, provider} = this.props;
+        let {coins, account} = this.props;
         let {activeCoin, action} = this.state;
+
         if (!coins.length) {
             return <LoadingIndicator />;
         }
@@ -111,7 +89,7 @@ class BlockTradesGateway extends React.Component {
             .map(coin => {
                 let option =
                     action === "deposit"
-                        ? coin.backingCoinType.toUpperCase()
+                        ? coin.backingCoin.toUpperCase()
                         : coin.symbol;
                 return (
                     <option value={option} key={coin.symbol}>
@@ -125,28 +103,15 @@ class BlockTradesGateway extends React.Component {
 
         let coin = filteredCoins.filter(coin => {
             return action === "deposit"
-                ? coin.backingCoinType.toUpperCase() === activeCoin
+                ? coin.backingCoin.toUpperCase() === activeCoin
                 : coin.symbol === activeCoin;
         })[0];
 
         if (!coin) coin = filteredCoins[0];
 
-        let issuers = {
-            blocktrades: {
-                name: "blocktrades",
-                id: "1.2.32567",
-                support: "support@blocktrades.us"
-            },
-            openledger: {
-                name: coin.intermediateAccount,
-                id: "1.2.96397",
-                support: "https://openledger.io"
-            }
-        };
-
-        let issuer = issuers[provider];
-
         let isDeposit = this.state.action === "deposit";
+
+        let supportUrl = "https://t.me/xbtsio";
 
         return (
             <div style={this.props.style}>
@@ -216,37 +181,34 @@ class BlockTradesGateway extends React.Component {
                 {!coin ? null : (
                     <div>
                         <div style={{marginBottom: 15}}>
-                            <BlockTradesGatewayDepositRequest
-                                key={`${provider}.${coin.symbol}`}
-                                gateway={provider}
-                                issuer_account={issuer.name}
+                            <XbtsxGatewayDepositRequest
+                                key={`${coin.symbol}`}
+                                gateway={coin.gatewayWallet}
+                                issuer_account={coin.issuer}
                                 account={account}
-                                deposit_asset={coin.backingCoinType.toUpperCase()}
+                                deposit_asset={coin.backingCoin.toUpperCase()}
                                 deposit_asset_name={coin.name}
-                                deposit_coin_type={coin.backingCoinType.toLowerCase()}
-                                deposit_account={coin.depositAccount}
+                                deposit_coin_type={coin.backingCoin.toLowerCase()}
+                                deposit_account={coin.gatewayWallet}
                                 deposit_wallet_type={coin.walletType}
-                                gateFee={coin.gateFee}
                                 receive_asset={coin.symbol}
                                 receive_coin_type={coin.symbol.toLowerCase()}
-                                supports_output_memos={coin.supportsMemos}
-                                isAvailable={coin.isAvailable}
+                                supports_output_memos={coin.memoSupport}
+                                min_amount={coin.minAmount}
+                                asset_precision={coin.precision}
                                 action={this.state.action}
                             />
                             <label className="left-label">Support</label>
                             <div>
-                                <Translate content="gateway.support_block" />
+                                <Translate content="gateway.xbtsx.support_block" />
                                 <br />
                                 <br />
                                 <a
-                                    href={
-                                        (issuer.support.indexOf("@") === -1
-                                            ? ""
-                                            : "mailto:") + issuer.support
-                                    }
+                                    href={supportUrl}
+                                    target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    {issuer.support}
+                                    {supportUrl}
                                 </a>
                             </div>
                         </div>
@@ -256,13 +218,13 @@ class BlockTradesGateway extends React.Component {
                                 asset={coin.symbol}
                                 fromAccount={
                                     isDeposit
-                                        ? issuer.id
+                                        ? coin.issuerId
                                         : this.props.account.get("id")
                                 }
                                 to={
                                     isDeposit
                                         ? this.props.account.get("id")
-                                        : issuer.id
+                                        : coin.issuerId
                                 }
                             >
                                 {({asset, to, fromAccount}) => {
@@ -307,7 +269,7 @@ class BlockTradesGateway extends React.Component {
     }
 }
 
-export default connect(BlockTradesGateway, {
+export default connect(XbtsxGateway, {
     listenTo() {
         return [SettingsStore];
     },

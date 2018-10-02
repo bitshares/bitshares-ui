@@ -60,8 +60,28 @@ $mobile-input-bg: $input-background;
 
 $incognito-bg: #ea340b;
 
+$tab-content-background-color: lighten($account-header, 4%);
+$explorer-tab-content-background-color: #fff;
+
+// * * * Explorer
+
+// * * * * * Witnesses
+
+$explorer--witnesses--info-bg: transparent;
+$explorer--witnesses--info-border: darken($account-header, 6%);
+$explorer--witnesses--info-table-title-color: lighten($dark-text-color, 20%);
+$explorer--witnesses--info-table-text-color: $dark-text-color;
+
+// * * * * * Assets
+
+$explorer--assets--bg: $bg-color;
+
+// * * *
+
 .lightTheme {
     @include theme(
+        $explorer-tab-content-background-color,
+        $tab-content-background-color,
         $primary-text-color,
         $bg-color,
         $dark-text-color,
@@ -107,7 +127,12 @@ $incognito-bg: #ea340b;
         $main-content-margin-block-bg-color,
         $modal-bg-color,
         $mobile-input-bg,
-        $incognito-bg
+        $incognito-bg,
+        $explorer--witnesses--info-bg,
+        $explorer--witnesses--info-border,
+        $explorer--witnesses--info-table-title-color,
+        $explorer--witnesses--info-table-text-color,
+        $explorer--assets--bg
     );
 
     .change-up {

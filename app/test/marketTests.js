@@ -1240,6 +1240,44 @@ describe("CallOrder", function() {
             "The amount should equal 3994930396"
         );
     });
+
+    const feedPriceUSD = {
+        base: {
+            amount: 984015,
+            asset_id: "1.3.121",
+            precision: 4
+        },
+        quote: {
+            amount: 100000000,
+            asset_id: "1.3.0",
+            precision: 5
+        },
+        sqr: 1100
+    };
+
+    let feedPrice = new FeedPrice({
+        priceObject: {
+            base: new Asset(feedPriceUSD.base),
+            quote: new Asset(feedPriceUSD.quote)
+        },
+        market_base: "1.3.0",
+        sqr: feedPriceUSD.sqr,
+        assets
+    });
+
+    const usdMarginCalls = require("./usdMarginCalls.json");
+
+    it("Can sum a large amount of call orders", function() {
+        let cos = usdMarginCalls.map(
+            o => new CallOrder(o, assets, "1.3.0", feedPrice)
+        );
+        for (var i = cos.length - 2; i >= 0; i--) {
+            cos[i] = cos[i].sum(cos[i + 1]);
+            cos.splice(i + 1, 1);
+        }
+        assert.equal(cos[0].collateral, 2221748234897);
+        assert.equal(cos[0].debt, 19874850935);
+    });
 });
 
 describe("Settle Order", function() {

@@ -1,6 +1,9 @@
 @import "../utils/utils";
+@import "./../style-guide-fixes";
 
 @mixin theme(
+    $explorer-tab-content-background-color,
+    $tab-content-background-color,
     $primary-text-color,
     $bg-color,
     $dark-text-color,
@@ -46,9 +49,43 @@
     $main-content-margin-block-bg-color,
     $modal-bg-color,
     $mobile-input-bg,
-    $incognito-bg
+    $incognito-bg,
+    $explorer--witnesses--info-bg,
+    $explorer--witnesses--info-border,
+    $explorer--witnesses--info-table-title-color,
+    $explorer--witnesses--info-table-text-color,
+    $explorer--assets--bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
+
+    .explore-witness--info {
+        width: 100%;
+
+        border: 1px solid $explorer--witnesses--info-border;
+        background: $explorer--witnesses--info-bg;
+
+        padding: 12px;
+        border-radius: 5px;
+
+        table {
+            width: 100%;
+
+            thead {
+                th {
+                    font-weight: 400;
+                    color: $explorer--witnesses--info-table-title-color;
+                    font-size: 14px;
+                    padding-bottom: 8px;
+                }
+            }
+
+            tbody {
+                td {
+                    color: $explorer--witnesses--info-table-text-color;
+                }
+            }
+        }
+    }
 
     #incognito {
         background: $incognito-bg;
@@ -59,35 +96,28 @@
         background-color: $settings-select-bg;
         color: $settings-select-color;
     }
-
     .settings-input {
         /* !important to overwrite styles for Inputs on User Settings. By default inputs take styles from
     .block-list and it uses on many places. To keep everything OK and do not break something I just do
-    overwrite for Inputs on settings and keep default styles for inputs on another places.
-    */
+    overwrite for Inputs on settings and keep default styles for inputs on another places. */
         color: $settings-select-color !important;
         height: 36px !important;
         background-color: $settings-select-bg !important;
         border-bottom: 0 !important;
         max-width: 100% !important;
     }
-
     .positive {
         color: $positive-color !important;
     }
-
     .negative {
         color: $negative-color !important;
     }
-
     .dark-text-color {
         color: $dark-text-color;
     }
-
     .fz_12 {
         font-size: 12px;
     }
-
     #unlock_wallet_modal2 {
         .upload-button {
             border-color: $border-color;
@@ -95,7 +125,6 @@
                 color: $settings-select-color;
             }
         }
-
         .login-select {
             color: $primary-text-color;
             border-color: $border-color;
@@ -103,16 +132,13 @@
                 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAGCAYAAAAVMmT4AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4gUEEhssVJbYaQAAAHVJREFUGNN1z7ERgkAUBNAHnOUQGdCDRRAaGlwFVkDgGBFeEfZAaA2MY2AL3GCogvz47e78wnVOsl4y2LpWo3IsZb0gajWbMIiyvvI6P9VGQVQb3T1WcNJJhhIkg0n3s7CAUNjPuz9NN8HhG67xJ3AyuSyffgPoxSqQfV+TFgAAAABJRU5ErkJggg==")
                 right 10px center no-repeat;
         }
-
         .login-label {
             color: $primary-text-color;
         }
-
         .themed-input {
             background-color: $input-background;
         }
     }
-
     .spinner-button-circle .circle-wrapper {
         display: inline-block;
         vertical-align: middle;
@@ -139,7 +165,6 @@
         border-color: $dark-text-color;
         background-color: $dark-text-color !important;
     }
-
     a {
         color: $link-text-color;
         &:hover,
@@ -148,31 +173,25 @@
             color: lighten($link-text-color, 4%);
         }
     }
-
     label,
     label > span {
         color: $primary-text-color;
     }
-
     // select:hover {
-    //   background-color: $panel-bg-color;
+    // background-color: $panel-bg-color;
     // }
-
     .label.success {
         color: $success-color;
         border-color: $success-color;
     }
-
     .label.info {
         color: $info-color;
         border-color: $info-color;
     }
-
     .label.warning {
         color: $warning-color;
         border-color: $warning-color;
     }
-
     .nested-approval-state {
         .tooltip {
             text-decoration: underline dotted $primary-text-color;
@@ -184,38 +203,30 @@
             color: $warning-color;
         }
     }
-
     .label.cancel,
     .label.alert {
         color: $alert-color;
         border-color: $alert-color;
     }
-
     .txtlabel.success {
         color: $success-color;
     }
-
     .txtlabel.info {
         color: $info-color;
     }
-
     .txtlabel.warning {
         color: $warning-color;
     }
-
     .txtlabel.cancel,
     .label.alert {
         color: $alert-color;
     }
-
     .txtann.success {
         color: $success-color;
     }
-
     .txtann.info {
         color: $info-color;
     }
-
     .txtann.warning {
         color: $warning-color;
     }
@@ -223,17 +234,13 @@
     .txtann.error {
         color: $alert-color;
     }
-
     // notification
-
     .notification {
         @include color($primary-text-color, $light-panel-bg-color, true);
     }
-
     .notification-dismiss {
         @include color($primary-text-color, $super-light-panel-bg-color, true);
     }
-
     .notification-success {
         border-left-color: $success-color !important;
     }
@@ -250,12 +257,10 @@
                 @include color(
                     $light-text-color,
                     lighten($super-light-panel-bg-color, 4%)
-                );
-                // color: $link-text-color;
+                ); // color: $link-text-color;
             }
         }
     }
-
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {
@@ -275,7 +280,6 @@
     .json-inspector__key {
         color: $secondary-text-color !important;
     }
-
     h1,
     h2,
     h3,
@@ -291,6 +295,12 @@
         > button.copyIcon {
             background-color: $button-bg-color;
         }
+    }
+
+    .modal#marketPicker,
+    .modal#settingsModal {
+        background-color: $bg-color;
+        border: 1px solid black;
     }
 
     .modal {
@@ -323,16 +333,13 @@
                 border-bottom-color: darken($secondary-text-color, 10%);
             }
         }
-
         span.send-name {
             color: $link-text-color;
         }
     }
-
     .icon > svg > path {
         fill: $primary-text-color;
     }
-
     .footer {
         @include color($secondary-text-color, $panel-bg-color);
         svg > path {
@@ -342,7 +349,6 @@
             color: darken($secondary-text-color, 10%);
         }
     }
-
     .node-access-popup {
         @include color($secondary-text-color, $panel-bg-color);
         border: 1px solid black;
@@ -350,7 +356,6 @@
             border-bottom: 1px solid lighten($bg-color, 4%);
         }
     }
-
     .panel-left {
         @include color($light-text-color, $light-panel-bg-color);
         .block-list li > a {
@@ -360,45 +365,36 @@
             }
         }
     }
-
     .tabs {
         @include color($secondary-text-color, $bg-color);
     }
-
     .page-layout {
         background-color: lighten($account-header, 4%);
-
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: $panel-bg-color; //lighten($bg-color, 4%);
+            background-color: $panel-bg-color; // lighten($bg-color, 4%);
         }
-
         .left-column-2 {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
             background-color: darken($bg-color, 4%);
         }
-
         .main-content {
             background-color: $bg-color;
-
             &.margin-block {
                 background-color: $main-content-margin-block-bg-color;
             }
         }
-
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
             background-color: darken($bg-color, 4%);
         }
     }
-
     .asset-prefix {
         color: $light-text-color !important;
     }
-
     .transfer-top {
         background-color: $light-panel-bg-color;
         label,
@@ -406,9 +402,7 @@
             color: $light-text-color;
         }
     }
-
     // buttons
-
     .button {
         background: $button-bg-color;
         &:hover,
@@ -428,12 +422,10 @@
             }
         }
     }
-
     .button:disabled {
         opacity: 0.2 !important;
         cursor: not-allowed !important;
     }
-
     .button.secondary {
         @include color($dark-text-color, $secondary-button-bg-color);
         &:hover,
@@ -446,7 +438,6 @@
             );
         }
     }
-
     .button.danger {
         @include color(white, $alert-color);
         &:hover,
@@ -455,25 +446,20 @@
             @include color(white, lighten($alert-color, 4%), true);
         }
     }
-
     .header .button,
     .header .button:active {
         background-color: transparent !important;
     }
-
     .header .modal .button {
         background-color: $button-bg-color !important;
-
         &:hover,
         &:focus,
         &:active {
             background-color: lighten($button-bg-color, 4%) !important;
         }
     }
-
     .header .modal .button.danger {
         background-color: $alert-color !important;
-
         &:hover,
         &:focus,
         &:active {
@@ -494,12 +480,10 @@
             }
         }
     }
-
     .header div.account-drop-down {
         div.total-value {
             color: $account-green;
         }
-
         div.header-right-lock {
             cursor: pointer;
             padding: 0.9rem 0.25rem;
@@ -507,7 +491,6 @@
                 background-color: $bg-color;
             }
         }
-
         div.dropdown-wrapper {
             > li {
                 div.hamburger > .icon > svg rect {
@@ -518,31 +501,26 @@
                 background-color: $bg-color;
             }
         }
-
         div.dropdown-wrapper.hover-transparent {
             &:hover {
                 background-color: transparent;
             }
         }
-
         div.dropdown-wrapper.cursor-default {
             cursor: default;
         }
-
         div.dropdown-wrapper.active {
             transition: background-color 0s;
             background-color: $bg-color;
             ul {
                 background-color: $bg-color;
             }
-
             > li {
                 div.hamburger > .icon > svg rect {
                     fill: $link-text-color;
                 }
             }
         }
-
         ul.dropdown.header-menu {
             > li {
                 > div:first-of-type {
@@ -552,18 +530,15 @@
                         }
                     }
                 }
-
                 &:hover,
                 &.active {
                     background-color: $light-panel-bg-color;
                 }
-
                 &.divider {
                     border-bottom: 1px solid $account-border;
                 }
             }
         }
-
         ul.dropdown.header-submenu {
             > li {
                 &.parent-item {
@@ -580,7 +555,6 @@
             }
         }
     }
-
     @media (max-width: $hamburger-submenu-display-endpoint) {
         ul.dropdown.header-menu {
             li.mobile-only {
@@ -591,11 +565,15 @@
             }
         }
     }
-
     .header-container span.icon.lock-unlock > svg > path {
         fill: $button-bg-color;
     }
-
+    .header-dropdown-sub-link.enabled {
+        color: $secondary-text-color;
+        &:hover {
+            color: $link-text-color;
+        }
+    }
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -603,18 +581,15 @@
             background-color: $light-panel-bg-color !important;
         }
     }
-
     .grp-menu-item {
         > a,
         .button {
             color: $primary-text-color !important;
         }
     }
-
     .header .logo {
         color: $secondary-text-color;
     }
-
     .header-right-menu {
         // a:hover {background-color: lighten($panel-bg-color, 4%);}
         // a.active {background-color: lighten($panel-bg-color, 4%);}
@@ -629,18 +604,14 @@
         }
         svg > path {
             fill: #fff;
-        }
-        // svg:hover > path { fill: $primary-text-color; }
+        } // svg:hover > path { fill: $primary-text-color; }
     }
-
     .settings-cog {
         svg > path {
             fill: $secondary-text-color;
         }
     }
-
     // cards
-
     .card-section {
         color: black;
         padding-left: 0.5rem;
@@ -651,7 +622,6 @@
             margin-left: 0;
         }
     }
-
     .card {
         @include color($primary-text-color, $panel-bg-color);
         background-color: $panel-bg-color;
@@ -671,7 +641,6 @@
             background-color: $light-panel-bg-color;
         }
     }
-
     // tables
     .table {
         > thead > tr > th {
@@ -689,15 +658,12 @@
         > tbody > tr.table-empty > td {
             padding: 5rem 0;
             font-size: 1.5rem;
-
             text-align: center;
             color: $account-dimmed !important;
             background-color: $bg-color !important;
         }
     }
-
     // block-list
-
     .block-list {
         color: $primary-text-color;
         li {
@@ -726,7 +692,6 @@
                 border-bottom: 0;
             }
         }
-
         li.with-dropdown {
             .settings-select {
                 @extend .settings-select;
@@ -736,29 +701,23 @@
             }
         }
     }
-
     // forms
-
     .right-label,
     .left-label {
         color: $secondary-text-color;
-
         > span {
             color: inherit;
         }
     }
-
     div.input-wrapper {
         > div.input-right-symbol {
             color: $secondary-text-color;
         }
     }
-
     .dropdown-wrapper {
         > div:first-of-type {
             color: $secondary-text-color;
         }
-
         ul.dropdown {
             @include color($light-text-color, $super-light-panel-bg-color);
             &::after {
@@ -768,7 +727,6 @@
                 color: $light-text-color;
             }
             /* Hover state */
-
             li:hover > span {
                 @include color(
                     $light-text-color,
@@ -777,11 +735,9 @@
                 color: $link-text-color;
             }
         }
-
         &.active:after {
             border-color: $link-text-color transparent;
         }
-
         &:after {
             /* Little arrow */
             border-color: $secondary-text-color transparent;
@@ -817,37 +773,32 @@
     .error-msg {
         color: $error-text-color !important;
     }
-
     .floatRight {
         float: right;
     }
-
     .has-warning,
     div.has-warning > label,
     div.has-warning > label > span {
         color: $warning-color;
     }
-
     div.has-error > input,
     div.has-error > input:hover,
     div.has-error > input:focus {
         border-color: $error-text-color;
     }
-
     .has-error input,
     .has-error select,
     .has-error textarea {
         border-color: $error-text-color;
     }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="number"],
-    input[type="search"],
-    textarea,
-    input[role="combobox"],
-    select[role="combobox"] {
+    input[type="text"]#{$ant-fix},
+    input[type="password"]#{$ant-fix},
+    input[type="email"]#{$ant-fix},
+    input[type="number"]#{$ant-fix},
+    input[type="search"]#{$ant-fix},
+    textarea#{$ant-fix},
+    input[role="combobox"]#{$ant-fix},
+    select[role="combobox"]#{$ant-fix} {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -860,7 +811,6 @@
             border-color: #aaa;
         }
     }
-
     input[type="range"] {
         /* These need to be independent selectors */
         &::-moz-range-thumb {
@@ -894,18 +844,15 @@
             border-radius: 3px;
         }
     }
-
     textarea {
         line-height: 22px;
     }
-
     // Typeahead
     input[role="combobox"] {
         padding: 5px 10px;
         width: 100%;
         box-sizing: border-box;
     }
-
     .typeahead {
         > div {
             > div {
@@ -934,11 +881,9 @@
         }
         .typeahead__innerItem {
             color: $primary-text-color;
-
             > .typeahead__innerItem__highlight {
                 background-color: darken($input-background, 10%) !important;
             }
-
             > .typeahead__innerItem__disabled {
                 color: $inactive-text-color;
             }
@@ -951,8 +896,8 @@
             border-bottom: 1px solid $button-bg-color;
         }
     }
-    // Tabs
 
+    // Tabs
     .tabs {
         border-bottom-color: $dark-text-color;
         > .tab-item {
@@ -968,9 +913,8 @@
             }
         }
     }
-
     .tab-content {
-        background-color: lighten($account-header, 4%);
+        background-color: $tab-content-background-color;
         div.header-selector {
             .filter input {
                 background-color: $bg-color;
@@ -981,13 +925,11 @@
                 }
             }
         }
-        &.tab-no-background {
-            background-color: inherit;
+        &.explorer-tab-content {
+            background-color: $explorer-tab-content-background-color;
         }
     }
-
     // Exchange
-
     .depthchart {
         background-color: $bg-color;
         &:hover {
@@ -997,44 +939,34 @@
             color: #fff;
         }
     }
-
     .bid-total {
         color: $bid-color !important;
     }
-
     .ask-total {
         color: $ask-color !important;
     }
-
     .stats .stat .negative {
         color: $negative-color !important;
     }
-
     .stats .stat .positive {
         color: $positive-color !important;
     }
-
     .value.negative {
         color: $ask-color !important;
         @include RobotoMedium;
     }
-
     .value.positive {
         color: $bid-color !important;
         @include RobotoMedium;
     }
-
     .active-bucket {
         background-color: lighten($light-panel-bg-color, 12%);
     }
-
     .bucket-option:hover {
         background-color: $panel-bg-color;
     }
-
     .buy-sell-box {
         background-color: lighten($light-panel-bg-color, 12%);
-
         > select {
             background-color: lighten($light-panel-bg-color, 12%);
             background: lighten($light-panel-bg-color, 12%)
@@ -1042,11 +974,9 @@
                 right 10px center no-repeat;
         }
     }
-
     .buy-sell-input > input.no-balance {
         color: $alert-color;
     }
-
     // Account page
     .account-left-panel {
         h5 {
@@ -1058,31 +988,25 @@
         .bottom {
             border-top-color: $bg-color;
         }
-
         .advanced-toggle > a {
             color: $primary-text-color;
         }
-
         a.pay-button {
             background-color: $bg-color;
             color: $primary-text-color;
-
             &:hover {
                 background-color: $light-panel-bg-color !important;
             }
         }
-
         div.create-account-button {
             background: transparent;
             border: 2px solid $button-bg-color;
-
             > a {
                 @include RobotoMedium;
                 color: $primary-text-color;
             }
         }
     }
-
     .account-info {
         color: $primary-text-color;
         > p:first-of-type {
@@ -1097,13 +1021,11 @@
             > span:first-of-type {
                 color: $primary-text-color;
             }
-
             > span:last-of-type {
                 color: $secondary-text-color;
             }
         }
     }
-
     .my-account h5,
     .my-account h4,
     .my-account p,
@@ -1111,7 +1033,6 @@
         @include RobotoMedium;
         color: $info-color;
     }
-
     .account-left-menu {
         > li > a:hover,
         > li > label:hover,
@@ -1125,11 +1046,9 @@
             border-right-color: darken($button-bg-color, 4%);
         }
     }
-
     .pagination {
         background-color: $panel-bg-color;
     }
-
     .invoice {
         .item-description {
             color: $secondary-text-color;
@@ -1140,19 +1059,15 @@
     .facolor-success {
         color: $success-color;
     }
-
     .facolor-alert {
         color: $alert-color;
     }
-
     .facolor-warning {
         color: $warning-color;
     }
-
     .facolor-info {
         color: $info-color;
     }
-
     .facolor-error {
         color: $error-text-color;
     }
@@ -1160,7 +1075,6 @@
     .facolor-fee {
         color: $fee-color;
     }
-
     // AccountSelector component
     .error-area {
         color: $error-text-color;
@@ -1170,29 +1084,24 @@
             color: $secondary-text-color;
         }
     }
-
     .icon.success {
         padding-right: 0.5rem;
         > svg > path {
             fill: $success-color;
         }
     }
-
     .icon.error {
         padding-right: 0.5rem;
         > svg > path {
             fill: $warning-color;
         }
     }
-
     .circle-wrapper {
         .circle:before {
             background-color: $secondary-text-color;
         }
     }
-
     // Misc
-
     .chart-zoom-dropdown {
         width: 24px;
         height: 28px;
@@ -1202,7 +1111,6 @@
         -webkit-transition: all 0.5s ease;
         -moz-transition: all 0.5s ease;
         transition: all 0.5s ease;
-
         &:hover,
         &:active,
         &:focus {
@@ -1216,7 +1124,6 @@
             height: 48px;
         }
     }
-
     .remove {
         color: $alert-color;
         border: none;
@@ -1236,11 +1143,9 @@
             border-radius: 2px;
         }
     }
-
     .memo {
         color: $secondary-text-color;
     }
-
     .help-content-layout div {
         background-color: $bg-color !important;
         .help-toc {
@@ -1280,10 +1185,8 @@
             }
         }
     }
-
     .help-content {
         padding: 10px;
-
         ul {
             list-style: none;
         }
@@ -1315,11 +1218,9 @@
             border-left: 3px solid $panel-bg-color;
         }
     }
-
     .click-for-help {
         border-bottom-color: $secondary-text-color !important;
     }
-
     // Block List (section)
     section.block-list input[type="text"],
     section.block-list input[type="password"] {
@@ -1334,7 +1235,6 @@
             border-bottom: 1px solid $panel-bg-color;
         }
     }
-
     .remove {
         color: $alert-color;
         border: none;
@@ -1354,11 +1254,9 @@
             border-radius: 2px;
         }
     }
-
     .menu-group.primary,
     .menu-group.primary .menu-bar {
         background-color: $account-background;
-
         li {
             > a {
                 color: $account-dimmed;
@@ -1366,27 +1264,22 @@
                     fill: $account-dimmed;
                 }
             }
-
             > a:hover,
             > a.active {
                 background-color: $bg-color !important;
                 color: $primary-text-color;
-
                 .icon > svg > path {
                     fill: $primary-text-color;
                 }
             }
         }
     }
-
     // Asset Detail
-
     .asset-card {
         .card-divider {
             background: $panel-bg-color;
         }
     }
-
     // Exchange
     .mymarkets-header {
         border-bottom-color: $button-bg-color;
@@ -1395,7 +1288,6 @@
             color: $secondary-text-color;
         }
     }
-
     .exchange-content-header {
         color: $light-text-color;
         background-color: $header-color !important;
@@ -1403,17 +1295,14 @@
         &.bid {
             border-bottom: 1px solid $bid-color;
         }
-
         &.ask {
             border-bottom: 1px solid $ask-color;
         }
     }
-
     // .block-content-header {
-    //   //text-transform: uppercase;
-    //   @include RobotoLight;
+    // //text-transform: uppercase;
+    // @include RobotoLight;
     // }
-
     .orderHistoryBid {
         > span.price-integer,
         > span > span.price-integer,
@@ -1421,14 +1310,12 @@
             @include RobotoMedium;
             color: $bid-color;
         }
-
         > span.price-decimal,
         > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
     }
-
     .orderHistoryAsk {
         > span.price-integer,
         > span > span.price-integer,
@@ -1436,14 +1323,12 @@
             @include RobotoMedium;
             color: $ask-color;
         }
-
         > span.price-decimal,
         > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
     }
-
     .orderHistoryCall {
         > span.price-integer,
         > span > span.price-integer,
@@ -1451,36 +1336,30 @@
             @include RobotoMedium;
             color: $call-color;
         }
-
         > span.price-decimal,
         > span > span.price-decimal {
             color: $primary-text-color;
             opacity: 0.6;
         }
     }
-
     .order-table .my-order {
         > .vertical-order-table-cell,
         > td {
             font-weight: bold;
             color: $info-color;
         }
-
         span.price-integer,
         span.price-decimal {
             color: $info-color !important;
             opacity: 1;
         }
     }
-
     .bid {
         background-color: $bid-color !important;
     }
-
     .ask {
         background-color: $ask-color !important;
     }
-
     .orderbook-latest-price {
         > div {
             $orderbook-center-horizontal-margin: 5px;
@@ -1494,26 +1373,21 @@
             font-size: 13px;
         }
     }
-
     .sticky-table .sticky-table-column,
     .sticky-table .sticky-table-header,
     .sticky-table .sticky-table-corner {
         @include color($primary-text-color, $bg-color);
     }
-
     .left-order-book {
         background-color: $bg-color;
-
         .spread .spread-value {
             color: $primary-text-color;
         }
     }
-
     .sticky-table-header {
         width: 100%;
         height: 32px;
         border-bottom: 1px solid grey;
-
         .sticky-table-container {
             height: 100%;
             width: 100%;
@@ -1522,37 +1396,30 @@
         #sticky-header-row {
             background-color: $panel-bg-color;
         }
-
         .sticky-table-row {
             width: 100%;
             background-color: $bg-color;
-
             &.order-row:hover {
                 background-color: $panel-bg-color;
             }
         }
     }
-
     .order-table {
         > tbody > tr:nth-of-type(even) {
             background-color: $row-accent-color;
         }
     }
-
     .mymarkets-header {
         background-color: $header-color;
     }
-
     tr.activeMarket,
     tr.activeMarket:hover {
         color: #4c85d8;
         background-color: $header-color;
     }
-
     .market-stats .stat .value {
         color: $primary-text-color;
     }
-
     li.stat.input {
         &:hover {
             background-color: lighten($panel-bg-color, 4%);
@@ -1561,11 +1428,9 @@
     .stats .stressed-stat {
         padding: 10px 0;
         font-size: 18px;
-
         &.is-call {
             color: $call-color !important;
         }
-
         &.daily_change {
             &.positive {
                 color: $account-green !important;
@@ -1574,12 +1439,10 @@
                 color: $negative-color !important;
             }
         }
-
         &.clickable:hover {
             background-color: lighten($panel-bg-color, 4%);
         }
     }
-
     .stat-text {
         margin-top: 3px;
         font-size: 11px;
@@ -1588,7 +1451,6 @@
 
     .buy-sell-box {
         background-color: $header-color;
-
         > select {
             padding: 0;
             margin: 0;
@@ -1599,31 +1461,25 @@
             background-size: 8px 8px;
             background-color: $header-color;
             font-size: 12px;
-
             > option {
                 color: $primary-text-color;
                 background-color: $header-color;
             }
         }
     }
-
     .change-up {
         color: $bid-color !important;
     }
-
     .change-down {
         color: $ask-color !important;
     }
-
     .header-sub-title {
         font-size: 11px;
         color: $light-text-color;
     }
-
     .label {
         background-color: $panel-bg-color;
     }
-
     .mymarkets-group-header {
         background-color: $header-color;
         padding: 8px 35px;
@@ -1636,46 +1492,39 @@
     div.exchange-content-header {
         background-color: $header-color !important;
     }
-
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
-    //bottom stats
+    // bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
             @include button-focus($primary-text-color, $panel-bg-color, 10);
         }
     }
-
     .active-bucket {
         @include button-focus($primary-text-color, $panel-bg-color, 10);
     }
-
     li.stat.clickable {
         color: $secondary-text-color;
         // &:hover{
-        //   @include button-focus($primary-text-color, $panel-bg-color, 10);
+        // @include button-focus($primary-text-color, $panel-bg-color, 10);
         // }
     }
-
     .mymarkets-tabs {
         > li {
             @include button-focus($secondary-text-color, $panel-bg-color, 0);
             &:hover {
                 @include button-focus($primary-text-color, $panel-bg-color, 10);
             }
-
             &.active {
                 @include button-focus($primary-text-color, $panel-bg-color, 10);
             }
         }
     }
-
     .mymarkets-list {
         border-top: 2px solid $panel-bg-color;
     }
-
     select.bts-select,
     select.native-coin-types,
     select.external-coin-types {
@@ -1688,7 +1537,6 @@
             background-color: $light-panel-bg-color;
         }
     }
-
     .api-node {
         .icon.shuffle svg > path {
             fill: $button-bg-color !important;
@@ -1703,12 +1551,10 @@
             background-color: lighten($bg-color, 4%);
         }
     }
-
     .active-node {
         border-bottom: 1px solid lighten($bg-color, 4%);
         border-top: 1px solid lighten($bg-color, 4%);
     }
-
     // Settings
     .settings-menu {
         > ul {
@@ -1724,7 +1570,6 @@
                     color: $primary-text-color;
                     background-color: $settings-menu-hover-bg;
                 }
-
                 &.active {
                     color: $primary-text-color;
                     background-color: $settings-menu-active-bg;
@@ -1732,7 +1577,6 @@
             }
         }
     }
-
     .settings--notifications {
         .settings--notifications--group {
             .settings--notifications--item {
@@ -1746,41 +1590,35 @@
             font-size: 12px;
         }
     }
-
     @media (max-width: $hamburger-submenu-display-endpoint) {
         .settings-menu {
             display: none;
         }
     }
-
     a {
         &.order-cancel > .icon > svg {
             > path {
                 fill: $negative-color;
             }
         }
-
         &.action-plus > .icon > svg {
             > path {
                 fill: $positive-color;
             }
         }
     }
-
     tr.margin-row {
         > td.danger {
             background-color: darken($alert-color, 15%) !important;
             color: $dark-text-color;
             @include RobotoMedium;
         }
-
         > td.warning {
             background-color: darken($warning-color, 15%) !important;
             color: $dark-text-color;
             @include RobotoMedium;
         }
     }
-
     .nodes-header {
         border-bottom-color: $button-bg-color;
         background-color: $bg-color;
@@ -1789,7 +1627,6 @@
             color: $secondary-text-color;
         }
     }
-
     div.custom-dropdown-content {
         background: $panel-bg-color;
         color: $primary-text-color;
@@ -1802,11 +1639,9 @@
             }
         }
     }
-
     .blocktrades-bridge input,
     .blocktrades-bridge select {
         color: $secondary-text-color;
-
         border: 1px solid $secondary-text-color;
         background-color: $panel-bg-color !important;
         &.native-coin-types,
@@ -1819,12 +1654,10 @@
         }
         &:hover,
         &:focus {
-            color: $primary-text-color;
-            //box-shadow: 1px 2px 3px #000;
+            color: $primary-text-color; // box-shadow: 1px 2px 3px #000;
             border: 2px solid $primary-text-color;
         }
     }
-
     .SimpleTrade__modal {
         .Modal__header {
             background-color: lighten($panel-bg-color, 5%);
@@ -1839,7 +1672,6 @@
             color: $primary-text-color;
         }
     }
-
     .switch input:checked + label {
         background-color: darken($positive-color, 10%);
         &::after {
@@ -1847,14 +1679,12 @@
             background-color: lighten($positive-color, 5%);
         }
     }
-
     div.ok-indicator {
         color: $secondary-text-color;
         &.success {
             color: $success-color;
         }
     }
-
     .login-selector {
         > div.box {
             background-color: $panel-bg-color;
@@ -1866,13 +1696,11 @@
             }
         }
     }
-
     table.table > tbody > tr.in-use {
         > td:nth-child(2) {
             @include RobotoMedium;
         }
     }
-
     .SimpleDepositBridge__info-row {
         > div {
             > div.float-right {
@@ -1882,13 +1710,11 @@
             }
         }
     }
-
     input.my-key,
     td.my-key a {
         @include RobotoMedium;
         color: $info-color;
     }
-
     td.pub-key {
         word-break: break-all;
     }
@@ -1906,18 +1732,14 @@
             background-color: $bg-color;
         }
     }
-
     ul.account-overview {
         li {
             transition: all 0.3s ease 0s;
-
             > a {
                 color: $account-dimmed;
                 background-color: transparent;
                 border: none;
-
                 transition: all 0.3s ease 0s;
-
                 &:hover {
                     background-color: lighten($account-header, 4%);
                     color: $account-primarytext;
@@ -1946,7 +1768,6 @@
             }
         }
     }
-
     table.table.dashboard-table {
         > thead > tr > th {
             background-color: $account-header;
@@ -1970,7 +1791,6 @@
                 .icon > svg > path {
                     fill: $account-primarytext;
                 }
-
                 .icon.locked > svg > path {
                     fill: $button-bg-color;
                 }
@@ -1987,14 +1807,12 @@
                     text-align: right;
                 }
             }
-
             &.unsupported {
                 > td {
                     color: grey;
                     > a {
                         color: grey;
                     }
-
                     svg > path {
                         fill: grey;
                     }
@@ -2002,11 +1820,9 @@
             }
         }
     }
-
     div.account-creation {
         border: 1px solid $account-cells;
         border-radius: 6px;
-
         div.button > a {
             color: $primary-text-color;
         }
@@ -2017,7 +1833,6 @@
     span.warning {
         color: darken($warning-color, 15%);
     }
-
     .api-status {
         .low {
             color: $bid-color;
@@ -2038,7 +1853,6 @@
             }
         }
     }
-
     .footer {
         div.footer-status {
             > span.success {
@@ -2049,22 +1863,17 @@
             }
         }
     }
-
     tr > td > a.primary-text {
         color: $primary-text-color;
     }
-
     .pulsate {
         animation: 0.5s ease-out 1;
-
         &.red {
             animation-name: pulsate-red;
         }
-
         &.green {
             animation-name: pulsate-green;
         }
-
         &.reverse {
             animation-timing-function: ease-in;
             animation-direction: reverse;
@@ -2087,7 +1896,6 @@
             color: $pulsate-red-end;
         }
     }
-
     .introjs-launcher {
         margin-left: 15px;
         background-color: $bs-blue;
@@ -2096,12 +1904,10 @@
         line-height: 1.8;
         transition: background-color 0.2s ease;
         color: #fff;
-
         &:hover {
             cursor: pointer;
             background-color: darken($bs-blue, 10%);
         }
-
         @include breakpoint(small only) {
             position: absolute;
             bottom: 1rem;
@@ -2112,7 +1918,6 @@
             font-size: 0;
             color: transparent;
             background-color: transparent;
-
             &:after {
                 content: "?";
                 color: #fff;
@@ -2125,56 +1930,47 @@
             }
         }
     }
-
     .footer {
         padding-right: 0;
     }
-
+    .tab-no-background {
+        background-color: transparent !important;
+    }
     .header-container {
         background-color: $account-background;
-
         .menu-dropdown-wrapper {
             &.active {
                 background: $panel-bg-color;
             }
         }
-
         .dropdown.header-menu {
             background-color: $panel-bg-color;
-
             li.divider {
                 border-bottom: 1px solid $dark-text-color;
             }
-
             > li:hover {
                 background-color: $super-light-panel-bg-color;
             }
         }
-
         .total-value {
             color: $account-green;
         }
     }
-
     .flip-arrow:hover {
         color: $bs-blue;
         cursor: pointer;
     }
-
     .order-2 .flip-arrow,
     .order-5 .flip-arrow {
         display: none;
     }
-
     .order-book-button-h svg > path {
         fill: #fff;
-
         &:hover {
             fill: $bs-blue;
             cursor: pointer;
         }
     }
-
     .order-book-button-v {
         display: none;
     }
@@ -2183,10 +1979,8 @@
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
-
             svg > path {
                 fill: #fff;
-
                 &:hover {
                     fill: $bs-blue;
                     cursor: pointer;
@@ -2194,28 +1988,23 @@
             }
         }
     }
-
     .calendarContainer {
         // restyle of react-datepicker2
         box-shadow: none;
         background-color: $panel-bg-color;
         border: 0;
         color: $light-text-color;
-
         button svg {
             fill: $light-text-color;
         }
-
         .dayWrapper button:hover {
             color: $light-text-color;
             background-color: $button-bg-color;
         }
-
         .dayWrapper button[disabled] {
             background-color: darken($panel-bg-color, 5%);
             color: darken(#aaa, 20%);
         }
-
         .monthsList {
             button {
                 border: 0;
@@ -2225,11 +2014,9 @@
                 }
             }
         }
-
         .time-table {
             line-height: 38px;
         }
-
         input.rc-time-picker-input {
             background: $input-background;
             color: $light-text-color;
@@ -2240,7 +2027,6 @@
             }
             cursor: pointer;
         }
-
         .heading {
             .title {
                 line-height: 28px;
@@ -2268,7 +2054,6 @@
             }
         }
     }
-
     .expiration-datetime-picker {
         width: 225px;
         > div {
@@ -2300,13 +2085,11 @@
             font-size: 0.9rem;
             height: 28px;
             margin: 0 0 1px;
-
             > option {
                 background-color: $light-panel-bg-color;
             }
         }
     }
-
     .marketPicker {
         background: $bg-color;
         box-shadow: 2px 2px 5px darken($bg-color, 30%);
@@ -2315,10 +2098,10 @@
             border: 1px solid $bg-color;
         }
     }
-
     .qr-address-scanner {
         &-btn {
             background: #049cce;
+
             height: 2.4rem;
             border-radius: 0 5px 5px 0;
             width: 40px;
@@ -2340,7 +2123,6 @@
         &-input-field {
             border-radius: 5px 0 0 5px !important;
         }
-
         &-status {
             font-size: 0.95rem;
             margin: 24px;
@@ -2358,18 +2140,15 @@
                 color: $success-color;
             }
         }
-
         &-actions {
             margin: 24px;
         }
-
         .modal {
             height: 100%;
             max-width: 500px;
             margin: 0 auto;
         }
     }
-
     .grouped_order {
         select {
             float: right;
@@ -2382,23 +2161,31 @@
             font-size: 0.7rem;
             height: 17px;
             margin: 0 0 1px 10px;
-
             > option {
                 background-color: $light-panel-bg-color;
             }
         }
     }
-}
 
+    .login-selector--language-select {
+        .login-selector--language-select--icon {
+            font-size: 18px;
+            margin-top: 7px;
+            margin-right: 7px;
+            color: $link-text-color;
+        }
+        .login-selector--language-select--wrapper {
+            margin-left: 0; // center language select for width icon takes
+        }
+    }
+}
 .rc-time-picker-panel {
     z-index: 9999 !important;
 }
-
 .midnightTheme .gate_fee .amount-selector {
     width: 100%;
     display: inline-block;
 }
-
 .midnightTheme .gate_fee .right-selector {
     text-align: right;
     width: 26%;
@@ -2406,23 +2193,19 @@
     color: #adadad;
     text-transform: uppercase;
 }
-
 .midnightTheme .gate_fee .right-selector .right-selector-input {
     text-align: right;
     width: 100%;
 }
-
 .clear-text,
 .search-wrapper {
     position: relative;
 }
-
 .market-filter-input,
 .clear-text,
 .search-wrapper {
     position: relative;
 }
-
 .clear-text {
     top: 10px;
     right: -30px;
@@ -2456,54 +2239,44 @@
 .market-filter-input:not(:valid) ~ .clear-text {
     display: none;
 }
-
 .header-container {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     height: 64px;
-
     .menu-bar {
         overflow: visible;
     }
-
     .logo {
         padding-top: 0.7rem;
         padding-bottom: 0.8rem;
     }
-
     .dropdown-wrapper:after {
         display: none;
     }
-
     .menu-dropdown-wrapper {
         height: 65px;
         width: 65px;
         text-align: center;
         border-radius: 0;
-
         .hamburger .icon {
             position: relative;
             top: 12px;
         }
     }
-
     .dropdown.header-menu {
         top: 65px;
     }
-
     .hamburger svg rect,
     .hamburger-x svg rect {
         fill: $bs-blue;
     }
-
     .total-value {
         text-align: right;
         font-size: 80%;
         line-height: normal;
     }
 }
-
 .local-wallet-menu {
     // top: 50px!important;
     .table-cell {
@@ -2516,11 +2289,9 @@
         }
     }
 }
-
 .app-menu {
     flex: 0;
 }
-
 .truncated {
     flex: 1;
     min-width: 0; /* or some value */
@@ -2531,7 +2302,6 @@
         text-align: right;
     }
 }
-
 #qr_scanner_modal {
     > section {
         width: 100%;
@@ -2541,7 +2311,6 @@
         justify-content: center;
     }
 }
-
 @media screen and (max-width: 640px) {
     .responsive-list > .help-content > ul {
         height: 300px;
@@ -2550,11 +2319,9 @@
         background: #2a2a2a;
         border: 1px solid #4b5158;
         margin-bottom: 2rem !important;
-
         li {
             border-bottom: 1px solid #393939;
             padding: 4px;
-
             ul li {
                 border: 0;
             }

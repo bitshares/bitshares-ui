@@ -699,8 +699,11 @@ class WithdrawModalNew extends React.Component {
             feeAmount
         } = this.state;
 
-        let assetName = selectedAsset.toLowerCase();
         let gatewayStatus = this.state.gatewayStatus[selectedGateway];
+        let assetName = !!gatewayStatus.assetWithdrawlAlias
+            ? gatewayStatus.assetWithdrawlAlias[selectedAsset.toLowerCase()] ||
+              selectedAsset.toLowerCase()
+            : selectedAsset.toLowerCase();
 
         const intermediateAccountNameOrId = getIntermediateAccount(
             withdrawalCurrency.symbol,
@@ -894,9 +897,11 @@ class WithdrawModalNew extends React.Component {
                 : backingAsset.minAmount;
         } else if (backingAsset) {
             minWithdraw =
-                backingAsset.gateFee * 2 ||
-                0 + backingAsset.transactionFee ||
-                0;
+                "gateFee" in backingAsset
+                    ? backingAsset.gateFee * 2 ||
+                      0 + backingAsset.transactionFee ||
+                      0
+                    : 0;
         }
 
         if (backingAsset && backingAsset.maxAmount) {
@@ -989,7 +994,7 @@ class WithdrawModalNew extends React.Component {
 
                     {/*QUANTITY*/}
                     {assetAndGateway || isBTS ? (
-                        <div>
+                        <div style={{marginBottom: "1em"}}>
                             {preferredCurrency ? (
                                 <div
                                     style={{
@@ -1244,7 +1249,13 @@ class WithdrawModalNew extends React.Component {
                                                 <input
                                                     type="text"
                                                     disabled
-                                                    value={backingAsset.gateFee}
+                                                    value={
+                                                        !!backingAsset &&
+                                                        "gateFee" in
+                                                            backingAsset
+                                                            ? backingAsset.gateFee
+                                                            : 0
+                                                    }
                                                 />
 
                                                 <div className="form-label select floating-dropdown">
@@ -1290,18 +1301,21 @@ class WithdrawModalNew extends React.Component {
     }
 }
 
-const ConnectedWithdrawModal = connect(WithdrawModalNew, {
-    listenTo() {
-        return [GatewayStore, AssetStore, SettingsStore, MarketsStore];
-    },
-    getProps() {
-        return {
-            backedCoins: GatewayStore.getState().backedCoins,
-            preferredCurrency: SettingsStore.getSetting("unit"),
-            marketStats: MarketsStore.getState().allMarketStats
-        };
+const ConnectedWithdrawModal = connect(
+    WithdrawModalNew,
+    {
+        listenTo() {
+            return [GatewayStore, AssetStore, SettingsStore, MarketsStore];
+        },
+        getProps() {
+            return {
+                backedCoins: GatewayStore.getState().backedCoins,
+                preferredCurrency: SettingsStore.getSetting("unit"),
+                marketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 class WithdrawModalWrapper extends React.Component {
     static propTypes = {
@@ -1351,16 +1365,19 @@ class WithdrawModalWrapper extends React.Component {
     }
 }
 
-const ConnectedWrapper = connect(BindToChainState(WithdrawModalWrapper), {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            account: AccountStore.getState().currentAccount
-        };
+const ConnectedWrapper = connect(
+    BindToChainState(WithdrawModalWrapper),
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                account: AccountStore.getState().currentAccount
+            };
+        }
     }
-});
+);
 
 export default class WithdrawModal extends React.Component {
     constructor() {

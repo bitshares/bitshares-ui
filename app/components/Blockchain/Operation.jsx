@@ -26,6 +26,15 @@ require("./operations.scss");
 let ops = Object.keys(operations);
 let listings = account_constants.account_listing;
 
+const ShortObjectId = ({objectId}) => {
+    if (typeof objectId === "string") {
+        const parts = objectId.split(".");
+        const {length} = parts;
+        if (length > 0) return "#" + parts[length - 1];
+    }
+    return objectId;
+};
+
 class TransactionLabel extends React.Component {
     shouldComponentUpdate(nextProps) {
         return (
@@ -77,10 +86,12 @@ class Row extends React.Component {
         if (!hidePending && block > last_irreversible_block_num) {
             pending = (
                 <span>
-                    (<Translate
+                    (
+                    <Translate
                         content="operation.pending"
                         blocks={block - last_irreversible_block_num}
-                    />)
+                    />
+                    )
                 </span>
             );
         }
@@ -661,25 +672,65 @@ class Operation extends React.Component {
 
             case "asset_settle":
                 color = "warning";
-                column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="operation.asset_settle"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].account,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount,
-                                    arg: "amount"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
+
+                const baseAmount = op[1].amount;
+                const {
+                    result: [resultCode, quoteAmount]
+                } = this.props;
+                const instantSettleCode = 2;
+
+                switch (resultCode) {
+                    case instantSettleCode:
+                        column = (
+                            <span>
+                                <TranslateWithLinks
+                                    string="operation.asset_settle_instant"
+                                    keys={[
+                                        {
+                                            type: "account",
+                                            value: op[1].account,
+                                            arg: "account"
+                                        },
+                                        {
+                                            type: "amount",
+                                            value: baseAmount,
+                                            arg: "amount"
+                                        },
+                                        {
+                                            type: "price",
+                                            value: {
+                                                base: baseAmount,
+                                                quote: quoteAmount
+                                            },
+                                            arg: "price"
+                                        }
+                                    ]}
+                                />
+                            </span>
+                        );
+                        break;
+                    default:
+                        column = (
+                            <span>
+                                <TranslateWithLinks
+                                    string="operation.asset_settle"
+                                    keys={[
+                                        {
+                                            type: "account",
+                                            value: op[1].account,
+                                            arg: "account"
+                                        },
+                                        {
+                                            type: "amount",
+                                            value: op[1].amount,
+                                            arg: "amount"
+                                        }
+                                    ]}
+                                />
+                            </span>
+                        );
+                }
+
                 break;
 
             case "asset_global_settle":
@@ -778,7 +829,8 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.witness_pay"
                             />
-                            &nbsp;<FormattedAsset
+                            &nbsp;
+                            <FormattedAsset
                                 amount={op[1].amount}
                                 asset={"1.3.0"}
                             />
@@ -786,7 +838,8 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.to"
                             />
-                            &nbsp;{this.linkToAccount(op[1].witness_account)}
+                            &nbsp;
+                            {this.linkToAccount(op[1].witness_account)}
                         </span>
                     );
                 } else {
@@ -796,7 +849,8 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.received"
                             />
-                            &nbsp;<FormattedAsset
+                            &nbsp;
+                            <FormattedAsset
                                 amount={op[1].amount}
                                 asset={"1.3.0"}
                             />
@@ -804,7 +858,8 @@ class Operation extends React.Component {
                                 component="span"
                                 content="transaction.from"
                             />
-                            &nbsp;{this.linkToAccount(op[1].witness_account)}
+                            &nbsp;
+                            {this.linkToAccount(op[1].witness_account)}
                         </span>
                     );
                 }
@@ -821,9 +876,18 @@ class Operation extends React.Component {
                                         type: "account",
                                         value: op[1].fee_paying_account,
                                         arg: "account"
+                                    },
+                                    {
+                                        value: (
+                                            <ShortObjectId
+                                                objectId={this.props.result[1]}
+                                            />
+                                        ),
+                                        arg: "proposal"
                                     }
                                 ]}
-                            />:
+                            />
+                            :
                         </span>
                         <div>
                             {op[1].proposed_ops.map((o, index) => {
@@ -846,28 +910,88 @@ class Operation extends React.Component {
                 break;
 
             case "proposal_update":
+                const fields = [
+                    "active_approvals_to_add",
+                    "active_approvals_to_remove",
+                    "owner_approvals_to_add",
+                    "owner_approvals_to_remove",
+                    "key_approvals_to_add",
+                    "key_approvals_to_remove"
+                ];
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="operation.proposal_update"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].fee_paying_account,
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <div>
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.proposal_update"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].fee_paying_account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        value: (
+                                            <ShortObjectId
+                                                objectId={op[1].proposal}
+                                            />
+                                        ),
+                                        arg: "proposal"
+                                    }
+                                ]}
+                            />
+                        </span>
+                        <div className="proposal-update">
+                            {fields.map(field => {
+                                if (op[1][field].length) {
+                                    return (
+                                        <div key={field}>
+                                            <Translate
+                                                content={`proposal.updated.${field}`}
+                                            />
+                                            <ul>
+                                                {op[1][field].map(value => {
+                                                    return (
+                                                        <li key={value}>
+                                                            {field.startsWith(
+                                                                "key"
+                                                            )
+                                                                ? value
+                                                                : this.linkToAccount(
+                                                                      value
+                                                                  )}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
+                                    );
+                                } else return null;
+                            })}
+                        </div>
+                    </div>
                 );
                 break;
 
             case "proposal_delete":
                 column = (
                     <span>
-                        <Translate
-                            component="span"
-                            content="transaction.proposal_delete"
+                        <TranslateWithLinks
+                            string="operation.proposal_delete"
+                            keys={[
+                                {
+                                    type: "account",
+                                    value: op[1].fee_paying_account,
+                                    arg: "account"
+                                },
+                                {
+                                    value: (
+                                        <ShortObjectId
+                                            objectId={op[1].proposal}
+                                        />
+                                    ),
+                                    arg: "proposal"
+                                }
+                            ]}
                         />
                     </span>
                 );
@@ -880,9 +1004,11 @@ class Operation extends React.Component {
                             component="span"
                             content="transaction.withdraw_permission_create"
                         />
-                        &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{this.linkToAccount(op[1].authorized_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
                 break;
@@ -894,9 +1020,11 @@ class Operation extends React.Component {
                             component="span"
                             content="transaction.withdraw_permission_update"
                         />
-                        &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{this.linkToAccount(op[1].authorized_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
                 break;
@@ -908,9 +1036,11 @@ class Operation extends React.Component {
                             component="span"
                             content="transaction.withdraw_permission_claim"
                         />
-                        &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{this.linkToAccount(op[1].withdraw_to_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].withdraw_to_account)}
                     </span>
                 );
                 break;
@@ -922,9 +1052,11 @@ class Operation extends React.Component {
                             component="span"
                             content="transaction.withdraw_permission_delete"
                         />
-                        &nbsp;{this.linkToAccount(op[1].withdraw_from_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].withdraw_from_account)}
                         <Translate component="span" content="transaction.to" />
-                        &nbsp;{this.linkToAccount(op[1].authorized_account)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].authorized_account)}
                     </span>
                 );
                 break;
@@ -1042,16 +1174,19 @@ class Operation extends React.Component {
             case "vesting_balance_create":
                 column = (
                     <span>
-                        &nbsp;{this.linkToAccount(op[1].creator)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].creator)}
                         <Translate
                             component="span"
                             content="transaction.vesting_balance_create"
                         />
-                        &nbsp;<FormattedAsset
+                        &nbsp;
+                        <FormattedAsset
                             amount={op[1].amount.amount}
                             asset={op[1].amount.asset_id}
                         />
-                        &nbsp;{this.linkToAccount(op[1].owner)}
+                        &nbsp;
+                        {this.linkToAccount(op[1].owner)}
                     </span>
                 );
                 break;
@@ -1140,9 +1275,8 @@ class Operation extends React.Component {
                             component="span"
                             content="transaction.committee_member_create"
                         />
-                        &nbsp;{this.linkToAccount(
-                            op[1].committee_member_account
-                        )}
+                        &nbsp;
+                        {this.linkToAccount(op[1].committee_member_account)}
                     </span>
                 );
                 break;
@@ -1151,11 +1285,13 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].from)}
-                        &nbsp;<Translate
+                        &nbsp;
+                        <Translate
                             component="span"
                             content="transaction.sent"
                         />
-                        &nbsp;<FormattedAsset
+                        &nbsp;
+                        <FormattedAsset
                             amount={op[1].amount.amount}
                             asset={op[1].amount.asset_id}
                         />
@@ -1167,11 +1303,13 @@ class Operation extends React.Component {
                 column = (
                     <span>
                         {this.linkToAccount(op[1].to)}
-                        &nbsp;<Translate
+                        &nbsp;
+                        <Translate
                             component="span"
                             content="transaction.received"
                         />
-                        &nbsp;<FormattedAsset
+                        &nbsp;
+                        <FormattedAsset
                             amount={op[1].amount.amount}
                             asset={op[1].amount.asset_id}
                         />
@@ -1187,7 +1325,8 @@ class Operation extends React.Component {
                 );
                 column = (
                     <span>
-                        {this.linkToAccount(op[1].issuer)}&nbsp;
+                        {this.linkToAccount(op[1].issuer)}
+                        &nbsp;
                         <BindToChainState.Wrapper
                             asset={op[1].amount_to_claim.asset_id}
                         >
@@ -1405,15 +1544,18 @@ class Operation extends React.Component {
     }
 }
 
-Operation = connect(Operation, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+Operation = connect(
+    Operation,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default Operation;
