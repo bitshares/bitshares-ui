@@ -518,6 +518,7 @@
         "others": "Otros",
         "overbought": "Sobrecomprado",
         "oversold": "Sobrevendido",
+        "panels_mirror": "Mirror Panels",
         "period": "Periodo de tiempo (days)",
         "price": "Precio",
         "price_history": "Gráfico de Precios",
@@ -532,7 +533,12 @@
         "search": "Busque más mercados aquí",
         "sell": "Vender",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Opciones de gráficos",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Precio de Liquidación",
         "settle_orders": "Establecer órdenes",
         "short": "Corto",

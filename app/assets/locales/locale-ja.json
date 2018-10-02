@@ -518,6 +518,7 @@
         "others": "その他",
         "overbought": "買われすぎ",
         "oversold": "売られすぎ",
+        "panels_mirror": "Mirror Panels",
         "period": "期間 (日)",
         "price": "価格",
         "price_history": "価格チャート",
@@ -532,7 +533,12 @@
         "search": "他のマーケットを検索する",
         "sell": "売る",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "チャートオプション",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "決済",
         "settle_orders": "決済注文",
         "short": "ショート",

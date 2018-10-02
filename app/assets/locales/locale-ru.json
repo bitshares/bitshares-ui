@@ -518,6 +518,7 @@
         "others": "Другие",
         "overbought": "Перекуплен",
         "oversold": "Перепродан",
+        "panels_mirror": "Mirror Panels",
         "period": "Временной период (дни)",
         "price": "Цена",
         "price_history": "График цен",
@@ -532,7 +533,12 @@
         "search": "Искать здесь другие рынки",
         "sell": "Продать",
         "sell_description": "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
-        "settings": "Параметры графика",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Погашение",
         "settle_orders": "Ордера на погашение",
         "short": "Сократить",

@@ -357,7 +357,9 @@ class MyOpenOrders extends React.Component {
                 Ps.initialize(contentContainer);
                 Ps.update(contentContainer);
             }
-            this.refs.contentTransition.resetAnimation();
+            if(this.refs.contentTransition) {
+                this.refs.contentTransition.resetAnimation();
+            }
             if (contentContainer) contentContainer.scrollTop = 0;
         }
         

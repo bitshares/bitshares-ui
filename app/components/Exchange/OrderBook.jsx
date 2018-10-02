@@ -60,7 +60,6 @@ class OrderBookRowVertical extends React.Component {
             np.index !== this.props.index ||
             np.currentAccount !== this.props.currentAccount ||
             np.isPanelActive !== this.props.isPanelActive ||
-            np.exchangeLayout !== this.props.exchangeLayout ||
             np.horizontal !== this.props.horizontal
         );
     }
@@ -490,7 +489,7 @@ class OrderBook extends React.Component {
         }
     }
 
-    queryStickyTable = query =>
+    queryStickyTable = query => 
         this.refs.vertical_sticky_table.table.querySelector(query);
 
     verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
@@ -509,27 +508,27 @@ class OrderBook extends React.Component {
     }
 
     getSnapshotBeforeUpdate() {
-        if (!this.props.horizontal && this.state.autoScroll) {
-            // Center vertical scroll bar
-            const scrollableContainer = this.queryStickyTable(
-                "#sticky-table-y-wrapper"
-            );
-            const header = this.queryStickyTable("#sticky-table-header");
-            const centerTextContainer = this.refs.center_text;
-            const topContainer = this.queryStickyTable("#top-order-rows");
-
-            const scrollableContainerHeight =
-                elemHeight(scrollableContainer) - elemHeight(header);
-
-            const scrollTo =
-                elemHeight(topContainer) +
-                elemHeight(centerTextContainer) / 2 -
-                scrollableContainerHeight / 2;
-
-            scrollableContainer.scrollTop = scrollTo;
-        } else {
+        if (!this.refs.vertical_sticky_table || this.props.horizontal || !this.state.autoScroll) { 
             return null;
         }
+
+        // Center vertical scroll bar
+        const scrollableContainer = this.queryStickyTable(
+            "#sticky-table-y-wrapper"
+        );
+        const header = this.queryStickyTable("#sticky-table-header");
+        const centerTextContainer = this.refs.center_text;
+        const topContainer = this.queryStickyTable("#top-order-rows");
+
+        const scrollableContainerHeight =
+            elemHeight(scrollableContainer) - elemHeight(header);
+
+        const scrollTo =
+            elemHeight(topContainer) +
+            elemHeight(centerTextContainer) / 2 -
+            scrollableContainerHeight / 2;
+
+        scrollableContainer.scrollTop = scrollTo;
     }
 
     psUpdate() {

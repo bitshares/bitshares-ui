@@ -518,6 +518,7 @@
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",
         "oversold": "Aşırı Arz",
+        "panels_mirror": "Mirror Panels",
         "period": "Süre (gün)",
         "price": "Fiyat",
         "price_history": "Fiyat Tablosu",
@@ -532,7 +533,12 @@
         "search": "Search for more markets here",
         "sell": "Satış -",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Çizelge tercihleri",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Ödeme",
         "settle_orders": "Emirleri öde",
         "short": "Kısa pozisyon",

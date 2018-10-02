@@ -534,6 +534,7 @@
         "others": "Others",
         "overbought": "Overbought",
         "oversold": "Oversold",
+        "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
         "price_history": "Price Chart",
@@ -548,7 +549,12 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Personalize",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",

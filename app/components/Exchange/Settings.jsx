@@ -60,9 +60,29 @@ class Settings extends React.Component {
         this.props.onSetAutoscroll(newState);
     }
 
+    _getGroupingOptions(selectKey) {
+        return (
+            <Select 
+                placeholder={counterpart.translate("settings.placeholder_select")}
+                style={{width: "100%"}}
+                onChange={this.props.onSetPanelTabs.bind(this, selectKey)}
+                value={this.props.panelTabs[selectKey]}
+            >
+                <Select.Option value={0}>
+                    <Translate content="exchange.settings.grouping_standalone" />
+                </Select.Option>
+                <Select.Option value={1}>
+                    <Translate content="exchange.settings.grouping_1" />
+                </Select.Option>
+                <Select.Option value={2}>
+                    <Translate content="exchange.settings.grouping_2" />
+                </Select.Option>
+            </Select>
+        );
+    }
+
     render() {
         let {
-            exchangeLayout,
             showDepthChart
         } = this.props;
 
@@ -77,21 +97,6 @@ class Settings extends React.Component {
                 ref={this.props.modalId}
             >
                 <section style={{paddingBottom: "1em"}} className="block-list no-border-bottom">
-                    <header>
-                        <Translate content="exchange.layout.title" />:
-                    </header>
-                    <Select 
-                        placeholder={counterpart.translate("settings.placeholder_select")}
-                        style={{width: "100%"}}
-                        value={exchangeLayout ? exchangeLayout : "exchange.layout.1"}
-                        onChange={this.props.onChangeLayout.bind(this)}
-                    >
-                        <Select.Option value="1">{counterpart.translate("exchange.layout.1")}</Select.Option>
-                        <Select.Option value="2">{counterpart.translate("exchange.layout.2")}</Select.Option>
-                        <Select.Option value="3">{counterpart.translate("exchange.layout.3")}</Select.Option>
-                        <Select.Option value="4">{counterpart.translate("exchange.layout.4")}</Select.Option>
-                        <Select.Option value="5">{counterpart.translate("exchange.layout.5")}</Select.Option>
-                    </Select>
                     <header>
                         <Translate content="exchange.chart_type" />:
                     </header>
@@ -144,6 +149,51 @@ class Settings extends React.Component {
                         }
                     />
                     <Translate component="h5" content="settings.global_settings" />
+                    
+                    <header>
+                        Panel Grouping
+                    </header>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6">
+                            <h6 style={{margin: 9}}>My Trades</h6>
+                        </div>
+                        <div className="small-6">{this._getGroupingOptions("my_history")}</div>
+                    </div>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6">
+                            <h6 style={{margin: 9}}>Market Trades</h6>
+                        </div>
+                        <div className="small-6">{this._getGroupingOptions("history")}</div>
+                    </div>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6">
+                            <h6 style={{margin: 9}}>Open Orders</h6>
+                        </div>
+                        <div className="small-6">{this._getGroupingOptions("my_orders")}</div>
+                    </div>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6">
+                            <h6 style={{margin: 9}}>Settlements</h6>
+                        </div>
+                        <div className="small-6">{this._getGroupingOptions("open_settlement")}</div>
+                    </div>
+                    <header>
+                        <Translate content="exchange.panels_mirror" />
+                    </header>
+                    <Select 
+                        placeholder={counterpart.translate("settings.placeholder_select")}
+                        style={{width: "100%"}}
+                        value={this.props.mirrorPanels ? 1 : 0}
+                        onSelect={this.props.onMirrorPanels.bind(this)}
+                    >
+                        <Select.Option value={0}>
+                            <Translate content="settings.no" />
+                        </Select.Option>
+                        <Select.Option value={1}>
+                            <Translate content="settings.yes" />
+                        </Select.Option>
+                    </Select>
+
                     <header>
                         <Translate content="exchange.chart_hide" />
                     </header>
