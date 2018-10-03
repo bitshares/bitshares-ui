@@ -34,6 +34,11 @@ import {
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
+import ls, {setLocalStorageType} from "../../lib/common/localStorage";
+import Translate from "react-translate-component";
+
+const STORAGE_KEY = "__graphene__";
+let ss = new ls(STORAGE_KEY);
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -50,7 +55,8 @@ class WalletUnlockModal extends React.Component {
             customError: null,
             isOpen: false,
             restoringBackup: false,
-            stopAskingForBackup: false
+            stopAskingForBackup: false,
+            remember_user: true
         };
     };
 
@@ -217,10 +223,14 @@ class WalletUnlockModal extends React.Component {
 
     handleLogin = e => {
         if (e) e.preventDefault();
-
         const {passwordLogin, backup} = this.props;
-        const {walletSelected, accountName} = this.state;
-
+        const {walletSelected, accountName, remember_user} = this.state;
+        ss.set("remember_user", remember_user);
+        if (remember_user) {
+            setLocalStorageType("persistant");
+        } else {
+            setLocalStorageType("inram");
+        }
         if (!passwordLogin && !walletSelected) {
             this.setState({
                 customError: counterpart.translate(
@@ -334,6 +344,9 @@ class WalletUnlockModal extends React.Component {
     shouldUseBackupLogin = () =>
         this.shouldShowBackupWarning() && !this.state.stopAskingForBackup;
 
+    handleRememberMe = () =>
+        this.setState({remember_user: !this.state.remember_user});
+
     render() {
         const {
             backup,
@@ -395,6 +408,35 @@ class WalletUnlockModal extends React.Component {
                                     password_error={passwordError}
                                     ref="custom_password_input"
                                 />
+                                <div
+                                    className="remember-check"
+                                    onClick={this.handleRememberMe}
+                                >
+                                    <label
+                                        style={{
+                                            position: "relative",
+                                            float: "right",
+                                            paddingTop: "10px"
+                                        }}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={this.state.remember_user}
+                                            onChange={() => {}}
+                                            style={{
+                                                position: "absolute"
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                paddingLeft: "30px",
+                                                paddingTop: "12px"
+                                            }}
+                                        >
+                                            <Translate content="wallet.remember_me" />
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         ) : (
                             <div>

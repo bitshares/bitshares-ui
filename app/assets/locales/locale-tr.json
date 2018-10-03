@@ -1859,7 +1859,8 @@
         "wallet_model_2": "Cüzdan Sistemi en yüksek güvenlikli yöntemdir, fakat bu sistemi seçtiğinizde bir başka tarayıcı ya da bilgisayardan hesabınıza erişmek için TekAnahtar ya da .bin dosyası gerekmektedir.",
         "wallet_model_3": "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "wallet_move": "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
-        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
+        "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz.",
+        "remember_me": "Remember me"
     },
     "winex": {
         "gateway": {

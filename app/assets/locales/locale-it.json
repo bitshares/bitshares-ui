@@ -1859,7 +1859,8 @@
         "wallet_model_2": "La modalità portafoglio è la più sicura, ma è limitata al tuo computer e al tuo browser corrente. Per spostare il portafoglio su un altro browser o computer, puoi utilizzare il file di backup o la brainkey.",
         "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
-        "wallet_password": "Fai il login dovunque usando la tua password"
+        "wallet_password": "Fai il login dovunque usando la tua password",
+        "remember_me": "Remember me"
     },
     "winex": {
         "gateway": {

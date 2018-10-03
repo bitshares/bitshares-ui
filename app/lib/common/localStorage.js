@@ -31,9 +31,9 @@ class AbstractLocalStorage {
      * @returns {*}
      */
     get(key, defaultValue = {}) {
-        key = this._translateKey(key);
         try {
             if (this.has(key)) {
+                key = this._translateKey(key);
                 var value = this._get(key);
                 if (value === undefined || value === null) {
                     return defaultValue;
@@ -65,10 +65,7 @@ class AbstractLocalStorage {
      * @param object
      */
     set(key, object) {
-        if (object && object.toJS) {
-            object = object.toJS();
-        }
-        this._set(this._translateKey(key), JSON.stringify(object));
+        this._set(this._translateKey(key), object);
     }
 
     /**
@@ -95,7 +92,7 @@ class AbstractLocalStorage {
      * @param key
      */
     has(key) {
-        this._has(this._translateKey(key));
+        return this._has(this._translateKey(key));
     }
 
     /**
