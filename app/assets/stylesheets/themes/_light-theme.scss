@@ -56,6 +56,13 @@ $pulsate-red-end: #e87f84;
 
 $modal-bg-color: #dadada;
 
+$new-negative-color: white;
+$new-positive-color: white;
+$separator-line: white;
+$medium-color: white;
+$light-text-color: white;
+$dark-help-text: white;
+
 $mobile-input-bg: $input-background;
 
 $incognito-bg: #ea340b;
@@ -132,7 +139,12 @@ $explorer--assets--bg: $bg-color;
         $explorer--witnesses--info-border,
         $explorer--witnesses--info-table-title-color,
         $explorer--witnesses--info-table-text-color,
-        $explorer--assets--bg
+        $explorer--assets--bg,
+        $new-negative-color,
+        $new-positive-color,
+        $separator-line,
+        $medium-color,
+        $dark-help-text
     );
 
     .change-up {

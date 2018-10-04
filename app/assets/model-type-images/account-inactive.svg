@@ -1,0 +1,55 @@
+
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="50" cy="50.6902667" r="50"></circle>
+        <polygon id="path-3" points="35 82.6902667 13 95.6902667 13 120.690267 88 120.690267 88 95.6902667 66 82.6902667"></polygon>
+        <polygon id="path-4" points="57 92.6902667 44 92.6902667 37 84.6902667 36 68.6902667 65 68.6902667 64 84.6902667"></polygon>
+        <polygon id="path-5" points="38 86.6902667 47 120.690267 55 120.690267 64 86.6902667 50.5 87.6902667"></polygon>
+        <path d="M68.8184851,49.3433125 C68.8184851,49.3433125 68.8846338,36.021283 67.3547959,31.3083641 C61.0899176,22.5312828 40.0991473,22.5312828 33.9160527,31.3083641 C32.3850122,36.021283 32.4511608,49.3433125 32.4511608,49.3433125 C32.4511608,49.3433125 31.2243514,48.6584941 30,48 C29.3421216,47.6458008 27.9747432,47.4384266 28,49.0779674 C28.0805811,54.3946074 29.8196473,58.9736366 30.4149851,60.3490494 C30.9982959,61.6964671 32.6423905,63.2702138 33.9160527,63 C34,65 35.0859459,68.6721228 36,69.9732876 C37.3398108,71.8806079 44,77 46,78 C48,79 53,79 55,78 C57,77 63.6601892,71.8806079 65,69.9732876 C65.9128514,68.6721228 68,66 68,63 C69.2748649,63.2702138 70.27135,61.6964671 70.8558635,60.3490494 C71.4512014,58.9736366 72.9194189,54.3946074 73,49.0779674 C73.0264595,47.4384266 71.6578784,47.6458008 71,48 C69.5456568,48.8955417 68.8184851,49.3433125 68.8184851,49.3433125 Z" id="path-6"></path>
+        <path d="M51,18 C36,18 30.6712811,29.2303952 29.6273351,32.4060165 C28.5665514,35.6424968 28.875473,43.4465315 30,48 C30,48 33,54 33,54 C32.5694324,38.0683377 36,32 36,32 C36,32 45.2569054,40.9457485 55,40 C62.2823649,39.2940359 66,35 66,35 C66,35 68.6542703,40.0596433 68,54 L71,48 C72.124527,43.4465315 73.0533216,35.6424968 71.9901324,32.4060165 C70.9485919,29.2303952 65.8473649,18.6085897 51,18 Z" id="path-7"></path>
+        <polygon id="path-8" points="36 80 34 83 42 98 50.5 88"></polygon>
+        <polygon id="path-9" points="65 80 50.5 88 60 98 67 83"></polygon>
+    </defs>
+    <g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico-men/disable">
+            <g id="ico-men/-active" transform="translate(0.000000, -1.000000)">
+                <g id="mask" transform="translate(0.000000, 0.309733)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Oval-2" fill="#171A25" opacity="0.2" xlink:href="#path-1"></use>
+                    <g id="Fill-1" mask="url(#mask-2)">
+                        <use fill="#186974" xlink:href="#path-3"></use>
+                        <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-3"></use>
+                    </g>
+                    <g id="Fill-2" mask="url(#mask-2)">
+                        <use fill="#E7E7E8" xlink:href="#path-4"></use>
+                        <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-4"></use>
+                    </g>
+                    <g id="Fill-3" mask="url(#mask-2)">
+                        <use fill="#B31749" xlink:href="#path-5"></use>
+                        <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-5"></use>
+                    </g>
+                </g>
+                <g id="Fill-4">
+                    <use fill="#FFFFFF" xlink:href="#path-6"></use>
+                    <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-6"></use>
+                </g>
+                <g id="Fill-6">
+                    <use fill="#186974" xlink:href="#path-7"></use>
+                    <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-7"></use>
+                </g>
+                <g id="Fill-9">
+                    <use fill="#FF276D" xlink:href="#path-8"></use>
+                    <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-8"></use>
+                </g>
+                <g id="Fill-11">
+                    <use fill="#FF276D" xlink:href="#path-9"></use>
+                    <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-9"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
