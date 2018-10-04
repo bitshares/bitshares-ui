@@ -137,15 +137,15 @@ class BuySell extends React.Component {
             ? 0
             : Math.min(
                   maxQuoteMarketFee.getAmount({real: true}),
-                  amount *
-                      quote.getIn(["options", "market_fee_percent"]) /
+                  (amount * quote.getIn(["options", "market_fee_percent"])) /
                       10000
               ).toFixed(maxQuoteMarketFee.precision);
         const baseFee = !amount
             ? 0
             : Math.min(
                   maxBaseMarketFee.getAmount({real: true}),
-                  total * base.getIn(["options", "market_fee_percent"]) / 10000
+                  (total * base.getIn(["options", "market_fee_percent"])) /
+                      10000
               ).toFixed(maxBaseMarketFee.precision);
         const baseFlagBooleans = assetUtils.getFlagBooleans(
             base.getIn(["options", "flags"]),
@@ -165,9 +165,9 @@ class BuySell extends React.Component {
         var baseMarketFee = baseFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
-                        baseMarketFeePercent
-                    }
+                    <Translate content="explorer.asset.summary.market_fee" />
+                    :&nbsp;
+                    {baseMarketFeePercent}
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
@@ -189,7 +189,8 @@ class BuySell extends React.Component {
                         })}
                         className="inline-block tooltip"
                     >
-                        &nbsp;<Icon
+                        &nbsp;
+                        <Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
                             title="icons.question_circle"
@@ -214,9 +215,9 @@ class BuySell extends React.Component {
         var quoteMarketFee = quoteFlagBooleans["charge_market_fee"] ? (
             <div className="grid-block no-padding buy-sell-row">
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-label">
-                    <Translate content="explorer.asset.summary.market_fee" />:&nbsp;{
-                        quoteMarketFeePercent
-                    }
+                    <Translate content="explorer.asset.summary.market_fee" />
+                    :&nbsp;
+                    {quoteMarketFeePercent}
                 </div>
                 <div className="grid-block small-4 no-margin no-overflow buy-sell-input">
                     <input
@@ -238,7 +239,8 @@ class BuySell extends React.Component {
                         })}
                         className="inline-block tooltip"
                     >
-                        &nbsp;<Icon
+                        &nbsp;
+                        <Icon
                             style={{position: "relative", top: 3}}
                             name="question-circle"
                             title="icons.question-circle"
@@ -648,7 +650,8 @@ class BuySell extends React.Component {
                                     <tbody>
                                         <tr className="buy-sell-info">
                                             <td>
-                                                <Translate content="exchange.balance" />:
+                                                <Translate content="exchange.balance" />
+                                                :
                                             </td>
                                             <td
                                                 style={{
@@ -686,7 +689,8 @@ class BuySell extends React.Component {
                                                     <Translate content="exchange.lowest_ask" />
                                                 ) : (
                                                     <Translate content="exchange.highest_bid" />
-                                                )}:&nbsp;
+                                                )}
+                                                :&nbsp;
                                             </td>
                                             {currentPrice ? (
                                                 <td
@@ -718,7 +722,9 @@ class BuySell extends React.Component {
                                                             name={base.get(
                                                                 "symbol"
                                                             )}
-                                                        />/<AssetName
+                                                        />
+                                                        /
+                                                        <AssetName
                                                             name={quote.get(
                                                                 "symbol"
                                                             )}
@@ -730,7 +736,8 @@ class BuySell extends React.Component {
 
                                         <tr className="buy-sell-info">
                                             <td style={{paddingTop: 5}}>
-                                                <Translate content="transaction.expiration" />:
+                                                <Translate content="transaction.expiration" />
+                                                :
                                             </td>
                                             <td className="expiration-datetime-picker">
                                                 <select

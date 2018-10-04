@@ -548,7 +548,8 @@ class SendModal extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />:{" "}
+                        />
+                        :{" "}
                         <span
                             className={_error}
                             style={{
@@ -711,6 +712,7 @@ class SendModal extends React.Component {
                                             assets={asset_types}
                                             display_balance={balance}
                                             tabIndex={tabIndex++}
+                                            allowNaN={true}
                                         />
                                     </div>
                                     {/*  M E M O  */}
@@ -911,17 +913,20 @@ class SendModalConnectWrapper extends React.Component {
     }
 }
 
-SendModalConnectWrapper = connect(SendModalConnectWrapper, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps(props) {
-        return {
-            currentAccount: AccountStore.getState().currentAccount,
-            passwordAccount: AccountStore.getState().passwordAccount,
-            tabIndex: props.tabIndex || 0
-        };
+SendModalConnectWrapper = connect(
+    SendModalConnectWrapper,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps(props) {
+            return {
+                currentAccount: AccountStore.getState().currentAccount,
+                passwordAccount: AccountStore.getState().passwordAccount,
+                tabIndex: props.tabIndex || 0
+            };
+        }
     }
-});
+);
 
 export default SendModalConnectWrapper;
