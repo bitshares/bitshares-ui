@@ -608,6 +608,71 @@ export const settingsAPIs = {
             operator: "CITADEL",
             contact: "email:citadel.li;support"
         },
+        {
+            url: "wss://us-east-1.bts.crypto-bridge.org",
+            region: "Northern America",
+            country: "United States of America",
+            location: "North Virginia",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://us-west-1.bts.crypto-bridge.org",
+            region: "Northern America",
+            country: "United States of America",
+            location: "North California",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-central-1.bts.crypto-bridge.org",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-west-1.bts.crypto-bridge.org",
+            region: "Northern Europe",
+            country: "Ireland",
+            location: "Dublin",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-west-2.bts.crypto-bridge.org",
+            region: "Northern Europe",
+            country: "United Kingdom",
+            location: "London",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-northeast-1.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-1.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Singapore",
+            location: "Singapore",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-2.bts.crypto-bridge.org",
+            region: "Australia",
+            country: "Australia",
+            location: "Sydney",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
