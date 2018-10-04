@@ -11,12 +11,11 @@ import counterpart from "counterpart";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
-import cnames from "classnames";
 import utils from "common/utils";
-import LoadingIndicator from "../LoadingIndicator";
 import ls from "common/localStorage";
 import PaginatedList from "../Utility/PaginatedList";
 import {Apis} from "bitsharesjs-ws";
+import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
 
 let accountStorage = new ls("__graphene__");
 
@@ -41,10 +40,13 @@ class Assets extends React.Component {
                         : 50, // mainnet has 3000+ assets, other chains may not have that many
             assetsFetched: 0,
             activeFilter: "market",
-            filterUIA: props.filterUIA || "",
-            filterMPA: props.filterMPA || "",
-            filterPM: props.filterPM || ""
+            filterSearch: props.filterSearch || "",
+            rowsOnPage: "25"
         };
+
+        this._toggleFilter = this._toggleFilter.bind(this);
+        this.handleRowsChange = this.handleRowsChange.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -56,6 +58,18 @@ class Assets extends React.Component {
 
     componentWillMount() {
         this._checkAssets(this.props.assets, true);
+    }
+
+    handleFilterChange(e) {
+        this.setState({
+            filterSearch: (e.target.value || "").toUpperCase()
+        });
+    }
+
+    handleRowsChange(rows) {
+        this.setState({
+            rowsOnPage: rows
+        });
     }
 
     _checkAssets(assets, force) {
@@ -106,9 +120,9 @@ class Assets extends React.Component {
         return <LinkToAccountById account={name_or_id} />;
     }
 
-    _toggleFilter(filter) {
+    _toggleFilter(e) {
         this.setState({
-            activeFilter: filter
+            activeFilter: e.target.value
         });
     }
 
@@ -130,12 +144,68 @@ class Assets extends React.Component {
         let mia;
         let pm;
 
+        let dataSource = [];
+        let columns = [];
+
         if (activeFilter == "user") {
-            uia = assets
+            columns = [
+                {
+                    key: "symbol",
+                    title: "symbol",
+                    dataIndex: "symbol",
+                    sorter: (a, b) => {
+                        return a.rank > b.rank ? 1 : a.rank < b.rank ? -1 : 0;
+                    },
+                    render: item => {
+                        return (
+                            <Link to={`/asset/${item}`}>
+                                <AssetName name={item} />
+                            </Link>
+                        );
+                    }
+                },
+                {
+                    key: "issuer",
+                    title: "issuer",
+                    dataIndex: "issuer",
+                    render: item => {
+                        return this.linkToAccount(item);
+                    }
+                },
+                {
+                    key: "currentSupply",
+                    title: "Supply",
+                    dataIndex: "currentSupply",
+                    render: (item, record) => {
+                        return (
+                            <FormattedAsset
+                                amount={record.currentSupply}
+                                asset={record.assetId}
+                                hide_asset={true}
+                            />
+                        );
+                    }
+                },
+                {
+                    key: "marketId",
+                    title: "",
+                    dataIndex: "marketId",
+                    render: item => {
+                        return (
+                            <Link to={`/market/${item}`}>
+                                <Icon type={"line-chart"} />{" "}
+                                <Translate content="header.exchange" />
+                            </Link>
+                        );
+                    }
+                }
+            ];
+
+            assets
                 .filter(a => {
                     return (
                         !a.market_asset &&
-                        a.symbol.indexOf(this.state.filterUIA) !== -1
+                        a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
                 })
                 .map(asset => {
@@ -152,51 +222,74 @@ class Assets extends React.Component {
                                 ? coreAsset.get("symbol")
                                 : "BTS");
 
-                    return (
-                        <tr key={asset.symbol}>
-                            <td>
-                                <Link to={`/asset/${asset.symbol}`}>
-                                    <AssetName name={asset.symbol} />
-                                </Link>
-                            </td>
-                            <td>{this.linkToAccount(asset.issuer)}</td>
-                            <td>
-                                <FormattedAsset
-                                    amount={asset.dynamic.current_supply}
-                                    asset={asset.id}
-                                    hide_asset={true}
-                                />
-                            </td>
-                            <td>
-                                <Link
-                                    className="button outline"
-                                    to={`/market/${marketID}`}
-                                >
-                                    <Translate content="header.exchange" />
-                                </Link>
-                            </td>
-                        </tr>
-                    );
-                })
-                .sort((a, b) => {
-                    if (a.key > b.key) {
-                        return 1;
-                    } else if (a.key < b.key) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
+                    dataSource.push({
+                        symbol: asset.symbol,
+                        issuer: asset.issuer,
+                        currentSupply: asset.dynamic.current_supply,
+                        assetId: asset.id,
+                        marketId: marketID
+                    });
                 })
                 .toArray();
         }
 
         if (activeFilter == "market") {
+            columns = [
+                {
+                    key: "symbol",
+                    title: "symbol",
+                    dataIndex: "symbol",
+                    render: item => {
+                        return (
+                            <Link to={`/asset/${item}`}>
+                                <AssetName name={item} />
+                            </Link>
+                        );
+                    }
+                },
+                {
+                    key: "issuer",
+                    title: "issuer",
+                    dataIndex: "issuer",
+                    render: item => {
+                        return this.linkToAccount(item);
+                    }
+                },
+                {
+                    key: "currentSupply",
+                    title: "Supply",
+                    dataIndex: "currentSupply",
+                    render: (item, record) => {
+                        return (
+                            <FormattedAsset
+                                amount={record.currentSupply}
+                                asset={record.assetId}
+                                hide_asset={true}
+                            />
+                        );
+                    }
+                },
+                {
+                    key: "marketId",
+                    title: "",
+                    dataIndex: "marketId",
+                    render: item => {
+                        return (
+                            <Link to={`/market/${item}`}>
+                                <Icon type={"line-chart"} />{" "}
+                                <Translate content="header.exchange" />
+                            </Link>
+                        );
+                    }
+                }
+            ];
+
             mia = assets
                 .filter(a => {
                     return (
                         a.bitasset_data &&
                         !a.bitasset_data.is_prediction_market &&
-                        a.symbol.indexOf(this.state.filterMPA) !== -1
+                        a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
                 })
                 .map(asset => {
@@ -213,40 +306,13 @@ class Assets extends React.Component {
                                 ? coreAsset.get("symbol")
                                 : "BTS");
 
-                    return (
-                        <tr key={asset.symbol}>
-                            <td>
-                                <Link to={`/asset/${asset.symbol}`}>
-                                    <AssetName name={asset.symbol} />
-                                </Link>
-                            </td>
-                            <td>{this.linkToAccount(asset.issuer)}</td>
-                            <td>
-                                <FormattedAsset
-                                    amount={asset.dynamic.current_supply}
-                                    asset={asset.id}
-                                    hide_asset={true}
-                                />
-                            </td>
-                            <td>
-                                <Link
-                                    className="button outline"
-                                    to={`/market/${marketID}`}
-                                >
-                                    <Translate content="header.exchange" />
-                                </Link>
-                            </td>
-                        </tr>
-                    );
-                })
-                .sort((a, b) => {
-                    if (a.key > b.key) {
-                        return 1;
-                    } else if (a.key < b.key) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
+                    dataSource.push({
+                        symbol: asset.symbol,
+                        issuer: asset.issuer,
+                        currentSupply: asset.dynamic.current_supply,
+                        assetId: asset.id,
+                        marketId: marketID
+                    });
                 })
                 .toArray();
         }
@@ -263,12 +329,13 @@ class Assets extends React.Component {
                         a.bitasset_data.is_prediction_market &&
                         (a.symbol
                             .toLowerCase()
-                            .indexOf(this.state.filterPM.toLowerCase()) !==
+                            .indexOf(this.state.filterSearch.toLowerCase()) !==
                             -1 ||
                             description.main
                                 .toLowerCase()
-                                .indexOf(this.state.filterPM.toLowerCase()) !==
-                                -1)
+                                .indexOf(
+                                    this.state.filterSearch.toLowerCase()
+                                ) !== -1)
                     );
                 })
                 .map(asset => {
@@ -378,120 +445,71 @@ class Assets extends React.Component {
                 <div className="grid-block vertical">
                     <div className="grid-block main-content small-12 medium-10 medium-offset-1 main-content vertical">
                         <div className="generic-bordered-box">
-                            <div className="header-selector">
-                                <div className="selector">
-                                    <div
-                                        className={cnames("inline-block", {
-                                            inactive: activeFilter != "market"
-                                        })}
-                                        onClick={this._toggleFilter.bind(
-                                            this,
-                                            "market"
-                                        )}
-                                    >
+                            <div
+                                style={{
+                                    textAlign: "right",
+                                    marginBottom: "24px"
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        display: "inline-block",
+                                        width: "24px",
+                                        marginTop: "2px",
+                                        float: "left",
+                                        fontSize: "18px"
+                                    }}
+                                >
+                                    {this.state.isLoading ? (
+                                        <Icon type="loading" />
+                                    ) : null}
+                                </span>
+
+                                <Radio.Group
+                                    value={this.state.activeFilter}
+                                    onChange={this._toggleFilter}
+                                >
+                                    <Radio value={"market"}>
                                         <Translate content="explorer.assets.market" />
-                                    </div>
-                                    <div
-                                        className={cnames("inline-block", {
-                                            inactive: activeFilter != "user"
-                                        })}
-                                        onClick={this._toggleFilter.bind(
-                                            this,
-                                            "user"
-                                        )}
-                                    >
+                                    </Radio>
+                                    <Radio value={"user"}>
                                         <Translate content="explorer.assets.user" />
-                                    </div>
-                                    <div
-                                        className={cnames("inline-block", {
-                                            inactive:
-                                                activeFilter != "prediction"
-                                        })}
-                                        onClick={this._toggleFilter.bind(
-                                            this,
-                                            "prediction"
-                                        )}
-                                    >
+                                    </Radio>
+                                    <Radio value={"prediction"}>
                                         <Translate content="explorer.assets.prediction" />
-                                    </div>
-                                </div>
+                                    </Radio>
+                                </Radio.Group>
+
+                                <Select
+                                    style={{width: "150px", marginLeft: "24px"}}
+                                    value={this.state.rowsOnPage}
+                                    onChange={this.handleRowsChange}
+                                >
+                                    <Select.Option key={"10"}>
+                                        10 rows
+                                    </Select.Option>
+                                    <Select.Option key={"25"}>
+                                        25 rows
+                                    </Select.Option>
+                                    <Select.Option key={"50"}>
+                                        50 rows
+                                    </Select.Option>
+                                    <Select.Option key={"100"}>
+                                        100 rows
+                                    </Select.Option>
+                                    <Select.Option key={"200"}>
+                                        200 rows
+                                    </Select.Option>
+                                </Select>
+
+                                <Input
+                                    placeholder={"Quick Search"}
+                                    value={this.state.filterSearch}
+                                    style={{width: "200px", marginLeft: "24px"}}
+                                    onChange={this.handleFilterChange}
+                                    addonAfter={<Icon type="search" />}
+                                />
                             </div>
-                            {this.state.isLoading ? <LoadingIndicator /> : null}
-                            {activeFilter == "market" ? (
-                                <div className="grid-block shrink">
-                                    <div className="grid-content">
-                                        <input
-                                            style={{maxWidth: "500px"}}
-                                            placeholder={placeholder}
-                                            type="text"
-                                            value={this.state.filterMPA}
-                                            onChange={this._onFilter.bind(
-                                                this,
-                                                "filterMPA"
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                            ) : null}
-                            {activeFilter == "market" ? (
-                                <div
-                                    className="grid-block"
-                                    style={{paddingBottom: 20}}
-                                >
-                                    <PaginatedList
-                                        header={assetListHeader}
-                                        rows={mia}
-                                    />
-                                </div>
-                            ) : null}
-
-                            {activeFilter == "user" ? (
-                                <div className="grid-block shrink">
-                                    <div className="grid-content">
-                                        <input
-                                            style={{maxWidth: "500px"}}
-                                            placeholder={placeholder}
-                                            type="text"
-                                            value={this.state.filterUIA}
-                                            onChange={this._onFilter.bind(
-                                                this,
-                                                "filterUIA"
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                            ) : null}
-
-                            {activeFilter == "user" ? (
-                                <div
-                                    className="grid-block"
-                                    style={{paddingBottom: 20}}
-                                >
-                                    <PaginatedList
-                                        header={assetListHeader}
-                                        rows={uia}
-                                    />
-                                </div>
-                            ) : null}
-
-                            {activeFilter == "prediction" ? (
-                                <div className="grid-block shrink">
-                                    <div className="grid-content">
-                                        <input
-                                            style={{maxWidth: "500px"}}
-                                            placeholder={counterpart
-                                                .translate("markets.search")
-                                                .toUpperCase()}
-                                            type="text"
-                                            value={this.state.filterPM}
-                                            onChange={this._onFilter.bind(
-                                                this,
-                                                "filterPM"
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                            ) : null}
 
                             {activeFilter == "prediction" ? (
                                 <div
@@ -500,7 +518,18 @@ class Assets extends React.Component {
                                 >
                                     <PaginatedList rows={pm} pageSize={6} />
                                 </div>
-                            ) : null}
+                            ) : (
+                                <Table
+                                    style={{width: "100%", marginTop: "16px"}}
+                                    rowKey="symbol"
+                                    columns={columns}
+                                    dataSource={dataSource}
+                                    pagination={{
+                                        position: "bottom",
+                                        pageSize: Number(this.state.rowsOnPage)
+                                    }}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
