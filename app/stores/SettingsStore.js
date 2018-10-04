@@ -426,7 +426,6 @@ class SettingsStore {
                 markets_39f5e2ed: [
                     // TESTNET
                     "PEG.FAKEUSD",
-                    "TATCHCOIN",
                     "BTWTY"
                 ]
             };
