@@ -23,16 +23,11 @@ class WalletUnlockActions {
 
     lock() {
         return dispatch => {
-            return new Promise(resolve, reject => {
-                dispatch({resolve, reject});
-            })
-                .then(was_unlocked => {
-                    if (was_unlocked) WrappedWalletUnlockActions.change();
-                })
-                .catch(error => {
-                    console.log("Error in MarketsActions.lock: ", error);
-                    reject(error);
-                });
+            return new Promise(resolve => {
+                dispatch({resolve});
+            }).then(was_unlocked => {
+                if (was_unlocked) WrappedWalletUnlockActions.change();
+            });
         };
     }
 

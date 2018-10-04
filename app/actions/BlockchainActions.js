@@ -20,9 +20,6 @@ class BlockchainActions {
                         },
                         height
                     });
-                })
-                .catch(error => {
-                    console.log("We have error with getHeader mathod: ", error);
                 });
         };
     }
