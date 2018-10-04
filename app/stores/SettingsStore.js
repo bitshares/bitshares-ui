@@ -404,7 +404,25 @@ class SettingsStore {
             this.basesKey = this._getChainKey("preferredBases");
             // Default markets setup
             let topMarkets = {
-                markets_4018d784: getMyMarketsQuotes(),
+                markets_4018d784: [
+                    // BTS MAIN NET
+                    "BTS",
+                    "OPEN.ETH",
+                    "BRIDGE.BTC",
+                    "BRIDGE.BCO",
+                    "USD",
+                    "CNY",
+                    "EUR",
+                    "TCLSILVER",
+                    "BRIDGE.LTC",
+                    "BTS",
+                    "OPEN.EOS",
+                    "TATCHCOIN",
+                    "BRIDGE.WSP",
+                    "BRIDGE.PIVX",
+                    "HERTZ",
+                    "BRIDGE.NLG",
+                    "TCLGULDEN"
                 markets_39f5e2ed: [
                     // TESTNET
                     "PEG.FAKEUSD",
