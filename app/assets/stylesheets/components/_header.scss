@@ -1,11 +1,11 @@
 .header.menu-group {
-  justify-content: flex-start;
+    justify-content: flex-start;
 }
 
 .icon > svg {
-  > path {
-    fill : #fff;
-  }
+    > path {
+        fill: #fff;
+    }
 }
 
 .float-left > span.icon.user {
@@ -19,30 +19,30 @@
     &.primary {
         border-bottom: none;
     }
-  padding-left: 0 !important;
-  // min-height: 64px;
-  // text-transform: uppercase;
-  .menu-bar > li {
-    padding: 0;
-    border-right: none;
-    > a {
-      font-weight: bold;
-      line-height: 2rem;
-      padding-left: 1.25rem;
-      padding-right: 0.75rem;
-      font-size: 1.1rem;
-      @include breakpoint(large) {
-        padding-left: 1.75rem;
-        padding-right: 1.75rem;
-      }
+    padding-left: 0 !important;
+    // min-height: 64px;
+    // text-transform: uppercase;
+    .menu-bar > li {
+        padding: 0;
+        border-right: none;
+        > a {
+            font-weight: bold;
+            line-height: 2rem;
+            padding-left: 1.25rem;
+            padding-right: 0.75rem;
+            font-size: 1.1rem;
+            @include breakpoint(large) {
+                padding-left: 1.75rem;
+                padding-right: 1.75rem;
+            }
+        }
     }
-  }
 
-  div.account-drop-down div.total-value {
-      text-align: right;
-      font-size: 80%;
-      line-height: initial;
-  }
+    div.account-drop-down div.total-value {
+        text-align: right;
+        font-size: 80%;
+        line-height: initial;
+    }
 }
 
 div.header-balance {
@@ -51,7 +51,7 @@ div.header-balance {
         font-weight: bold;
         &:hover {
             background-color: transparent !important;
-        };
+        }
     }
 }
 
@@ -60,14 +60,15 @@ div.account-drop-down {
     .dropdown-divider {
         padding-bottom: 10px;
     }
-  a.button {
-      font-weight: bold;
-      font-size: 90%;
-      background-color: transparent;
-  }
-  a:active.button, a:hover.button {
-    background-color: transparent !important;
-  }
+    a.button {
+        font-weight: bold;
+        font-size: 90%;
+        background-color: transparent;
+    }
+    a:active.button,
+    a:hover.button {
+        background-color: transparent !important;
+    }
 }
 
 div.header-right-menu {
@@ -77,40 +78,41 @@ div.header-right-menu {
 
         > a {
             @include breakpoint(large) {
-              padding-left: 1.25rem;
-              padding-right: 1.25rem;
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
             }
         }
     }
 }
 
 .grp-menu-items-group {
-  flex-flow: row nowrap;
-  display: flex;
-  justify-content: flex-end;
+    flex-flow: row nowrap;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .grp-menu-item {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  > a, .button {
-    padding: 0.5rem;
-    @include breakpoint(large) {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    > a,
+    .button {
+        padding: 0.5rem;
+        @include breakpoint(large) {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        font-size: 1rem;
     }
-    font-size: 1rem;
-  }
 }
 
 .user-icon > a {
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
 }
 
 .lower-case {
-  text-transform: lowercase;
+    text-transform: lowercase;
 }
 
 div.account-drop-down div.dropdown-wrapper {
@@ -141,24 +143,24 @@ div.account-drop-down div.dropdown-wrapper {
 }
 
 div.account-drop-down div.account-dropdown-wrapper {
-  > li {
-    > div.table-cell {
-      height: 64px;
-      padding-left: 10px;
-      padding-right: 10px;
+    > li {
+        > div.table-cell {
+            height: 64px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
     }
-  }
 }
 
 div.account-drop-down div.menu-dropdown-wrapper {
-  > li {
-    width: 64.55px;
+    > li {
+        width: 64.55px;
 
-    > div.table-cell {
-      height: 64px;
-      padding: 23px 5px 24px 5px;
+        > div.table-cell {
+            height: 64px;
+            padding: 23px 5px 24px 5px;
+        }
     }
-  }
 }
 
 ul.dropdown.header-menu {
@@ -184,7 +186,7 @@ ul.dropdown.header-menu {
 
         &.disabled {
             color: grey;
-            cursor:not-allowed;
+            cursor: not-allowed;
             opacity: 50%;
 
             svg > path {
@@ -216,23 +218,30 @@ ul.dropdown.header-menu {
 }
 
 .account-summary {
-  text-align: right;
-  line-height: initial;
-  display: inline-block;
+    text-align: right;
+    line-height: initial;
+    display: inline-block;
 
-  .icon {
-    margin-right: 5px;
-  }
+    .icon {
+        margin-right: 5px;
+    }
 
-  svg path {
-    fill: #fff;
-  }
+    svg path {
+        fill: #fff;
+    }
 }
 
 .account-name .icon {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 .active-account {
     padding-right: 10px;
+}
+
+.header-dropdown-sub-link {
+    font-size: 0.85em;
+    &.enabled:hover {
+        text-decoration: underline;
+    }
 }

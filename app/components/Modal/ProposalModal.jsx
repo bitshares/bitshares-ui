@@ -2,6 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import AccountSelect from "components/Forms/AccountSelect";
@@ -34,7 +35,7 @@ export const finalRequiredPerms = (
     return [finalRequired, finalRequiredKeys];
 };
 
-class ProposalApproveModal extends React.Component {
+class ProposalModal extends React.Component {
     static propTypes = {
         accounts: ChainTypes.ChainAccountsList
     };
@@ -68,44 +69,58 @@ class ProposalApproveModal extends React.Component {
     _onProposalAction(oldProposal) {
         let proposalObject = oldProposal.toJS();
         let {active, key, owner, payee} = this.state;
+        const fee_paying_account = payee || active;
 
-        let proposal = {
-            fee_paying_account: payee || active,
-            proposal: proposalObject.id,
-            active_approvals_to_add: [],
-            active_approvals_to_remove: [],
-            owner_approvals_to_add: [],
-            owner_approvals_to_remove: [],
-            key_approvals_to_add: [],
-            key_approvals_to_remove: []
-        };
+        if (this.props.action === "delete") {
+            const transaction = WalletApi.new_transaction();
+            transaction.add_type_operation("proposal_delete", {
+                fee_paying_account:
+                    fee_paying_account || this.props.account.get("id"),
+                proposal: proposalObject.id,
+                using_owner_authority: false
+            });
+            WalletDb.process_transaction(transaction, null, true);
+        } else {
+            let proposal = {
+                fee_paying_account,
+                proposal: proposalObject.id,
+                active_approvals_to_add: [],
+                active_approvals_to_remove: [],
+                owner_approvals_to_add: [],
+                owner_approvals_to_remove: [],
+                key_approvals_to_add: [],
+                key_approvals_to_remove: []
+            };
 
-        let isAdd = this.props.action === "approve";
+            let isAdd = this.props.action === "approve";
 
-        let neededKeys = [];
+            let neededKeys = [];
 
-        ["active", "owner", "key"].forEach(auth_type => {
-            let value = this.state[auth_type];
-            if (value) {
-                let hasValue =
-                    proposalObject[`available_${auth_type}_approvals`].indexOf(
-                        value
-                    ) !== -1;
-                if ((isAdd && !hasValue) || (!isAdd && hasValue)) {
-                    if (this.props.action === "approve") {
-                        proposal[`${auth_type}_approvals_to_add`] = [value];
-                        if (auth_type === "key") neededKeys.push(value);
-                    } else if (this.props.action === "reject") {
-                        proposal[`${auth_type}_approvals_to_remove`] = [value];
-                        if (auth_type === "key") neededKeys.push(value);
+            ["active", "owner", "key"].forEach(auth_type => {
+                let value = this.state[auth_type];
+                if (value) {
+                    let hasValue =
+                        proposalObject[
+                            `available_${auth_type}_approvals`
+                        ].indexOf(value) !== -1;
+                    if ((isAdd && !hasValue) || (!isAdd && hasValue)) {
+                        if (this.props.action === "approve") {
+                            proposal[`${auth_type}_approvals_to_add`] = [value];
+                            if (auth_type === "key") neededKeys.push(value);
+                        } else if (this.props.action === "reject") {
+                            proposal[`${auth_type}_approvals_to_remove`] = [
+                                value
+                            ];
+                            if (auth_type === "key") neededKeys.push(value);
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        var tr = WalletApi.new_transaction();
-        tr.add_type_operation("proposal_update", proposal);
-        WalletDb.process_transaction(tr, null, true, neededKeys);
+            var tr = WalletApi.new_transaction();
+            tr.add_type_operation("proposal_update", proposal);
+            WalletDb.process_transaction(tr, null, true, neededKeys);
+        }
 
         ZfApi.publish(this.props.modalId, "close");
     }
@@ -173,7 +188,13 @@ class ProposalApproveModal extends React.Component {
             <form className="grid-block vertical full-width-content">
                 <div className="grid-container">
                     <div className="content-block">
-                        <h4>{isAdd ? "Add approval" : "Remove approval"}</h4>
+                        <h4>
+                            <Translate
+                                content={`modal.proposals.actions.${
+                                    this.props.action
+                                }`}
+                            />
+                        </h4>
                     </div>
                     <div
                         className="content-block"
@@ -213,7 +234,8 @@ class ProposalApproveModal extends React.Component {
                             />
                         </div>
 
-                        {accountNames.length || keyNames.length ? (
+                        {this.props.action !== "delete" &&
+                        (accountNames.length || keyNames.length) ? (
                             <div className="full-width-content form-group">
                                 <Translate
                                     content={`modal.proposals.approval_${
@@ -263,7 +285,9 @@ class ProposalApproveModal extends React.Component {
                                 this,
                                 proposal
                             )}
-                            value={isAdd ? "Approve" : "Remove"}
+                            value={counterpart.translate(
+                                `proposal.${this.props.action}`
+                            )}
                         />
                         <div
                             onClick={this.onCancel.bind(this)}
@@ -277,7 +301,7 @@ class ProposalApproveModal extends React.Component {
         );
     }
 }
-ProposalApproveModal = BindToChainState(ProposalApproveModal);
+ProposalModal = BindToChainState(ProposalModal);
 
 class FirstLevel extends React.Component {
     static propTypes = {
@@ -334,7 +358,7 @@ class FirstLevel extends React.Component {
         );
 
         return (
-            <ProposalApproveModal
+            <ProposalModal
                 {...this.props}
                 type={type}
                 accounts={action === "approve" ? finalRequired : available}

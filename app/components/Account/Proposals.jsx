@@ -7,9 +7,7 @@ import ProposedOperation, {
 import BindToChainState from "components/Utility/BindToChainState";
 import ChainTypes from "components/Utility/ChainTypes";
 import utils from "common/utils";
-import ProposalApproveModal, {
-    finalRequiredPerms
-} from "../Modal/ProposalApproveModal";
+import ProposalModal, {finalRequiredPerms} from "../Modal/ProposalModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import {ChainStore} from "bitsharesjs";
 import counterpart from "counterpart";
@@ -242,7 +240,7 @@ class Proposals extends Component {
                                     </span>
                                 </button>
                             )}
-                            <ProposalApproveModal
+                            <ProposalModal
                                 ref={proposalId + "_" + "approve"}
                                 modalId={proposalId + "_" + "approve"}
                                 account={proposal.account.get("id")}
@@ -261,12 +259,29 @@ class Proposals extends Component {
                                     <Translate content="proposal.reject" />
                                 </button>
                             ) : null}
-                            <ProposalApproveModal
+                            <ProposalModal
                                 ref={proposalId + "_" + "reject"}
                                 modalId={proposalId + "_" + "reject"}
                                 account={proposal.account.get("id")}
                                 proposal={proposalId}
                                 action="reject"
+                            />
+                            <button
+                                onClick={this._onApproveModal.bind(
+                                    this,
+                                    proposalId,
+                                    "delete"
+                                )}
+                                className="button primary hollow"
+                            >
+                                <Translate content="proposal.delete" />
+                            </button>
+                            <ProposalModal
+                                ref={proposalId + "_" + "delete"}
+                                modalId={proposalId + "_" + "delete"}
+                                account={proposal.account.get("id")}
+                                proposal={proposalId}
+                                action="delete"
                             />
                         </td>
                     </tr>
