@@ -8,7 +8,7 @@ import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCach
 import CopyButton from "../Utility/CopyButton";
 import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
 import {
     gatewaySelector,
@@ -377,7 +377,10 @@ class DepositModalContent extends DecimalChecker {
                                     />
                                     <div
                                         className="modal__highlight"
-                                        style={{fontSize: "0.9rem", wordBreak: "break-all"}}
+                                        style={{
+                                            fontSize: "0.9rem",
+                                            wordBreak: "break-all"
+                                        }}
                                     >
                                         {depositAddress.address}
                                     </div>
@@ -402,7 +405,10 @@ class DepositModalContent extends DecimalChecker {
                                             unsafe
                                             content="gateway.purchase_notice_memo"
                                         />
-                                        <div className="modal__highlight" style={{wordBreak: "break-all"}}>
+                                        <div
+                                            className="modal__highlight"
+                                            style={{wordBreak: "break-all"}}
+                                        >
                                             {depositAddress.memo}
                                         </div>
                                     </div>
