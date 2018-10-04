@@ -585,7 +585,13 @@ class WithdrawModalNew extends React.Component {
     }
 
     onQuantityChanged(e) {
-        var input = parseFloat(e.target.value.replace(/[^\d.-]/g, "")) || 0;
+        var input = null;
+        if (parseFloat(e.target.value) == e.target.value) {
+            input = e.target.value.trim();
+        } else {
+            input =
+                parseFloat(e.target.value.trim().replace(/[^\d.-]/g, "")) || 0;
+        }
         this.setState({quantity: input});
     }
 
@@ -1047,7 +1053,7 @@ class WithdrawModalNew extends React.Component {
                                 onChange={this.onQuantityChanged.bind(this)}
                                 onFocus={onFocus}
                                 onBlur={onBlur}
-                                onPaste={() => {}}
+                                allowNaN={true}
                                 placeholder={counterpart.translate(
                                     "gateway.limit_withdraw_asset",
                                     {

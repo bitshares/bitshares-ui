@@ -1,14 +1,25 @@
 import React from "react";
 import {Input} from "bitshares-ui-style-guide";
+import PropTypes from "prop-types";
 
 export class DecimalChecker extends React.Component {
-    onPaste(e) {
-        var pasteValue = e.clipboardData.getData("text");
+    static propTypes = {
+        allowNaN: PropTypes.bool
+    };
 
+    static defaultProps = {
+        allowNaN: false
+    };
+
+    onPaste(e) {
+        let allowNaN = this.props.allowNaN;
+        var pasteValue = e.clipboardData.getData("text");
         var decimal = pasteValue.match(/\./g);
         var decimalCount = decimal ? decimal.length : 0;
+
         if (decimalCount > 1) e.preventDefault();
-        if (parseFloat(pasteValue) != pasteValue) e.preventDefault();
+        if (!allowNaN && parseFloat(pasteValue) != pasteValue)
+            e.preventDefault();
     }
 
     onKeyPress(e) {
