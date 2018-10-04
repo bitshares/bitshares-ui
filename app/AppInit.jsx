@@ -75,18 +75,23 @@ class AppInit extends React.Component {
             text += value;
         }
         text = ["~ ", type, ": ", text].join("");
-        if (this.state.extendeLogText.length > maxlogslength) {
+        if (logState.length > maxlogslength) {
             logState.splice(0, 1);
         }
-        if (text.indexOf(logState[this.state.extendeLogText.length])) {
+        if (text.indexOf(logState[logState.length])) {
             logState.push(text);
             this.setState({extendeLogText: logState});
         }
     }
     componentWillMount() {
-        LogsActions.getLogs().then(data => {
-            this.setState({extendeLogText: data});
-        });
+        if (!this.state.extendeLogText.length) {
+            LogsActions.getLogs().then(data => {
+                if (data) {
+                    this.setState({extendeLogText: data});
+                }
+            });
+        }
+
         const thiz = this;
         const saveLog = (type, log) => {
             thiz.saveExtendedLog(type, Array.from(log));
