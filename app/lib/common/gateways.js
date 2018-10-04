@@ -5,6 +5,7 @@
 
 import {
     rudexAPIs,
+    bitsparkAPIs,
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
@@ -36,6 +37,17 @@ export const availableGateways = {
         simpleAssetGateway: true,
         fixedMemo: {prepend: "dex:", append: ""},
         addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    SPARKDEX: {
+        id: "SPARKDEX",
+        name: "SPARKDEX",
+        baseAPI: bitsparkAPIs,
+        isEnabled: allowedGateway("SPARKDEX"),
+        selected: false,
         options: {
             enabled: false,
             selected: false
