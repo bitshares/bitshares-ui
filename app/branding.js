@@ -92,86 +92,38 @@ export function getMyMarketsQuotes() {
             "BTS",
             "CNY",
             "EUR",
-            "GOLD",
-            "KRW",
-            "RUBLE",
-            "SILVER",
+            "BRIDGE.NLG",
             "USD"
         ],
-        bridgeTokens: ["BRIDGE.BCO", "BRIDGE.BTC", "BRIDGE.MONA", "BRIDGE.ZNY"],
-        gdexTokens: ["GDEX.BTC", "GDEX.BTO", "GDEX.EOS", "GDEX.ETH"],
+        bridgeTokens: [
+            "BRIDGE.BCO", 
+            "BRIDGE.BTC",
+            "BRIDGE.LTC",
+            "BRIDGE.NLG
+        ],
         openledgerTokens: [
             "OBITS",
-            "OPEN.BTC",
             "OPEN.DASH",
             "OPEN.DGD",
             "OPEN.DOGE",
             "OPEN.EOS",
             "OPEN.EOSDAC",
             "OPEN.ETH",
-            "OPEN.EURT",
-            "OPEN.GAME",
-            "OPEN.GRC",
-            "OPEN.INCNT",
-            "OPEN.KRM",
             "OPEN.LISK",
-            "OPEN.LTC",
             "OPEN.MAID",
-            "OPEN.MKR",
             "OPEN.NEO",
             "OPEN.OMG",
             "OPEN.SBD",
             "OPEN.STEEM",
-            "OPEN.TUSD",
-            "OPEN.USDT",
             "OPEN.WAVES",
             "OPEN.XMR",
             "OPEN.ZEC",
             "OPEN.ZRX"
         ],
-        rudexTokens: [
-            "PPY",
-            "RUDEX.DCT",
-            "RUDEX.DGB",
-            "RUDEX.GBG",
-            "RUDEX.GOLOS",
-            "RUDEX.KRM",
-            "RUDEX.MUSE",
-            "RUDEX.SBD",
-            "RUDEX.STEEM",
-            "RUDEX.TT"
-        ],
-        winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
-        xbtsxTokens: [
-            "XBTSX.STH",
-            "XBTSX.POST",
-            "XBTSX.DOGE",
-            "XBTSX.BTC",
-            "XBTSX.LTC",
-            "XBTSX.DASH",
-            "XBTSX.KEC",
-            "XBTSX.BCH",
-            "XBTSX.BTG",
-            "XBTSX.XSPEC",
-            "XBTSX.NVC"
-        ],
         otherTokens: [
-            "BKT",
-            "BLOCKPAY",
-            "BTWTY",
-            "TWENTIX",
-            "BTSR",
-            "CADASTRAL",
             "CVCOIN",
-            "HEMPSWEET",
             "HERO",
             "HERTZ",
-            "ICOO",
-            "IOU.CNY",
-            "KAPITAL",
-            "KEXCOIN",
-            "OCT",
-            "SMOKE",
             "STEALTH",
             "YOYOW",
             "ZEPH"
@@ -306,7 +258,7 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX"].indexOf(gateway) >=
+        ["OPEN", "BRIDGE"].indexOf(gateway) >=
         0
     );
 }
