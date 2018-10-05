@@ -99,7 +99,7 @@ export function getMyMarketsQuotes() {
             "BRIDGE.BCO", 
             "BRIDGE.BTC",
             "BRIDGE.LTC",
-            "BRIDGE.NLG
+            "BRIDGE.NLG"
         ],
         openledgerTokens: [
             "OBITS",
