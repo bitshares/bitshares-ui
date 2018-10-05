@@ -122,9 +122,14 @@ export function getMyMarketsQuotes() {
             "OPEN.XMR",
             "OPEN.ZEC",
             "OPEN.ZRX"
-        ]
-    }
-}
+        ]    
+    };
+     let allTokens = [];
+     for (let type in tokens) {
+         allTokens = allTokens.concat(tokens[type]);
+     }
+     return allTokens;
+ }
 
 /**
  * The featured markets displayed on the landing page of the UI
