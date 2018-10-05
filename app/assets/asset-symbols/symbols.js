@@ -78,3 +78,10 @@ require("file-loader?name=asset-symbols/[name].png!./ltc.png");
 require("file-loader?name=asset-symbols/[name].png!./post.png");
 require("file-loader?name=asset-symbols/[name].png!./bch.png");
 require("file-loader?name=asset-symbols/[name].png!./btg.png");
+
+//Tatch
+require("file-loader?name=asset-symbols/[name].png!./tatchcoin.png");
+require("file-loader?name=asset-symbols/[name].png!./tclgulden.png");
+require("file-loader?name=asset-symbols/[name].png!./tclsilver.png");
+
+
