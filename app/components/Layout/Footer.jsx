@@ -438,17 +438,10 @@ class Footer extends React.Component {
                                         wallet_name={getWalletName()}
                                     />
                                     {__GIT_BRANCH__ === "staging" ? (
-                                        <a
-                                            href={`https://github.com/bitshares/bitshares-ui/commit/${version.trim()}`}
-                                            className="version"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            {version}
-                                        </a>
+                                        
                                     ) : (
                                         <span className="version">
-                                            Tatch Cloud Walle - 0.Beta.2
+                                            Tatch Cloud Wallet - 0.Beta.2
                                         </span>
                                     )}
                                 </span>
