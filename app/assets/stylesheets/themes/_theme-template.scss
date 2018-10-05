@@ -2249,6 +2249,11 @@
             .option-border {
                 border-bottom-color: $separator-line;
             }
+
+            div.inactive-left-block,
+            div.inactive-right-block {
+                background-color: darken($modal-bg-color, 10);
+            }
         }
 
         .plate.inactive-model-block {
@@ -2263,12 +2268,33 @@
             border-color: $button-bg-color;
             background-color: $button-bg-color;
         }
+
         span.checkbox-active {
             border-color: $button-bg-color;
             background-color: $button-bg-color;
 
             svg path {
                 fill: $bg-color;
+            }
+        }
+
+        @include breakpoint(small only) {
+            .plate {
+                background-color: darken($modal-bg-color, 10);
+
+                .header-block,
+                .wallet-block,
+                .account-block,
+                .wallet-block-registration,
+                .account-block-registration {
+                    background-color: $modal-bg-color;
+
+                    .overflow-bg-block {
+                        .content {
+                            background-color: $modal-bg-color;
+                        }
+                    }
+                }
             }
         }
     }
