@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
+        return ["BTS", "USD", "CNY", "BTC", "EUR", "BRIDGE.NLG"];
     else if (chainId === "39f5e2ed") return ["TEST"];
 }
 
@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BTS", "USD", "CNY"];
+    return ["BTC", "ETH", "BRIDGE.NLG", "USD", "EUR"];
 }
 
 /**
@@ -92,7 +92,6 @@ export function getMyMarketsQuotes() {
             "BTS",
             "CNY",
             "EUR",
-            "BRIDGE.NLG",
             "USD"
         ],
         bridgeTokens: [
