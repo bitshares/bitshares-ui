@@ -243,15 +243,15 @@ class DepositModalContent extends DecimalChecker {
             !depositAddress.error;
 
         let minDeposit = 0;
-        if (backingAsset) {
-            if (backingAsset.minAmount && backingAsset.precision) {
+        if (!!backingAsset) {
+            if (!!backingAsset.minAmount && !!backingAsset.precision) {
                 minDeposit = utils.format_number(
                     backingAsset.minAmount /
                         utils.get_asset_precision(backingAsset.precision),
                     backingAsset.precision,
                     false
                 );
-            } else if (backingAsset.gateFee) {
+            } else if (!!backingAsset.gateFee) {
                 minDeposit = backingAsset.gateFee * 2;
             }
         }
