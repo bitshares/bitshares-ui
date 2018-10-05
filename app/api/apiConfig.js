@@ -682,7 +682,6 @@ export const settingsAPIs = {
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
-
         // Testnet
         {
             url: "wss://node.testnet.bitshares.eu",
