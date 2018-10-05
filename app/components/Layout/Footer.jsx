@@ -433,13 +433,6 @@ class Footer extends React.Component {
                                     />
                                 )}
                                 <span style={updateStyles}>
-                                    <Translate
-                                        content="footer.title"
-                                        wallet_name={getWalletName()}
-                                    />
-                                    {__GIT_BRANCH__ === "staging" ? (
-                                        
-                                    ) : (
                                         <span className="version">
                                             Tatch Cloud Wallet - 0.Beta.2
                                         </span>
