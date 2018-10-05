@@ -87,5 +87,4 @@ require("file-loader?name=asset-symbols/[name].png!./tclsilver.png");
 //Addons
 require("file-loader?name=asset-symbols/[name].png!./bco.png");
 require("file-loader?name=asset-symbols/[name].png!./wsp.png");
-require("file-loader?name=asset-symbols/[name].png!./pvix.png");
-
+require("file-loader?name=asset-symbols/[name].png!./pvix.png")
