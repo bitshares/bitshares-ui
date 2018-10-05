@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BTC", "ETH", "BRIDGE.NLG", "USD", "EUR"];
+    return ["BRIDGE.BTC", "OPEN.ETH", "BRIDGE.NLG", "BitUSD", "BitEUR"];
 }
 
 /**
