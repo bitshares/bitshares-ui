@@ -123,13 +123,7 @@ export function getMyMarketsQuotes() {
             "OPEN.ZEC",
             "OPEN.ZRX"
         ]
-    };
-
-    let allTokens = [];
-    for (let type in tokens) {
-        allTokens = allTokens.concat(tokens[type]);
     }
-    return allTokens;
 }
 
 /**
