@@ -140,12 +140,12 @@ export function getMyMarketsQuotes() {
 export function getFeaturedMarkets(quotes = []) {
     return [
         ["BTS","BRIDGE.BTC"],	
-	    ["EUR","BRIDGE.BTC"],
+	["EUR","BRIDGE.BTC"],
     	["USD","BRIDGE.BTC"],
     	["CNY","BRIDGE.BTC"],
-	    ["BRIDGE.BCO","BRIDGE.BTC"],
+	["BRIDGE.BCO","BRIDGE.BTC"],
     	["BRIDGE.LTC","BRIDGE.BTC"],
-	    ["BRIDGE.NLG","BRIDGE.BTC"],
+	["BRIDGE.NLG","BRIDGE.BTC"],
 	["TATCHCOIN","BRIDGE.BTC"],
 	["TCLGULDEN","BRIDGE.BTC"],
 	["TCLSILVER","BRIDGE.BTC"],
@@ -282,6 +282,7 @@ export function getFeaturedMarkets(quotes = []) {
 	["OPEN.ZEC","OPEN.ETH"],
 	["OPEN.ZRX","OPEN.ETH"]
     ]
+}
 
 /**
  * Recognized namespaces of assets
