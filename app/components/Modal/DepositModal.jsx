@@ -243,7 +243,7 @@ class DepositModalContent extends DecimalChecker {
             !depositAddress.error;
 
         let minDeposit =
-            !backingAsset || !backingAsset.gateFee
+            !backingAsset
                 ? 0
                 : backingAsset.gateFee
                     ? backingAsset.gateFee * 2
