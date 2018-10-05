@@ -97,7 +97,10 @@ export function getMyMarketsQuotes() {
             "BRIDGE.BCO", 
             "BRIDGE.BTC",
             "BRIDGE.LTC",
-            "BRIDGE.NLG"
+            "BRIDGE.NLG",
+	    "BRIDGE.WSP",
+	    "BRIDGE.PIVX"
+
         ],
         tatchTokens: [
             "TATCHCOIN",
