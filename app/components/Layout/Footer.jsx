@@ -448,7 +448,7 @@ class Footer extends React.Component {
                                         </a>
                                     ) : (
                                         <span className="version">
-                                            {version}
+                                            Tatch Cloud Walle - 0.Beta.2
                                         </span>
                                     )}
                                 </span>
