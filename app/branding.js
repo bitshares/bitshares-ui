@@ -301,7 +301,9 @@ export function getAssetNamespaces() {
  */
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
-    return [];
+    return [
+	    "BRIDGE."
+    ];
 }
 
 /**
