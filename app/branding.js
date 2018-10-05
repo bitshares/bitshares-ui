@@ -282,7 +282,15 @@ export function getFeaturedMarkets(quotes = []) {
 	["OPEN.WAVES","OPEN.ETH"],
 	["OPEN.XMR","OPEN.ETH"],
 	["OPEN.ZEC","OPEN.ETH"],
-	["OPEN.ZRX","OPEN.ETH"]
+	["OPEN.ZRX","OPEN.ETH"],
+	["BRIDGE.PIVX","BRIDGE.BTC"],
+	["BRIDGE.WSP","BRIDGE.BTC"],
+	["BRIDGE.PIVX","BRIDGE.NLG"],
+	["BRIDGE.WSP","BRIDGE.NLG"],
+	["BRIDGE.PIVX","EUR"],    
+	["BRIDGE.WSP","EUR"],  
+	["BRIDGE.PIVX","OPEN.ETH"],
+	["BRIDGE.WSP","OPEN.ETH"]   
     ]
 }
 
