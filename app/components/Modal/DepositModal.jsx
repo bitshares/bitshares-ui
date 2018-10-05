@@ -242,17 +242,19 @@ class DepositModalContent extends DecimalChecker {
             depositAddress !== "unknown" &&
             !depositAddress.error;
 
-        let minDeposit =
-            !backingAsset || !backingAsset.gateFee
-                ? 0
-                : backingAsset.gateFee
-                    ? backingAsset.gateFee * 2
-                    : utils.format_number(
-                          backingAsset.minAmount /
-                              utils.get_asset_precision(backingAsset.precision),
-                          backingAsset.precision,
-                          false
-                      );
+        let minDeposit = 0;
+        if (backingAsset) {
+            if (backingAsset.minAmount && backingAsset.precision) {
+                minDeposit = utils.format_number(
+                    backingAsset.minAmount /
+                        utils.get_asset_precision(backingAsset.precision),
+                    backingAsset.precision,
+                    false
+                );
+            } else if (backingAsset.gateFee) {
+                minDeposit = backingAsset.gateFee * 2;
+            }
+        }
         //let maxDeposit = backingAsset.maxAmount ? backingAsset.maxAmount : null;
 
         const QR = isAddressValid ? (
