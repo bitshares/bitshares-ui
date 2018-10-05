@@ -436,7 +436,6 @@ class Footer extends React.Component {
                                         <span className="version">
                                             Tatch Cloud Wallet - 0.Beta.2
                                         </span>
-                                    )}
                                 </span>
 
                                 {state.newVersion && (
