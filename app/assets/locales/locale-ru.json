@@ -881,6 +881,10 @@
         "status": "Статус",
         "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"OpenLedger TRANSFER SERVICE\", пожалуйста, обращайтесь в Openledger:",
         "support_gdex": "Для получения поддержки, пожалуйста, свяжитесь с GDEX",
+        "bitspark": {
+            "support_block":
+                "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
+        },
         "symbol": "Символ",
         "time": "Время",
         "title": "Пополнение и Вывод",

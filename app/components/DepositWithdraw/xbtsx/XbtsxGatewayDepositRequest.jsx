@@ -13,9 +13,11 @@ import {requestDepositAddress} from "lib/common/XbtsxMethods";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "lib/common/utils";
+import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 class XbtsxGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -49,25 +51,6 @@ class XbtsxGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
-        this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
-    }
-
-    _copy(e) {
-        try {
-            if (this.state.clipboardText)
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-            else
-                e.clipboardData.setData(
-                    "text/plain",
-                    counterpart
-                        .translate("gateway.use_copy_button")
-                        .toUpperCase()
-                );
-            e.preventDefault();
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     _getDepositObject() {
@@ -85,10 +68,6 @@ class XbtsxGatewayDepositRequest extends React.Component {
     //
     //     // let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
     // }
-
-    componentWillUnmount() {
-        document.removeEventListener("copy", this._copy);
-    }
 
     addDepositAddress(receive_address) {
         let account_name = this.props.account.get("name");
@@ -117,16 +96,6 @@ class XbtsxGatewayDepositRequest extends React.Component {
 
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-    toClipboard(clipboardText) {
-        try {
-            this.setState({clipboardText}, () => {
-                document.execCommand("copy");
-            });
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     render() {
@@ -318,7 +287,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -356,7 +326,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="left-label">
                             <b>
@@ -377,8 +348,17 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                     textTransform: "uppercase"
                                                 }}
                                                 content="gateway.address"
-                                            />:{" "}
-                                            <b>{deposit_address_fragment}</b>
+                                            />
+                                            :{" "}
+                                            <DisableCopyText
+                                                replaceCopyText={counterpart.translate(
+                                                    "gateway.use_copy_button"
+                                                )}
+                                            >
+                                                <b>
+                                                    {deposit_address_fragment}
+                                                </b>
+                                            </DisableCopyText>
                                         </td>
                                     </tr>
                                     {deposit_memo ? (
@@ -390,7 +370,15 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                                             "uppercase"
                                                     }}
                                                     content="gateway.memo"
-                                                />: <b>{deposit_memo}</b>
+                                                />
+                                                :{" "}
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    <b> {deposit_memo} </b>
+                                                </DisableCopyText>
                                             </td>
                                         </tr>
                                     ) : null}
@@ -401,26 +389,18 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                 style={{paddingTop: 10}}
                             >
                                 {deposit_address_fragment ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_address" />
-                                    </div>
+                                    <CopyToClipboard text={clipboardText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_address" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {memoText ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            memoText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_memo" />
-                                    </div>
+                                    <CopyToClipboard text={memoText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_memo" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {showPayFromWallet ? (
                                     <a className="button" href={payFromWallet}>
@@ -514,7 +494,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -549,7 +530,8 @@ class XbtsxGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button

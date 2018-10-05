@@ -881,6 +881,10 @@
         "status": "Status",
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
+        "bitspark": {
+            "support_block":
+                "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "symbol": "Symbol",
         "time": "Time",
         "title": "Deposit & Withdraw",
