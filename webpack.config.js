@@ -333,6 +333,9 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
+                    exclude: [
+                        path.resolve(root_dir, "app/assets/model-type-images")
+                    ],
                     use: [
                         {
                             loader: "svg-inline-loader"

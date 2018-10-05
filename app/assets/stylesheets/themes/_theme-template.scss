@@ -54,7 +54,12 @@
     $explorer--witnesses--info-border,
     $explorer--witnesses--info-table-title-color,
     $explorer--witnesses--info-table-text-color,
-    $explorer--assets--bg
+    $explorer--assets--bg,
+    $new-negative-color,
+    $new-positive-color,
+    $separator-line,
+    $medium-color,
+    $dark-help-text
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
@@ -2178,7 +2183,123 @@
             margin-left: 0; // center language select for width icon takes
         }
     }
+
+    .new-layout {
+        .attention-note {
+            background-color: rgba($medium-color, 0.06);
+        }
+
+        .attention-text {
+            color: $medium-color;
+        }
+
+        .button-primary {
+            background-color: $button-bg-color;
+            color: $light-text-color;
+            &:hover {
+                background-color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                background-color: lighten($button-bg-color, 15%) !important;
+            }
+        }
+
+        .button-secondary {
+            background-color: initial;
+            color: $button-bg-color;
+            border-color: $button-bg-color;
+            &:hover {
+                border-color: lighten($button-bg-color, 10%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                border-color: lighten($button-bg-color, 15%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+        }
+
+        .registration-title {
+            color: $light-text-color;
+        }
+
+        .selection-block {
+            .selection-title,
+            .choice-model,
+            .model-option {
+                color: $light-text-color;
+            }
+
+            .recommended {
+                background-color: $new-positive-color;
+                color: $dark-help-text;
+            }
+
+            .model-option-value {
+                color: $new-positive-color;
+            }
+
+            .account-option-value {
+                color: $new-negative-color;
+            }
+
+            .account-security {
+                color: $medium-color;
+            }
+
+            .option-border {
+                border-bottom-color: $separator-line;
+            }
+
+            div.inactive-left-block,
+            div.inactive-right-block {
+                background-color: darken($modal-bg-color, 10);
+            }
+        }
+
+        .plate.inactive-model-block {
+            background-color: transparentize($modal-bg-color, 0.6);
+        }
+
+        .plate {
+            background-color: $modal-bg-color;
+        }
+
+        span.checkbox {
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
+        }
+
+        span.checkbox-active {
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
+
+            svg path {
+                fill: $bg-color;
+            }
+        }
+
+        @include breakpoint(small only) {
+            .plate {
+                background-color: darken($modal-bg-color, 10);
+
+                .header-block,
+                .wallet-block,
+                .account-block,
+                .wallet-block-registration,
+                .account-block-registration {
+                    background-color: $modal-bg-color;
+
+                    .overflow-bg-block {
+                        .content {
+                            background-color: $modal-bg-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
 .rc-time-picker-panel {
     z-index: 9999 !important;
 }
