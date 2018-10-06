@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BRIDGE.NLG", "BRIDGE.BTC"];
+    return ["BRIDGE.BTC", "BRIDGE.NLG"];
 }
 
 /**
