@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BRIDGE.NLG", "BRIDGE.BTC", "OPEN.ETH"];
+    return ["BRIDGE.NLG", "BRIDGE.BTC"];
 }
 
 /**
@@ -89,9 +89,9 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTS",
-            "CNY",
             "EUR",
-            "USD"
+            "USD",
+            "CNY"
         ],
         bridgeTokens: [
             "BRIDGE.BCO", 
@@ -99,6 +99,7 @@ export function getMyMarketsQuotes() {
             "BRIDGE.LTC",
             "BRIDGE.NLG",
 	    "BRIDGE.WSP",
+	    "BRIDGE.RPI",
 	    "BRIDGE.PIVX"
 
         ],
@@ -109,16 +110,11 @@ export function getMyMarketsQuotes() {
          ],
         openledgerTokens: [
             "OBITS",
-            "OPEN.DASH",
-            "OPEN.DGD",
             "OPEN.DOGE",
             "OPEN.EOS",
-            "OPEN.EOSDAC",
             "OPEN.ETH",
             "OPEN.LISK",
-            "OPEN.MAID",
             "OPEN.NEO",
-            "OPEN.OMG",
             "OPEN.SBD",
             "OPEN.STEEM",
             "OPEN.WAVES",
@@ -151,17 +147,12 @@ export function getFeaturedMarkets(quotes = []) {
 	["TATCHCOIN","BRIDGE.BTC"],
 	["TCLGULDEN","BRIDGE.BTC"],
 	["TCLSILVER","BRIDGE.BTC"],
-	["OBITS","BRIDGE.BTC"],
-	["OPEN.DASH","BRIDGE.BTC"],
-	["OPEN.DGD","BRIDGE.BTC"],
+	["OBITS","BRIDGE.BTC"]
 	["OPEN.DOGE","BRIDGE.BTC"],
 	["OPEN.EOS","BRIDGE.BTC"],
-	["OPEN.EOSDAC","BRIDGE.BTC"],
 	["OPEN.ETH","BRIDGE.BTC"],
 	["OPEN.LISK","BRIDGE.BTC"],
-	["OPEN.MAID","BRIDGE.BTC"],
 	["OPEN.NEO","BRIDGE.BTC"],
-	["OPEN.OMG","BRIDGE.BTC"],
 	["OPEN.SBD","BRIDGE.BTC"],
 	["OPEN.STEEM","BRIDGE.BTC"],
 	["OPEN.WAVES","BRIDGE.BTC"],
@@ -186,16 +177,11 @@ export function getFeaturedMarkets(quotes = []) {
 	["TCLGULDEN","BRIDGE.NLG"],
 	["TCLSILVER","BRIDGE.NLG"],
 	["OBITS","BRIDGE.NLG"],
-	["OPEN.DASH","BRIDGE.NLG"],
-	["OPEN.DGD","BRIDGE.NLG"],
 	["OPEN.DOGE","BRIDGE.NLG"],
 	["OPEN.EOS","BRIDGE.NLG"],
-	["OPEN.EOSDAC","BRIDGE.NLG"],
 	["OPEN.ETH","BRIDGE.NLG"],
 	["OPEN.LISK","BRIDGE.NLG"],
-	["OPEN.MAID","BRIDGE.NLG"],
 	["OPEN.NEO","BRIDGE.NLG"],
-	["OPEN.OMG","BRIDGE.NLG"],
 	["OPEN.SBD","BRIDGE.NLG"],
 	["OPEN.STEEM","BRIDGE.NLG"],
 	["OPEN.WAVES","BRIDGE.NLG"],
@@ -213,16 +199,12 @@ export function getFeaturedMarkets(quotes = []) {
 	["TCLGULDEN","EUR"],
 	["TCLSILVER","EUR"],
 	["OBITS","EUR"],
-	["OPEN.DASH","EUR"],
-	["OPEN.DGD","EUR"],
 	["OPEN.DOGE","EUR"],
 	["OPEN.EOS","EUR"],
-	["OPEN.EOSDAC","EUR"],
 	["OPEN.ETH","EUR"],
 	["OPEN.LISK","EUR"],
 	["OPEN.MAID","EUR"],
 	["OPEN.NEO","EUR"],
-	["OPEN.OMG","EUR"],
 	["OPEN.SBD","EUR"],
 	["OPEN.STEEM","EUR"],
 	["OPEN.WAVES","EUR"],
@@ -240,57 +222,18 @@ export function getFeaturedMarkets(quotes = []) {
 	["TCLGULDEN","USD"],
 	["TCLSILVER","USD"],
 	["OBITS","USD"],
-	["OPEN.DASH","USD"],
-	["OPEN.DGD","USD"],
 	["OPEN.DOGE","USD"],
 	["OPEN.EOS","USD"],
-	["OPEN.EOSDAC","USD"],
 	["OPEN.ETH","USD"],
 	["OPEN.LISK","USD"],
-	["OPEN.MAID","USD"],
 	["OPEN.NEO","USD"],
-	["OPEN.OMG","USD"],
 	["OPEN.SBD","USD"],
 	["OPEN.STEEM","USD"],
 	["OPEN.WAVES","USD"],
 	["OPEN.XMR","USD"],
 	["OPEN.ZEC","USD"],
-	["OPEN.ZRX","USD"],
-	["BRIDGE.BTC","OPEN.ETH"],
-	["BTS","OPEN.ETH"],
-	["EUR","OPEN.ETH"],
-	["USD","OPEN.ETH"],
-	["CNY","OPEN.ETH"],
-	["BRIDGE.BCO","OPEN.ETH"],
-	["BRIDGE.LTC","OPEN.ETH"],
-	["BRIDGE.NLG","OPEN.ETH"],
-	["TATCHCOIN","OPEN.ETH"],
-	["TCLGULDEN","OPEN.ETH"],
-	["TCLSILVER","OPEN.ETH"],
-	["OBITS","OPEN.ETH"],
-	["OPEN.DASH","OPEN.ETH"],
-	["OPEN.DGD","OPEN.ETH"],
-	["OPEN.DOGE","OPEN.ETH"],
-	["OPEN.EOS","OPEN.ETH"],
-	["OPEN.EOSDAC","OPEN.ETH"],
-	["OPEN.LISK","OPEN.ETH"],
-	["OPEN.MAID","OPEN.ETH"],
-	["OPEN.NEO","OPEN.ETH"],
-	["OPEN.OMG","OPEN.ETH"],
-	["OPEN.SBD","OPEN.ETH"],
-	["OPEN.STEEM","OPEN.ETH"],
-	["OPEN.WAVES","OPEN.ETH"],
-	["OPEN.XMR","OPEN.ETH"],
-	["OPEN.ZEC","OPEN.ETH"],
-	["OPEN.ZRX","OPEN.ETH"],
-	["BRIDGE.PIVX","BRIDGE.BTC"],
-	["BRIDGE.WSP","BRIDGE.BTC"],
-	["BRIDGE.PIVX","BRIDGE.NLG"],
-	["BRIDGE.WSP","BRIDGE.NLG"],
-	["BRIDGE.PIVX","EUR"],    
-	["BRIDGE.WSP","EUR"],  
-	["BRIDGE.PIVX","OPEN.ETH"],
-	["BRIDGE.WSP","OPEN.ETH"]   
+	["OPEN.ZRX","USD"]
+	 
     ]
 }
 
