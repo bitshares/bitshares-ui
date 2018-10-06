@@ -106,6 +106,9 @@
         border-bottom: 0 !important;
         max-width: 100% !important;
     }
+    .modal-separator {
+        border-color: $secondary-text-color;
+    }
     .positive {
         color: $positive-color !important;
     }

@@ -22,6 +22,25 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
+import {Button, Form, Input} from "bitshares-ui-style-guide";
+
+const EqualWidthContainer = ({children}) => (
+    <div
+        style={{
+            display: "flex",
+            justifyContent: "center"
+        }}
+    >
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: children.map(() => "1fr").join(" ")
+            }}
+        >
+            {children}
+        </div>
+    </div>
+);
 
 class SendModal extends React.Component {
     constructor(props) {
@@ -402,6 +421,14 @@ class SendModal extends React.Component {
         this.setState({to_name, error: null});
     }
 
+    fromChanged(from_name) {
+        if (this.state.propose) this.setState({from_name});
+    }
+
+    onFromAccountChanged(from_account) {
+        this.setState({from_account});
+    }
+
     onToAccountChanged(to_account) {
         this.setState({to_account, error: null});
     }
@@ -462,7 +489,7 @@ class SendModal extends React.Component {
         }
     }
 
-    onPropose(e) {
+    onPropose = () => {
         let {
             propose,
             orig_account,
@@ -471,19 +498,16 @@ class SendModal extends React.Component {
             from_account,
             from_name
         } = this.state;
-        e.preventDefault();
-
-        if (!to_account || !to_name || to_name == from_name) return;
 
         // Store Original Account
-        if (!propose && !orig_account) {
+        if (!propose) {
             this.setState({orig_account: from_account});
         }
 
         // ReStore Original Account
         if (propose) {
-            to_account = orig_account;
-            to_name = orig_account.get("name");
+            from_account = orig_account;
+            from_name = orig_account.get("name");
         }
 
         // toggle switch
@@ -491,13 +515,11 @@ class SendModal extends React.Component {
 
         this.setState({
             propose,
-            propose_account: null,
-            from_account: to_account,
-            from_name: to_name,
-            to_account: from_account,
-            to_name: from_name
+            propose_account: propose ? from_account : null,
+            from_account: propose ? null : from_account,
+            from_name: propose ? "" : from_name
         });
-    }
+    };
 
     onProposeAccount(propose_account) {
         this.setState({propose_account});
@@ -609,8 +631,8 @@ class SendModal extends React.Component {
             !asset ||
             from_error ||
             propose_incomplete ||
-            balanceError ||
-            (!AccountStore.isMyAccount(from_account) && !propose);
+            balanceError;
+        const isSubmitValid = !isSendNotValid;
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
@@ -625,58 +647,75 @@ class SendModal extends React.Component {
                     onClose={this.onClose.bind(this, false)}
                 >
                     <div className="grid-block vertical no-overflow">
+                        <div className="content-block">
+                            <EqualWidthContainer>
+                                <Button
+                                    type={propose ? "ghost" : "primary"}
+                                    onClick={this.onPropose}
+                                >
+                                    <Translate content="transfer.send" />
+                                </Button>
+                                <Button
+                                    type={propose ? "primary" : "ghost"}
+                                    onClick={this.onPropose}
+                                >
+                                    <Translate content="propose" />
+                                </Button>
+                            </EqualWidthContainer>
+                        </div>
                         <div
                             className="content-block"
-                            style={{textAlign: "center", textTransform: "none"}}
+                            style={{textAlign: "center"}}
                         >
-                            {!propose ? (
-                                <div
-                                    style={{
-                                        fontSize: "1.8rem",
-                                        fontFamily:
-                                            "Roboto-Medium, arial, sans-serif"
-                                    }}
-                                >
-                                    <Translate
-                                        unsafe
-                                        content="modal.send.header"
-                                        with={{fromName: from_name}}
-                                    />
-                                </div>
-                            ) : (
-                                <div
-                                    style={{
-                                        fontSize: "1.8rem",
-                                        fontFamily:
-                                            "Roboto-Medium, arial, sans-serif"
-                                    }}
-                                >
-                                    <Translate
-                                        unsafe
-                                        content="modal.send.header_propose"
-                                        with={{fromName: from_name}}
-                                    />
-                                </div>
-                            )}
-                            <div
-                                style={{
-                                    marginTop: 10,
-                                    fontSize: "0.9rem",
-                                    marginLeft: "auto",
-                                    marginRight: "auto"
-                                }}
-                            >
-                                <p>
-                                    <Translate
-                                        content="transfer.header_subheader"
-                                        wallet_name={getWalletName()}
-                                    />
-                                </p>
-                            </div>
+                            <Translate
+                                content={
+                                    propose
+                                        ? "transfer.header_subheader_propose"
+                                        : "transfer.header_subheader"
+                                }
+                            />
                         </div>
                         {this.state.open ? (
                             <form noValidate>
                                 <div>
+                                    {!!propose && (
+                                        <React.Fragment>
+                                            <div className="content-block">
+                                                <AccountSelector
+                                                    label="transfer.by"
+                                                    accountName={
+                                                        this.props
+                                                            .currentAccount
+                                                    }
+                                                    account={
+                                                        this.props
+                                                            .currentAccount
+                                                    }
+                                                    size={60}
+                                                    tabIndex={tabIndex++}
+                                                    hideImage
+                                                />
+                                            </div>
+                                            <div className="modal-separator" />
+                                        </React.Fragment>
+                                    )}
+                                    <div className="content-block">
+                                        <AccountSelector
+                                            label="transfer.from"
+                                            accountName={from_name}
+                                            account={from_account}
+                                            onChange={this.fromChanged.bind(
+                                                this
+                                            )}
+                                            onAccountChanged={this.onFromAccountChanged.bind(
+                                                this
+                                            )}
+                                            size={60}
+                                            typeahead={propose || undefined}
+                                            tabIndex={tabIndex++}
+                                            hideImage
+                                        />
+                                    </div>
                                     {/* T O */}
                                     <div className="content-block">
                                         <AccountSelector
@@ -797,21 +836,6 @@ class SendModal extends React.Component {
                                         </div>
                                     </div>
 
-                                    {propose ? (
-                                        <div className="content-block transfer-input">
-                                            <label className="left-label">
-                                                <Translate content="account.propose_from" />
-                                            </label>
-                                            <AccountSelect
-                                                account_names={AccountStore.getMyAccounts()}
-                                                onChange={this.onProposeAccount.bind(
-                                                    this
-                                                )}
-                                                tabIndex={tabIndex++}
-                                            />
-                                        </div>
-                                    ) : null}
-
                                     <div className="content-block transfer-input">
                                         <div className="no-margin no-padding">
                                             <div
@@ -826,13 +850,13 @@ class SendModal extends React.Component {
                                                         className={classnames(
                                                             "button primary",
                                                             {
-                                                                disabled: isSendNotValid
+                                                                disabled: !isSubmitValid
                                                             }
                                                         )}
                                                         type="submit"
                                                         value="Submit"
                                                         onClick={
-                                                            !isSendNotValid
+                                                            isSubmitValid
                                                                 ? this.onSubmit.bind(
                                                                       this
                                                                   )
