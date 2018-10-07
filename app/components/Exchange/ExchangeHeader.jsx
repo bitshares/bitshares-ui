@@ -146,7 +146,7 @@ export default class ExchangeHeader extends React.Component {
                 ? quoteAsset
                 : quoteId == "1.3.0"
                     ? baseAsset
-                    : null;
+                    : quoteAsset;
 
         if (settleAsset && feedPrice) {
             let offset_percent = settleAsset
@@ -341,7 +341,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.feed_price"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
