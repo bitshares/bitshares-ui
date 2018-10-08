@@ -22,7 +22,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
-import {Button, Form, Input} from "bitshares-ui-style-guide";
+import {Button} from "bitshares-ui-style-guide";
 
 const EqualWidthContainer = ({children}) => (
     <div
@@ -625,14 +625,15 @@ class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isSendNotValid =
+        const isSubmitNotValid =
             !from_account ||
+            !to_account ||
             !isAmountValid ||
             !asset ||
             from_error ||
             propose_incomplete ||
-            balanceError;
-        const isSubmitValid = !isSendNotValid;
+            balanceError ||
+            from_account.get("id") == to_account.get("id");
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
@@ -673,6 +674,7 @@ class SendModal extends React.Component {
                                         ? "transfer.header_subheader_propose"
                                         : "transfer.header_subheader"
                                 }
+                                wallet_name={getWalletName()}
                             />
                         </div>
                         {this.state.open ? (
@@ -845,55 +847,33 @@ class SendModal extends React.Component {
                                                     paddingRight: "10px"
                                                 }}
                                             >
-                                                {propose ? (
-                                                    <button
-                                                        className={classnames(
-                                                            "button primary",
-                                                            {
-                                                                disabled: !isSubmitValid
-                                                            }
-                                                        )}
-                                                        type="submit"
-                                                        value="Submit"
-                                                        onClick={
-                                                            isSubmitValid
-                                                                ? this.onSubmit.bind(
-                                                                      this
-                                                                  )
-                                                                : null
+                                                <button
+                                                    className={classnames(
+                                                        "button primary",
+                                                        {
+                                                            disabled: isSubmitNotValid
                                                         }
-                                                        tabIndex={tabIndex++}
-                                                    >
-                                                        <Translate
-                                                            component="span"
-                                                            content="propose"
-                                                        />
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className={classnames(
-                                                            "button primary",
-                                                            {
-                                                                disabled: isSendNotValid
-                                                            }
-                                                        )}
-                                                        type="submit"
-                                                        value="Submit"
-                                                        onClick={
-                                                            !isSendNotValid
-                                                                ? this.onSubmit.bind(
-                                                                      this
-                                                                  )
-                                                                : null
+                                                    )}
+                                                    type="submit"
+                                                    value="Submit"
+                                                    onClick={
+                                                        isSubmitNotValid
+                                                            ? null
+                                                            : this.onSubmit.bind(
+                                                                this
+                                                            )
+                                                    }
+                                                    tabIndex={tabIndex++}
+                                                >
+                                                    <Translate
+                                                        component="span"
+                                                        content={
+                                                            propose
+                                                                ? "propose"
+                                                                : "transfer.send"
                                                         }
-                                                        tabIndex={tabIndex++}
-                                                    >
-                                                        <Translate
-                                                            component="span"
-                                                            content="transfer.send"
-                                                        />
-                                                    </button>
-                                                )}
+                                                    />
+                                                </button>
                                             </div>
                                             <div
                                                 className="small-6"
