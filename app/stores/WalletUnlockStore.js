@@ -3,6 +3,10 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import SettingsActions from "actions/SettingsActions";
 import WalletDb from "stores/WalletDb";
 import ls from "common/localStorage";
+import {
+    setLocalStorageType,
+    isPersistantType
+} from "../lib/common/localStorage";
 
 const STORAGE_KEY = "__graphene__";
 let ss = new ls(STORAGE_KEY);
@@ -65,6 +69,9 @@ class WalletUnlockStore {
             reject: null,
             locked: WalletDb.isLocked()
         });
+        if (!this.state.rememberMe && !isPersistantType()) {
+            setLocalStorageType("persistant");
+        }
         resolve();
     }
 

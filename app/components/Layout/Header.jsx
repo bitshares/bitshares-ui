@@ -154,15 +154,8 @@ class Header extends React.Component {
                 .catch(() => {});
         } else {
             WalletUnlockActions.lock();
-            setLocalStorageType("persistant");
-            var wallet = AccountStore.getState().wallet_name;
-            const chainId = Apis.instance().chain_id;
-            if (!ss.get("remember_user")) {
-                ss.remove(
-                    "currentAccount" +
-                        (chainId ? `_${chainId.substr(0, 8)}` : "") +
-                        (wallet ? `_${wallet}` : "")
-                );
+            if (!WalletUnlockStore.getState().rememberMe) {
+                AccountStore.reset();
             }
         }
         this._closeDropdown();
