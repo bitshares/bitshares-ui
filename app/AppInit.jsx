@@ -54,16 +54,21 @@ class AppInit extends React.Component {
             status: "",
             extendeLogText: []
         };
+        this.mounted = true;
+        if (!this.state.extendeLogText.length) {
+            LogsActions.getLogs().then(data => {
+                if (data) {
+                    this.setState({extendeLogText: data});
+                }
+            });
+        }
     }
 
     componentDidCatch(error) {
-        this.saveExtendedLog({
-            type: "query",
-            log: [error]
-        });
+        this.saveExtendedLog("error", [error]);
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    componentDidUpdate(nextProps, nextState) {
         LogsActions.setLog(nextState.extendeLogText);
     }
     saveExtendedLog(type, logText) {
@@ -78,24 +83,22 @@ class AppInit extends React.Component {
         if (logState.length > maxlogslength) {
             logState.splice(0, 1);
         }
-        if (text.indexOf(logState[logState.length])) {
+        if (text.indexOf(logState[logState.length - 1])) {
             logState.push(text);
-            this.setState({extendeLogText: logState});
+            if (this.mounted) {
+                this.setState({extendeLogText: logState});
+            } else {
+                LogsActions.setLog(logState);
+            }
         }
     }
     componentWillMount() {
-        if (!this.state.extendeLogText.length) {
-            LogsActions.getLogs().then(data => {
-                if (data) {
-                    this.setState({extendeLogText: data});
-                }
-            });
-        }
-
         const thiz = this;
         const saveLog = (type, log) => {
             thiz.saveExtendedLog(type, Array.from(log));
-            console[`str${type}`].apply(console, log);
+            if (this.mounted) {
+                console[`str${type}`].apply(console, log);
+            }
         };
 
         console.strlog = console.log.bind(console);
@@ -147,6 +150,7 @@ class AppInit extends React.Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
         //Detect OS for platform specific fixes
         if (navigator.platform.indexOf("Win") > -1) {
             var main = document.getElementById("content");
@@ -158,6 +162,10 @@ class AppInit extends React.Component {
                     windowsClass;
             }
         }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
     }
 
     _statusCallback(status) {
