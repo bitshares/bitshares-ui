@@ -3,6 +3,7 @@ import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
 import notify from "actions/NotificationActions";
+import SettingsActions from "actions/SettingsActions";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -34,11 +35,11 @@ import {
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
-import ls, {setLocalStorageType} from "../../lib/common/localStorage";
+import {
+    setLocalStorageType,
+    isPersistantType
+} from "../../lib/common/localStorage";
 import Translate from "react-translate-component";
-
-const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -56,7 +57,7 @@ class WalletUnlockModal extends React.Component {
             isOpen: false,
             restoringBackup: false,
             stopAskingForBackup: false,
-            remember_user: true
+            rememberMe: WalletUnlockStore.getState().rememberMe
         };
     };
 
@@ -224,13 +225,8 @@ class WalletUnlockModal extends React.Component {
     handleLogin = e => {
         if (e) e.preventDefault();
         const {passwordLogin, backup} = this.props;
-        const {walletSelected, accountName, remember_user} = this.state;
-        ss.set("remember_user", remember_user);
-        if (remember_user) {
-            setLocalStorageType("persistant");
-        } else {
-            setLocalStorageType("inram");
-        }
+        const {walletSelected, accountName} = this.state;
+
         if (!passwordLogin && !walletSelected) {
             this.setState({
                 customError: counterpart.translate(
@@ -246,6 +242,15 @@ class WalletUnlockModal extends React.Component {
                 if (!passwordLogin && backup.name) {
                     this.restoreBackup(password, () => this.validate(password));
                 } else {
+                    if (!this.state.rememberMe) {
+                        if (isPersistantType()) {
+                            setLocalStorageType("inram");
+                        }
+                    } else {
+                        if (!isPersistantType()) {
+                            setLocalStorageType("persistant");
+                        }
+                    }
                     const account = passwordLogin ? accountName : null;
                     this.validate(password, account);
                 }
@@ -344,8 +349,14 @@ class WalletUnlockModal extends React.Component {
     shouldUseBackupLogin = () =>
         this.shouldShowBackupWarning() && !this.state.stopAskingForBackup;
 
-    handleRememberMe = () =>
-        this.setState({remember_user: !this.state.remember_user});
+    handleRememberMe = () => {
+        let newRememberMe = !this.state.rememberMe;
+        this.setState({rememberMe: newRememberMe});
+        SettingsActions.changeSetting({
+            setting: "rememberMe",
+            value: newRememberMe
+        });
+    };
 
     render() {
         const {
@@ -421,7 +432,7 @@ class WalletUnlockModal extends React.Component {
                                     >
                                         <input
                                             type="checkbox"
-                                            checked={this.state.remember_user}
+                                            checked={this.state.rememberMe}
                                             onChange={() => {}}
                                             style={{
                                                 position: "absolute"

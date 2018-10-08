@@ -121,11 +121,20 @@ class AbstractLocalStorage {
  */
 class PersistantLocalStorage extends AbstractLocalStorage {
     _get(key) {
-        return JSON.parse(ls.getItem(key));
+        let value = ls.getItem(key);
+        if (value === "") {
+            return value;
+        } else {
+            return JSON.parse(value);
+        }
     }
 
     _set(key, object) {
-        ls.setItem(key, JSON.stringify(object));
+        if (object === "") {
+            ls.setItem(key, object);
+        } else {
+            ls.setItem(key, JSON.stringify(object));
+        }
     }
 
     _remove(key) {
@@ -134,6 +143,10 @@ class PersistantLocalStorage extends AbstractLocalStorage {
 
     _has(key) {
         return ls_key_exists(key, ls);
+    }
+
+    _getLocalStorage() {
+        return ls;
     }
 }
 
@@ -177,6 +190,13 @@ export const setLocalStorageType = type => {
     enforceLocalStorageType = type;
 };
 
+export const isPersistantType = () => {
+    return (
+        enforceLocalStorageType == null ||
+        enforceLocalStorageType == "persistant"
+    );
+};
+
 /**
  * Storage that allows switching between persistant and inram implementation
  */
@@ -190,6 +210,10 @@ class DynamicLocalStorage extends AbstractLocalStorage {
         } else {
             this.usePersistant();
         }
+    }
+
+    isPersistant() {
+        return this._impl instanceof PersistantLocalStorage;
     }
 
     _switchIfNecessary() {
@@ -223,8 +247,26 @@ class DynamicLocalStorage extends AbstractLocalStorage {
         return this._impl._has(key);
     }
 
+    /**
+     * When switching from persistant to inram, copy persistant as default
+     */
     useInRam() {
+        let copy = {};
+        if (this.isPersistant()) {
+            console.log("Switching to InRam storage for private session");
+            for (
+                var i = 0, len = this._impl._getLocalStorage().length;
+                i < len;
+                ++i
+            ) {
+                let key = this._impl._getLocalStorage().key(i);
+                copy[key] = this._impl._getLocalStorage().getItem(key);
+            }
+        }
         this._impl = new InRamLocalStorage(this._storage_prefix);
+        for (let key in copy) {
+            this._impl._set(key, copy[key]);
+        }
     }
 
     usePersistant() {

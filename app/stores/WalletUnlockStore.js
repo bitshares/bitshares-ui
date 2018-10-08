@@ -19,7 +19,11 @@ class WalletUnlockStore {
         let passwordLogin = storedSettings.passwordLogin;
         this.state = {
             locked: true,
-            passwordLogin: passwordLogin
+            passwordLogin: passwordLogin,
+            rememberMe:
+                storedSettings.rememberMe === undefined
+                    ? true
+                    : storedSettings.rememberMe
         };
 
         this.walletLockTimeout = this._getTimeout(); // seconds (10 minutes)
@@ -82,6 +86,10 @@ class WalletUnlockStore {
         } else if (payload.setting === "passwordLogin") {
             this.setState({
                 passwordLogin: payload.value
+            });
+        } else if (payload.setting === "rememberMe") {
+            this.setState({
+                rememberMe: payload.rememberMe
             });
         }
     }
