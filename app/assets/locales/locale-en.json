@@ -1001,6 +1001,7 @@
             "remove": "Remove"
         },
         "dashboard": "Dashboard",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Deposit",
             "deposit_withdraw": "Deposit/Withdraw"
@@ -1200,7 +1201,7 @@
             "withdraw": "Withdraw"
         },
         "report": {
-            "button": "Report about errors",
+            "button": "Report",
             "takeScreenshot": "Take screenshot",
             "copyLog": "Copy Log",
             "copySuccess": "Copy ended",
