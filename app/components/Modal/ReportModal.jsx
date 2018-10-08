@@ -2,15 +2,7 @@ import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import BaseModal from "./BaseModal";
-import {ChainStore} from "bitsharesjs";
 import AccountStore from "stores/AccountStore";
-import {Asset} from "common/MarketClasses";
-import {debounce, isNaN} from "lodash-es";
-import {
-    checkFeeStatusAsync,
-    checkBalance,
-    shouldPayFeeWithAssetAsync
-} from "common/trxHelper";
 import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
 import Screenshot from "lib/common/Screenshot";
