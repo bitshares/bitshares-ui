@@ -12,7 +12,7 @@
     "license": "MIT",
     "engines": {
         "node": ">=9.x",
-        "npm": ">=5.x",
+        "npm": ">=6.x",
         "yarn": ">=0.21.3"
     },
     "repository": {
