@@ -17,6 +17,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import {openledgerAPIs} from "api/apiConfig";
+import BitsharesEos from "../DepositWithdraw/BitsharesEos";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
@@ -45,7 +46,10 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
-            bitsparkService: props.viewSettings.get("bitsparkService", "gateway"),
+            bitsparkService: props.viewSettings.get(
+                "bitsparkService",
+                "gateway"
+            ),
             xbtsxService: props.viewSettings.get("xbtsxService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             citadelService: props.viewSettings.get("citadelService", "bridge"),
@@ -501,6 +505,11 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         serList.push({
+            name: "BitShares EOS",
+            template: <BitsharesEos />
+        });
+
+        serList.push({
             name: "BitKapital",
             template: (
                 <BitKapital
@@ -597,6 +606,7 @@ class AccountDepositWithdraw extends React.Component {
             "RUDEX",
             "SPARKDEX",
             "TRADE",
+            "BEOS",
             "BITKAPITAL",
             "XBTSX",
             "CITADEL"
