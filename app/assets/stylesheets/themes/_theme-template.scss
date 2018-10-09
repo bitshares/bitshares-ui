@@ -55,8 +55,8 @@
     $explorer--witnesses--info-table-title-color,
     $explorer--witnesses--info-table-text-color,
     $explorer--assets--bg,
-    $new-negative-color,
-    $new-positive-color,
+    $negative-color-alternative,
+    $positive-color-alternative,
     $separator-line,
     $medium-color,
     $dark-help-text
@@ -2184,7 +2184,7 @@
         }
     }
 
-    .new-layout {
+    .registration-layout {
         .attention-note {
             background-color: rgba($medium-color, 0.06);
         }
@@ -2230,16 +2230,16 @@
             }
 
             .recommended {
-                background-color: $new-positive-color;
+                background-color: $positive-color-alternative;
                 color: $dark-help-text;
             }
 
             .model-option-value {
-                color: $new-positive-color;
+                color: $positive-color-alternative;
             }
 
             .account-option-value {
-                color: $new-negative-color;
+                color: $negative-color-alternative;
             }
 
             .account-security {

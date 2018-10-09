@@ -59,7 +59,7 @@ export default class RegistrationSelector extends React.Component {
 
         const {activeWalletModel} = this.state;
         return (
-            <div className="grid-block align-center new-layout">
+            <div className="grid-block align-center registration-layout">
                 <div className="grid-block shrink vertical text-center registration-selector">
                     <Translate
                         content="registration.title"
@@ -77,7 +77,7 @@ export default class RegistrationSelector extends React.Component {
                             >
                                 {this.renderHeader(true)}
                                 <WalletBlockSelection
-                                    onSelect={() => this.onSelect("wallet")}
+                                    onSelect={() => this.onSelect("local")}
                                     active={activeWalletModel}
                                     onChangeActive={() =>
                                         this.changeActiveModel(true)
@@ -93,7 +93,7 @@ export default class RegistrationSelector extends React.Component {
                             >
                                 {this.renderHeader(false)}
                                 <AccountBlockSelection
-                                    onSelect={() => this.onSelect("password")}
+                                    onSelect={() => this.onSelect("cloud")}
                                     active={!activeWalletModel}
                                     onChangeActive={() =>
                                         this.changeActiveModel(false)
