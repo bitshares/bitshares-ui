@@ -177,92 +177,129 @@ class Settings extends React.Component {
                         </div>
                         <div className="small-6">{this._getGroupingOptions("open_settlement")}</div>
                     </div>
-                    <header>
-                        <Translate content="exchange.panels_mirror" />
-                    </header>
-                    <Select 
-                        placeholder={counterpart.translate("settings.placeholder_select")}
-                        style={{width: "100%"}}
-                        value={this.props.mirrorPanels ? 1 : 0}
-                        onSelect={this.props.onMirrorPanels.bind(this)}
-                    >
-                        <Select.Option value={0}>
-                            <Translate content="settings.no" />
-                        </Select.Option>
-                        <Select.Option value={1}>
-                            <Translate content="settings.yes" />
-                        </Select.Option>
-                    </Select>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6" style={{paddingRight: 5}}>
+                            <header>
+                                <Translate content="exchange.panels_mirror" />
+                            </header>
+                            <Select 
+                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                style={{width: "100%"}}
+                                value={this.props.mirrorPanels ? 1 : 0}
+                                onSelect={this.props.onMirrorPanels.bind(this)}
+                            >
+                                <Select.Option value={0}>
+                                    <Translate content="settings.no" />
+                                </Select.Option>
+                                <Select.Option value={1}>
+                                    <Translate content="settings.yes" />
+                                </Select.Option>
+                            </Select>
+                        </div>
+                        <div className="small-6">
+                            <header>
+                                <Translate content="exchange.chart_hide" />
+                            </header>
+                            <Select 
+                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                style={{width: "100%"}}
+                                value={this.props.hideChart ? 1 : 0}
+                                onSelect={this.props.onToggleChart.bind(this)}
+                            >
+                                <Select.Option value={0}>
+                                    <Translate content="settings.no" />
+                                </Select.Option>
+                                <Select.Option value={1}>
+                                    <Translate content="settings.yes" />
+                                </Select.Option>
+                            </Select>
+                        </div>
+                    </div>
 
-                    <header>
-                        <Translate content="exchange.chart_hide" />
-                    </header>
-                    <Select 
-                        placeholder={counterpart.translate("settings.placeholder_select")}
-                        style={{width: "100%"}}
-                        value={this.props.hideChart ? 1 : 0}
-                        onSelect={this.props.onToggleChart.bind(this)}
-                    >
-                        <Select.Option value={0}>
-                            <Translate content="settings.no" />
-                        </Select.Option>
-                        <Select.Option value={1}>
-                            <Translate content="settings.yes" />
-                        </Select.Option>
-                    </Select>
-                    <header>
-                        <Translate content="settings.orderbook_grouping" />
-                    </header>
-                    <ul>
-                        <li className="with-dropdown">
-                            {this.props.trackedGroupsConfig ? (
-                                <GroupOrderLimitSelector
-                                    globalSettingsSelector={true}
-                                    trackedGroupsConfig={
-                                        this.props.trackedGroupsConfig
-                                    }
-                                    handleGroupOrderLimitChange={this.props.handleGroupOrderLimitChange.bind(
-                                        this
-                                    )}
-                                    currentGroupOrderLimit={
-                                        this.props.currentGroupOrderLimit
-                                    }
-                                />
-                            ) : null}
-                        </li>
-                    </ul>
-                    <header>
-                        <Translate content="settings.orderbook_autoscroll" />
-                    </header>
-                    <Select 
-                        placeholder={counterpart.translate("settings.placeholder_select")}
-                        style={{width: "100%"}}
-                        value={this.state.autoScroll ? 1 : 0}
-                        onSelect={this.setAutoscroll.bind(this)}
-                    >
-                        <Select.Option value={0}>
-                            <Translate content="settings.no" />
-                        </Select.Option>
-                        <Select.Option value={1}>
-                            <Translate content="settings.yes" />
-                        </Select.Option>
-                    </Select>
-                    <header>
-                        <Translate content="settings.scrollbars_hide" />
-                    </header>
-                    <Select
-                        placeholder={counterpart.translate("settings.placeholder_select")}
-                        style={{width: "100%"}}
-                        value={this.props.hideScrollbars ? 1 : 0}
-                        onChange={this.props.onToggleScrollbars.bind(this)}
-                    >
-                        <Select.Option value={0}>
-                            <Translate content="settings.no" />
-                        </Select.Option>
-                        <Select.Option value={1}>
-                            <Translate content="settings.yes" />
-                        </Select.Option>
-                    </Select>
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6" style={{paddingRight: 5}}>
+                            <header>
+                                <Translate content="settings.scrollbars_hide" />
+                            </header>
+                            <Select
+                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                style={{width: "100%"}}
+                                value={this.props.hideScrollbars ? 1 : 0}
+                                onChange={this.props.onToggleScrollbars.bind(this)}
+                            >
+                                <Select.Option value={0}>
+                                    <Translate content="settings.no" />
+                                </Select.Option>
+                                <Select.Option value={1}>
+                                    <Translate content="settings.yes" />
+                                </Select.Option>
+                            </Select>
+                        </div>
+                        <div className="small-6">
+                            {/* <header>
+                                <Translate content="settings.orderbook_reverse" />
+                            </header>
+                            <Select 
+                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                style={{width: "100%"}}
+                                // value={this.state.autoScroll ? 1 : 0}
+                                // onSelect={this.setAutoscroll.bind(this)}
+                            >
+                                <Select.Option value={0}>
+                                    <Translate content="settings.no" />
+                                </Select.Option>
+                                <Select.Option value={1}>
+                                    <Translate content="settings.yes" />
+                                </Select.Option>
+                            </Select> */}
+                        </div>
+                    </div>
+
+                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                        <div className="small-6" style={{paddingRight: 5}}>
+                            <header>
+                                <Translate content="settings.orderbook_grouping" />
+                            </header>
+                            <ul>
+                                <li className="with-dropdown">
+                                    {this.props.trackedGroupsConfig ? (
+                                        <GroupOrderLimitSelector
+                                            globalSettingsSelector={true}
+                                            trackedGroupsConfig={
+                                                this.props.trackedGroupsConfig
+                                            }
+                                            handleGroupOrderLimitChange={this.props.handleGroupOrderLimitChange.bind(
+                                                this
+                                            )}
+                                            currentGroupOrderLimit={
+                                                this.props.currentGroupOrderLimit
+                                            }
+                                        />
+                                    ) : null}
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="small-6">
+                            <header>
+                                <Translate content="settings.orderbook_autoscroll" />
+                            </header>
+                            <Select 
+                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                style={{width: "100%"}}
+                                value={this.state.autoScroll ? 1 : 0}
+                                onSelect={this.setAutoscroll.bind(this)}
+                            >
+                                <Select.Option value={0}>
+                                    <Translate content="settings.no" />
+                                </Select.Option>
+                                <Select.Option value={1}>
+                                    <Translate content="settings.yes" />
+                                </Select.Option>
+                            </Select>
+                        </div>
+                    </div>
+
+                    
                 </section>
                 <Button 
                     type="primary"

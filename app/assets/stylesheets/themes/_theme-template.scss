@@ -2191,6 +2191,23 @@
         border-top: 1px solid $super-light-panel-bg-color !important;
         border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
+
+    i.anticon.icon-fill {
+        &:hover {
+            color: $bs-blue;
+            cursor: pointer;
+        }
+    }
+    
+    .icon-fill {
+        svg > path {
+            fill: #fff;
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+        }
+    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;

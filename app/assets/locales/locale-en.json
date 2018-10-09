@@ -1055,6 +1055,7 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
@@ -1062,6 +1063,7 @@
         },
         "power": "Login",
         "question_circle": "Help",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Explore",
         "settle": "Settle",
         "share": "About",
@@ -1070,7 +1072,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
@@ -1413,6 +1415,7 @@
         "olDarkTheme": "Openledger dark",
         "orderbook_autoscroll": "Order Book Autoscroll",
         "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "Password",
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",

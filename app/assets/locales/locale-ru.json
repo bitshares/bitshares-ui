@@ -1030,12 +1030,14 @@
             "wrong_address": "Не удается создать адрес"
         },
         "news": "Новости",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Добавить контакт в список",
             "show_asset": "Показать актив",
             "show_market": "Показать рынок"
         },
         "power": "Войти",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Помощь",
         "server": "Исследовать",
         "settle": "Запросить расчет",
@@ -1045,7 +1047,7 @@
             "membership_stats": "Статистика членства",
             "signed_messages": "Подписанные сообщения"
         },
-        "thumb_tack": "Прикрепить панель к левой стороне",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Открепить панель",
         "thumbs_up": "Голосование",
         "times": "Удалить узел API",

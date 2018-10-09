@@ -1028,12 +1028,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1043,7 +1045,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",

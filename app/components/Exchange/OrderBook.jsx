@@ -502,7 +502,12 @@ class OrderBook extends React.Component {
             const singleAskHeight = elemHeight( 
                 this.queryStickyTable(".order-row") 
             );
-            const asksHeight = this.props.combinedAsks.length * singleAskHeight; 
+
+            let asks = this.props.currentGroupOrderLimit !== 0
+                ? this.props.groupedAsks
+                : this.props.combinedAsks;
+
+            const asksHeight = asks.length * singleAskHeight; 
 
             const scrollableContainerHeight = 
                 elemHeight(scrollableContainer) - elemHeight(header); 
@@ -1258,7 +1263,7 @@ class OrderBook extends React.Component {
                                                 </span>
                                                 <span style={{width: 75}}>
                                                     <Icon
-                                                        className="lock-unlock clickable "
+                                                        className="lock-unlock clickable icon-fill"
                                                         onClick={
                                                             this.toggleAutoScroll
                                                         }
@@ -1276,16 +1281,32 @@ class OrderBook extends React.Component {
                                                     <Icon
                                                         onClick={this.props.moveOrderBook}
                                                         name="thumb-tack"
-                                                        className="icon-14px order-book-button-v"
+                                                        className="icon-14px order-book-button-v clickable"
+                                                        title={
+                                                            this.props.horizontal
+                                                                ? "icons.thumb_tack"
+                                                                : "icons.thumb_untack"
+                                                        }
                                                         style={{marginLeft: 0}}
                                                     />&nbsp;
-                                                    <AntIcon 
+                                                    {/* <AntIcon 
                                                         style={{fontSize: 20}}
-                                                        type="retweet"
+                                                        type="retweet icon-fill"
                                                         onClick={
                                                             this.toggleOrderBook
                                                         } 
-                                                    />
+                                                        title={translator.translate("icons.reverse_orderbook")}
+                                                    /> */}
+                                                    {/* <img src="../assets/grouping.png" style={{width: 16}} alt="Grouping" /> */}
+                                                    {currentGroupOrderLimit == 0 ? 
+                                                        null : 
+                                                        <AntIcon 
+                                                            style={{fontSize: 16}} 
+                                                            type="fork" 
+                                                            className="icon-fill" 
+                                                            title={translator.translate("icons.order_grouping")}
+                                                        />
+                                                    }
                                                 </span>
                                                 {!!this.props.latest && (
                                                     <span className="right">
@@ -1312,15 +1333,6 @@ class OrderBook extends React.Component {
                                                     </span>
                                                 )}
                                             </div>
-                                            {currentGroupOrderLimit == 0 ? null : (
-                                                <div className="text-center" style={{paddingTop: 5}}>
-                                                    <Translate 
-                                                        component="span"
-                                                        content="exchange.order_grouping"
-                                                        orderlimit={currentGroupOrderLimit / 100}
-                                                    />
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </td>
