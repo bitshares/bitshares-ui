@@ -133,12 +133,8 @@ class BuySell extends React.Component {
             verticalOrderForm
         } = this.props;
 
-        let width = 0;
-        if(this.refs.order_form) {
-            width = this.refs.order_form.clientWidth;
-        }
-
-        let singleColumnForm = width < 450 ? true : false;
+        let clientWidth = this.refs.order_form ? this.refs.order_form.clientWidth : 0;
+        let singleColumnForm = clientWidth < 450 ? true : false;
         
         let amount, price, total;
 

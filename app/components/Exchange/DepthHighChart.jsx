@@ -21,7 +21,7 @@ class DepthHighChart extends React.Component {
             nextProps.feedPrice !== this.props.feedPrice ||
             nextProps.height !== this.props.height ||
             nextProps.isPanelActive !== this.props.isPanelActive ||
-            nextProps.exchangeLayout !== this.props.exchangeLayout ||
+            nextProps.activePanels !== this.props.activePanels ||
             nextProps.LCP !== this.props.LCP ||
             nextProps.showCallLimit !== this.props.showCallLimit ||
             nextProps.hasPrediction !== this.props.hasPrediction ||
@@ -36,8 +36,8 @@ class DepthHighChart extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (
-            this.refs.depthChart &&
-            nextProps.exchangeLayout !== this.props.exchangeLayout
+            this.refs.depthChart && 
+            nextProps.activePanels !== this.props.activePanels
         ) {
             this.reflowChart(100);
         }

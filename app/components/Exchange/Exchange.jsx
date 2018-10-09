@@ -205,7 +205,6 @@ class Exchange extends React.Component {
             ask,
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
-            exchangeLayout: ws.get("exchangeLayout", 5),
             showDepthChart: ws.get("showDepthChart", false),
             verticalOrderBook: ws.get("verticalOrderBook", false),
             verticalOrderForm: ws.get("verticalOrderForm", false),
@@ -1490,7 +1489,6 @@ class Exchange extends React.Component {
         } = marketData;
 
         let {
-            exchangeLayout,
             bid,
             ask,
             verticalOrderBook,
@@ -1626,7 +1624,7 @@ class Exchange extends React.Component {
         let expirationType = this.state.expirationType;
         let expirationCustomTime = this.state.expirationCustomTime;
 
-        let isPanelActive = !hidePanel && !smallScreen ? true : false;
+        let isPanelActive = activePanels.length >= 1 ? true : false;
         let isPredictionMarket = base.getIn([
             "bitasset",
             "is_prediction_market"
@@ -1732,7 +1730,6 @@ class Exchange extends React.Component {
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
-                exchangeLayout={exchangeLayout}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
             />
@@ -1834,7 +1831,6 @@ class Exchange extends React.Component {
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
-                exchangeLayout={exchangeLayout}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
             />
@@ -1932,7 +1928,7 @@ class Exchange extends React.Component {
             />
         );
 
-        if (this.refs.order_book && this.refs.order_book.refs.center_text) {
+        if (this.refs.order_book) {
             // Doesn't scale backwards
             // panelWidth = this.refs.order_book.refs.vertical_sticky_table.scrollData.scrollWidth;
             panelWidth = 350;
@@ -1964,12 +1960,9 @@ class Exchange extends React.Component {
                 activeTab={"history"}
                 tinyScreen={tinyScreen}
                 isPanelActive={isPanelActive}
-                exchangeLayout={exchangeLayout}
                 hideScrollbars={hideScrollbars}
             />
         );
-
-        console.log(panelTabs);
 
         let myMarketHistory = tinyScreen && !this.state.mobileKey.includes("myMarketHistory") ? null : (
             <MarketHistory
@@ -1997,7 +1990,6 @@ class Exchange extends React.Component {
                 activeTab={"my_history"}
                 tinyScreen={tinyScreen}
                 isPanelActive={isPanelActive}
-                exchangeLayout={exchangeLayout}
                 hideScrollbars={hideScrollbars}
             />
         );
@@ -2030,7 +2022,6 @@ class Exchange extends React.Component {
                 onCancel={this._cancelLimitOrder.bind(this)}
                 flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                 feedPrice={this.props.feedPrice}
-                exchangeLayout={exchangeLayout}
                 smallScreen={smallScreen}
                 tinyScreen={tinyScreen}
                 hidePanel={hidePanel}
@@ -2067,7 +2058,6 @@ class Exchange extends React.Component {
                 onCancel={this._cancelLimitOrder.bind(this)}
                 flipMyOrders={this.props.viewSettings.get("flipMyOrders")}
                 feedPrice={this.props.feedPrice}
-                exchangeLayout={exchangeLayout}
                 smallScreen={smallScreen}
                 tinyScreen={tinyScreen}
                 hidePanel={hidePanel}
@@ -2136,13 +2126,13 @@ class Exchange extends React.Component {
                         ? lowestCallPrice
                         : null
                 }
-                exchangeLayout={exchangeLayout}
                 hasPrediction={hasPrediction}
                 noFrame={false}
                 theme={this.props.settings.get(
                     "themes"
                 )}
                 centerRef={this.refs.center}
+                activePanels={activePanels}
             />
         );
 
@@ -2154,12 +2144,7 @@ class Exchange extends React.Component {
         let buySellTab = (
             <div
                 key={`actionCard_${actionCardIndex++}`}
-                className={cnames(
-                    "left-order-book small-12 ",
-                    exchangeLayout <= 2 
-                        ? "medium-12 large-6 xlarge-6" 
-                        : "medium-12 large-12 xlarge-12 no-padding"
-                )}
+                className={"left-order-book small-12"}
                 style={{
                     paddingLeft: 5,
                     width: !smallScreen ? 300 : "auto"
@@ -2340,7 +2325,7 @@ class Exchange extends React.Component {
         ) : null;
 
         /**
-         * Generate layout grid based on ExchangeLayout
+         * Generate layout grid based on Screen Size
          */
         let actionCards = [];
         if (!smallScreen) {
@@ -2438,41 +2423,25 @@ class Exchange extends React.Component {
                 );
             }
 
-            if (exchangeLayout <= 2 || exchangeLayout >= 5) {
-                rightPanel = (
-                    <div
-                        className="left-order-book no-padding no-overflow"
-                        style={{display: "block"}}
-                        key={`actionCard_${actionCardIndex++}`}
-                    >
-                        <div className="v-align no-padding align-center grid-block footer shrink column">
-                            <Tabs
-                                defaultActiveKey="order_book"
-                                activeKey={tabVerticalPanel}
-                                onChange={this._setTabVerticalPanel.bind(this)}
-                            >
-                                {exchangeLayout <= 2 ? <Tabs.TabPane tab={translator.translate("exchange.order_book")} key="order_book" /> : null}
-                                <Tabs.TabPane tab={translator.translate("exchange.market_name")} key="my-market" />
-                                <Tabs.TabPane tab={translator.translate("exchange.more")} key="find-market" />
-                            </Tabs>
-                        </div>
-                        {exchangeLayout <= 2 && tabVerticalPanel == "order_book" ? orderBook : null}
-                        {tabVerticalPanel == "my-market" || tabVerticalPanel == "find-market" ? myMarkets : null}
+            rightPanel = (
+                <div
+                    className="left-order-book no-padding no-overflow"
+                    style={{display: "block"}}
+                    key={`actionCard_${actionCardIndex++}`}
+                >
+                    <div className="v-align no-padding align-center grid-block footer shrink column">
+                        <Tabs
+                            defaultActiveKey="order_book"
+                            activeKey={tabVerticalPanel}
+                            onChange={this._setTabVerticalPanel.bind(this)}
+                        >
+                            <Tabs.TabPane tab={translator.translate("exchange.market_name")} key="my-market" />
+                            <Tabs.TabPane tab={translator.translate("exchange.more")} key="find-market" />
+                        </Tabs>
                     </div>
-                );
-            } else if (exchangeLayout >= 3 || exchangeLayout <= 4) {
-                rightPanel = (
-                    <div
-                        className="left-order-book no-padding no-overflow"
-                        style={{display: "block"}}
-                    >
-                        {buySellTab}
-                        {tabBuySell == "my-market" || tabBuySell == "find-market"
-                            ? myMarkets
-                            : null}
-                    </div>
-                );
-            }
+                    {tabVerticalPanel == "my-market" || tabVerticalPanel == "find-market" ? myMarkets : null}
+                </div>
+            );
 
             if((!mirrorPanels && leftPanel) || (mirrorPanels && rightPanel)) { enableToggleLeft = true; }
             if((!mirrorPanels && rightPanel) || (mirrorPanels && leftPanel)) { enableToggleRight = true; }
@@ -2554,7 +2523,6 @@ class Exchange extends React.Component {
                         ref="settingsModal"
                         modalId="settingsModal"
                         viewSettings={this.props.viewSettings}
-                        exchangeLayout={exchangeLayout}    
                         showDepthChart={showDepthChart}
                         chartHeight={chartHeight}
                         onToggleSettings={this._toggleSettings.bind(this)}

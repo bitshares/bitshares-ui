@@ -57,7 +57,6 @@ class MarketHistory extends React.Component {
             nextState.showAll !== this.state.showAll ||
             nextProps.currentAccount !== this.props.currentAccount ||
             nextProps.isPanelActive !== this.props.isPanelActive ||
-            nextProps.exchangeLayout !== this.props.exchangeLayout ||
             nextProps.hideScrollbars !== this.props.hideScrollbars
         );
     }
