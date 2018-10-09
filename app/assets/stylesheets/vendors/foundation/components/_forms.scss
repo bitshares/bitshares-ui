@@ -87,24 +87,13 @@ $meter-radius: 0 !default;
         height: $height;
         padding: $form-padding;
         margin: 0 0 $global-padding 0;
-        border: $input-border;
         border-radius: 0;
-        background: $input-background;
-        color: $input-color;
         font-size: $form-fontsize;
         -webkit-font-smoothing: antialiased;
         vertical-align: middle;
 
-        &:hover {
-            border: $input-border-hover;
-            background: $input-background-hover;
-            color: $input-color-hover;
-        }
         &:focus {
             outline: 0;
-            border: $input-border-focus;
-            background: $input-background-focus;
-            color: $input-color-focus;
         }
 
         label > & {
@@ -125,11 +114,6 @@ $meter-radius: 0 !default;
         &[readonly],
         fieldset[disabled] & {
             cursor: $input-cursor-disabled;
-
-            &,
-            &:hover {
-                background-color: $input-background-disabled;
-            }
         }
     }
 
@@ -245,26 +229,7 @@ $meter-radius: 0 !default;
         padding: $form-padding;
         margin: 0 0 $global-padding 0;
         font-size: $form-fontsize;
-        color: $select-color;
         border-radius: 0;
-        border: $input-border;
-
-        @if $select-arrow {
-            background: $select-background
-                url(image-triangle($select-arrow-color))
-                right
-                10px
-                center
-                no-repeat;
-            background-size: 8px 8px;
-            padding-right: rem-calc(18px) + $form-padding;
-        } @else {
-            background-color: $select-background;
-        }
-
-        &:hover {
-            background-color: $select-background-hover;
-        }
 
         &:focus {
             outline: 0;
@@ -367,7 +332,6 @@ $meter-radius: 0 !default;
         }
         &::-webkit-outer-spin-button {
             -webkit-appearance: none;
-            background: $primary-color;
         }
     }
 
