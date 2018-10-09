@@ -31,6 +31,7 @@ import {getWalletName} from "branding";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
+        balance: ChainTypes.ChainObject,
         sender: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
@@ -289,9 +290,9 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getCurrentBalance() {
-        return 0; // FIXME: Needs Fix
+        let balances = this.props.balance ? [this.props.balance] : this.props.balances;
 
-        return this.props.balances.find(b => {
+        return balances.find(b => {
             return b && b.get("asset_type") === this.props.asset.get("id");
         });
     }

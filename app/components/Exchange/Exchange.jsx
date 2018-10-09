@@ -1928,11 +1928,13 @@ class Exchange extends React.Component {
             />
         );
 
-        if (this.refs.order_book) {
+        // if (this.refs.order_book) {
             // Doesn't scale backwards
             // panelWidth = this.refs.order_book.refs.vertical_sticky_table.scrollData.scrollWidth;
-            panelWidth = 350;
-        } 
+            // panelWidth = 350;
+        // } 
+
+        panelWidth = 350;
 
         let marketHistory = tinyScreen && !this.state.mobileKey.includes("marketHistory") ? null : (
             <MarketHistory
@@ -2625,7 +2627,7 @@ class Exchange extends React.Component {
                     sender={currentAccount.get("id")}
                     asset={modalType === "bid" ? base.get("id") : quote.get("id")}
                     modalId={"simple_deposit_modal" + (modalType === "bid" ? "" : "_ask")}
-                    balances={[modalType === "bid" ? baseBalance : quoteBalance]}
+                    balance={modalType === "bid" ? baseBalance : quoteBalance}
                     {...this.props.backedCoins.find(
                         a => a.symbol === modalType === "bid" ? base.get("symbol") : quote.get("symbol")
                     )}
