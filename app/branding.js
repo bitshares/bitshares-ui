@@ -141,6 +141,7 @@ export function getMyMarketsQuotes() {
             "RUDEX.STEEM",
             "RUDEX.TT"
         ],
+        sparkTokens: ["ZEPH", "SPARKDEX.ETH", "SPARKDEX.BTC"],
         winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -173,8 +174,7 @@ export function getMyMarketsQuotes() {
             "OCT",
             "SMOKE",
             "STEALTH",
-            "YOYOW",
-            "ZEPH"
+            "YOYOW"
         ]
     };
 
@@ -265,7 +265,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"]
+        ["BTS", "HERTZ"][("BTS", "SPARKDEX.BTC")],
+        ["BTS", "SPARKDEX.ETH"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -286,7 +287,8 @@ export function getAssetNamespaces() {
         "RUDEX.",
         "GDEX.",
         "WIN.",
-        "XBTSX."
+        "XBTSX.",
+        "SPARKDEX."
     ];
 }
 
@@ -306,8 +308,9 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX"].indexOf(gateway) >=
-        0
+        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX", "SPARKDEX"].indexOf(
+            gateway
+        ) >= 0
     );
 }
 

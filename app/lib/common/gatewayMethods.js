@@ -278,6 +278,7 @@ export function requestDepositAddress({
     selectedGateway
 }) {
     let gatewayStatus = availableGateways[selectedGateway];
+
     inputCoinType =
         !!gatewayStatus && gatewayStatus.assetWithdrawlAlias
             ? gatewayStatus.assetWithdrawlAlias[inputCoinType.toLowerCase()] ||

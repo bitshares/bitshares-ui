@@ -193,7 +193,7 @@ class Exchange extends React.Component {
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
             showDepthChart: ws.get("showDepthChart", false),
-            leftOrderBook: ws.get("leftOrderBook", false),
+            leftOrderBook: ws.get("leftOrderBook", true),
             buyDiff: false,
             sellDiff: false,
             buySellTop: ws.get("buySellTop", true),

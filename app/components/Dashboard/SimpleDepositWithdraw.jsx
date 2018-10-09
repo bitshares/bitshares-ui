@@ -22,7 +22,7 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
 

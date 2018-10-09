@@ -10,14 +10,14 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
-import {ChainStore} from "bitsharesjs/es";
+import {ChainStore} from "bitsharesjs";
 import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {debounce} from "lodash-es";
 import {Price, Asset} from "common/MarketClasses";
 import PropTypes from "prop-types";
 
-class WithdrawModalCitadel extends React.Component {
+class BitsparkWithdrawModal extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
@@ -853,4 +853,4 @@ class WithdrawModalCitadel extends React.Component {
     }
 }
 
-export default BindToChainState(WithdrawModalCitadel);
+export default BindToChainState(BitsparkWithdrawModal);
