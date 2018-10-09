@@ -1,5 +1,5 @@
 import React from "react";
-import CitadelGatewayDepositRequest from "./CitadelGatewayDepositRequest";
+import BitsparkGatewayDepositRequest from "./BitsparkGatewayDepositRequest";
 import Translate from "react-translate-component";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
@@ -9,10 +9,9 @@ import {
     TransactionWrapper
 } from "components/Account/RecentTransactions";
 import Immutable from "immutable";
-import cnames from "classnames";
 import LoadingIndicator from "../../LoadingIndicator";
 
-class CitadelGateway extends React.Component {
+class BitsparkGateway extends React.Component {
     constructor(props) {
         super();
 
@@ -28,15 +27,15 @@ class CitadelGateway extends React.Component {
 
     _getActiveCoin(props, state) {
         let cachedCoin = props.viewSettings.get(
-            `activeCoin_citadel_${state.action}`,
+            `activeCoin_${props.provider}_${state.action}`,
             null
         );
         let firstTimeCoin = null;
         if (state.action == "deposit") {
-            firstTimeCoin = "XMR";
+            firstTimeCoin = "BTC";
         }
         if (state.action == "withdraw") {
-            firstTimeCoin = "XMR";
+            firstTimeCoin = "SPARKDEX.BTC";
         }
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
@@ -56,7 +55,8 @@ class CitadelGateway extends React.Component {
         });
 
         let setting = {};
-        setting[`activeCoin_citadel_${this.state.action}`] = e.target.value;
+        setting[`activeCoin_${this.props.provider}_${this.state.action}`] =
+            e.target.value;
         SettingsActions.changeViewSetting(setting);
     }
 
@@ -76,7 +76,6 @@ class CitadelGateway extends React.Component {
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
-
         if (!coins.length) {
             return <LoadingIndicator />;
         }
@@ -115,9 +114,17 @@ class CitadelGateway extends React.Component {
 
         if (!coin) coin = filteredCoins[0];
 
-        let isDeposit = this.state.action === "deposit";
+        let issuers = {
+            bitspark: {
+                name: coin.intermediateAccount,
+                id: "1.2.1070206",
+                support: "info@bitspark.io"
+            }
+        };
 
-        let supportUrl = "https://citadel.li";
+        let issuer = issuers[provider];
+
+        let isDeposit = this.state.action === "deposit";
 
         return (
             <div style={this.props.style}>
@@ -188,10 +195,10 @@ class CitadelGateway extends React.Component {
                 {!coin ? null : (
                     <div>
                         <div style={{marginBottom: 15}}>
-                            <CitadelGatewayDepositRequest
+                            <BitsparkGatewayDepositRequest
                                 key={`${provider}.${coin.symbol}`}
                                 gateway={provider}
-                                issuer_account={coin.intermediateAccount}
+                                issuer_account={issuer.name}
                                 account={account}
                                 deposit_asset={coin.backingCoinType.toUpperCase()}
                                 deposit_asset_name={coin.name}
@@ -207,15 +214,18 @@ class CitadelGateway extends React.Component {
                             />
                             <label className="left-label">Support</label>
                             <div>
-                                <Translate content="gateway.citadel.support_block" />
+                                <Translate content="gateway.bitspark.support_block" />
                                 <br />
                                 <br />
                                 <a
-                                    href={supportUrl}
-                                    target="_blank"
+                                    href={
+                                        (issuer.support.indexOf("@") === -1
+                                            ? ""
+                                            : "mailto:") + issuer.support
+                                    }
                                     rel="noopener noreferrer"
                                 >
-                                    {supportUrl}
+                                    {issuer.support}
                                 </a>
                             </div>
                         </div>
@@ -277,7 +287,7 @@ class CitadelGateway extends React.Component {
 }
 
 export default connect(
-    CitadelGateway,
+    BitsparkGateway,
     {
         listenTo() {
             return [SettingsStore];

@@ -32,6 +32,20 @@ export default class TradingViewPriceChart extends React.Component {
 
         if (__DEV__) console.log("*** Load Chart ***");
         if (__DEV__) console.time("*** Chart load time: ");
+
+        let disabled_features = [
+            "header_saveload",
+            "symbol_info",
+            "symbol_search_hot_key",
+            "border_around_the_chart",
+            "header_symbol_search",
+            "header_compare"
+        ];
+        if (this.props.mobile) {
+            disabled_features.push("chart_scroll");
+            disabled_features.push("chart_zoom");
+        }
+
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,
@@ -63,14 +77,7 @@ export default class TradingViewPriceChart extends React.Component {
                 "study_templates",
                 "keep_left_toolbar_visible_on_small_screens"
             ],
-            disabled_features: [
-                "header_saveload",
-                "symbol_info",
-                "symbol_search_hot_key",
-                "border_around_the_chart",
-                "header_symbol_search",
-                "header_compare"
-            ],
+            disabled_features: disabled_features,
             debug: false,
             preset: this.props.mobile ? "mobile" : ""
         });
