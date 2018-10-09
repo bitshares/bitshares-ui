@@ -369,6 +369,7 @@ class App extends React.Component {
                                 />
                                 <Route
                                     path="/registration"
+                                    exact
                                     component={RegistrationSelector}
                                 />
                                 <Route path="/news" exact component={News} />
