@@ -55,13 +55,6 @@ class AppInit extends React.Component {
             extendeLogText: []
         };
         this.mounted = true;
-        if (!this.state.extendeLogText.length) {
-            LogsActions.getLogs().then(data => {
-                if (data) {
-                    this.setState({extendeLogText: data});
-                }
-            });
-        }
     }
 
     componentDidCatch(error) {
@@ -93,10 +86,18 @@ class AppInit extends React.Component {
         }
     }
     componentWillMount() {
+        if (!this.state.extendeLogText.length) {
+            LogsActions.getLogs().then(data => {
+                if (data) {
+                    this.setState({extendeLogText: data});
+                }
+            });
+        }
+
         const thiz = this;
         const saveLog = (type, log) => {
             thiz.saveExtendedLog(type, Array.from(log));
-            if (this.mounted) {
+            if (thiz.mounted) {
                 console[`str${type}`].apply(console, log);
             }
         };
