@@ -1,4 +1,3 @@
-import {Fraction} from "fractional";
 import utils from "./utils";
 import {BigNumber} from "bignumber.js";
 
