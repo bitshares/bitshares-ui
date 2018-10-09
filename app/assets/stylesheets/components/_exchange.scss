@@ -598,6 +598,32 @@ table thead tr th.mymarkets-header {
     font-size: 12px;
 }
 
+.exchange-bordered {
+    overflow: scroll;
+}
+
+.orderbook-table {
+    min-width: 360px;
+}
+
+.orderbook-table.buyorders td:first-child,
+.orderbook-table.buyorders th:first-child {
+    width: 100px;
+}
+
+.orderbook-table.sellorders {
+}
+
+.orderbook-table.tradehistory,
+.orderbook-table.openorders {
+    min-width: 300px;
+}
+
+.orderbook-table.tradehistory td:last-child,
+.orderbook-table.tradehistory th:last-child {
+    width: 120px;
+}
+
 .newrow-enter.newrow-enter-active {
     animation: flash 1.25s;
     animation-timing-function: ease-out;

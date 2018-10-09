@@ -197,55 +197,57 @@ class MarketHistory extends React.Component {
                             <Translate content="exchange.history" />
                         </div>
                     </div>
-                    <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table className="table order-table text-right fixed-table market-right-padding">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="exchange.price"
-                                        />
-                                    </th>
-                                    <th>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={quoteSymbol}
+                    <div className="orderbook-table tradehistory">
+                        <div className="grid-block shrink left-orderbook-header market-right-padding-only">
+                            <table className="table order-table text-right fixed-table market-right-padding">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <Translate
+                                                className="header-sub-title"
+                                                content="exchange.price"
                                             />
-                                        </span>
-                                    </th>
-                                    <th>
-                                        <span className="header-sub-title">
-                                            <AssetName
-                                                dataPlace="top"
-                                                name={baseSymbol}
+                                        </th>
+                                        <th>
+                                            <span className="header-sub-title">
+                                                <AssetName
+                                                    dataPlace="top"
+                                                    name={quoteSymbol}
+                                                />
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span className="header-sub-title">
+                                                <AssetName
+                                                    dataPlace="top"
+                                                    name={baseSymbol}
+                                                />
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <Translate
+                                                className="header-sub-title"
+                                                content="explorer.block.date"
                                             />
-                                        </span>
-                                    </th>
-                                    <th>
-                                        <Translate
-                                            className="header-sub-title"
-                                            content="explorer.block.date"
-                                        />
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div
-                        className="table-container grid-block market-right-padding-only no-overflow"
-                        ref="history"
-                        style={{maxHeight: 210, overflow: "hidden"}}
-                    >
-                        <table className="table order-table text-right fixed-table market-right-padding">
-                            <TransitionWrapper
-                                component="tbody"
-                                transitionName="newrow"
-                            >
-                                {historyRows}
-                            </TransitionWrapper>
-                        </table>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div
+                            className="table-container grid-block market-right-padding-only no-overflow"
+                            ref="history"
+                            style={{maxHeight: 210, overflow: "hidden"}}
+                        >
+                            <table className="table order-table text-right fixed-table market-right-padding">
+                                <TransitionWrapper
+                                    component="tbody"
+                                    transitionName="newrow"
+                                >
+                                    {historyRows}
+                                </TransitionWrapper>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
