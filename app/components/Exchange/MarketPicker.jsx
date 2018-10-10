@@ -14,6 +14,7 @@ import AssetStore from "stores/AssetStore";
 import Icon from "../Icon/Icon";
 import BaseModal from "../Modal/BaseModal";
 import LoadingIndicator from "../LoadingIndicator";
+import {Form, Input, Select} from "bitshares-ui-style-guide";
 import AssetName from "../Utility/AssetName";
 
 class MarketPickerWrapper extends React.Component {
@@ -54,8 +55,8 @@ class MarketPickerWrapper extends React.Component {
         );
     }
 
-    _onSelectIssuer(e) {
-        let filterByIssuerName = e.target.value == "0" ? null : e.target.value;
+    _onSelectIssuer(value) {
+        let filterByIssuerName = value == "0" ? null : value;
         this.assetFilter(filterByIssuerName);
     }
 
@@ -215,9 +216,9 @@ class MarketPickerWrapper extends React.Component {
                   })
                   .map(issuer => {
                       return (
-                          <option key={issuer} value={issuer}>
+                          <Select.Option key={issuer} value={issuer}>
                               {issuer}
-                          </option>
+                          </Select.Option>
                       );
                   });
 
@@ -359,14 +360,14 @@ class MarketPickerWrapper extends React.Component {
                     style={{display: marketPickerTab == "search" ? "" : "none"}}
                 >
                     <div>
-                        <section className="block-list no-border-bottom">
-                            <header>
-                                <Translate
-                                    component="span"
-                                    content="exchange.market_picker.search_for_asset"
-                                />
-                            </header>
-                            <input
+                        <Form.Item
+                            label={counterpart
+                                .translate(
+                                    "exchange.market_picker.search_for_asset"
+                                )
+                                .toUpperCase()}
+                        >
+                            <Input
                                 type="text"
                                 value={inputValue}
                                 onChange={this._onInputName.bind(this, false)}
@@ -376,7 +377,7 @@ class MarketPickerWrapper extends React.Component {
                                 maxLength="16"
                                 tabIndex={2}
                             />
-                        </section>
+                        </Form.Item>
                     </div>
                 </div>
                 <div
@@ -390,14 +391,14 @@ class MarketPickerWrapper extends React.Component {
                     }}
                 >
                     <div>
-                        <section className="block-list no-border-bottom">
-                            <header>
-                                <Translate
-                                    component="span"
-                                    content="exchange.market_picker.find_by_asset"
-                                />
-                            </header>
-                            <input
+                        <Form.Item
+                            label={counterpart
+                                .translate(
+                                    "exchange.market_picker.find_by_asset"
+                                )
+                                .toUpperCase()}
+                        >
+                            <Input
                                 type="text"
                                 value={inputValue}
                                 onChange={this._onInputName.bind(this, true)}
@@ -407,58 +408,52 @@ class MarketPickerWrapper extends React.Component {
                                 maxLength="16"
                                 tabIndex={2}
                             />
-                        </section>
+                        </Form.Item>
                     </div>
                     <div>
-                        <section className="block-list no-border-bottom">
-                            <header>
-                                <Translate
-                                    component="span"
-                                    content="exchange.market_picker.filter_by_issuer"
-                                />
-                            </header>
-                            <ul>
-                                <li className="with-dropdpwn">
-                                    <select
-                                        className="settings-select"
-                                        onChange={this._onSelectIssuer.bind(
-                                            this
-                                        )}
-                                        style={{border: 0}}
-                                    >
-                                        <option key="0" value="0">
-                                            {counterpart.translate(
-                                                "exchange.market_picker.show_all"
-                                            )}{" "}
-                                        </option>
-                                        {issuersList}
-                                    </select>
-                                </li>
-                            </ul>
-                        </section>
+                        <Form.Item
+                            label={counterpart
+                                .translate(
+                                    "exchange.market_picker.filter_by_issuer"
+                                )
+                                .toUpperCase()}
+                        >
+                            <Select
+                                defaultValue={"0"}
+                                onChange={this._onSelectIssuer.bind(this)}
+                                style={{width: "100%"}}
+                            >
+                                <Select.Option key="0" value="0">
+                                    {counterpart.translate(
+                                        "exchange.market_picker.show_all"
+                                    )}{" "}
+                                </Select.Option>
+                                {issuersList}
+                            </Select>
+                        </Form.Item>
                     </div>
                 </div>
-                <section className="block-list no-border-bottom">
-                    <Translate
-                        component="header"
-                        content="exchange.market_picker.results"
-                        total_assets={!allMarkets ? 0 : allMarkets.length}
-                    />
-                </section>
+                <Form.Item
+                    label={counterpart
+                        .translate("exchange.market_picker.results", {
+                            total_assets: !allMarkets ? 0 : allMarkets.length
+                        })
+                        .toUpperCase()}
+                />
                 {this.state.activeSearch &&
                 this.state.inputValue.length != 0 ? (
                     <div style={{textAlign: "center"}}>
                         <LoadingIndicator type="three-bounce" />
                     </div>
                 ) : null}
-                
+
                 <div className="results">
                     <ul ref="results" style={{marginLeft: 0}}>
                         {!this.state.activeSearch ? marketsList : null}
                     </ul>
                 </div>
 
-                <Button 
+                <Button
                     type="primary"
                     onClick={this.props.onClose.bind(this)}
                 >
@@ -493,7 +488,7 @@ class MarketPicker extends React.Component {
             this.onClose();
         }
     }
-    
+
     show() {
         this.setState({open: true}, () => {
             ZfApi.publish(this.props.modalId, "open");
@@ -501,15 +496,15 @@ class MarketPicker extends React.Component {
     }
 
     onClose() {
-        this.setState({open: false}, () => { 
+        this.setState({open: false}, () => {
             this.props.onToggleMarketPicker(null)
         });
     }
 
     render() {
-        return !this.state.open 
-            ? null 
-            : 
+        return !this.state.open
+            ? null
+            :
             <BaseModal
                 id={this.props.modalId}
                 overlay={true}
@@ -520,7 +515,7 @@ class MarketPicker extends React.Component {
             >
                 <MarketPickerWrapper
                     onClose={this.onClose.bind(this)}
-                    {...this.props} 
+                    {...this.props}
                 />
             </BaseModal>;
     }
