@@ -175,8 +175,16 @@ class Settings extends React.Component {
         });
     }
 
+    _handleSettingsEntryChange(setting, input) {
+        if (!input.target) {
+            this._onChangeSetting(setting, {target: {value: input}});
+        } else {
+            this._onChangeSetting(setting, input);
+        }
+    }
+
     _onChangeSetting(setting, e) {
-        e.preventDefault();
+        if (e.preventDefault) e.preventDefault();
 
         let {defaults} = this.props;
         let value = null;
@@ -365,7 +373,9 @@ class Settings extends React.Component {
                             setting={setting}
                             settings={settings}
                             defaults={defaults[setting]}
-                            onChange={this._onChangeSetting.bind(this)}
+                            onChange={this._handleSettingsEntryChange.bind(
+                                this
+                            )}
                             onNotificationChange={
                                 this._handleNotificationChange
                             }
