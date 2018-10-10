@@ -892,8 +892,13 @@
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
         "bitshares_beos": {
+            "action": "%(action)s",
+            "account": "Account",
+            "active_key": "Active key",
+            "amount_to_send": "Amount to send",
             "create_account": "Create BEOS account",
-            "transfer": "Convert BTS to BEOS"
+            "transfer": "Send BTS",
+            "title": "%(name)s"
         },
         "bitspark": {
             "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
