@@ -80,7 +80,7 @@ export default class QuoteSelectionModal extends React.Component {
                 modalHeader="exchange.quote_selection"
                 noLogo
             >
-                <section className="block-list no-border-bottom">
+                <section className="no-border-bottom">
                     <table className="table">
                         <thead>
                             <tr>
