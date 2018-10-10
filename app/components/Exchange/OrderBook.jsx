@@ -398,6 +398,12 @@ class OrderBook extends React.Component {
         this.centerText = React.createRef(); 
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            autoScroll: nextProps.autoScroll
+        });
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllAsks != this.state.showAllAsks) {
             let asksContainer = this.refs.hor_asks;
@@ -423,7 +429,7 @@ class OrderBook extends React.Component {
             if (this.refs.hor_bids) this.refs.hor_bids.scrollTop = 0;
         }
 
-        if (!nextProps.marketReady) return false;
+        // if (!nextProps.marketReady) return false;
         return true;
     }
 

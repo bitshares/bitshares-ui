@@ -550,10 +550,20 @@
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "settings": {
-            "header": "Personalize",
+            "chart_height": "Height",
+            "chart_options": "Chart options",
+            "chart_tools": "View Tools",
+            "chart_type": "Type",
+            "chart_zoom": "Allow Zoom",
             "grouping_standalone": "Standalone",
             "grouping_1": "Group 1",
-            "grouping_2": "Group 2"
+            "grouping_2": "Group 2",
+            "header": "Personalize",
+            "hidden_chart": "Hidde chart",
+            "hide_function_buttons": "Hide function buttons",
+            "market_location": "Market location",
+            "orderbook_autoscroll": "Autoscroll",
+            "reduce_scrollbars": "Reduce Scroll Bars"
         },
         "settle": "Settlement",
         "settle_orders": "Settle orders",
@@ -1452,7 +1462,9 @@
         "wallet_required_text": "In order to restore a backup you will need to switch to a local wallet first, do so by clicking the button below",
         "wallet_text": "Control the details of your local wallet.",
         "wallets": "Wallets",
-        "yes": "Yes"
+        "yes": "Yes",
+        "left": "Left",
+        "right": "Right"
     },
     "sync_fail": {
         "sub_text_1": "Please verify that your computer clock is correct.",

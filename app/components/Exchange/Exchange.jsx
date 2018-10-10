@@ -205,7 +205,6 @@ class Exchange extends React.Component {
             ask,
             flipBuySell: ws.get("flipBuySell", false),
             favorite: false,
-            showDepthChart: ws.get("showDepthChart", false),
             verticalOrderBook: ws.get("verticalOrderBook", false),
             verticalOrderForm: ws.get("verticalOrderForm", false),
             buyDiff: false,
@@ -218,7 +217,7 @@ class Exchange extends React.Component {
             hidePanel: ws.get("hidePanel", false),
             autoScroll: ws.get("global_AutoScroll", true),
             hideScrollbars: ws.get("hideScrollbars", false),
-            hideChart: ws.get("hideChart", false),
+            chartType: ws.get("chartType", "price_chart"),
             chartHeight: ws.get("chartHeight", 600),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
@@ -988,15 +987,14 @@ class Exchange extends React.Component {
             activePanels: newState
         });
     }
-
-    _toggleChart() {
-        let newState = !this.state.hideChart;
+   
+    _toggleChart(value) {
         this.setState({
-            hideChart: newState
+            chartType: value
         });
 
         SettingsActions.changeViewSetting({
-            hideChart: newState
+            chartType: value
         });
     }
 
@@ -1016,14 +1014,6 @@ class Exchange extends React.Component {
         });
 
         this.setState({buySellOpen: !this.state.buySellOpen});
-    }
-
-    _toggleCharts() {
-        SettingsActions.changeViewSetting({
-            showDepthChart: !this.state.showDepthChart
-        });
-
-        this.setState({showDepthChart: !this.state.showDepthChart});
     }
 
     _toggleMarketPicker(asset) {
@@ -1073,21 +1063,23 @@ class Exchange extends React.Component {
         this.setState({showSettings: !this.state.showSettings});
     }
 
-    _toggleScrollbars(value) {
+    _toggleScrollbars() {
         SettingsActions.changeViewSetting({
-            hideScrollbars: value
+            hideScrollbars: !this.state.hideScrollbars
         });
 
-        this.setState({hideScrollbars: value});
+        this.setState({
+            hideScrollbars: !this.state.hideScrollbars
+        });
     }
 
-    _mirrorPanels(value) {
+    _mirrorPanels() {
         this.setState({
-            mirrorPanels: value
+            mirrorPanels: !this.state.mirrorPanels
         });
 
         SettingsActions.changeViewSetting({
-            mirrorPanels: value
+            mirrorPanels: !this.state.mirrorPanels
         });
     }
 
@@ -1493,8 +1485,8 @@ class Exchange extends React.Component {
             ask,
             verticalOrderBook,
             verticalOrderForm,
-            showDepthChart,
             chartHeight,
+            chartType,
             buyDiff,
             sellDiff,
             width,
@@ -1503,7 +1495,7 @@ class Exchange extends React.Component {
             tabVerticalPanel,
             hidePanel,
             hideScrollbars,
-            hideChart,
+            // hideChart,
             modalType,
             autoScroll,
             activePanels,
@@ -2068,7 +2060,7 @@ class Exchange extends React.Component {
             />
         );
 
-        let tradingViewChart = hideChart || showDepthChart || (tinyScreen && !this.state.mobileKey.includes("tradingViewChart")) ? null : (
+        let tradingViewChart = !chartType || chartType != "price_chart" || (tinyScreen && !this.state.mobileKey.includes("tradingViewChart")) ? null : (
             <TradingViewPriceChart
                 locale={this.props.locale}
                 dataFeed={this.props.dataFeed}
@@ -2088,7 +2080,7 @@ class Exchange extends React.Component {
             />
         );
 
-        let deptHighChart = hideChart || !showDepthChart || (tinyScreen && !this.state.mobileKey.includes("deptHighChart")) ? null : (
+        let deptHighChart = !chartType || chartType != "market_depth" || (tinyScreen && !this.state.mobileKey.includes("deptHighChart")) ? null : (
             <DepthHighChart
                 marketReady={marketReady}
                 orders={marketLimitOrders}
@@ -2355,12 +2347,12 @@ class Exchange extends React.Component {
                     activeKey={this.state.mobileKey} 
                     onChange={this._onChangeMobilePanel.bind(this)}
                 >
-                    {!hideChart ? 
+                    {chartType && chartType == "price_chart" ? 
                         <Collapse.Panel header={translator.translate("exchange.price_history")} key="tradingViewChart">
                             {tradingViewChart}
                         </Collapse.Panel>
                         : null}
-                    {!hideChart ?
+                    {chartType && chartType == "market_depth" ?
                         <Collapse.Panel header={translator.translate("exchange.order_depth")} key="deptHighChart">
                             {deptHighChart}
                         </Collapse.Panel>
@@ -2487,6 +2479,8 @@ class Exchange extends React.Component {
             ;
         }
 
+        console.log("Chart Type is " + chartType);
+
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
@@ -2503,7 +2497,6 @@ class Exchange extends React.Component {
                     feedPrice={feedPrice}
                     marketReady={marketReady}
                     latestPrice={latest && latest.getPrice()}
-                    showDepthChart={showDepthChart}
                     marketStats={marketStats}
                     selectedMarketPickerAsset={this.state.marketPickerAsset}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
@@ -2525,20 +2518,20 @@ class Exchange extends React.Component {
                         ref="settingsModal"
                         modalId="settingsModal"
                         viewSettings={this.props.viewSettings}
-                        showDepthChart={showDepthChart}
+                        chartType={chartType}
                         chartHeight={chartHeight}
                         onToggleSettings={this._toggleSettings.bind(this)}
                         onChangeChartHeight={this.onChangeChartHeight.bind(this)}
-                        onToggleCharts={this._toggleCharts.bind(this)}
                         handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
                             this
                         )}
                         trackedGroupsConfig={trackedGroupsConfig}
                         currentGroupOrderLimit={currentGroupOrderLimit}
+                        verticalOrderBook={verticalOrderBook}
                         hideScrollbars={hideScrollbars}
-                        hideChart={hideChart}
                         mirrorPanels={mirrorPanels}
                         panelTabs={panelTabs}
+                        onMoveOrderBook={this._moveOrderBook.bind(this)}
                         onMirrorPanels={this._mirrorPanels.bind(this)}
                         onToggleScrollbars={this._toggleScrollbars.bind(this)}
                         onSetAutoscroll={this._setAutoscroll.bind(this)}
@@ -2565,19 +2558,20 @@ class Exchange extends React.Component {
                             ref="center"
                         >
                             <div>
-                                {!showDepthChart ? (
+                                {/* Price history chart */}
+                                {chartType && chartType == "price_chart" ?
                                     <div
                                         className="grid-block shrink no-overflow"
                                         id="market-charts"
                                     >
-                                        {/* Price history chart */}
-                                        {!tinyScreen ? tradingViewChart : null}
-                                    </div>
-                                ) : (
+                                        {tradingViewChart}
+                                    </div> : null}
+
+                                {/* Market depth chart */}
+                                {chartType && chartType == "market_depth" ?
                                     <div className="grid-block vertical no-padding shrink">
-                                        {!tinyScreen ? deptHighChart : null}
-                                    </div>
-                                )}
+                                        {deptHighChart}
+                                    </div> : null}
                             </div>
                             <div className="grid-block no-overflow wrap shrink">
                                 {actionCards}

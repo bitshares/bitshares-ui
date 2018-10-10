@@ -1452,9 +1452,6 @@
                 color: $negative-color !important;
             }
         }
-        &.clickable:hover {
-            background-color: lighten($panel-bg-color, 4%);
-        }
     }
     .stat-text {
         margin-top: 3px;
