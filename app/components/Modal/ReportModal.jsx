@@ -7,6 +7,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
 import Screenshot from "lib/common/Screenshot";
 import CopyButton from "../Utility/CopyButton";
+import html2canvas from "html2canvas";
 
 import {connect} from "alt-react";
 
@@ -31,7 +32,9 @@ class ReportModal extends React.Component {
             memo: [],
             hidden: false,
             logsCopySuccess: false,
-            showLog: false
+            showLog: false,
+            imageURI: "",
+            showScreen: false
         };
     }
 
@@ -40,6 +43,14 @@ class ReportModal extends React.Component {
         this.setState({open: true, hidden: false}, () => {
             ZfApi.publish(this.props.id, "open");
         });
+        html2canvas(content)
+            .then(canvas => {
+                return canvas.toDataURL("image/png");
+            })
+            .then(
+                uri => this.setState({imageURI: uri}),
+                error => console.error("Oops, Something Went Wrong", error)
+            );
     }
 
     onMemoChanged(e) {
@@ -64,15 +75,10 @@ class ReportModal extends React.Component {
     };
 
     downloadScreenshot = () => {
-        this.setState({
-            loadingImage: true
-        });
-
         // Take screenshot
-        Screenshot(() => {
-            this.setState({
-                loadingImage: false
-            });
+        this.setState({
+            showScreen: !this.state.showScreen,
+            showLog: false
         });
     };
 
@@ -95,11 +101,47 @@ class ReportModal extends React.Component {
     };
 
     showLog() {
-        this.setState({showLog: !this.state.showLog});
+        this.setState({
+            showLog: !this.state.showLog,
+            showScreen: false
+        });
     }
 
     render() {
-        let {open, hidden, memo, loadingImage, logsCopySuccess} = this.state;
+        let {
+            open,
+            hidden,
+            memo,
+            loadingImage,
+            logsCopySuccess,
+            showLog,
+            showScreen
+        } = this.state;
+        const logsArea = () => {
+            if (showLog) {
+                return (
+                    <textarea
+                        id="logsText"
+                        style={{
+                            marginBottom: 0
+                        }}
+                        rows="20"
+                        value={memo}
+                        onChange={this.onMemoChanged.bind(this)}
+                    />
+                );
+            } else if (showScreen) {
+                return <img src={this.state.imageURI} />;
+            } else {
+                return (
+                    <Translate
+                        className="left-label"
+                        component="label"
+                        content="modal.report.explanatory_text"
+                    />
+                );
+            }
+        };
 
         return !open ? null : (
             <div id="report_modal" className={hidden || !open ? "hide" : ""}>
@@ -122,23 +164,7 @@ class ReportModal extends React.Component {
                             />
                         </div>
                         <div className="raw">
-                            {this.state.showLog ? (
-                                <textarea
-                                    id="logsText"
-                                    style={{
-                                        marginBottom: 0
-                                    }}
-                                    rows="20"
-                                    value={memo}
-                                    onChange={this.onMemoChanged.bind(this)}
-                                />
-                            ) : (
-                                <Translate
-                                    className="left-label"
-                                    component="label"
-                                    content="modal.report.explanatory_text"
-                                />
-                            )}
+                            {logsArea()}
                             {/* warning */}
                             {this.state.propose ? (
                                 <div
