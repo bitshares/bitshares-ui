@@ -404,6 +404,12 @@ class OrderBook extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            autoScroll: nextProps.autoScroll
+        });
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllAsks != this.state.showAllAsks) {
             let asksContainer = this.refs.hor_asks;
