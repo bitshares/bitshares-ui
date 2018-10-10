@@ -27,6 +27,16 @@ export const rudexAPIs = {
     NEW_DEPOSIT_ADDRESS: "/new-deposit-address"
 };
 
+export const bitsparkAPIs = {
+    BASE: "https://dex-api.bitspark.io/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs",
+    DEPOSIT_LIMIT: "/deposit-limits",
+    ESTIMATE_OUTPUT: "/estimate-output-amount",
+    ESTIMATE_INPUT: "/estimate-input-amount"
+};
+
 export const cryptoBridgeAPIs = {
     BASE: "https://api.crypto-bridge.org/api/v1",
     COINS_LIST: "/coins",
@@ -607,6 +617,70 @@ export const settingsAPIs = {
             location: "Reykjavik",
             operator: "CITADEL",
             contact: "email:citadel.li;support"
+        },
+        {
+            url: "wss://us-east-1.bts.crypto-bridge.org",
+            region: "Northern America",
+            country: "United States of America",
+            location: "North Virginia",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://us-west-1.bts.crypto-bridge.org",
+            region: "Northern America",
+            country: "United States of America",
+            location: "North California",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-central-1.bts.crypto-bridge.org",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-west-1.bts.crypto-bridge.org",
+            region: "Northern Europe",
+            country: "Ireland",
+            location: "Dublin",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://eu-west-2.bts.crypto-bridge.org",
+            region: "Northern Europe",
+            country: "United Kingdom",
+            location: "London",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-northeast-1.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Japan",
+            location: "Tokyo",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-1.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Singapore",
+            location: "Singapore",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-2.bts.crypto-bridge.org",
+            region: "Australia",
+            country: "Australia",
+            location: "Sydney",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
         },
         // Testnet
         {

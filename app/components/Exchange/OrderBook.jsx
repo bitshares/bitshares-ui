@@ -66,7 +66,7 @@ class OrderBookRowVertical extends React.Component {
     }
 }
 
-const elemHeight = elem => elem.getBoundingClientRect().height;
+const elemHeight = elem => (elem ? elem.getBoundingClientRect().height : 0);
 
 class OrderBookRowHorizontal extends React.Component {
     shouldComponentUpdate(np) {
@@ -273,8 +273,8 @@ class GroupOrderLimitSelector extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({groupLimit: this.props.currentGroupOrderLimit});
+    static getDerivedStateFromProps(props) {
+        return {groupLimit: props.currentGroupOrderLimit};
     }
 
     render() {
@@ -320,6 +320,8 @@ class OrderBook extends React.Component {
             rowCount: 20,
             autoScroll: true
         };
+        this.verticalStickyTable = React.createRef();
+        this.centerText = React.createRef();
     }
 
     shouldComponentUpdate(nextProps) {
@@ -341,11 +343,12 @@ class OrderBook extends React.Component {
     //     );
     // }
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const nextProps = this.props;
         // Change of market or direction
         if (
-            nextProps.base.get("id") !== this.props.base.get("id") ||
-            nextProps.quote.get("id") !== this.props.quote.get("id")
+            nextProps.base.get("id") !== prevProps.base.get("id") ||
+            nextProps.quote.get("id") !== prevProps.quote.get("id")
         ) {
             if (this.refs.askTransition) {
                 this.refs.askTransition.resetAnimation();
@@ -363,25 +366,13 @@ class OrderBook extends React.Component {
                 this.setState({autoScroll: true});
             }
         }
-
-        if (
-            !utils.are_equal_shallow(
-                nextProps.combinedAsks,
-                this.props.combinedAsks
-            ) ||
-            !utils.are_equal_shallow(
-                nextProps.combinedBids,
-                this.props.combinedBids
-            )
-        ) {
-            this.setState({}, () => {
-                this.psUpdate();
-            });
-        }
+        this.psUpdate();
+        this.centerVerticalScrollBar();
     }
 
-    queryStickyTable = query =>
-        this.refs.vertical_sticky_table.table.querySelector(query);
+    queryStickyTable = query => {
+        return this.verticalStickyTable.current.table.querySelector(query);
+    };
 
     verticalScrollBar = () => this.queryStickyTable("#y-scrollbar");
 
@@ -397,49 +388,34 @@ class OrderBook extends React.Component {
         }
     }
 
-    componentWillUpdate() {
-        if (!this.props.horizontal) {
-            const scrollableContainer = this.queryStickyTable(
-                "#sticky-table-y-wrapper"
-            );
-
-            const centerTextContainer = this.refs.center_text;
-            const centeringOffset = 21;
-            const scrollTo =
-                centerTextContainer.offsetTop -
-                elemHeight(scrollableContainer) / 2 +
-                centeringOffset;
-
-            this.offset = scrollableContainer.scrollTop - scrollTo;
-        }
-    }
-
     centerVerticalScrollBar() {
-        if (!this.props.horizontal) {
+        if (!this.props.horizontal && this.state.autoScroll) {
+            // Center vertical scroll bar
             const scrollableContainer = this.queryStickyTable(
                 "#sticky-table-y-wrapper"
             );
-            const centerTextContainer = this.refs.center_text;
-            const centeringOffset = 21;
-            const offset =
-                !this.state.autoScroll && this.offset ? this.offset : 0;
-            const scrollTo =
-                centerTextContainer.offsetTop -
-                elemHeight(scrollableContainer) / 2 +
-                centeringOffset +
-                offset;
-
-            this.setState(
-                {ownScroll: true},
-                () => (scrollableContainer.scrollTop = scrollTo)
+            const header = this.queryStickyTable("#sticky-table-header");
+            const centerTextContainer = this.centerText.current;
+            const singleAskHeight = elemHeight(
+                this.queryStickyTable(".order-row")
             );
+            const asksHeight = this.props.combinedAsks.length * singleAskHeight;
+
+            const scrollableContainerHeight =
+                elemHeight(scrollableContainer) - elemHeight(header);
+
+            const scrollTo =
+                asksHeight +
+                elemHeight(centerTextContainer) / 2 -
+                scrollableContainerHeight / 2;
+
+            scrollableContainer.scrollTop = scrollTo;
         }
     }
 
     psUpdate() {
         if (!this.props.horizontal) {
             Ps.update(this.verticalScrollBar());
-            this.centerVerticalScrollBar();
         } else {
             let bidsContainer = this.refs.hor_bids;
             Ps.update(bidsContainer);
@@ -483,10 +459,7 @@ class OrderBook extends React.Component {
     };
 
     toggleAutoScroll = () => {
-        const newState = {autoScroll: !this.state.autoScroll};
-        if (newState.autoScroll)
-            this.setState(newState, this.centerVerticalScrollBar);
-        else this.setState(newState);
+        this.setState({autoScroll: !this.state.autoScroll});
     };
 
     render() {
@@ -1043,7 +1016,7 @@ class OrderBook extends React.Component {
                         <StickyTable
                             stickyColumnCount={0}
                             className="order-table table"
-                            ref="vertical_sticky_table"
+                            ref={this.verticalStickyTable}
                         >
                             <div className="sticky-table-row top-header">
                                 <div className="cell header-cell left">
@@ -1068,6 +1041,7 @@ class OrderBook extends React.Component {
                                 className="transition-container clickable"
                                 component="div"
                                 transitionName="newrow"
+                                id="top-order-rows"
                             >
                                 {askRows.length > 0
                                     ? askRows
@@ -1082,7 +1056,10 @@ class OrderBook extends React.Component {
                                           </div>
                                       )}
                             </TransitionWrapper>
-                            <div className="sticky-table-row" ref="center_text">
+                            <div
+                                className="sticky-table-row"
+                                ref={this.centerText}
+                            >
                                 {noOrders ? (
                                     <td
                                         colSpan={3}

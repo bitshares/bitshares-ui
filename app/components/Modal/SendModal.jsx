@@ -712,6 +712,7 @@ class SendModal extends React.Component {
                                             assets={asset_types}
                                             display_balance={balance}
                                             tabIndex={tabIndex++}
+                                            allowNaN={true}
                                         />
                                     </div>
                                     {/*  M E M O  */}
