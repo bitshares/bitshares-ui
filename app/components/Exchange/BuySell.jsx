@@ -201,7 +201,7 @@ class BuySell extends React.Component {
                         <ExchangeInput 
                             placeholder="0.0"
                             id="baseMarketFee"
-                            value={baseFee}
+                            defaultValue={baseFee}
                             addonAfter={
                                 <span style={{fontSize: "75%"}}>
                                     <AssetName noTip name={base.get("symbol")} />
@@ -222,7 +222,7 @@ class BuySell extends React.Component {
                             <ExchangeInput 
                                 placeholder="0.0"
                                 id="baseMarketFee"
-                                value={baseFee}
+                                defaultValue={baseFee}
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName noTip name={base.get("symbol")} />
@@ -243,7 +243,7 @@ class BuySell extends React.Component {
                             <ExchangeInput 
                                 placeholder="0.0"
                                 id="baseMarketFee"
-                                value={baseFee}
+                                defaultValue={baseFee}
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName noTip name={base.get("symbol")} />
@@ -270,7 +270,7 @@ class BuySell extends React.Component {
                         <ExchangeInput 
                             placeholder="0.0"
                             id="quoteMarketFee"
-                            value={quoteFee}
+                            defaultValue={quoteFee}
                             addonAfter={
                                 <span style={{fontSize: "75%"}}>
                                     <AssetName style={{width: 100}} noTip name={quote.get("symbol")} />
@@ -291,7 +291,7 @@ class BuySell extends React.Component {
                             <ExchangeInput 
                                 placeholder="0.0"
                                 id="quoteMarketFee"
-                                value={quoteFee}
+                                defaultValue={quoteFee}
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName style={{width: 100}} noTip name={quote.get("symbol")} />
@@ -312,7 +312,7 @@ class BuySell extends React.Component {
                             <ExchangeInput 
                                 placeholder="0.0"
                                 id="quoteMarketFee"
-                                value={quoteFee}
+                                defaultValue={quoteFee}
                                 addonAfter={
                                     <span style={{fontSize: "75%"}}>
                                         <AssetName style={{width: 100}} noTip name={quote.get("symbol")} />
@@ -332,7 +332,7 @@ class BuySell extends React.Component {
                     <ExchangeInput 
                         placeholder="0.0"
                         id="emptyPlaceholder"
-                        value="0"
+                        defaultValue="0"
                         addonAfter={
                             <span style={{fontSize: "75%"}}>
                                 <AssetName style={{width: 100}} noTip name={quote.get("symbol")} />
@@ -514,7 +514,7 @@ class BuySell extends React.Component {
                             <ExchangeInput 
                                 id={`${type}Fee`}
                                 placeholder="0.0" 
-                                value={
+                                defaultValue={
                                     !hasFeeBalance
                                         ? counterpart.translate(
                                             "transfer.errors.insufficient"
@@ -761,7 +761,7 @@ class BuySell extends React.Component {
                                 <ExchangeInput 
                                     id={`${type}Fee`}
                                     placeholder="0.0" 
-                                    value={
+                                    defaultValue={
                                         !hasFeeBalance
                                             ? counterpart.translate(
                                                 "transfer.errors.insufficient"

@@ -1289,22 +1289,13 @@ class OrderBook extends React.Component {
                                                         }
                                                         style={{marginLeft: 0}}
                                                     />&nbsp;
-                                                    {/* <AntIcon 
-                                                        style={{fontSize: 20}}
-                                                        type="retweet icon-fill"
-                                                        onClick={
-                                                            this.toggleOrderBook
-                                                        } 
-                                                        title={translator.translate("icons.reverse_orderbook")}
-                                                    /> */}
-                                                    {/* <img src="../assets/grouping.png" style={{width: 16}} alt="Grouping" /> */}
                                                     {currentGroupOrderLimit == 0 ? 
                                                         null : 
-                                                        <AntIcon 
-                                                            style={{fontSize: 16}} 
-                                                            type="fork" 
-                                                            className="icon-fill" 
+                                                        <Icon
+                                                            name="grouping"
+                                                            className="icon-14px"
                                                             title={translator.translate("icons.order_grouping")}
+                                                            style={{marginLeft: 0}}
                                                         />
                                                     }
                                                 </span>
