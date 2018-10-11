@@ -2269,7 +2269,7 @@
 
         span.checkbox {
             border-color: $button-bg-color;
-            background-color: $button-bg-color;
+            background-color: transparentize($button-bg-color, 0.9);
         }
 
         span.checkbox-active {

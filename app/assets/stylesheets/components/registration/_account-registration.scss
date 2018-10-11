@@ -113,7 +113,7 @@ div.registration {
             }
         }
 
-        .new-layout-select {
+        .registration-layout-select {
             max-width: 30rem;
             border-radius: 0;
         }
@@ -161,6 +161,18 @@ div.registration {
 
     div.button.disabled {
         opacity: 0.1;
+    }
+
+    .password-copy-button {
+        padding: 10px;
+        border-radius: 0 5px 5px 0;
+        display: inline;
+        right: 35px;
+        position: absolute;
+    }
+
+    .generated-password-section {
+        position: relative;
     }
 }
 
@@ -221,7 +233,7 @@ div.registration {
                 line-height: 18px;
             }
 
-            .new-layout-select {
+            .registration-layout-select {
                 max-width: 100%;
             }
 
