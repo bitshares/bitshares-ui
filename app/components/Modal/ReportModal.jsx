@@ -66,7 +66,8 @@ class ReportModal extends React.Component {
                 memo: [],
                 hidden: false,
                 logsCopySuccess: false,
-                showLog: false
+                showLog: false,
+                showScreen: false
             },
             () => {
                 if (publishClose) ZfApi.publish(this.props.id, "close");
