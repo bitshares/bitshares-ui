@@ -1954,6 +1954,9 @@
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
     },
+    "alert": {
+        "warning": "Warning"
+    },
     "registration": {
         "title": "Registration",
         "walletModelTitle": "By bin-file",
