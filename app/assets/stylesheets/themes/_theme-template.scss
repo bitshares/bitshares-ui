@@ -1300,15 +1300,20 @@
             color: $secondary-text-color;
         }
     }
-
+    
     div.exchange-content-header {
         background-color: transparent !important;
     }
 
     .exchange-content-header {
         color: $light-text-color;
-        background-color: transparent !important;
-
+        border-bottom: 1px solid $button-bg-color;
+        &.bid {
+            border-bottom: 1px solid $bid-color;
+        }
+        &.ask {
+            border-bottom: 1px solid $ask-color;
+        }
     }
     // .block-content-header {
     // //text-transform: uppercase;
@@ -1439,8 +1444,7 @@
     }
     .stats .stressed-stat {
         padding: 10px 0;
-        font-size: 16px;
-
+        font-size: 18px;
         &.is-call {
             color: $call-color !important;
         }
@@ -1499,17 +1503,10 @@
         cursor: pointer;
     }
 
-
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
-
-    .table.no-stripes > tbody > tr {
-        background-color: transparent;
-        
-    }
-
-    //bottom stats
+    // bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1947,6 +1944,9 @@
     .footer {
         padding-right: 0;
     }
+    .tab-no-background {
+        background-color: transparent !important;
+    }
     .header-container {
         background-color: $account-background;
         .menu-dropdown-wrapper {
@@ -1970,6 +1970,10 @@
     .flip-arrow:hover {
         color: $bs-blue;
         cursor: pointer;
+    }
+    .order-2 .flip-arrow,
+    .order-5 .flip-arrow {
+        display: none;
     }
     .order-book-button-h svg > path {
         fill: #fff;
@@ -2062,37 +2066,47 @@
         }
     }
     .expiration-datetime-picker {
-        width: 100%;
+        width: 225px;
         > div {
-            float: left;
+            float: right;
         }
         input {
             width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
-            background: transparent !important;
+            background: transparent;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            font-size: 90%;
+            text-align: right;
+            font-size: 0.9rem;
             height: 28px;
             &:hover {
-                background: transparent !important;
+                background: transparent;
             }
         }
         select {
+            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 90%;
+            font-size: 0.9rem;
             height: 28px;
             margin: 0 0 1px;
             > option {
                 background-color: $light-panel-bg-color;
             }
+        }
+    }
+    .marketPicker {
+        background: $bg-color;
+        box-shadow: 2px 2px 5px darken($bg-color, 30%);
+        .results {
+            background: $input-background;
+            border: 1px solid $bg-color;
         }
     }
     .qr-address-scanner {
