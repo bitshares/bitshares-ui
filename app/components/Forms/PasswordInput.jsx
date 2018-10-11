@@ -192,7 +192,7 @@ class PasswordInput extends Component {
                             }}
                             id="current-password"
                             name="password"
-                            type={visible ? "password" : "text"}
+                            type={visible ? "text" : "password"}
                             ref="password"
                             autoComplete="current-password"
                             onChange={this.handleChange}

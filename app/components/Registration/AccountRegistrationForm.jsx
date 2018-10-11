@@ -2,10 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
-import AccountNameInput from "./../Forms/AccountNameInput";
-import WalletDb from "stores/WalletDb";
-import AccountSelect from "../Forms/AccountSelect";
-import LoadingIndicator from "../LoadingIndicator";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore, key} from "bitsharesjs/es";
@@ -13,6 +9,10 @@ import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import PasswordInput from "components/Forms/PasswordInput";
+import WalletDb from "stores/WalletDb";
+import AccountNameInput from "./../Forms/AccountNameInput";
+import AccountSelect from "../Forms/AccountSelect";
+import LoadingIndicator from "../LoadingIndicator";
 import Icon from "../Icon/Icon";
 
 class AccountRegistrationForm extends React.Component {
@@ -136,7 +136,6 @@ class AccountRegistrationForm extends React.Component {
                             </span>
                         }
                         noLabel
-                        newLayout
                     />
 
                     <PasswordInput
@@ -145,11 +144,9 @@ class AccountRegistrationForm extends React.Component {
                         onChange={this.onPasswordChange}
                         noLabel
                         placeholder={counterpart.translate("settings.password")}
-                        newLayout
-                        show
-                        disabled
                         copy
                         readonly
+                        visible
                     />
 
                     {firstAccount ? null : (

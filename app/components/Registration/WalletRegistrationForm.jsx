@@ -12,23 +12,20 @@ import AccountStore from "stores/AccountStore";
 import WalletDb from "stores/WalletDb";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import utils from "common/utils";
+import ls from "common/localStorage";
 import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import Icon from "../Icon/Icon";
-import ls from "common/localStorage";
 
 const STORAGE_KEY = "__graphene__";
 const ss = new ls(STORAGE_KEY);
 
 class WalletRegistrationForm extends React.Component {
     static propTypes = {
-        continue: PropTypes.func.isRequired
-    };
-
-    static contextTypes = {
-        router: PropTypes.object
+        continue: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired
     };
 
     constructor() {
@@ -102,7 +99,7 @@ class WalletRegistrationForm extends React.Component {
         if (!this.isValid()) {
             return;
         }
-        const accountName = this.state.accountName;
+        const {accountName} = this.state;
         if (WalletDb.getWallet()) {
             this.createAccount(accountName);
         } else {
@@ -114,7 +111,6 @@ class WalletRegistrationForm extends React.Component {
     }
 
     createAccount(name) {
-        const refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         const {referralAccount} = AccountStore.getState();
         WalletUnlockActions.unlock().then(() => {
             this.setState({loading: true});
@@ -123,8 +119,7 @@ class WalletRegistrationForm extends React.Component {
                 name,
                 this.state.registrarAccount,
                 referralAccount || this.state.registrarAccount,
-                0,
-                refcode
+                0
             )
                 .then(() => {
                     ss.set("isAuthentificated", true);
@@ -235,8 +230,6 @@ class WalletRegistrationForm extends React.Component {
                         </span>
                     </span>
                 }
-                newLayout
-                passwordVisibility
             />
         );
     }
@@ -265,7 +258,6 @@ class WalletRegistrationForm extends React.Component {
                     </span>
                 }
                 noLabel
-                newLayout
             />
         );
     }
