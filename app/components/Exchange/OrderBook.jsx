@@ -399,7 +399,11 @@ class OrderBook extends React.Component {
             const singleAskHeight = elemHeight(
                 this.queryStickyTable(".order-row")
             );
-            const asksHeight = this.props.combinedAsks.length * singleAskHeight;
+            const asks =
+                this.props.currentGroupOrderLimit !== 0
+                    ? this.props.groupedAsks
+                    : this.props.combinedAsks;
+            const asksHeight = asks.length * singleAskHeight;
 
             const scrollableContainerHeight =
                 elemHeight(scrollableContainer) - elemHeight(header);
