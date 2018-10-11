@@ -28,8 +28,6 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
-import ls, {setLocalStorageType} from "../../lib/common/localStorage";
-
 import {getLogo} from "branding";
 var logo = getLogo();
 
@@ -40,9 +38,6 @@ var logo = getLogo();
 const SUBMENUS = {
     SETTINGS: "SETTINGS"
 };
-
-const STORAGE_KEY = "__graphene__";
-let ss = new ls(STORAGE_KEY);
 
 class Header extends React.Component {
     constructor(props) {

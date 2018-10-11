@@ -35,10 +35,7 @@ import {
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
-import {
-    setLocalStorageType,
-    isPersistantType
-} from "../../lib/common/localStorage";
+import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import Translate from "react-translate-component";
 
 class WalletUnlockModal extends React.Component {
