@@ -57,7 +57,6 @@ export default class TransitionWrapper extends React.Component {
                     transitionEnterTimeout={this.props.enterTimeout}
                     transitionEnter={this.state.animateEnter}
                     transitionLeave={false}
-                    id={this.props.id}
                 >
                     {this.props.children}
                 </CSSTransitionGroup>

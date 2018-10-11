@@ -143,18 +143,18 @@ export default class ExchangeHeader extends React.Component {
 
             /* Settlment Offset */
             let settleAsset =
-                baseAsset.get("id") == "1.3.0"
+                baseId == "1.3.0"
                     ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0"
+                    : quoteId == "1.3.0"
                         ? baseAsset
-                        : null;
+                        : quoteAsset;
 
             if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
                     .getIn(["bitasset", "options"])
                     .toJS().force_settlement_offset_percent;
                 settlePrice =
-                    baseAsset.get("id") == "1.3.0"
+                    baseId == "1.3.0"
                         ? feedPrice.toReal() / (1 + offset_percent / 10000)
                         : feedPrice.toReal() * (1 + offset_percent / 10000);
             }
@@ -329,7 +329,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.volume_24"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
