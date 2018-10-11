@@ -17,7 +17,7 @@ import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import {openledgerAPIs} from "api/apiConfig";
-import BitsharesEos from "../DepositWithdraw/BitsharesEos";
+import BitsharesBeos from "../DepositWithdraw/BitsharesBeos";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
@@ -506,7 +506,7 @@ class AccountDepositWithdraw extends React.Component {
 
         serList.push({
             name: "BitShares EOS",
-            template: <BitsharesEos />
+            template: <BitsharesBeos account={account} asset={"BTS"} />
         });
 
         serList.push({
