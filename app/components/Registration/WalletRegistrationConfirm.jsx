@@ -11,11 +11,8 @@ class WalletRegistrationConfirm extends React.Component {
         toggleConfirmed: PropTypes.func.isRequired,
         checkboxUploaded: PropTypes.bool.isRequired,
         checkboxRecover: PropTypes.bool.isRequired,
-        checkboxRemember: PropTypes.bool.isRequired
-    };
-
-    static contextTypes = {
-        router: PropTypes.object.isRequired
+        checkboxRemember: PropTypes.bool.isRequired,
+        history: PropTypes.object.isRequired
     };
 
     onBackupDownload = () => {
@@ -132,7 +129,7 @@ class WalletRegistrationConfirm extends React.Component {
                     />
                 </div>
                 <Download
-                    newLayout
+                    confirmation
                     checkboxActive={
                         this.props.checkboxUploaded &&
                         this.props.checkboxRemember &&

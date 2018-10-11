@@ -20,11 +20,8 @@ class AccountRegistrationConfirm extends React.Component {
     static propTypes = {
         accountName: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired,
-        toggleConfirmed: PropTypes.func.isRequired
-    };
-
-    static contextTypes = {
-        router: PropTypes.object.isRequired
+        toggleConfirmed: PropTypes.func.isRequired,
+        history: PropTypes.object.isRequired
     };
 
     constructor() {
@@ -64,7 +61,6 @@ class AccountRegistrationConfirm extends React.Component {
     }
 
     createAccount(name, password) {
-        const refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         const {referralAccount} = AccountStore.getState();
 
         AccountActions.createAccountWithPassword(
@@ -72,8 +68,7 @@ class AccountRegistrationConfirm extends React.Component {
             password,
             this.state.registrarAccount,
             referralAccount || this.state.registrarAccount,
-            0,
-            refcode
+            0
         )
             .then(() => {
                 AccountActions.setPasswordAccount(name);
