@@ -278,7 +278,7 @@ class MarketHistory extends React.Component {
                     )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
-                            <thead style={{backgroundColor: "#2c2e37"}}>
+                            <thead>
                                 <tr>
                                     <th style={{textAlign: "right"}}>
                                         <Translate
