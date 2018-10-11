@@ -1957,6 +1957,10 @@
     "alert": {
         "warning": "Warning"
     },
+    "modal": {
+        "ok": "ok",
+        "cancel": "cancel"
+    },
     "registration": {
         "title": "Registration",
         "walletModelTitle": "By bin-file",

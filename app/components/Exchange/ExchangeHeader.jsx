@@ -16,6 +16,7 @@ export default class ExchangeHeader extends React.Component {
         super();
 
         this.state = {
+            isModalVisible: false,
             volumeShowQuote: true,
             selectedMarketPickerAsset: props.selectedMarketPickerAsset
         };
