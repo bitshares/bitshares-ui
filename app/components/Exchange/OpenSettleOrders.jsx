@@ -147,7 +147,11 @@ class OpenSettleOrders extends React.Component {
         }
 
         return (
-            <TransitionWrapper component="tbody" transitionName="newrow">
+            <TransitionWrapper
+                ref="contentTransition"
+                component="tbody"
+                transitionName="newrow"
+            >
                 {activeOrders}
             </TransitionWrapper>
         );

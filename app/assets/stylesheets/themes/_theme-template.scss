@@ -582,6 +582,12 @@
             color: $link-text-color;
         }
     }
+    .header-container .anticon {
+        color: $primary-text-color !important;
+        background-color: $primary-text-color !important;
+        fill: $primary-text-color !important;
+    }
+
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -1377,8 +1383,6 @@
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            @include RobotoMedium;
-            font-size: 13px;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1388,6 +1392,9 @@
     }
     .left-order-book {
         background-color: $bg-color;
+        .orderbook-center-title {
+            color: $inactive-text-color;
+        }
         .spread .spread-value {
             color: $primary-text-color;
         }
@@ -1446,9 +1453,6 @@
             &.negative {
                 color: $negative-color !important;
             }
-        }
-        &.clickable:hover {
-            background-color: lighten($panel-bg-color, 4%);
         }
     }
     .stat-text {
@@ -1983,7 +1987,7 @@
         display: none;
     }
 
-    @include breakpoint(large) {
+    @include breakpoint(medium) {
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
@@ -2301,8 +2305,30 @@
             }
         }
     }
-}
 
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
+    }
+
+    i.anticon.icon-fill {
+        &:hover {
+            color: $bs-blue;
+            cursor: pointer;
+        }
+    }
+
+    .icon-fill {
+        svg > path {
+            fill: #fff;
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+        }
+    }
+}
 .rc-time-picker-panel {
     z-index: 9999 !important;
 }

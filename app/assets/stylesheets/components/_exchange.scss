@@ -3,8 +3,32 @@ div#CenterContent {
 }
 
 .market-layout {
-    > .grid-block {
-        // padding: 0.25rem 0.25rem 0.25rem 0.25rem !important;
+    .column-header {
+        width: 100%;
+        padding-right: 10px;
+
+        > ul {
+            list-style-type: none;
+            margin-left: 0px;
+            width: 100%;
+            margin-bottom: 0px;
+
+            > li {
+                font-size: 80%;
+                cursor: pointer;
+                display: inline-block;
+                margin-right: 15px;
+                text-transform: uppercase;
+            }
+
+            > li.last {
+                margin-right: 0px;
+            }
+
+            li.active {
+                cursor: default;
+            }
+        }
     }
 
     > .left-column {
@@ -61,6 +85,13 @@ div#CenterContent {
     > tbody > tr > td {
         font-size: 12px;
         padding-bottom: 4px;
+    }
+}
+
+// Mozilla Specific Padding Issues on Sticky Table Wrapper
+@-moz-document url-prefix() {
+    .order-table-container .sticky-table .sticky-table-y-wrapper {
+        padding-right: 0px !important;
     }
 }
 
@@ -178,7 +209,6 @@ form.order-form {
             padding-right: $scrollBarSpacePadding;
         }
         .text-center.spread {
-            color: grey;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -204,7 +234,7 @@ form.order-form {
     }
     .order-table-container {
         width: 100%;
-        height: calc(100% - 32px);
+        height: 100%;
     }
     .top-header {
         text-align: right;
@@ -316,10 +346,6 @@ ul.market-stats {
     /*border-right: 1px solid $border-color;*/
     min-height: 42px;
     margin-left: 25px;
-}
-
-.bottom-stats li {
-    // border-right: 1px solid $border-color;
 }
 
 .stats .stat {
