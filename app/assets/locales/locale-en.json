@@ -1491,7 +1491,14 @@
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "withdraw_full": "Click to withdraw the full balance"
+        "withdraw_full": "Click to withdraw the full balance",
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        }
     },
     "transaction": {
         "amount_sell": "Amount to sell",
@@ -1906,5 +1913,35 @@
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
+    },
+    "registration": {
+        "title": "Registration",
+        "walletModelTitle": "By bin-file",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "recommended": "recommended",
+        "securityKey": "Security",
+        "securityAccountModel": "Medium",
+        "securityWalletModel": "High",
+        "loginByKey": "Login by",
+        "accountLoginByValue": "Account name + Password",
+        "walletLoginByValue": "Bin-file + Password",
+        "backUpRestoreKey": "Back up and restore Account",
+        "select": "Select",
+        "createAccountTitle": "Create Account by Bin-file",
+        "continue": "Continue",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "createByPassword": "Create Account by Name and Password",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "copyPassword": "Copy your password to save.",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "downloadFile": "Download file",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "walletNote": "Please keep in mind, that OpenLedger doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "attention": "Attention",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "whyBinFile": "Why do I need a .bin file?"
     }
 }

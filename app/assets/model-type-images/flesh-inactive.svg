@@ -1,0 +1,39 @@
+
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="50" cy="50.6933333" r="50"></circle>
+        <path d="M24.296,50.6933333 L75.704,50.6933333 C76.419761,50.6933333 77,51.2735723 77,51.9893333 L77,117.693333 L23,117.693333 L23,51.9893333 C23,51.2735723 23.580239,50.6933333 24.296,50.6933333 Z" id="path-3"></path>
+        <path d="M50.5,59 L47.5,66 L49.5,66 L49.5,85.5 L44.641658,80.325871 C44.1965152,79.8412887 43.951627,79.2140711 43.951627,78.5589876 L43.951627,77.4717475 C45.1304798,77.0752496 45.9799507,75.973368 45.9799507,74.6726472 C45.9799507,73.0389531 44.6411807,71.714381 42.9899753,71.714381 C41.3385313,71.714381 40,73.0389531 40,74.6726472 C40,75.9558929 40.8272735,77.0450222 41.9817806,77.4547446 L41.9817806,78.5589876 C41.9817806,79.699598 42.4087835,80.792978 43.1840242,81.6365102 L48.3935078,87.3079176 C49.0701726,88.0447093 49.4863951,88.9949818 49.5,89.9889422 C47.4294295,90.4362126 45.838412,92.2581192 45.838412,94.4408648 C45.838412,96.958709 47.9551675,99 50.5,99 C53.0450712,99 55.0544196,96.958709 55.0544196,94.4408648 C55.0544196,92.2682737 53.5560108,90.4470756 51.5,89.9889422 L51.5,86 C51.5,84.6640926 52.0140823,83.5316236 52.9688122,82.5867826 L57.8047577,77.8025953 C58.6203357,76.9956666 59.0881534,75.8784353 59.0881534,74.7371165 L59.0881534,73.5242439 L61,73.5242439 L61,67.7470407 L55.160872,67.7470407 L55.160872,73.5242439 L57.1183069,73.5242439 L57.1183069,74.7371165 C57.1183069,75.3652787 56.8607686,75.9802164 56.4118068,76.424653 C53.1627284,79.4484354 51.5254595,80.9735511 51.5,81 L51.5,66 L53.5,66 L50.5,59 Z" id="path-4"></path>
+        <rect id="path-5" x="33" y="24" width="34" height="22"></rect>
+        <rect id="path-6" x="30" y="46" width="40" height="4"></rect>
+    </defs>
+    <g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(0.000000, -0.693333)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Oval-2" fill="#171A25" opacity="0.2" xlink:href="#path-1"></use>
+            <g id="Rectangle-4" mask="url(#mask-2)">
+                <use fill="#186974" xlink:href="#path-3"></use>
+                <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-3"></use>
+            </g>
+        </g>
+        <g id="Fill-1" opacity="0.5">
+            <use fill="#FFFFFF" xlink:href="#path-4"></use>
+            <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-4"></use>
+        </g>
+        <g id="Rectangle-5">
+            <use fill="#00FFFF" xlink:href="#path-5"></use>
+            <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-5"></use>
+        </g>
+        <g id="Rectangle-5-Copy">
+            <use fill="#FF276D" xlink:href="#path-6"></use>
+            <use fill-opacity="0.5" fill="#1F2432" xlink:href="#path-6"></use>
+        </g>
+        <rect id="Rectangle-3" fill="#000000" x="38" y="32" width="6" height="3"></rect>
+        <rect id="Rectangle-3-Copy" fill="#000000" x="56" y="32" width="6" height="3"></rect>
+        <polyline id="Path-2" stroke="#000000" stroke-width="0.5" opacity="0.200000003" points="49 24 49 32 52 32 52 37 49 37 49 46"></polyline>
+    </g>
+</svg>

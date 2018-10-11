@@ -1,0 +1,79 @@
+.registration-layout {
+    .plate {
+        width: 390px;
+        padding-bottom: 49px;
+        border-radius: 12px;
+        box-shadow: 0 8px 19px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .button-primary,
+    .button-secondary {
+        text-align: center;
+        border-radius: 20px;
+        font-size: 16px;
+        letter-spacing: 0.07px;
+        line-height: 20px;
+        padding: 8px 0;
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.1;
+        }
+    }
+
+    .button-secondary {
+        background-color: inherit;
+        border: 1px solid;
+    }
+
+    .button {
+        border-radius: 20px;
+    }
+
+    @include breakpoint(small only) {
+        .plate {
+            .wallet-block,
+            .account-block,
+            .wallet-block-registration,
+            .account-block-registration {
+                padding-bottom: 45px;
+                border-bottom-right-radius: 12px;
+                border-bottom-left-radius: 12px;
+
+                .overflow-bg-block {
+                    height: 10px;
+
+                    .content {
+                        padding: 15px 50px 0;
+                    }
+                }
+            }
+
+            .wallet-block,
+            .wallet-block-registration {
+                border-top-right-radius: 12px;
+            }
+
+            .account-block,
+            .account-block-registration {
+                border-top-left-radius: 12px;
+            }
+
+            .header-block {
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                z-index: 1;
+            }
+
+            .inactive-right-block {
+                z-index: 1;
+                border-top-left-radius: 0;
+            }
+
+            .inactive-left-block {
+                z-index: 1;
+                border-top-right-radius: 0;
+            }
+        }
+    }
+}
