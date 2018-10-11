@@ -1138,6 +1138,7 @@
         "title": "Notice"
     },
     "modal": {
+        "cancel": "cancel",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
