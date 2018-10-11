@@ -892,8 +892,7 @@
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
         "bitspark": {
-            "support_block":
-                "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
         },
         "symbol": "Symbol",
         "time": "Time",
@@ -1657,6 +1656,7 @@
         "balances": "Balances",
         "broadcast": "Your transfer has been broadcast to the network",
         "broadcasting": "Broadcasting...",
+        "by": "By",
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "CONFIRM",
@@ -1680,7 +1680,8 @@
         "final": "Final balance",
         "from": "From",
         "header": "Transfer details",
-        "header_subheader": "Transfers are used for sending funds to other %(wallet_name)s Account Holders",
+        "header_subheader": "Send funds from an account you control to another %(wallet_name)s account holder.",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "Memo / Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
