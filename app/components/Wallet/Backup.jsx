@@ -336,7 +336,7 @@ class Download extends Component {
                     <div className="download-block">
                         <img
                             className="bin-img"
-                            src="/app/assets/bin-file/default.svg"
+                            src="/bin-file/default.svg"
                             alt="bin"
                         />
                         <span className="text-left">
