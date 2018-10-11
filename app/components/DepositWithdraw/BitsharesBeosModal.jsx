@@ -31,6 +31,7 @@ class BitsharesBeosModal extends React.Component {
             creator: this.props.creator,
             owner_key: this.props.owner_key,
             ram: this.props.ram,
+            isAccountCreation: false,
             account_contract: this.props.account_contract,
             action: this.props.action,
             fee_amount: 10000,
@@ -99,6 +100,10 @@ class BitsharesBeosModal extends React.Component {
             },
             this._checkBalance
         );
+    }
+
+    onCreateAccountCheckbox() {
+        this.setState({isAccountCreation: !this.state.isAccountCreation});
     }
 
     onSubmit() {
@@ -195,8 +200,40 @@ class BitsharesBeosModal extends React.Component {
                             <input type="text" value={""} autoComplete="off" />
                         </div>
                     </div>
-                    {/* Active key */}
-
+                    {/* Create account enabled/disabled */}
+                    <table className="table" style={{width: "inherit"}}>
+                        <tbody>
+                            <tr>
+                                <td style={{border: "none"}}>
+                                    <Translate
+                                        content={
+                                            "gateway.bitshares_beos.create_account_checkbox"
+                                        }
+                                    />
+                                    :
+                                </td>
+                                <td style={{border: "none"}}>
+                                    <div
+                                        className="switch"
+                                        style={{
+                                            marginBottom: "10px"
+                                        }}
+                                        onClick={this.onCreateAccountCheckbox.bind(
+                                            this
+                                        )}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={
+                                                this.state.isAccountCreation
+                                            }
+                                        />
+                                        <label />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     {/* Send/Cancel buttons */}
                     <div className="button-group">
                         <div

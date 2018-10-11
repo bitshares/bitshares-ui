@@ -894,6 +894,7 @@
         "bitshares_beos": {
             "account_label": "Bitshares EOS account",
             "amount_to_send_label": "Amount to send to BEOS account",
+            "create_account_checkbox": "Create account",
             "send_button_label": "Send",
             "transfer_button": "Transfer BTS to BitShares EOS account",
             "modal_title": "Transfer BTS to BitShares EOS account"
