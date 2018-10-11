@@ -470,7 +470,7 @@ class MarketPickerWrapper extends React.Component {
 }
 
 class MarketPicker extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
 
         this.state = {

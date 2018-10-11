@@ -2611,8 +2611,6 @@ class Exchange extends React.Component {
             );
         }
 
-        console.log("Chart Type is " + chartType);
-
         return (
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
