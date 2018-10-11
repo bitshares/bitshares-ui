@@ -43,9 +43,10 @@ export default class TradingViewPriceChart extends React.Component {
             disabled_features.push("chart_scroll");
             disabled_features.push("chart_zoom");
         }
-        
+
         if (__DEV__) console.log("*** Load Chart ***");
         if (__DEV__) console.time("*** Chart load time: ");
+
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
             symbol: props.quoteSymbol + "_" + props.baseSymbol,

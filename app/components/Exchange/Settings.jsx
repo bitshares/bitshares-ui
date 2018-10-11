@@ -1,5 +1,6 @@
 import {
-    Col, Row,
+    Col,
+    Row,
     Button,
     Select,
     Slider,
@@ -22,7 +23,7 @@ class Settings extends React.Component {
             open: false,
             smallScreen: false,
             chartHeight: props.chartHeight,
-            autoScroll: props.viewSettings.get("global_AutoScroll", true),
+            autoScroll: props.viewSettings.get("global_AutoScroll", true)
         };
 
         this.setChartHeight = this.setChartHeight.bind(this);
@@ -41,7 +42,7 @@ class Settings extends React.Component {
     }
 
     onClose() {
-        this.setState({open: false}, () => { 
+        this.setState({open: false}, () => {
             this.props.onToggleSettings();
         });
     }
@@ -73,7 +74,9 @@ class Settings extends React.Component {
     _getGroupingOptions(selectKey) {
         return (
             <Select
-                placeholder={counterpart.translate("settings.placeholder_select")}
+                placeholder={counterpart.translate(
+                    "settings.placeholder_select"
+                )}
                 style={{width: "100%"}}
                 onChange={this.props.onSetPanelTabs.bind(this, selectKey)}
                 value={this.props.panelTabs[selectKey]}
@@ -92,19 +95,11 @@ class Settings extends React.Component {
     }
 
     render() {
-        let {
-            chartType
-        } = this.props;
+        let {chartType} = this.props;
 
-        let {
-            chartHeight
-        } = this.state;
+        let {chartHeight} = this.state;
 
-        console.log(this.props.verticalOrderBook);
-
-        return !this.state.open
-            ? null
-            :
+        return !this.state.open ? null : (
             <BaseModal
                 id={this.props.modalId}
                 overlay={true}
@@ -112,7 +107,10 @@ class Settings extends React.Component {
                 noHeaderContainer
                 ref={this.props.modalId}
             >
-                <section style={{paddingBottom: "1em"}} className="block-list no-border-bottom">
+                <section
+                    style={{paddingBottom: "1em"}}
+                    className="block-list no-border-bottom"
+                >
                     <header>
                         <Translate content="exchange.settings.chart_options" />
                     </header>
@@ -124,7 +122,9 @@ class Settings extends React.Component {
                         </div>
                         <div className="small-6">
                             <Select
-                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                placeholder={counterpart.translate(
+                                    "settings.placeholder_select"
+                                )}
                                 style={{width: "100%"}}
                                 value={chartType}
                                 onChange={this.props.onToggleChart.bind(this)}
@@ -140,13 +140,15 @@ class Settings extends React.Component {
                                     )}
                                 </Select.Option>
                                 <Select.Option value="">
-                                    {counterpart.translate("exchange.settings.hidden_chart")}
+                                    {counterpart.translate(
+                                        "exchange.settings.hidden_chart"
+                                    )}
                                 </Select.Option>
                             </Select>
                         </div>
                     </div>
 
-                    <div className="grid-block no-overflow wrap shrink" >
+                    <div className="grid-block no-overflow wrap shrink">
                         <div className="small-6">
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.chart_height" />
@@ -157,12 +159,16 @@ class Settings extends React.Component {
                                 min={300}
                                 max={1000}
                                 onChange={this.setChartHeight.bind(this)}
-                                value={typeof chartHeight === "number" ? chartHeight : 300}
+                                value={
+                                    typeof chartHeight === "number"
+                                        ? chartHeight
+                                        : 300
+                                }
                             />
                         </div>
                     </div>
 
-                    {chartType == "price_chart" ?
+                    {chartType == "price_chart" ? (
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
@@ -175,9 +181,10 @@ class Settings extends React.Component {
                                     //  FIXME
                                 />
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
-                    {chartType == "price_chart" ?
+                    {chartType == "price_chart" ? (
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
@@ -190,14 +197,15 @@ class Settings extends React.Component {
                                     //  FIXME
                                 />
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
-                    <header>
-                        Order Options
-                    </header>
+                    <header>Order Options</header>
                     <div className="grid-block no-overflow wrap shrink">
                         <div className="small-6">
-                            <h6 style={{margin: 9}}><Translate content="settings.orderbook_grouping" /></h6>
+                            <h6 style={{margin: 9}}>
+                                <Translate content="settings.orderbook_grouping" />
+                            </h6>
                         </div>
                         <div className="small-6">
                             <ul>
@@ -212,11 +220,11 @@ class Settings extends React.Component {
                                                 this
                                             )}
                                             currentGroupOrderLimit={
-                                                this.props.currentGroupOrderLimit
+                                                this.props
+                                                    .currentGroupOrderLimit
                                             }
                                         />
                                     ) : null}
-
                                 </li>
                             </ul>
                         </div>
@@ -227,7 +235,9 @@ class Settings extends React.Component {
                         </div>
                         <div className="small-6">
                             <Select
-                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                placeholder={counterpart.translate(
+                                    "settings.placeholder_select"
+                                )}
                                 style={{width: "100%"}}
                                 value={this.props.verticalOrderBook}
                                 onSelect={this.props.onMoveOrderBook.bind(this)}
@@ -243,16 +253,19 @@ class Settings extends React.Component {
                     </div>
 
                     {/* FIXME */}
-                    {!this.props.verticalOrderBook ?
-                        <div className="grid-block no-overflow wrap shrink" style={{ paddingTop: "0.5em" }}>
+                    {!this.props.verticalOrderBook ? (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingTop: "0.5em"}}
+                        >
                             <div className="small-6">
-                                <h6 style={{margin: 9}}>
-                                    Buy/Sell Orders
-                                </h6>
+                                <h6 style={{margin: 9}}>Buy/Sell Orders</h6>
                             </div>
                             <div className="small-6">
                                 <Select
-                                    placeholder={counterpart.translate("settings.placeholder_select")}
+                                    placeholder={counterpart.translate(
+                                        "settings.placeholder_select"
+                                    )}
                                     style={{width: "100%"}}
                                     // value={this.props.mirrorPanels}
                                     // onSelect={this.props.onMirrorPanels.bind(this)}
@@ -265,19 +278,23 @@ class Settings extends React.Component {
                                     </Select.Option>
                                 </Select>
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
                     {/* FIXME */}
-                    {!this.props.verticalOrderBook ?
-                        <div className="grid-block no-overflow wrap shrink" style={{ paddingTop: "0.5em" }}>
+                    {!this.props.verticalOrderBook ? (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingTop: "0.5em"}}
+                        >
                             <div className="small-6">
-                                <h6 style={{margin: 9}}>
-                                    Buy/Sell Asset
-                                </h6>
+                                <h6 style={{margin: 9}}>Buy/Sell Asset</h6>
                             </div>
                             <div className="small-6">
                                 <Select
-                                    placeholder={counterpart.translate("settings.placeholder_select")}
+                                    placeholder={counterpart.translate(
+                                        "settings.placeholder_select"
+                                    )}
                                     style={{width: "100%"}}
                                     // value={this.props.mirrorPanels}
                                     // onSelect={this.props.onMirrorPanels.bind(this)}
@@ -290,11 +307,15 @@ class Settings extends React.Component {
                                     </Select.Option>
                                 </Select>
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
                     {/* FIXME */}
-                    {!this.props.verticalOrderBook ?
-                        <div className="grid-block no-overflow wrap shrink" style={{ paddingTop: "0.5em" }}>
+                    {!this.props.verticalOrderBook ? (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingTop: "0.5em"}}
+                        >
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
                                     Vertical Orders / Asset
@@ -302,7 +323,9 @@ class Settings extends React.Component {
                             </div>
                             <div className="small-6">
                                 <Select
-                                    placeholder={counterpart.translate("settings.placeholder_select")}
+                                    placeholder={counterpart.translate(
+                                        "settings.placeholder_select"
+                                    )}
                                     style={{width: "100%"}}
                                     // value={this.props.mirrorPanels}
                                     // onSelect={this.props.onMirrorPanels.bind(this)}
@@ -315,10 +338,14 @@ class Settings extends React.Component {
                                     </Select.Option>
                                 </Select>
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
-                    {this.props.verticalOrderBook ?
-                        <div className="grid-block no-overflow wrap shrink" style={{ paddingTop: "0.5em" }}>
+                    {this.props.verticalOrderBook ? (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingTop: "0.5em"}}
+                        >
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.orderbook_autoscroll" />
@@ -331,41 +358,61 @@ class Settings extends React.Component {
                                     onChange={this.setAutoscroll.bind(this)}
                                 />
                             </div>
-                        </div> : null}
+                        </div>
+                    ) : null}
 
-                    <header>
-                        Panel Grouping
-                    </header>
-                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                    <header>Panel Grouping</header>
+                    <div
+                        className="grid-block no-overflow wrap shrink"
+                        style={{paddingBottom: "1em"}}
+                    >
                         <div className="small-6">
                             <h6 style={{margin: 9}}>My Trades</h6>
                         </div>
-                        <div className="small-6">{this._getGroupingOptions("my_history")}</div>
+                        <div className="small-6">
+                            {this._getGroupingOptions("my_history")}
+                        </div>
                     </div>
-                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                    <div
+                        className="grid-block no-overflow wrap shrink"
+                        style={{paddingBottom: "1em"}}
+                    >
                         <div className="small-6">
                             <h6 style={{margin: 9}}>Market Trades</h6>
                         </div>
-                        <div className="small-6">{this._getGroupingOptions("history")}</div>
+                        <div className="small-6">
+                            {this._getGroupingOptions("history")}
+                        </div>
                     </div>
-                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                    <div
+                        className="grid-block no-overflow wrap shrink"
+                        style={{paddingBottom: "1em"}}
+                    >
                         <div className="small-6">
                             <h6 style={{margin: 9}}>Open Orders</h6>
                         </div>
-                        <div className="small-6">{this._getGroupingOptions("my_orders")}</div>
+                        <div className="small-6">
+                            {this._getGroupingOptions("my_orders")}
+                        </div>
                     </div>
-                    <div className="grid-block no-overflow wrap shrink" style={{paddingBottom: "1em"}}>
+                    <div
+                        className="grid-block no-overflow wrap shrink"
+                        style={{paddingBottom: "1em"}}
+                    >
                         <div className="small-6">
                             <h6 style={{margin: 9}}>Settlements</h6>
                         </div>
-                        <div className="small-6">{this._getGroupingOptions("open_settlement")}</div>
+                        <div className="small-6">
+                            {this._getGroupingOptions("open_settlement")}
+                        </div>
                     </div>
 
-                    <header>
-                        General
-                    </header>
+                    <header>General</header>
 
-                    <div className="grid-block no-overflow wrap shrink"  style={{paddingBottom: "0.5em"}}>
+                    <div
+                        className="grid-block no-overflow wrap shrink"
+                        style={{paddingBottom: "0.5em"}}
+                    >
                         <div className="small-6" style={{paddingRight: 5}}>
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.market_location" />
@@ -373,7 +420,9 @@ class Settings extends React.Component {
                         </div>
                         <div className="small-6">
                             <Select
-                                placeholder={counterpart.translate("settings.placeholder_select")}
+                                placeholder={counterpart.translate(
+                                    "settings.placeholder_select"
+                                )}
                                 style={{width: "100%"}}
                                 value={this.props.mirrorPanels}
                                 onSelect={this.props.onMirrorPanels.bind(this)}
@@ -398,7 +447,9 @@ class Settings extends React.Component {
                             <Switch
                                 style={{margin: 6}}
                                 checked={this.state.hideScrollbars}
-                                onChange={this.props.onToggleScrollbars.bind(this)}
+                                onChange={this.props.onToggleScrollbars.bind(
+                                    this
+                                )}
                             />
                         </div>
                     </div>
@@ -418,16 +469,12 @@ class Settings extends React.Component {
                             />
                         </div>
                     </div>
-
                 </section>
-                <Button 
-                    type="primary"
-                    onClick={this.onClose.bind(this)}
-                >
+                <Button type="primary" onClick={this.onClose.bind(this)}>
                     <Translate content="global.close" />
                 </Button>
             </BaseModal>
-        ;
+        );
     }
 }
 

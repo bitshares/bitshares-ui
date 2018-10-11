@@ -31,13 +31,16 @@ class MarketHistory extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.activeTab !== this.props.activeTab) {
+        if (nextProps.activeTab !== this.props.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
-        
-        if(this.props.hideScrollbars && nextState.showAll != this.state.showAll) {
+
+        if (
+            this.props.hideScrollbars &&
+            nextState.showAll != this.state.showAll
+        ) {
             let historyContainer = this.refs.history;
-            if(!nextState.showAll) {
+            if (!nextState.showAll) {
                 Ps.destroy(historyContainer);
             } else {
                 Ps.initialize(historyContainer);
@@ -62,27 +65,36 @@ class MarketHistory extends React.Component {
     }
 
     componentDidMount() {
-        if(!this.props.hideScrollbars) {
+        if (!this.props.hideScrollbars) {
             let historyContainer = this.refs.history;
-            if(historyContainer) Ps.initialize(historyContainer);
+            if (historyContainer) Ps.initialize(historyContainer);
         }
     }
 
     componentDidUpdate() {
-        if(!this.props.hideScrollbars || (this.props.hideScrollbars && this.state.showAll)) {
+        if (
+            !this.props.hideScrollbars ||
+            (this.props.hideScrollbars && this.state.showAll)
+        ) {
             let historyContainer = this.refs.history;
-            if(historyContainer) Ps.update(historyContainer);
+            if (historyContainer) Ps.update(historyContainer);
         }
     }
 
     componentWillReceiveProps(nextProps) {
         let historyContainer = this.refs.history;
 
-        if(nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
+        ) {
             Ps.destroy(historyContainer);
         }
 
-        if(nextProps.hideScrollbars !== this.props.hideScrollbars && !nextProps.hideScrollbars) {
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
             Ps.initialize(historyContainer);
             this.refs.historyTransition.resetAnimation();
             if (historyContainer) historyContainer.scrollTop = 0;
@@ -203,7 +215,11 @@ class MarketHistory extends React.Component {
                             </td>
                             <td>{fill.amountToReceive()}</td>
                             <td>{fill.amountToPay()}</td>
-                            <td className="tooltip" style={{whiteSpace: "nowrap"}} data-tip={fill.time}>
+                            <td
+                                className="tooltip"
+                                style={{whiteSpace: "nowrap"}}
+                                data-tip={fill.time}
+                            >
                                 {counterpart.localize(fill.time, {
                                     type: "date",
                                     format:
@@ -222,7 +238,14 @@ class MarketHistory extends React.Component {
 
         let emptyRow = (
             <tr>
-                <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                <td
+                    style={{
+                        textAlign: "center",
+                        lineHeight: 4,
+                        fontStyle: "italic"
+                    }}
+                    colSpan="5"
+                >
                     <Translate content="account.no_orders" />
                 </td>
             </tr>
@@ -236,24 +259,25 @@ class MarketHistory extends React.Component {
 
         return (
             <div className={cnames(this.props.className)}>
-                <div className={this.props.innerClass} style={this.props.innerStyle}>
-                    {this.props.noHeader ? null : 
+                <div
+                    className={this.props.innerClass}
+                    style={this.props.innerStyle}
+                >
+                    {this.props.noHeader ? null : (
                         <div
                             style={this.props.headerStyle}
                             className="exchange-content-header"
                         >
-                            {activeTab === "my_history" ?
+                            {activeTab === "my_history" ? (
                                 <Translate content="exchange.my_history" />
-                                : null}
-                            {activeTab === "history" ?
+                            ) : null}
+                            {activeTab === "history" ? (
                                 <Translate content="exchange.history" />
-                                : null}
+                            ) : null}
                         </div>
-                    }
+                    )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
-                        <table 
-                            className="table table-no-padding order-table text-left fixed-table market-right-padding"
-                        >
+                        <table className="table table-no-padding order-table text-left fixed-table market-right-padding">
                             <thead style={{backgroundColor: "#2c2e37"}}>
                                 <tr>
                                     <th style={{textAlign: "right"}}>
@@ -291,7 +315,12 @@ class MarketHistory extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="history"
-                        style={{minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, overflow: "hidden", lineHeight: "13px"}}
+                        style={{
+                            minHeight: !this.props.tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            overflow: "hidden",
+                            lineHeight: "13px"
+                        }}
                     >
                         <table className="table order-table no-stripes table-hover fixed-table text-right no-overflow">
                             <TransitionWrapper
@@ -300,15 +329,15 @@ class MarketHistory extends React.Component {
                                 transitionName="newrow"
                                 className="orderbook"
                             >
-                                {!!historyRows && historyRows.length > 0 ? historyRows : emptyRow}
+                                {!!historyRows && historyRows.length > 0
+                                    ? historyRows
+                                    : emptyRow}
                             </TransitionWrapper>
                         </table>
                     </div>
                     {historyRowsLength > 11 ? (
                         <div className="orderbook-showall">
-                            <a
-                                onClick={this._onSetShowAll.bind(this)}
-                            >
+                            <a onClick={this._onSetShowAll.bind(this)}>
                                 <Translate
                                     content={
                                         showAll
@@ -334,13 +363,16 @@ MarketHistory.propTypes = {
     history: PropTypes.object.isRequired
 };
 
-export default connect(MarketHistory, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    MarketHistory,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);

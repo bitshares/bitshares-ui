@@ -277,11 +277,12 @@ export function requestDepositAddress({
     stateCallback,
     selectedGateway
 }) {
-
     let gatewayStatus = availableGateways[selectedGateway];
-    inputCoinType = !!gatewayStatus && !!gatewayStatus.assetWithdrawlAlias 
-        ? gatewayStatus.assetWithdrawlAlias[inputCoinType.toLowerCase()] || inputCoinType.toLowerCase()
-        : inputCoinType;
+    inputCoinType =
+        !!gatewayStatus && !!gatewayStatus.assetWithdrawlAlias
+            ? gatewayStatus.assetWithdrawlAlias[inputCoinType.toLowerCase()] ||
+              inputCoinType.toLowerCase()
+            : inputCoinType;
 
     let body = {
         inputCoinType,

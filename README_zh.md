@@ -7,7 +7,7 @@ BitShares-UI
 
 ## 项目依赖
 
-BitShares-UI 依赖于 Node.js v6 以上版本。
+BitShares-UI 依赖于 Node.js v9 以上版本。
 
 在 Linux 和 macOS 上，安装 Node 最简单的方式是用 [NVM](https://github.com/creationix/nvm)。
 
@@ -15,8 +15,8 @@ BitShares-UI 依赖于 Node.js v6 以上版本。
 
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v6
-nvm use v6
+nvm install v9
+nvm use v9
 ```
 
 Node 安装完成后，获取项目的源代码：

@@ -29,7 +29,6 @@ div#CenterContent {
                 cursor: default;
             }
         }
-        
     }
 
     > .left-column {
@@ -586,6 +585,11 @@ table thead tr th.mymarkets-header {
     fill: #cc9f00 !important;
 }
 
+@media (max-width: 450px) {
+    .hide-order-0 {
+        display: none !important;
+    }
+}
 @media (max-width: 570px) {
     .hide-order-1 {
         display: none !important;
@@ -612,6 +616,12 @@ table thead tr th.mymarkets-header {
     }
 }
 @media (max-width: 1340px) {
+    .hide-order-6 {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1220px) {
     .hide-order-6 {
         display: none !important;
     }

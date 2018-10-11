@@ -11,10 +11,7 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {
-    Select,
-    Icon as AntIcon
-} from "bitshares-ui-style-guide";
+import {Select, Icon as AntIcon} from "bitshares-ui-style-guide";
 
 /**
  * @array: orderRows
@@ -41,15 +38,16 @@ class OrderRows extends React.Component {
                 {orderRows.length > 0
                     ? orderRows
                     : noOrders || (
-                        <div className="sticky-table-row">
-                            <td className="cell no-orders" colSpan="3">
-                                {isBid
-                                    ? <Translate content="exchange.no_bids" />
-                                    : <Translate content="exchange.no_asks" />
-                                }
-                            </td>
-                        </div>
-                    )}
+                          <div className="sticky-table-row">
+                              <td className="cell no-orders" colSpan="3">
+                                  {isBid ? (
+                                      <Translate content="exchange.no_bids" />
+                                  ) : (
+                                      <Translate content="exchange.no_asks" />
+                                  )}
+                              </td>
+                          </div>
+                      )}
             </TransitionWrapper>
         );
     }
@@ -139,31 +137,31 @@ class OrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                order.amountToReceive().getAmount({real: true}),
-                quote.get("precision")
-            )
+                  order.amountToReceive().getAmount({real: true}),
+                  quote.get("precision")
+              )
             : utils.format_number(
-                order.amountForSale().getAmount({real: true}),
-                quote.get("precision")
-            );
+                  order.amountForSale().getAmount({real: true}),
+                  quote.get("precision")
+              );
         let value = isBid
             ? utils.format_number(
-                order.amountForSale().getAmount({real: true}),
-                base.get("precision")
-            )
+                  order.amountForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                order.amountToReceive().getAmount({real: true}),
-                base.get("precision")
-            );
+                  order.amountToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
         let total = isBid
             ? utils.format_number(
-                order.totalForSale().getAmount({real: true}),
-                base.get("precision")
-            )
+                  order.totalForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                order.totalToReceive().getAmount({real: true}),
-                base.get("precision")
-            );
+                  order.totalToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
 
         return (
             <tr
@@ -261,31 +259,31 @@ class GroupedOrderBookRowHorizontal extends React.Component {
         );
         let amount = isBid
             ? utils.format_number(
-                order.amountToReceive().getAmount({real: true}),
-                quote.get("precision")
-            )
+                  order.amountToReceive().getAmount({real: true}),
+                  quote.get("precision")
+              )
             : utils.format_number(
-                order.amountForSale().getAmount({real: true}),
-                quote.get("precision")
-            );
+                  order.amountForSale().getAmount({real: true}),
+                  quote.get("precision")
+              );
         let value = isBid
             ? utils.format_number(
-                order.amountForSale().getAmount({real: true}),
-                base.get("precision")
-            )
+                  order.amountForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                order.amountToReceive().getAmount({real: true}),
-                base.get("precision")
-            );
+                  order.amountToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
         let total = isBid
             ? utils.format_number(
-                order.totalForSale().getAmount({real: true}),
-                base.get("precision")
-            )
+                  order.totalForSale().getAmount({real: true}),
+                  base.get("precision")
+              )
             : utils.format_number(
-                order.totalToReceive().getAmount({real: true}),
-                base.get("precision")
-            );
+                  order.totalToReceive().getAmount({real: true}),
+                  base.get("precision")
+              );
 
         return (
             <tr onClick={this.props.onClick}>
@@ -325,19 +323,19 @@ class GroupOrderLimitSelector extends React.Component {
     render() {
         const noGroupsAvailable = this.props.trackedGroupsConfig.length === 0;
         const trackedGroupsOptionsList = this.props.trackedGroupsConfig.map(
-            key => (
-                this.props.globalSettingsSelector ?
+            key =>
+                this.props.globalSettingsSelector ? (
                     <Select.Option value={key} key={key}>
                         {`${key / 100}%`}
                     </Select.Option>
-                    :
+                ) : (
                     <option value={key} key={key}>
                         {`${key / 100}%`}
                     </option>
-            )
+                )
         );
 
-        if(this.props.globalSettingsSelector) {
+        if (this.props.globalSettingsSelector) {
             return (
                 <Select
                     placeholder="Select option"
@@ -346,15 +344,15 @@ class GroupOrderLimitSelector extends React.Component {
                     disabled={noGroupsAvailable}
                     onChange={this.props.handleGroupOrderLimitChange.bind(this)}
                 >
-                    {noGroupsAvailable ?
+                    {noGroupsAvailable ? (
                         <Select.Option value={0}>
                             <Translate content="tooltip.no_groups_available" />
                         </Select.Option>
-                        :
+                    ) : (
                         <Select.Option value={0}>
                             <Translate content="settings.disabled" />
                         </Select.Option>
-                    }
+                    )}
                     {trackedGroupsOptionsList}
                 </Select>
             );
@@ -365,7 +363,9 @@ class GroupOrderLimitSelector extends React.Component {
                     onChange={this.props.handleGroupOrderLimitChange}
                     data-tip={
                         noGroupsAvailable
-                            ? translator.translate("tooltip.no_groups_available")
+                            ? translator.translate(
+                                  "tooltip.no_groups_available"
+                              )
                             : null
                     }
                     className="settings-select"
@@ -392,7 +392,7 @@ class OrderBook extends React.Component {
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
-            autoScroll: props.autoScroll,
+            autoScroll: props.autoScroll
         };
         this.verticalStickyTable = React.createRef();
         this.centerText = React.createRef();
@@ -411,9 +411,13 @@ class OrderBook extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllAsks != this.state.showAllAsks) {
+        if (
+            this.props.horizontal &&
+            this.props.hideScrollbars &&
+            nextState.showAllAsks != this.state.showAllAsks
+        ) {
             let asksContainer = this.refs.hor_asks;
-            if(!nextState.showAllAsks) {
+            if (!nextState.showAllAsks) {
                 Ps.destroy(asksContainer);
             } else {
                 Ps.initialize(asksContainer);
@@ -423,9 +427,13 @@ class OrderBook extends React.Component {
             if (this.refs.hor_asks) this.refs.hor_asks.scrollTop = 0;
         }
 
-        if(this.props.horizontal && this.props.hideScrollbars && nextState.showAllBids != this.state.showAllBids) {
+        if (
+            this.props.horizontal &&
+            this.props.hideScrollbars &&
+            nextState.showAllBids != this.state.showAllBids
+        ) {
             let bidsContainer = this.refs.hor_bids;
-            if(!nextState.showAllBids) {
+            if (!nextState.showAllBids) {
                 Ps.destroy(bidsContainer);
             } else {
                 Ps.initialize(bidsContainer);
@@ -466,12 +474,20 @@ class OrderBook extends React.Component {
         let bidsContainer = this.refs.hor_bids;
         let asksContainer = this.refs.hor_asks;
 
-        if(this.props.horizontal && nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
+        if (
+            this.props.horizontal &&
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
+        ) {
             Ps.destroy(bidsContainer);
             Ps.destroy(asksContainer);
         }
 
-        if(this.props.horizontal && nextProps.hideScrollbars !== this.props.hideScrollbars && !nextProps.hideScrollbars) {
+        if (
+            this.props.horizontal &&
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
             Ps.initialize(bidsContainer);
             Ps.initialize(asksContainer);
             this.refs.askTransition.resetAnimation();
@@ -494,7 +510,7 @@ class OrderBook extends React.Component {
         if (!this.props.horizontal) {
             Ps.initialize(this.verticalScrollBar());
         } else {
-            if(!this.props.hideScrollbars) {
+            if (!this.props.hideScrollbars) {
                 let bidsContainer = this.refs.hor_bids;
                 Ps.initialize(bidsContainer);
                 let asksContainer = this.refs.hor_asks;
@@ -515,9 +531,10 @@ class OrderBook extends React.Component {
                 this.queryStickyTable(".order-row")
             );
 
-            let asks = this.props.currentGroupOrderLimit !== 0
-                ? this.props.groupedAsks
-                : this.props.combinedAsks;
+            let asks =
+                this.props.currentGroupOrderLimit !== 0
+                    ? this.props.groupedAsks
+                    : this.props.combinedAsks;
 
             const asksHeight = asks.length * singleAskHeight;
 
@@ -633,7 +650,7 @@ class OrderBook extends React.Component {
             handleGroupOrderLimitChange,
             orderBookReversed,
             groupedBids,
-            groupedAsks,
+            groupedAsks
         } = this.props;
         let {
             showAllAsks,
@@ -911,14 +928,11 @@ class OrderBook extends React.Component {
             let wrapperClass = this.props.wrapperClass;
             let innerClass = this.props.innerClass;
 
-
             return (
                 <div
                     ref="order_book"
                     style={{marginRight: this.props.smallScreen ? 10 : 0}}
-                    className={cnames(
-                        wrapperClass,
-                    )}
+                    className={cnames(wrapperClass)}
                 >
                     <div
                         className={cnames(
@@ -952,7 +966,6 @@ class OrderBook extends React.Component {
                                             {" "}
                                             &#8646;
                                         </span>
-
                                     </div>
                                 ) : null}
                                 {this.state.flip ? (
@@ -1264,58 +1277,79 @@ class OrderBook extends React.Component {
                                                 <span
                                                     className="clickable left"
                                                     onClick={
-                                                        this
-                                                            .toggleSpreadValue
+                                                        this.toggleSpreadValue
                                                     }
                                                 >
-                                                    <Translate className="orderbook-center-title" content="exchange.spread" />{" "}
+                                                    <Translate
+                                                        className="orderbook-center-title"
+                                                        content="exchange.spread"
+                                                    />{" "}
                                                     <span className="spread-value">
-                                                        {!!spread ? spread : "0"}
+                                                        {!!spread
+                                                            ? spread
+                                                            : "0"}
                                                     </span>
                                                 </span>
                                                 <span style={{width: 75}}>
                                                     <Icon
                                                         className="lock-unlock clickable icon-fill"
                                                         onClick={
-                                                            this.toggleAutoScroll
+                                                            this
+                                                                .toggleAutoScroll
                                                         }
                                                         name={
-                                                            this.state.autoScroll
+                                                            this.state
+                                                                .autoScroll
                                                                 ? "locked"
                                                                 : "unlocked"
                                                         }
                                                         title={
-                                                            this.state.autoScroll
+                                                            this.state
+                                                                .autoScroll
                                                                 ? "icons.unlocked.disable_auto_scroll"
                                                                 : "icons.locked.enable_auto_scroll"
                                                         }
-                                                    />&nbsp;
+                                                    />
+                                                    &nbsp;
                                                     <Icon
-                                                        onClick={this.props.moveOrderBook}
+                                                        onClick={
+                                                            this.props
+                                                                .moveOrderBook
+                                                        }
                                                         name="thumb-tack"
                                                         className="icon-14px order-book-button-v clickable"
                                                         title={
-                                                            this.props.horizontal
+                                                            this.props
+                                                                .horizontal
                                                                 ? "icons.thumb_tack"
                                                                 : "icons.thumb_untack"
                                                         }
                                                         style={{marginLeft: 0}}
-                                                    />&nbsp;
-                                                    {currentGroupOrderLimit == 0 ?
-                                                        null :
+                                                    />
+                                                    &nbsp;
+                                                    {currentGroupOrderLimit ==
+                                                    0 ? null : (
                                                         <Icon
                                                             name="grouping"
                                                             className="icon-14px"
-                                                            title={translator.translate("icons.order_grouping")}
-                                                            style={{marginLeft: 0}}
+                                                            title={translator.translate(
+                                                                "icons.order_grouping"
+                                                            )}
+                                                            style={{
+                                                                marginLeft: 0
+                                                            }}
                                                         />
-                                                    }
+                                                    )}
                                                 </span>
                                                 {!!this.props.latest && (
                                                     <span className="right">
                                                         <span
                                                             className={
-                                                                !this.props.changeClass ? "spread-value" : this.props.changeClass
+                                                                !this.props
+                                                                    .changeClass
+                                                                    ? "spread-value"
+                                                                    : this.props
+                                                                          .changeClass
                                                             }
                                                         >
                                                             <PriceText

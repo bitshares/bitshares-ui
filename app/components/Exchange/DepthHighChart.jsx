@@ -36,7 +36,7 @@ class DepthHighChart extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (
-            this.refs.depthChart && 
+            this.refs.depthChart &&
             nextProps.activePanels !== this.props.activePanels
         ) {
             this.reflowChart(100);

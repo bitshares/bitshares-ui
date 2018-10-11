@@ -9,7 +9,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
-import {Icon as AntIcon} from 'bitshares-ui-style-guide'
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -73,7 +73,7 @@ export default class ExchangeHeader extends React.Component {
             marketReady,
             latestPrice,
             marketStats,
-            account,
+            account
         } = this.props;
 
         const baseSymbol = baseAsset.get("symbol");
@@ -143,18 +143,18 @@ export default class ExchangeHeader extends React.Component {
 
             /* Settlment Offset */
             let settleAsset =
-                baseAsset.get("id") == "1.3.0"
+                baseId == "1.3.0"
                     ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0"
+                    : quoteId == "1.3.0"
                         ? baseAsset
-                        : null;
+                        : quoteAsset;
 
             if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
                     .getIn(["bitasset", "options"])
                     .toJS().force_settlement_offset_percent;
                 settlePrice =
-                    baseAsset.get("id") == "1.3.0"
+                    baseId == "1.3.0"
                         ? feedPrice.toReal() / (1 + offset_percent / 10000)
                         : feedPrice.toReal() * (1 + offset_percent / 10000);
             }
@@ -178,7 +178,9 @@ export default class ExchangeHeader extends React.Component {
                                 <div
                                     style={{
                                         padding: "0 5px",
-                                        fontSize: this.props.tinyScreen ? "13px" : "18px",
+                                        fontSize: this.props.tinyScreen
+                                            ? "13px"
+                                            : "18px",
                                         marginTop: "1px"
                                     }}
                                 >
@@ -327,7 +329,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.volume_24"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
@@ -400,7 +402,9 @@ export default class ExchangeHeader extends React.Component {
                                 <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px 16px 16px 0px"}}
-                                    onClick={this.props.onToggleSettings.bind(this)}
+                                    onClick={this.props.onToggleSettings.bind(
+                                        this
+                                    )}
                                 >
                                     <AntIcon
                                         type="setting"

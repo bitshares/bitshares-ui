@@ -23,7 +23,13 @@ import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
-        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, leftAlign} = this.props;
+        let {
+            baseSymbol,
+            quoteSymbol,
+            dashboard,
+            isMyAccount,
+            leftAlign
+        } = this.props;
 
         return !dashboard ? (
             <thead>
@@ -159,7 +165,11 @@ class OrderRow extends React.Component {
                     {valueSymbol}
                 </td>
                 <td
-                    style={{width: "25%", textAlign: "right", whiteSpace: "nowrap"}}
+                    style={{
+                        width: "25%",
+                        textAlign: "right",
+                        whiteSpace: "nowrap"
+                    }}
                     className="tooltip"
                     data-tip={order.expiration.toLocaleString()}
                 >
@@ -345,19 +355,22 @@ class MyOpenOrders extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.activeTab !== this.state.activeTab) {
+        if (nextProps.activeTab !== this.state.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
 
-        if(this.props.hideScrollbars && nextState.showAll != this.state.showAll) {
+        if (
+            this.props.hideScrollbars &&
+            nextState.showAll != this.state.showAll
+        ) {
             let contentContainer = this.refs.container;
-            if(!nextState.showAll) {
+            if (!nextState.showAll) {
                 Ps.destroy(contentContainer);
             } else {
                 Ps.initialize(contentContainer);
                 Ps.update(contentContainer);
             }
-            if(this.refs.contentTransition) {
+            if (this.refs.contentTransition) {
                 this.refs.contentTransition.resetAnimation();
             }
             if (contentContainer) contentContainer.scrollTop = 0;
@@ -375,14 +388,17 @@ class MyOpenOrders extends React.Component {
     }
 
     componentDidMount() {
-        if(!this.props.hideScrollbars) {
+        if (!this.props.hideScrollbars) {
             let contentContainer = this.refs.container;
             if (contentContainer) Ps.initialize(contentContainer);
         }
     }
 
     componentDidUpdate() {
-        if(!this.props.hideScrollbars || (this.props.hideScrollbars && this.state.showAll)) {
+        if (
+            !this.props.hideScrollbars ||
+            (this.props.hideScrollbars && this.state.showAll)
+        ) {
             let contentContainer = this.refs.container;
             if (contentContainer) Ps.update(contentContainer);
         }
@@ -391,11 +407,17 @@ class MyOpenOrders extends React.Component {
     componentWillReceiveProps(nextProps) {
         let contentContainer = this.refs.container;
 
-        if(nextProps.hideScrollbars !== this.props.hideScrollbars && nextProps.hideScrollbars) {
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
+        ) {
             Ps.destroy(contentContainer);
         }
 
-        if(nextProps.hideScrollbars !== this.props.hideScrollbars && !nextProps.hideScrollbars) {
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
             Ps.initialize(contentContainer);
             this.refs.contentTransition.resetAnimation();
             if (contentContainer) contentContainer.scrollTop = 0;
@@ -457,11 +479,11 @@ class MyOpenOrders extends React.Component {
                     ) {
                         return feedPrice
                             ? new CallOrder(
-                                o.toJS(),
-                                assets,
-                                quote.get("id"),
-                                feedPrice
-                            )
+                                  o.toJS(),
+                                  assets,
+                                  quote.get("id"),
+                                  feedPrice
+                              )
                             : null;
                     }
                 } catch (e) {
@@ -514,12 +536,21 @@ class MyOpenOrders extends React.Component {
                 ? true
                 : false;
 
-        {/* Users Open Orders Tab (default) */}
+        {
+            /* Users Open Orders Tab (default) */
+        }
         if (!activeTab || activeTab == "my_orders") {
             const orders = this._getOrders();
             let emptyRow = (
                 <tr>
-                    <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                    <td
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 4,
+                            fontStyle: "italic"
+                        }}
+                        colSpan="5"
+                    >
                         <Translate content="account.no_orders" />
                     </td>
                 </tr>
@@ -596,25 +627,26 @@ class MyOpenOrders extends React.Component {
                 </TransitionWrapper>
             );
 
-            footerContainer = rowsLength > 11 ? (
-                <div className="orderbook-showall">
-                    <a
-                        onClick={this._onSetShowAll.bind(this)}
-                    >
-                        <Translate
-                            content={
-                                showAll
-                                    ? "exchange.hide"
-                                    : "exchange.show_all_orders"
-                            }
-                            rowcount={rowsLength}
-                        />
-                    </a>
-                </div>
-            ) : null;
+            footerContainer =
+                rowsLength > 11 ? (
+                    <div className="orderbook-showall">
+                        <a onClick={this._onSetShowAll.bind(this)}>
+                            <Translate
+                                content={
+                                    showAll
+                                        ? "exchange.hide"
+                                        : "exchange.show_all_orders"
+                                }
+                                rowcount={rowsLength}
+                            />
+                        </a>
+                    </div>
+                ) : null;
         }
 
-        {/* Open Settle Orders */}
+        {
+            /* Open Settle Orders */
+        }
         if (activeTab && activeTab == "open_settlement") {
             let settleOrdersLength = settleOrders.length;
 
@@ -635,22 +667,21 @@ class MyOpenOrders extends React.Component {
                 />
             );
 
-            footerContainer = settleOrdersLength > 11 ? (
-                <div className="orderbook-showall">
-                    <a
-                        onClick={this._onSetShowAll.bind(this)}
-                    >
-                        <Translate
-                            content={
-                                showAll
-                                    ? "exchange.hide"
-                                    : "exchange.show_all_orders"
-                            }
-                            rowcount={settleOrdersLength}
-                        />
-                    </a>
-                </div>
-            ) : null;
+            footerContainer =
+                settleOrdersLength > 11 ? (
+                    <div className="orderbook-showall">
+                        <a onClick={this._onSetShowAll.bind(this)}>
+                            <Translate
+                                content={
+                                    showAll
+                                        ? "exchange.hide"
+                                        : "exchange.show_all_orders"
+                                }
+                                rowcount={settleOrdersLength}
+                            />
+                        </a>
+                    </div>
+                ) : null;
         }
 
         return (
@@ -659,17 +690,23 @@ class MyOpenOrders extends React.Component {
                 key="open_orders"
                 className={this.props.className}
             >
-                <div className={this.props.innerClass} style={this.props.innerStyle}>
-                    {this.props.noHeader ? null : 
-                        <div style={this.props.headerStyle} className="exchange-content-header">
-                            {activeTab == "my_orders" ?
+                <div
+                    className={this.props.innerClass}
+                    style={this.props.innerStyle}
+                >
+                    {this.props.noHeader ? null : (
+                        <div
+                            style={this.props.headerStyle}
+                            className="exchange-content-header"
+                        >
+                            {activeTab == "my_orders" ? (
                                 <Translate content="exchange.my_orders" />
-                                : null}
-                            {activeTab == "open_settlement" ?
+                            ) : null}
+                            {activeTab == "open_settlement" ? (
                                 <Translate content="exchange.settle_orders" />
-                                : null}
+                            ) : null}
                         </div>
-                    }
+                    )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
@@ -718,7 +755,12 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, lineHeight: "13px"}}
+                        style={{
+                            overflow: "hidden",
+                            minHeight: !this.props.tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            lineHeight: "13px"
+                        }}
                     >
                         <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}

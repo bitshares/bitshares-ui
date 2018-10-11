@@ -53,7 +53,8 @@ let icons = [
     "info-circle-o",
     "zoom",
     "people",
-    "fire"
+    "fire",
+    "question-in-circle"
 ];
 
 let iconsMap = {};

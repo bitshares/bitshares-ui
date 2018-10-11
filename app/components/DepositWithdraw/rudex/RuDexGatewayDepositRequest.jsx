@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
+import DisableCopyText from "../DisableCopyText";
 import RuDexWithdrawModal from "./RuDexWithdrawModal";
 import Modal from "react-foundation-apps/src/modal";
 import Trigger from "react-foundation-apps/src/trigger";
@@ -14,6 +15,7 @@ import LinkToAccountById from "components/Utility/LinkToAccountById";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 class RuDexGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -44,25 +46,6 @@ class RuDexGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
-        this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
-    }
-
-    _copy(e) {
-        try {
-            if (this.state.clipboardText)
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-            else
-                e.clipboardData.setData(
-                    "text/plain",
-                    counterpart
-                        .translate("gateway.use_copy_button")
-                        .toUpperCase()
-                );
-            e.preventDefault();
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     _getDepositObject() {
@@ -78,10 +61,6 @@ class RuDexGatewayDepositRequest extends React.Component {
     //     let account_name = this.props.account.get("name");
     //     let receive_address = this.deposit_address_cache.getCachedInputAddress(this.props.gateway, account_name, this.props.deposit_coin_type, this.props.receive_coin_type);
     // }
-
-    componentWillUnmount() {
-        document.removeEventListener("copy", this._copy);
-    }
 
     addDepositAddress(receive_address) {
         let account_name = this.props.account.get("name");
@@ -109,16 +88,6 @@ class RuDexGatewayDepositRequest extends React.Component {
 
     onWithdraw() {
         ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-    toClipboard(clipboardText) {
-        try {
-            this.setState({clipboardText}, () => {
-                document.execCommand("copy");
-            });
-        } catch (err) {
-            console.error(err);
-        }
     }
 
     render() {
@@ -298,7 +267,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -331,7 +301,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <label className="left-label">
                             <b>
@@ -355,13 +326,27 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     <tr>
                                         <td>
                                             ADDRESS:{" "}
-                                            <b>{deposit_address_fragment}</b>
+                                            <b>
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    {deposit_address_fragment}
+                                                </DisableCopyText>
+                                            </b>
                                         </td>
                                     </tr>
                                     {deposit_memo ? (
                                         <tr>
                                             <td>
-                                                MEMO: <b>{deposit_memo}</b>
+                                                <DisableCopyText
+                                                    replaceCopyText={counterpart.translate(
+                                                        "gateway.use_copy_button"
+                                                    )}
+                                                >
+                                                    MEMO: <b>{deposit_memo}</b>
+                                                </DisableCopyText>
                                             </td>
                                         </tr>
                                     ) : null}
@@ -372,26 +357,16 @@ class RuDexGatewayDepositRequest extends React.Component {
                                 style={{paddingTop: 10}}
                             >
                                 {deposit_address_fragment ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        Copy address
-                                    </div>
+                                    <CopyToClipboard text={clipboardText}>
+                                        <div className="button">
+                                            Copy address
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {memoText ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            memoText
-                                        )}
-                                    >
-                                        Copy memo
-                                    </div>
+                                    <CopyToClipboard text={memoText}>
+                                        <div className="button">Copy memo</div>
+                                    </CopyToClipboard>
                                 ) : null}
                             </div>
                         </div>
@@ -465,7 +440,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -500,7 +476,8 @@ class RuDexGatewayDepositRequest extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button
