@@ -106,7 +106,7 @@ export function getMyMarketsQuotes() {
         tatchTokens: [
             "TATCHCOIN",
             "TCLGULDEN",
-            "TCLSILVER",
+            "TCLSILVER"
          ],
         openledgerTokens: [
             "OBITS",
@@ -121,7 +121,7 @@ export function getMyMarketsQuotes() {
             "OPEN.XMR",
             "OPEN.ZEC",
             "OPEN.ZRX"
-        ]    
+        ]    ,
     };
      let allTokens = [];
      for (let type in tokens) {
