@@ -109,58 +109,55 @@ export default class ExchangeHeader extends React.Component {
 
         const quoteId = quoteAsset.get("id");
         const baseId = baseAsset.get("id");
-
-        const lookForBitAsset =
-            quoteId === "1.3.0" ? baseId : baseId === "1.3.0" ? quoteId : null;
-        const possibleBitAsset = lookForBitAsset
-            ? ChainStore.getAsset(lookForBitAsset)
-            : null;
-        const isBitAsset = possibleBitAsset
-            ? !!possibleBitAsset.get("bitasset")
-            : false;
+        
         let collOrderObject = "";
         let settlePrice = null;
+        
+        if (account.toJS && account.has("call_orders")) {
+            const call_orders = account.get("call_orders").toJS();
 
-        if (isBitAsset) {
-            if (account.toJS && account.has("call_orders")) {
-                const call_orders = account.get("call_orders").toJS();
+            for (let i = 0; i < call_orders.length; i++) {
+                let callID = call_orders[i];
 
-                for (let i = 0; i < call_orders.length; i++) {
-                    let callID = call_orders[i];
+                let position = ChainStore.getObject(callID);
+                let debtAsset = position.getIn([
+                    "call_price",
+                    "quote",
+                    "asset_id"
+                ]);
 
-                    let position = ChainStore.getObject(callID);
-                    let debtAsset = position.getIn([
-                        "call_price",
-                        "quote",
-                        "asset_id"
-                    ]);
+                let collateralAsset = position.getIn([
+                   "call_price",
+                   "base",
+                   "asset_id"
+                ]);
 
-                    if (debtAsset === lookForBitAsset) {
+                if ((debtAsset === quoteId && collateralAsset === baseId) || (collateralAsset === quoteId && debtAsset === baseId)) {
                         collOrderObject = callID;
                         showCollateralRatio = true;
                         break;
-                    }
                 }
             }
-
-            /* Settlment Offset */
-            let settleAsset =
-                baseAsset.get("id") == "1.3.0"
-                    ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0"
-                        ? baseAsset
-                        : null;
-
-            if (settleAsset && feedPrice) {
-                let offset_percent = settleAsset
-                    .getIn(["bitasset", "options"])
-                    .toJS().force_settlement_offset_percent;
-                settlePrice =
-                    baseAsset.get("id") == "1.3.0"
-                        ? feedPrice.toReal() / (1 + offset_percent / 10000)
-                        : feedPrice.toReal() * (1 + offset_percent / 10000);
-            }
         }
+
+        /* Settlment Offset */
+        let settleAsset =
+            baseId == "1.3.0"
+                ? quoteAsset
+                : quoteId == "1.3.0"
+                    ? baseAsset
+                    : quoteAsset;
+
+        if (settleAsset && feedPrice) {
+            let offset_percent = settleAsset
+                .getIn(["bitasset", "options"])
+                .toJS().force_settlement_offset_percent;
+            settlePrice =
+                baseId == "1.3.0"
+                    ? feedPrice.toReal() / (1 + offset_percent / 10000)
+                    : feedPrice.toReal() * (1 + offset_percent / 10000);
+        }
+        
 
         const translator = require("counterpart");
 
@@ -344,7 +341,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.feed_price"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
