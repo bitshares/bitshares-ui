@@ -1644,7 +1644,7 @@ class Exchange extends React.Component {
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 parentWidth={centerContainerWidth}
-                styles={{paddingRight: mirrorPanels ? 15 : 0}}
+                styles={{padding: 5, paddingRight: mirrorPanels ? 15 : 5}}
                 className={cnames(
                     verticalOrderForm && !smallScreen ? "" :
                         centerContainerWidth > 1200
@@ -1743,7 +1743,7 @@ class Exchange extends React.Component {
                 isOpen={this.state.buySellOpen}
                 onToggleOpen={this._toggleOpenBuySell.bind(this)}
                 parentWidth={centerContainerWidth}
-                styles={{paddingRight: mirrorPanels ? 15 : 0}}
+                styles={{padding: 5, paddingRight: mirrorPanels ? 15 : 5}}
                 className={cnames(
                     verticalOrderForm && !smallScreen ? "" :
                         centerContainerWidth > 1200
@@ -1890,7 +1890,7 @@ class Exchange extends React.Component {
                 marketReady={marketReady}
                 wrapperClass={cnames(
                     "medium-12 large-12 xlarge-8",
-                    "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink",
+                    "small-12 grid-block orderbook align-spaced no-overflow wrap shrink",
                     `order-${buySellTop ? 3 : 1} xlarge-order-${buySellTop ? 4 : 1}`
                 )}
                 innerClass={cnames(
