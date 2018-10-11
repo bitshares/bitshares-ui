@@ -46,7 +46,8 @@ class Header extends React.Component {
             active: props.location.pathname,
             accountsListDropdownActive: false,
             dropdownActive: false,
-            dropdownSubmenuActive: false
+            dropdownSubmenuActive: false,
+            isDepositModalVisible: false
         };
 
         this.unlisten = null;
@@ -61,7 +62,23 @@ class Header extends React.Component {
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(
             this
         );
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
         this.onBodyClick = this.onBodyClick.bind(this);
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
+        });
     }
 
     componentWillMount() {
@@ -124,7 +141,7 @@ class Header extends React.Component {
 
     _showDeposit(e) {
         e.preventDefault();
-        this.refs.deposit_modal_new.show();
+        this.showDepositModal();
         this._closeDropdown();
     }
 
@@ -1144,6 +1161,9 @@ class Header extends React.Component {
                 />
 
                 <DepositModal
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
+                    showModal={this.showDepositModal}
                     ref="deposit_modal_new"
                     modalId="deposit_modal_new"
                     account={currentAccount}

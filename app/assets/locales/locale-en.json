@@ -1138,6 +1138,7 @@
         "title": "Notice"
     },
     "modal": {
+        "close": "close",
         "cancel": "cancel",
         "buy": {
             "asset": "Asset",
