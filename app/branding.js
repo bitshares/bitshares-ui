@@ -233,7 +233,7 @@ export function getFeaturedMarkets(quotes = []) {
 	["OPEN.WAVES","USD"],
 	["OPEN.XMR","USD"],
 	["OPEN.ZEC","USD"],
-	["OPEN.ZRX","USD"]
+	["OPEN.ZRX","USD"];
 }
 
 /**
