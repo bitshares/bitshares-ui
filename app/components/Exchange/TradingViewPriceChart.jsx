@@ -30,9 +30,6 @@ export default class TradingViewPriceChart extends React.Component {
             interval: getResolutionsFromBuckets([props.bucketSize])[0]
         });
 
-        if (__DEV__) console.log("*** Load Chart ***");
-        if (__DEV__) console.time("*** Chart load time: ");
-
         let disabled_features = [
             "header_saveload",
             "symbol_info",
@@ -41,10 +38,14 @@ export default class TradingViewPriceChart extends React.Component {
             "header_symbol_search",
             "header_compare"
         ];
+
         if (this.props.mobile) {
             disabled_features.push("chart_scroll");
             disabled_features.push("chart_zoom");
         }
+
+        if (__DEV__) console.log("*** Load Chart ***");
+        if (__DEV__) console.time("*** Chart load time: ");
 
         this.tvWidget = new TradingView.widget({
             fullscreen: false,
@@ -128,8 +129,7 @@ export default class TradingViewPriceChart extends React.Component {
                 <div
                     className="exchange-bordered"
                     style={{
-                        marginTop: 10,
-                        marginBottom: 10,
+                        margin: 0,
                         height: this.props.chartHeight + "px"
                     }}
                     id="tv_chart"

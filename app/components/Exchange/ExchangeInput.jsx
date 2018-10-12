@@ -15,7 +15,7 @@ class ExchangeInput extends DecimalChecker {
 
     render() {
         return (
-            <input
+            <Input
                 ref="input"
                 type="text"
                 {...this.props}

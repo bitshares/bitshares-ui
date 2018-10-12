@@ -378,6 +378,17 @@
     }
     .page-layout {
         background-color: lighten($account-header, 4%);
+
+        .column-header {
+            > ul {
+                border-bottom: 1px solid $panel-bg-color;
+
+                > li.active, li:hover {
+                    border-bottom: 3px solid lightblue;
+                }
+            }
+        }
+
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -397,7 +408,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: darken($bg-color, 4%);
+            background-color: $panel-bg-color;
         }
     }
     .asset-prefix {
@@ -582,6 +593,12 @@
             color: $link-text-color;
         }
     }
+    .header-container .anticon {
+        color: $primary-text-color !important;
+        background-color: $primary-text-color !important;
+        fill: $primary-text-color !important;
+    }
+
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -806,13 +823,15 @@
     input[type="search"]#{$ant-fix},
     textarea#{$ant-fix},
     input[role="combobox"]#{$ant-fix},
-    select[role="combobox"]#{$ant-fix} {
+    select[role="combobox"]#{$ant-fix},
+    .buy-sell-container .ant-input {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
         &:hover,
         &:focus,
-        &:active {
+        &:active,
+        &:disabled {
             background-color: $input-background;
         }
         &:focus {
@@ -1296,9 +1315,13 @@
             color: $secondary-text-color;
         }
     }
+    
+    div.exchange-content-header {
+        background-color: transparent !important;
+    }
+
     .exchange-content-header {
         color: $light-text-color;
-        background-color: $header-color !important;
         border-bottom: 1px solid $button-bg-color;
         &.bid {
             border-bottom: 1px solid $bid-color;
@@ -1377,8 +1400,6 @@
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            @include RobotoMedium;
-            font-size: 13px;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1388,6 +1409,9 @@
     }
     .left-order-book {
         background-color: $bg-color;
+        .orderbook-center-title {
+            color: $inactive-text-color;
+        }
         .spread .spread-value {
             color: $primary-text-color;
         }
@@ -1447,9 +1471,6 @@
                 color: $negative-color !important;
             }
         }
-        &.clickable:hover {
-            background-color: lighten($panel-bg-color, 4%);
-        }
     }
     .stat-text {
         margin-top: 3px;
@@ -1497,9 +1518,6 @@
         cursor: pointer;
     }
 
-    div.exchange-content-header {
-        background-color: $header-color !important;
-    }
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
@@ -1983,7 +2001,7 @@
         display: none;
     }
 
-    @include breakpoint(large) {
+    @include breakpoint(medium) {
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
@@ -2301,8 +2319,30 @@
             }
         }
     }
-}
 
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
+    }
+
+    i.anticon.icon-fill {
+        &:hover {
+            color: $bs-blue;
+            cursor: pointer;
+        }
+    }
+
+    .icon-fill {
+        svg > path {
+            fill: #fff;
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+        }
+    }
+}
 .rc-time-picker-panel {
     z-index: 9999 !important;
 }

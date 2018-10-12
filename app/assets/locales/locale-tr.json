@@ -457,6 +457,7 @@
         "call": "Çağrı Fiyatı",
         "change": "Değişim",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Alış emrini onayla: Miktar :%(buy_amount)s miktarda %(buy_symbol)s. Fiyat: %(price_amount)s %(price_symbol)s",
@@ -517,6 +518,7 @@
         "others": "Diğerleri",
         "overbought": "Aşırı Talep",
         "oversold": "Aşırı Arz",
+        "panels_mirror": "Mirror Panels",
         "period": "Süre (gün)",
         "price": "Fiyat",
         "price_history": "Fiyat Tablosu",
@@ -531,7 +533,12 @@
         "search": "Search for more markets here",
         "sell": "Satış -",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Çizelge tercihleri",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Ödeme",
         "settle_orders": "Emirleri öde",
         "short": "Kısa pozisyon",
@@ -1021,12 +1028,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1036,7 +1045,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
