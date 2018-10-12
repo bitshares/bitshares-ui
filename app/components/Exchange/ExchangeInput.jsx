@@ -14,11 +14,12 @@ class ExchangeInput extends DecimalChecker {
     }
 
     render() {
+        var {allowNaN, ...other} = this.props;
         return (
             <Input
                 ref="input"
                 type="text"
-                {...this.props}
+                {...other}
                 onPaste={this.props.onPaste || this.onPaste.bind(this)}
                 onKeyPress={this.onKeyPress.bind(this)}
             />
