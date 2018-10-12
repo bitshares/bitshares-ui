@@ -24,7 +24,13 @@ import ReactTooltip from "react-tooltip";
 
 class TableHeader extends React.Component {
     render() {
-        let {baseSymbol, quoteSymbol, dashboard, isMyAccount, leftAlign} = this.props;
+        let {
+            baseSymbol,
+            quoteSymbol,
+            dashboard,
+            isMyAccount,
+            leftAlign
+        } = this.props;
 
         return !dashboard ? (
             <thead>
@@ -160,7 +166,11 @@ class OrderRow extends React.Component {
                     {valueSymbol}
                 </td>
                 <td
-                    style={{width: "25%", textAlign: "right", whiteSpace: "nowrap"}}
+                    style={{
+                        width: "25%",
+                        textAlign: "right",
+                        whiteSpace: "nowrap"
+                    }}
                     className="tooltip"
                     data-tip={order.expiration.toLocaleString()}
                 >
@@ -344,10 +354,10 @@ class MyOpenOrders extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps.activeTab !== this.state.activeTab) {
+        if (nextProps.activeTab !== this.state.activeTab) {
             this._changeTab(nextProps.activeTab);
         }
-        
+
         return (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
@@ -369,27 +379,42 @@ class MyOpenOrders extends React.Component {
     }
 
     _getOrders() {
-        const {currentAccount, base, quote, feedPrice} = this.props;
+        const {currentAccount, feedPrice} = this.props;
         const orders = currentAccount.get("orders"),
             call_orders = currentAccount.get("call_orders");
-        const baseID = base.get("id"),
-            quoteID = quote.get("id");
-        const assets = {
-            [base.get("id")]: {precision: base.get("precision")},
-            [quote.get("id")]: {precision: quote.get("precision")}
+
+        const getOrderData = order => {
+            let o = ChainStore.getObject(order).toJS();
+            if (!o) return null;
+            let base = ChainStore.getAsset(o.sell_price.base.asset_id);
+            let quote = ChainStore.getAsset(o.sell_price.quote.asset_id);
+            const baseID = base.get("id"),
+                quoteID = quote.get("id");
+            const assets = {
+                [base.get("id")]: {precision: base.get("precision")},
+                [quote.get("id")]: {precision: quote.get("precision")}
+            };
+            let sellBase = o.sell_price.base.asset_id,
+                sellQuote = o.sell_price.quote.asset_id;
+            if (
+                (sellBase === baseID && sellQuote === quoteID) ||
+                (sellBase === quoteID && sellQuote === baseID)
+            ) {
+                return {o, assets, id: [quote.get("id")]};
+            }
+            return {};
         };
         let limitOrders = orders
             .toArray()
             .map(order => {
-                let o = ChainStore.getObject(order);
-                if (!o) return null;
-                let sellBase = o.getIn(["sell_price", "base", "asset_id"]),
-                    sellQuote = o.getIn(["sell_price", "quote", "asset_id"]);
-                if (
-                    (sellBase === baseID && sellQuote === quoteID) ||
-                    (sellBase === quoteID && sellQuote === baseID)
-                ) {
-                    return new LimitOrder(o.toJS(), assets, quote.get("id"));
+                try {
+                    const {o, assets, id} = getOrderData(order);
+                    if (o) {
+                        return new LimitOrder(o, assets, id);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    return null;
                 }
             })
             .filter(a => !!a);
@@ -398,28 +423,12 @@ class MyOpenOrders extends React.Component {
             .toArray()
             .map(order => {
                 try {
-                    let o = ChainStore.getObject(order);
-                    if (!o) return null;
-                    let sellBase = o.getIn(["call_price", "base", "asset_id"]),
-                        sellQuote = o.getIn([
-                            "call_price",
-                            "quote",
-                            "asset_id"
-                        ]);
-                    if (
-                        (sellBase === baseID && sellQuote === quoteID) ||
-                        (sellBase === quoteID && sellQuote === baseID)
-                    ) {
-                        return feedPrice
-                            ? new CallOrder(
-                                  o.toJS(),
-                                  assets,
-                                  quote.get("id"),
-                                  feedPrice
-                              )
-                            : null;
+                    const {o, assets, id} = getOrderData(order);
+                    if (o && feedPrice) {
+                        return new CallOrder(o, assets, id, feedPrice);
                     }
                 } catch (e) {
+                    console.error(e);
                     return null;
                 }
             })
@@ -468,12 +477,21 @@ class MyOpenOrders extends React.Component {
                 ? true
                 : false;
 
-        {/* Users Open Orders Tab (default) */}
+        {
+            /* Users Open Orders Tab (default) */
+        }
         if (!activeTab || activeTab == "my_orders") {
             const orders = this._getOrders();
             let emptyRow = (
                 <tr>
-                    <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                    <td
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 4,
+                            fontStyle: "italic"
+                        }}
+                        colSpan="5"
+                    >
                         <Translate content="account.no_orders" />
                     </td>
                 </tr>
@@ -542,7 +560,9 @@ class MyOpenOrders extends React.Component {
             );
         }
 
-        {/* Open Settle Orders */}
+        {
+            /* Open Settle Orders */
+        }
         if (activeTab && activeTab == "open_settlement") {
             contentContainer = (
                 <OpenSettleOrders
@@ -562,16 +582,23 @@ class MyOpenOrders extends React.Component {
                 key="open_orders"
                 className={this.props.className}
             >
-                <div className={this.props.innerClass} style={this.props.innerStyle}>
-                    {this.props.noHeader ? null : 
-                    <div style={this.props.headerStyle} className="exchange-content-header">
-                        {activeTab == "my_orders" ?
-                            <Translate content="exchange.my_orders" />
-                            : null}
-                        {activeTab == "open_settlement" ?
-                            <Translate content="exchange.settle_orders" />
-                            : null}
-                    </div>}
+                <div
+                    className={this.props.innerClass}
+                    style={this.props.innerStyle}
+                >
+                    {this.props.noHeader ? null : (
+                        <div
+                            style={this.props.headerStyle}
+                            className="exchange-content-header"
+                        >
+                            {activeTab == "my_orders" ? (
+                                <Translate content="exchange.my_orders" />
+                            ) : null}
+                            {activeTab == "open_settlement" ? (
+                                <Translate content="exchange.settle_orders" />
+                            ) : null}
+                        </div>
+                    )}
                     <div className="grid-block shrink left-orderbook-header market-right-padding-only">
                         <table className="table order-table text-right fixed-table market-right-padding">
                             {activeTab == "my_orders" ? (
@@ -620,7 +647,12 @@ class MyOpenOrders extends React.Component {
                     <div
                         className="table-container grid-block market-right-padding-only no-overflow"
                         ref="container"
-                        style={{overflow: "hidden", minHeight: !this.props.tinyScreen ? 260 : 0, maxHeight: 260, lineHeight: "13px"}}
+                        style={{
+                            overflow: "hidden",
+                            minHeight: !this.props.tinyScreen ? 260 : 0,
+                            maxHeight: 260,
+                            lineHeight: "13px"
+                        }}
                     >
                         <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}
