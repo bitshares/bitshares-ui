@@ -1,7 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "alt-react";
-import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
@@ -357,23 +356,7 @@ class Header extends React.Component {
             </a>
         );
 
-        let createAccountLink =
-            myAccountCount === 0 ? (
-                <ActionSheet.Button title="" setActiveState={() => {}}>
-                    <a
-                        className="button create-account"
-                        onClick={this._onNavigate.bind(this, "/create-account")}
-                        style={{padding: "1rem", border: "none"}}
-                    >
-                        <Icon
-                            className="icon-14px"
-                            name="user"
-                            title="icons.user.create_account"
-                        />{" "}
-                        <Translate content="header.create_account" />
-                    </a>
-                </ActionSheet.Button>
-            ) : null;
+        let createAccountLink = myAccountCount === 0 ? true : null;
 
         // let lock_unlock = ((!!this.props.current_wallet) || passwordLogin) ? (
         //     <div className="grp-menu-item" >
