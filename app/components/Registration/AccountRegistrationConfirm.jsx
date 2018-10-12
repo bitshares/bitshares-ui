@@ -145,7 +145,7 @@ class AccountRegistrationConfirm extends React.Component {
                             <input
                                 id="password"
                                 type="text"
-                                value={this.props.password}
+                                defaultValue={this.props.password}
                                 className="input create-account-input"
                             />
                             <Clipboard

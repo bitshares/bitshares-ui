@@ -11,7 +11,7 @@ import AltContainer from "alt-container";
 class AccountNameInput extends React.Component {
     static propTypes = {
         id: PropTypes.string,
-        placeholder: PropTypes.string,
+        placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         initial_value: PropTypes.string,
         onChange: PropTypes.func,
         onEnter: PropTypes.func,
