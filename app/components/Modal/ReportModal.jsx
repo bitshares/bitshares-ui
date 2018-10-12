@@ -29,11 +29,11 @@ class ReportModal extends React.Component {
         return {
             open: false,
             loadingImage: false,
-            memo: [],
+            logEntries: [],
             hidden: false,
             logsCopySuccess: false,
             showLog: false,
-            imageURI: "",
+            imageURI: null,
             showScreen: false
         };
     }
@@ -49,12 +49,17 @@ class ReportModal extends React.Component {
             })
             .then(
                 uri => this.setState({imageURI: uri}),
-                error => console.error("Oops, Something Went Wrong", error)
+                error => {
+                    console.error("Screenshot could not be captured", error);
+                    this.setState({
+                        imageURI: "Screenshot could not be captured"
+                    });
+                }
             );
     }
 
     onMemoChanged(e) {
-        this.setState({memo: [e.target.value]});
+        this.setState({logEntries: [e.target.value]});
     }
 
     onClose = (publishClose = true) => {
@@ -63,7 +68,7 @@ class ReportModal extends React.Component {
             {
                 open: false,
                 loadingImage: false,
-                memo: [],
+                logEntries: [],
                 hidden: false,
                 logsCopySuccess: false,
                 showLog: false,
@@ -75,18 +80,17 @@ class ReportModal extends React.Component {
         );
     };
 
-    downloadScreenshot = () => {
+    showScreenshot = () => {
         // Take screenshot
         this.setState({
-            showScreen: !this.state.showScreen,
-            showLog: false
+            showScreen: !this.state.showScreen
         });
     };
 
     getLogs = () => {
         LogsActions.getLogs().then(data => {
             this.setState({
-                memo: data.join("\n")
+                logEntries: data.join("\n")
             });
         });
     };
@@ -103,8 +107,7 @@ class ReportModal extends React.Component {
 
     showLog() {
         this.setState({
-            showLog: !this.state.showLog,
-            showScreen: false
+            showLog: !this.state.showLog
         });
     }
 
@@ -112,35 +115,57 @@ class ReportModal extends React.Component {
         let {
             open,
             hidden,
-            memo,
+            logEntries,
             loadingImage,
             logsCopySuccess,
             showLog,
             showScreen
         } = this.state;
+
+        const decriptionArea = () => {
+            if (true) {
+                // !showLog && !showScreen
+                return (
+                    <p>
+                        <Translate content="modal.report.explanatory_text_2" />
+                        <br />
+                        <a
+                            href="https://github.com/bitshares/bitshares-ui/issues"
+                            target="_blank"
+                            style={{textAlign: "center", width: "100%"}}
+                        >
+                            https://github.com/bitshares/bitshares-ui/issues
+                        </a>
+                        <br />
+                        <Translate content="modal.report.explanatory_text_3" />
+                    </p>
+                );
+            }
+        };
+
         const logsArea = () => {
             if (showLog) {
                 return (
                     <textarea
                         id="logsText"
-                        style={{
-                            marginBottom: 0
-                        }}
+                        style={{}}
                         rows="20"
-                        value={memo}
+                        value={logEntries}
                         onChange={this.onMemoChanged.bind(this)}
                     />
                 );
-            } else if (showScreen) {
-                return <img src={this.state.imageURI} />;
-            } else {
-                return (
-                    <Translate
-                        className="left-label"
-                        component="label"
-                        content="modal.report.explanatory_text"
-                    />
-                );
+            }
+        };
+
+        const screenshotArea = () => {
+            if (this.state.imageURI != null) {
+                if (showScreen) {
+                    if (this.state.imageURI.length > 100) {
+                        return <img src={this.state.imageURI} />;
+                    } else {
+                        return <text>this.state.imageURI</text>;
+                    }
+                }
             }
         };
 
@@ -152,49 +177,95 @@ class ReportModal extends React.Component {
                     onClose={() => this.onClose(this, false)}
                 >
                     <div className="grid-block vertical no-overflow">
-                        {/*  M E M O  */}
-                        <div className="raw">
-                            <label className="right-label">
-                                <CopyButton text={this.state.memo} />
-                            </label>
+                        <Translate
+                            content="modal.report.title"
+                            component="h1"
+                        />
+                        <p>
+                            <Translate
+                                content="modal.report.explanatory_text_1"
+                                component="label"
+                            />
+                        </p>
+                        <span
+                            className="raw"
+                            style={{
+                                border: "1px solid darkgray",
+                                marginBottom: "1em"
+                            }}
+                        >
+                            <div
+                                className="right-label"
+                                style={{paddingBottom: "0em"}}
+                            >
+                                <CopyButton text={this.state.logEntries} />
+                            </div>
 
                             <Translate
-                                className="left-label tooltip"
+                                className="left-label"
                                 component="label"
-                                content="transfer.memo"
+                                content="modal.report.lastLogEntries"
+                                style={{
+                                    paddingTop: "1em",
+                                    paddingLeft: "0.5em"
+                                }}
                             />
-                        </div>
-                        <div className="raw">
+
                             {logsArea()}
-                            {/* warning */}
-                            {this.state.propose ? (
-                                <div
-                                    className="error-area"
-                                    style={{position: "absolute"}}
-                                >
-                                    <Translate
-                                        content="transfer.warn_name_unable_read_memo"
-                                        name={this.state.from_name}
+                        </span>
+                        <span
+                            className="raw"
+                            style={{
+                                border: "1px solid darkgray",
+                                marginBottom: "1em"
+                            }}
+                        >
+                            <div
+                                className="right-label"
+                                style={{paddingBottom: "0em"}}
+                            >
+                                {this.state.imageURI != null ? (
+                                    <img
+                                        style={{
+                                            height: "2.8em",
+                                            marginTop: "0em",
+                                            marginRight: "0em"
+                                        }}
+                                        src={this.state.imageURI}
                                     />
-                                </div>
-                            ) : null}
-                        </div>
+                                ) : (
+                                    "Failed"
+                                )}
+                            </div>
+                            <div
+                                className="right-label"
+                                style={{paddingBottom: "0em"}}
+                            >
+                                <Translate
+                                    component="label"
+                                    content="modal.report.copyScreenshot"
+                                    style={{
+                                        paddingTop: "1em",
+                                        paddingRight: "0.5em"
+                                    }}
+                                />
+                            </div>
+                            <Translate
+                                className="left-label"
+                                component="label"
+                                content="modal.report.screenshot"
+                                style={{
+                                    paddingTop: "1em",
+                                    paddingLeft: "0.5em"
+                                }}
+                            />
+
+                            {screenshotArea()}
+                        </span>
+                        <br />
+                        {decriptionArea()}
                         <div className="content-block transfer-input">
                             <div className="no-margin no-padding">
-                                <div
-                                    className="small-6"
-                                    style={{
-                                        display: "inline-block",
-                                        paddingRight: "10px"
-                                    }}
-                                >
-                                    <div
-                                        className="button primary"
-                                        onClick={this.downloadScreenshot}
-                                    >
-                                        <Translate content="modal.report.takeScreenshot" />
-                                    </div>
-                                </div>
                                 <div
                                     className="small-6"
                                     style={{
@@ -210,6 +281,24 @@ class ReportModal extends React.Component {
                                             <Translate content="modal.report.hideLog" />
                                         ) : (
                                             <Translate content="modal.report.showLog" />
+                                        )}
+                                    </div>
+                                </div>
+                                <div
+                                    className="small-6"
+                                    style={{
+                                        display: "inline-block",
+                                        paddingRight: "10px"
+                                    }}
+                                >
+                                    <div
+                                        className="button primary"
+                                        onClick={this.showScreenshot}
+                                    >
+                                        {this.state.showScreen ? (
+                                            <Translate content="modal.report.hideScreenshot" />
+                                        ) : (
+                                            <Translate content="modal.report.takeScreenshot" />
                                         )}
                                     </div>
                                 </div>

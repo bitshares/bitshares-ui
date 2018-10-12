@@ -96,11 +96,22 @@ class AppInit extends React.Component {
 
         const thiz = this;
         const saveLog = (type, log) => {
+            if (
+                log.length > 1 &&
+                typeof log[1] === "string" &&
+                log[1] === "html2canvas:"
+            ) {
+                return;
+            }
             thiz.saveExtendedLog(type, Array.from(log));
             if (thiz.mounted) {
                 console[`str${type}`].apply(console, log);
             }
         };
+
+        // see https://www.sitepoint.com/javascript-decorators-what-they-are/ for decorator
+
+        // see https://stackoverflow.com/questions/9559725/extending-console-log-without-affecting-log-line for line numbers
 
         console.strlog = console.log.bind(console);
         console.strerror = console.error.bind(console);
