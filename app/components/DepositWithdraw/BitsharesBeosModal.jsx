@@ -1,11 +1,13 @@
 import React from "react";
 import AmountSelector from "components/Utility/AmountSelector";
+import Modal from "react-foundation-apps/src/modal";
 import Translate from "react-translate-component";
 import Trigger from "react-foundation-apps/src/trigger";
 import ChainTypes from "components/Utility/ChainTypes";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import BindToChainState from "components/Utility/BindToChainState";
 import PropTypes from "prop-types";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 
@@ -61,6 +63,14 @@ class BitsharesBeosModal extends React.Component {
         return hasBalance;
     }
 
+    getMaintenanceId() {
+        return "maintenance";
+    }
+
+    onMaintenance() {
+        ZfApi.publish(this.getMaintenanceId(), "open");
+    }
+
     onAccountBalance() {
         if (
             Object.keys(this.props.account.get("balances").toJS()).includes(
@@ -107,13 +117,14 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onSubmit() {
-        console.log("Send");
+        this.onMaintenance();
     }
 
     render() {
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
+        let maintenanceId = this.getMaintenanceId();
 
         if (asset_types.length > 0) {
             let current_asset_id = this.props.asset.get("id");
@@ -153,106 +164,132 @@ class BitsharesBeosModal extends React.Component {
         const disableSubmit = !this.state.amount_to_send;
 
         return (
-            <form className="grid-block vertical full-width-content">
-                <div className="grid-container">
-                    <div className="content-block">
-                        <h3>
-                            <Translate content="gateway.bitshares_beos.modal_title" />
-                        </h3>
-                    </div>
-                    {/* Amount to send to BEOS account */}
-                    <div className="content-block">
-                        <AmountSelector
-                            label="gateway.bitshares_beos.amount_to_send_label"
-                            amount={this.state.amount_to_send}
-                            asset={this.props.asset.get("id")}
-                            assets={[this.props.asset.get("id")]}
-                            placeholder="0.0"
-                            onChange={this.onAmountToSendChange.bind(this)}
-                            display_balance={balance}
-                        />
-                        {this.state.empty_amount_to_send_value ? (
-                            <p
-                                className="has-error no-margin"
-                                style={{paddingTop: 10}}
-                            >
-                                <Translate content="transfer.errors.valid" />
-                            </p>
-                        ) : null}
-                        {this.state.balance_error ? (
-                            <p
-                                className="has-error no-margin"
-                                style={{paddingTop: 10}}
-                            >
-                                <Translate content="transfer.errors.insufficient" />
-                            </p>
-                        ) : null}
-                    </div>
-                    {/* Bitshares EOS account */}
-                    <div className="content-block">
-                        <label className="left-label">
-                            <Translate
-                                component="span"
-                                content="gateway.bitshares_beos.account_label"
-                            />
-                        </label>
-                        <div className="inline-label">
-                            <input type="text" value={""} autoComplete="off" />
+            <div>
+                <form className="grid-block vertical full-width-content">
+                    <div className="grid-container">
+                        <div className="content-block">
+                            <h3>
+                                <Translate content="gateway.bitshares_beos.modal_title" />
+                            </h3>
                         </div>
-                    </div>
-                    {/* Create account enabled/disabled */}
-                    <table className="table" style={{width: "inherit"}}>
-                        <tbody>
-                            <tr>
-                                <td style={{border: "none"}}>
-                                    <Translate
-                                        content={
-                                            "gateway.bitshares_beos.create_account_checkbox"
-                                        }
-                                    />
-                                    :
-                                </td>
-                                <td style={{border: "none"}}>
-                                    <div
-                                        className="switch"
-                                        style={{
-                                            marginBottom: "10px"
-                                        }}
-                                        onClick={this.onCreateAccountCheckbox.bind(
-                                            this
-                                        )}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={
-                                                this.state.isAccountCreation
+                        {/* Amount to send to BEOS account */}
+                        <div className="content-block">
+                            <AmountSelector
+                                label="gateway.bitshares_beos.amount_to_send_label"
+                                amount={this.state.amount_to_send}
+                                asset={this.props.asset.get("id")}
+                                assets={[this.props.asset.get("id")]}
+                                placeholder="0.0"
+                                onChange={this.onAmountToSendChange.bind(this)}
+                                display_balance={balance}
+                            />
+                            {this.state.empty_amount_to_send_value ? (
+                                <p
+                                    className="has-error no-margin"
+                                    style={{paddingTop: 10}}
+                                >
+                                    <Translate content="transfer.errors.valid" />
+                                </p>
+                            ) : null}
+                            {this.state.balance_error ? (
+                                <p
+                                    className="has-error no-margin"
+                                    style={{paddingTop: 10}}
+                                >
+                                    <Translate content="transfer.errors.insufficient" />
+                                </p>
+                            ) : null}
+                        </div>
+                        {/* Bitshares EOS account */}
+                        <div className="content-block">
+                            <label className="left-label">
+                                <Translate
+                                    component="span"
+                                    content="gateway.bitshares_beos.account_label"
+                                />
+                            </label>
+                            <div className="inline-label">
+                                <input
+                                    type="text"
+                                    value={""}
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+                        {/* Create account enabled/disabled */}
+                        <table className="table" style={{width: "inherit"}}>
+                            <tbody>
+                                <tr>
+                                    <td style={{border: "none"}}>
+                                        <Translate
+                                            content={
+                                                "gateway.bitshares_beos.create_account_checkbox"
                                             }
                                         />
-                                        <label />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {/* Send/Cancel buttons */}
-                    <div className="button-group">
-                        <div
-                            onClick={this.onSubmit.bind(this)}
-                            className={
-                                "button" + (disableSubmit ? " disabled" : "")
-                            }
-                        >
-                            <Translate content="gateway.bitshares_beos.send_button_label" />
-                        </div>
-
-                        <Trigger close={this.props.modal_id}>
-                            <div className="button">
-                                <Translate content="account.perm.cancel" />
+                                        :
+                                    </td>
+                                    <td style={{border: "none"}}>
+                                        <div
+                                            className="switch"
+                                            style={{
+                                                marginBottom: "10px"
+                                            }}
+                                            onClick={this.onCreateAccountCheckbox.bind(
+                                                this
+                                            )}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    this.state.isAccountCreation
+                                                }
+                                            />
+                                            <label />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {/* Send/Cancel buttons */}
+                        <div className="button-group">
+                            <div
+                                onClick={this.onSubmit.bind(this)}
+                                className={
+                                    "button" +
+                                    (disableSubmit ? " disabled" : "")
+                                }
+                            >
+                                <Translate content="gateway.bitshares_beos.send_button_label" />
                             </div>
+
+                            <Trigger close={this.props.modal_id}>
+                                <div className="button">
+                                    <Translate content="account.perm.cancel" />
+                                </div>
+                            </Trigger>
+                        </div>
+                    </div>
+                </form>
+                <Modal id={maintenanceId} overlay={true}>
+                    <Trigger close={maintenanceId}>
+                        <a href="#" className="close-button">
+                            &times;
+                        </a>
+                    </Trigger>
+                    <br />
+                    <label>
+                        <Translate content="gateway.bitshares_beos.maintenance_modal_label" />
+                    </label>
+                    <br />
+                    <div className="content-block">
+                        <Trigger close={maintenanceId}>
+                            <a className="button">
+                                <Translate content="gateway.bitshares_beos.maintenance_button_label" />
+                            </a>
                         </Trigger>
                     </div>
-                </div>
-            </form>
+                </Modal>
+            </div>
         );
     }
 }
