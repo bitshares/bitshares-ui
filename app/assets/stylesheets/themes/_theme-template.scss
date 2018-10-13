@@ -2345,6 +2345,10 @@
             }
         }
     }
+
+    .modal--transaction-confirm {
+        zindex: 10000; // make transaction confirm modal above another modals
+    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;
