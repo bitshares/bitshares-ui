@@ -4,13 +4,14 @@ import {
     Select,
     Slider,
     Switch,
+    Input,
+    InputNumber,
+    Modal,
     Icon
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
-import BaseModal from "../Modal/BaseModal";
 import {GroupOrderLimitSelector} from "./OrderBook";
 import SettingsActions from "actions/SettingsActions";
 
@@ -33,16 +34,9 @@ class Settings extends React.Component {
         });
     }
 
-    show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
     onClose() {
-        this.setState({open: false}, () => {
-            this.props.onToggleSettings();
-        });
+        this.props.hideModal();
+        this.props.onToggleSettings();
     }
 
     setChartHeight(value) {
@@ -97,29 +91,36 @@ class Settings extends React.Component {
 
         let {chartHeight} = this.state;
 
-        return !this.state.open ? null : (
-            <BaseModal
+        return (
+            <Modal
+                title={counterpart.translate("exchange.settings.chart_options")}
+                visible={this.props.visible}
                 id={this.props.modalId}
                 overlay={true}
-                onClose={this.onClose.bind(this)}
+                footer={[
+                    <Button key={"close"} onClick={this.onClose.bind(this)}>
+                        {counterpart.translate("modal.close")}
+                    </Button>
+                ]}
+                onCancel={this.onClose.bind(this)}
                 noHeaderContainer
                 ref={this.props.modalId}
             >
                 <Form.Item>
-                    {!this.props.tinyScreen ? 
+                    {!this.props.tinyScreen ?
                         <header>
                             <Translate content="exchange.settings.header.chart_options" />
                         </header> : null}
-                    
-                    {!this.props.tinyScreen ? 
+
+                    {!this.props.tinyScreen ?
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.chart_type" />
-                                    &nbsp;<Icon 
+                                    &nbsp;<Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.chart_type")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -151,15 +152,15 @@ class Settings extends React.Component {
                             </div>
                         </div> : null}
 
-                    {!this.props.tinyScreen ? 
+                    {!this.props.tinyScreen ?
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.chart_height" />
-                                    &nbsp;<Icon 
+                                    &nbsp;<Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.chart_height")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -187,10 +188,10 @@ class Settings extends React.Component {
                         <div className="small-6">
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.chart_tools" />
-                                &nbsp;<Icon 
+                                &nbsp;<Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.chart_tools")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                             </h6>
                         </div>
@@ -207,10 +208,10 @@ class Settings extends React.Component {
                         <div className="small-6">
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.chart_zoom" />
-                                &nbsp;<Icon 
+                                &nbsp;<Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.chart_zoom")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                             </h6>
                         </div>
@@ -230,10 +231,10 @@ class Settings extends React.Component {
                         <div className="small-6">
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.order_book_grouping" />
-                                &nbsp;<Icon 
+                                &nbsp;<Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.order_book_grouping")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -260,10 +261,10 @@ class Settings extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.order_style" />
                                 &nbsp;
-                                <Icon 
+                                <Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.order_style")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -296,10 +297,10 @@ class Settings extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_form" />
                                     &nbsp;
-                                    <Icon 
+                                    <Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.position_order_form")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -333,10 +334,10 @@ class Settings extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_orders" />
                                     &nbsp;
-                                    <Icon 
+                                    <Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.position_order_orders")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -370,10 +371,10 @@ class Settings extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_asset" />
                                     &nbsp;
-                                    <Icon 
+                                    <Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.position_order_asset")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -406,10 +407,10 @@ class Settings extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.orderbook_auto_scroll" />
                                     &nbsp;
-                                    <Icon 
+                                    <Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.orderbook_auto_scroll")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -431,10 +432,10 @@ class Settings extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.reverse_order_book" />
                                     &nbsp;
-                                    <Icon 
+                                    <Icon
                                         data-tip={counterpart.translate("exchange.settings.tooltip.reverse_order_book")}
-                                        type="question-circle" 
-                                        theme="filled" 
+                                        type="question-circle"
+                                        theme="filled"
                                     />
                                 </h6>
                             </div>
@@ -451,10 +452,10 @@ class Settings extends React.Component {
                     <header>
                         <Translate content="exchange.settings.header.panel_grouping" />
                         &nbsp;
-                        <Icon 
+                        <Icon
                             data-tip={counterpart.translate("exchange.settings.tooltip.panel_grouping")}
-                            type="question-circle" 
-                            theme="filled" 
+                            type="question-circle"
+                            theme="filled"
                         />
                     </header>
                     <div
@@ -522,10 +523,10 @@ class Settings extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.market_location" />
                                 &nbsp;
-                                <Icon 
+                                <Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.market_location")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -553,10 +554,10 @@ class Settings extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.reduce_scrollbars" />
                                 &nbsp;
-                                <Icon 
+                                <Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.reduce_scrollbars")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -576,10 +577,10 @@ class Settings extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.dynamic_form" />
                                 &nbsp;
-                                <Icon 
+                                <Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.dynamic_form")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -597,10 +598,10 @@ class Settings extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.hide_function_buttons" />
                                 &nbsp;
-                                <Icon 
+                                <Icon
                                     data-tip={counterpart.translate("exchange.settings.tooltip.hide_function_buttons")}
-                                    type="question-circle" 
-                                    theme="filled" 
+                                    type="question-circle"
+                                    theme="filled"
                                 />
                             </h6>
                         </div>
@@ -613,10 +614,7 @@ class Settings extends React.Component {
                         </div>
                     </div>
                 </Form.Item>
-                <Button type="primary" onClick={this.onClose.bind(this)}>
-                    <Translate content="global.close" />
-                </Button>
-            </BaseModal>
+            </Modal>
         );
     }
 }

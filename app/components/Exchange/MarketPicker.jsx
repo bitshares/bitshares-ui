@@ -16,7 +16,6 @@ import BaseModal from "../Modal/BaseModal";
 import LoadingIndicator from "../LoadingIndicator";
 import {Form, Input, Select} from "bitshares-ui-style-guide";
 import AssetName from "../Utility/AssetName";
-import {Form, Input, Select} from "bitshares-ui-style-guide";
 
 class MarketPickerWrapper extends React.Component {
     constructor() {
