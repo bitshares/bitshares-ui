@@ -73,6 +73,9 @@ class Exchange extends React.Component {
         this.showSettingsModal = this.showSettingsModal.bind(this);
         this.hideSettingsModal = this.hideSettingsModal.bind(this);
 
+        this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
+        this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
+
         this.psInit = true;
     }
 
@@ -197,6 +200,7 @@ class Exchange extends React.Component {
 
         return {
             isSettingsModalVisible: false,
+            isMarketPickerModalVisible: false,
             history: [],
             tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -243,6 +247,18 @@ class Exchange extends React.Component {
                 2: ""
             }
         };
+    }
+
+    showMarketPickerModal() {
+        this.setState({
+            isMarketPickerModalVisible: true
+        });
+    }
+
+    hideMarketPickerModal() {
+        this.setState({
+            isMarketPickerModalVisible: false
+        });
     }
 
     showSettingsModal() {
@@ -1104,7 +1120,7 @@ class Exchange extends React.Component {
         let showMarketPicker = !!asset ? true : false;
 
         if (showMarketPicker) {
-            this.refs.marketPicker.show();
+            this.showMarketPickerModal();
         }
 
         this.setState({
@@ -2746,8 +2762,9 @@ class Exchange extends React.Component {
 
                 <div className="grid-block page-layout market-layout">
                     <MarketPicker
-                        ref="marketPicker"
-                        modalId="marketPicker"
+                        visible={this.state.isMarketPickerModalVisible}
+                        showModal={this.showMarketPickerModal}
+                        hideModal={this.hideMarketPickerModal}
                         marketPickerAsset={this.state.marketPickerAsset}
                         onToggleMarketPicker={this._toggleMarketPicker.bind(
                             this
