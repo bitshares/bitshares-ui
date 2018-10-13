@@ -37,6 +37,7 @@ class AccountPortfolioList extends React.Component {
         super();
 
         this.state = {
+            isSettleModalVisible: false,
             settleAsset: "1.3.0",
             depositAsset: null,
             withdrawAsset: null,
@@ -52,6 +53,9 @@ class AccountPortfolioList extends React.Component {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
         this._checkRefAssignments = this._checkRefAssignments.bind(this);
+
+        this.showSettleModal = this.showSettleModal.bind(this);
+        this.hideSettleModal = this.hideSettleModal.bind(this);
     }
 
     componentWillMount() {
@@ -105,6 +109,18 @@ class AccountPortfolioList extends React.Component {
                 );
             }, false)
         );
+    }
+
+    showSettleModal() {
+        this.setState({
+            isSettleModalVisible: true
+        });
+    }
+
+    hideSettleModal() {
+        this.setState({
+            isSettleModalVisible: false
+        });
     }
 
     sortFunctions = {
@@ -183,7 +199,7 @@ class AccountPortfolioList extends React.Component {
             settleAsset: id
         });
 
-        this.refs.settlement_modal.show();
+        this.showSettleModal();
     }
 
     _hideAsset(asset, status) {
@@ -895,8 +911,9 @@ class AccountPortfolioList extends React.Component {
     _renderSettleModal() {
         return (
             <SettleModal
-                ref="settlement_modal"
-                modalId="settlement_modal"
+                visible={this.state.isSettleModalVisible}
+                hideModal={this.hideSettleModal}
+                showModal={this.showSettleModal}
                 asset={this.state.settleAsset}
                 account={this.props.account.get("name")}
             />
