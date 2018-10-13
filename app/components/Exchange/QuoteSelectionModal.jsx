@@ -77,11 +77,11 @@ export default class QuoteSelectionModal extends React.Component {
         const quoteCount = this.props.quotes.size;
         return (
             <Modal
+                title={counterpart.translate("exchange.quote_selection")}
                 closable={false}
                 visible={this.props.visible}
                 id="quote_selection"
                 overlay={true}
-                modalHeader="exchange.quote_selection"
                 onCancel={this.props.hideModal}
                 footer={[
                     <Button onClick={this.props.hideModal}>
