@@ -108,9 +108,11 @@ class Settings extends React.Component {
                     style={{paddingBottom: "1em"}}
                     className="block-list no-border-bottom"
                 >
-                    <header>
-                        <Translate content="exchange.settings.header.chart_options" />
-                    </header>
+                    {!this.props.tinyScreen ? 
+                        <header>
+                            <Translate content="exchange.settings.header.chart_options" />
+                        </header> : null}
+                    
                     {!this.props.tinyScreen ? 
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
@@ -142,7 +144,7 @@ class Settings extends React.Component {
                                             "exchange.price_history"
                                         )}
                                     </Select.Option>
-                                    <Select.Option value="">
+                                    <Select.Option value={""}>
                                         {counterpart.translate(
                                             "exchange.settings.options.hidden_chart"
                                         )}

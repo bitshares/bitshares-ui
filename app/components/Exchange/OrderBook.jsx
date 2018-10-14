@@ -977,7 +977,7 @@ class OrderBook extends React.Component {
                                     >
                                         <Icon
                                             name="thumb-tack"
-                                            className="icon-14px"
+                                            className="icon-14px icon-fill"
                                         />
                                     </span>
                                 ) : null}
@@ -1291,7 +1291,7 @@ class OrderBook extends React.Component {
                                                                     .moveOrderBook
                                                             }
                                                             name="thumb-tack"
-                                                            className="icon-14px order-book-button-v clickable"
+                                                            className="icon-14px icon-fill order-book-button-v clickable"
                                                             title={
                                                                 this.props
                                                                     .horizontal

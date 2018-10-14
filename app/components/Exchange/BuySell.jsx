@@ -962,7 +962,7 @@ class BuySell extends React.Component {
                                 <Icon
                                     onClick={this.props.moveOrderForm}
                                     name="thumb-tack"
-                                    className="icon-14px order-book-button-v"
+                                    className="icon-14px icon-fill order-book-button-v"
                                     style={{ marginLeft: 5 }}
                                 />
                             ) : null}
@@ -986,7 +986,7 @@ class BuySell extends React.Component {
                                 >
                                     <Icon
                                         name="thumb-tack"
-                                        className="icon-18px order-book-button-v"
+                                        className="icon-18px icon-fill order-book-button-v"
                                     />
                                 </div>
                             ) : null}

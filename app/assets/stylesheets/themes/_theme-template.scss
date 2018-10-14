@@ -2335,7 +2335,7 @@
 
     .icon-fill {
         svg > path {
-            fill: #fff;
+            fill: $light-text-color;
             &:hover {
                 fill: $bs-blue;
                 cursor: pointer;

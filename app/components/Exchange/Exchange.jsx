@@ -1598,8 +1598,6 @@ class Exchange extends React.Component {
             centerContainerWidth = this.refs.center.clientWidth;
         }
 
-        console.log("Center W: " + centerContainerWidth);
-
         let base = null,
             quote = null,
             accountBalance = null,
@@ -2416,11 +2414,11 @@ class Exchange extends React.Component {
                 <div
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
-                        // verticalOrderBook || verticalOrderForm
-                        //     ? ""
-                        //     : "",
+                        verticalOrderBook
+                            ? "xlarge-order-2"
+                            : "",
                         centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4 xlarge-order-2"
+                            ? "medium-6 large-6 xlarge-4 "
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
