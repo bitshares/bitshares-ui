@@ -1,5 +1,6 @@
 import {
     Button,
+    Form,
     Select,
     Slider,
     Switch,
@@ -104,10 +105,7 @@ class Settings extends React.Component {
                 noHeaderContainer
                 ref={this.props.modalId}
             >
-                <section
-                    style={{paddingBottom: "1em"}}
-                    className="block-list no-border-bottom"
-                >
+                <Form.Item>
                     {!this.props.tinyScreen ? 
                         <header>
                             <Translate content="exchange.settings.header.chart_options" />
@@ -240,25 +238,21 @@ class Settings extends React.Component {
                             </h6>
                         </div>
                         <div className="small-6">
-                            <ul style={{marginBottom: "0.5em"}}>
-                                <li className="with-dropdown">
-                                    {this.props.trackedGroupsConfig ? (
-                                        <GroupOrderLimitSelector
-                                            globalSettingsSelector={true}
-                                            trackedGroupsConfig={
-                                                this.props.trackedGroupsConfig
-                                            }
-                                            handleGroupOrderLimitChange={this.props.handleGroupOrderLimitChange.bind(
-                                                this
-                                            )}
-                                            currentGroupOrderLimit={
-                                                this.props
-                                                    .currentGroupOrderLimit
-                                            }
-                                        />
-                                    ) : null}
-                                </li>
-                            </ul>
+                            {this.props.trackedGroupsConfig ? (
+                                <GroupOrderLimitSelector
+                                    globalSettingsSelector={true}
+                                    trackedGroupsConfig={
+                                        this.props.trackedGroupsConfig
+                                    }
+                                    handleGroupOrderLimitChange={this.props.handleGroupOrderLimitChange.bind(
+                                        this
+                                    )}
+                                    currentGroupOrderLimit={
+                                        this.props
+                                            .currentGroupOrderLimit
+                                    }
+                                />
+                            ) : null}
                         </div>
                     </div>
                     <div className="grid-block no-overflow wrap shrink">
@@ -618,7 +612,7 @@ class Settings extends React.Component {
                             />
                         </div>
                     </div>
-                </section>
+                </Form.Item>
                 <Button type="primary" onClick={this.onClose.bind(this)}>
                     <Translate content="global.close" />
                 </Button>
