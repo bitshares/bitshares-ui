@@ -1812,7 +1812,12 @@
         "sell_form": "Place sell orders using this form.",
         "sell_orders": "View all sell orders for this market.",
         "skip_label": "Skip",
-        "switch_button": "Switch the trading pairs using this button."
+        "switch_button": "Switch the trading pairs using this button.",
+        "vertical_order": "View all orders for this market, including spread and latest order price",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers"
     },
     "wallet": {
         "accept": "Accept",
