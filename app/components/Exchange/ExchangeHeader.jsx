@@ -412,7 +412,7 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                     <Translate
                                         className="column-hide-xs"
-                                        content="exchange.settings.header"
+                                        content="exchange.settings.header.title"
                                     />
                                 </li>
                             </ul>

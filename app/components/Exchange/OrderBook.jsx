@@ -38,16 +38,16 @@ class OrderRows extends React.Component {
                 {orderRows.length > 0
                     ? orderRows
                     : noOrders || (
-                          <div className="sticky-table-row">
-                              <td className="cell no-orders" colSpan="3">
-                                  {isBid ? (
-                                      <Translate content="exchange.no_bids" />
-                                  ) : (
-                                      <Translate content="exchange.no_asks" />
-                                  )}
-                              </td>
-                          </div>
-                      )}
+                        <div className="sticky-table-row">
+                            <td className="cell no-orders" colSpan="3">
+                                {isBid ? (
+                                    <Translate content="exchange.no_bids" />
+                                ) : (
+                                    <Translate content="exchange.no_asks" />
+                                )}
+                            </td>
+                        </div>
+                    )}
             </TransitionWrapper>
         );
     }
@@ -364,8 +364,8 @@ class GroupOrderLimitSelector extends React.Component {
                     data-tip={
                         noGroupsAvailable
                             ? translator.translate(
-                                  "tooltip.no_groups_available"
-                              )
+                                "tooltip.no_groups_available"
+                            )
                             : null
                     }
                     className="settings-select"
@@ -388,7 +388,6 @@ class OrderBook extends React.Component {
         super();
         this.state = {
             flip: props.flipOrderBook,
-            orderBookReversed: props.orderBookReversed,
             showAllBids: false,
             showAllAsks: false,
             rowCount: 20,
@@ -527,22 +526,22 @@ class OrderBook extends React.Component {
             );
             const header = this.queryStickyTable("#sticky-table-header");
             const centerTextContainer = this.centerText.current;
-            const singleAskHeight = elemHeight(
+            const singleRowHeight = elemHeight(
                 this.queryStickyTable(".order-row")
             );
 
-            let asks =
+            let rows =
                 this.props.currentGroupOrderLimit !== 0
-                    ? this.props.groupedAsks
-                    : this.props.combinedAsks;
+                    ? !this.props.orderBookReversed ? this.props.groupedAsks : this.props.groupedBids
+                    : !this.props.orderBookReversed ? this.props.combinedAsks : this.props.combinedBids;
 
-            const asksHeight = asks.length * singleAskHeight;
+            const rowsHeight = rows.length * singleRowHeight;
 
             const scrollableContainerHeight =
                 elemHeight(scrollableContainer) - elemHeight(header);
 
             const scrollTo =
-                asksHeight +
+                rowsHeight +
                 elemHeight(centerTextContainer) / 2 -
                 scrollableContainerHeight / 2;
 
@@ -586,20 +585,6 @@ class OrderBook extends React.Component {
     }
 
     /***
-     * Toggle Buy/Sell order UX
-     * Horizontal order book only
-     */
-    toggleFlipBuySell = () => {
-        SettingsActions.changeViewSetting({
-            flipOrderBook: !this.state.flip
-        });
-
-        this.setState({flip: !this.state.flip}, () => {
-            this.psUpdate();
-        });
-    };
-
-    /***
      * Toggle spread value to view real value or percentage in spread
      * Vertical order book only
      */
@@ -616,20 +601,6 @@ class OrderBook extends React.Component {
 
     toggleAutoScroll = () => {
         this.setState({autoScroll: !this.state.autoScroll});
-    };
-
-    /***
-     * Toggle order book to switch place of buy and sell orders
-     * Vertical order book only
-     */
-    toggleOrderBook = () => {
-        const orderBookState = {
-            orderBookReversed: !this.state.orderBookReversed
-        };
-        SettingsActions.changeViewSetting(orderBookState);
-        this.setState(orderBookState, () => {
-            this.psUpdate();
-        });
     };
 
     render() {
@@ -650,7 +621,8 @@ class OrderBook extends React.Component {
             handleGroupOrderLimitChange,
             orderBookReversed,
             groupedBids,
-            groupedAsks
+            groupedAsks,
+            flipOrderBook
         } = this.props;
         let {
             showAllAsks,
@@ -718,7 +690,7 @@ class OrderBook extends React.Component {
                             onClick={this.props.onClick.bind(this, order)}
                             base={base}
                             quote={quote}
-                            position={!this.state.flip ? "left" : "right"}
+                            position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -749,7 +721,7 @@ class OrderBook extends React.Component {
                             base={base}
                             quote={quote}
                             type={order.type}
-                            position={!this.state.flip ? "right" : "left"}
+                            position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -781,7 +753,7 @@ class OrderBook extends React.Component {
                             onClick={this.props.onClick.bind(this, order)}
                             base={base}
                             quote={quote}
-                            position={!this.state.flip ? "left" : "right"}
+                            position={!flipOrderBook ? "left" : "right"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -814,7 +786,7 @@ class OrderBook extends React.Component {
                             base={base}
                             quote={quote}
                             type={order.type}
-                            position={!this.state.flip ? "right" : "left"}
+                            position={!flipOrderBook ? "right" : "left"}
                             currentAccount={this.props.currentAccount}
                         />
                     ) : (
@@ -876,7 +848,7 @@ class OrderBook extends React.Component {
                         <th>
                             <Translate
                                 className={
-                                    (this.state.flip
+                                    (flipOrderBook
                                         ? "ask-total"
                                         : "bid-total") + " header-sub-title"
                                 }
@@ -893,7 +865,7 @@ class OrderBook extends React.Component {
                         <th>
                             <Translate
                                 className={
-                                    (!this.state.flip
+                                    (!flipOrderBook
                                         ? "ask-total"
                                         : "bid-total") + " header-sub-title"
                                 }
@@ -937,7 +909,7 @@ class OrderBook extends React.Component {
                     <div
                         className={cnames(
                             innerClass,
-                            this.state.flip ? "order-1" : "order-2"
+                            flipOrderBook ? "order-1" : "order-2"
                         )}
                     >
                         <div>
@@ -948,10 +920,10 @@ class OrderBook extends React.Component {
                                 )}
                             >
                                 <Translate content="exchange.asks" />
-                                {this.state.flip ? (
+                                {flipOrderBook && !this.props.hideFunctionButtons ? (
                                     <div style={{display: "inline-block"}}>
                                         <span
-                                            onClick={this.toggleFlipBuySell.bind(
+                                            onClick={this.props.onFlipOrderBook.bind(
                                                 this
                                             )}
                                             style={{
@@ -968,7 +940,7 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
-                                {this.state.flip ? (
+                                {flipOrderBook ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -985,7 +957,7 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
-                                {this.props.onTogglePosition ? (
+                                {this.props.onTogglePosition && !this.props.hideFunctionButtons ? (
                                     <span
                                         onClick={this.props.onTogglePosition}
                                         style={{
@@ -998,7 +970,7 @@ class OrderBook extends React.Component {
                                         &#8645;
                                     </span>
                                 ) : null}
-                                {this.state.flip ? (
+                                {flipOrderBook && !this.props.hideFunctionButtons ? (
                                     <span
                                         className="order-book-button-v"
                                         onClick={this.props.moveOrderBook}
@@ -1027,7 +999,7 @@ class OrderBook extends React.Component {
                             </div>
                             <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
-                                    {!this.state.flip
+                                    {!flipOrderBook
                                         ? rightHeader
                                         : leftHeader}
                                 </table>
@@ -1082,7 +1054,7 @@ class OrderBook extends React.Component {
                     <div
                         className={cnames(
                             innerClass,
-                            this.state.flip ? "order-2" : "order-1"
+                            flipOrderBook ? "order-2" : "order-1"
                         )}
                     >
                         <div>
@@ -1093,10 +1065,10 @@ class OrderBook extends React.Component {
                                 )}
                             >
                                 <Translate content="exchange.bids" />
-                                {!this.state.flip ? (
+                                {!flipOrderBook && !this.props.hideFunctionButtons ? (
                                     <div style={{display: "inline-block"}}>
                                         <span
-                                            onClick={this.toggleFlipBuySell.bind(
+                                            onClick={this.props.onFlipOrderBook.bind(
                                                 this
                                             )}
                                             style={{
@@ -1113,7 +1085,7 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
-                                {!this.state.flip ? (
+                                {!flipOrderBook ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -1130,7 +1102,7 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
-                                {this.props.onTogglePosition ? (
+                                {this.props.onTogglePosition && !this.props.hideFunctionButtons ? (
                                     <span
                                         onClick={this.props.onTogglePosition}
                                         style={{
@@ -1143,7 +1115,7 @@ class OrderBook extends React.Component {
                                         &#8645;
                                     </span>
                                 ) : null}
-                                {!this.state.flip ? (
+                                {!flipOrderBook && !this.props.hideFunctionButtons ? (
                                     <span
                                         className="order-book-button-v"
                                         onClick={this.props.moveOrderBook}
@@ -1172,7 +1144,7 @@ class OrderBook extends React.Component {
                             </div>
                             <div className="market-right-padding-only">
                                 <table className="table order-table table-hover fixed-table text-right">
-                                    {this.state.flip ? rightHeader : leftHeader}
+                                    {flipOrderBook ? rightHeader : leftHeader}
                                 </table>
                             </div>
                             <div
@@ -1249,7 +1221,7 @@ class OrderBook extends React.Component {
                                 />
                             </div>
                         </div>
-                        {this.state.orderBookReversed ? (
+                        {orderBookReversed ? (
                             <OrderRows
                                 id="top-order-rows"
                                 noOrders={noOrders}
@@ -1291,55 +1263,57 @@ class OrderBook extends React.Component {
                                                     </span>
                                                 </span>
                                                 <span style={{width: 75}}>
-                                                    <Icon
-                                                        className="lock-unlock clickable icon-fill"
-                                                        onClick={
-                                                            this
-                                                                .toggleAutoScroll
-                                                        }
-                                                        name={
-                                                            this.state
-                                                                .autoScroll
-                                                                ? "locked"
-                                                                : "unlocked"
-                                                        }
-                                                        title={
-                                                            this.state
-                                                                .autoScroll
-                                                                ? "icons.unlocked.disable_auto_scroll"
-                                                                : "icons.locked.enable_auto_scroll"
-                                                        }
-                                                    />
+                                                    {!this.props.hideFunctionButtons ? 
+                                                        <Icon
+                                                            className="lock-unlock clickable icon-fill"
+                                                            onClick={
+                                                                this
+                                                                    .toggleAutoScroll
+                                                            }
+                                                            name={
+                                                                this.state
+                                                                    .autoScroll
+                                                                    ? "locked"
+                                                                    : "unlocked"
+                                                            }
+                                                            title={
+                                                                this.state
+                                                                    .autoScroll
+                                                                    ? "icons.unlocked.disable_auto_scroll"
+                                                                    : "icons.locked.enable_auto_scroll"
+                                                            }
+                                                        /> : null}
                                                     &nbsp;
-                                                    <Icon
-                                                        onClick={
-                                                            this.props
-                                                                .moveOrderBook
-                                                        }
-                                                        name="thumb-tack"
-                                                        className="icon-14px order-book-button-v clickable"
-                                                        title={
-                                                            this.props
-                                                                .horizontal
-                                                                ? "icons.thumb_tack"
-                                                                : "icons.thumb_untack"
-                                                        }
-                                                        style={{marginLeft: 0}}
-                                                    />
+                                                    {!this.props.hideFunctionButtons ? 
+                                                        <Icon
+                                                            onClick={
+                                                                this.props
+                                                                    .moveOrderBook
+                                                            }
+                                                            name="thumb-tack"
+                                                            className="icon-14px order-book-button-v clickable"
+                                                            title={
+                                                                this.props
+                                                                    .horizontal
+                                                                    ? "icons.thumb_tack"
+                                                                    : "icons.thumb_untack"
+                                                            }
+                                                            style={{marginLeft: 0}}
+                                                        /> : null}
                                                     &nbsp;
                                                     {currentGroupOrderLimit ==
                                                     0 ? null : (
-                                                        <Icon
-                                                            name="grouping"
-                                                            className="icon-14px"
-                                                            title={translator.translate(
-                                                                "icons.order_grouping"
-                                                            )}
-                                                            style={{
-                                                                marginLeft: 0
-                                                            }}
-                                                        />
-                                                    )}
+                                                            <Icon
+                                                                name="grouping"
+                                                                className="icon-14px"
+                                                                title={translator.translate(
+                                                                    "icons.order_grouping"
+                                                                )}
+                                                                style={{
+                                                                    marginLeft: 0
+                                                                }}
+                                                            />
+                                                        )}
                                                 </span>
                                                 {!!this.props.latest && (
                                                     <span className="right">
@@ -1349,7 +1323,7 @@ class OrderBook extends React.Component {
                                                                     .changeClass
                                                                     ? "spread-value"
                                                                     : this.props
-                                                                          .changeClass
+                                                                        .changeClass
                                                             }
                                                         >
                                                             <PriceText
@@ -1375,7 +1349,7 @@ class OrderBook extends React.Component {
                                 </td>
                             )}
                         </div>
-                        {this.state.orderBookReversed ? (
+                        {orderBookReversed ? (
                             <OrderRows
                                 noOrders={noOrders}
                                 orderRows={askRows}
