@@ -66,6 +66,7 @@ class Header extends React.Component {
 
         this.showDepositModal = this.showDepositModal.bind(this);
         this.hideDepositModal = this.hideDepositModal.bind(this);
+
         this.showWithdrawModal = this.showWithdrawModal.bind(this);
         this.hideWithdrawModal = this.hideWithdrawModal.bind(this);
 
