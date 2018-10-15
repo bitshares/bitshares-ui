@@ -47,7 +47,8 @@ class Header extends React.Component {
             accountsListDropdownActive: false,
             dropdownActive: false,
             dropdownSubmenuActive: false,
-            isDepositModalVisible: false
+            isDepositModalVisible: false,
+            isWithdrawModalVisible: false
         };
 
         this.unlisten = null;
@@ -66,6 +67,9 @@ class Header extends React.Component {
         this.showDepositModal = this.showDepositModal.bind(this);
         this.hideDepositModal = this.hideDepositModal.bind(this);
 
+        this.showWithdrawModal = this.showWithdrawModal.bind(this);
+        this.hideWithdrawModal = this.hideWithdrawModal.bind(this);
+
         this.onBodyClick = this.onBodyClick.bind(this);
     }
 
@@ -78,6 +82,18 @@ class Header extends React.Component {
     hideDepositModal() {
         this.setState({
             isDepositModalVisible: false
+        });
+    }
+
+    showWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: true
+        });
+    }
+
+    hideWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: false
         });
     }
 
@@ -148,7 +164,7 @@ class Header extends React.Component {
     _showWithdraw(e) {
         e.preventDefault();
         this._closeDropdown();
-        this.refs.withdraw_modal_new.show();
+        this.showWithdrawModal();
     }
 
     _triggerMenu(e) {
@@ -1170,6 +1186,9 @@ class Header extends React.Component {
                     backedCoins={this.props.backedCoins}
                 />
                 <WithdrawModal
+                    visible={this.state.isWithdrawModalVisible}
+                    hideModal={this.hideWithdrawModal}
+                    showModal={this.showWithdrawModal}
                     ref="withdraw_modal_new"
                     modalId="withdraw_modal_new"
                     backedCoins={this.props.backedCoins}

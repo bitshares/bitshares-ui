@@ -2122,8 +2122,6 @@
         }
     }
     .marketPicker {
-        background: $bg-color;
-        box-shadow: 2px 2px 5px darken($bg-color, 30%);
         .results {
             background: $input-background;
             border: 1px solid $bg-color;
@@ -2346,6 +2344,10 @@
                 cursor: pointer;
             }
         }
+    }
+
+    .modal--transaction-confirm {
+        zindex: 10000; // make transaction confirm modal above another modals
     }
 }
 .rc-time-picker-panel {

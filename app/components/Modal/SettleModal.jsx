@@ -14,6 +14,7 @@ import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
     ({worthLessSettlement, asset, shortBackingAsset}) => {
@@ -56,6 +57,8 @@ class ModalContent extends React.Component {
         this.state = {
             amount: 0
         };
+
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     onAmountChanged({amount, asset}) {
@@ -64,7 +67,8 @@ class ModalContent extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        ZfApi.publish("settlement_modal", "close");
+
+        this.props.hideModal();
 
         let precision = utils.get_asset_precision(
             this.props.asset.get("precision")
@@ -143,72 +147,54 @@ class ModalContent extends React.Component {
             </span>
         );
 
+        const footer = [
+            <Button key={"submit"} type="primary" onClick={this.onSubmit}>
+                {counterpart.translate("modal.settle.submit")}
+            </Button>,
+            <Button key={"close"} onClick={this.props.hideModal}>
+                {counterpart.translate("modal.close")}
+            </Button>
+        ];
+
         return (
-            <form className="grid-block vertical full-width-content">
-                <Translate
-                    component="h3"
-                    style={{textAlign: "center"}}
-                    content="modal.settle.title"
-                    asset={asset.get("symbol")}
-                />
-                <WorthLessSettlementWarning asset={assetID} />
-                <div className="grid-container " style={{paddingTop: "2rem"}}>
-                    <div className="content-block">
-                        <AmountSelector
-                            label="modal.settle.amount"
-                            amount={amount}
-                            onChange={this.onAmountChanged.bind(this)}
-                            display_balance={balanceText}
-                            asset={assetID}
-                            assets={[assetID]}
-                            tabIndex={1}
-                        />
-                    </div>
-                    <div className="content-block">
-                        <input
-                            type="submit"
-                            className={submit_btn_class}
-                            onClick={this.onSubmit.bind(this)}
-                            value={counterpart.translate("modal.settle.submit")}
-                        />
-                    </div>
+            <Modal
+                title={counterpart.translate("modal.settle.title", {
+                    asset: asset.get("symbol")
+                })}
+                visible={this.props.visible}
+                id={this.props.modalId}
+                footer={footer}
+                onCancel={this.props.hideModal}
+                overlay={true}
+                ref="settlement_modal"
+            >
+                <div className="grid-block vertical">
+                    <form className="grid-block vertical full-width-content">
+                        <WorthLessSettlementWarning asset={assetID} />
+                        <div className="grid-container ">
+                            <div className="content-block">
+                                <AmountSelector
+                                    label="modal.settle.amount"
+                                    amount={amount}
+                                    onChange={this.onAmountChanged.bind(this)}
+                                    display_balance={balanceText}
+                                    asset={assetID}
+                                    assets={[assetID]}
+                                    tabIndex={1}
+                                />
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </Modal>
         );
     }
 }
 ModalContent = BindToChainState(ModalContent);
 
 class SettleModal extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {open: false};
-    }
-
-    show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
-    onClose() {
-        this.setState({open: false});
-    }
-
     render() {
-        return !this.state.open ? null : (
-            <BaseModal
-                id={this.props.modalId}
-                onClose={this.onClose.bind(this)}
-                overlay={true}
-                ref="settlement_modal"
-            >
-                <div className="grid-block vertical">
-                    <ModalContent {...this.props} />
-                </div>
-            </BaseModal>
-        );
+        return <ModalContent {...this.props} />;
     }
 }
 

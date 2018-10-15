@@ -70,6 +70,12 @@ class Exchange extends React.Component {
             this
         );
 
+        this.showSettingsModal = this.showSettingsModal.bind(this);
+        this.hideSettingsModal = this.hideSettingsModal.bind(this);
+
+        this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
+        this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
+
         this.psInit = true;
     }
 
@@ -193,6 +199,8 @@ class Exchange extends React.Component {
         let {ask, bid} = this._initialOrderState(props);
 
         return {
+            isSettingsModalVisible: false,
+            isMarketPickerModalVisible: false,
             history: [],
             tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -239,6 +247,30 @@ class Exchange extends React.Component {
                 2: ""
             }
         };
+    }
+
+    showMarketPickerModal() {
+        this.setState({
+            isMarketPickerModalVisible: true
+        });
+    }
+
+    hideMarketPickerModal() {
+        this.setState({
+            isMarketPickerModalVisible: false
+        });
+    }
+
+    showSettingsModal() {
+        this.setState({
+            isSettingsModalVisible: true
+        });
+    }
+
+    hideSettingsModal() {
+        this.setState({
+            isSettingsModalVisible: false
+        });
     }
 
     _getLastMarketKey() {
@@ -1088,7 +1120,7 @@ class Exchange extends React.Component {
         let showMarketPicker = !!asset ? true : false;
 
         if (showMarketPicker) {
-            this.refs.marketPicker.show();
+            this.showMarketPickerModal();
         }
 
         this.setState({
@@ -1125,7 +1157,7 @@ class Exchange extends React.Component {
 
     _toggleSettings() {
         if (!this.state.showSettings) {
-            this.refs.settingsModal.show();
+            this.showSettingsModal();
         }
 
         this.setState({showSettings: !this.state.showSettings});
@@ -2730,8 +2762,9 @@ class Exchange extends React.Component {
 
                 <div className="grid-block page-layout market-layout">
                     <MarketPicker
-                        ref="marketPicker"
-                        modalId="marketPicker"
+                        visible={this.state.isMarketPickerModalVisible}
+                        showModal={this.showMarketPickerModal}
+                        hideModal={this.hideMarketPickerModal}
                         marketPickerAsset={this.state.marketPickerAsset}
                         onToggleMarketPicker={this._toggleMarketPicker.bind(
                             this
@@ -2739,8 +2772,9 @@ class Exchange extends React.Component {
                         {...this.props}
                     />
                     <Settings
-                        ref="settingsModal"
-                        modalId="settingsModal"
+                        visible={this.state.isSettingsModalVisible}
+                        showModal={this.showSettingsModal}
+                        hideModal={this.hideSettingsModal}
                         viewSettings={this.props.viewSettings}
                         chartType={chartType}
                         chartHeight={chartHeight}

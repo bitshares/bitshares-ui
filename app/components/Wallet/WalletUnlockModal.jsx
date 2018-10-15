@@ -390,6 +390,7 @@ class WalletUnlockModal extends React.Component {
                 overlay={true}
                 overlayClose={false}
                 modalHeader="header.unlock_short"
+                onCancel={this.handleModalClose}
                 leftHeader
                 footer={[
                     <Button onClick={this.handleLogin} key="login-btn">

@@ -1,9 +1,11 @@
 import React from "react";
 import Icon from "../Icon/Icon";
-import BaseModal from "../Modal/BaseModal";
 import AssetSelector from "../Utility/AssetSelector";
 import SettingsActions from "actions/SettingsActions";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
+
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 export default class QuoteSelectionModal extends React.Component {
     constructor() {
@@ -74,11 +76,18 @@ export default class QuoteSelectionModal extends React.Component {
         const {error} = this.state;
         const quoteCount = this.props.quotes.size;
         return (
-            <BaseModal
+            <Modal
+                title={counterpart.translate("exchange.quote_selection")}
+                closable={false}
+                visible={this.props.visible}
                 id="quote_selection"
                 overlay={true}
-                modalHeader="exchange.quote_selection"
-                noLogo
+                onCancel={this.props.hideModal}
+                footer={[
+                    <Button onClick={this.props.hideModal}>
+                        {counterpart.translate("modal.close")}
+                    </Button>
+                ]}
             >
                 <section className="no-border-bottom">
                     <table className="table">
@@ -148,8 +157,6 @@ export default class QuoteSelectionModal extends React.Component {
                     </table>
 
                     <br />
-                    <br />
-                    <br />
 
                     <div>
                         <AssetSelector
@@ -168,7 +175,7 @@ export default class QuoteSelectionModal extends React.Component {
                         <div className="error-area">{error}</div>
                     </div>
                 </section>
-            </BaseModal>
+            </Modal>
         );
     }
 }

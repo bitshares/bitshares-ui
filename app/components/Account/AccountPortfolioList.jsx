@@ -37,6 +37,9 @@ class AccountPortfolioList extends React.Component {
         super();
 
         this.state = {
+            isSettleModalVisible: false,
+            isBorrowModalVisible: false,
+            borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
             withdrawAsset: null,
@@ -52,6 +55,12 @@ class AccountPortfolioList extends React.Component {
             this.sortFunctions[key] = this.sortFunctions[key].bind(this);
         }
         this._checkRefAssignments = this._checkRefAssignments.bind(this);
+
+        this.showSettleModal = this.showSettleModal.bind(this);
+        this.hideSettleModal = this.hideSettleModal.bind(this);
+
+        this.showBorrowModal = this.showBorrowModal.bind(this);
+        this.hideBorrowModal = this.hideBorrowModal.bind(this);
     }
 
     componentWillMount() {
@@ -105,6 +114,36 @@ class AccountPortfolioList extends React.Component {
                 );
             }, false)
         );
+    }
+
+    showSettleModal() {
+        this.setState({
+            isSettleModalVisible: true
+        });
+    }
+
+    hideSettleModal() {
+        this.setState({
+            isSettleModalVisible: false
+        });
+    }
+
+    showBorrowModal(quoteAsset, backingAsset, account) {
+        this.setState({
+            isBorrowModalVisible: true,
+            borrow: {
+                quoteAsset: quoteAsset,
+                backingAsset: backingAsset,
+                account: account
+            }
+        });
+    }
+
+    hideBorrowModal() {
+        this.setState({
+            borrow: null,
+            isBorrowModalVisible: false
+        });
     }
 
     sortFunctions = {
@@ -183,7 +222,7 @@ class AccountPortfolioList extends React.Component {
             settleAsset: id
         });
 
-        this.refs.settlement_modal.show();
+        this.showSettleModal();
     }
 
     _hideAsset(asset, status) {
@@ -303,7 +342,15 @@ class AccountPortfolioList extends React.Component {
                     <a
                         onClick={() => {
                             ReactTooltip.hide();
-                            this.refs[modalRef].show();
+                            this.showBorrowModal(
+                                asset.get("id"),
+                                asset.getIn([
+                                    "bitasset",
+                                    "options",
+                                    "short_backing_asset"
+                                ]),
+                                account
+                            );
                         }}
                     >
                         <Icon
@@ -580,7 +627,6 @@ class AccountPortfolioList extends React.Component {
                                 )}
                             >
                                 {borrowLink}
-                                {borrowModal}
                             </div>
                         ) : (
                             emptyCell
@@ -737,11 +783,10 @@ class AccountPortfolioList extends React.Component {
                         ) : (
                             emptyCell
                         );
-                        let {
-                            isBitAsset,
-                            borrowModal,
-                            borrowLink
-                        } = renderBorrow(asset, this.props.account);
+                        let {isBitAsset, borrowLink} = renderBorrow(
+                            asset,
+                            this.props.account
+                        );
                         if (
                             (includeAsset && visible) ||
                             (!includeAsset && !visible)
@@ -823,7 +868,6 @@ class AccountPortfolioList extends React.Component {
                                                 )}
                                             >
                                                 {borrowLink}
-                                                {borrowModal}
                                             </div>
                                         ) : (
                                             emptyCell
@@ -892,11 +936,39 @@ class AccountPortfolioList extends React.Component {
         );
     }
 
+    _renderBorrowModal() {
+        if (
+            !this.state.borrow ||
+            !this.state.borrow.quoteAsset ||
+            !this.state.borrow.backingAsset ||
+            !this.state.borrow.account
+        ) {
+            console.log("prevent render", this.state);
+            return null;
+        }
+
+        console.log("render borrow modal");
+
+        return (
+            <BorrowModal
+                visible={this.state.isBorrowModalVisible}
+                showModal={this.showBorrowModal}
+                hideModal={this.hideBorrowModal}
+                account={this.state.borrow && this.state.borrow.account}
+                quoteAsset={this.state.borrow && this.state.borrow.quoteAsset}
+                backingAsset={
+                    this.state.borrow && this.state.borrow.backingAsset
+                }
+            />
+        );
+    }
+
     _renderSettleModal() {
         return (
             <SettleModal
-                ref="settlement_modal"
-                modalId="settlement_modal"
+                visible={this.state.isSettleModalVisible}
+                hideModal={this.hideSettleModal}
+                showModal={this.showSettleModal}
                 asset={this.state.settleAsset}
                 account={this.props.account.get("name")}
             />
@@ -929,6 +1001,7 @@ class AccountPortfolioList extends React.Component {
                 >
                     {this._renderSendModal()}
                     {this._renderSettleModal()}
+                    {this._renderBorrowModal()}
                     {/* Withdraw Modal*/}
                     <SimpleDepositWithdraw
                         ref="withdraw_modal"

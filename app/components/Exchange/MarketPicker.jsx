@@ -1,10 +1,8 @@
 import {connect} from "alt-react";
-import {Button} from 'bitshares-ui-style-guide'
 import {ChainStore, ChainValidation} from "bitsharesjs";
 import counterpart from "counterpart";
 import {debounce} from "lodash-es";
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import {Link} from "react-router-dom";
 import AssetActions from "actions/AssetActions";
@@ -12,17 +10,26 @@ import {hasGatewayPrefix} from "common/gatewayUtils";
 import utils from "common/utils";
 import AssetStore from "stores/AssetStore";
 import Icon from "../Icon/Icon";
-import BaseModal from "../Modal/BaseModal";
-import LoadingIndicator from "../LoadingIndicator";
-import {Form, Input, Select} from "bitshares-ui-style-guide";
+import {
+    Form,
+    Input,
+    Select,
+    Modal,
+    Button,
+    Radio,
+    Icon as AntIcon
+} from "bitshares-ui-style-guide";
 import AssetName from "../Utility/AssetName";
-import {Form, Input, Select} from "bitshares-ui-style-guide";
 
 class MarketPickerWrapper extends React.Component {
     constructor() {
         super();
 
         this.state = this.initialState();
+
+        this.handleMarketPickerFilterChange = this.handleMarketPickerFilterChange.bind(
+            this
+        );
 
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
     }
@@ -48,6 +55,7 @@ class MarketPickerWrapper extends React.Component {
 
     shouldComponentUpdate(np, ns) {
         return (
+            np.visible !== this.props.visible ||
             np.marketPickerAsset !== this.props.marketPickerAsset ||
             np.searchAssets !== this.props.searchAssets ||
             ns.marketsList !== this.state.marketsList ||
@@ -250,7 +258,7 @@ class MarketPickerWrapper extends React.Component {
                               <span style={{float: "right"}}>
                                   <Link
                                       onClick={() => {
-                                            this.props.onClose.bind(this)
+                                          this.props.onClose.bind(this);
                                       }}
                                       to={
                                           quoteSymbol == marketPickerAsset
@@ -278,6 +286,10 @@ class MarketPickerWrapper extends React.Component {
         });
     }
 
+    handleMarketPickerFilterChange(e) {
+        this._changeMarketPickerFilter(e.target.value);
+    }
+
     render() {
         let {marketPickerAsset} = this.props;
 
@@ -291,51 +303,6 @@ class MarketPickerWrapper extends React.Component {
 
         return (
             <div className="marketPicker">
-                <div className="marketPicker__header">
-                    <div className="marketPicker__filterType">
-                        <Translate
-                            className="marketPicker__filterHeader"
-                            component="span"
-                            content="exchange.market_picker.search_mode"
-                        />
-                        <Icon
-                            style={{marginLeft: 5, cursor: "pointer"}}
-                            className={
-                                !this.state.marketPickerTab ||
-                                this.state.marketPickerTab == "filter"
-                                    ? "blue-icon"
-                                    : ""
-                            }
-                            size="1_5x"
-                            onClick={this._changeMarketPickerFilter.bind(
-                                this,
-                                "filter"
-                            )}
-                            name="filter"
-                            title="icons.filter"
-                        />
-                        <Icon
-                            style={{marginLeft: 5, cursor: "pointer"}}
-                            className={
-                                this.state.marketPickerTab == "search"
-                                    ? "blue-icon"
-                                    : ""
-                            }
-                            size="1_5x"
-                            onClick={this._changeMarketPickerFilter.bind(
-                                this,
-                                "search"
-                            )}
-                            name="zoom"
-                            title="icons.zoom"
-                        />
-                    </div>
-                    <Translate
-                        className="marketPicker__title"
-                        component="span"
-                        content="exchange.market_picker.title"
-                    />
-                </div>
                 <div className="marketPicker__subHeader">
                     <Translate content="exchange.market_picker.sub_title" />
                     &nbsp;
@@ -355,7 +322,27 @@ class MarketPickerWrapper extends React.Component {
                         />
                     </Link>
                 </div>
-                <hr />
+                <Form.Item
+                    label={counterpart
+                        .translate("exchange.market_picker.search_mode")
+                        .toUpperCase()}
+                >
+                    <Radio.Group
+                        value={
+                            !this.state.marketPickerTab
+                                ? "filter"
+                                : this.state.marketPickerTab
+                        }
+                        onChange={this.handleMarketPickerFilterChange}
+                    >
+                        <Radio value="filter">
+                            {counterpart.translate("markets.filter")}
+                        </Radio>
+                        <Radio value="search">
+                            {counterpart.translate("markets.search")}
+                        </Radio>
+                    </Radio.Group>
+                </Form.Item>
                 <div
                     id="search"
                     style={{display: marketPickerTab == "search" ? "" : "none"}}
@@ -435,31 +422,34 @@ class MarketPickerWrapper extends React.Component {
                     </div>
                 </div>
                 <Form.Item
-                    label={counterpart
-                        .translate("exchange.market_picker.results", {
-                            total_assets: !allMarkets ? 0 : allMarkets.length
-                        })
-                        .toUpperCase()}
+                    colon={false}
+                    label={
+                        <span>
+                            {counterpart
+                                .translate("exchange.market_picker.results", {
+                                    total_assets: !allMarkets
+                                        ? 0
+                                        : allMarkets.length
+                                })
+                                .toUpperCase()}
+                            :
+                            {this.state.activeSearch &&
+                            this.state.inputValue.length != 0 ? (
+                                <AntIcon
+                                    style={{marginLeft: "8px"}}
+                                    type="loading"
+                                    theme="outlined"
+                                />
+                            ) : null}
+                        </span>
+                    }
                 />
-                {this.state.activeSearch &&
-                this.state.inputValue.length != 0 ? (
-                    <div style={{textAlign: "center"}}>
-                        <LoadingIndicator type="three-bounce" />
-                    </div>
-                ) : null}
 
                 <div className="results">
                     <ul ref="results" style={{marginLeft: 0}}>
                         {!this.state.activeSearch ? marketsList : null}
                     </ul>
                 </div>
-
-                <Button
-                    type="primary"
-                    onClick={this.props.onClose.bind(this)}
-                >
-                    <Translate content="global.close" />
-                </Button>
             </div>
         );
     }
@@ -482,34 +472,33 @@ class MarketPicker extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(
-            this.props.quoteAsset.get("id") !== nextProps.quoteAsset.get("id")
-            || this.props.baseAsset.get("id") !== nextProps.baseAsset.get("id")
+        if (
+            this.props.quoteAsset.get("id") !==
+                nextProps.quoteAsset.get("id") ||
+            this.props.baseAsset.get("id") !== nextProps.baseAsset.get("id")
         ) {
             this.onClose();
         }
     }
 
     show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
+        this.props.showModal();
     }
 
     onClose() {
-        this.setState({open: false}, () => {
-            this.props.onToggleMarketPicker(null)
-        });
+        this.props.onToggleMarketPicker(null);
+        this.props.hideModal();
     }
 
     render() {
-        return !this.state.open
-            ? null
-            :
-            <BaseModal
+        return (
+            <Modal
+                title={counterpart.translate("exchange.market_picker.title")}
+                closable={false}
+                visible={this.props.visible}
                 id={this.props.modalId}
                 overlay={true}
-                onClose={this.onClose.bind(this)}
+                onCancel={this.onClose.bind(this)}
                 noHeaderContainer
                 ref={this.props.modalId}
                 {...this.props}
@@ -518,7 +507,8 @@ class MarketPicker extends React.Component {
                     onClose={this.onClose.bind(this)}
                     {...this.props}
                 />
-            </BaseModal>;
+            </Modal>
+        );
     }
 }
 
