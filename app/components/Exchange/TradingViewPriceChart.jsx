@@ -39,7 +39,12 @@ export default class TradingViewPriceChart extends React.Component {
             "header_compare"
         ];
 
-        if (this.props.mobile) {
+        {/* FIXME 
+        * Handle this.props.chartZoom and this.props.chartTools changes
+        * when user toggles them in Settings.jsx
+        */}
+        
+        if (!this.props.chartZoom) {
             disabled_features.push("chart_scroll");
             disabled_features.push("chart_zoom");
         }

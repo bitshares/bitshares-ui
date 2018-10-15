@@ -383,7 +383,8 @@
             > ul {
                 border-bottom: 1px solid $panel-bg-color;
 
-                > li.active, li:hover {
+                > li.active,
+                li:hover {
                     border-bottom: 3px solid lightblue;
                 }
             }
@@ -1315,7 +1316,7 @@
             color: $secondary-text-color;
         }
     }
-    
+
     div.exchange-content-header {
         background-color: transparent !important;
     }
@@ -2081,39 +2082,43 @@
         }
     }
     .expiration-datetime-picker {
-        width: 225px;
         > div {
-            float: right;
+            float: left;
         }
         input {
-            width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
             background: transparent;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            text-align: right;
-            font-size: 0.9rem;
-            height: 28px;
+            text-align: left;
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
             &:hover {
                 background: transparent;
             }
         }
         select {
-            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 0.9rem;
-            height: 28px;
             margin: 0 0 1px;
+
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
+
             > option {
                 background-color: $light-panel-bg-color;
             }
+        }
+        .expiration-datetime-picker--select--specific {
+            float: right;
         }
     }
     .marketPicker {
@@ -2335,7 +2340,7 @@
 
     .icon-fill {
         svg > path {
-            fill: #fff;
+            fill: $light-text-color;
             &:hover {
                 fill: $bs-blue;
                 cursor: pointer;

@@ -199,22 +199,28 @@ class Exchange extends React.Component {
             buySellOpen: ws.get("buySellOpen", true),
             bid,
             ask,
-            flipBuySell: ws.get("flipBuySell", false),
+            height: window.innerHeight,
+            width: window.innerWidth,
             favorite: false,
-            verticalOrderBook: ws.get("verticalOrderBook", false),
-            verticalOrderForm: ws.get("verticalOrderForm", false),
             buyDiff: false,
             sellDiff: false,
+            autoScroll: ws.get("global_AutoScroll", true),
             buySellTop: ws.get("buySellTop", true),
             buyFeeAssetIdx: ws.get("buyFeeAssetIdx", 0),
             sellFeeAssetIdx: ws.get("sellFeeAssetIdx", 0),
-            height: window.innerHeight,
-            width: window.innerWidth,
+            verticalOrderBook: ws.get("verticalOrderBook", false),
+            verticalOrderForm: ws.get("verticalOrderForm", false),
             hidePanel: ws.get("hidePanel", false),
-            autoScroll: ws.get("global_AutoScroll", true),
             hideScrollbars: ws.get("hideScrollbars", false),
+            dynamicOrderForm: ws.get("dynamicOrderForm", true),
+            flipOrderBook: ws.get("flipOrderBook", false),
+            flipBuySell: ws.get("flipBuySell", false),
+            orderBookReversed: ws.get("orderBookReversed", false),
             chartType: ws.get("chartType", "price_chart"),
-            chartHeight: ws.get("chartHeight", 600),
+            chartHeight: ws.get("chartHeight", 620),
+            chartZoom: ws.get("chartZoom", true),
+            chartTools: ws.get("chartTools", true),
+            hideFunctionButtons: ws.get("hideFunctionButtons", false),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
             activePanels: ws.get("activePanels", ["left", "right"]),
@@ -1012,6 +1018,64 @@ class Exchange extends React.Component {
         });
     }
 
+    /***
+     * Toggle Buy/Sell order UX
+     * Horizontal order book only
+     */
+    _flipOrderBook = () => {
+        SettingsActions.changeViewSetting({
+            flipOrderBook: !this.state.flipOrderBook
+        });
+
+        this.setState({
+            flipOrderBook: !this.state.flipOrderBook
+        });
+    };
+
+    /***
+     * Toggle order book to switch place of buy and sell orders
+     * Vertical order book only
+     */
+    _orderBookReversed = () => {
+        SettingsActions.changeViewSetting({
+            orderBookReversed: !this.state.orderBookReversed
+        });
+
+        this.setState({
+            orderBookReversed: !this.state.orderBookReversed
+        });
+    };
+
+    _chartZoom = () => {
+        SettingsActions.changeViewSetting({
+            chartZoom: !this.state.chartZoom
+        });
+
+        this.setState({
+            chartZoom: !this.state.chartZoom
+        });
+    };
+
+    _chartTools = () => {
+        SettingsActions.changeViewSettings({
+            chartTools: !this.state.chartTools
+        });
+
+        this.setState({
+            chartTools: !this.state.chartTools
+        });
+    };
+
+    _hideFunctionButtons = () => {
+        SettingsActions.changeViewSetting({
+            hideFunctionButtons: !this.state.hideFunctionButtons
+        });
+
+        this.setState({
+            hideFunctionButtons: !this.state.hideFunctionButtons
+        });
+    };
+
     _toggleOpenBuySell() {
         SettingsActions.changeViewSetting({
             buySellOpen: !this.state.buySellOpen
@@ -1074,6 +1138,16 @@ class Exchange extends React.Component {
 
         this.setState({
             hideScrollbars: !this.state.hideScrollbars
+        });
+    }
+
+    _toggleDynamicOrderForm() {
+        SettingsActions.changeViewSetting({
+            dynamicOrderForm: !this.state.dynamicOrderForm
+        });
+
+        this.setState({
+            dynamicOrderForm: !this.state.dynamicOrderForm
         });
     }
 
@@ -1494,6 +1568,7 @@ class Exchange extends React.Component {
             verticalOrderForm,
             chartHeight,
             chartType,
+            flipBuySell,
             buyDiff,
             sellDiff,
             width,
@@ -1502,18 +1577,23 @@ class Exchange extends React.Component {
             tabVerticalPanel,
             hidePanel,
             hideScrollbars,
-            // hideChart,
             modalType,
             autoScroll,
             activePanels,
             panelWidth,
             mirrorPanels,
             panelTabsActive,
-            panelTabs
+            panelTabs,
+            dynamicOrderForm,
+            flipOrderBook,
+            orderBookReversed,
+            chartZoom,
+            chartTools,
+            hideFunctionButtons
         } = this.state;
         const {isFrozen, frozenAsset} = this.isMarketFrozen();
 
-        let centerContainerWidth = 0;
+        let centerContainerWidth = width;
         if (this.refs.center) {
             centerContainerWidth = this.refs.center.clientWidth;
         }
@@ -1661,7 +1741,7 @@ class Exchange extends React.Component {
                                 ? "medium-6"
                                 : "",
                     "small-12 no-padding middle-content",
-                    this.state.flipBuySell
+                    flipBuySell
                         ? `order-${buySellTop ? 2 : 3} large-order-${
                               buySellTop ? 2 : 5
                           } sell-form`
@@ -1722,25 +1802,22 @@ class Exchange extends React.Component {
                     "bitasset",
                     "is_prediction_market"
                 ])}
-                onFlip={
-                    !this.state.flipBuySell
-                        ? this._flipBuySell.bind(this)
-                        : null
-                }
+                onFlip={!flipBuySell ? this._flipBuySell.bind(this) : null}
                 onTogglePosition={
                     this.state.buySellTop && !verticalOrderBook
                         ? this._toggleBuySellPosition.bind(this)
                         : null
                 }
                 moveOrderForm={
-                    !smallScreen &&
-                    (!this.state.flipBuySell || verticalOrderForm)
+                    !smallScreen && (!flipBuySell || verticalOrderForm)
                         ? this._moveOrderForm.bind(this)
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
+                dynamicOrderForm={dynamicOrderForm}
+                hideFunctionButtons={hideFunctionButtons}
             />
         );
 
@@ -1771,7 +1848,7 @@ class Exchange extends React.Component {
                                 ? "medium-6"
                                 : "",
                     "small-12 no-padding middle-content",
-                    this.state.flipBuySell
+                    flipBuySell
                         ? `order-${buySellTop ? 1 : 2} large-order-${
                               buySellTop ? 1 : 4
                           } buy-form`
@@ -1834,23 +1911,22 @@ class Exchange extends React.Component {
                     "bitasset",
                     "is_prediction_market"
                 ])}
-                onFlip={
-                    this.state.flipBuySell ? this._flipBuySell.bind(this) : null
-                }
+                onFlip={flipBuySell ? this._flipBuySell.bind(this) : null}
                 onTogglePosition={
                     this.state.buySellTop && !verticalOrderBook
                         ? this._toggleBuySellPosition.bind(this)
                         : null
                 }
                 moveOrderForm={
-                    !smallScreen &&
-                    (this.state.flipBuySell || verticalOrderForm)
+                    !smallScreen && (flipBuySell || verticalOrderForm)
                         ? this._moveOrderForm.bind(this)
                         : null
                 }
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
+                dynamicOrderForm={dynamicOrderForm}
+                hideFunctionButtons={hideFunctionButtons}
             />
         );
 
@@ -1869,13 +1945,7 @@ class Exchange extends React.Component {
                         display: !smallScreen ? "display: none" : ""
                     }}
                     noHeader={smallScreen ? false : true}
-                    listHeight={
-                        this.state.height
-                            ? tabBuySell == "my-market"
-                                ? this.state.height - 325
-                                : this.state.height - 450
-                            : null
-                    }
+                    listHeight={this.state.height - 450}
                     columns={[
                         {name: "star", index: 1},
                         {name: "market", index: 2},
@@ -1926,13 +1996,16 @@ class Exchange extends React.Component {
                     horizontal={
                         !verticalOrderBook || smallScreen ? true : false
                     }
-                    flipOrderBook={this.props.viewSettings.get("flipOrderBook")}
-                    orderBookReversed={this.props.viewSettings.get(
-                        "orderBookReversed"
-                    )}
+                    flipOrderBook={flipOrderBook}
+                    orderBookReversed={orderBookReversed}
                     marketReady={marketReady}
                     wrapperClass={cnames(
-                        "medium-12 large-12 xlarge-8",
+                        centerContainerWidth > 1200
+                            ? "xlarge-8"
+                            : centerContainerWidth > 800
+                                ? ""
+                                : "",
+                        "medium-12 large-12",
                         "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap shrink",
                         `order-${buySellTop ? 3 : 1} xlarge-order-${
                             buySellTop ? 4 : 1
@@ -1964,6 +2037,8 @@ class Exchange extends React.Component {
                     smallScreen={smallScreen}
                     hideScrollbars={hideScrollbars}
                     autoScroll={autoScroll}
+                    onFlipOrderBook={this._flipOrderBook.bind(this)}
+                    hideFunctionButtons={hideFunctionButtons}
                 />
             );
 
@@ -2116,8 +2191,7 @@ class Exchange extends React.Component {
             );
 
         let tradingViewChart =
-            !chartType ||
-            chartType != "price_chart" ||
+            (!tinyScreen && (!chartType || chartType != "price_chart")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("tradingViewChart")) ? null : (
                 <TradingViewPriceChart
@@ -2131,13 +2205,14 @@ class Exchange extends React.Component {
                     bucketSize={bucketSize}
                     currentPeriod={this.state.currentPeriod}
                     chartHeight={thisChartHeight}
-                    mobile={width < 800}
+                    chartZoom={tinyScreen ? false : chartZoom}
+                    chartTools={tinyScreen ? false : chartTools}
+                    mobile={tinyScreen}
                 />
             );
 
         let deptHighChart =
-            !chartType ||
-            chartType != "market_depth" ||
+            (!tinyScreen && (!chartType || chartType != "market_depth")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("deptHighChart")) ? null : (
                 <DepthHighChart
@@ -2338,11 +2413,9 @@ class Exchange extends React.Component {
                 <div
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
-                        verticalOrderBook || verticalOrderForm
-                            ? ""
-                            : "xlarge-order-2",
+                        verticalOrderBook ? "xlarge-order-2" : "xlarge-order-2",
                         centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
+                            ? "medium-6 large-6 xlarge-4 "
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
@@ -2382,6 +2455,25 @@ class Exchange extends React.Component {
                 </div>
             ) : null;
 
+        let emptyDiv = (
+            <div
+                className={cnames(
+                    centerContainerWidth > 1200
+                        ? "xlarge-8"
+                        : centerContainerWidth > 800
+                            ? ""
+                            : "",
+                    "medium-12 large-12",
+                    "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
+                    `order-${buySellTop ? 3 : 1} xlarge-order-${
+                        buySellTop ? 4 : 1
+                    }`
+                )}
+            >
+                &nbsp;
+            </div>
+        );
+
         /**
          * Generate layout grid based on Screen Size
          */
@@ -2393,6 +2485,8 @@ class Exchange extends React.Component {
             }
             if (!verticalOrderBook) {
                 actionCards.push(orderBook);
+            } else {
+                actionCards.push(emptyDiv);
             }
             actionCards.push(groupStandalone);
             actionCards.push(groupTabbed1);
@@ -2410,27 +2504,20 @@ class Exchange extends React.Component {
                 <Collapse
                     activeKey={this.state.mobileKey}
                     onChange={this._onChangeMobilePanel.bind(this)}
+                    style={{paddingRight: 8}}
                 >
-                    {chartType && chartType == "price_chart" ? (
-                        <Collapse.Panel
-                            header={translator.translate(
-                                "exchange.price_history"
-                            )}
-                            key="tradingViewChart"
-                        >
-                            {tradingViewChart}
-                        </Collapse.Panel>
-                    ) : null}
-                    {chartType && chartType == "market_depth" ? (
-                        <Collapse.Panel
-                            header={translator.translate(
-                                "exchange.order_depth"
-                            )}
-                            key="deptHighChart"
-                        >
-                            {deptHighChart}
-                        </Collapse.Panel>
-                    ) : null}
+                    <Collapse.Panel
+                        header={translator.translate("exchange.price_history")}
+                        key="tradingViewChart"
+                    >
+                        {tradingViewChart}
+                    </Collapse.Panel>
+                    <Collapse.Panel
+                        header={translator.translate("exchange.order_depth")}
+                        key="deptHighChart"
+                    >
+                        {deptHighChart}
+                    </Collapse.Panel>
                     <Collapse.Panel
                         header={translator.translate("exchange.buy_sell")}
                         key="buySellTab"
@@ -2526,7 +2613,7 @@ class Exchange extends React.Component {
                 >
                     <div className="v-align no-padding align-center grid-block footer shrink column">
                         <Tabs
-                            defaultActiveKey="order_book"
+                            defaultActiveKey="my-market"
                             activeKey={tabVerticalPanel}
                             onChange={this._setTabVerticalPanel.bind(this)}
                         >
@@ -2542,10 +2629,7 @@ class Exchange extends React.Component {
                             />
                         </Tabs>
                     </div>
-                    {tabVerticalPanel == "my-market" ||
-                    tabVerticalPanel == "find-market"
-                        ? myMarkets
-                        : null}
+                    {myMarkets}
                 </div>
             );
 
@@ -2663,12 +2747,35 @@ class Exchange extends React.Component {
                         hideScrollbars={hideScrollbars}
                         mirrorPanels={mirrorPanels}
                         panelTabs={panelTabs}
+                        dynamicOrderForm={dynamicOrderForm}
+                        buySellTop={buySellTop}
+                        flipBuySell={flipBuySell}
+                        flipOrderBook={flipOrderBook}
+                        tinyScreen={tinyScreen}
+                        orderBookReversed={orderBookReversed}
+                        chartZoom={chartZoom}
+                        chartTools={chartTools}
+                        hideFunctionButtons={hideFunctionButtons}
                         onMoveOrderBook={this._moveOrderBook.bind(this)}
                         onMirrorPanels={this._mirrorPanels.bind(this)}
                         onToggleScrollbars={this._toggleScrollbars.bind(this)}
                         onSetAutoscroll={this._setAutoscroll.bind(this)}
                         onToggleChart={this._toggleChart.bind(this)}
                         onSetPanelTabs={this._setPanelTabs.bind(this)}
+                        onToggleDynamicOrderForm={this._toggleDynamicOrderForm.bind(
+                            this
+                        )}
+                        onToggleBuySellPosition={this._toggleBuySellPosition.bind(
+                            this
+                        )}
+                        onFlipBuySell={this._flipBuySell.bind(this)}
+                        onFlipOrderBook={this._flipOrderBook.bind(this)}
+                        onOrderBookReversed={this._orderBookReversed.bind(this)}
+                        onChartZoom={this._chartZoom.bind(this)}
+                        onChartTools={this._chartTools.bind(this)}
+                        onHideFunctionButtons={this._hideFunctionButtons.bind(
+                            this
+                        )}
                     />
 
                     <AccountNotifications />
@@ -2689,24 +2796,28 @@ class Exchange extends React.Component {
                             id="CenterContent"
                             ref="center"
                         >
-                            <div>
-                                {/* Price history chart */}
-                                {chartType && chartType == "price_chart" ? (
-                                    <div
-                                        className="grid-block shrink no-overflow"
-                                        id="market-charts"
-                                    >
-                                        {tradingViewChart}
-                                    </div>
-                                ) : null}
+                            {!tinyScreen ? (
+                                <div>
+                                    {/* Price history chart */}
+                                    {chartType && chartType == "price_chart" ? (
+                                        <div
+                                            className="grid-block shrink no-overflow"
+                                            id="market-charts"
+                                        >
+                                            {tradingViewChart}
+                                        </div>
+                                    ) : null}
 
-                                {/* Market depth chart */}
-                                {chartType && chartType == "market_depth" ? (
-                                    <div className="grid-block vertical no-padding shrink">
-                                        {deptHighChart}
-                                    </div>
-                                ) : null}
-                            </div>
+                                    {/* Market depth chart */}
+                                    {chartType &&
+                                    chartType == "market_depth" ? (
+                                        <div className="grid-block vertical no-padding shrink">
+                                            {deptHighChart}
+                                        </div>
+                                    ) : null}
+                                </div>
+                            ) : null}
+
                             <div className="grid-block no-overflow wrap shrink">
                                 {actionCards}
                             </div>

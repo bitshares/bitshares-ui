@@ -49,7 +49,7 @@ class BuySell extends React.Component {
     * - Once when state is changed
     * - Once when forceReRender is set to false
     */
-    _forceRender(np, ns) {
+    _forceRender(np) {
         if (this.state.forceReRender) {
             this.setState({
                 forceReRender: false
@@ -86,7 +86,9 @@ class BuySell extends React.Component {
             nextProps.expirationCustomTime !==
                 this.props.expirationCustomTime ||
             nextProps.parentWidth !== this.props.parentWidth ||
-            nextState.forceReRender !== this.state.forceReRender
+            nextState.forceReRender !== this.state.forceReRender ||
+            nextProps.dynamicOrderForm !== this.props.dynamicOrderForm ||
+            nextProps.hideFunctionButtons !== this.props.hideFunctionButtons
         );
     }
 
@@ -128,10 +130,10 @@ class BuySell extends React.Component {
             verticalOrderForm
         } = this.props;
 
-        let clientWidth = this.refs.order_form
-            ? this.refs.order_form.clientWidth
-            : 0;
-        let singleColumnForm = clientWidth < 450 ? true : false;
+        //let clientWidth = this.refs.order_form
+        //    ? this.refs.order_form.clientWidth
+        //    : 0;
+        let singleColumnForm = true; // clientWidth < 450 || !this.props.dynamicOrderForm ? true : false;
 
         let amount, price, total;
 
@@ -930,7 +932,8 @@ class BuySell extends React.Component {
                                 />
                             </span>
                             {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
-                            {this.props.onFlip ? (
+                            {this.props.onFlip &&
+                            !this.props.hideFunctionButtons ? (
                                 <span
                                     onClick={this.props.onFlip}
                                     style={{
@@ -943,7 +946,8 @@ class BuySell extends React.Component {
                                     &#8646;
                                 </span>
                             ) : null}
-                            {this.props.onTogglePosition ? (
+                            {this.props.onTogglePosition &&
+                            !this.props.hideFunctionButtons ? (
                                 <span
                                     onClick={this.props.onTogglePosition}
                                     style={{
@@ -956,11 +960,12 @@ class BuySell extends React.Component {
                                     &#8645;
                                 </span>
                             ) : null}
-                            {this.props.moveOrderForm ? (
+                            {this.props.moveOrderForm &&
+                            !this.props.hideFunctionButtons ? (
                                 <Icon
                                     onClick={this.props.moveOrderForm}
                                     name="thumb-tack"
-                                    className="icon-14px order-book-button-v"
+                                    className="icon-14px icon-fill order-book-button-v"
                                     style={{marginLeft: 5}}
                                 />
                             ) : null}
@@ -984,7 +989,7 @@ class BuySell extends React.Component {
                                 >
                                     <Icon
                                         name="thumb-tack"
-                                        className="icon-18px order-book-button-v"
+                                        className="icon-18px icon-fill order-book-button-v"
                                     />
                                 </div>
                             ) : null}
@@ -1005,6 +1010,13 @@ class BuySell extends React.Component {
                                 />
                                 <div className="small-8 expiration-datetime-picker">
                                     <select
+                                        className={
+                                            this.props.expirationType ===
+                                                "SPECIFIC" && singleColumnForm
+                                                ? "expiration-datetime-picker--select--specific"
+                                                : ""
+                                        }
+                                        style={{cursor: "pointer"}}
                                         onChange={
                                             this.props.onExpirationTypeChange
                                         }
