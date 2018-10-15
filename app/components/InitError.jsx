@@ -6,6 +6,7 @@ import Translate from "react-translate-component";
 import WebsocketAddModal from "./Settings/WebsocketAddModal";
 import SettingsActions from "actions/SettingsActions";
 import {Apis} from "bitsharesjs-ws";
+import {Form, Select, Button, Input} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 
 const optionalApis = {enableCrypto: true, enableOrders: true};
@@ -23,12 +24,12 @@ class InitError extends React.Component {
         this.refs.ws_modal.show(e);
     }
 
-    onChangeWS(e) {
+    onChangeWS(value) {
         SettingsActions.changeSetting({
             setting: "apiServer",
-            value: e.target.value
+            value: value
         });
-        Apis.reset(e.target.value, true, 4000, optionalApis);
+        Apis.reset(value, true, 4000, optionalApis);
     }
 
     onReloadClick(e) {
@@ -79,86 +80,93 @@ class InitError extends React.Component {
             );
         });
 
+        let selectOptions = uniqueNodes.map(entry => {
+            let onlyDescription =
+                entry.url.indexOf("fake.automatic-selection") !== -1;
+            let {location} = entry;
+            if (
+                location &&
+                typeof location === "object" &&
+                "translate" in location
+            )
+                location = counterpart.translate(location.translate);
+
+            return (
+                <Select.Option key={entry.url} value={entry.url}>
+                    {location || entry.url}{" "}
+                    {!onlyDescription && location ? `(${entry.url})` : null}
+                </Select.Option>
+            );
+        });
+
         return (
-            <div className="grid-block page-layout">
+            <div className="grid-block">
                 <div className="grid-container">
                     <div className="grid-content no-overflow">
                         <br />
                         <Translate component="h3" content={`app_init.title`} />
-                        <br />
-                        <section className="block-list">
-                            <header>
-                                <Translate
-                                    component="span"
-                                    content={`settings.apiServer`}
-                                />
-                            </header>
-                            <ul>
-                                <li className="with-dropdown">
-                                    <select
+
+                        <Form layout="vertical">
+                            <Form.Item
+                                label={counterpart.translate(
+                                    "settings.apiServer"
+                                )}
+                            >
+                                <Input.Group compact>
+                                    <Select
+                                        style={{width: "calc(100% - 175px)"}}
                                         onChange={this.onChangeWS.bind(this)}
                                         value={this.props.apiServer}
                                     >
-                                        {options}
-                                    </select>
-
-                                    <div
-                                        style={{paddingTop: 10}}
-                                        className="button-group"
+                                        {selectOptions}
+                                    </Select>
+                                    <Button
+                                        id="add"
+                                        style={{width: "175px"}}
+                                        onClick={this.triggerModal.bind(this)}
+                                        icon={"plus"}
                                     >
-                                        <div
-                                            onClick={this.triggerModal.bind(
-                                                this
-                                            )}
-                                            className="button outline"
-                                            id="add"
-                                        >
-                                            <Translate
-                                                id="add_text"
-                                                content="settings.add_api"
-                                            />
-                                        </div>
-                                    </div>
-                                </li>
-                                <li className="key-value clearfix">
-                                    <div className="float-left">
-                                        <Translate content="app_init.ws_status" />
-                                    </div>
-                                    <div className="float-right">
-                                        {this.props.rpc_connection_status ===
-                                        "open" ? (
-                                            <span className="txtlabel success">
-                                                <Translate
-                                                    content={`app_init.connected`}
-                                                />
-                                            </span>
-                                        ) : (
-                                            <span className="txtlabel warning">
-                                                <Translate
-                                                    content={`app_init.not_connected`}
-                                                />
-                                            </span>
+                                        {counterpart.translate(
+                                            "settings.add_api"
                                         )}
-                                    </div>
-                                </li>
-                            </ul>
-                        </section>
-                        <br />
-                        <div className="button-group">
-                            <div
-                                className="button outline"
+                                    </Button>
+                                </Input.Group>
+                            </Form.Item>
+
+                            <Form.Item
+                                label={counterpart.translate(
+                                    "app_init.ws_status"
+                                )}
+                            >
+                                {this.props.rpc_connection_status === "open" ? (
+                                    <span className="txtlabel success">
+                                        <Translate
+                                            content={`app_init.connected`}
+                                        />
+                                    </span>
+                                ) : (
+                                    <span className="txtlabel warning">
+                                        <Translate
+                                            content={`app_init.not_connected`}
+                                        />
+                                    </span>
+                                )}
+                            </Form.Item>
+
+                            <Button
+                                type={"primary"}
                                 onClick={this.onReloadClick}
                             >
-                                <Translate content={`app_init.retry`} />
-                            </div>
-
-                            <div
+                                {counterpart.translate(`app_init.retry`)}
+                            </Button>
+                            <Button
+                                style={{marginLeft: "16px"}}
                                 onClick={this.onReset.bind(this)}
-                                className="button outline"
                             >
-                                <Translate content="settings.reset" />
-                            </div>
-                        </div>
+                                {counterpart.translate(`settings.reset`)}
+                            </Button>
+                        </Form>
+
                         <WebsocketAddModal
                             ref="ws_modal"
                             apis={this.props.apis}
@@ -170,19 +178,22 @@ class InitError extends React.Component {
     }
 }
 
-export default connect(InitError, {
-    listenTo() {
-        return [BlockchainStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            rpc_connection_status: BlockchainStore.getState()
-                .rpc_connection_status,
-            apis: SettingsStore.getState().defaults.apiServer,
-            apiServer: SettingsStore.getState().settings.get("apiServer"),
-            defaultConnection: SettingsStore.getState().defaultSettings.get(
-                "apiServer"
-            )
-        };
+export default connect(
+    InitError,
+    {
+        listenTo() {
+            return [BlockchainStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                rpc_connection_status: BlockchainStore.getState()
+                    .rpc_connection_status,
+                apis: SettingsStore.getState().defaults.apiServer,
+                apiServer: SettingsStore.getState().settings.get("apiServer"),
+                defaultConnection: SettingsStore.getState().defaultSettings.get(
+                    "apiServer"
+                )
+            };
+        }
     }
-});
+);
