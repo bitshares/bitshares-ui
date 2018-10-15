@@ -11,6 +11,16 @@ import counterpart from "counterpart";
 
 const optionalApis = {enableCrypto: true, enableOrders: true};
 class InitError extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isModalVisible: false
+        };
+
+        this.handleModalClose = this.handleModalClose.bind(this);
+    }
+
     componentWillReceiveProps(nextProps) {
         if (
             nextProps.rpc_connection_status === "open" &&
@@ -20,8 +30,16 @@ class InitError extends React.Component {
         }
     }
 
+    handleModalClose() {
+        this.setState({
+            isModalVisible: false
+        });
+    }
+
     triggerModal(e) {
-        this.refs.ws_modal.show(e);
+        this.setState({
+            isModalVisible: true
+        });
     }
 
     onChangeWS(value) {
@@ -169,6 +187,8 @@ class InitError extends React.Component {
 
                         <WebsocketAddModal
                             ref="ws_modal"
+                            isModalVisible={this.state.isModalVisible}
+                            onClose={this.handleModalClose}
                             apis={this.props.apis}
                         />
                     </div>

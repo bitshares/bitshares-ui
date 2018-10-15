@@ -126,7 +126,7 @@
     .fz_12 {
         font-size: 12px;
     }
-    #unlock_wallet_modal2 {
+    .unlock_wallet_modal2 {
         .upload-button {
             border-color: $border-color;
             span {
@@ -2156,7 +2156,7 @@
         }
         &-status {
             font-size: 0.95rem;
-            margin: 24px;
+            margin: 12px 24px 0 24px;
             &-title {
                 margin-bottom: 12px;
                 margin-top: 12px;

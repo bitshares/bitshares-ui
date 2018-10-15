@@ -1190,6 +1190,8 @@
         "title": "Notice"
     },
     "modal": {
+        "close": "close",
+        "cancel": "cancel",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
@@ -2010,6 +2012,9 @@
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
+    },
+    "alert": {
+        "warning": "Warning"
     },
     "registration": {
         "title": "Registration",

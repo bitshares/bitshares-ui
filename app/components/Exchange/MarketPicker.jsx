@@ -14,6 +14,7 @@ import AssetStore from "stores/AssetStore";
 import Icon from "../Icon/Icon";
 import BaseModal from "../Modal/BaseModal";
 import LoadingIndicator from "../LoadingIndicator";
+import {Form, Input, Select} from "bitshares-ui-style-guide";
 import AssetName from "../Utility/AssetName";
 import {Form, Input, Select} from "bitshares-ui-style-guide";
 
