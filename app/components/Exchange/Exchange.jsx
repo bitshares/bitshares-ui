@@ -2611,7 +2611,11 @@ class Exchange extends React.Component {
                     style={{display: "block"}}
                     key={`actionCard_${actionCardIndex++}`}
                 >
-                    <div className="v-align no-padding align-center grid-block footer shrink column">
+                    <div 
+                        className="v-align no-padding align-center grid-block footer shrink column"
+                        data-intro={translator.translate(
+                            "walkthrough.my_markets"
+                        )}>
                         <Tabs
                             defaultActiveKey="my-market"
                             activeKey={tabVerticalPanel}
@@ -2656,6 +2660,9 @@ class Exchange extends React.Component {
                             onClick={this._togglePanel.bind(this, "left")}
                         >
                             <AntIcon
+                                data-intro={translator.translate(
+                                    "walkthrough.panel_hide"
+                                )}
                                 type={
                                     activePanels.includes("left")
                                         ? "caret-left"
@@ -2678,6 +2685,9 @@ class Exchange extends React.Component {
                             onClick={this._togglePanel.bind(this, "right")}
                         >
                             <AntIcon
+                                data-intro={translator.translate(
+                                    "walkthrough.panel_hide"
+                                )}
                                 type={
                                     activePanels.includes("right")
                                         ? "caret-right"
@@ -2795,6 +2805,9 @@ class Exchange extends React.Component {
                             className="grid-block vertical no-padding ps-container"
                             id="CenterContent"
                             ref="center"
+                            data-intro={tinyScreen 
+                                ? translator.translate("walkthrough.collapsed_items") 
+                                : null}
                         >
                             {!tinyScreen ? (
                                 <div>

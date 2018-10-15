@@ -1242,7 +1242,13 @@ class OrderBook extends React.Component {
                                     <Translate content="exchange.no_orders" />
                                 </td>
                             ) : (
-                                <td className="cell center-cell" colSpan="3">
+                                <td 
+                                    className="cell center-cell" 
+                                    colSpan="3"
+                                    data-intro={translator.translate(
+                                        "walkthrough.vertical_order"
+                                    )}
+                                >
                                     <div className="orderbook-latest-price">
                                         <div>
                                             <div className="text-center spread">
@@ -1265,6 +1271,9 @@ class OrderBook extends React.Component {
                                                 <span style={{width: 75}}>
                                                     {!this.props.hideFunctionButtons ? 
                                                         <Icon
+                                                            data-intro={translator.translate(
+                                                                "walkthrough.vertical_lock"
+                                                            )}
                                                             className="lock-unlock clickable icon-fill"
                                                             onClick={
                                                                 this

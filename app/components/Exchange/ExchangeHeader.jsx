@@ -405,10 +405,15 @@ export default class ExchangeHeader extends React.Component {
                                     onClick={this.props.onToggleSettings.bind(
                                         this
                                     )}
+                                    
                                 >
                                     <AntIcon
                                         type="setting"
                                         style={{paddingRight: 5}}
+                                        data-position={"left"}
+                                        data-intro={translator.translate(
+                                            "walkthrough.personalize"
+                                        )}
                                     />
                                     <Translate
                                         className="column-hide-xs"
