@@ -899,7 +899,8 @@
             "transfer_button": "Transfer BTS to BitShares EOS account",
             "modal_title": "Transfer BTS to BitShares EOS account",
             "maintenance_modal_label": "Gateway to BitShares EOS is down for maintenance",
-            "maintenance_button_label": "Ok"
+            "maintenance_button_label": "Ok",
+            "memo_label": "Memo"
         },
         "bitspark": {
             "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"

@@ -45,6 +45,7 @@ class BitsharesBeos extends React.Component {
                                 ]
                             }
                             creator={"eosio"}
+                            issuer="blocktrades"
                             owner_key={
                                 "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
                             }

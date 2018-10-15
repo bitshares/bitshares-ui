@@ -10,12 +10,15 @@ import PropTypes from "prop-types";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
+import AccountActions from "actions/AccountActions";
+import utils from "common/utils";
 
 class BitsharesBeosModal extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         creator: PropTypes.string.isRequired,
+        issuer: ChainTypes.ChainAccount.isRequired,
         owner_key: PropTypes.string.isRequired,
         ram: PropTypes.string.isRequired,
         account_contract: PropTypes.string.isRequired,
@@ -39,7 +42,8 @@ class BitsharesBeosModal extends React.Component {
             fee_amount: 10000,
             from: this.props.from,
             empty_amount_to_send_value: false,
-            balance_error: false
+            balance_error: false,
+            memo: ""
         };
     }
 
@@ -113,11 +117,63 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onCreateAccountCheckbox() {
-        this.setState({isAccountCreation: !this.state.isAccountCreation});
+        if (this.state.isAccountCreation) {
+            this.setState(
+                {
+                    fee_amount: 0,
+                    isAccountCreation: !this.state.isAccountCreation
+                },
+                this._checkBalance
+            );
+        } else {
+            this.setState(
+                {
+                    fee_amount: 10000,
+                    isAccountCreation: !this.state.isAccountCreation
+                },
+                this._checkBalance
+            );
+        }
+    }
+
+    onMemoChanged(e) {
+        this.setState({memo: e.target.value});
     }
 
     onSubmit() {
-        this.onMaintenance();
+        let newMemo = "";
+        let newAmountToSend = parseInt(
+            this.state.amount_to_send *
+                utils.get_asset_precision(this.props.asset.get("precision")),
+            10
+        );
+
+        if (this.state.isAccountCreation) {
+            newMemo =
+                "beos:receiving_beos_account_name:" +
+                this.state.memo +
+                ":create";
+        } else if (this.state.memo === "" && !this.state.isAccountCreation) {
+            newMemo = "beos:receiving_beos_account_name";
+        } else if (this.state.memo !== "" && !this.state.isAccountCreation) {
+            newMemo = "beos:receiving_beos_account_name:" + this.state.memo;
+        }
+
+        if (this.state.isAccountCreation) {
+            newAmountToSend = newAmountToSend + this.state.fee_amount;
+        }
+
+        console.log(newAmountToSend);
+
+        /*AccountActions.transfer(
+            this.props.account.get("id"),
+            this.props.issuer.get("id"),
+            newAmountToSend,
+            this.props.asset.get("id"),
+            newMemo
+        ).catch(() => {
+            this.onMaintenance();
+        });*/
     }
 
     render() {
@@ -161,7 +217,8 @@ class BitsharesBeosModal extends React.Component {
             balance = "No funds";
         }
 
-        const disableSubmit = !this.state.amount_to_send;
+        const disableSubmit =
+            !this.state.amount_to_send || this.state.balance_error;
 
         return (
             <div>
@@ -215,6 +272,20 @@ class BitsharesBeosModal extends React.Component {
                                     autoComplete="off"
                                 />
                             </div>
+                        </div>
+                        {/* Memo */}
+                        <div className="content-block">
+                            <label className="left-label">
+                                <Translate
+                                    component="span"
+                                    content="gateway.bitshares_beos.memo_label"
+                                />
+                            </label>
+                            <textarea
+                                rows="3"
+                                value={this.state.memo}
+                                onChange={this.onMemoChanged.bind(this)}
+                            />
                         </div>
                         {/* Create account enabled/disabled */}
                         <table className="table" style={{width: "inherit"}}>
