@@ -457,6 +457,7 @@
         "call": "Call Preis",
         "change": "Änderung",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
@@ -517,6 +518,7 @@
         "others": "Others",
         "overbought": "Overbought",
         "oversold": "Oversold",
+        "panels_mirror": "Mirror Panels",
         "period": "Periode (Tage)",
         "price": "Preis",
         "price_history": "Preisverlauf",
@@ -531,7 +533,12 @@
         "search": "Search for more markets here",
         "sell": "Verkaufen",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Chart options",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Settlement-Preis",
         "settle_orders": "Settlement-Order",
         "short": "Short",
@@ -882,8 +889,7 @@
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
         "bitspark": {
-            "support_block":
-                "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
         },
         "symbol": "Symbol",
         "time": "Time",
@@ -1025,12 +1031,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1040,7 +1048,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",

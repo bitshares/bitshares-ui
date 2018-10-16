@@ -1,6 +1,5 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
@@ -22,7 +21,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
-import {Button} from "bitshares-ui-style-guide";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 const EqualWidthContainer = ({children}) => (
     <div
@@ -57,12 +56,30 @@ class SendModal extends React.Component {
         ZfApi.subscribe("transaction_confirm_actions", (name, msg) => {
             if (msg == "close") {
                 this.setState({hidden: false});
+                this.hideModal();
             }
+        });
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
         });
     }
 
     getInitialState() {
         return {
+            isModalVisible: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -87,7 +104,7 @@ class SendModal extends React.Component {
 
     show() {
         this.setState({open: true, hidden: false}, () => {
-            ZfApi.publish(this.props.id, "open");
+            this.showModal();
             this._initForm();
         });
     }
@@ -118,7 +135,7 @@ class SendModal extends React.Component {
                 hidden: false
             },
             () => {
-                if (publishClose) ZfApi.publish(this.props.id, "close");
+                if (publishClose) this.hideModal();
             }
         );
     }
@@ -642,10 +659,36 @@ class SendModal extends React.Component {
                 id="send_modal_wrapper"
                 className={hidden || !this.state.open ? "hide" : ""}
             >
-                <BaseModal
+                <Modal
+                    visible={this.state.isModalVisible}
                     id={this.props.id}
                     overlay={true}
-                    onClose={this.onClose.bind(this, false)}
+                    onCancel={this.hideModal}
+                    footer={[
+                        <Button
+                            key={"send"}
+                            disabled={isSubmitNotValid}
+                            onClick={
+                                !isSubmitNotValid
+                                    ? this.onSubmit.bind(this)
+                                    : null
+                            }
+                        >
+                            {propose
+                                ? counterpart.translate("propose")
+                                : counterpart.translate("transfer.send")}
+                        </Button>,
+                        <Button
+                            key="Cancel"
+                            tabIndex={tabIndex++}
+                            onClick={this.onClose}
+                        >
+                            <Translate
+                                component="span"
+                                content="transfer.cancel"
+                            />
+                        </Button>
+                    ]}
                 >
                     <div className="grid-block vertical no-overflow">
                         <div className="content-block">
@@ -837,75 +880,11 @@ class SendModal extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="content-block transfer-input">
-                                        <div className="no-margin no-padding">
-                                            <div
-                                                className="small-6"
-                                                style={{
-                                                    display: "inline-block",
-                                                    paddingRight: "10px"
-                                                }}
-                                            >
-                                                <button
-                                                    className={classnames(
-                                                        "button primary",
-                                                        {
-                                                            disabled: isSubmitNotValid
-                                                        }
-                                                    )}
-                                                    type="submit"
-                                                    value="Submit"
-                                                    onClick={
-                                                        isSubmitNotValid
-                                                            ? null
-                                                            : this.onSubmit.bind(
-                                                                this
-                                                            )
-                                                    }
-                                                    tabIndex={tabIndex++}
-                                                >
-                                                    <Translate
-                                                        component="span"
-                                                        content={
-                                                            propose
-                                                                ? "propose"
-                                                                : "transfer.send"
-                                                        }
-                                                    />
-                                                </button>
-                                            </div>
-                                            <div
-                                                className="small-6"
-                                                style={{
-                                                    display: "inline-block",
-                                                    paddingRight: "10px"
-                                                }}
-                                            >
-                                                <button
-                                                    className={classnames(
-                                                        "button hollow primary"
-                                                    )}
-                                                    type="submit"
-                                                    value="Cancel"
-                                                    tabIndex={tabIndex++}
-                                                    onClick={this.onClose.bind(
-                                                        this
-                                                    )}
-                                                >
-                                                    <Translate
-                                                        component="span"
-                                                        content="transfer.cancel"
-                                                    />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </form>
                         ) : null}
                     </div>
-                </BaseModal>
+                </Modal>
             </div>
         );
     }

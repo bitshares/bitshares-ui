@@ -457,6 +457,7 @@
         "call": "Call Price",
         "change": "Variazione",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "Il tuo ordine è %(diff)s volte più alto dell'offerta più bassa, sei sicuro?",
@@ -517,6 +518,7 @@
         "others": "Altri",
         "overbought": "Overbought",
         "oversold": "Oversold",
+        "panels_mirror": "Mirror Panels",
         "period": "Periodo (giorni)",
         "price": "Prezzo",
         "price_history": "Grafico del prezzo",
@@ -531,7 +533,12 @@
         "search": "Cerca qui altri mercati",
         "sell": "Vendi",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Opzioni grafico",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Settlement",
         "settle_orders": "Ordini settle",
         "short": "Short",
@@ -1021,12 +1028,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1036,7 +1045,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
