@@ -1201,13 +1201,20 @@
             "withdraw": "Withdraw"
         },
         "report": {
+            "title:": "Error report",
             "button": "Report",
-            "takeScreenshot": "Take screenshot",
+            "takeScreenshot": "Show screenshot",
+            "hideScreenshot": "Hide screenshot",
             "copyLog": "Copy Log",
             "copySuccess": "Copy ended",
             "showLog": "Show Log",
             "hideLog": "Hide Log",
-            "explanatory_text": "Some explanatory text"
+            "lastLogEntries": "Last 20 log entries",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "screenshot": "Screenshot"
         }
     },
     "news": {
