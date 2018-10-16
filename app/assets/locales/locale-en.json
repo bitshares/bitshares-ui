@@ -894,7 +894,8 @@
         "bitshares_beos": {
             "account_label": "Bitshares EOS account",
             "amount_to_send_label": "Amount to send to BEOS account",
-            "create_account_checkbox": "Create account",
+            "bitshares_eos_account_error": "Illegal BEOS account name: account must have 12 symbols (a-z lower case only, 1-5 are allowed)",
+            "create_account_checkbox": "Create BitShares EOS account",
             "send_button_label": "Send",
             "transfer_button": "Transfer BTS to BitShares EOS account",
             "modal_title": "Transfer BTS to BitShares EOS account",

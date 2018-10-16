@@ -31,6 +31,8 @@ class BitsharesBeosModal extends React.Component {
         super(props);
 
         this.state = {
+            account: "",
+            account_validation_error: false,
             amount_to_send: "",
             create_account: 0,
             creator: this.props.creator,
@@ -105,6 +107,16 @@ class BitsharesBeosModal extends React.Component {
         }
     }
 
+    onAccountChanged(e) {
+        let re = /^[a-z1-5]+$/;
+        if (e.target.value.length === 12 && re.test(e.target.value)) {
+            this.setState({account_validation_error: false});
+        } else {
+            this.setState({account_validation_error: true});
+        }
+        this.setState({account: e.target.value});
+    }
+
     onAmountToSendChange({amount}) {
         this.setState(
             {
@@ -163,8 +175,6 @@ class BitsharesBeosModal extends React.Component {
             newAmountToSend = newAmountToSend + this.state.fee_amount;
         }
 
-        console.log(newAmountToSend);
-
         /*AccountActions.transfer(
             this.props.account.get("id"),
             this.props.issuer.get("id"),
@@ -218,7 +228,10 @@ class BitsharesBeosModal extends React.Component {
         }
 
         const disableSubmit =
-            !this.state.amount_to_send || this.state.balance_error;
+            !this.state.amount_to_send ||
+            this.state.balance_error ||
+            this.state.account === "" ||
+            this.state.account_validation_error;
 
         return (
             <div>
@@ -268,10 +281,19 @@ class BitsharesBeosModal extends React.Component {
                             <div className="inline-label">
                                 <input
                                     type="text"
-                                    value={""}
+                                    value={this.state.account}
                                     autoComplete="off"
+                                    onChange={this.onAccountChanged.bind(this)}
                                 />
                             </div>
+                            {this.state.account_validation_error ? (
+                                <p
+                                    className="has-error no-margin"
+                                    style={{paddingTop: 10}}
+                                >
+                                    <Translate content="gateway.bitshares_beos.bitshares_eos_account_error" />
+                                </p>
+                            ) : null}
                         </div>
                         {/* Memo */}
                         <div className="content-block">
