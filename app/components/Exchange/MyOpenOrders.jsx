@@ -385,7 +385,7 @@ class MyOpenOrders extends React.Component {
 
         const getOrderData = order => {
             let orderObj = ChainStore.getObject(order).toJS();
-            if (!o) return null;
+            if (!orderObj) return null;
             let base = ChainStore.getAsset(orderObj.sell_price.base.asset_id);
             let quote = ChainStore.getAsset(orderObj.sell_price.quote.asset_id);
             const baseID = base.get("id"),
