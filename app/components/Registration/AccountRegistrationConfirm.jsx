@@ -11,10 +11,6 @@ import Translate from "react-translate-component";
 import {FetchChain} from "bitsharesjs/es";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "components/Icon/Icon";
-import ls from "common/localStorage";
-
-const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
 
 class AccountRegistrationConfirm extends React.Component {
     static propTypes = {
@@ -80,7 +76,6 @@ class AccountRegistrationConfirm extends React.Component {
                 } else {
                     FetchChain("getAccount", name).then(() => {});
                     this.unlockAccount(name, password);
-                    ss.set("isAuthentificated", true);
                     this.props.history.push(
                         `/account/${this.props.accountName}`
                     );
@@ -145,7 +140,7 @@ class AccountRegistrationConfirm extends React.Component {
                             <input
                                 id="password"
                                 type="text"
-                                value={this.props.password}
+                                defaultValue={this.props.password}
                                 className="input create-account-input"
                             />
                             <Clipboard

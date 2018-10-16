@@ -1954,7 +1954,7 @@
         "accountConfirmation": "I have written down or otherwise stored my username and password.",
         "downloadFile": "Download file",
         "passwordPlaceholder": "Minimum 7 characters",
-        "walletNote": "Please keep in mind, that OpenLedger doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
         "attention": "Attention",
         "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
         "whyBinFile": "Why do I need a .bin file?"
