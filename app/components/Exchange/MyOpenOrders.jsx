@@ -384,33 +384,33 @@ class MyOpenOrders extends React.Component {
             call_orders = currentAccount.get("call_orders");
 
         const getOrderData = order => {
-            let o = ChainStore.getObject(order).toJS();
+            let orderObj = ChainStore.getObject(order).toJS();
             if (!o) return null;
-            let base = ChainStore.getAsset(o.sell_price.base.asset_id);
-            let quote = ChainStore.getAsset(o.sell_price.quote.asset_id);
+            let base = ChainStore.getAsset(orderObj.sell_price.base.asset_id);
+            let quote = ChainStore.getAsset(orderObj.sell_price.quote.asset_id);
             const baseID = base.get("id"),
                 quoteID = quote.get("id");
             const assets = {
                 [base.get("id")]: {precision: base.get("precision")},
                 [quote.get("id")]: {precision: quote.get("precision")}
             };
-            let sellBase = o.sell_price.base.asset_id,
-                sellQuote = o.sell_price.quote.asset_id;
+            let sellBase = orderObj.sell_price.base.asset_id,
+                sellQuote = orderObj.sell_price.quote.asset_id;
             if (
                 (sellBase === baseID && sellQuote === quoteID) ||
                 (sellBase === quoteID && sellQuote === baseID)
             ) {
-                return {o, assets, id: [quote.get("id")]};
+                return {orderObj, assets, id: [quote.get("id")]};
             }
             return {};
         };
-        let limitOrders = orders
+        const limitOrders = orders
             .toArray()
             .map(order => {
                 try {
-                    const {o, assets, id} = getOrderData(order);
-                    if (o) {
-                        return new LimitOrder(o, assets, id);
+                    const {orderObj, assets, id} = getOrderData(order);
+                    if (orderObj) {
+                        return new LimitOrder(orderObj, assets, id);
                     }
                 } catch (e) {
                     console.error(e);
@@ -419,13 +419,13 @@ class MyOpenOrders extends React.Component {
             })
             .filter(a => !!a);
 
-        let callOrders = call_orders
+        const callOrders = call_orders
             .toArray()
             .map(order => {
                 try {
-                    const {o, assets, id} = getOrderData(order);
-                    if (o && feedPrice) {
-                        return new CallOrder(o, assets, id, feedPrice);
+                    const {orderObj, assets, id} = getOrderData(order);
+                    if (orderObj && feedPrice) {
+                        return new CallOrder(orderObj, assets, id, feedPrice);
                     }
                 } catch (e) {
                     console.error(e);
