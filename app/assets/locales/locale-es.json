@@ -1650,7 +1650,7 @@
         "from": "Desde",
         "header": "Detalles de transferencia",
         "header_subheader": "Las transferencias se utilizan para enviar fondos a otros titulares de cuentas BitShares",
-        "memo": "Últimas 20 entradas de registro",
+        "memo": "Memo",
         "memo_unlock": "Desbloquee su billetera/cuenta para ver esta nota",
         "optional": "Opcional",
         "pay_from": "Pagar Desde",

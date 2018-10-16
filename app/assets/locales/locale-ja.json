@@ -1650,7 +1650,7 @@
         "from": "From",
         "header": "転送の詳細設定",
         "header_subheader": "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
-        "memo": "最後の20のログエントリ",
+        "memo": "メモ",
         "memo_unlock": "このメモを見るにはウォレットをアンロックしてください",
         "optional": "オプション",
         "pay_from": "送信元",

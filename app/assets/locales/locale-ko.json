@@ -1650,7 +1650,7 @@
         "from": "보내는 사람",
         "header": "Transfer details",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
-        "memo": "최근 20 개의 로그 항목",
+        "memo": "메모",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
         "pay_from": "전송받음",

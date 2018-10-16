@@ -1650,7 +1650,7 @@
         "from": "Gönderen",
         "header": "Transfer detayları",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
-        "memo": "Son 20 günlük girişi",
+        "memo": "Açıklama",
         "memo_unlock": "Açıklamayı görmek için cüzdan kilidini açın.",
         "optional": "Tercihe bağlı",
         "pay_from": "Ödeyen hesap",

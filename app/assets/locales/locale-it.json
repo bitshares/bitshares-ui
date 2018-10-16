@@ -1650,7 +1650,7 @@
         "from": "Da",
         "header": "Dettagli trasferimento",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
-        "memo": "Ultime 20 voci di registro",
+        "memo": "Memo / Messaggio",
         "memo_unlock": "Sblocca il tuo portafoglio per visualizzare questo memo",
         "optional": "Opzionale",
         "pay_from": "Paga da",

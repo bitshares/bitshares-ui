@@ -1650,7 +1650,7 @@
         "from": "来自",
         "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
-        "memo": "最近20個日誌條目",
+        "memo": "备注消息",
         "memo_unlock": "解锁钱包以查看交易备注",
         "optional": "可选",
         "pay_from": "支付自",

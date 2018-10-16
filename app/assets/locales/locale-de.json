@@ -1650,7 +1650,7 @@
         "from": "Von",
         "header": "Transfer details",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
-        "memo": "Die letzten 20 Protokolleinträge",
+        "memo": "Memo",
         "memo_unlock": "Entsperren um Memo zu lesen",
         "optional": "Optional",
         "pay_from": "Bezahlen von",

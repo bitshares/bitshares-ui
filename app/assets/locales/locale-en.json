@@ -1672,7 +1672,7 @@
         "from": "From",
         "header": "Transfer details",
         "header_subheader": "Transfers are used for sending funds to other %(wallet_name)s Account Holders",
-        "memo": "Last 20 log entries",
+        "memo": "Memo / Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
         "pay_from": "Pay From",

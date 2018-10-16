@@ -1650,7 +1650,7 @@
         "from": "De",
         "header": "Transfer details",
         "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
-        "memo": "20 dernières entrées de journal",
+        "memo": "Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
         "pay_from": "Pay From",
