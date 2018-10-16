@@ -1201,7 +1201,7 @@
             "withdraw": "Withdraw"
         },
         "report": {
-            "title:": "Error report",
+            "title": "Error report",
             "button": "Report",
             "takeScreenshot": "Show screenshot",
             "hideScreenshot": "Hide screenshot",
