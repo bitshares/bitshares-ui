@@ -131,7 +131,7 @@ class App extends React.Component {
                 ? true
                 : false;
         this.state = {
-            isBrowserSupportModalVisible: true,
+            isBrowserSupportModalVisible: false,
             loading: false,
             synced: this._syncStatus(),
             syncFail,
