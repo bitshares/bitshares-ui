@@ -175,7 +175,7 @@ class PasswordInput extends Component {
             <div className="account-selector">
                 <div className={password_class_name}>
                     {/* {noLabel ? null : <Translate component="label" content="wallet.password" />} */}
-                    <section className="generated-password-section">
+                    <section>
                         <label
                             className={
                                 "left-label " + (this.props.labelClass || "")
@@ -183,31 +183,33 @@ class PasswordInput extends Component {
                         >
                             <Translate content="wallet.enter_password" />
                         </label>
-                        <input
-                            style={{
-                                marginBottom: this.props.checkStrength
-                                    ? 0
-                                    : null,
-                                display: copy ? "inline" : "block"
-                            }}
-                            id="current-password"
-                            name="password"
-                            type={visible ? "text" : "password"}
-                            ref="password"
-                            autoComplete="current-password"
-                            onChange={this.handleChange}
-                            onKeyDown={this.onKeyDown}
-                            value={value}
-                            readOnly={readonly}
-                        />
-                        {copy && (
-                            <CopyButton
-                                text={value}
-                                tip="tooltip.copy_password"
-                                dataPlace="top"
-                                className="button password-copy-button"
+                        <div className="generated-password-section">
+                            <input
+                                style={{
+                                    marginBottom: this.props.checkStrength
+                                        ? 0
+                                        : null,
+                                    display: copy ? "inline" : "block"
+                                }}
+                                id="current-password"
+                                name="password"
+                                type={visible ? "text" : "password"}
+                                ref="password"
+                                autoComplete="current-password"
+                                onChange={this.handleChange}
+                                onKeyDown={this.onKeyDown}
+                                value={value}
+                                readOnly={readonly}
                             />
-                        )}
+                            {copy && (
+                                <CopyButton
+                                    text={value}
+                                    tip="tooltip.copy_password"
+                                    dataPlace="top"
+                                    className="button password-copy-button"
+                                />
+                            )}
+                        </div>
                         {this.props.checkStrength ? (
                             <progress
                                 style={{height: 10}}
