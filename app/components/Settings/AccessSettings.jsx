@@ -97,7 +97,7 @@ class AutoSelectionNode extends React.Component {
                         />
                         <Translate
                             component="div"
-                            style={{paddingLeft: "1rem", paddingTop: "0.1rem"}}
+                            style={{paddingLeft: "1rem", paddingTop: "0.2rem"}}
                             content="settings.automatic"
                             totalNodes={totalNodes}
                         />
