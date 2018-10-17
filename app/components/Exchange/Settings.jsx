@@ -14,6 +14,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import {GroupOrderLimitSelector} from "./OrderBook";
 import SettingsActions from "actions/SettingsActions";
+import ReactTooltip from "react-tooltip";
 
 class Settings extends React.Component {
     constructor(props) {
@@ -109,7 +110,7 @@ class Settings extends React.Component {
                 <Form.Item>
                     {!this.props.tinyScreen ? (
                         <header>
-                            <Translate content="exchange.settings.header.title" />
+                            <Translate content="exchange.settings.header.chart_options" />
                         </header>
                     ) : null}
 
@@ -124,6 +125,14 @@ class Settings extends React.Component {
                                             "exchange.settings.tooltip.chart_type"
                                         )}
                                         type="question-circle"
+                                        theme="filled"
+                                    />
+                                    &nbsp;
+                                    <Icon
+                                        data-tip={counterpart.translate(
+                                            "exchange.settings.tooltip.chart_reload"
+                                        )}
+                                        type="reload"
                                         theme="filled"
                                     />
                                 </h6>
@@ -189,51 +198,77 @@ class Settings extends React.Component {
                         </div>
                     ) : null}
 
-                    {/**
-                     * FIXME
-                     * Toggles for switching on/off usage of Tools and Zoom in charts
-                     * should be respected by TradingViewPriceChart.jsx and DepthHighChart.jsx
-                     */}
-
-                    {/* <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.chart_tools" />
-                                &nbsp;<Icon
-                                        data-tip={counterpart.translate("exchange.settings.tooltip.chart_tools")}
-                                        type="question-circle"
-                                        theme="filled"
+                    {!this.props.tinyScreen &&
+                        chartType == "price_chart" && (
+                            <div className="grid-block no-overflow wrap shrink">
+                                <div className="small-6">
+                                    <h6 style={{margin: 9}}>
+                                        <Translate content="exchange.settings.title.chart_tools" />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.chart_tools"
+                                            )}
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.chart_reload"
+                                            )}
+                                            type="reload"
+                                            theme="filled"
+                                        />
+                                    </h6>
+                                </div>
+                                <div className="small-6">
+                                    <Switch
+                                        style={{margin: 6}}
+                                        checked={this.props.chartTools}
+                                        onChange={this.props.onChartTools.bind(
+                                            this
+                                        )}
                                     />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            <Switch
-                                style={{margin: 6}}
-                                checked={this.props.chartTools}
-                                onChange={this.props.onChartTools.bind(this)}
-                            />
-                        </div>
-                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                    <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.chart_zoom" />
-                                &nbsp;<Icon
-                                        data-tip={counterpart.translate("exchange.settings.tooltip.chart_zoom")}
-                                        type="question-circle"
-                                        theme="filled"
+                    {!this.props.tinyScreen &&
+                        chartType == "price_chart" && (
+                            <div className="grid-block no-overflow wrap shrink">
+                                <div className="small-6">
+                                    <h6 style={{margin: 9}}>
+                                        <Translate content="exchange.settings.title.chart_zoom" />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.chart_zoom"
+                                            )}
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.chart_reload"
+                                            )}
+                                            type="reload"
+                                            theme="filled"
+                                        />
+                                    </h6>
+                                </div>
+                                <div className="small-6">
+                                    <Switch
+                                        style={{margin: 6}}
+                                        checked={this.props.chartZoom}
+                                        onChange={this.props.onChartZoom.bind(
+                                            this
+                                        )}
                                     />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            <Switch
-                                style={{margin: 6}}
-                                checked={this.props.chartZoom}
-                                onChange={this.props.onChartZoom.bind(this)}
-                            />
-                        </div>
-                    </div> */}
+                                </div>
+                            </div>
+                        )}
 
                     <header>
                         <Translate content="exchange.settings.header.order_options" />
@@ -269,41 +304,49 @@ class Settings extends React.Component {
                             ) : null}
                         </div>
                     </div>
-                    <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.order_style" />
-                                &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
-                                        "exchange.settings.tooltip.order_style"
-                                    )}
-                                    type="question-circle"
-                                    theme="filled"
-                                />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            <Select
-                                placeholder={counterpart.translate(
-                                    "settings.placeholder_select"
-                                )}
-                                style={{width: "100%"}}
-                                value={this.props.verticalOrderBook}
-                                onSelect={this.props.onMoveOrderBook.bind(this)}
-                            >
-                                <Select.Option value={true}>
-                                    <Translate content="exchange.settings.options.vertical" />
-                                </Select.Option>
-                                <Select.Option value={false}>
-                                    <Translate content="exchange.settings.options.horizontal" />
-                                </Select.Option>
-                            </Select>
-                        </div>
-                    </div>
+
+                    {!this.props.tinyScreen &&
+                        !this.props.smallScreen && (
+                            <div className="grid-block no-overflow wrap shrink">
+                                <div className="small-6">
+                                    <h6 style={{margin: 9}}>
+                                        <Translate content="exchange.settings.title.order_style" />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.order_style"
+                                            )}
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </h6>
+                                </div>
+                                <div className="small-6">
+                                    <Select
+                                        placeholder={counterpart.translate(
+                                            "settings.placeholder_select"
+                                        )}
+                                        style={{width: "100%"}}
+                                        value={this.props.verticalOrderBook}
+                                        onSelect={this.props.onMoveOrderBook.bind(
+                                            this
+                                        )}
+                                    >
+                                        <Select.Option value={true}>
+                                            <Translate content="exchange.settings.options.vertical" />
+                                        </Select.Option>
+                                        <Select.Option value={false}>
+                                            <Translate content="exchange.settings.options.horizontal" />
+                                        </Select.Option>
+                                    </Select>
+                                </div>
+                            </div>
+                        )}
 
                     {/* Orientation Order Form */}
-                    {!this.props.verticalOrderBook ? (
+                    {(!this.props.tinyScreen &&
+                        !this.props.verticalOrderBook) ||
+                    this.props.smallScreen ? (
                         <div
                             className="grid-block no-overflow wrap shrink"
                             style={{paddingTop: "0.5em"}}
@@ -344,7 +387,9 @@ class Settings extends React.Component {
                     ) : null}
 
                     {/* Orientation Order Book */}
-                    {!this.props.verticalOrderBook ? (
+                    {(!this.props.tinyScreen &&
+                        !this.props.verticalOrderBook) ||
+                    this.props.smallScreen ? (
                         <div
                             className="grid-block no-overflow wrap shrink"
                             style={{paddingTop: "0.5em"}}
@@ -385,7 +430,9 @@ class Settings extends React.Component {
                     ) : null}
 
                     {/* Asset / Order Form Position */}
-                    {!this.props.verticalOrderBook ? (
+                    {(!this.props.tinyScreen &&
+                        !this.props.verticalOrderBook) ||
+                    this.props.smallScreen ? (
                         <div
                             className="grid-block no-overflow wrap shrink"
                             style={{paddingTop: "0.5em"}}
@@ -425,7 +472,7 @@ class Settings extends React.Component {
                         </div>
                     ) : null}
 
-                    {this.props.verticalOrderBook ? (
+                    {!this.props.tinyScreen && this.props.verticalOrderBook ? (
                         <div
                             className="grid-block no-overflow wrap shrink"
                             style={{paddingTop: "0.5em"}}
@@ -453,7 +500,7 @@ class Settings extends React.Component {
                         </div>
                     ) : null}
 
-                    {this.props.verticalOrderBook ? (
+                    {!this.props.tinyScreen && this.props.verticalOrderBook ? (
                         <div className="grid-block no-overflow wrap shrink">
                             <div className="small-6">
                                 <h6 style={{margin: 9}}>
@@ -480,184 +527,210 @@ class Settings extends React.Component {
                         </div>
                     ) : null}
 
-                    <header>
-                        <Translate content="exchange.settings.header.panel_grouping" />
-                        &nbsp;
-                        <Icon
-                            data-tip={counterpart.translate(
-                                "exchange.settings.tooltip.panel_grouping"
-                            )}
-                            type="question-circle"
-                            theme="filled"
-                        />
-                    </header>
-                    <div
-                        className="grid-block no-overflow wrap shrink"
-                        style={{paddingBottom: "0.5em"}}
-                    >
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.my_trades" />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            {this._getGroupingOptions("my_history")}
-                        </div>
-                    </div>
-                    <div
-                        className="grid-block no-overflow wrap shrink"
-                        style={{paddingBottom: "0.5em"}}
-                    >
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.market_trades" />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            {this._getGroupingOptions("history")}
-                        </div>
-                    </div>
-                    <div
-                        className="grid-block no-overflow wrap shrink"
-                        style={{paddingBottom: "0.5em"}}
-                    >
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.open_orders" />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            {this._getGroupingOptions("my_orders")}
-                        </div>
-                    </div>
-                    <div
-                        className="grid-block no-overflow wrap shrink"
-                        style={{paddingBottom: "0.5em"}}
-                    >
-                        <div className="small-6">
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.settlements" />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            {this._getGroupingOptions("open_settlement")}
-                        </div>
-                    </div>
-
-                    <header>
-                        <Translate content="exchange.settings.header.general" />
-                    </header>
-
-                    <div
-                        className="grid-block no-overflow wrap shrink"
-                        style={{paddingBottom: "0.5em"}}
-                    >
-                        <div className="small-6" style={{paddingRight: 5}}>
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.market_location" />
-                                &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
-                                        "exchange.settings.tooltip.market_location"
+                    {!this.props.tinyScreen && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6" style={{paddingRight: 5}}>
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.single_colum_order_form" />
+                                    &nbsp;
+                                    <Icon
+                                        data-tip={counterpart.translate(
+                                            "exchange.settings.tooltip.single_colum_order_form"
+                                        )}
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                <Switch
+                                    style={{margin: 6}}
+                                    checked={this.props.singleColumnOrderForm}
+                                    onChange={this.props.onToggleSingleColumnOrderForm.bind(
+                                        this
                                     )}
-                                    type="question-circle"
-                                    theme="filled"
                                 />
-                            </h6>
+                            </div>
                         </div>
-                        <div className="small-6">
-                            <Select
-                                placeholder={counterpart.translate(
-                                    "settings.placeholder_select"
+                    )}
+
+                    {!this.props.tinyScreen && (
+                        <header>
+                            <Translate content="exchange.settings.header.panel_grouping" />
+                            &nbsp;
+                            <Icon
+                                data-tip={counterpart.translate(
+                                    "exchange.settings.tooltip.panel_grouping"
                                 )}
-                                style={{width: "100%"}}
-                                value={this.props.mirrorPanels}
-                                onSelect={this.props.onMirrorPanels.bind(this)}
+                                type="question-circle"
+                                theme="filled"
+                            />
+                        </header>
+                    )}
+                    {!this.props.tinyScreen && (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingBottom: "0.5em"}}
+                        >
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.my_trades" />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                {this._getGroupingOptions("my_history")}
+                            </div>
+                        </div>
+                    )}
+                    {!this.props.tinyScreen && (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingBottom: "0.5em"}}
+                        >
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.market_trades" />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                {this._getGroupingOptions("history")}
+                            </div>
+                        </div>
+                    )}
+                    {!this.props.tinyScreen && (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingBottom: "0.5em"}}
+                        >
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.open_orders" />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                {this._getGroupingOptions("my_orders")}
+                            </div>
+                        </div>
+                    )}
+                    {!this.props.tinyScreen && (
+                        <div
+                            className="grid-block no-overflow wrap shrink"
+                            style={{paddingBottom: "0.5em"}}
+                        >
+                            <div className="small-6">
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.settlements" />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                {this._getGroupingOptions("open_settlement")}
+                            </div>
+                        </div>
+                    )}
+
+                    {!this.props.tinyScreen && (
+                        <header>
+                            <Translate content="exchange.settings.header.general" />
+                        </header>
+                    )}
+
+                    {!this.props.tinyScreen &&
+                        !this.props.smallScreen && (
+                            <div
+                                className="grid-block no-overflow wrap shrink"
+                                style={{paddingBottom: "0.5em"}}
                             >
-                                <Select.Option value={false}>
-                                    <Translate content="settings.left" />
-                                </Select.Option>
-                                <Select.Option value={true}>
-                                    <Translate content="settings.right" />
-                                </Select.Option>
-                            </Select>
-                        </div>
-                    </div>
+                                <div
+                                    className="small-6"
+                                    style={{paddingRight: 5}}
+                                >
+                                    <h6 style={{margin: 9}}>
+                                        <Translate content="exchange.settings.title.market_location" />
+                                        &nbsp;
+                                        <Icon
+                                            data-tip={counterpart.translate(
+                                                "exchange.settings.tooltip.market_location"
+                                            )}
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </h6>
+                                </div>
+                                <div className="small-6">
+                                    <Select
+                                        placeholder={counterpart.translate(
+                                            "settings.placeholder_select"
+                                        )}
+                                        style={{width: "100%"}}
+                                        value={this.props.mirrorPanels}
+                                        onSelect={this.props.onMirrorPanels.bind(
+                                            this
+                                        )}
+                                    >
+                                        <Select.Option value={false}>
+                                            <Translate content="settings.left" />
+                                        </Select.Option>
+                                        <Select.Option value={true}>
+                                            <Translate content="settings.right" />
+                                        </Select.Option>
+                                    </Select>
+                                </div>
+                            </div>
+                        )}
 
-                    <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6" style={{paddingRight: 5}}>
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.reduce_scrollbars" />
-                                &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
-                                        "exchange.settings.tooltip.reduce_scrollbars"
+                    {!this.props.tinyScreen && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6" style={{paddingRight: 5}}>
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.reduce_scrollbars" />
+                                    &nbsp;
+                                    <Icon
+                                        data-tip={counterpart.translate(
+                                            "exchange.settings.tooltip.reduce_scrollbars"
+                                        )}
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                <Switch
+                                    style={{margin: 6}}
+                                    checked={this.props.hideScrollbars}
+                                    onChange={this.props.onToggleScrollbars.bind(
+                                        this
                                     )}
-                                    type="question-circle"
-                                    theme="filled"
                                 />
-                            </h6>
+                            </div>
                         </div>
-                        <div className="small-6">
-                            <Switch
-                                style={{margin: 6}}
-                                checked={this.props.hideScrollbars}
-                                onChange={this.props.onToggleScrollbars.bind(
-                                    this
-                                )}
-                            />
-                        </div>
-                    </div>
+                    )}
 
-                    <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6" style={{paddingRight: 5}}>
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.dynamic_form" />
-                                &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
-                                        "exchange.settings.tooltip.dynamic_form"
+                    {!this.props.tinyScreen && (
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div className="small-6" style={{paddingRight: 5}}>
+                                <h6 style={{margin: 9}}>
+                                    <Translate content="exchange.settings.title.hide_function_buttons" />
+                                    &nbsp;
+                                    <Icon
+                                        data-tip={counterpart.translate(
+                                            "exchange.settings.tooltip.hide_function_buttons"
+                                        )}
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </h6>
+                            </div>
+                            <div className="small-6">
+                                <Switch
+                                    style={{margin: 6}}
+                                    checked={this.props.hideFunctionButtons}
+                                    onChange={this.props.onHideFunctionButtons.bind(
+                                        this
                                     )}
-                                    type="question-circle"
-                                    theme="filled"
                                 />
-                            </h6>
+                            </div>
                         </div>
-                        <div className="small-6">
-                            <Switch
-                                style={{margin: 6}}
-                                checked={this.props.dynamicOrderForm}
-                                onChange={this.props.onToggleDynamicOrderForm.bind(
-                                    this
-                                )}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid-block no-overflow wrap shrink">
-                        <div className="small-6" style={{paddingRight: 5}}>
-                            <h6 style={{margin: 9}}>
-                                <Translate content="exchange.settings.title.hide_function_buttons" />
-                                &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
-                                        "exchange.settings.tooltip.hide_function_buttons"
-                                    )}
-                                    type="question-circle"
-                                    theme="filled"
-                                />
-                            </h6>
-                        </div>
-                        <div className="small-6">
-                            <Switch
-                                style={{margin: 6}}
-                                checked={this.props.hideFunctionButtons}
-                                onChange={this.props.onHideFunctionButtons.bind(
-                                    this
-                                )}
-                            />
-                        </div>
-                    </div>
+                    )}
                 </Form.Item>
             </Modal>
         );

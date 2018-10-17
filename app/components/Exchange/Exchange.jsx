@@ -220,7 +220,7 @@ class Exchange extends React.Component {
             verticalOrderForm: ws.get("verticalOrderForm", false),
             hidePanel: ws.get("hidePanel", false),
             hideScrollbars: ws.get("hideScrollbars", false),
-            dynamicOrderForm: ws.get("dynamicOrderForm", true),
+            singleColumnOrderForm: ws.get("singleColumnOrderForm", true),
             flipOrderBook: ws.get("flipOrderBook", false),
             flipBuySell: ws.get("flipBuySell", false),
             orderBookReversed: ws.get("orderBookReversed", false),
@@ -1040,6 +1040,42 @@ class Exchange extends React.Component {
         });
     }
 
+    _chartZoom = () => {
+        SettingsActions.changeViewSetting({
+            chartZoom: !this.state.chartZoom
+        });
+
+        let chartType = this.state.chartType;
+        this.setState({
+            chartZoom: !this.state.chartZoom,
+            chartType: "hidden_chart"
+        });
+        // force reload
+        setTimeout(() => {
+            this.setState({
+                chartType: chartType
+            });
+        }, 100);
+    };
+
+    _chartTools = () => {
+        SettingsActions.changeViewSetting({
+            chartTools: !this.state.chartTools
+        });
+
+        let chartType = this.state.chartType;
+        this.setState({
+            chartTools: !this.state.chartTools,
+            chartType: "hidden_chart"
+        });
+        // force reload
+        setTimeout(() => {
+            this.setState({
+                chartType: chartType
+            });
+        }, 100);
+    };
+
     _flipBuySell() {
         this.setState({
             flipBuySell: !this.state.flipBuySell
@@ -1075,26 +1111,6 @@ class Exchange extends React.Component {
 
         this.setState({
             orderBookReversed: !this.state.orderBookReversed
-        });
-    };
-
-    _chartZoom = () => {
-        SettingsActions.changeViewSetting({
-            chartZoom: !this.state.chartZoom
-        });
-
-        this.setState({
-            chartZoom: !this.state.chartZoom
-        });
-    };
-
-    _chartTools = () => {
-        SettingsActions.changeViewSettings({
-            chartTools: !this.state.chartTools
-        });
-
-        this.setState({
-            chartTools: !this.state.chartTools
         });
     };
 
@@ -1173,13 +1189,13 @@ class Exchange extends React.Component {
         });
     }
 
-    _toggleDynamicOrderForm() {
+    _toggleSingleColumnOrderForm() {
         SettingsActions.changeViewSetting({
-            dynamicOrderForm: !this.state.dynamicOrderForm
+            singleColumnOrderForm: !this.state.singleColumnOrderForm
         });
 
         this.setState({
-            dynamicOrderForm: !this.state.dynamicOrderForm
+            singleColumnOrderForm: !this.state.singleColumnOrderForm
         });
     }
 
@@ -1616,7 +1632,7 @@ class Exchange extends React.Component {
             mirrorPanels,
             panelTabsActive,
             panelTabs,
-            dynamicOrderForm,
+            singleColumnOrderForm,
             flipOrderBook,
             orderBookReversed,
             chartZoom,
@@ -1848,7 +1864,7 @@ class Exchange extends React.Component {
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
-                dynamicOrderForm={dynamicOrderForm}
+                singleColumnOrderForm={singleColumnOrderForm}
                 hideFunctionButtons={hideFunctionButtons}
             />
         );
@@ -1957,7 +1973,7 @@ class Exchange extends React.Component {
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
-                dynamicOrderForm={dynamicOrderForm}
+                singleColumnOrderForm={singleColumnOrderForm}
                 hideFunctionButtons={hideFunctionButtons}
             />
         );
@@ -2792,11 +2808,12 @@ class Exchange extends React.Component {
                         hideScrollbars={hideScrollbars}
                         mirrorPanels={mirrorPanels}
                         panelTabs={panelTabs}
-                        dynamicOrderForm={dynamicOrderForm}
+                        singleColumnOrderForm={singleColumnOrderForm}
                         buySellTop={buySellTop}
                         flipBuySell={flipBuySell}
                         flipOrderBook={flipOrderBook}
                         tinyScreen={tinyScreen}
+                        smallScreen={smallScreen}
                         orderBookReversed={orderBookReversed}
                         chartZoom={chartZoom}
                         chartTools={chartTools}
@@ -2807,7 +2824,7 @@ class Exchange extends React.Component {
                         onSetAutoscroll={this._setAutoscroll.bind(this)}
                         onToggleChart={this._toggleChart.bind(this)}
                         onSetPanelTabs={this._setPanelTabs.bind(this)}
-                        onToggleDynamicOrderForm={this._toggleDynamicOrderForm.bind(
+                        onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
                             this
                         )}
                         onToggleBuySellPosition={this._toggleBuySellPosition.bind(

@@ -556,8 +556,8 @@
             "title": {
                 "chart_type": "Type",
                 "chart_height": "Height",
-                "chart_tools": "View Chart Tools",
-                "chart_zoom": "Allow Chart Zoom",
+                "chart_tools": "View Tools",
+                "chart_zoom": "Allow Zoom",
                 "order_style": "Style",
                 "position_order_asset": "Vertical Orders / Asset",
                 "position_order_form": "Buy/Sell Asset",
@@ -571,7 +571,7 @@
                 "settlements": "Settlements",
                 "market_location": "Market location",
                 "reduce_scrollbars": "Reduce Scroll Bars",
-                "dynamic_form": "Dynamic Order Form",
+                "single_colum_order_form": "Single Column Order Form",
                 "hide_function_buttons": "Hide function buttons"
             },
             "options": {
@@ -591,8 +591,9 @@
             "tooltip": {
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_height": "Define the height of the charts",
-                "chart_tools": "Use chart tools",
-                "chart_zoom": "Allow chart zooming",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
                 "order_style": "Use vertical order book to pin it to the side panel",
                 "position_order_asset": "Define the vertical order for the order form vs order book",
                 "position_order_form": "Define the horizontal order for the order form",
@@ -606,7 +607,7 @@
                 "settlements": "",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "reduce_scrollbars": "Disable scroll bars by default",
-                "dynamic_form": "Disable to not use two column order form",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
                 "panel_grouping": "Define panel grouping"
             }
@@ -1806,7 +1807,7 @@
         "favourite_button": "Mark this pair as a favourite in your markets list.",
         "find_markets_tab": "This tab allows you to search and add additional markets to the 'my markets' tab.",
         "language_flag": "Choose from 9 different languages to use in the DEX.",
-        "my_markets_tab": "This tab lists commonly used markets.",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "Next",
         "prev_label": "Back",
         "price_chart": "View price action of an asset using the price chart.",

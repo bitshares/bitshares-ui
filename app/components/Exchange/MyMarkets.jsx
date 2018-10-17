@@ -1209,7 +1209,6 @@ class MyMarkets extends React.Component {
                     visible={this.state.isQuoteModalVisible}
                     hideModal={this.hideQuoteModal}
                     showModal={this.showQuoteModal}
-                    visible={this.state.isQuoteModalVisible}
                     quotes={this.props.preferredBases}
                 />
             </div>

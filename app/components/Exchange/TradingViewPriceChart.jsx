@@ -39,14 +39,37 @@ export default class TradingViewPriceChart extends React.Component {
             "header_compare"
         ];
 
-        {/* FIXME 
-        * Handle this.props.chartZoom and this.props.chartTools changes
-        * when user toggles them in Settings.jsx
-        */}
-        
-        if (!this.props.chartZoom) {
+        let enabled_features = [];
+
+        if (this.props.mobile || !this.props.chartZoom) {
             disabled_features.push("chart_scroll");
             disabled_features.push("chart_zoom");
+        }
+
+        if (this.props.mobile || !this.props.chartTools) {
+            disabled_features.push("left_toolbar");
+            disabled_features.push("chart_crosshair_menu");
+            disabled_features.push("chart_events");
+            disabled_features.push("footer_share_buttons");
+            disabled_features.push("footer_screenshot");
+            disabled_features.push("footer_publish_idea_button");
+            disabled_features.push("caption_buttons_text_if_possible");
+            disabled_features.push("line_tool_templates");
+            disabled_features.push("widgetbar_tabs");
+            disabled_features.push("support_manage_drawings");
+            disabled_features.push("support_multicharts");
+            disabled_features.push("right_bar_stays_on_scroll");
+            disabled_features.push("charts_auto_save");
+            disabled_features.push("edit_buttons_in_legend");
+            disabled_features.push("context_menus");
+            disabled_features.push("control_bar");
+            disabled_features.push("header_fullscreen_button");
+            disabled_features.push("header_widget");
+            disabled_features.push("symbollist_context_menu");
+            disabled_features.push("show_pro_features");
+        } else {
+            enabled_features.push("study_templates");
+            enabled_features.push("keep_left_toolbar_visible_on_small_screens");
         }
 
         if (__DEV__) console.log("*** Load Chart ***");
@@ -79,10 +102,7 @@ export default class TradingViewPriceChart extends React.Component {
                 "scalesProperties.textColor": themeColors.textColor
             },
             custom_css_url: props.theme + ".css",
-            enabled_features: [
-                "study_templates",
-                "keep_left_toolbar_visible_on_small_screens"
-            ],
+            enabled_features: enabled_features,
             disabled_features: disabled_features,
             debug: false,
             preset: this.props.mobile ? "mobile" : ""

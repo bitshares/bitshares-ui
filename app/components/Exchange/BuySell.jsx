@@ -87,7 +87,8 @@ class BuySell extends React.Component {
                 this.props.expirationCustomTime ||
             nextProps.parentWidth !== this.props.parentWidth ||
             nextState.forceReRender !== this.state.forceReRender ||
-            nextProps.dynamicOrderForm !== this.props.dynamicOrderForm ||
+            nextProps.singleColumnOrderForm !==
+                this.props.singleColumnOrderForm ||
             nextProps.hideFunctionButtons !== this.props.hideFunctionButtons
         );
     }
@@ -130,10 +131,13 @@ class BuySell extends React.Component {
             verticalOrderForm
         } = this.props;
 
-        //let clientWidth = this.refs.order_form
-        //    ? this.refs.order_form.clientWidth
-        //    : 0;
-        let singleColumnForm = true; // clientWidth < 450 || !this.props.dynamicOrderForm ? true : false;
+        let clientWidth = this.refs.order_form
+            ? this.refs.order_form.clientWidth
+            : 0;
+        let singleColumnForm =
+            clientWidth < 450 || this.props.singleColumnOrderForm
+                ? true
+                : false;
 
         let amount, price, total;
 
@@ -902,12 +906,13 @@ class BuySell extends React.Component {
                 className={cnames(this.props.className)}
                 style={this.props.styles}
             >
-                <div className="buy-sell-container" style={{paddingRight: 5}}>
+                <div
+                    className="buy-sell-container"
+                    style={{paddingRight: 5}}
+                    data-intro={dataIntro}
+                >
                     {!hideHeader ? (
-                        <div
-                            className={"exchange-content-header " + type}
-                            data-intro={dataIntro}
-                        >
+                        <div className={"exchange-content-header " + type}>
                             <span>
                                 <TranslateWithLinks
                                     string="exchange.buysell_formatter"
