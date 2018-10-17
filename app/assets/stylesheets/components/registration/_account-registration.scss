@@ -113,7 +113,7 @@ div.registration {
             }
         }
 
-        .new-layout-select {
+        .registration-layout-select {
             max-width: 30rem;
             border-radius: 0;
         }
@@ -162,6 +162,19 @@ div.registration {
     div.button.disabled {
         opacity: 0.1;
     }
+
+    .password-copy-button {
+        padding: 10px;
+        border-radius: 0 5px 5px 0;
+        display: inline;
+        right: 0;
+        position: absolute;
+    }
+
+    .generated-password-section {
+        position: relative;
+        display: inline;
+    }
 }
 
 @include breakpoint(small only) {
@@ -180,12 +193,6 @@ div.registration {
                 font-size: 12px;
                 letter-spacing: 0.05px;
                 line-height: 16px;
-            }
-
-            .facolor-error,
-            .facolor-warning {
-                margin-top: 2px;
-                line-height: 17px;
             }
 
             button.button-primary {
@@ -221,7 +228,7 @@ div.registration {
                 line-height: 18px;
             }
 
-            .new-layout-select {
+            .registration-layout-select {
                 max-width: 100%;
             }
 

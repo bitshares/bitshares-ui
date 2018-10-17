@@ -336,7 +336,8 @@ module.exports = function(env) {
                 {
                     test: /.*\.svg$/,
                     exclude: [
-                        path.resolve(root_dir, "app/assets/model-type-images")
+                        path.resolve(root_dir, "app/assets/model-type-images"),
+                        path.resolve(root_dir, "app/assets/bin-file")
                     ],
                     use: [
                         {
