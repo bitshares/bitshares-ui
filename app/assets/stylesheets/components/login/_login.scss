@@ -110,6 +110,7 @@
                 font-size: 14px;
                 letter-spacing: -0.2px;
                 line-height: 20px;
+                text-transform: none;
 
                 p {
                     margin-bottom: 0;
@@ -283,6 +284,7 @@
                 }
 
                 .attach-bin {
+                    display: block;
                     width: 19px;
                     height: 19px;
                     margin: 8px 10px 10px;
