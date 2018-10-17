@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-// import { browserHistory } from "react-router/es";
 import {connect} from "alt-react";
 import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs/es";
@@ -15,10 +14,6 @@ import BackupActions, {restore} from "actions/BackupActions";
 import notify from "actions/NotificationActions";
 import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
-import ls from "common/localStorage";
-
-const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
 
 class DecryptBackup extends Component {
     static propTypes = {
@@ -56,7 +51,6 @@ class DecryptBackup extends Component {
         const {backupPassword} = this.state;
         WalletDb.validatePassword(backupPassword || "", true);
         WalletUnlockActions.change();
-        ss.set("isAuthentificated", true);
         SettingsActions.changeSetting({
             setting: "passwordLogin",
             value: false
