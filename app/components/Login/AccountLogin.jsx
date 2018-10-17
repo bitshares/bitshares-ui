@@ -1,5 +1,4 @@
 import React from "react";
-// import { browserHistory } from "react-router/es";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import AltContainer from "alt-container";
@@ -13,10 +12,6 @@ import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
 import Icon from "../Icon/Icon";
-import ls from "common/localStorage";
-
-const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
 
 class AccountLogin extends React.Component {
     static propTypes = {
@@ -98,7 +93,6 @@ class AccountLogin extends React.Component {
                 this.setState({passwordError: true});
                 return false;
             }
-            ss.set("isAuthentificated", true);
             this.refs.password.value = "";
             AccountActions.setPasswordAccount(account);
             this.props.history.push(`/account/${account}`);
@@ -155,13 +149,13 @@ class AccountLogin extends React.Component {
                 className="custom-tooltip text-left"
             >
                 <div className="tooltip-text">
-                    <Translate content="tooltip.login.incorrectPassword.begin" />
+                    <Translate content="tooltip.login-tooltip.incorrectPassword.begin" />
                     <Translate
                         onClick={this.props.goToWalletModel}
                         className="active-upload-text without-bin cursor-pointer"
-                        content="tooltip.login.incorrectPassword.model"
+                        content="tooltip.login-tooltip.incorrectPassword.model"
                     />
-                    <Translate content="tooltip.login.incorrectPassword.end" />
+                    <Translate content="tooltip.login-tooltip.incorrectPassword.end" />
                     <span
                         onClick={() => this.hideTooltip()}
                         className="close-button"
@@ -183,7 +177,7 @@ class AccountLogin extends React.Component {
                 } content-block`}
             >
                 <AccountSelector
-                    label="wallet.accountName"
+                    label="account.name"
                     ref="accountName"
                     accountName={accountName}
                     onChange={this.accountChanged}
@@ -192,7 +186,6 @@ class AccountLogin extends React.Component {
                     size={60}
                     placeholder=" "
                     hideImage
-                    newLayout
                 />
             </div>
         );

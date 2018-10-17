@@ -107,14 +107,12 @@
 
             .upload-text {
                 margin: auto 0;
-                font-family: "Open-Sans";
                 font-size: 14px;
                 letter-spacing: -0.2px;
                 line-height: 20px;
 
                 p {
                     margin-bottom: 0;
-                    font-family: "Open-Sans";
                     font-size: 14px;
                     line-height: 20px;
                 }
@@ -152,7 +150,6 @@
         .without-bin {
             width: fit-content;
             margin: 6px 0 22px;
-            font-family: "Open-Sans";
             font-size: 12px;
             letter-spacing: -0.17px;
             line-height: 17px;
@@ -213,6 +210,15 @@
     .inactive-model-block:hover {
         .button-secondary {
             opacity: 1;
+        }
+    }
+
+    .account-selector {
+        text-align: left;
+
+        .has-error {
+            font-size: 0.875rem;
+            margin-top: 5px !important;
         }
     }
 

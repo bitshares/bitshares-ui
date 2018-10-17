@@ -22,6 +22,13 @@ class WalletLogin extends Component {
         backup: {}
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isDrop: false
+        };
+    }
+
     componentDidMount() {
         BackupActions.reset();
     }
@@ -43,6 +50,12 @@ class WalletLogin extends Component {
         this.onFileUpload(e, e.dataTransfer.files[0]);
     }
 
+    onPlaceFile(isOpen) {
+        this.setState({
+            isDrop: isOpen
+        });
+    }
+
     renderTooltip() {
         return (
             <ReactTooltip
@@ -54,21 +67,21 @@ class WalletLogin extends Component {
                     className="tooltip-text"
                     onClick={e => e.stopPropagation()}
                 >
-                    <Translate content="tooltip.login-tooltips.withoutBinFileBlock.begin" />
+                    <Translate content="tooltip.login-tooltip.withoutBinFileBlock.begin" />
                     <Link to="/create-wallet-brainkey">
                         <Translate
                             component="u"
                             className="active-upload-text cursor-pointer"
-                            content="tooltip.login-tooltips.withoutBinFileBlock.brainkey"
+                            content="tooltip.login-tooltip.withoutBinFileBlock.brainkey"
                         />
                     </Link>
-                    <Translate content="tooltip.login-tooltips.withoutBinFileBlock.middle" />
+                    <Translate content="tooltip.login-tooltip.withoutBinFileBlock.middle" />
                     <Translate
                         onClick={this.props.goToAccountModel}
                         className="without-bin cursor-pointer"
-                        content="tooltip.login-tooltips.withoutBinFileBlock.model"
+                        content="tooltip.login-tooltip.withoutBinFileBlock.model"
                     />
-                    <Translate content="tooltip.login-tooltips.withoutBinFileBlock.end" />
+                    <Translate content="tooltip.login-tooltip.withoutBinFileBlock.end" />
                     <span
                         onClick={() => ReactTooltip.hide()}
                         className="close-button"
@@ -86,10 +99,7 @@ class WalletLogin extends Component {
 
         return (
             <div>
-                <label
-                    className="text-left left-label show-for-small-only"
-                    htmlFor="backupFile"
-                >
+                <span className="text-left left-label show-for-small-only">
                     <Translate
                         content={
                             this.props.backup.contents
@@ -97,7 +107,7 @@ class WalletLogin extends Component {
                                 : "login.browseFileLabel"
                         }
                     />
-                </label>
+                </span>
                 <div
                     onDragOver={e => e.preventDefault()}
                     onDragEnter={e => e.preventDefault()}
@@ -130,20 +140,30 @@ class WalletLogin extends Component {
     }
 
     renderUploadInput() {
-        const isInvalid =
-            this.props.backup.contents && !this.props.backup.public_key;
-        const isDownloaded =
-            this.props.backup.contents && this.props.backup.public_key;
+        const {isDrop} = this.state;
+        const {backup} = this.props;
+        const isInvalid = backup.contents && !backup.public_key;
+        const isDownloaded = backup.contents && backup.public_key;
 
         return (
-            <label className="cursor-pointer" htmlFor="backupFile">
+            <label
+                onDragOver={() => {
+                    this.onPlaceFile(true);
+                }}
+                onDragLeave={() => {
+                    this.onPlaceFile(false);
+                }}
+                className="cursor-pointer"
+                htmlFor="backupFile"
+            >
                 <div
                     onDragOver={e => e.preventDefault()}
-                    onDragEnter={e => e.preventDefault()}
                     onDrop={e => this.onDropBinFile(e)}
-                    className={`${isInvalid ? "invalid" : ""} ${
+                    className={`file-input-container ${
+                        isInvalid ? "invalid" : ""
+                    } ${isDrop ? "dropHover" : ""} ${
                         isDownloaded ? "downloaded" : ""
-                    } file-input-container`}
+                    }`}
                 >
                     <img
                         className="rounded-arrow"
@@ -165,13 +185,8 @@ class WalletLogin extends Component {
                     ) : (
                         <span>
                             <img
-                                className="bin-file show-on-hover"
+                                className="bin-file initial-bin"
                                 src="bin-file/hover.svg"
-                                alt="bin-file"
-                            />
-                            <img
-                                className="bin-file hide-on-hover"
-                                src="bin-file/default.svg"
                                 alt="bin-file"
                             />
                         </span>
