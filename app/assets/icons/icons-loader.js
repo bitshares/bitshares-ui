@@ -54,7 +54,9 @@ let icons = [
     "zoom",
     "people",
     "fire",
-    "question-in-circle"
+    "question-in-circle",
+    "attention",
+    "checkmark"
 ];
 
 let iconsMap = {};

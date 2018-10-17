@@ -1586,6 +1586,20 @@
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
         "withdraw_full": "Click to withdraw the full balance",
+        "login-tooltips": {
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "middle": " or use ",
+                "model": "Cloud wallet",
+                "end": " to login."
+            },
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "model": "Local wallet",
+                "end": " to login."
+            }
+        },
         "registration": {
             "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
@@ -2043,9 +2057,20 @@
         "accountConfirmation": "I have written down or otherwise stored my username and password.",
         "downloadFile": "Download file",
         "passwordPlaceholder": "Minimum 7 characters",
-        "walletNote": "Please keep in mind, that OpenLedger doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
         "attention": "Attention",
         "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
         "whyBinFile": "Why do I need a .bin file?"
+    },
+    "login": {
+        "title": "Select Login Type",
+        "loginButton": "Login",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "dropFile": "Drop your backup file in this area or ",
+        "browseFile": "browse your files",
+        "withoutBinFile": "I don't have .bin-file",
+        "selectDifferent": "Select different file",
+        "invalidFormat": "Invalid format!",
+        "browseFileLabel": "Browse your backup file"
     }
 }
