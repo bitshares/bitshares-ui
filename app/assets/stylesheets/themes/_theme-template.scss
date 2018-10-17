@@ -2335,6 +2335,14 @@
                     }
                 }
             }
+            .small-container {
+                border: 1px solid transparentize($light-text-color, 0.8);
+                background-color: transparentize($light-text-color, 0.9);
+
+                .active-upload-text {
+                    background-color: transparentize($dark-text-color, 0.9);
+                }
+            }
         }
     }
 }
