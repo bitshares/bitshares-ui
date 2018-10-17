@@ -108,6 +108,7 @@ class FormattedPrice extends React.Component {
             pulsate
         } = this.props;
         const {marketName, first, second} = this.state;
+        if (!first || !second) return <span>--</span>;
         let inverted = marketDirections.get(marketName) || this.props.invert;
         if (
             this.props.force_direction &&
@@ -190,8 +191,7 @@ class FormattedPrice extends React.Component {
                 className={noPopOver ? "clickable inline-block" : ""}
                 onClick={noPopOver ? this.onFlip.bind(this) : null}
             >
-                <AssetName name={quote.get("symbol")} />
-                /
+                <AssetName name={quote.get("symbol")} />/
                 <AssetName name={base.get("symbol")} />
             </span>
         );

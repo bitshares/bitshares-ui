@@ -101,7 +101,7 @@
             "premium_name_warning": "This is a premium name which is more expensive than a name containing a dash (-) or a number."
         },
         "new_user": "New user?",
-        "no_orders": "No orders",
+        "no_orders": "No open orders",
         "no_price": "--",
         "open_orders": "Open Orders",
         "optional": {
@@ -253,7 +253,9 @@
             "force_settlement_offset_percent": "Percent offset of forced settlements",
             "global_settle": "Allow issuer to force a global settling",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Preferred market pairing can not be the same market",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "Issued Assets",
             "market": "Preferred market pairing",
             "market_fee": "Market fee",
@@ -390,6 +392,10 @@
         "understand": "I understand",
         "ws_status": "Full node connection status"
     },
+    "boolean": {
+        "true": "True",
+        "false": "False"
+    },
     "borrow": {
         "adjust": "Update position",
         "adjust_short": "Adjust",
@@ -453,17 +459,17 @@
         "borrow": "Borrow",
         "borrow_short": "Borrow",
         "buy": "Buy",
-        "buy_sell": "Buy/Sell",
-        "buy_quick": "Quick Buy",
-        "buy_description":
-            "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "Buy at least",
+        "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "Call Price",
         "change": "Change",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "Your order is %(diff)s times higher than the lowest ask, are you sure?",
         "confirm_no_orders_buy": "You are placing a buy order in a market with no open sell orders. Are you certain you wish to proceed?",
         "confirm_no_orders_sell": "You are placing a sell order in a market with no open buy orders. Are you certain you wish to proceed?",
@@ -487,14 +493,6 @@
         "invalid_price": "Invalid price",
         "invert": "Invert the price",
         "latest": "Latest",
-        "layout": {
-            "title": "Layout",
-            "1": "Horiz. Orderbook Left",
-            "2": "Horiz. Orderbook Right",
-            "3": "Vert. Orderbook, Combined Details",
-            "4": "Vert. Orderbook, Separated Details",
-            "5": "Vert. Orderbook, Original"
-        },
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
@@ -528,9 +526,11 @@
         "no_orders": "No orders",
         "order_book": "Order Book",
         "order_depth": "Market Depth",
+        "order_grouping": "Order Grouping %(orderlimit)s%",
         "others": "Others",
         "overbought": "Overbought",
         "oversold": "Oversold",
+        "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
         "price_history": "Price Chart",
@@ -545,12 +545,81 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "Personalize",
+        "settings": {
+            "header": {
+                "title": "Personalize",
+                "general": "General",
+                "chart_options": "Chart options",
+                "order_options": "Order Options",
+                "panel_grouping": "Panel Grouping"
+            },
+            "title": {
+                "chart_type": "Type",
+                "chart_height": "Height",
+                "chart_tools": "View Tools",
+                "chart_zoom": "Allow Zoom",
+                "order_style": "Style",
+                "position_order_asset": "Vertical Orders / Asset",
+                "position_order_form": "Buy/Sell Asset",
+                "position_order_orders": "Buy/Sell Orders",
+                "order_book_grouping": "Order Book Grouping",
+                "orderbook_auto_scroll": "Auto scroll",
+                "reverse_order_book": "Reverse Order Book",
+                "my_trades": "My Trades",
+                "market_trades": "Market Trades",
+                "open_orders": "Open Orders",
+                "settlements": "Settlements",
+                "market_location": "Market location",
+                "reduce_scrollbars": "Reduce Scroll Bars",
+                "single_colum_order_form": "Single Column Order Form",
+                "hide_function_buttons": "Hide function buttons"
+            },
+            "options": {
+                "position_order_asset_opt1": "Orders above Asset",
+                "position_order_asset_opt2": "Asset above Order",
+                "position_order_form_opt1": "Buy - Sell",
+                "position_order_form_opt2": "Sell - Buy",
+                "position_order_orders_opt1": "Buy - Sell",
+                "position_order_orders_opt2": "Sell - Buy",
+                "grouping_standalone": "Standalone",
+                "grouping_1": "Group 1",
+                "grouping_2": "Group 2",
+                "horizontal": "Horizontal",
+                "vertical": "Vertical",
+                "hidden_chart": "Hide chart"
+            },
+            "tooltip": {
+                "chart_type": "Switch between market depth and price charts, or disable charts",
+                "chart_height": "Define the height of the charts",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "order_style": "Use vertical order book to pin it to the side panel",
+                "position_order_asset": "Define the vertical order for the order form vs order book",
+                "position_order_form": "Define the horizontal order for the order form",
+                "position_order_orders": "Define the horizontal order for the order book",
+                "order_book_grouping": "Group orders which are close together by a defined percentage",
+                "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
+                "reverse_order_book": "Reverse order book to have buy orders on top",
+                "my_trades": "",
+                "market_trades": "",
+                "open_orders": "",
+                "settlements": "",
+                "reload": "Changing this option will only affect after manually reloading",
+                "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "reduce_scrollbars": "Disable scroll bars by default",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)",
+                "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "panel_grouping": "Define panel grouping"
+            }
+        },
         "settle": "Settlement",
         "settle_orders": "Settle orders",
         "short": "Short",
-        "show_asks": "Show all %(ordercount)s asks",
-        "show_bids": "Show all %(ordercount)s bids",
+        "show_asks": "Show all asks",
+        "show_bids": "Show all bids",
+        "show_all_orders": "Show all %(rowcount)s orders",
+        "show_all_trades": "Show all %(rowcount)s trades",
         "show_only_liquid": "Show liquid markets only",
         "show_only_star_formatter": "Show {star_icon} only",
         "sma": "Simple Moving Average",
@@ -565,6 +634,7 @@
         "vol_short": "Vol",
         "volume": "Volume",
         "volume_24": "24hr Volume",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All",
@@ -901,9 +971,13 @@
         "status": "Status",
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
+        "bitspark": {
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "symbol": "Symbol",
         "time": "Time",
         "title": "Deposit & Withdraw",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
         "unavailable": "The gateway service for this asset is currently down, please try again later",
         "unavailable_OPEN": "The OpenLedger Gateway is down or not responding",
@@ -940,7 +1014,8 @@
         "confirm": "Confirm",
         "help": "Help",
         "return_to_top": "Return to top",
-        "scan_qr_code": "Scan QR code"
+        "scan_qr_code": "Scan QR code",
+        "set": "Set"
     },
     "header": {
         "account": "Account",
@@ -961,8 +1036,9 @@
         "locked_tip": "<br/>Click to login.<br/><br/>Closing the browser window will also log you out.",
         "logout": "Logout",
         "payments": "Send",
-        "payments_beta": "Send (Beta)",
-        "payments_legacy": "Send (legacy)",
+        "payments_legacy": "or Legacy Send",
+        "deposit_legacy": "or Legacy Deposit",
+        "withdraw_legacy": "or Legacy Withdraw",
         "settings": "Settings",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
@@ -1043,6 +1119,7 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
@@ -1050,6 +1127,7 @@
         },
         "power": "Login",
         "question_circle": "Help",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Explore",
         "settle": "Settle",
         "share": "About",
@@ -1058,7 +1136,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
@@ -1114,6 +1192,8 @@
         "title": "Notice"
     },
     "modal": {
+        "close": "close",
+        "cancel": "cancel",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
@@ -1137,8 +1217,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
-            "submit": "Deposit",
-            "submit_beta": "Deposit (beta)"
+            "submit": "Deposit"
         },
         "deposit_withdraw": {
             "disabled": "%(gateway)s gateway service disabled",
@@ -1154,6 +1233,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "reject": "Reject proposal",
+                "delete": "Permanently reject proposal"
+            },
             "approval_add": "Approval to add",
             "approval_remove": "Approval to remove",
             "key_approval_add": "Key approval to add",
@@ -1191,13 +1275,12 @@
             "estimated_value": "Estimated Value",
             "fee": "Fee",
             "gateway_fee": "Gateway Fee",
-            "header": "Withdraw (beta)",
+            "header": "Withdraw",
             "memo": "Memo",
             "no_estimate": "No estimate available for this object",
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "Withdraw",
-            "submit_beta": "Withdraw (beta)",
             "withdraw": "Withdraw"
         }
     },
@@ -1249,9 +1332,9 @@
         "no_recent": "No recent transactions",
         "override_transfer": "{issuer} transferred {amount} from {from} to {to}",
         "pending": "pending %(blocks)s blocks",
-        "proposal_create": "{account} created a proposed transaction",
-        "proposal_delete": "{account} deleted a proposed transaction",
-        "proposal_update": "{account} updated a proposed transaction",
+        "proposal_create": "{account} created the proposed transaction {proposal}",
+        "proposal_delete": "{account} deleted the proposed transaction {proposal}",
+        "proposal_update": "{account} updated the proposed transaction {proposal}",
         "publish_feed": "{account} published feed price of {price}",
         "reg_account": "{registrar} registered the account {new_account}",
         "set_proxy": "{account} set {proxy} as their voting proxy",
@@ -1289,6 +1372,7 @@
         "asset_update": "Update the asset {asset} using the account {account}",
         "call_order_update": "Change {account} {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "Update committee global parameters by {account}",
+        "delete": "Permanently reject",
         "expires": "Expires",
         "feed_producer": "Update the feed producers for the asset {asset} using the account {account}",
         "limit_order_buy": "Place an order to buy {amount} at {price} for {account}",
@@ -1307,6 +1391,14 @@
             "owner_approvals_to_add": "Owner approvals to add",
             "owner_approvals_to_remove": "Owner approvals to remove"
         },
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "update_account": "Update account data for {account}",
         "vesting_balance_withdraw": "Withdraw {amount} from vesting balance of {account}"
     },
@@ -1316,6 +1408,9 @@
         "id": "Proposal object id",
         "proposed_operations": "Proposed operations",
         "review_period": "Review period begin"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "Propose",
     "qr_address_scanner": {
@@ -1373,11 +1468,13 @@
         "connection_error": "Unable to connect to API node %(url)s, falling back to known working nodes. Error was: %(error)s",
         "darkTheme": "Dark",
         "delete_select": "Select local wallet to delete",
+        "disabled": "Disabled",
         "enable_wallet": "Enable local wallet",
         "faucet_address": "Faucet",
         "faucet_address_text": "The faucet address is used to pay the registration fee for new users.",
         "general": "General",
         "general_text": "Adjust the basic settings.",
+        "global_settings": "Default Global Settings",
         "hidden_nodes": "Hidden",
         "hide": "Hide",
         "high_latency": "High latency",
@@ -1396,12 +1493,16 @@
         "node_down": "Unreachable",
         "node_up": "Available",
         "olDarkTheme": "Openledger dark",
+        "orderbook_autoscroll": "Order Book Autoscroll",
+        "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "Password",
         "passwordLogin": "Login mode",
         "password_text": "Change your password.",
         "personal_active": "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
+        "placeholder_select": "Select option",
         "remove": "Remove",
         "remove_api": "Remove Node",
         "remove_ws": "Remove Node",
@@ -1413,6 +1514,7 @@
         "restore_default_success": "Settings have been reset successfully",
         "restore_key_count": "# of keys",
         "restore_text": "Restore from a backup or import keys.",
+        "scrollbars_hide": "Reduce scroll bars",
         "show": "Show",
         "showAssetPercent": "Show asset percentages on the account page",
         "showSettles": "Show settle orders in depth chart",
@@ -1430,7 +1532,9 @@
         "wallet_required_text": "In order to restore a backup you will need to switch to a local wallet first, do so by clicking the button below",
         "wallet_text": "Control the details of your local wallet.",
         "wallets": "Wallets",
-        "yes": "Yes"
+        "yes": "Yes",
+        "left": "Left",
+        "right": "Right"
     },
     "sync_fail": {
         "sub_text_1": "Please verify that your computer clock is correct.",
@@ -1481,7 +1585,28 @@
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "withdraw_full": "Click to withdraw the full balance"
+        "withdraw_full": "Click to withdraw the full balance",
+        "login-tooltips": {
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "middle": " or use ",
+                "model": "Cloud wallet",
+                "end": " to login."
+            },
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "model": "Local wallet",
+                "end": " to login."
+            }
+        },
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        }
     },
     "transaction": {
         "amount_sell": "Amount to sell",
@@ -1632,6 +1757,7 @@
         "withdraw_permission_update": "Updated withdrawal permission for account"
     },
     "transfer": {
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "again": "MAKE ANOTHER TRANSFER",
         "amount": "Quantity",
         "available": "Available",
@@ -1639,6 +1765,7 @@
         "balances": "Balances",
         "broadcast": "Your transfer has been broadcast to the network",
         "broadcasting": "Broadcasting...",
+        "by": "By",
         "cancel": "Cancel",
         "close": "Close",
         "confirm": "CONFIRM",
@@ -1662,7 +1789,8 @@
         "final": "Final balance",
         "from": "From",
         "header": "Transfer details",
-        "header_subheader": "Transfers are used for sending funds to other %(wallet_name)s Account Holders",
+        "header_subheader": "Send funds from an account you control to another %(wallet_name)s account holder.",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "Memo / Message",
         "memo_unlock": "Unlock your wallet/account in order to see this memo",
         "optional": "Optional",
@@ -1694,7 +1822,7 @@
         "favourite_button": "Mark this pair as a favourite in your markets list.",
         "find_markets_tab": "This tab allows you to search and add additional markets to the 'my markets' tab.",
         "language_flag": "Choose from 9 different languages to use in the DEX.",
-        "my_markets_tab": "This tab lists commonly used markets.",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "Next",
         "prev_label": "Back",
         "price_chart": "View price action of an asset using the price chart.",
@@ -1702,7 +1830,12 @@
         "sell_form": "Place sell orders using this form.",
         "sell_orders": "View all sell orders for this market.",
         "skip_label": "Skip",
-        "switch_button": "Switch the trading pairs using this button."
+        "switch_button": "Switch the trading pairs using this button.",
+        "vertical_order": "View all orders for this market, including spread and latest order price",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers"
     },
     "wallet": {
         "accept": "Accept",
@@ -1895,5 +2028,49 @@
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
+    },
+    "alert": {
+        "warning": "Warning"
+    },
+    "registration": {
+        "title": "Registration",
+        "walletModelTitle": "By bin-file",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "recommended": "recommended",
+        "securityKey": "Security",
+        "securityAccountModel": "Medium",
+        "securityWalletModel": "High",
+        "loginByKey": "Login by",
+        "accountLoginByValue": "Account name + Password",
+        "walletLoginByValue": "Bin-file + Password",
+        "backUpRestoreKey": "Back up and restore Account",
+        "select": "Select",
+        "createAccountTitle": "Create Account by Bin-file",
+        "continue": "Continue",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "createByPassword": "Create Account by Name and Password",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "copyPassword": "Copy your password to save.",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "downloadFile": "Download file",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "attention": "Attention",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "whyBinFile": "Why do I need a .bin file?"
+    },
+    "login": {
+        "title": "Select Login Type",
+        "loginButton": "Login",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "dropFile": "Drop your backup file in this area or ",
+        "browseFile": "browse your files",
+        "withoutBinFile": "I don't have .bin-file",
+        "selectDifferent": "Select different file",
+        "invalidFormat": "Invalid format!",
+        "browseFileLabel": "Browse your backup file"
     }
 }

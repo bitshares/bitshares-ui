@@ -10,7 +10,6 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import SettingsActions from "actions/SettingsActions";
 import AssetName from "../Utility/AssetName";
-import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import {ChainStore} from "bitsharesjs";
 import {LimitOrder, CallOrder} from "common/MarketClasses";
@@ -348,7 +347,9 @@ class MyOpenOrders extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            activeTab: props.activeTab
+            activeTab: props.activeTab,
+            rowCount: 20,
+            showAll: false
         };
         this._getOrders = this._getOrders.bind(this);
     }
@@ -358,24 +359,80 @@ class MyOpenOrders extends React.Component {
             this._changeTab(nextProps.activeTab);
         }
 
+        if (
+            this.props.hideScrollbars &&
+            nextState.showAll != this.state.showAll
+        ) {
+            let contentContainer = this.refs.container;
+            if (!nextState.showAll) {
+                Ps.destroy(contentContainer);
+            } else {
+                Ps.initialize(contentContainer);
+                Ps.update(contentContainer);
+            }
+            if (this.refs.contentTransition) {
+                this.refs.contentTransition.resetAnimation();
+            }
+            if (contentContainer) contentContainer.scrollTop = 0;
+        }
+
         return (
             nextProps.baseSymbol !== this.props.baseSymbol ||
             nextProps.quoteSymbol !== this.props.quoteSymbol ||
             nextProps.className !== this.props.className ||
             nextProps.activeTab !== this.props.activeTab ||
             nextState.activeTab !== this.state.activeTab ||
+            nextState.showAll !== this.state.showAll ||
             nextProps.currentAccount !== this.props.currentAccount
         );
     }
 
     componentDidMount() {
-        let contentContainer = this.refs.container;
-        if (contentContainer) Ps.initialize(contentContainer);
+        if (!this.props.hideScrollbars) {
+            let contentContainer = this.refs.container;
+            if (contentContainer) Ps.initialize(contentContainer);
+        }
     }
 
     componentDidUpdate() {
+        if (
+            !this.props.hideScrollbars ||
+            (this.props.hideScrollbars && this.state.showAll)
+        ) {
+            let contentContainer = this.refs.container;
+            if (contentContainer) Ps.update(contentContainer);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
         let contentContainer = this.refs.container;
-        if (contentContainer) Ps.update(contentContainer);
+
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            nextProps.hideScrollbars
+        ) {
+            Ps.destroy(contentContainer);
+        }
+
+        if (
+            nextProps.hideScrollbars !== this.props.hideScrollbars &&
+            !nextProps.hideScrollbars
+        ) {
+            Ps.initialize(contentContainer);
+            this.refs.contentTransition.resetAnimation();
+            if (contentContainer) contentContainer.scrollTop = 0;
+            Ps.update(contentContainer);
+        }
+    }
+
+    _onSetShowAll() {
+        this.setState({
+            showAll: !this.state.showAll
+        });
+
+        if (this.state.showAll) {
+            this.refs.container.scrollTop = 0;
+        }
     }
 
     _getOrders() {
@@ -461,11 +518,12 @@ class MyOpenOrders extends React.Component {
 
     render() {
         let {base, quote, quoteSymbol, baseSymbol, settleOrders} = this.props;
-        let {activeTab} = this.state;
+        let {activeTab, showAll, rowCount} = this.state;
 
         if (!base || !quote) return null;
 
         let contentContainer;
+        let footerContainer;
 
         // Is asset a BitAsset with Settlements
         let baseIsBitAsset =
@@ -553,17 +611,50 @@ class MyOpenOrders extends React.Component {
                 return a.props.price - b.props.price;
             });
 
+            let rowsLength = rows.length;
+            if (!showAll) {
+                rows.splice(rowCount, rows.length);
+            }
+
             contentContainer = (
-                <TransitionWrapper component="tbody" transitionName="newrow">
+                <TransitionWrapper
+                    ref="contentTransition"
+                    component="tbody"
+                    transitionName="newrow"
+                >
                     {rows.length ? rows : emptyRow}
                 </TransitionWrapper>
             );
+
+            footerContainer =
+                rowsLength > 11 ? (
+                    <div className="orderbook-showall">
+                        <a onClick={this._onSetShowAll.bind(this)}>
+                            <Translate
+                                content={
+                                    showAll
+                                        ? "exchange.hide"
+                                        : "exchange.show_all_orders"
+                                }
+                                rowcount={rowsLength}
+                            />
+                        </a>
+                    </div>
+                ) : null;
         }
 
         {
             /* Open Settle Orders */
         }
         if (activeTab && activeTab == "open_settlement") {
+            let settleOrdersLength = settleOrders.length;
+
+            if (settleOrdersLength > 0) {
+                if (!showAll) {
+                    settleOrders.splice(rowCount, settleOrders.length);
+                }
+            }
+
             contentContainer = (
                 <OpenSettleOrders
                     key="settle_orders"
@@ -574,6 +665,22 @@ class MyOpenOrders extends React.Component {
                     quoteSymbol={quoteSymbol}
                 />
             );
+
+            footerContainer =
+                settleOrdersLength > 11 ? (
+                    <div className="orderbook-showall">
+                        <a onClick={this._onSetShowAll.bind(this)}>
+                            <Translate
+                                content={
+                                    showAll
+                                        ? "exchange.hide"
+                                        : "exchange.show_all_orders"
+                                }
+                                rowcount={settleOrdersLength}
+                            />
+                        </a>
+                    </div>
+                ) : null;
         }
 
         return (
@@ -658,6 +765,7 @@ class MyOpenOrders extends React.Component {
                             {contentContainer}
                         </table>
                     </div>
+                    {footerContainer}
                 </div>
             </div>
         );

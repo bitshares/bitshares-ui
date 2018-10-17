@@ -1,11 +1,10 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.180912-rc1",
+    "version": "2.0.181010-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
-        "BitShares UI worker",
         "James Calfee",
         "Dan Larimer",
         "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
@@ -13,7 +12,7 @@
     "license": "MIT",
     "engines": {
         "node": ">=9.x",
-        "npm": ">=5.x",
+        "npm": ">=6.x",
         "yarn": ">=0.21.3"
     },
     "repository": {
@@ -133,13 +132,13 @@
         }
     },
     "dependencies": {
-        "alt": "^0.18.6",
-        "alt-container": "^1.0.0",
-        "alt-react": "git+https://github.com/bitshares/react.git",
+        "alt": "git+https://github.com/bitshares/alt.git#b6b42ceb790ca321402e9add95b9f77af8a7657d",
+        "alt-container": "git+https://github.com/bitshares/alt-container.git#cf4e2c690a54e49fc9fe2dc99ab8816e6c3e5a86",
+        "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#1cadac0d6ccced4f23f230d54c3e87bf7b7dd973",
-        "bitsharesjs": "^1.8.0",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#f37e27b79a205410cdd23d5e3060eb382d999658",
+        "bitsharesjs": "^1.8.2",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",
@@ -171,6 +170,7 @@
         "react": "^16.4.1",
         "react-autocomplete": "^1.7.2",
         "react-clipboard.js": "^1.0.1",
+        "react-copy-to-clipboard": "^5.0.1",
         "react-datepicker2": "git+https://github.com/bitshares/react-datepicker2.git#9d4c2c28a23c970badcf765c35c5493d5a49afde",
         "react-debounce-render": "^4.0.2",
         "react-dom": "^16.4.1",

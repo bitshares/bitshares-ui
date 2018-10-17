@@ -326,6 +326,7 @@ class MyMarkets extends React.Component {
         super();
 
         this.state = {
+            isQuoteModalVisible: false,
             inverseSort: props.viewSettings.get("myMarketsInvert", true),
             sortBy: props.viewSettings.get("myMarketsSort", "volume"),
             activeTab: props.viewSettings.get("favMarketTab", "my-market"),
@@ -340,6 +341,9 @@ class MyMarkets extends React.Component {
 
         this._setMinWidth = this._setMinWidth.bind(this);
         this.getAssetList = debounce(AssetActions.getAssetList.defer, 150);
+
+        this.showQuoteModal = this.showQuoteModal.bind(this);
+        this.hideQuoteModal = this.hideQuoteModal.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -352,9 +356,12 @@ class MyMarkets extends React.Component {
             this._lookupAssets("OPEN.", true);
         }
 
-        if(this.state.activeTab !== nextState.activeTab) {
+        if (this.state.activeTab !== nextState.activeTab) {
             this._changeTab(nextState.activeTab);
-        } else if(!nextProps.tabHeader && this.state.activeTab !== nextProps.activeTab) {
+        } else if (
+            !nextProps.tabHeader &&
+            this.state.activeTab !== nextProps.activeTab
+        ) {
             this._changeTab(nextProps.activeTab);
         }
 
@@ -414,8 +421,10 @@ class MyMarkets extends React.Component {
             this._lookupAssets("OPEN.", true);
         }
 
-        if(this.state.activeTab !== this.props.activeTab) {
-            this._changeTab(this.props.activeTab);
+        if (this.state.activeTab !== this.props.activeTab) {
+            setTimeout(() => {
+                this._changeTab(this.props.activeTab);
+            }, 100);
         }
     }
 
@@ -430,6 +439,18 @@ class MyMarkets extends React.Component {
         if (this.props.myMarketTab && !np.myMarketTab) {
             if (this.refs.findSearchInput) this.refs.findSearchInput.focus();
         }
+    }
+
+    hideQuoteModal() {
+        this.setState({
+            isQuoteModalVisible: false
+        });
+    }
+
+    showQuoteModal() {
+        this.setState({
+            isQuoteModalVisible: true
+        });
     }
 
     _setMinWidth() {
@@ -833,7 +854,7 @@ class MyMarkets extends React.Component {
 
         let listStyle = {
             minWidth: this.state.minWidth,
-            minHeight: "6rem",
+            minHeight: "6rem"
         };
         if (listHeight) {
             listStyle.height = listHeight;
@@ -843,39 +864,41 @@ class MyMarkets extends React.Component {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                {this.props.tabHeader ? <div
-                    style={this.props.headerStyle}
-                    className="grid-block shrink left-orderbook-header bottom-header"
-                >
+                {this.props.tabHeader ? (
                     <div
-                        ref="myMarkets"
-                        className={starClass}
-                        onClick={this._changeTab.bind(this, "my-market")}
-                        data-intro={translator.translate(
-                            "walkthrough.my_markets_tab"
-                        )}
-                    >
-                        <Translate content="exchange.market_name" />
-                    </div>
-                    <div
-                        className={allClass}
-                        onClick={this._changeTab.bind(this, "find-market")}
-                        data-intro={translator.translate(
-                            "walkthrough.find_markets_tab"
-                        )}
-                    >
-                        <Translate content="exchange.more" />
-                    </div>
-                </div> : null}
-                {this.props.noHeader || this.props.tabHeader ? null :
-                    <div 
                         style={this.props.headerStyle}
+                        className="grid-block shrink left-orderbook-header bottom-header"
                     >
-                        <div className="exchange-content-header">
-                            <span><Translate content="exchange.market_name" /></span>
+                        <div
+                            ref="myMarkets"
+                            className={starClass}
+                            onClick={this._changeTab.bind(this, "my-market")}
+                            data-intro={translator.translate(
+                                "walkthrough.my_markets_tab"
+                            )}
+                        >
+                            <Translate content="exchange.market_name" />
+                        </div>
+                        <div
+                            className={allClass}
+                            onClick={this._changeTab.bind(this, "find-market")}
+                            data-intro={translator.translate(
+                                "walkthrough.find_markets_tab"
+                            )}
+                        >
+                            <Translate content="exchange.more" />
                         </div>
                     </div>
-                }
+                ) : null}
+                {this.props.noHeader || this.props.tabHeader ? null : (
+                    <div style={this.props.headerStyle}>
+                        <div className="exchange-content-header">
+                            <span>
+                                <Translate content="exchange.market_name" />
+                            </span>
+                        </div>
+                    </div>
+                )}
 
                 {this.props.controls ? (
                     <div
@@ -941,6 +964,7 @@ class MyMarkets extends React.Component {
                                     />
                                 </span>
                             </label>
+                            <br />
                         </div>
                         <div className="search-wrapper">
                             <form>
@@ -1068,9 +1092,7 @@ class MyMarkets extends React.Component {
                         <li
                             key="quote_edit"
                             style={{textTransform: "uppercase"}}
-                            onClick={() => {
-                                ZfApi.publish("quote_selection", "open");
-                            }}
+                            onClick={this.showQuoteModal}
                             className="mymarkets-tab"
                         >
                             &nbsp;+&nbsp;
@@ -1079,22 +1101,22 @@ class MyMarkets extends React.Component {
                     {!myMarketTab && !this.state.inputValue
                         ? null
                         : preferredBases.map((base, index) => {
-                        if (!base) return null;
-                        return (
-                            <li
-                                key={base}
-                                onClick={this.toggleActiveMarketTab.bind(
-                                    this,
-                                    index
-                                )}
-                                className={cnames("mymarkets-tab", {
-                                    active: activeMarketTab === index
-                                })}
-                            >
-                                {base}
-                            </li>
-                        );
-                    })}
+                              if (!base) return null;
+                              return (
+                                  <li
+                                      key={base}
+                                      onClick={this.toggleActiveMarketTab.bind(
+                                          this,
+                                          index
+                                      )}
+                                      className={cnames("mymarkets-tab", {
+                                          active: activeMarketTab === index
+                                      })}
+                                  >
+                                      {base}
+                                  </li>
+                              );
+                          })}
                     {myMarketTab && hasOthers ? (
                         <li
                             key={"others"}
@@ -1111,8 +1133,6 @@ class MyMarkets extends React.Component {
                             <Translate content="exchange.others" />
                         </li>
                     ) : null}
-
-                    
                 </ul>
 
                 <div
@@ -1185,7 +1205,12 @@ class MyMarkets extends React.Component {
                         />
                     ) : null}
                 </div>
-                <QuoteSelectionModal quotes={this.props.preferredBases} />
+                <QuoteSelectionModal
+                    visible={this.state.isQuoteModalVisible}
+                    hideModal={this.hideQuoteModal}
+                    showModal={this.showQuoteModal}
+                    quotes={this.props.preferredBases}
+                />
             </div>
         );
     }
