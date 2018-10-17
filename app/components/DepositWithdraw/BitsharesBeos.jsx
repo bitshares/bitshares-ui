@@ -30,7 +30,7 @@ class BitsharesBeos extends React.Component {
                     onClick={this.onTransferBts.bind(this)}
                     type="submit"
                 >
-                    <Translate content="gateway.bitshares_beos.transfer_button" />
+                    <Translate content="gateway.bitshares_beos.transfer_button_label" />
                 </button>
                 <BaseModal id={transferBtsId} overlay={true}>
                     <br />
