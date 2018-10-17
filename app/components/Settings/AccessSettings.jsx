@@ -278,7 +278,8 @@ class ApiNode extends React.Component {
                         <p className="api-node-title">{title}</p>
                         {!!node.operator && (
                             <p className="api-node-operator">
-                                {node.operator}&nbsp;&nbsp;&nbsp;
+                                {node.operator}
+                                &nbsp;&nbsp;&nbsp;
                             </p>
                         )}
                         <p
@@ -459,7 +460,7 @@ class AccessSettings extends React.Component {
 
     _recalculateLatency(event, feedback) {
         feedback("settings.pinging");
-        routerTransitioner.doLatencyUpdate(true, null).finally(() => {
+        routerTransitioner.doLatencyUpdate(true, true).finally(() => {
             feedback();
         });
     }
@@ -639,19 +640,26 @@ class AccessSettings extends React.Component {
     }
 }
 
-AccessSettings = connect(AccessSettings, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            // apiServer and activeNode are ambiguous definition when dealing with isActive, autoSelectionActive etc..
-            // using distinct names
-            selectedNode: SettingsStore.getState().settings.get("apiServer"),
-            connectedNode: SettingsStore.getState().settings.get("activeNode"),
-            apiLatencies: SettingsStore.getState().apiLatencies
-        };
+AccessSettings = connect(
+    AccessSettings,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                // apiServer and activeNode are ambiguous definition when dealing with isActive, autoSelectionActive etc..
+                // using distinct names
+                selectedNode: SettingsStore.getState().settings.get(
+                    "apiServer"
+                ),
+                connectedNode: SettingsStore.getState().settings.get(
+                    "activeNode"
+                ),
+                apiLatencies: SettingsStore.getState().apiLatencies
+            };
+        }
     }
-});
+);
 
 export default AccessSettings;
