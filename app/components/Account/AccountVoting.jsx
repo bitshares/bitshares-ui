@@ -45,7 +45,8 @@ class AccountVoting extends React.Component {
             lastBudgetObject: props.initialBudget.get("id"),
             workerTableIndex: props.viewSettings.get("workerTableIndex", 1),
             all_witnesses: Immutable.List(),
-            all_committee: Immutable.List()
+            all_committee: Immutable.List(),
+            hideLegacyProposals: true
         };
         this.onProxyAccountFound = this.onProxyAccountFound.bind(this);
         this.onPublish = this.onPublish.bind(this);
@@ -549,13 +550,41 @@ class AccountVoting extends React.Component {
         let workerArray = this._getWorkerArray();
 
         let voteThreshold = 0;
+        let hideProposals = a => {
+            let dublicated = workerArray.some(o => {
+                return (
+                    (a.get("name").includes(o.get("name")) ||
+                        o.get("name").includes(a.get("name"))) &&
+                    o.get("worker_account") === a.get("worker_account") &&
+                    new Date(o.get("work_begin_date")) >
+                        new Date(a.get("work_begin_date"))
+                );
+            });
+            let hasStarted = new Date(a.get("work_begin_date") + "Z") <= now;
+            let approvalState = this.state.vote_ids.has(a.get("vote_for"))
+                ? true
+                : this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"].has(
+                      a.get("vote_against")
+                  )
+                    ? false
+                    : null;
+            return this.state.hideLegacyProposals
+                ? !approvalState && hasStarted && !dublicated
+                : true;
+        };
+
         let workers = workerArray
             .filter(a => {
                 if (!a) {
                     return false;
                 }
 
+                /*  if (workerArray.has(worker.get("worker_account"))) {
+                    sortedArr.assign({[worker.get("worker_account")]: [worker.get("name"),worker.get("work_begin_date")]});
+                } */
+
                 return (
+                    hideProposals(a) &&
                     new Date(a.get("work_end_date") + "Z") > now &&
                     new Date(a.get("work_begin_date") + "Z") <= now
                 );
@@ -572,7 +601,6 @@ class AccountVoting extends React.Component {
                 if (workerBudget <= 0 && !voteThreshold) {
                     voteThreshold = votes;
                 }
-
                 if (voteThreshold && votes < voteThreshold) return null;
 
                 return (
@@ -604,9 +632,10 @@ class AccountVoting extends React.Component {
                 let votes =
                     a.get("total_votes_for") - a.get("total_votes_against");
                 return (
-                    (new Date(a.get("work_end_date") + "Z") > now &&
+                    hideProposals(a) &&
+                    ((new Date(a.get("work_end_date") + "Z") > now &&
                         votes < voteThreshold) ||
-                    new Date(a.get("work_begin_date") + "Z") > now
+                        new Date(a.get("work_begin_date") + "Z") > now)
                 );
             })
             .sort((a, b) => {
@@ -639,7 +668,9 @@ class AccountVoting extends React.Component {
                     return false;
                 }
 
-                return new Date(a.get("work_end_date")) <= now;
+                return (
+                    hideProposals(a) && new Date(a.get("work_end_date")) <= now
+                );
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -757,6 +788,21 @@ class AccountVoting extends React.Component {
             </div>
         );
 
+        const hideLegacy = (
+            <div>
+                <input
+                    type="checkbox"
+                    onChange={() => {
+                        this.setState({
+                            hideLegacyProposals: !this.state.hideLegacyProposals
+                        });
+                    }}
+                    checked={this.state.hideLegacyProposals}
+                />
+                <label>Hide Legacy Proposals</label>
+            </div>
+        );
+
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
                 <div className="content-block small-12">
@@ -813,6 +859,9 @@ class AccountVoting extends React.Component {
                                             "active_witnesses"
                                         )}
                                         proxy={this.state.proxy_account_id}
+                                        hideLegacy={
+                                            this.state.hideLegacyProposals
+                                        }
                                     />
                                 </div>
                             </Tab>
@@ -926,6 +975,8 @@ class AccountVoting extends React.Component {
                                     </div>
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
+
+                                        {hideLegacy}
                                         <div
                                             style={{
                                                 float: "right",
@@ -998,9 +1049,11 @@ class AccountVoting extends React.Component {
                                                     style={{textAlign: "left"}}
                                                 >
                                                     <Translate content="account.votes.total_budget" />{" "}
-                                                    (<AssetName
+                                                    (
+                                                    <AssetName
                                                         name={preferredUnit}
-                                                    />)
+                                                    />
+                                                    )
                                                 </th>
                                                 <th
                                                     colSpan="2"
@@ -1084,9 +1137,11 @@ class AccountVoting extends React.Component {
                                                         fontSize: "0.8rem"
                                                     }}
                                                 >
-                                                    (<AssetName
+                                                    (
+                                                    <AssetName
                                                         name={preferredUnit}
-                                                    />)
+                                                    />
+                                                    )
                                                 </div>
                                             </th>
                                             {workerTableIndex === 2 ||
@@ -1101,9 +1156,11 @@ class AccountVoting extends React.Component {
                                                             fontSize: "0.8rem"
                                                         }}
                                                     >
-                                                        (<AssetName
+                                                        (
+                                                        <AssetName
                                                             name={preferredUnit}
-                                                        />)
+                                                        />
+                                                        )
                                                     </div>
                                                 </th>
                                             )}
