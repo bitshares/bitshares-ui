@@ -36,7 +36,6 @@ class Personalize extends React.Component {
 
     onClose() {
         this.props.hideModal();
-        this.props.onToggleSingleColumnOrderForm();
     }
 
     setChartHeight(value) {
