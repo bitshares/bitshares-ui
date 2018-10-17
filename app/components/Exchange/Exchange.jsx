@@ -202,7 +202,7 @@ class Exchange extends React.Component {
             isSettingsModalVisible: false,
             isMarketPickerModalVisible: false,
             history: [],
-            tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
+            tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
             buySellOpen: ws.get("buySellOpen", true),
             bid,
@@ -2223,7 +2223,7 @@ class Exchange extends React.Component {
             );
 
         let tradingViewChart =
-            (!tinyScreen && (!chartType || chartType != "price_chart")) ||
+            (!tinyScreen && !(chartType == "price_chart")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("tradingViewChart")) ? null : (
                 <TradingViewPriceChart
@@ -2244,7 +2244,7 @@ class Exchange extends React.Component {
             );
 
         let deptHighChart =
-            (!tinyScreen && (!chartType || chartType != "market_depth")) ||
+            (!tinyScreen && !(chartType == "market_depth")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("deptHighChart")) ? null : (
                 <DepthHighChart
@@ -2643,11 +2643,12 @@ class Exchange extends React.Component {
                     style={{display: "block"}}
                     key={`actionCard_${actionCardIndex++}`}
                 >
-                    <div 
+                    <div
                         className="v-align no-padding align-center grid-block footer shrink column"
                         data-intro={translator.translate(
                             "walkthrough.my_markets"
-                        )}>
+                        )}
+                    >
                         <Tabs
                             defaultActiveKey="my-market"
                             activeKey={tabVerticalPanel}
@@ -2839,9 +2840,13 @@ class Exchange extends React.Component {
                             className="grid-block vertical no-padding ps-container"
                             id="CenterContent"
                             ref="center"
-                            data-intro={tinyScreen 
-                                ? translator.translate("walkthrough.collapsed_items") 
-                                : null}
+                            data-intro={
+                                tinyScreen
+                                    ? translator.translate(
+                                          "walkthrough.collapsed_items"
+                                      )
+                                    : null
+                            }
                         >
                             {!tinyScreen ? (
                                 <div>

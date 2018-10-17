@@ -422,7 +422,9 @@ class MyMarkets extends React.Component {
         }
 
         if (this.state.activeTab !== this.props.activeTab) {
-            this._changeTab(this.props.activeTab);
+            setTimeout(() => {
+                this._changeTab(this.props.activeTab);
+            }, 100);
         }
     }
 

@@ -149,7 +149,7 @@ class Settings extends React.Component {
                                             "exchange.price_history"
                                         )}
                                     </Select.Option>
-                                    <Select.Option value={""}>
+                                    <Select.Option value={"hidden_chart"}>
                                         {counterpart.translate(
                                             "exchange.settings.options.hidden_chart"
                                         )}
