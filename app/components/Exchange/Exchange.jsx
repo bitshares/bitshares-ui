@@ -228,7 +228,7 @@ class Exchange extends React.Component {
             chartHeight: ws.get("chartHeight", 620),
             chartZoom: ws.get("chartZoom", true),
             chartTools: ws.get("chartTools", true),
-            hideFunctionButtons: ws.get("hideFunctionButtons", false),
+            hideFunctionButtons: ws.get("hideFunctionButtons", true),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
             activePanels: ws.get("activePanels", ["left", "right"]),
