@@ -5,10 +5,8 @@ import BaseModal from "./BaseModal";
 import AccountStore from "stores/AccountStore";
 import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
-import Screenshot from "lib/common/Screenshot";
 import CopyButton from "../Utility/CopyButton";
 import html2canvas from "html2canvas";
-
 import {connect} from "alt-react";
 
 class ReportModal extends React.Component {
