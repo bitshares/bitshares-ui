@@ -14,6 +14,7 @@ import BackupSettings from "./BackupSettings";
 import AccessSettings from "./AccessSettings";
 import {set} from "lodash-es";
 import {getAllowedLogins, getFaucet} from "../../branding";
+import {Input} from "bitshares-ui-style-guide";
 
 class Settings extends React.Component {
     constructor(props) {
@@ -344,10 +345,9 @@ class Settings extends React.Component {
                 break;
             case "faucet_address":
                 entries = (
-                    <input
+                    <Input
                         disabled={!getFaucet().editable}
                         type="text"
-                        className="settings-input"
                         defaultValue={settings.get("faucet_address")}
                         onChange={
                             getFaucet().editable
