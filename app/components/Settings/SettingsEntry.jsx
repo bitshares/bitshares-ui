@@ -228,10 +228,10 @@ export default class SettingsEntry extends React.Component {
         };
 
         return (
-            <section className="block-list no-border-bottom">
+            <section className="no-border-bottom">
                 <EntryLayout noHeader={noHeader} setting={setting}>
                     {options ? (
-                        <ul>
+                        <ul className={"unstyled-list"}>
                             <li className="with-dropdown">
                                 {optional}
                                 <Select
@@ -249,7 +249,7 @@ export default class SettingsEntry extends React.Component {
                         </ul>
                     ) : null}
                     {input ? (
-                        <ul>
+                        <ul className={"unstyled-list"}>
                             <li>{input}</li>
                         </ul>
                     ) : null}
