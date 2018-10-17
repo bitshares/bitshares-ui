@@ -2302,6 +2302,42 @@
             }
         }
 
+        .file-input-container {
+            background-color: darken($modal-bg-color, 5);
+            border-color: transparentize($button-bg-color, 0.5);
+
+            .upload-text {
+                color: transparentize($light-text-color, 0.3);
+            }
+
+            &:hover,
+            &.dropHover {
+                border-color: $button-bg-color;
+                background-color: darken($modal-bg-color, 10);
+            }
+
+            &.downloaded {
+                border-color: $button-bg-color;
+                background-color: transparentize($button-bg-color, 0.8);
+            }
+
+            &.invalid {
+                border-color: $negative-color-alternative;
+                background-color: transparentize(
+                    $negative-color-alternative,
+                    0.9
+                );
+            }
+        }
+
+        .dismiss-icon {
+            color: $negative-color-alternative;
+        }
+
+        .approve-icon svg path {
+            fill: $positive-color-alternative;
+        }
+
         @include breakpoint(small only) {
             .plate {
                 background-color: darken($modal-bg-color, 10);
