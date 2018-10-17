@@ -14,9 +14,8 @@ import React from "react";
 import Translate from "react-translate-component";
 import {GroupOrderLimitSelector} from "./OrderBook";
 import SettingsActions from "actions/SettingsActions";
-import ReactTooltip from "react-tooltip";
 
-class Settings extends React.Component {
+class Personalize extends React.Component {
     constructor(props) {
         super();
         this.state = {
@@ -37,7 +36,7 @@ class Settings extends React.Component {
 
     onClose() {
         this.props.hideModal();
-        this.props.onToggleSettings();
+        this.props.onToggleSingleColumnOrderForm();
     }
 
     setChartHeight(value) {
@@ -691,6 +690,14 @@ class Settings extends React.Component {
                                         type="question-circle"
                                         theme="filled"
                                     />
+                                    &nbsp;
+                                    <Icon
+                                        data-tip={counterpart.translate(
+                                            "exchange.settings.tooltip.reload"
+                                        )}
+                                        type="reload"
+                                        theme="filled"
+                                    />
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -737,4 +744,4 @@ class Settings extends React.Component {
     }
 }
 
-export default Settings;
+export default Personalize;

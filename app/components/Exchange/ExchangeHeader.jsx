@@ -410,7 +410,7 @@ export default class ExchangeHeader extends React.Component {
                                 <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px 16px 16px 0px"}}
-                                    onClick={this.props.onToggleSettings.bind(
+                                    onClick={this.props.onTogglePersonalize.bind(
                                         this
                                     )}
                                 >

@@ -605,6 +605,7 @@
                 "market_trades": "",
                 "open_orders": "",
                 "settlements": "",
+                "reload": "Changing this option will only affect after manually reloading",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "reduce_scrollbars": "Disable scroll bars by default",
                 "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)",

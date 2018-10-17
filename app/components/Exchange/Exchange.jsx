@@ -24,7 +24,7 @@ import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import MarketPicker from "./MarketPicker";
-import Settings from "./Settings";
+import Personalize from "./Personalize";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import DepthHighChart from "./DepthHighChart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -70,8 +70,8 @@ class Exchange extends React.Component {
             this
         );
 
-        this.showSettingsModal = this.showSettingsModal.bind(this);
-        this.hideSettingsModal = this.hideSettingsModal.bind(this);
+        this.showPersonalizeModal = this.showPersonalizeModal.bind(this);
+        this.hidePersonalizeModal = this.hidePersonalizeModal.bind(this);
 
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
@@ -199,7 +199,7 @@ class Exchange extends React.Component {
         let {ask, bid} = this._initialOrderState(props);
 
         return {
-            isSettingsModalVisible: false,
+            isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
             history: [],
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
@@ -261,15 +261,15 @@ class Exchange extends React.Component {
         });
     }
 
-    showSettingsModal() {
+    showPersonalizeModal() {
         this.setState({
-            isSettingsModalVisible: true
+            isPersonalizeModalVisible: true
         });
     }
 
-    hideSettingsModal() {
+    hidePersonalizeModal() {
         this.setState({
-            isSettingsModalVisible: false
+            isPersonalizeModalVisible: false
         });
     }
 
@@ -1171,12 +1171,12 @@ class Exchange extends React.Component {
         this.setState({verticalOrderForm: !this.state.verticalOrderForm});
     }
 
-    _toggleSettings() {
-        if (!this.state.showSettings) {
-            this.showSettingsModal();
+    _togglePersonalize() {
+        if (!this.state.showPersonalize) {
+            this.showPersonalizeModal();
         }
 
-        this.setState({showSettings: !this.state.showSettings});
+        this.setState({showPersonalize: !this.state.showPersonalize});
     }
 
     _toggleScrollbars() {
@@ -2773,7 +2773,7 @@ class Exchange extends React.Component {
                     marketStats={marketStats}
                     selectedMarketPickerAsset={this.state.marketPickerAsset}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
-                    onToggleSettings={this._toggleSettings.bind(this)}
+                    onTogglePersonalize={this._togglePersonalize.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
 
@@ -2788,14 +2788,14 @@ class Exchange extends React.Component {
                         )}
                         {...this.props}
                     />
-                    <Settings
-                        visible={this.state.isSettingsModalVisible}
-                        showModal={this.showSettingsModal}
-                        hideModal={this.hideSettingsModal}
+                    <Personalize
+                        visible={this.state.isPersonalizeModalVisible}
+                        showModal={this.showPersonalizeModal}
+                        hideModal={this.hidePersonalizeModal}
                         viewSettings={this.props.viewSettings}
                         chartType={chartType}
                         chartHeight={chartHeight}
-                        onToggleSettings={this._toggleSettings.bind(this)}
+                        onTogglePersonalize={this._togglePersonalize.bind(this)}
                         onChangeChartHeight={this.onChangeChartHeight.bind(
                             this
                         )}
