@@ -19,12 +19,17 @@ export default class PrivateKeyView extends Component {
 
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+
+        this.showQrModal = this.showQrModal.bind(this);
+        this.hideQrModal = this.hideQrModal.bind(this);
+
         this.onClose = this.onClose.bind(this);
     }
 
     _getInitialState() {
         return {
             isModalVisible: false,
+            isQrModalVisible: false,
             wif: null
         };
     }
@@ -42,6 +47,18 @@ export default class PrivateKeyView extends Component {
     showModal() {
         this.setState({
             isModalVisible: true
+        });
+    }
+
+    hideQrModal() {
+        this.setState({
+            isQrModalVisible: false
+        });
+    }
+
+    showQrModal() {
+        this.setState({
+            isQrModalVisible: true
         });
     }
 
@@ -101,9 +118,7 @@ export default class PrivateKeyView extends Component {
                                                 </div>
                                                 <div
                                                     className="clickable"
-                                                    onClick={this.showQrCode.bind(
-                                                        this
-                                                    )}
+                                                    onClick={this.showQrModal}
                                                 >
                                                     <img
                                                         style={{height: 50}}
@@ -149,7 +164,12 @@ export default class PrivateKeyView extends Component {
                         </div>
                     </div>
                 </Modal>
-                <QrcodeModal ref="qrmodal" keyValue={this.state.wif} />
+                <QrcodeModal
+                    showModal={this.showQrModal}
+                    hideModal={this.hideQrModal}
+                    visible={this.state.isQrModalVisible}
+                    keyValue={this.state.wif}
+                />
             </span>
         );
     }
@@ -174,9 +194,5 @@ export default class PrivateKeyView extends Component {
 
     onHide() {
         this.setState({wif: null});
-    }
-
-    showQrCode() {
-        this.refs.qrmodal.show();
     }
 }
