@@ -40,6 +40,7 @@ class AccountPortfolioList extends React.Component {
             isSettleModalVisible: false,
             isBorrowModalVisible: false,
             isDepositModalVisible: false,
+            isWithdrawModalVisible: false,
             borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
@@ -62,6 +63,9 @@ class AccountPortfolioList extends React.Component {
 
         this.showDepositModal = this.showDepositModal.bind(this);
         this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showWithdrawModal = this.showWithdrawModal.bind(this);
+        this.hideWithdrawModal = this.hideWithdrawModal.bind(this);
 
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
@@ -118,6 +122,18 @@ class AccountPortfolioList extends React.Component {
                 );
             }, false)
         );
+    }
+
+    showWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: true
+        });
+    }
+
+    hideWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: false
+        });
     }
 
     showSettleModal() {
@@ -270,7 +286,7 @@ class AccountPortfolioList extends React.Component {
                 fiatModal
             },
             () => {
-                this.refs[action].show();
+                this.showWithdrawModal();
             }
         );
     }
@@ -1032,8 +1048,8 @@ class AccountPortfolioList extends React.Component {
                     />
 
                     <WithdrawModal
-                        ref="withdraw_modal_new"
-                        modalId="withdraw_modal_new"
+                        hideModal={this.hideWithdrawModal}
+                        visible={this.state.isWithdrawModalVisible}
                         backedCoins={this.props.backedCoins}
                         initialSymbol={this.state.withdrawAsset}
                     />
