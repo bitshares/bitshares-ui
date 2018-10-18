@@ -3,6 +3,7 @@ import Translate from "react-translate-component";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import {Button, Notification} from "bitshares-ui-style-guide";
+import {Button} from "bitshares-ui-style-guide";
 
 class RestoreFavorites extends React.Component {
     constructor(props) {
