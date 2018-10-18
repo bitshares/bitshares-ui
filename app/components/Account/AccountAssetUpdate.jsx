@@ -50,6 +50,13 @@ class AccountAssetUpdate extends React.Component {
         super(props);
 
         this.state = this.resetState(props);
+
+        this.showAssetUpdateConfirmationModal = this.showAssetUpdateConfirmationModal.bind(
+            this
+        );
+        this.hideAssetUpdateConfirmationModal = this.hideAssetUpdateConfirmationModal.bind(
+            this
+        );
     }
 
     _openConfirm() {
@@ -1608,6 +1615,7 @@ class ConfirmModal extends React.Component {
             <Modal
                 visible={this.props.visible}
                 footer={footer}
+                onCancel={this.props.hideModal}
                 title={counterpart.translate(
                     "account.confirm_asset_modal.header"
                 )}
