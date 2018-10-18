@@ -198,6 +198,12 @@ class Exchange extends React.Component {
         let ws = props.viewSettings;
         let {ask, bid} = this._initialOrderState(props);
 
+        let chart_height = ws.get("chartHeight", 620);
+        if (chart_height == 620 && window.innerWidth < 640) {
+            // assume user is on default setting, use smaller for mobile
+            chart_height = 400;
+        }
+
         return {
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
@@ -225,7 +231,7 @@ class Exchange extends React.Component {
             flipBuySell: ws.get("flipBuySell", false),
             orderBookReversed: ws.get("orderBookReversed", false),
             chartType: ws.get("chartType", "price_chart"),
-            chartHeight: ws.get("chartHeight", 620),
+            chartHeight: chart_height,
             chartZoom: ws.get("chartZoom", true),
             chartTools: ws.get("chartTools", true),
             hideFunctionButtons: ws.get("hideFunctionButtons", true),
