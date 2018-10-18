@@ -37,6 +37,7 @@ class AccountPortfolioList extends React.Component {
         super();
 
         this.state = {
+            isBridgeModalVisible: false,
             isSettleModalVisible: false,
             isBorrowModalVisible: false,
             isDepositModalVisible: false,
@@ -73,6 +74,9 @@ class AccountPortfolioList extends React.Component {
 
         this.showBurnModal = this.showBurnModal.bind(this);
         this.hideBurnModal = this.hideBurnModal.bind(this);
+
+        this.showBridgeModal = this.showBridgeModal.bind(this);
+        this.hideBridgeModal = this.hideBridgeModal.bind(this);
     }
 
     componentWillMount() {
@@ -126,6 +130,18 @@ class AccountPortfolioList extends React.Component {
                 );
             }, false)
         );
+    }
+
+    showBridgeModal() {
+        this.setState({
+            isBridgeModalVisible: true
+        });
+    }
+
+    hideBridgeModal() {
+        this.setState({
+            isBridgeModalVisible: false
+        });
     }
 
     showWithdrawModal() {
@@ -302,6 +318,16 @@ class AccountPortfolioList extends React.Component {
                 fiatModal
             },
             () => {
+                if (action === "bridge_modal") {
+                    this.showBridgeModal();
+                    return true;
+                }
+
+                if (action === "deposit_modal") {
+                    this.showDepositModal();
+                    return true;
+                }
+
                 this.showWithdrawModal();
             }
         );
@@ -1082,12 +1108,13 @@ class AccountPortfolioList extends React.Component {
 
                     {/* Bridge modal */}
                     <SimpleDepositBlocktradesBridge
-                        ref="bridge_modal"
+                        visible={this.state.isBridgeModalVisible}
+                        showModal={this.showBridgeModal}
+                        hideModal={this.hideBridgeModal}
                         action="deposit"
                         account={this.props.account.get("name")}
                         sender={this.props.account.get("id")}
                         asset={this.state.bridgeAsset}
-                        modalId="simple_bridge_modal"
                         balances={this.props.balances}
                         bridges={currentBridges}
                         isDown={this.props.gatewayDown.get("TRADE")}

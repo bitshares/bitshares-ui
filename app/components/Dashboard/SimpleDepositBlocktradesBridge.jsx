@@ -26,6 +26,7 @@ import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import QRCode from "qrcode.react";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 // import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
 // import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
@@ -54,7 +55,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     onClose() {
-        ZfApi.publish(this.props.modalId, "close");
+        this.props.hideModal();
     }
 
     componentWillMount() {
@@ -322,7 +323,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             : null;
 
         return (
-            <div className="modal__body">
+            <div className="modal__body" style={{paddingTop: 0}}>
                 <div className="container-row">
                     <label className="left-label">
                         <Translate content="modal.buy.asset" />
@@ -347,7 +348,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                             className="inline-block tooltip"
                             onClick={this.onBlockTradesContact.bind(this)}
                         >
-                            &nbsp;<Icon
+                            &nbsp;
+                            <Icon
                                 style={{position: "relative", top: 0}}
                                 name="question-circle"
                                 title="icons.question_circle"
@@ -378,7 +380,9 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                                 "tooltip.over_limit"
                                             )}
                                         >
-                                            <Translate content="gateway.over_limit" />&nbsp;<Icon
+                                            <Translate content="gateway.over_limit" />
+                                            &nbsp;
+                                            <Icon
                                                 name="question-circle"
                                                 title="icons.question_circle"
                                             />
@@ -465,8 +469,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                 <div className="grid-block">
                                     <label className="left-label">
                                         <Translate content="exchange.price" />
-                                        &nbsp;&nbsp;{this.state
-                                            .receiveLoading ? (
+                                        &nbsp;&nbsp;
+                                        {this.state.receiveLoading ? (
                                             <Translate content="footer.loading" />
                                         ) : (
                                             ""
@@ -548,31 +552,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                             ) : null}
                         </div>
                     )}
-                    <div>
-                        <div className="no-margin no-padding">
-                            <button
-                                className="button primary hollow"
-                                onClick={this.onClose.bind(this)}
-                            >
-                                <Translate content="transfer.close" />
-                            </button>
-                        </div>
-                    </div>
-                </span>
-                <span style={apiError ? {display: ""} : {display: "none"}}>
-                    <div className="container-row double-row">
-                        <Translate
-                            className="txtlabel cancel"
-                            content="gateway.unavailable_TRADE"
-                            component="h3"
-                        />
-                        <button
-                            className="button primary hollow"
-                            onClick={this.onClose.bind(this)}
-                        >
-                            <Translate content="transfer.close" />
-                        </button>
-                    </div>
                 </span>
             </div>
         );
@@ -626,7 +605,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                 <label style={{fontSize: "1rem"}}>
                     {counterpart.translate("gateway.balance_asset", {
                         asset: assetName
-                    })}:
+                    })}
+                    :
                     <span className="inline-label">
                         <input
                             disabled
@@ -654,10 +634,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         return (
             <div className="grid-block vertical no-overflow">
-                <div className="modal__header">
-                    <Translate component="p" content="modal.buy.title" />
-                </div>
-
                 {this.props.isDown ? (
                     <div style={{textAlign: "center"}}>
                         <Translate
@@ -695,6 +671,7 @@ class StoreWrapper extends React.Component {
         }
         return (
             <SimpleDepositBlocktradesBridge
+                hideModal={this.props.hideModal}
                 {...others}
                 preferredBridge={preferredBridge}
                 {...currentBridge.toJS()}
@@ -703,53 +680,40 @@ class StoreWrapper extends React.Component {
     }
 }
 
-StoreWrapper = connect(StoreWrapper, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            preferredBridge: SettingsStore.getState().viewSettings.get(
-                "preferredBridge",
-                "btc"
-            )
-        };
+StoreWrapper = connect(
+    StoreWrapper,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                preferredBridge: SettingsStore.getState().viewSettings.get(
+                    "preferredBridge",
+                    "btc"
+                )
+            };
+        }
     }
-});
+);
 
 export default class SimpleDepositBlocktradesBridgeModal extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            open: false
-        };
-    }
-
-    show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
-    onClose() {
-        this.setState({open: false});
-    }
-
     render() {
         if (!this.props.bridges) return null;
 
-        return !this.state.open ? null : (
-            <BaseModal
-                id={this.props.modalId}
-                onClose={this.onClose.bind(this)}
-                noCloseBtn
-                overlay={true}
+        return (
+            <Modal
+                title={counterpart.translate("modal.buy.title")}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                footer={[
+                    <Button key="cancel" onClick={this.props.hideModal}>
+                        {counterpart.translate("modal.close")}
+                    </Button>
+                ]}
             >
-                {this.state.open ? (
-                    <StoreWrapper {...this.props} open={this.state.open} />
-                ) : null}
-            </BaseModal>
+                <StoreWrapper {...this.props} open={this.props.visible} />
+            </Modal>
         );
     }
 }
