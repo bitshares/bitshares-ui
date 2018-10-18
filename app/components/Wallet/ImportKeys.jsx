@@ -20,6 +20,8 @@ import {Notification} from "bitshares-ui-style-guide";
 
 import GenesisFilter from "chain/GenesisFilter";
 
+import {Button, Input} from "bitshares-ui-style-guide";
+
 require("./ImportKeys.scss");
 
 let import_keys_assert_checking = false;
@@ -659,12 +661,9 @@ class ImportKeys extends Component {
                 <BalanceClaimActive />
 
                 <div style={{paddingTop: 15}}>
-                    <div
-                        className="button success"
-                        onClick={this.onCancel.bind(this)}
-                    >
+                    <Button type="primary" onClick={this.onCancel.bind(this)}>
                         <Translate content="wallet.done" />
-                    </div>
+                    </Button>
                 </div>
             </div>
         );
@@ -741,9 +740,9 @@ class ImportKeys extends Component {
         }
 
         let cancelButton = (
-            <div className="button success" onClick={this.onCancel.bind(this)}>
+            <Button onClick={this.onCancel.bind(this)}>
                 <Translate content="wallet.cancel" />
-            </div>
+            </Button>
         );
 
         let tabIndex = 1;
@@ -811,19 +810,21 @@ class ImportKeys extends Component {
                                             component="label"
                                             content="wallet.paste_private"
                                         />
-                                        <input
+                                        <Input
                                             ref="wifInput"
                                             type="password"
                                             id="wif"
                                             tabIndex={tabIndex++}
+                                            style={{marginBottom: "16px"}}
                                         />
 
-                                        <button
-                                            className="button"
-                                            type="submit"
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            style={{marginRight: "16px"}}
                                         >
                                             <Translate content="wallet.submit" />
-                                        </button>
+                                        </Button>
                                         {cancelButton}
                                     </form>
                                 ) : (
@@ -864,7 +865,7 @@ class ImportKeys extends Component {
                                         </div>
                                         {!this.state.no_file ? (
                                             <div>
-                                                <input
+                                                <Input
                                                     type="password"
                                                     ref="password"
                                                     key={
@@ -897,15 +898,14 @@ class ImportKeys extends Component {
                                             </div>
                                         ) : null}
                                         <div className="button-group">
-                                            <button
-                                                className={cname("button", {
-                                                    disabled: !!this.state
-                                                        .no_file
-                                                })}
-                                                type="submit"
+                                            <Button
+                                                type="primary"
+                                                disabled={!!this.state.no_file}
+                                                htmlType="submit"
+                                                style={{marginRight: "16px"}}
                                             >
                                                 <Translate content="wallet.submit" />
-                                            </button>
+                                            </Button>
                                             {cancelButton}
                                         </div>
                                     </form>
