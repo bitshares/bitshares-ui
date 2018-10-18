@@ -6,6 +6,9 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import SettingsActions from "actions/SettingsActions";
 import RestoreFavorites from "./RestoreFavorites";
+import {Button, Select} from "bitshares-ui-style-guide";
+
+const Option = Select.Option;
 
 export default class RestoreSettings extends React.Component {
     constructor() {
@@ -23,9 +26,9 @@ export default class RestoreSettings extends React.Component {
         });
     }
 
-    _changeType(e) {
+    _changeType(value) {
         this.setState({
-            restoreType: this.state.types.indexOf(e.target.value)
+            restoreType: this.state.types.indexOf(value)
         });
     }
 
@@ -43,18 +46,22 @@ export default class RestoreSettings extends React.Component {
                         <Translate content="settings.wallet_required_text" />:
                     </p>
 
-                    <button className="button" onClick={this._setWalletMode}>
+                    <Button
+                        type="primary"
+                        className="button"
+                        onClick={this._setWalletMode}
+                    >
                         <Translate content="settings.enable_wallet" />
-                    </button>
+                    </Button>
                 </div>
             );
         }
         let {types, restoreType} = this.state;
         let options = types.map(type => {
             return (
-                <option key={type} value={type}>
+                <Option key={type} value={type}>
                     {counterpart.translate(`settings.backup_${type}`)}{" "}
-                </option>
+                </Option>
             );
         });
 
@@ -95,13 +102,13 @@ export default class RestoreSettings extends React.Component {
 
         return (
             <div>
-                <select
+                <Select
                     onChange={this._changeType.bind(this)}
                     className="bts-select"
                     value={types[restoreType]}
                 >
                     {options}
-                </select>
+                </Select>
 
                 {content}
             </div>
