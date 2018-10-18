@@ -39,6 +39,7 @@ class AccountPortfolioList extends React.Component {
         this.state = {
             isSettleModalVisible: false,
             isBorrowModalVisible: false,
+            isDepositModalVisible: false,
             borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
@@ -58,6 +59,9 @@ class AccountPortfolioList extends React.Component {
 
         this.showSettleModal = this.showSettleModal.bind(this);
         this.hideSettleModal = this.hideSettleModal.bind(this);
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
 
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
@@ -125,6 +129,18 @@ class AccountPortfolioList extends React.Component {
     hideSettleModal() {
         this.setState({
             isSettleModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
@@ -238,7 +254,7 @@ class AccountPortfolioList extends React.Component {
     _showDepositModal(asset, e) {
         e.preventDefault();
         this.setState({depositAsset: asset}, () => {
-            this.refs.deposit_modal_new.show();
+            this.showDepositModal();
         });
     }
 
@@ -943,7 +959,6 @@ class AccountPortfolioList extends React.Component {
             !this.state.borrow.backingAsset ||
             !this.state.borrow.account
         ) {
-            console.log("prevent render", this.state);
             return null;
         }
 
@@ -1025,8 +1040,9 @@ class AccountPortfolioList extends React.Component {
 
                     {/* Deposit Modal */}
                     <DepositModal
-                        ref="deposit_modal_new"
-                        modalId="deposit_modal_new"
+                        visible={this.state.isDepositModalVisible}
+                        showModal={this.showDepositModal}
+                        hideModal={this.hideDepositModal}
                         asset={this.state.depositAsset}
                         account={this.props.account.get("name")}
                         backedCoins={this.props.backedCoins}
