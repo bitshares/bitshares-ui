@@ -878,10 +878,12 @@ class Operation extends React.Component {
                                         arg: "account"
                                     },
                                     {
-                                        value: (
+                                        value: this.props.result ? (
                                             <ShortObjectId
                                                 objectId={this.props.result[1]}
                                             />
+                                        ) : (
+                                            ""
                                         ),
                                         arg: "proposal"
                                     }

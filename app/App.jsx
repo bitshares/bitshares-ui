@@ -115,6 +115,9 @@ const CreateWorker = Loadable({
 });
 
 import LoginSelector from "./components/LoginSelector";
+import RegistrationSelector from "./components/Registration/RegistrationSelector";
+import WalletRegistration from "./components/Registration/WalletRegistration";
+import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 
 class App extends React.Component {
@@ -365,6 +368,21 @@ class App extends React.Component {
                                 <Route
                                     path="/create-account"
                                     component={LoginSelector}
+                                />
+                                <Route
+                                    path="/registration"
+                                    exact
+                                    component={RegistrationSelector}
+                                />
+                                <Route
+                                    path="/registration/local"
+                                    exact
+                                    component={WalletRegistration}
+                                />
+                                <Route
+                                    path="/registration/cloud"
+                                    exact
+                                    component={AccountRegistration}
                                 />
                                 <Route path="/news" exact component={News} />
 

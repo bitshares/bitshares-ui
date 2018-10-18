@@ -1,0 +1,8 @@
+
+<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1">
+    <defs></defs>
+    <g id="UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#FF9900" cx="12.5" cy="12.5" r="12.5"></circle>
+        <path d="M11.824,14.896 L11.712,6.704 L13.312,6.704 L13.216,14.896 L11.824,14.896 Z M11.728,18 L11.728,16.448 L13.312,16.448 L13.312,18 L11.728,18 Z" id="!" fill="#30374D"></path>
+    </g>
+</svg>

@@ -457,6 +457,7 @@
         "call": "Цена досрочного погашения",
         "change": "Изменение",
         "chart_height": "Высота графика (в пикселях)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Параметры графика",
         "chart_type": "Тип графика",
         "confirm_buy": "Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
@@ -517,6 +518,7 @@
         "others": "Другие",
         "overbought": "Перекуплен",
         "oversold": "Перепродан",
+        "panels_mirror": "Mirror Panels",
         "period": "Временной период (дни)",
         "price": "Цена",
         "price_history": "График цен",
@@ -531,7 +533,12 @@
         "search": "Искать здесь другие рынки",
         "sell": "Продать",
         "sell_description": "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
-        "settings": "Параметры графика",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "Погашение",
         "settle_orders": "Ордера на погашение",
         "short": "Сократить",
@@ -882,8 +889,7 @@
         "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"OpenLedger TRANSFER SERVICE\", пожалуйста, обращайтесь в Openledger:",
         "support_gdex": "Для получения поддержки, пожалуйста, свяжитесь с GDEX",
         "bitspark": {
-            "support_block":
-                "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
+            "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
         },
         "symbol": "Символ",
         "time": "Время",
@@ -1026,12 +1032,14 @@
             "wrong_address": "Не удается создать адрес"
         },
         "news": "Новости",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Добавить контакт в список",
             "show_asset": "Показать актив",
             "show_market": "Показать рынок"
         },
         "power": "Войти",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Помощь",
         "server": "Исследовать",
         "settle": "Запросить расчет",
@@ -1041,7 +1049,7 @@
             "membership_stats": "Статистика членства",
             "signed_messages": "Подписанные сообщения"
         },
-        "thumb_tack": "Прикрепить панель к левой стороне",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Открепить панель",
         "thumbs_up": "Голосование",
         "times": "Удалить узел API",

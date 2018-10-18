@@ -54,7 +54,12 @@
     $explorer--witnesses--info-border,
     $explorer--witnesses--info-table-title-color,
     $explorer--witnesses--info-table-text-color,
-    $explorer--assets--bg
+    $explorer--assets--bg,
+    $negative-color-alternative,
+    $positive-color-alternative,
+    $separator-line,
+    $medium-color,
+    $dark-help-text
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
@@ -106,6 +111,9 @@
         border-bottom: 0 !important;
         max-width: 100% !important;
     }
+    .modal-separator {
+        border-color: $secondary-text-color;
+    }
     .positive {
         color: $positive-color !important;
     }
@@ -118,7 +126,7 @@
     .fz_12 {
         font-size: 12px;
     }
-    #unlock_wallet_modal2 {
+    .unlock_wallet_modal2 {
         .upload-button {
             border-color: $border-color;
             span {
@@ -370,6 +378,18 @@
     }
     .page-layout {
         background-color: lighten($account-header, 4%);
+
+        .column-header {
+            > ul {
+                border-bottom: 1px solid $panel-bg-color;
+
+                > li.active,
+                li:hover {
+                    border-bottom: 3px solid lightblue;
+                }
+            }
+        }
+
         .left-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
@@ -389,7 +409,7 @@
         .right-column {
             border-top-color: $bg-color;
             border-bottom-color: $bg-color;
-            background-color: darken($bg-color, 4%);
+            background-color: $panel-bg-color;
         }
     }
     .asset-prefix {
@@ -574,6 +594,12 @@
             color: $link-text-color;
         }
     }
+    .header-container .anticon {
+        color: $primary-text-color !important;
+        background-color: $primary-text-color !important;
+        fill: $primary-text-color !important;
+    }
+
     .grp-menu-item button {
         &:hover,
         &:focus,
@@ -798,13 +824,15 @@
     input[type="search"]#{$ant-fix},
     textarea#{$ant-fix},
     input[role="combobox"]#{$ant-fix},
-    select[role="combobox"]#{$ant-fix} {
+    select[role="combobox"]#{$ant-fix},
+    .buy-sell-container .ant-input {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
         &:hover,
         &:focus,
-        &:active {
+        &:active,
+        &:disabled {
             background-color: $input-background;
         }
         &:focus {
@@ -1288,9 +1316,13 @@
             color: $secondary-text-color;
         }
     }
+
+    div.exchange-content-header {
+        background-color: transparent !important;
+    }
+
     .exchange-content-header {
         color: $light-text-color;
-        background-color: $header-color !important;
         border-bottom: 1px solid $button-bg-color;
         &.bid {
             border-bottom: 1px solid $bid-color;
@@ -1369,8 +1401,6 @@
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
             padding: 10px 0 !important;
-            @include RobotoMedium;
-            font-size: 13px;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1380,6 +1410,9 @@
     }
     .left-order-book {
         background-color: $bg-color;
+        .orderbook-center-title {
+            color: $inactive-text-color;
+        }
         .spread .spread-value {
             color: $primary-text-color;
         }
@@ -1439,9 +1472,6 @@
                 color: $negative-color !important;
             }
         }
-        &.clickable:hover {
-            background-color: lighten($panel-bg-color, 4%);
-        }
     }
     .stat-text {
         margin-top: 3px;
@@ -1489,9 +1519,6 @@
         cursor: pointer;
     }
 
-    div.exchange-content-header {
-        background-color: $header-color !important;
-    }
     .table > tbody > tr:nth-of-type(even) {
         background-color: lighten($bg-color, 4%);
     }
@@ -1975,7 +2002,7 @@
         display: none;
     }
 
-    @include breakpoint(large) {
+    @include breakpoint(medium) {
         .order-book-button-v {
             display: inline-block;
             margin-left: 5px;
@@ -2055,44 +2082,46 @@
         }
     }
     .expiration-datetime-picker {
-        width: 225px;
         > div {
-            float: right;
+            float: left;
         }
         input {
-            width: 160px;
             padding: 0;
             margin: 0 5px 0 0;
             background: transparent;
             border-radius: 0 !important;
             border-bottom: 1px dotted rgb(160, 159, 159);
             display: inline-block;
-            text-align: right;
-            font-size: 0.9rem;
-            height: 28px;
+            text-align: left;
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
             &:hover {
                 background: transparent;
             }
         }
         select {
-            float: right;
             width: auto;
             padding: 0;
             background: transparent;
             border: 0;
             color: $primary-text-color;
             border-bottom: 1px dotted rgb(160, 159, 159);
-            font-size: 0.9rem;
-            height: 28px;
             margin: 0 0 1px;
+
+            font-size: 90%;
+            line-height: 1.75rem;
+            height: 1.75rem;
+
             > option {
                 background-color: $light-panel-bg-color;
             }
         }
+        .expiration-datetime-picker--select--specific {
+            float: right;
+        }
     }
     .marketPicker {
-        background: $bg-color;
-        box-shadow: 2px 2px 5px darken($bg-color, 30%);
         .results {
             background: $input-background;
             border: 1px solid $bg-color;
@@ -2125,7 +2154,7 @@
         }
         &-status {
             font-size: 0.95rem;
-            margin: 24px;
+            margin: 12px 24px 0 24px;
             &-title {
                 margin-bottom: 12px;
                 margin-top: 12px;
@@ -2177,6 +2206,148 @@
         .login-selector--language-select--wrapper {
             margin-left: 0; // center language select for width icon takes
         }
+    }
+
+    .registration-layout {
+        .attention-note {
+            background-color: rgba($medium-color, 0.06);
+        }
+
+        .attention-text {
+            color: $medium-color;
+        }
+
+        .button-primary {
+            background-color: $button-bg-color;
+            color: $light-text-color;
+            &:hover {
+                background-color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                background-color: lighten($button-bg-color, 15%) !important;
+            }
+        }
+
+        .button-secondary {
+            background-color: initial;
+            color: $button-bg-color;
+            border-color: $button-bg-color;
+            &:hover {
+                border-color: lighten($button-bg-color, 10%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+            &:active {
+                border-color: lighten($button-bg-color, 15%) !important;
+                color: lighten($button-bg-color, 10%) !important;
+            }
+        }
+
+        .registration-title {
+            color: $light-text-color;
+        }
+
+        .selection-block {
+            .selection-title,
+            .choice-model,
+            .model-option {
+                color: $light-text-color;
+            }
+
+            .recommended {
+                background-color: $positive-color-alternative;
+                color: $dark-help-text;
+            }
+
+            .model-option-value {
+                color: $positive-color-alternative;
+            }
+
+            .account-option-value {
+                color: $negative-color-alternative;
+            }
+
+            .account-security {
+                color: $medium-color;
+            }
+
+            .option-border {
+                border-bottom-color: $separator-line;
+            }
+
+            div.inactive-left-block,
+            div.inactive-right-block {
+                background-color: darken($modal-bg-color, 10);
+            }
+        }
+
+        .plate.inactive-model-block {
+            background-color: transparentize($modal-bg-color, 0.6);
+        }
+
+        .plate {
+            background-color: $modal-bg-color;
+        }
+
+        span.checkbox {
+            border-color: $button-bg-color;
+            background-color: transparentize($button-bg-color, 0.9);
+        }
+
+        span.checkbox-active {
+            border-color: $button-bg-color;
+            background-color: $button-bg-color;
+
+            svg path {
+                fill: $bg-color;
+            }
+        }
+
+        @include breakpoint(small only) {
+            .plate {
+                background-color: darken($modal-bg-color, 10);
+
+                .header-block,
+                .wallet-block,
+                .account-block,
+                .wallet-block-registration,
+                .account-block-registration {
+                    background-color: $modal-bg-color;
+
+                    .overflow-bg-block {
+                        .content {
+                            background-color: $modal-bg-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
+    }
+
+    i.anticon.icon-fill {
+        &:hover {
+            color: $bs-blue;
+            cursor: pointer;
+        }
+    }
+
+    .icon-fill {
+        svg > path {
+            fill: $light-text-color;
+            &:hover {
+                fill: $bs-blue;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .modal--transaction-confirm {
+        zindex: 10000; // make transaction confirm modal above another modals
     }
 }
 .rc-time-picker-panel {
