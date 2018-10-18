@@ -41,6 +41,7 @@ class AccountPortfolioList extends React.Component {
             isBorrowModalVisible: false,
             isDepositModalVisible: false,
             isWithdrawModalVisible: false,
+            isBurnModalVisible: false,
             borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
@@ -69,6 +70,9 @@ class AccountPortfolioList extends React.Component {
 
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
+
+        this.showBurnModal = this.showBurnModal.bind(this);
+        this.hideBurnModal = this.hideBurnModal.bind(this);
     }
 
     componentWillMount() {
@@ -133,6 +137,18 @@ class AccountPortfolioList extends React.Component {
     hideWithdrawModal() {
         this.setState({
             isWithdrawModalVisible: false
+        });
+    }
+
+    showBurnModal() {
+        this.setState({
+            isBurnModalVisible: true
+        });
+    }
+
+    hideBurnModal() {
+        this.setState({
+            isBurnModalVisible: false
         });
     }
 
@@ -264,7 +280,7 @@ class AccountPortfolioList extends React.Component {
     _burnAsset(asset, e) {
         e.preventDefault();
         this.setState({reserve: asset});
-        ZfApi.publish("reserve_asset", "open");
+        this.showBurnModal();
     }
 
     _showDepositModal(asset, e) {
@@ -1077,19 +1093,16 @@ class AccountPortfolioList extends React.Component {
                         isDown={this.props.gatewayDown.get("TRADE")}
                     />
 
-                    {/* Burn modal */}
-                    <BaseModal id="reserve_asset" overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <ReserveAssetModal
-                                asset={this.state.reserve}
-                                account={this.props.account}
-                                onClose={() => {
-                                    ZfApi.publish("reserve_asset", "close");
-                                }}
-                            />
-                        </div>
-                    </BaseModal>
+                    {/* Burn Modal */}
+                    <ReserveAssetModal
+                        visible={this.state.isBurnModalVisible}
+                        hideModal={this.hideBurnModal}
+                        asset={this.state.reserve}
+                        account={this.props.account}
+                        onClose={() => {
+                            ZfApi.publish("reserve_asset", "close");
+                        }}
+                    />
                 </PaginatedList>
             </div>
         );
