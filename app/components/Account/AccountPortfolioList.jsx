@@ -1075,19 +1075,6 @@ class AccountPortfolioList extends React.Component {
                     {this._renderSendModal()}
                     {this._renderSettleModal()}
                     {this._renderBorrowModal()}
-                    {/* Withdraw Modal*/}
-                    <SimpleDepositWithdraw
-                        ref="withdraw_modal"
-                        action="withdraw"
-                        fiatModal={this.state.fiatModal}
-                        account={this.props.account.get("name")}
-                        sender={this.props.account.get("id")}
-                        asset={this.state.withdrawAsset}
-                        modalId="simple_withdraw_modal"
-                        balances={this.props.balances}
-                        {...currentWithdrawAsset}
-                        isDown={this.props.gatewayDown.get("OPEN")}
-                    />
 
                     <WithdrawModal
                         hideModal={this.hideWithdrawModal}
