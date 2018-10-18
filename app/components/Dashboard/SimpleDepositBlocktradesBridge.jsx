@@ -1,6 +1,4 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "../Modal/BaseModal";
 import Translate from "react-translate-component";
 import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
