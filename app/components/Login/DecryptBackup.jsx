@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {connect} from "alt-react";
 import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs/es";
-import counterpart from "counterpart";
 import WalletManagerStore from "stores/WalletManagerStore";
 import BackupStore from "stores/BackupStore";
 import AccountStore from "stores/AccountStore";
@@ -18,7 +17,7 @@ import Icon from "../Icon/Icon";
 class DecryptBackup extends Component {
     static propTypes = {
         active: PropTypes.bool,
-        accounts: PropTypes.array,
+        currentAccount: PropTypes.string,
         backup: PropTypes.object,
         wallet: PropTypes.object,
         history: PropTypes.object.isRequired
@@ -26,7 +25,7 @@ class DecryptBackup extends Component {
 
     static defaultProps = {
         active: false,
-        accounts: [],
+        currentAccount: "",
         backup: {},
         wallet: {}
     };
@@ -42,8 +41,8 @@ class DecryptBackup extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.accounts.length && this.props.active) {
-            this.props.history.push(`/account/${this.props.accounts[0]}`);
+        if (this.props.active) {
+            this.refs.passwordInput.focus();
         }
     }
 
@@ -55,6 +54,8 @@ class DecryptBackup extends Component {
             setting: "passwordLogin",
             value: false
         });
+        BackupActions.reset();
+        this.props.history.push("/");
     }
 
     onPassword(e) {
@@ -65,8 +66,7 @@ class DecryptBackup extends Component {
         restore(privateKey.toWif(), contents, walletName)
             .then(() => {
                 return WalletActions.setWallet(walletName).then(() => {
-                    BackupActions.reset();
-                    this.onRestore();
+                    this.onRestore(walletName);
                 });
             })
             .catch(error => {
@@ -137,9 +137,8 @@ class DecryptBackup extends Component {
                         id="backupPassword"
                         onChange={this.formChange}
                         value={this.state.backupPassword}
-                        placeholder={counterpart.translate(
-                            "registration.passwordPlaceholder"
-                        )}
+                        ref="passwordInput"
+                        autoFocus={true}
                     />
                     {!this.state.passwordVisible ? (
                         <span
@@ -181,7 +180,9 @@ const connectObject = {
         return {
             wallet: WalletManagerStore.getState(),
             backup: BackupStore.getState(),
-            accounts: AccountStore.getMyAccounts()
+            currentAccount:
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount
         };
     }
 };

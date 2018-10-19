@@ -55,6 +55,16 @@ class AccountLogin extends React.Component {
         }
     }
 
+    componentDidUpdate(previousProps) {
+        if (
+            !previousProps.active &&
+            this.props.active &&
+            this.state.accountName
+        ) {
+            this.refs.password.focus();
+        }
+    }
+
     componentWillReceiveProps(np) {
         if (np.passwordAccount && !this.state.accountName) {
             this.setState({
@@ -95,7 +105,7 @@ class AccountLogin extends React.Component {
             }
             this.refs.password.value = "";
             AccountActions.setPasswordAccount(account);
-            this.props.history.push(`/account/${account}`);
+            this.props.history.push("/");
             WalletUnlockActions.change();
         }, 550);
 
@@ -169,13 +179,10 @@ class AccountLogin extends React.Component {
 
     renderNameInput() {
         const {accountName} = this.state;
+        const {active} = this.props;
 
         return (
-            <div
-                className={`${
-                    !this.props.active ? "display-none" : ""
-                } content-block`}
-            >
+            <div className={`${!active ? "display-none" : ""} content-block`}>
                 <AccountSelector
                     label="account.name"
                     ref="accountName"
@@ -186,6 +193,7 @@ class AccountLogin extends React.Component {
                     size={60}
                     placeholder=" "
                     hideImage
+                    focus={active && !this.state.accountName}
                 />
             </div>
         );
@@ -202,9 +210,6 @@ class AccountLogin extends React.Component {
                     className={`${
                         passwordError ? "input-warning" : ""
                     } input create-account-input`}
-                    placeholder={counterpart.translate(
-                        "registration.passwordPlaceholder"
-                    )}
                 />
 
                 {!passwordVisible ? (
