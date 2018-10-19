@@ -4,9 +4,7 @@ import Translate from "react-translate-component";
 import AssetName from "../../Utility/AssetName";
 import LinkToAccountById from "../../Utility/LinkToAccountById";
 import AccountBalance from "../../Account/AccountBalance";
-import BaseModal from "../../Modal/BaseModal";
 import ChainTypes from "../../Utility/ChainTypes";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import GdexCache from "../../../lib/common/GdexCache";
 import {requestDepositAddress} from "../../../lib/common/gdexMethods";
 import QRCode from "qrcode.react";
@@ -34,6 +32,7 @@ class GdexGatewayInfo extends React.Component {
         super();
         this.state = {
             isQrModalVisible: false,
+            isModalVisible: false,
             receive_address: null,
             isAvailable: true,
             qrcode: ""
@@ -44,6 +43,21 @@ class GdexGatewayInfo extends React.Component {
 
         this.showQrModal = this.showQrModal.bind(this);
         this.hideQrModal = this.hideQrModal.bind(this);
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     showQrModal() {
@@ -148,7 +162,7 @@ class GdexGatewayInfo extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+        this.showModal();
     }
 
     onShowQrcode(text) {
@@ -553,27 +567,33 @@ class GdexGatewayInfo extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <BaseModal id={withdraw_modal_id} overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <GdexWithdrawModal
-                                account={this.props.account.get("name")}
-                                issuer={this.props.issuer_account.get("name")}
-                                asset={coin.innerSymbol}
-                                output_coin_name={coin.outerAssetName}
-                                gateFee={coin.gateFee}
-                                output_coin_id={coin.outerAssetId}
-                                output_coin_symbol={coin.outerSymbol}
-                                output_supports_memos={coin.needMemo == 1}
-                                minWithdrawAmount={coin.minTransactionAmount}
-                                output_coin_precision={coin.relationPrecision}
-                                memo_prefix={withdraw_memo_prefix}
-                                memo_rule={this.props.memo_rule}
-                                modal_id={withdraw_modal_id}
-                                balance={balance}
-                            />
-                        </div>
-                    </BaseModal>
+                    <Modal
+                        onCancel={this.hideModal}
+                        title={counterpart.translate("gateway.withdraw_coin", {
+                            coin: coin.outerAssetName,
+                            symbol: coin.outerSymbol
+                        })}
+                        footer={null}
+                        visible={this.state.isModalVisible}
+                    >
+                        <GdexWithdrawModal
+                            hideModal={this.hideModal}
+                            account={this.props.account.get("name")}
+                            issuer={this.props.issuer_account.get("name")}
+                            asset={coin.innerSymbol}
+                            output_coin_name={coin.outerAssetName}
+                            gateFee={coin.gateFee}
+                            output_coin_id={coin.outerAssetId}
+                            output_coin_symbol={coin.outerSymbol}
+                            output_supports_memos={coin.needMemo == 1}
+                            minWithdrawAmount={coin.minTransactionAmount}
+                            output_coin_precision={coin.relationPrecision}
+                            memo_prefix={withdraw_memo_prefix}
+                            memo_rule={this.props.memo_rule}
+                            modal_id={withdraw_modal_id}
+                            balance={balance}
+                        />
+                    </Modal>
                 </div>
             );
         }
