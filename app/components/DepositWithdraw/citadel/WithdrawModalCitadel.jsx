@@ -669,7 +669,8 @@ class WithdrawModalCitadel extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />&nbsp;:&nbsp;
+                        />
+                        &nbsp;:&nbsp;
                         <span
                             className="set-cursor"
                             onClick={this.onAccountBalance.bind(this)}

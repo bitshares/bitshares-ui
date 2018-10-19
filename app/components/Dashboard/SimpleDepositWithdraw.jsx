@@ -22,7 +22,7 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
 
@@ -31,6 +31,7 @@ import {getWalletName} from "branding";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
+        balance: ChainTypes.ChainObject,
         sender: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
@@ -289,7 +290,11 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getCurrentBalance() {
-        return this.props.balances.find(b => {
+        let balances = this.props.balance
+            ? [this.props.balance]
+            : this.props.balances;
+
+        return balances.find(b => {
             return b && b.get("asset_type") === this.props.asset.get("id");
         });
     }
@@ -681,7 +686,8 @@ class DepositWithdrawContent extends DecimalChecker {
                             className="help-tooltip"
                             content="gateway.deposit_to"
                             asset={assetName}
-                        />:
+                        />
+                        :
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
                         </label>
@@ -797,7 +803,8 @@ class DepositWithdrawContent extends DecimalChecker {
                 <label style={{fontSize: "1rem"}}>
                     {counterpart.translate("gateway.balance_asset", {
                         asset: assetName
-                    })}:
+                    })}
+                    :
                     <span className="inline-label">
                         <input
                             disabled
@@ -901,9 +908,10 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     render() {
         return !this.state.open ? null : (
             <BaseModal
-                id={this.props.modalId}
+                className="test"
                 onClose={this.onClose.bind(this)}
                 overlay={true}
+                id={this.props.modalId}
             >
                 {this.state.open ? (
                     <DepositWithdrawContent

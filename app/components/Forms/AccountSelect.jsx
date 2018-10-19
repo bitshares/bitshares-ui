@@ -22,6 +22,15 @@ export default class AccountSelect extends React.Component {
         );
     }
 
+    componentDidMount() {
+        // setTimeout(() => {
+        //     var account_names = this.props.account_names;
+        //     if (account_names.length === 1 && !!account_names[0] && account_names[0] !== "" && account_names[0] !== this.state.selected) {
+        //         this._selectAccount(account_names[0]);
+        //     }
+        // }, 100);
+    }
+
     shouldComponentUpdate(nextProps) {
         return (
             nextProps.selected !== this.props.selected ||
@@ -43,7 +52,6 @@ export default class AccountSelect extends React.Component {
         var account_names = this.props.account_names;
         var selected_account = this.props.selected;
         var placeholder = this.props.placeholder || this.default_placeholder;
-        var ikey;
         if (this.props.list_size > 1) {
             placeholder = (
                 <option value="" disabled>
@@ -82,21 +90,23 @@ export default class AccountSelect extends React.Component {
                 })}
             </select>
         );
-        //Cannot read property 'getAttribute' of null
-        //<Identicon account={current_account} size={
-        //            {height: 150, width: 150}
-        //        }/>
     }
 
     _onAccountChange(e) {
         //DEBUG console.log('... _onAccountChange',e.target.value)
         e.preventDefault();
         let value = e.target.value;
+        this._selectAccount(value);
+    }
+
+    _selectAccount(value) {
         var placeholder = this.props.placeholder || this.default_placeholder;
         if (value === placeholder) {
             value = null;
         }
-        this.state.selected = value;
+        this.setState({
+            selected: value
+        });
         if (this.props.onChange) {
             this.props.onChange(value);
         }

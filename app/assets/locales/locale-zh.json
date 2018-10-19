@@ -457,6 +457,7 @@
         "call": "平仓触发价",
         "change": "涨跌幅",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "你的委单价格超出最低卖出价 %(diff)s 倍，确定下单吗？",
@@ -517,6 +518,7 @@
         "others": "其他",
         "overbought": "超买",
         "oversold": "超卖",
+        "panels_mirror": "Mirror Panels",
         "period": "周期 (天)",
         "price": "单价",
         "price_history": "价格历史",
@@ -531,7 +533,12 @@
         "search": "搜索更多交易对",
         "sell": "卖出",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "图表选项",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "喂价",
         "settle_orders": "清算单",
         "short": "做空",
@@ -1021,12 +1028,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1036,7 +1045,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",

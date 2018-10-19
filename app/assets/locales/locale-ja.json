@@ -457,6 +457,7 @@
         "call": "コール価格",
         "change": "変化",
         "chart_height": "Chart height (pixels)",
+        "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
         "confirm_buy": "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",
@@ -517,6 +518,7 @@
         "others": "その他",
         "overbought": "買われすぎ",
         "oversold": "売られすぎ",
+        "panels_mirror": "Mirror Panels",
         "period": "期間 (日)",
         "price": "価格",
         "price_history": "価格チャート",
@@ -531,7 +533,12 @@
         "search": "他のマーケットを検索する",
         "sell": "売る",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settings": "チャートオプション",
+        "settings": {
+            "header": "Personalize",
+            "grouping_standalone": "Standalone",
+            "grouping_1": "Group 1",
+            "grouping_2": "Group 2"
+        },
         "settle": "決済",
         "settle_orders": "決済注文",
         "short": "ショート",
@@ -1021,12 +1028,14 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
+        "orderbook_reverse": "Order Book Reversed",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
+        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
         "server": "Explore",
         "settle": "Settle",
@@ -1036,7 +1045,7 @@
             "membership_stats": "Membership stats",
             "signed_messages": "Signed messages"
         },
-        "thumb_tack": "Pin panel to the left side",
+        "thumb_tack": "Pin panel to the side",
         "thumb_untack": "Unpin panel",
         "thumbs_up": "Voting",
         "times": "Remove API Node",
