@@ -148,6 +148,7 @@
             "private": "私钥(WIF - 钱包导入格式)",
             "public": "公钥",
             "publish": "保存修改",
+            "remove_proxy": "Remove proxy",
             "remove_text": "移除",
             "reset": "重置修改",
             "save": "Save Changes",
@@ -240,6 +241,7 @@
             "disable_force_settle": "禁止强制清算",
             "error_invalid": "该资产不能使用",
             "error_precision": "该资产的精度与 %(asset)s 不同",
+            "error_too_deep": "May not create a bitasset backed by a bitasset backed by a bitasset",
             "exists": "资产代码已存在",
             "expiry": "市场裁决日期",
             "feed_lifetime_sec": "喂价有效时间（分钟）",
@@ -251,7 +253,9 @@
             "force_settlement_offset_percent": "强制清算价格偏离百分比",
             "global_settle": "允许发行人进行全局强制清算",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Preferred market pairing can not be the same market",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "我发行的资产",
             "market": "优先市场交易对",
             "market_fee": "交易手续费率",
@@ -374,6 +378,9 @@
             "whitelist_authorities": "资产白名单"
         }
     },
+    "alert": {
+        "warning": "Warning"
+    },
     "app_init": {
         "browser": "不支持的浏览器",
         "browser_text": "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
@@ -387,6 +394,10 @@
         "title": "应用初始化错误",
         "understand": "我理解",
         "ws_status": "API 节点连接状态"
+    },
+    "boolean": {
+        "false": "False",
+        "true": "True"
     },
     "borrow": {
         "adjust": "调整债仓",
@@ -453,6 +464,7 @@
         "buy": "买入",
         "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "至少买",
+        "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "平仓触发价",
         "change": "涨跌幅",
@@ -460,6 +472,7 @@
         "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "你的委单价格超出最低卖出价 %(diff)s 倍，确定下单吗？",
         "confirm_no_orders_buy": "你在一个没有委托卖单的市场下了一个买单，确定下单吗？",
         "confirm_no_orders_sell": "你在一个没有委托买单的市场下了一个卖单，确定下单吗？",
@@ -514,7 +527,9 @@
         "no_bids": "No bids",
         "no_data": "暂无数据",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "市场深度",
+        "order_grouping": "Order Grouping %(orderlimit)s%",
         "others": "其他",
         "overbought": "超买",
         "oversold": "超卖",
@@ -524,6 +539,7 @@
         "price_history": "价格历史",
         "price_market": "Market Price",
         "quantity": "数量",
+        "quick_deposit": "Quick Deposit",
         "quote": "报价货币：",
         "quote_selection": "Modify quote selection",
         "quote_supply": "标价资产供应量",
@@ -535,13 +551,71 @@
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "settings": {
             "header": "Personalize",
-            "grouping_standalone": "Standalone",
-            "grouping_1": "Group 1",
-            "grouping_2": "Group 2"
+            "options": {
+                "grouping_1": "Group 1",
+                "grouping_2": "Group 2",
+                "grouping_standalone": "Standalone",
+                "hidden_chart": "Hide chart",
+                "horizontal": "Horizontal",
+                "position_order_asset_opt1": "Orders above Asset",
+                "position_order_asset_opt2": "Asset above Order",
+                "position_order_form_opt1": "Buy - Sell",
+                "position_order_form_opt2": "Sell - Buy",
+                "position_order_orders_opt1": "Buy - Sell",
+                "position_order_orders_opt2": "Sell - Buy",
+                "vertical": "Vertical"
+            },
+            "title": {
+                "chart_height": "Height",
+                "chart_tools": "View Tools",
+                "chart_type": "Type",
+                "chart_zoom": "Allow Zoom",
+                "hide_function_buttons": "Hide function buttons",
+                "market_location": "Market location",
+                "market_trades": "Market Trades",
+                "my_trades": "My Trades",
+                "open_orders": "Open Orders",
+                "order_book_grouping": "Order Book Grouping",
+                "order_style": "Style",
+                "orderbook_auto_scroll": "Auto scroll",
+                "position_order_asset": "Vertical Orders / Asset",
+                "position_order_form": "Buy/Sell Asset",
+                "position_order_orders": "Buy/Sell Orders",
+                "reduce_scrollbars": "Reduce Scroll Bars",
+                "reverse_order_book": "Reverse Order Book",
+                "settlements": "Settlements",
+                "single_colum_order_form": "Single Column Order Form"
+            },
+            "tooltip": {
+                "chart_height": "Define the height of the charts",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_type": "Switch between market depth and price charts, or disable charts",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
+                "order_book_grouping": "Group orders which are close together by a defined percentage",
+                "order_style": "Use vertical order book to pin it to the side panel",
+                "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
+                "panel_grouping": "Define panel grouping",
+                "position_order_asset": "Define the vertical order for the order form vs order book",
+                "position_order_form": "Define the horizontal order for the order form",
+                "position_order_orders": "Define the horizontal order for the order book",
+                "reduce_scrollbars": "Disable scroll bars by default",
+                "reload": "Changing this option will only affect after manually reloading",
+                "reverse_order_book": "Reverse order book to have buy orders on top",
+                "settlements": "",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
+            }
         },
         "settle": "喂价",
         "settle_orders": "清算单",
         "short": "做空",
+        "show_all_orders": "Show all %(rowcount)s orders",
+        "show_all_trades": "Show all %(rowcount)s trades",
         "show_asks": "显示所有卖单",
         "show_bids": "显示所有买单",
         "show_only_liquid": "Show liquid markets only",
@@ -558,6 +632,7 @@
         "vol_short": "量",
         "volume": "成交量",
         "volume_24": "日成交量",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "你的强平触发价",
         "zoom": "缩放",
         "zoom_all": "显示全部"
@@ -728,6 +803,7 @@
             "budget": "剩余预算",
             "card": "卡片视图",
             "current": "当前见证人",
+            "filter_by_name": "按名称过滤",
             "last_confirmed": "上次生成块",
             "missed": "缺失块数",
             "next_vote": "投票更新时间",
@@ -735,8 +811,7 @@
             "pay": "每块奖励",
             "rank": "排名",
             "table": "表格视图",
-            "title": "见证人",
-            "filter_by_name": "按名称过滤"
+            "title": "见证人"
         },
         "workers": {
             "create": "创建一个新的预算项目提案",
@@ -793,14 +868,22 @@
         "assets": {
             "bit": "<br/>bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
             "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
+            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
             "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
-            "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。"
+            "rudex": "",
+            "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
+            "win": "",
+            "xbts": ""
         },
         "balance": "余额",
         "balance_asset": "当前 %(asset)s 余额",
         "bitkapital_receive": "你将收到",
         "bitkapital_text": "选择要充值或提现的资产：",
         "bitkapital_withdraw": "你将提现",
+        "bitspark": {
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "bridge": "桥接服务",
         "bridge_text": "桥接服务能让你将一种资产转变成另一种资产，比如从 BTC 转换到 BTS。",
         "calc": "计算中",
@@ -819,9 +902,9 @@
         "convert_now": "兑换",
         "copy_address": "Copy address",
         "copy_memo": "Copy memo",
-        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "充值",
         "deposit_address": "充值地址",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit_history_status": {
             "confirming": "充值确认中",
             "fail": "充值失败",
@@ -861,6 +944,7 @@
         "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
         "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "到达上限",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "Please, get new address ",
         "purchase": "购买 %(asset)s",
         "purchase_1": "快速简便地从外部钱包使用 %(inputAsset)s 购买 %(outputAsset)s 。这项服务由 <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a> 提供",
@@ -876,13 +960,6 @@
             "support_block": "请联系 RuDEX 获取客户支持：",
             "under_construction": "Under Construction"
         },
-        "xbtsx": {
-            "coming_soon": "即将上线",
-            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
-            "min_amount_error": "请输入大于最小金额的数量",
-            "support_block": "请联系 XBTS 获取客户支持：",
-            "under_construction": "Under Construction"
-        },
         "scan_qr": "扫描二维码，手机支付",
         "service": "转账服务",
         "status": "状态",
@@ -893,6 +970,7 @@
         "title": "充值和提现",
         "transaction_history_info": "交易 %(amount)s %(assetName)s，流水号：%(txid)s ",
         "unavailable": "此资产的网关服务暂时不可用，请稍后再试",
+        "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_OPEN": "OpenLedger 网关不可用或无响应",
         "unavailable_RUDEX": "RuDEX 网关不可用或无响应",
         "unavailable_TRADE": "Blocktrades 桥接服务不可用或无响应",
@@ -918,14 +996,23 @@
         "withdraw_placeholder": "请输入 %(asset)s 地址",
         "withdraw_summary": "提现摘要",
         "withdraw_to": "点击下方按钮进行 %(asset)s 提现",
+        "xbtsx": {
+            "coming_soon": "即将上线",
+            "min_amount": "最小金额：%(minAmount)s %(symbol)s",
+            "min_amount_error": "请输入大于最小金额的数量",
+            "support_block": "请联系 XBTS 获取客户支持：",
+            "under_construction": "Under Construction"
+        },
         "your_account": "你的账户"
     },
     "global": {
         "cancel": "Cancel",
+        "close": "Close",
         "confirm": "Confirm",
         "help": "Help",
         "return_to_top": "Return to top",
-        "scan_qr_code": "Scan QR code"
+        "scan_qr_code": "Scan QR code",
+        "set": "Set"
     },
     "header": {
         "account": "账户",
@@ -938,6 +1025,7 @@
         "current": "当前账户",
         "dashboard": "资产总览",
         "deposit-withdraw": "Deposit/Withdraw",
+        "deposit_legacy": "or Legacy Deposit",
         "exchange": "交易",
         "explorer": "浏览",
         "help": "帮助",
@@ -946,7 +1034,6 @@
         "locked_tip": "钱包已锁定，点击解锁。",
         "logout": "注销",
         "payments": "转账",
-        "payments_beta": "转账（测试版）",
         "payments_legacy": "Send (legacy)",
         "settings": "设置",
         "title": "BitShares 钱包",
@@ -954,7 +1041,8 @@
         "unlock_password": "使用密码登录",
         "unlock_short": "登录",
         "unlocked_tip": "钱包已解锁，点击锁定。",
-        "update_asset": "更新资产"
+        "update_asset": "更新资产",
+        "withdraw_legacy": "or Legacy Withdraw"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -1028,15 +1116,15 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
-        "orderbook_reverse": "Order Book Reversed",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
-        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Explore",
         "settle": "Settle",
         "share": "About",
@@ -1083,6 +1171,17 @@
         "tr": "Türkçe",
         "zh": "简体中文"
     },
+    "login": {
+        "browseFile": "browse your files",
+        "browseFileLabel": "Browse your backup file",
+        "dropFile": "Drop your backup file in this area or ",
+        "invalidFormat": "Invalid format!",
+        "loginButton": "Login",
+        "selectDifferent": "Select different file",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "title": "Select Login Type",
+        "withoutBinFile": "I don't have .bin-file"
+    },
     "markets": {
         "base": "基准资产",
         "core_rate": "手续费汇率",
@@ -1106,6 +1205,8 @@
             "bridge": "Brdige",
             "title": "Buy"
         },
+        "cancel": "cancel",
+        "close": "close",
         "confirmation": {
             "accept": "是",
             "cancel": "否",
@@ -1124,8 +1225,7 @@
             "close": "Close",
             "header": "Deposit to %(account_name)s",
             "header_short": "Deposit",
-            "submit": "充值",
-            "submit_beta": "Deposit (beta)"
+            "submit": "充值"
         },
         "deposit_withdraw": {
             "disabled": "%(gateway)s gateway service disabled",
@@ -1141,6 +1241,11 @@
         },
         "ok": "确定",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "delete": "Permanently reject proposal",
+                "reject": "Reject proposal"
+            },
             "approval_add": "同意添加",
             "approval_remove": "同意移除",
             "key_approval_add": "同意添加密钥",
@@ -1184,7 +1289,6 @@
             "no_gateways": "Sorry, but there are no gateways available to handle this withdrawal",
             "quantity": "Quantity",
             "submit": "提现",
-            "submit_beta": "Withdraw (beta)",
             "withdraw": "Withdraw"
         }
     },
@@ -1276,6 +1380,7 @@
         "asset_update": "使用账户 {account} 更新资产 {asset}",
         "call_order_update": "将账户 {account} 的 {debtSymbol} 债务调整 {debt}，抵押额调整 {collateral}",
         "committee_member_update_global_parameters": "由 {account} 更新理事会全局参数",
+        "delete": "Permanently reject",
         "expires": "过期时间",
         "feed_producer": "使用账户 {account} 更新资产 {asset} 的喂价提供者",
         "limit_order_buy": "为账户 {account} 下单，以价格 {price} 买入 {amount}",
@@ -1295,6 +1400,14 @@
             "owner_approvals_to_remove": "要移除的账户权限许可"
         },
         "update_account": "更新账户 {account} 的信息",
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "vesting_balance_withdraw": "从 {account} 的解冻余额中提取 {amount}"
     },
     "proposal_create": {
@@ -1303,6 +1416,9 @@
         "id": "提议 ID",
         "proposed_operations": "提议的操作",
         "review_period": "复审期开始"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "提议",
     "qr_address_scanner": {
@@ -1316,6 +1432,36 @@
         "claim_refcode": "领取推荐码",
         "enter_refcode": "输入推荐码",
         "refcode_optional": "推荐码 (可选)"
+    },
+    "registration": {
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "accountLoginByValue": "Account name + Password",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "attention": "Attention",
+        "backUpRestoreKey": "Back up and restore Account",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "continue": "Continue",
+        "copyPassword": "Copy your password to save.",
+        "createAccountTitle": "Create Account by Bin-file",
+        "createByPassword": "Create Account by Name and Password",
+        "downloadFile": "Download file",
+        "loginByKey": "Login by",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "recommended": "recommended",
+        "securityAccountModel": "Medium",
+        "securityKey": "Security",
+        "securityWalletModel": "High",
+        "select": "Select",
+        "title": "Registration",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "walletLoginByValue": "Bin-file + Password",
+        "walletModelTitle": "By bin-file",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
         "access": "接入点",
@@ -1360,15 +1506,18 @@
         "connection_error": "无法连接到 API 节点 %(url)s, 正在尝试使用其他在线节点",
         "darkTheme": "黑色主题",
         "delete_select": "选择要删除的钱包",
+        "disabled": "Disabled",
         "enable_wallet": "启用钱包模式",
         "faucet_address": "水龙头",
         "faucet_address_text": "新用户注册费用将由水龙头进行支付。",
         "general": "通用设置",
         "general_text": "调整基本设置。",
+        "global_settings": "Default Global Settings",
         "hidden_nodes": "隐藏节点",
         "hide": "隐藏",
         "high_latency": "高延迟",
         "inverseMarket": "市场交易对偏好",
+        "left": "Left",
         "lightTheme": "白色主题",
         "local_wallet": "本地钱包模式",
         "locale": "语言选择",
@@ -1383,12 +1532,16 @@
         "node_down": "离线",
         "node_up": "在线",
         "olDarkTheme": "OpenLedger 黑",
+        "orderbook_autoscroll": "Order Book Autoscroll",
+        "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "密码",
         "passwordLogin": "登录方式",
         "password_text": "修改钱包密码。",
         "personal_active": "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
+        "placeholder_select": "Select option",
         "remove": "删除",
         "remove_api": "移除 API 服务器节点",
         "remove_ws": "删除 API 服务器",
@@ -1400,6 +1553,8 @@
         "restore_default_success": "已成功恢复默认设置",
         "restore_key_count": "恢复的密钥",
         "restore_text": "从钱包备份文件恢复或者导入私钥。",
+        "right": "Right",
+        "scrollbars_hide": "Reduce scroll bars",
         "show": "显示",
         "showAssetPercent": "在账户页上显示资产/供应量占比",
         "showSettles": "在深度图中显示清算订单",
@@ -1447,6 +1602,20 @@
         "hide_asset": "从列表中隐藏资产",
         "latest_price": "市场最新成交价",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
+        "login-tooltips": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
         "margin_price": "这是触发平仓的最大价格。也被称为挤压价格。",
         "market_fee": "资产 %(asset)s 的拥有者将对所有买入订单收取 %(percent)s%% 的市场手续费。手续费将在订单成交后从成交金额中收取，下单时不会收取任何费用。",
         "memo_tip": "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
@@ -1457,6 +1626,13 @@
         "propose_tip": "提议另一个用户发起交易",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        },
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "清算单执行时将使用的价格",
         "show_asset": "在主列表中显示资产",
@@ -1626,6 +1802,7 @@
         "balances": "余额",
         "broadcast": "你的转账已经向网络广播",
         "broadcasting": "交易广播中…",
+        "by": "By",
         "cancel": "取消",
         "close": "关闭",
         "confirm": "确认",
@@ -1650,10 +1827,12 @@
         "from": "来自",
         "header": "转账详情",
         "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "备注消息",
         "memo_unlock": "解锁钱包以查看交易备注",
         "optional": "可选",
         "pay_from": "支付自",
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "查看我的转账记录",
         "send": "转账",
         "to": "发往",
@@ -1674,6 +1853,7 @@
         "chart_tool_duration": "使用不同的时间间隔分组贸易数据",
         "chart_tool_indicators": "将技术指标添加到价格图表中以识别交易机会。",
         "chart_tool_zoom": "调整价格图表以显示更多或更少的价格历史记录。",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers",
         "create_cloud_wallet": "使用帐户名称和密码访问云钱包。",
         "create_local_wallet": "创建一个本地钱包并下载属于它的任何私钥。",
         "depth_chart": "使用市场深度图来显示不同价格的供应和需求。",
@@ -1681,15 +1861,19 @@
         "favourite_button": "将这一对标记为您的市场列表中的最爱。",
         "find_markets_tab": "此标签允许您搜索并添加更多市场到'我的市场'标签。",
         "language_flag": "在DEX中选择9种不同的语言。",
-        "my_markets_tab": "此选项卡列出常用市场。",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "下",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
         "prev_label": "背部",
         "price_chart": "使用价格图查看资产的价格动作。",
         "restore_account": "使用备份文件还原钱包。",
         "sell_form": "使用此表单发出卖单。",
         "sell_orders": "查看此市场的所有订单。",
         "skip_label": "跳跃",
-        "switch_button": "使用此按钮切换交易对。"
+        "switch_button": "使用此按钮切换交易对。",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "vertical_order": "View all orders for this market, including spread and latest order price"
     },
     "wallet": {
         "accept": "接受",

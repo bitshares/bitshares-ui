@@ -148,6 +148,7 @@
             "private": "秘密キー (WIF - Wallet Import Format)",
             "public": "公開キー",
             "publish": "変更を公開",
+            "remove_proxy": "Remove proxy",
             "remove_text": "削除",
             "reset": "変更をリセット",
             "save": "Save Changes",
@@ -240,6 +241,7 @@
             "disable_force_settle": "強制決済を無効にする",
             "error_invalid": "そのアセットは使用できません",
             "error_precision": "そのアセットの精度は%(asset)sと異なります。",
+            "error_too_deep": "May not create a bitasset backed by a bitasset backed by a bitasset",
             "exists": "そのアセットは既に存在します",
             "expiry": "市場解決日",
             "feed_lifetime_sec": "フィード寿命 (分)",
@@ -251,7 +253,9 @@
             "force_settlement_offset_percent": "強制決済のパーセントオフセット",
             "global_settle": "発行者に強制グローバル決済を許可する",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Preferred market pairing can not be the same market",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "発行済みアセット",
             "market": "優先取引ペア",
             "market_fee": "取引手数料",
@@ -374,6 +378,9 @@
             "whitelist_authorities": "ホワイトリスト権限"
         }
     },
+    "alert": {
+        "warning": "Warning"
+    },
     "app_init": {
         "browser": "サポートされていないブラウザ",
         "browser_text": "使用しているブラウザはBitSharesウォレットをサポートするための完全なテストが行われていません。ウォレットをバックアップし、あなたが選択したブラウザの完全なテストが行われるまで、Chromeブラウザを使用することを強く推奨します。自身の責任で使用してください。",
@@ -387,6 +394,10 @@
         "title": "アプリケーション初期化エラー",
         "understand": "理解しました。",
         "ws_status": "フルノード接続状態"
+    },
+    "boolean": {
+        "false": "False",
+        "true": "True"
     },
     "borrow": {
         "adjust": "ポジションを更新",
@@ -453,6 +464,7 @@
         "buy": "買う",
         "buy_description": "Buy %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "buy_min": "最低購入量",
+        "buy_sell": "Order Form",
         "buysell_formatter": "{asset} {direction}",
         "call": "コール価格",
         "change": "変化",
@@ -460,6 +472,7 @@
         "chart_hide": "Hide Charts",
         "chart_modal": "Chart options",
         "chart_type": "Chart type",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "あなたの注文は、最低アスク価格より%(diff)s倍高いです。続行してもよろしいですか？",
         "confirm_no_orders_buy": "未執行の売り注文がないマーケットに買い注文を出そうとしています。続行してもよろしいですか？",
         "confirm_no_orders_sell": "未執行の買い注文がないマーケットに売り注文を出そうとしています。続行してもよろしいですか？",
@@ -514,7 +527,9 @@
         "no_bids": "No bids",
         "no_data": "データなし",
         "no_orders": "No orders",
+        "order_book": "Order Book",
         "order_depth": "マーケットデプス",
+        "order_grouping": "Order Grouping %(orderlimit)s%",
         "others": "その他",
         "overbought": "買われすぎ",
         "oversold": "売られすぎ",
@@ -524,6 +539,7 @@
         "price_history": "価格チャート",
         "price_market": "マーケット価格",
         "quantity": "数量",
+        "quick_deposit": "Quick Deposit",
         "quote": "クオート通貨:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "クオート供給量",
@@ -535,13 +551,71 @@
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
         "settings": {
             "header": "Personalize",
-            "grouping_standalone": "Standalone",
-            "grouping_1": "Group 1",
-            "grouping_2": "Group 2"
+            "options": {
+                "grouping_1": "Group 1",
+                "grouping_2": "Group 2",
+                "grouping_standalone": "Standalone",
+                "hidden_chart": "Hide chart",
+                "horizontal": "Horizontal",
+                "position_order_asset_opt1": "Orders above Asset",
+                "position_order_asset_opt2": "Asset above Order",
+                "position_order_form_opt1": "Buy - Sell",
+                "position_order_form_opt2": "Sell - Buy",
+                "position_order_orders_opt1": "Buy - Sell",
+                "position_order_orders_opt2": "Sell - Buy",
+                "vertical": "Vertical"
+            },
+            "title": {
+                "chart_height": "Height",
+                "chart_tools": "View Tools",
+                "chart_type": "Type",
+                "chart_zoom": "Allow Zoom",
+                "hide_function_buttons": "Hide function buttons",
+                "market_location": "Market location",
+                "market_trades": "Market Trades",
+                "my_trades": "My Trades",
+                "open_orders": "Open Orders",
+                "order_book_grouping": "Order Book Grouping",
+                "order_style": "Style",
+                "orderbook_auto_scroll": "Auto scroll",
+                "position_order_asset": "Vertical Orders / Asset",
+                "position_order_form": "Buy/Sell Asset",
+                "position_order_orders": "Buy/Sell Orders",
+                "reduce_scrollbars": "Reduce Scroll Bars",
+                "reverse_order_book": "Reverse Order Book",
+                "settlements": "Settlements",
+                "single_colum_order_form": "Single Column Order Form"
+            },
+            "tooltip": {
+                "chart_height": "Define the height of the charts",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_type": "Switch between market depth and price charts, or disable charts",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
+                "order_book_grouping": "Group orders which are close together by a defined percentage",
+                "order_style": "Use vertical order book to pin it to the side panel",
+                "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
+                "panel_grouping": "Define panel grouping",
+                "position_order_asset": "Define the vertical order for the order form vs order book",
+                "position_order_form": "Define the horizontal order for the order form",
+                "position_order_orders": "Define the horizontal order for the order book",
+                "reduce_scrollbars": "Disable scroll bars by default",
+                "reload": "Changing this option will only affect after manually reloading",
+                "reverse_order_book": "Reverse order book to have buy orders on top",
+                "settlements": "",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
+            }
         },
         "settle": "決済",
         "settle_orders": "決済注文",
         "short": "ショート",
+        "show_all_orders": "Show all %(rowcount)s orders",
+        "show_all_trades": "Show all %(rowcount)s trades",
         "show_asks": "すべての売り注文を見る",
         "show_bids": "すべての買い注文を見る",
         "show_only_liquid": "Show liquid markets only",
@@ -558,6 +632,7 @@
         "vol_short": "出来高",
         "volume": "出来高",
         "volume_24": "24時間出来高",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "あなたのコール価格",
         "zoom": "拡大",
         "zoom_all": "すべて"
@@ -728,6 +803,7 @@
             "budget": "残余予算",
             "card": "カードビュー",
             "current": "現在の証人",
+            "filter_by_name": "名前でフィルタリングする",
             "last_confirmed": "最新の確認",
             "missed": "ブロック喪失",
             "next_vote": "次回の投票更新",
@@ -735,8 +811,7 @@
             "pay": "1ブロックあたりの報酬",
             "rank": "ランク",
             "table": "テーブルビュー",
-            "title": "証人",
-            "filter_by_name": "名前でフィルタリングする"
+            "title": "証人"
         },
         "workers": {
             "create": "新しいワーカー提案を作成する",
@@ -793,14 +868,22 @@
         "assets": {
             "bit": "<br/><br/>%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
             "bitcny": "<br/><br/>bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
+            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
             "open": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
-            "trade": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。"
+            "rudex": "",
+            "trade": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "win": "",
+            "xbts": ""
         },
         "balance": "現在の残高",
         "balance_asset": "現在の%(asset)s残高",
         "bitkapital_receive": "入金額",
         "bitkapital_text": "入出金するアセットを選択してください:",
         "bitkapital_withdraw": "出金額",
+        "bitspark": {
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "bridge": "ブリッジ",
         "bridge_text": "ブリッジはアセットを他のものに交換します。例: BTCをBTSに。",
         "calc": "計算中",
@@ -819,9 +902,9 @@
         "convert_now": "今すぐ変換",
         "copy_address": "アドレスをコピー",
         "copy_memo": "メモをコピー",
-        "deposit_from_wallet": "Deposit from wallet",
         "deposit": "入金",
         "deposit_address": "入金アドレス",
+        "deposit_from_wallet": "Deposit from wallet",
         "deposit_history_status": {
             "confirming": "デポジット確認中",
             "fail": "失敗",
@@ -861,6 +944,7 @@
         "min_deposit_warning_amount": "最低入金額は%(minDeposit)s %(coin)sです。",
         "min_deposit_warning_asset": "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
         "over_limit": "制限に達しました",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "新しいアドレスを取得",
         "purchase": "%(asset)sを買う",
         "purchase_1": "外部ウォレットの%(inputAsset)sで%(outputAsset)sを素早く簡単に買います。このサービスは<a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>によって提供されます。",
@@ -876,13 +960,6 @@
             "support_block": "サポートについては、RuDEXまでご連絡ください。:",
             "under_construction": "工事中"
         },
-        "xbtsx": {
-            "coming_soon": "近日公開",
-            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
-            "min_amount_error": "数字を入力してください >= minimum",
-            "support_block": "サポートについては、XBTSまでご連絡ください。:",
-            "under_construction": "工事中"
-        },
         "scan_qr": "QRをスキャン",
         "service": "転送サービス",
         "status": "ステータス",
@@ -893,6 +970,7 @@
         "title": "入金 & 出金",
         "transaction_history_info": " %(amount)s %(assetName)s with trancation id: %(txid)s ",
         "unavailable": "このアセットのゲートウェイサービスが現在停止しています。後でやり直してください",
+        "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_OPEN": "OpenLedgerゲートウェイがダウンしているか、応答していません",
         "unavailable_RUDEX": "RuDEXゲートウェイがダウンしているか、応答していません",
         "unavailable_TRADE": "Blocktradesブリッジがダウンしているか、応答していません",
@@ -918,14 +996,23 @@
         "withdraw_placeholder": "%(asset)sアドレスを入力してください",
         "withdraw_summary": "出金概要",
         "withdraw_to": "%(asset)sの出金画面を開くには下のボタンをクリックしてください",
+        "xbtsx": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、XBTSまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "your_account": "あなたのアカウント"
     },
     "global": {
         "cancel": "Cancel",
+        "close": "Close",
         "confirm": "Confirm",
         "help": "Help",
         "return_to_top": "Return to top",
-        "scan_qr_code": "Scan QR code"
+        "scan_qr_code": "Scan QR code",
+        "set": "Set"
     },
     "header": {
         "account": "アカウント",
@@ -938,6 +1025,7 @@
         "current": "現在のアカウント",
         "dashboard": "ダッシュボード",
         "deposit-withdraw": "入金/出金",
+        "deposit_legacy": "or Legacy Deposit",
         "exchange": "取引所",
         "explorer": "エクスプローラー",
         "help": "ヘルプ",
@@ -946,7 +1034,6 @@
         "locked_tip": "<br/>クリックすると、ウォレットをアンロックしログインします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
         "logout": "ログアウト",
         "payments": "送金",
-        "payments_beta": "送金 (ベータ)",
         "payments_legacy": "送金 (レガシー)",
         "settings": "設定",
         "title": "BitShares UI",
@@ -954,7 +1041,8 @@
         "unlock_password": "パスワードでログイン",
         "unlock_short": "ログイン",
         "unlocked_tip": "<br/>クリックすると、ウォレットをロックしログアウトします。<br/><br/>ブラウザを閉じることでもログアウトできます。",
-        "update_asset": "アセット更新"
+        "update_asset": "アセット更新",
+        "withdraw_legacy": "or Legacy Withdraw"
     },
     "icons": {
         "adjust": "Adjust margin position",
@@ -1028,15 +1116,15 @@
             "wrong_address": "Unable to generate address"
         },
         "news": "News",
-        "orderbook_reverse": "Order Book Reversed",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Add contact to the list",
             "show_asset": "Show asset",
             "show_market": "Show market"
         },
         "power": "Login",
-        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Help",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Explore",
         "settle": "Settle",
         "share": "About",
@@ -1083,6 +1171,17 @@
         "tr": "Türkçe",
         "zh": "简体中文"
     },
+    "login": {
+        "browseFile": "browse your files",
+        "browseFileLabel": "Browse your backup file",
+        "dropFile": "Drop your backup file in this area or ",
+        "invalidFormat": "Invalid format!",
+        "loginButton": "Login",
+        "selectDifferent": "Select different file",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "title": "Select Login Type",
+        "withoutBinFile": "I don't have .bin-file"
+    },
     "markets": {
         "base": "ベースアセット",
         "core_rate": "中心レート",
@@ -1106,6 +1205,8 @@
             "bridge": "Brdige",
             "title": "Buy"
         },
+        "cancel": "cancel",
+        "close": "close",
         "confirmation": {
             "accept": "はい",
             "cancel": "いいえ",
@@ -1124,8 +1225,7 @@
             "close": "閉じる",
             "header": "%(account_name)sに入金",
             "header_short": "入金",
-            "submit": "入金",
-            "submit_beta": "入金 (ベータ)"
+            "submit": "入金"
         },
         "deposit_withdraw": {
             "disabled": "ゲートウェイサービスが無効",
@@ -1141,6 +1241,11 @@
         },
         "ok": "OK",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "delete": "Permanently reject proposal",
+                "reject": "Reject proposal"
+            },
             "approval_add": "承認を追加",
             "approval_remove": "承認を削除",
             "key_approval_add": "キー承認を追加",
@@ -1184,7 +1289,6 @@
             "no_gateways": "申し訳ありませんが、この引き出しを処理するゲートウェイはありません",
             "quantity": "数量",
             "submit": "出金",
-            "submit_beta": "出金 (ベータ)",
             "withdraw": "出金"
         }
     },
@@ -1276,6 +1380,7 @@
         "asset_update": "{account}アカウントでアセット{asset}を更新します",
         "call_order_update": "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
         "committee_member_update_global_parameters": "{account}による委員会グローバルパラメータを更新します",
+        "delete": "Permanently reject",
         "expires": "有効期限",
         "feed_producer": "{account}で アセット{asset}のフィード作成者を更新します",
         "limit_order_buy": "{amount}を{price}で{account}が買い注文を出します",
@@ -1295,6 +1400,14 @@
             "owner_approvals_to_remove": "オーナー承認の削除"
         },
         "update_account": "{account}のアカウントデータを更新します",
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "vesting_balance_withdraw": "{account}の権利確定残高から{amount}を引き出します"
     },
     "proposal_create": {
@@ -1303,6 +1416,9 @@
         "id": "Proposal object id",
         "proposed_operations": "提案された操作",
         "review_period": "レビュー期間開始"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "提案",
     "qr_address_scanner": {
@@ -1316,6 +1432,36 @@
         "claim_refcode": "紹介コードを請求する",
         "enter_refcode": "紹介コードを入力してください",
         "refcode_optional": "紹介コード (任意)"
+    },
+    "registration": {
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "accountLoginByValue": "Account name + Password",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "attention": "Attention",
+        "backUpRestoreKey": "Back up and restore Account",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "continue": "Continue",
+        "copyPassword": "Copy your password to save.",
+        "createAccountTitle": "Create Account by Bin-file",
+        "createByPassword": "Create Account by Name and Password",
+        "downloadFile": "Download file",
+        "loginByKey": "Login by",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "recommended": "recommended",
+        "securityAccountModel": "Medium",
+        "securityKey": "Security",
+        "securityWalletModel": "High",
+        "select": "Select",
+        "title": "Registration",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "walletLoginByValue": "Bin-file + Password",
+        "walletModelTitle": "By bin-file",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
         "access": "アクセス",
@@ -1360,15 +1506,18 @@
         "connection_error": "APIノード%(url)sに接続できません。接続可能のノードに戻ります。",
         "darkTheme": "ダークテーマ",
         "delete_select": "削除するウォレットを選択してください",
+        "disabled": "Disabled",
         "enable_wallet": "ウォレットモデルを有効にする",
         "faucet_address": "フォーセット",
         "faucet_address_text": "フォーセットアドレスは新規ユーザーの登録手数料の支払いに使用されます。",
         "general": "全般",
         "general_text": "基本設定を調整する。",
+        "global_settings": "Default Global Settings",
         "hidden_nodes": "非表示のノード",
         "hide": "非表示",
         "high_latency": "レイテンシー高",
         "inverseMarket": "市場志向の選択",
+        "left": "Left",
         "lightTheme": "ライトテーマ",
         "local_wallet": "ウォレットモデルでログイン",
         "locale": "言語切替",
@@ -1383,12 +1532,16 @@
         "node_down": "DOWN",
         "node_up": "UP",
         "olDarkTheme": "Openledgerダーク",
+        "orderbook_autoscroll": "Order Book Autoscroll",
+        "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "パスワード",
         "passwordLogin": "ログインモード",
         "password_text": "パスワードを変更する。",
         "personal_active": "Your only personal node is active, to remove or modify it you must first connect to a different node",
         "ping": "Ping Nodes",
         "pinging": "Pinging ...",
+        "placeholder_select": "Select option",
         "remove": "削除",
         "remove_api": "ノードを削除",
         "remove_ws": "ノードを削除",
@@ -1400,6 +1553,8 @@
         "restore_default_success": "設定が正常にリセットされました",
         "restore_key_count": "キー数",
         "restore_text": "バックアップまたはインポートキーからリストアする。",
+        "right": "Right",
+        "scrollbars_hide": "Reduce scroll bars",
         "show": "表示",
         "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
         "showSettles": "決済注文をデプスチャートで表示する",
@@ -1447,6 +1602,20 @@
         "hide_asset": "このリストからこのアセットを非表示にするにはここをクリックしてください。",
         "latest_price": "これはこの市場における最新の価格です。",
         "login": "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+        "login-tooltips": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
         "margin_price": "これはマージンコールがかかったポジションが支払う必要のある最大価格です。スクイーズ価格とも言います。",
         "market_fee": "%(asset)sのオーナーは買い注文に対して%(percent)s%%の取引手数料を課しています。この手数料は注文が約定したときに、受取額から減算されます。注文を出すときにはかかりません。",
         "memo_tip": "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
@@ -1457,6 +1626,13 @@
         "propose_tip": "別のユーザーからトランザクションを提案する",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        },
         "settle": "精算により、保有する%(asset)sを%(settleDelay)s時間の遅延後に%(backingAsset)sにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",
         "show_asset": "メインリストにこのアセットを表示するにはここをクリックしてください。",
@@ -1626,6 +1802,7 @@
         "balances": "残高",
         "broadcast": "あなたの転送はネットワークに送信されました",
         "broadcasting": "送信中...",
+        "by": "By",
         "cancel": "キャンセル",
         "close": "閉じる",
         "confirm": "確認",
@@ -1650,10 +1827,12 @@
         "from": "From",
         "header": "転送の詳細設定",
         "header_subheader": "転送機能は他のBitSharesアカウントに資金を送金するために使用されます。",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "メモ",
         "memo_unlock": "このメモを見るにはウォレットをアンロックしてください",
         "optional": "オプション",
         "pay_from": "送信元",
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "自身の転送を見る",
         "send": "送信",
         "to": "To",
@@ -1674,6 +1853,7 @@
         "chart_tool_duration": "別の間隔を使用して取引データをグループ化する。",
         "chart_tool_indicators": "テクニカル・インジケータを価格チャートに追加する。",
         "chart_tool_zoom": "価格チャートを調整して価格の履歴の表示数を変更する。",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers",
         "create_cloud_wallet": "アカウント名とパスワードを使用してアクセスする。",
         "create_local_wallet": "ローカルウォレットを作成してローカルにプライベートキーをダウンロードする。",
         "depth_chart": "市場深度チャートを使用して買いと売りを表示する。",
@@ -1681,15 +1861,19 @@
         "favourite_button": "このペアをあなたのマーケットリストのお気に入りとしてマークする。",
         "find_markets_tab": "このタブでは、マーケットを検索して「マイマーケット」タブに追加することができます。",
         "language_flag": "DEXで利用する言語を9種類の中から選択してください。",
-        "my_markets_tab": "このタブには、よく利用する市場が表示されます。",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "次へ",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
         "prev_label": "戻る",
         "price_chart": "価格チャートを使用してアセットの価格アクションを表示する。",
         "restore_account": "バックアップファイルからウォレットをリストアする。",
         "sell_form": "このフォームを使用して売り注文を出します。",
         "sell_orders": "この市場のすべての売り注文を表示する。",
         "skip_label": "スキップ",
-        "switch_button": "このボタンを使用してトレーディングペアを切り替える。"
+        "switch_button": "このボタンを使用してトレーディングペアを切り替える。",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "vertical_order": "View all orders for this market, including spread and latest order price"
     },
     "wallet": {
         "accept": "承認",

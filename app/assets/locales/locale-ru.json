@@ -148,6 +148,7 @@
             "private": "Приватный ключ (WIF)",
             "public": "Публичный ключ",
             "publish": "Сохранить",
+            "remove_proxy": "Remove proxy",
             "remove_text": "Удалить",
             "reset": "Отменить",
             "save": "Сохранить изменения",
@@ -240,6 +241,7 @@
             "disable_force_settle": "Отключить принудительное погашение",
             "error_invalid": "Этот актив не может быть использован",
             "error_precision": "Этот актив не обладает той же точностью, что и %(asset)s",
+            "error_too_deep": "May not create a bitasset backed by a bitasset backed by a bitasset",
             "exists": "Этот актив уже существует",
             "expiry": "Дата решения рынка",
             "feed_lifetime_sec": "Срок действия котировок в минутах",
@@ -251,7 +253,9 @@
             "force_settlement_offset_percent": "Процент смещения принудительного погашения",
             "global_settle": "Позволить эмитенту форсировать принудительное погашение",
             "id": "ID",
+            "invalid_backing_asset_change": "You can't change the backing asset of an asset that has a non-zero current supply",
             "invalid_market_pair": "Предпочитаемая рыночная пара не может быть с того же рынка",
+            "invalid_permissions_change": "You can't enable a permission for an asset that has a non-zero current supply",
             "issued_assets": "Размещенные активы",
             "market": "Предпочтительные рыночные пары",
             "market_fee": "Комиссия рынка",
@@ -374,6 +378,9 @@
             "whitelist_authorities": "Источник белого списка"
         }
     },
+    "alert": {
+        "warning": "Warning"
+    },
     "app_init": {
         "browser": "Неподдерживаемый браузер",
         "browser_text": "Браузер, который Вы используете, не тестировался на поддержку кошелька %(wallet_name)s. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не найдем время, чтобы провести полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
@@ -387,6 +394,10 @@
         "title": "Проблемы инициализации приложения",
         "understand": "Я понимаю",
         "ws_status": "Состояние подключения полного узла"
+    },
+    "boolean": {
+        "false": "False",
+        "true": "True"
     },
     "borrow": {
         "adjust": "Обновить позицию",
@@ -453,6 +464,7 @@
         "buy": "Купить",
         "buy_description": "Купить %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
         "buy_min": "Купить по меньшей мере",
+        "buy_sell": "Order Form",
         "buysell_formatter": "{direction} {asset}",
         "call": "Цена досрочного погашения",
         "change": "Изменение",
@@ -460,6 +472,7 @@
         "chart_hide": "Hide Charts",
         "chart_modal": "Параметры графика",
         "chart_type": "Тип графика",
+        "checking_for_worth_less_settlement": "Checking if you can get a better price by selling to market, please wait..",
         "confirm_buy": "Ваш ордер в %(diff)s раз выше, чем самое низкое предложение, Вы уверены?",
         "confirm_no_orders_buy": "Вы размещаете ордер на покупку на рынке, где нет открытых ордеров на продажу. Вы уверены, что хотите продолжить?",
         "confirm_no_orders_sell": "Вы размещаете ордер на продажу на рынке, где нет открытых ордеров на покупку. Вы уверены, что хотите продолжить?",
@@ -514,7 +527,9 @@
         "no_bids": "Нет предложений на покупку",
         "no_data": "Нет данных",
         "no_orders": "Нет ордеров",
+        "order_book": "Order Book",
         "order_depth": "Глубина Рынка",
+        "order_grouping": "Order Grouping %(orderlimit)s%",
         "others": "Другие",
         "overbought": "Перекуплен",
         "oversold": "Перепродан",
@@ -524,6 +539,7 @@
         "price_history": "График цен",
         "price_market": "Рыночная цена",
         "quantity": "Количество",
+        "quick_deposit": "Quick Deposit",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
         "quote_supply": "Назначить запас",
@@ -535,13 +551,71 @@
         "sell_description": "Продать %(baseAsset)s %(baseName)s за %(quoteAsset)s %(quoteName)s",
         "settings": {
             "header": "Personalize",
-            "grouping_standalone": "Standalone",
-            "grouping_1": "Group 1",
-            "grouping_2": "Group 2"
+            "options": {
+                "grouping_1": "Group 1",
+                "grouping_2": "Group 2",
+                "grouping_standalone": "Standalone",
+                "hidden_chart": "Hide chart",
+                "horizontal": "Horizontal",
+                "position_order_asset_opt1": "Orders above Asset",
+                "position_order_asset_opt2": "Asset above Order",
+                "position_order_form_opt1": "Buy - Sell",
+                "position_order_form_opt2": "Sell - Buy",
+                "position_order_orders_opt1": "Buy - Sell",
+                "position_order_orders_opt2": "Sell - Buy",
+                "vertical": "Vertical"
+            },
+            "title": {
+                "chart_height": "Height",
+                "chart_tools": "View Tools",
+                "chart_type": "Type",
+                "chart_zoom": "Allow Zoom",
+                "hide_function_buttons": "Hide function buttons",
+                "market_location": "Market location",
+                "market_trades": "Market Trades",
+                "my_trades": "My Trades",
+                "open_orders": "Open Orders",
+                "order_book_grouping": "Order Book Grouping",
+                "order_style": "Style",
+                "orderbook_auto_scroll": "Auto scroll",
+                "position_order_asset": "Vertical Orders / Asset",
+                "position_order_form": "Buy/Sell Asset",
+                "position_order_orders": "Buy/Sell Orders",
+                "reduce_scrollbars": "Reduce Scroll Bars",
+                "reverse_order_book": "Reverse Order Book",
+                "settlements": "Settlements",
+                "single_colum_order_form": "Single Column Order Form"
+            },
+            "tooltip": {
+                "chart_height": "Define the height of the charts",
+                "chart_reload": "Changing this setting will reload the chart",
+                "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
+                "chart_type": "Switch between market depth and price charts, or disable charts",
+                "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
+                "order_book_grouping": "Group orders which are close together by a defined percentage",
+                "order_style": "Use vertical order book to pin it to the side panel",
+                "orderbook_auto_scroll": "Auto scroll the order book to keep center as new orders come in. Disable to allow scrolling",
+                "panel_grouping": "Define panel grouping",
+                "position_order_asset": "Define the vertical order for the order form vs order book",
+                "position_order_form": "Define the horizontal order for the order form",
+                "position_order_orders": "Define the horizontal order for the order book",
+                "reduce_scrollbars": "Disable scroll bars by default",
+                "reload": "Changing this option will only affect after manually reloading",
+                "reverse_order_book": "Reverse order book to have buy orders on top",
+                "settlements": "",
+                "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
+            }
         },
         "settle": "Погашение",
         "settle_orders": "Ордера на погашение",
         "short": "Сократить",
+        "show_all_orders": "Show all %(rowcount)s orders",
+        "show_all_trades": "Show all %(rowcount)s trades",
         "show_asks": "Показать все запросы",
         "show_bids": "Показать все заявки",
         "show_only_liquid": "Показать только ликвидные рынки",
@@ -558,6 +632,7 @@
         "vol_short": "Объем",
         "volume": "Объем",
         "volume_24": "Суточный объем",
+        "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "Ваша Цена досрочного погашения",
         "zoom": "Увеличить",
         "zoom_all": "Все"
@@ -728,6 +803,7 @@
             "budget": "Оставшийся бюджет",
             "card": "В виде карт",
             "current": "Текущие заверители",
+            "filter_by_name": "Фильтровать по названию",
             "last_confirmed": "Последний подтвержденный",
             "missed": "Пропущено блоков",
             "next_vote": "Следующее обновление голосов",
@@ -735,8 +811,7 @@
             "pay": "Оплата за блок",
             "rank": "Ранг",
             "table": "В виде таблицы",
-            "title": "Заверители",
-            "filter_by_name": "Фильтровать по названию"
+            "title": "Заверители"
         },
         "workers": {
             "create": "Создать предложение о работе",
@@ -793,14 +868,22 @@
         "assets": {
             "bit": "<br/>Bit%(asset)s - это производное, которое отслеживает реальную стоимость %(backed)s. Он на 100%% децентрализован, не требует доверия и обеспечен залогом, удерживаемым блокчейном в виде смарт-контракта.",
             "bitcny": "<br/><br/>bitCNY может быть депонирован или выведен в соотношении 1:1 к реальному Юаню с помощью сервиса шлюза от Magic Wallet. Подробную информацию можно найти здесь https://www.magicw.net/",
+            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
             "open": "<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",
-            "trade": "<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades."
+            "rudex": "",
+            "trade": "<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
+            "win": "",
+            "xbts": ""
         },
         "balance": "Текущий остаток на счете",
         "balance_asset": "Текущий баланс %(asset)s",
         "bitkapital_receive": "Вы получите",
         "bitkapital_text": "Выберите актив для для пополнения или вывода:",
         "bitkapital_withdraw": "Вы выводите",
+        "bitspark": {
+            "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
+        },
         "bridge": "Мост",
         "bridge_text": "Шлюз позволяет Вам \"превращать\" один актив в другой, например BTC в BTS.",
         "calc": "Расчет",
@@ -819,9 +902,9 @@
         "convert_now": "Обменять сейчас",
         "copy_address": "Скопировать адрес",
         "copy_memo": "Скопировать примечание",
-        "deposit_from_wallet": "Депозит из кошелька",
         "deposit": "Пополнить счет",
         "deposit_address": "Адрес депозита",
+        "deposit_from_wallet": "Депозит из кошелька",
         "deposit_history_status": {
             "confirming": "подтверждение депозита",
             "fail": "не удалось",
@@ -861,6 +944,7 @@
         "min_deposit_warning_amount": "Минимальное значение депозита %(minDeposit)s %(coin)s.",
         "min_deposit_warning_asset": "ВАЖНО: Отправляйте только %(coin)s на этот адрес депозита. Отправка меньше %(minDeposit)s %(coin)s или любой другой валюты может привезти к потере Вашего депозита.",
         "over_limit": "Лимит исчерпан",
+        "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "Пожалуйста, получите новый адрес ",
         "purchase": "Покупка %(asset)s",
         "purchase_1": "Покупайте %(outputAsset)s легко и просто, используя %(inputAsset)s с внешнего кошелька. Этот сервис предоставлен <a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'><a href='https://blocktrades.us/' target='blank' rel='noopener noreferrer'>Blocktrades</a>",
@@ -876,30 +960,20 @@
             "support_block": "Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
             "under_construction": "Технические работы"
         },
-        "xbtsx": {
-            "coming_soon": "Скоро",
-            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
-            "min_amount_error": "Пожалуйста введите число >= минимума",
-            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
-            "under_construction": "Технические работы"
-        },
         "scan_qr": "Сканировать QR-код",
         "service": "Перевод средств",
         "status": "Статус",
         "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"OpenLedger TRANSFER SERVICE\", пожалуйста, обращайтесь в Openledger:",
         "support_gdex": "Для получения поддержки, пожалуйста, свяжитесь с GDEX",
-        "bitspark": {
-            "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
-        },
         "symbol": "Символ",
         "time": "Время",
         "title": "Пополнение и Вывод",
         "transaction_history_info": " %(amount)s %(assetName)s с id транзакции: %(txid)s ",
         "unavailable": "Шлюз для данного актива в настоящее время не работает, пожалуйста, повторите попытку позже",
+        "unavailable_CITADEL": "Шлюз Citadel не работает или не отвечает",
         "unavailable_OPEN": "Шлюз OpenLedger не работает или не отвечает",
         "unavailable_RUDEX": "Шлюз RuDEX не работает или не отвечает",
         "unavailable_TRADE": "Шлюз Blocktrades не работает или не отвечает",
-        "unavailable_CITADEL": "Шлюз Citadel не работает или не отвечает",
         "unavailable_bridge": "Мост для данного актива в настоящее время не работает, пожалуйста, повторите попытку позже",
         "use_copy_button": "ПОЖАЛУЙСТА ИСПОЛЬЗУЙТЕ КНОПКУ ДЛЯ КОПИРОВАНИЯ АДРЕСА ИЛИ МЕМО",
         "user_unavailable": "В настоящий момент информация о пользователе недоступна, повторите попытку позже",
@@ -922,14 +996,23 @@
         "withdraw_placeholder": "Пожалуйста, введите Ваш %(asset)s адрес",
         "withdraw_summary": "Сводка выводов",
         "withdraw_to": "Нажмите кнопку ниже, чтобы открыть вывод %(asset)s",
+        "xbtsx": {
+            "coming_soon": "Скоро",
+            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Пожалуйста введите число >= минимума",
+            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
+            "under_construction": "Технические работы"
+        },
         "your_account": "Ваш аккаунт"
     },
     "global": {
         "cancel": "Отменить",
+        "close": "Close",
         "confirm": "Подтвердить",
         "help": "Помощь",
         "return_to_top": "Вернуться к началу",
-        "scan_qr_code": "Сканировать QR-код"
+        "scan_qr_code": "Сканировать QR-код",
+        "set": "Set"
     },
     "header": {
         "account": "Аккаунт",
@@ -942,6 +1025,7 @@
         "current": "Текущий аккаунт",
         "dashboard": "Инфопанель",
         "deposit-withdraw": "Ввод/Вывод",
+        "deposit_legacy": "or Legacy Deposit",
         "exchange": "Биржа",
         "explorer": "Обозреватель",
         "help": "Помощь",
@@ -950,7 +1034,6 @@
         "locked_tip": "<br/>Нажмите, чтобы войти.<br/><br/>Закрыв окно браузера, Вы также выйдете из аккаунта.",
         "logout": "Выйти",
         "payments": "Отправить",
-        "payments_beta": "Отправить (бета)",
         "payments_legacy": "Отправить (стар.)",
         "settings": "Настройки",
         "title": "Пользовательский интерфейс %(wallet_name)s",
@@ -958,7 +1041,8 @@
         "unlock_password": "Войти используя пароль",
         "unlock_short": "Войти",
         "unlocked_tip": "<br/>Нажмите, чтобы выйти.<br/><br/>Закрыв окно браузера, Вы также выйдете из аккаунта.",
-        "update_asset": "Обновить актив"
+        "update_asset": "Обновить актив",
+        "withdraw_legacy": "or Legacy Withdraw"
     },
     "icons": {
         "adjust": "Настроить маржинальную позицию",
@@ -1032,15 +1116,15 @@
             "wrong_address": "Не удается создать адрес"
         },
         "news": "Новости",
-        "orderbook_reverse": "Order Book Reversed",
+        "order_grouping": "Order Grouping Active",
         "plus_circle": {
             "add_contact": "Добавить контакт в список",
             "show_asset": "Показать актив",
             "show_market": "Показать рынок"
         },
         "power": "Войти",
-        "reverse_orderbook": "Reverse orderbook",
         "question_circle": "Помощь",
+        "reverse_orderbook": "Reverse orderbook",
         "server": "Исследовать",
         "settle": "Запросить расчет",
         "share": "Подробнее",
@@ -1087,6 +1171,17 @@
         "tr": "Türkçe",
         "zh": "简体中文"
     },
+    "login": {
+        "browseFile": "browse your files",
+        "browseFileLabel": "Browse your backup file",
+        "dropFile": "Drop your backup file in this area or ",
+        "invalidFormat": "Invalid format!",
+        "loginButton": "Login",
+        "selectDifferent": "Select different file",
+        "supportWarning": "Warning! You browser doesn't support some some file operations required to restore backup, we recommend you to use Chrome or Firefox browsers to restore your backup.",
+        "title": "Select Login Type",
+        "withoutBinFile": "I don't have .bin-file"
+    },
     "markets": {
         "base": "Основной актив",
         "core_rate": "Основная ставка",
@@ -1110,6 +1205,8 @@
             "bridge": "Мост",
             "title": "Купить"
         },
+        "cancel": "cancel",
+        "close": "close",
         "confirmation": {
             "accept": "Да",
             "cancel": "Нет",
@@ -1128,8 +1225,7 @@
             "close": "Закрыть",
             "header": "Пополнить аккаунт %(account_name)s",
             "header_short": "Пополнить",
-            "submit": "Пополнить счет",
-            "submit_beta": "Пополнение (beta)"
+            "submit": "Пополнить счет"
         },
         "deposit_withdraw": {
             "disabled": "Сервис шлюза %(gateway)s недоступен",
@@ -1145,6 +1241,11 @@
         },
         "ok": "ОК",
         "proposals": {
+            "actions": {
+                "approve": "Approve proposal",
+                "delete": "Permanently reject proposal",
+                "reject": "Reject proposal"
+            },
             "approval_add": "Подтверждение для добавления",
             "approval_remove": "Подтверждение для исключения",
             "key_approval_add": "Подтверждение ключей на добавление",
@@ -1188,7 +1289,6 @@
             "no_gateways": "Извините, для обработки этой операции вывода нет доступных шлюзов",
             "quantity": "Количество",
             "submit": "Вывод",
-            "submit_beta": "Вывод (бета)",
             "withdraw": "Вывод"
         }
     },
@@ -1280,6 +1380,7 @@
         "asset_update": "Обновить актив %(asset)s, используя аккаунт {account}",
         "call_order_update": "Изменить {debtSymbol} долг {account} на {debt} и залог на {collateral}",
         "committee_member_update_global_parameters": "Обновить глобальные параметры комитета {account}",
+        "delete": "Permanently reject",
         "expires": "Истекает",
         "feed_producer": "Обновить поставщиков котировок для актива {asset} используя аккаунт {account}",
         "limit_order_buy": "Разместить ордер на покупку {amount} за {price} для {account}",
@@ -1299,6 +1400,14 @@
             "owner_approvals_to_remove": "Подтверждения владельцев для удаления"
         },
         "update_account": "Обновить данные аккаунта для {account}",
+        "updated": {
+            "active_approvals_to_add": "Active approval(s) added",
+            "active_approvals_to_remove": "Active approval(s) removed",
+            "key_approvals_to_add": "Key approval(s) added",
+            "key_approvals_to_remove": "Key approval(s) removed",
+            "owner_approvals_to_add": "Owner approval(s) added",
+            "owner_approvals_to_remove": "Owner approval(s) removed"
+        },
         "vesting_balance_withdraw": "Вывести {amount} с вестингового баланса {account}"
     },
     "proposal_create": {
@@ -1307,6 +1416,9 @@
         "id": "Идентификатор предложения",
         "proposed_operations": "Предлагаемые операции",
         "review_period": "Начало отчетного периода"
+    },
+    "proposal_delete": {
+        "using_owner_authority": "Using owner authority"
     },
     "propose": "Предложить",
     "qr_address_scanner": {
@@ -1320,6 +1432,36 @@
         "claim_refcode": "Ввести реферальный код",
         "enter_refcode": "Введите код реферала",
         "refcode_optional": "Код реферала (необязательно)"
+    },
+    "registration": {
+        "accountConfirmation": "I have written down or otherwise stored my username and password.",
+        "accountDescription": "Please keep your password in a safe place. Don’t share it with any third-parties or send it online.",
+        "accountLoginByValue": "Account name + Password",
+        "accountModelTitle": "By Account Name<span class=\"hide-text-for-small\"> and Password</span>",
+        "accountNote": "If you forget your pass phrase you will be unable to access your account and your funds. We cannot reset or restore your password! Memorize or write down your username and password!",
+        "attention": "Attention",
+        "backUpRestoreKey": "Back up and restore Account",
+        "checkboxRecover": "I understand that no one can recover my password or .bin file if I forget or lose it.",
+        "checkboxRemember": "I have remembered or otherwise stored my password and I safely kept downloaded .bin file.",
+        "checkboxUploaded": "I understand that .bin file must be uploaded during the login process and without .bin file I will lose access to my funds.",
+        "continue": "Continue",
+        "copyPassword": "Copy your password to save.",
+        "createAccountTitle": "Create Account by Bin-file",
+        "createByPassword": "Create Account by Name and Password",
+        "downloadFile": "Download file",
+        "loginByKey": "Login by",
+        "passwordPlaceholder": "Minimum 7 characters",
+        "recommended": "recommended",
+        "securityAccountModel": "Medium",
+        "securityKey": "Security",
+        "securityWalletModel": "High",
+        "select": "Select",
+        "title": "Registration",
+        "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
+        "walletLoginByValue": "Bin-file + Password",
+        "walletModelTitle": "By bin-file",
+        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
         "access": "Доступ",
@@ -1364,15 +1506,18 @@
         "connection_error": "Не удается подключиться к узлу API %(url)s, возврат к известным рабочим узлам. Ошибка: %(error)s",
         "darkTheme": "Темная тема",
         "delete_select": "Выберите локальный кошелек для удаления",
+        "disabled": "Disabled",
         "enable_wallet": "Переключиться на модель кошелька",
         "faucet_address": "Адрес сервера-крана (faucet)",
         "faucet_address_text": "Адрес сервера-крана (faucet) который используется для оплаты регистрационного сбора для новых пользователей.",
         "general": "Общие",
         "general_text": "Выбрать основные настройки.",
+        "global_settings": "Default Global Settings",
         "hidden_nodes": "Скрытые",
         "hide": "Скрыть",
         "high_latency": "Высокое значение задержки",
         "inverseMarket": "Предпочтительная ориентация рынка",
+        "left": "Left",
         "lightTheme": "Светлая тема",
         "local_wallet": "Вход в локальный кошелек (модель \"Кошелек\")",
         "locale": "Переключить язык",
@@ -1387,12 +1532,16 @@
         "node_down": "Недоступен",
         "node_up": "Доступно",
         "olDarkTheme": "Темная Openledger",
+        "orderbook_autoscroll": "Order Book Autoscroll",
+        "orderbook_grouping": "Order Book Grouping",
+        "orderbook_reverse": "Order Book Reversed",
         "password": "Пароль",
         "passwordLogin": "Режим входа",
         "password_text": "Поменяйте пароль.",
         "personal_active": "Ваш персональный узел активен; чтобы удалить или изменить его, вам нужно сначала подключиться к другому узлу",
         "ping": "Проверить Узлы",
         "pinging": "Отслеживается...",
+        "placeholder_select": "Select option",
         "remove": "Удалить",
         "remove_api": "Удалить API",
         "remove_ws": "Удалить WebSocket API",
@@ -1404,6 +1553,8 @@
         "restore_default_success": "Настройки были успешно изменены",
         "restore_key_count": "# ключей",
         "restore_text": "Восстановить из резервной копии или импортировать ключи.",
+        "right": "Right",
+        "scrollbars_hide": "Reduce scroll bars",
         "show": "Показать",
         "showAssetPercent": "Показать процентное соотношение активов на странице аккаунтов",
         "showSettles": "Показать ордера на погашение ордера на графике глубины",
@@ -1451,6 +1602,20 @@
         "hide_asset": "Нажмите здесь, чтобы скрыть актив из этого списка.",
         "latest_price": "Это самая актуальная цена для этого рынка.",
         "login": "Кошелек %(wallet_name)s не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается, и Вы выходите из аккаунта.",
+        "login-tooltips": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
         "margin_price": "Это максимальная цена, которую может быть вынуждена заплатить позиция с затребованным дополнительным обеспечением. Также она называется Squeeze Price.",
         "market_fee": "Владелец %(asset)s назначил для ордеров на покупку рыночную комиссию в размере %(percent)s%%. Эта комиссия будет вычтена из суммы, полученной Вами при выполнении ордера, в момент же размещения ордера она не взимается.",
         "memo_tip": "В поле примечания Вы можете включить любое сообщение. Примечание необязательно, но обычно необходимо для перевода на биржи.",
@@ -1461,6 +1626,13 @@
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
         "proxy_remove": "Вам предоставлен набор прокси, чтобы его удалить, просто очистите данное поле ввода",
         "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования",
+        "registration": {
+            "accountModel": "The cloud wallet lets you login to your wallet from anywhere using only your account name and password, but your password is vulnerable to brute-force attacks which means it is important to use a very long password, ideally 20+ characters!",
+            "accountName": "Account name must contain from 4 to 63 characters and must consist of latin letters, dashes, digits.",
+            "password": "Password must contain at least 8 characters. It would be better to use a complicated password containing a combination of numbers, special characters and letters.",
+            "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
+            "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
+        },
         "settle": "Погашение позволит вам обменять ваши %(asset)s на %(backingAsset)s с задержкой в %(settleDelay)s часа по цене, равной цене котировки на момент погашения.",
         "settle_price": "Это цена, при которой будут исполнятся ордера на погашение.",
         "show_asset": "Нажмите здесь, чтобы отобразить этот актив в основном списке.",
@@ -1630,6 +1802,7 @@
         "balances": "Балансы",
         "broadcast": "Ваш перевод был транслирован в сеть",
         "broadcasting": "Трансляция...",
+        "by": "By",
         "cancel": "Отменить",
         "close": "Закрыть",
         "confirm": "ПОДТВЕРДИТЬ",
@@ -1654,10 +1827,12 @@
         "from": "От",
         "header": "Детали транзакции",
         "header_subheader": "Переводы используются для отправки средств другим владельцам аккаунтов %(wallet_name)s",
+        "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "Примечание",
         "memo_unlock": "Разблокируйте Ваш кошелек/аккаунт, чтобы увидеть это примечание",
         "optional": "Опционально",
         "pay_from": "Оплатить с",
+        "phase_out_warning": "We recommend using the new {modal_link} modal as this page will be phased out",
         "see": "ПОКАЗАТЬ МОИ ПЕРЕВОДЫ",
         "send": "Отправить",
         "to": "Кому",
@@ -1678,6 +1853,7 @@
         "chart_tool_duration": "Групповые торговые данные с использованием разных интервалов.",
         "chart_tool_indicators": "Добавьте технические индикаторы в график цен, чтобы определить торговые возможности.",
         "chart_tool_zoom": "Настройте ценовой график так, чтобы он отображал больше или меньше истории цен.",
+        "collapsed_items": "View one or several sections of the market by expanding the drawers",
         "create_cloud_wallet": "Доступ к облачному кошельку, используя имя учетной записи и пароль.",
         "create_local_wallet": "Создайте локальный кошелек и загрузите принадлежащие ему секретные ключи.",
         "depth_chart": "Используйте диаграмму глубины рынка, чтобы показать спрос и предложение по разным ценам.",
@@ -1685,15 +1861,19 @@
         "favourite_button": "Добавьте эту пару в избранные в вашем списке рынков.",
         "find_markets_tab": "Эта вкладка позволяет вам искать и добавлять дополнительные рынки на вкладку \"Мои рынки\".",
         "language_flag": "Выберите один из 9 языков для использования в DEX.",
-        "my_markets_tab": "На этой вкладке перечислены наиболее часто используемые рынки.",
+        "my_markets": "This tab lists commonly used markets.",
         "next_label": "Далее",
+        "panel_hide": "You can hide the panel to have more room",
+        "personalize": "Change the default layout in the personalize settings",
         "prev_label": "Назад",
         "price_chart": "Просмотр ценового действия актива с использованием ценового графика.",
         "restore_account": "Восстановите кошелек, используя резервный файл.",
         "sell_form": "Разместить заявки на продажу, используя эту форму.",
         "sell_orders": "Просмотреть все ордера на продажу на этом рынке.",
         "skip_label": "Пропустить",
-        "switch_button": "Переключайтесь между торговыми парами с помощью данной кнопки."
+        "switch_button": "Переключайтесь между торговыми парами с помощью данной кнопки.",
+        "vertical_lock": "Disable auto scroll to scroll through the order book",
+        "vertical_order": "View all orders for this market, including spread and latest order price"
     },
     "wallet": {
         "accept": "Принять",
