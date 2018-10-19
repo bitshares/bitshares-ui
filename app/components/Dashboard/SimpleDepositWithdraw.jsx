@@ -26,9 +26,6 @@ import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
 
-// import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
-// import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
-
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
         balance: ChainTypes.ChainObject,
@@ -294,9 +291,13 @@ class DepositWithdrawContent extends DecimalChecker {
             ? [this.props.balance]
             : this.props.balances;
 
-        return balances.find(b => {
-            return b && b.get("asset_type") === this.props.asset.get("id");
-        });
+        return !!balances
+            ? balances.find(b => {
+                  return (
+                      b && b.get("asset_type") === this.props.asset.get("id")
+                  );
+              })
+            : null;
     }
 
     _checkBalance() {

@@ -24,6 +24,7 @@ import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import MarketPicker from "./MarketPicker";
+import ConfirmOrderModal from "./ConfirmOrderModal";
 import Personalize from "./Personalize";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import DepthHighChart from "./DepthHighChart";
@@ -72,6 +73,20 @@ class Exchange extends React.Component {
 
         this.showPersonalizeModal = this.showPersonalizeModal.bind(this);
         this.hidePersonalizeModal = this.hidePersonalizeModal.bind(this);
+
+        this.showConfirmSellOrderModal = this.showConfirmSellOrderModal.bind(
+            this
+        );
+        this.hideConfirmSellOrderModal = this.hideConfirmSellOrderModal.bind(
+            this
+        );
+
+        this.showConfirmBuyOrderModal = this.showConfirmBuyOrderModal.bind(
+            this
+        );
+        this.hideConfirmBuyOrderModal = this.hideConfirmBuyOrderModal.bind(
+            this
+        );
 
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
@@ -208,6 +223,8 @@ class Exchange extends React.Component {
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
             history: [],
+            isConfirmBuyOrderModalVisible: false,
+            isConfirmSellOrderModalVisible: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
             buySellOpen: ws.get("buySellOpen", true),
@@ -282,6 +299,30 @@ class Exchange extends React.Component {
     _getLastMarketKey() {
         const chainID = Apis.instance().chain_id;
         return `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`;
+    }
+
+    showConfirmBuyOrderModal() {
+        this.setState({
+            isConfirmBuyOrderModalVisible: true
+        });
+    }
+
+    hideConfirmBuyOrderModal() {
+        this.setState({
+            isConfirmBuyOrderModalVisible: false
+        });
+    }
+
+    showConfirmSellOrderModal() {
+        this.setState({
+            isConfirmSellOrderModalVisible: true
+        });
+    }
+
+    hideConfirmSellOrderModal() {
+        this.setState({
+            isConfirmSellOrderModalVisible: false
+        });
     }
 
     componentWillMount() {
@@ -688,7 +729,7 @@ class Exchange extends React.Component {
         if (type === "buy" && lowestAsk) {
             let diff = this.state.bid.price.toReal() / lowestAsk.getPrice();
             if (diff > 1.2) {
-                this.refs.buy.show();
+                this.showConfirmBuyOrderModal();
                 return this.setState({
                     buyDiff: diff
                 });
@@ -697,7 +738,7 @@ class Exchange extends React.Component {
             let diff =
                 1 / (this.state.ask.price.toReal() / highestBid.getPrice());
             if (diff > 1.2) {
-                this.refs.sell.show();
+                this.showConfirmSellOrderModal();
                 return this.setState({
                     sellDiff: diff
                 });
@@ -2949,9 +2990,10 @@ class Exchange extends React.Component {
                     balance={modalType === "bid" ? baseBalance : quoteBalance}
                     {...this.props.backedCoins.find(
                         a =>
-                            (a.symbol === modalType) === "bid"
+                            a.symbol ===
+                            (modalType === "bid"
                                 ? base.get("symbol")
-                                : quote.get("symbol")
+                                : quote.get("symbol"))
                     )}
                 />
 
@@ -2978,6 +3020,38 @@ class Exchange extends React.Component {
                                 : quote.get("symbol")
                         ) || null
                     }
+                />
+
+                {/* Confirm Modal */}
+
+                <ConfirmOrderModal
+                    visible={this.state.isConfirmBuyOrderModalVisible}
+                    hideModal={this.hideConfirmBuyOrderModal}
+                    type="buy"
+                    onForce={this._forceBuy.bind(
+                        this,
+                        "buy",
+                        buyFeeAsset,
+                        baseBalance,
+                        coreBalance
+                    )}
+                    diff={buyDiff}
+                    hasOrders={combinedAsks.length > 0}
+                />
+
+                <ConfirmOrderModal
+                    visible={this.state.isConfirmSellOrderModalVisible}
+                    hideModal={this.hideConfirmSellOrderModal}
+                    type="sell"
+                    onForce={this._forceSell.bind(
+                        this,
+                        "sell",
+                        sellFeeAsset,
+                        quoteBalance,
+                        coreBalance
+                    )}
+                    diff={sellDiff}
+                    hasOrders={combinedBids.length > 0}
                 />
             </div>
         );
