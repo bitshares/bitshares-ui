@@ -12,15 +12,11 @@ import AccountStore from "stores/AccountStore";
 import WalletDb from "stores/WalletDb";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import utils from "common/utils";
-import ls from "common/localStorage";
 import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import Icon from "../Icon/Icon";
-
-const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
 
 class WalletRegistrationForm extends React.Component {
     static propTypes = {
@@ -122,7 +118,6 @@ class WalletRegistrationForm extends React.Component {
                 0
             )
                 .then(() => {
-                    ss.set("isAuthentificated", true);
                     // User registering his own account
                     FetchChain("getAccount", name, undefined, {
                         [name]: true

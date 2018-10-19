@@ -130,7 +130,7 @@ class AccountNameInput extends React.Component {
         // Simplify the rules (prevent typing of invalid characters)
         var account_name = e.target.value.toLowerCase();
         account_name = account_name.match(/[a-z0-9\.-]+/);
-        account_name = account_name ? account_name[0] : null;
+        account_name = account_name ? account_name[0] : "";
         this.setState({account_name});
         this.validateAccountName(account_name);
     }

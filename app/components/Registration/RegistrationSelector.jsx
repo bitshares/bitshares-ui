@@ -66,7 +66,7 @@ export default class RegistrationSelector extends React.Component {
                         component="p"
                         className="registration-title"
                     />
-                    <div>
+                    <div className="registration-container">
                         <div className="v-align">
                             <div
                                 className={`${

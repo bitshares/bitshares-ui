@@ -2,6 +2,7 @@ import React from "react";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {getWalletName} from "branding";
+import {Alert, Checkbox} from "bitshares-ui-style-guide";
 
 /* Dummy input to trick Chrome into disabling auto-complete */
 export const DisableChromeAutocomplete = () => (
@@ -74,17 +75,19 @@ export const RestoreBackupOnly = ({onFileChosen, onRestoreOther}) => (
 
 export const BackupWarning = ({onChange, checked}) => (
     <div className="backup-warning">
-        <p>
-            <Translate content="wallet.backup_warning" />
-        </p>
+        <Alert
+            type="warning"
+            message={counterpart.translate("alert.warning")}
+            description={counterpart.translate("wallet.backup_warning")}
+        />
         <div className="checkbox">
-            <input
+            <Checkbox
                 key={`checkbox_${checked}`} // This is needed to prevent slow checkbox reaction
-                type="checkbox"
                 onChange={onChange}
                 checked={checked}
-            />{" "}
-            <Translate content="wallet.dont_ask_for_backup" />
+            >
+                <Translate content="wallet.dont_ask_for_backup" />
+            </Checkbox>
         </div>
     </div>
 );
