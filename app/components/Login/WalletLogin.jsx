@@ -33,12 +33,6 @@ class WalletLogin extends Component {
         BackupActions.reset();
     }
 
-    componentDidUpdate() {
-        if (this.props.backup.contents && !this.props.backup.public_key) {
-            BackupActions.reset();
-        }
-    }
-
     onFileUpload(evt, droppedFile) {
         const file = droppedFile || evt.target.files[0];
         BackupActions.incommingWebFile(file);
