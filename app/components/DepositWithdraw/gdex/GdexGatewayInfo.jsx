@@ -12,6 +12,7 @@ import {requestDepositAddress} from "../../../lib/common/gdexMethods";
 import QRCode from "qrcode.react";
 import GdexWithdrawModal from "./GdexWithdrawModal";
 import counterpart from "counterpart";
+import {Modal, Button} from "bitshares-ui-style-guide";
 import PropTypes from "prop-types";
 
 class GdexGatewayInfo extends React.Component {
@@ -32,6 +33,7 @@ class GdexGatewayInfo extends React.Component {
     constructor() {
         super();
         this.state = {
+            isQrModalVisible: false,
             receive_address: null,
             isAvailable: true,
             qrcode: ""
@@ -39,6 +41,21 @@ class GdexGatewayInfo extends React.Component {
         this.deposit_address_cache = new GdexCache();
         this._copy = this._copy.bind(this);
         document.addEventListener("copy", this._copy);
+
+        this.showQrModal = this.showQrModal.bind(this);
+        this.hideQrModal = this.hideQrModal.bind(this);
+    }
+
+    showQrModal() {
+        this.setState({
+            isQrModalVisible: true
+        });
+    }
+
+    hideQrModal() {
+        this.setState({
+            isQrModalVisible: false
+        });
     }
 
     getDepositAddress() {
@@ -135,7 +152,9 @@ class GdexGatewayInfo extends React.Component {
     }
 
     onShowQrcode(text) {
-        this.setState({qrcode: text}, () => ZfApi.publish("qrcode", "open"));
+        this.setState({qrcode: text}, () => {
+            this.showQrModal();
+        });
     }
 
     _copy(e) {
@@ -288,7 +307,8 @@ class GdexGatewayInfo extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -319,7 +339,8 @@ class GdexGatewayInfo extends React.Component {
                             <Translate
                                 content="gateway.deposit_to"
                                 asset={coin.outerSymbol}
-                            />:
+                            />
+                            :
                         </label>
                         <p style={{color: "red"}}>
                             <Translate
@@ -340,7 +361,8 @@ class GdexGatewayInfo extends React.Component {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.address" />:
+                                            <Translate content="gateway.address" />
+                                            :
                                         </td>
                                         <td>{deposit_address_fragment}</td>
                                         <td>
@@ -370,7 +392,8 @@ class GdexGatewayInfo extends React.Component {
                                     {memoText ? (
                                         <tr>
                                             <td>
-                                                <Translate content="gateway.memo" />:
+                                                <Translate content="gateway.memo" />
+                                                :
                                             </td>
                                             <td>{memoText}</td>
                                             <td>
@@ -400,10 +423,22 @@ class GdexGatewayInfo extends React.Component {
                                     ) : null}
                                 </tbody>
                             </table>
-                            <BaseModal id="qrcode" overlay={true}>
+                            <Modal
+                                footer={[
+                                    <Button
+                                        key="close"
+                                        type="primary"
+                                        onClick={this.hideQrModal}
+                                    >
+                                        {counterpart.translate("modal.close")}
+                                    </Button>
+                                ]}
+                                visible={this.state.isQrModalVisible}
+                                onCancel={this.hideQrModal}
+                            >
                                 {/*<div className="gdex-gateway">abc</div>*/}
                                 <DepositQrCodeModal text={qrcode} />
-                            </BaseModal>
+                            </Modal>
                         </div>
                     </div>
                 </div>
@@ -473,7 +508,8 @@ class GdexGatewayInfo extends React.Component {
                                     </tr>
                                     <tr>
                                         <td>
-                                            <Translate content="gateway.balance" />:
+                                            <Translate content="gateway.balance" />
+                                            :
                                         </td>
                                         <td
                                             style={{
@@ -504,7 +540,8 @@ class GdexGatewayInfo extends React.Component {
                             <Translate
                                 content="gateway.withdraw_to"
                                 asset={this.props.deposit_asset}
-                            />:
+                            />
+                            :
                         </label>
                         <div className="button-group" style={{paddingTop: 20}}>
                             <button
@@ -555,7 +592,7 @@ class DepositQrCodeModal extends React.Component {
                 <QRCode size={200} value={text} />
                 <br />
                 <br />
-                <label>{text}</label>
+                <label style={{textTransform: "none"}}>{text}</label>
             </div>
         );
     }
