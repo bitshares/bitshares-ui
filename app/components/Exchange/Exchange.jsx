@@ -97,6 +97,12 @@ class Exchange extends React.Component {
         this.showDepositModal = this.showDepositModal.bind(this);
         this.hideDepositModal = this.hideDepositModal.bind(this);
 
+        this.showBorrowQuoteModal = this.showBorrowQuoteModal.bind(this);
+        this.hideBorrowQuoteModal = this.hideBorrowQuoteModal.bind(this);
+
+        this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
+        this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
+
         this.psInit = true;
     }
 
@@ -230,6 +236,8 @@ class Exchange extends React.Component {
             isDepositModalVisible: false,
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
+            isBorrowQuoteModalVisible: false,
+            isBorrowBaseModalVisible: false,
             history: [],
             isConfirmBuyOrderModalVisible: false,
             isConfirmSellOrderModalVisible: false,
@@ -301,6 +309,30 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: true
+        });
+    }
+
+    hideBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: false
+        });
+    }
+
+    showBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: true
+        });
+    }
+
+    hideBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: false
         });
     }
 
@@ -1345,11 +1377,11 @@ class Exchange extends React.Component {
     }
 
     _borrowQuote() {
-        this.refs.borrowQuote.show();
+        this.showBorrowQuoteModal();
     }
 
     _borrowBase() {
-        this.refs.borrowBase.show();
+        this.showBorrowBaseModal();
     }
 
     _onDeposit(type, e) {
@@ -2981,8 +3013,8 @@ class Exchange extends React.Component {
 
                 {quoteIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowQuote"
-                        modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                        visible={this.state.isBorrowQuoteModalVisible}
+                        hideModal={this.hideBorrowQuoteModal}
                         quote_asset={quoteAsset.get("id")}
                         backing_asset={quoteAsset.getIn([
                             "bitasset",
@@ -2994,8 +3026,8 @@ class Exchange extends React.Component {
                 ) : null}
                 {baseIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowBase"
-                        modalId={"borrow_modal_base_" + baseAsset.get("id")}
+                        visible={this.state.isBorrowBaseModalVisible}
+                        hideModal={this.hideBorrowBaseModal}
                         quote_asset={baseAsset.get("id")}
                         backing_asset={baseAsset.getIn([
                             "bitasset",

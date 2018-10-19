@@ -1028,8 +1028,8 @@ class AccountPortfolioList extends React.Component {
                 showModal={this.showBorrowModal}
                 hideModal={this.hideBorrowModal}
                 account={this.state.borrow && this.state.borrow.account}
-                quoteAsset={this.state.borrow && this.state.borrow.quoteAsset}
-                backingAsset={
+                quote_asset={this.state.borrow && this.state.borrow.quoteAsset}
+                backing_asset={
                     this.state.borrow && this.state.borrow.backingAsset
                 }
             />
