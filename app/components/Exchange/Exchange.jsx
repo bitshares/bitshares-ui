@@ -2990,9 +2990,10 @@ class Exchange extends React.Component {
                     balance={modalType === "bid" ? baseBalance : quoteBalance}
                     {...this.props.backedCoins.find(
                         a =>
-                            (a.symbol === modalType) === "bid"
+                            a.symbol ===
+                            (modalType === "bid"
                                 ? base.get("symbol")
-                                : quote.get("symbol")
+                                : quote.get("symbol"))
                     )}
                 />
 
