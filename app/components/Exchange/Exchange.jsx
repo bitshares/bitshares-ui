@@ -91,6 +91,12 @@ class Exchange extends React.Component {
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
 
+        this.showDepositBridgeModal = this.showDepositBridgeModal.bind(this);
+        this.hideDepositBridgeModal = this.hideDepositBridgeModal.bind(this);
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
         this.psInit = true;
     }
 
@@ -220,6 +226,8 @@ class Exchange extends React.Component {
         }
 
         return {
+            isDepositBridgeModalVisible: false,
+            isDepositModalVisible: false,
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
             history: [],
@@ -293,6 +301,30 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: true
+        });
+    }
+
+    hideDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
@@ -1326,7 +1358,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.deposit_modal.show();
+        this.showDepositModal();
     }
 
     _onBuy(type, e) {
@@ -1335,7 +1367,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.bridge_modal.show();
+        this.showDepositBridgeModal();
     }
 
     _getSettlementInfo() {
@@ -2975,6 +3007,8 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <SimpleDepositWithdraw
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
                     ref="deposit_modal"
                     action="deposit"
                     fiatModal={false}
@@ -2999,6 +3033,8 @@ class Exchange extends React.Component {
 
                 {/* Bridge modal */}
                 <SimpleDepositBlocktradesBridge
+                    visible={this.state.isDepositBridgeModalVisible}
+                    hideModal={this.hideDepositBridgeModal}
                     ref="bridge_modal"
                     action="deposit"
                     account={currentAccount.get("name")}

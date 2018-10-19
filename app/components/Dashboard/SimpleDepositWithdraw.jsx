@@ -25,6 +25,7 @@ import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
+import {Modal} from "bitshares-ui-style-guide";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
@@ -858,20 +859,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
         return (
             <div className="SimpleTrade__modal">
-                <div className="Modal__header">
-                    <h3>
-                        <Translate
-                            content={
-                                isDeposit
-                                    ? "gateway.deposit"
-                                    : "modal.withdraw.submit"
-                            }
-                        />{" "}
-                        {assetName}
-                    </h3>
-                </div>
-                <div className="Modal__divider" />
-
                 <div
                     className="grid-block vertical no-overflow"
                     style={{
@@ -907,20 +894,30 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     }
 
     render() {
-        return !this.state.open ? null : (
-            <BaseModal
+        const isDeposit = this.props.action === "deposit";
+
+        const title = isDeposit
+            ? counterpart.translate("gateway.deposit")
+            : counterpart.translate("modal.withdraw.submit");
+
+        return (
+            <Modal
+                title={title}
+                footer={[]}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
                 className="test"
                 onClose={this.onClose.bind(this)}
                 overlay={true}
                 id={this.props.modalId}
             >
-                {this.state.open ? (
+                {this.props.visible ? (
                     <DepositWithdrawContent
                         {...this.props}
-                        open={this.state.open}
+                        open={this.props.visible}
                     />
                 ) : null}
-            </BaseModal>
+            </Modal>
         );
     }
 }
