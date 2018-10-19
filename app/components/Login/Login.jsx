@@ -101,7 +101,6 @@ export default class Login extends React.Component {
                                     goToWalletModel={() =>
                                         this.changeActiveModel(true)
                                     }
-                                    history={this.props.history}
                                 />
                             </div>
                         </div>

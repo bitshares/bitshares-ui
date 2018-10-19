@@ -4,7 +4,6 @@ import Translate from "react-translate-component";
 import ReactTooltip from "react-tooltip";
 import Icon from "../Icon/Icon";
 import {Download} from "../Wallet/Backup";
-import AccountStore from "../../stores/AccountStore";
 
 class WalletRegistrationConfirm extends React.Component {
     static propTypes = {
@@ -16,7 +15,7 @@ class WalletRegistrationConfirm extends React.Component {
     };
 
     onBackupDownload = () => {
-        this.props.history.push(`/account/${AccountStore.getMyAccounts()[0]}`);
+        this.props.history.push("/");
     };
 
     static renderWarning() {
