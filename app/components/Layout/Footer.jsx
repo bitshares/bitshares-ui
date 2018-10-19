@@ -300,12 +300,6 @@ class Footer extends React.Component {
         }
     }
 
-    _showSend(e) {
-        e.preventDefault();
-        if (this.send_modal) this.send_modal.show();
-        // this._closeDropdown();
-    }
-
     _showReport(e) {
         e.preventDefault();
         if (this.reportModal) this.reportModal.show();
@@ -622,8 +616,6 @@ class Footer extends React.Component {
                     refCallback={e => {
                         if (e) this.reportModal = e;
                     }}
-                    // from_name={this.props.account.get("name")}
-                    // asset_id={this.state.send_asset || "1.3.0"}
                 />
             </div>
         );
