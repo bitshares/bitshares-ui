@@ -2107,8 +2107,11 @@ class Exchange extends React.Component {
                         }`
                     )}
                     innerClass={cnames(
-                        centerContainerWidth > 800 ? "medium-6" : "medium-12",
-                        "large-6 xlarge-6",
+                        centerContainerWidth > 1200 
+                            ? "medium-6"
+                            : centerContainerWidth > 800 
+                                ? "medium-6 large-6" 
+                                : "",
                         "small-12 middle-content",
                         !tinyScreen ? "exchange-padded" : ""
                     )}
@@ -2508,9 +2511,9 @@ class Exchange extends React.Component {
                 <div
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
-                        verticalOrderBook ? "xlarge-order-2" : "xlarge-order-2",
+                        verticalOrderBook ? "xlarge-order-2" : "",
                         centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4 "
+                            ? "medium-6 large-6 xlarge-4"
                             : centerContainerWidth > 800
                                 ? "medium-6"
                                 : "",
@@ -2553,16 +2556,10 @@ class Exchange extends React.Component {
         let emptyDiv = (
             <div
                 className={cnames(
-                    centerContainerWidth > 1200
-                        ? "xlarge-8"
-                        : centerContainerWidth > 800
-                            ? ""
-                            : "",
+                    centerContainerWidth > 1200 && verticalOrderBook ? "xlarge-order-4 xlarge-8 order-9" : "",
+                    centerContainerWidth > 1200 && verticalOrderForm ? "xlarge-order-6 xlarge-8 order-9" : "",
                     "medium-12 large-12",
                     "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
-                    `order-${buySellTop ? 3 : 1} xlarge-order-${
-                        buySellTop ? 4 : 1
-                    }`
                 )}
             >
                 &nbsp;
@@ -2577,12 +2574,16 @@ class Exchange extends React.Component {
             if (!verticalOrderForm) {
                 actionCards.push(buyForm);
                 actionCards.push(sellForm);
-            }
+            } 
+
             if (!verticalOrderBook) {
                 actionCards.push(orderBook);
-            } else {
+            } 
+
+            if (verticalOrderBook || verticalOrderForm) {
                 actionCards.push(emptyDiv);
             }
+
             actionCards.push(groupStandalone);
             actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
