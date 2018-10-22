@@ -540,6 +540,7 @@
         "price_market": "Market Price",
         "quantity": "Quantità",
         "quick_deposit": "Quick Deposit",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "Disponibilità valuta quotata",

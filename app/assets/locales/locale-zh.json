@@ -540,6 +540,7 @@
         "price_market": "Market Price",
         "quantity": "数量",
         "quick_deposit": "Quick Deposit",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "报价货币：",
         "quote_selection": "Modify quote selection",
         "quote_supply": "标价资产供应量",
