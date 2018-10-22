@@ -212,7 +212,8 @@
             "id": "ID",
             "info": "Info",
             "time": "Time",
-            "type": "Type"
+            "type": "Type",
+            "fee": "Fee"
         },
         "transfer_actions": "Transfer actions",
         "unfollow": "Remove contact",

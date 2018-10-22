@@ -106,6 +106,9 @@ class Row extends React.Component {
                         {this.props.operationId}
                     </td>
                 ) : null}
+                <td style={{padding: "8px 5px", textAlign: "left"}}>
+                    <FormattedAsset amount={fee.amount} asset={fee.asset_id} />
+                </td>
                 {hideOpLabel ? null : (
                     <td
                         style={{textAlign: "left"}}
@@ -131,6 +134,7 @@ class Row extends React.Component {
                         </Link>
                     </td>
                 )}
+
                 <td style={{padding: "8px 5px", textAlign: "left"}}>
                     <div>
                         <span>{this.props.info}</span>

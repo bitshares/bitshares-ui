@@ -435,6 +435,9 @@ class RecentTransactions extends React.Component {
                                     >
                                         <Translate content="account.transactions.id" />
                                     </th>
+                                    <th style={alignLeft}>
+                                        <Translate content="account.transactions.fee" />
+                                    </th>
                                     <th
                                         className="column-hide-tiny"
                                         style={alignLeft}
