@@ -38,6 +38,9 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            receiveAmount: 0,
+            depositLimit: 0,
+            sendAmount: 0,
             toAddress: WithdrawAddresses.getLast(props.walletType),
             withdrawValue: "",
             amountError: null,
