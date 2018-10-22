@@ -1,4 +1,3 @@
-import {Button} from "components/DepositWithdraw/blocktrades/WithdrawModalBlocktrades";
 import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
