@@ -550,21 +550,27 @@ class AccountVoting extends React.Component {
         let workerArray = this._getWorkerArray();
 
         let voteThreshold = 0;
-        let hideProposals = a => {
-            let dublicated = workerArray.some(o => {
+        const hideProposals = filteredWorker => {
+            let dublicated = workerArray.some(worker => {
                 return (
-                    (a.get("name").includes(o.get("name")) ||
-                        o.get("name").includes(a.get("name"))) &&
-                    o.get("worker_account") === a.get("worker_account") &&
-                    new Date(o.get("work_begin_date")) >
-                        new Date(a.get("work_begin_date"))
+                    (filteredWorker.get("name").includes(worker.get("name")) ||
+                        worker
+                            .get("name")
+                            .includes(filteredWorker.get("name"))) &&
+                    worker.get("worker_account") ===
+                        filteredWorker.get("worker_account") &&
+                    new Date(worker.get("work_begin_date")) >
+                        new Date(filteredWorker.get("work_begin_date"))
                 );
             });
-            let hasStarted = new Date(a.get("work_begin_date") + "Z") <= now;
-            let approvalState = this.state.vote_ids.has(a.get("vote_for"))
+            let hasStarted =
+                new Date(filteredWorker.get("work_begin_date") + "Z") <= now;
+            let approvalState = this.state.vote_ids.has(
+                filteredWorker.get("vote_for")
+            )
                 ? true
                 : this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"].has(
-                      a.get("vote_against")
+                      filteredWorker.get("vote_against")
                   )
                     ? false
                     : null;
@@ -578,11 +584,6 @@ class AccountVoting extends React.Component {
                 if (!a) {
                     return false;
                 }
-
-                /*  if (workerArray.has(worker.get("worker_account"))) {
-                    sortedArr.assign({[worker.get("worker_account")]: [worker.get("name"),worker.get("work_begin_date")]});
-                } */
-
                 return (
                     hideProposals(a) &&
                     new Date(a.get("work_end_date") + "Z") > now &&
@@ -669,7 +670,8 @@ class AccountVoting extends React.Component {
                 }
 
                 return (
-                    hideProposals(a) && new Date(a.get("work_end_date")) <= now
+                    hideProposals(a) &&
+                    new Date(a.get("work_end_date") + "Z") <= now
                 );
             })
             .sort((a, b) => {
