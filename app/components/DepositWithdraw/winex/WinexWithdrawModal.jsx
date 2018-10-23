@@ -9,11 +9,11 @@ import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
 import {validateAddress, WithdrawAddresses} from "common/gatewayMethods";
 import {ChainStore} from "bitsharesjs";
-import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 import {debounce} from "lodash-es";
 import PropTypes from "prop-types";
+import {Button, Modal} from "bitshares-ui-style-guide";
 
 class WinexWithdrawModal extends React.Component {
     static propTypes = {
