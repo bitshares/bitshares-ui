@@ -423,6 +423,12 @@
         "update": "Update",
         "use_max": "Use Max"
     },
+    "notifications": {
+        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
+        "exchange_enter_valid_values": "Please enter a valid amount and price",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)"
+    },
     "browser_notification_messages": {
         "money_received_body": "Sent you %(amount)s %(symbol)s",
         "money_received_title": "Transfer from %(from)s"

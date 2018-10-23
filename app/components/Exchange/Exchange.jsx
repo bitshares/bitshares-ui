@@ -34,7 +34,7 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
-
+import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
@@ -785,7 +785,9 @@ class Exchange extends React.Component {
         );
         if (!feeID) {
             return Notification.error({
-                message: "Insufficient funds to pay fees"
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_for_fees"
+                )
             });
         }
 
@@ -815,11 +817,13 @@ class Exchange extends React.Component {
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
             return Notification.error({
-                message:
-                    "Insufficient funds to place order, you need at least " +
-                    current.for_sale.getAmount({real: true}) +
-                    " " +
-                    sellAsset.get("symbol")
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_to_place_order",
+                    {
+                        amount: current.for_sale.getAmount({real: true}),
+                        symbol: sellAsset.get("symbol")
+                    }
+                )
             });
         }
         //
@@ -830,7 +834,9 @@ class Exchange extends React.Component {
             )
         ) {
             return Notification.warning({
-                message: "Please enter a valid amount and price"
+                message: counterpart.translate(
+                    "notifications.exchange_enter_valid_values"
+                )
             });
         }
         //
@@ -886,11 +892,15 @@ class Exchange extends React.Component {
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
                         Notification.error({
-                            message:
-                                "Unknown error. Failed to place order for " +
-                                current.to_receive.getAmount({real: true}) +
-                                " " +
-                                current.to_receive.asset_id
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: current.to_receive.getAmount({
+                                        real: true
+                                    }),
+                                    symbol: current.to_receive.asset_id
+                                }
+                            )
                         });
                 }
                 console.log("order success");
@@ -954,11 +964,13 @@ class Exchange extends React.Component {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
                             Notification.error({
-                                message:
-                                    "Unknown error. Failed to place order for " +
-                                    buyAssetAmount +
-                                    " " +
-                                    buyAsset.symbol
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: buyAssetAmount,
+                                        symbol: buyAsset.symbol
+                                    }
+                                )
                             });
                     }
                 }
