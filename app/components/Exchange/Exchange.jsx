@@ -91,6 +91,18 @@ class Exchange extends React.Component {
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
 
+        this.showDepositBridgeModal = this.showDepositBridgeModal.bind(this);
+        this.hideDepositBridgeModal = this.hideDepositBridgeModal.bind(this);
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showBorrowQuoteModal = this.showBorrowQuoteModal.bind(this);
+        this.hideBorrowQuoteModal = this.hideBorrowQuoteModal.bind(this);
+
+        this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
+        this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
+
         this.psInit = true;
     }
 
@@ -220,8 +232,12 @@ class Exchange extends React.Component {
         }
 
         return {
+            isDepositBridgeModalVisible: false,
+            isDepositModalVisible: false,
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
+            isBorrowQuoteModalVisible: false,
+            isBorrowBaseModalVisible: false,
             history: [],
             isConfirmBuyOrderModalVisible: false,
             isConfirmSellOrderModalVisible: false,
@@ -293,6 +309,54 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: true
+        });
+    }
+
+    hideBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: false
+        });
+    }
+
+    showBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: true
+        });
+    }
+
+    hideBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: false
+        });
+    }
+
+    showDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: true
+        });
+    }
+
+    hideDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
@@ -1313,11 +1377,11 @@ class Exchange extends React.Component {
     }
 
     _borrowQuote() {
-        this.refs.borrowQuote.show();
+        this.showBorrowQuoteModal();
     }
 
     _borrowBase() {
-        this.refs.borrowBase.show();
+        this.showBorrowBaseModal();
     }
 
     _onDeposit(type, e) {
@@ -1326,7 +1390,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.deposit_modal.show();
+        this.showDepositModal();
     }
 
     _onBuy(type, e) {
@@ -1335,7 +1399,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.bridge_modal.show();
+        this.showDepositBridgeModal();
     }
 
     _getSettlementInfo() {
@@ -2949,8 +3013,8 @@ class Exchange extends React.Component {
 
                 {quoteIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowQuote"
-                        modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                        visible={this.state.isBorrowQuoteModalVisible}
+                        hideModal={this.hideBorrowQuoteModal}
                         quote_asset={quoteAsset.get("id")}
                         backing_asset={quoteAsset.getIn([
                             "bitasset",
@@ -2962,8 +3026,8 @@ class Exchange extends React.Component {
                 ) : null}
                 {baseIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowBase"
-                        modalId={"borrow_modal_base_" + baseAsset.get("id")}
+                        visible={this.state.isBorrowBaseModalVisible}
+                        hideModal={this.hideBorrowBaseModal}
                         quote_asset={baseAsset.get("id")}
                         backing_asset={baseAsset.getIn([
                             "bitasset",
@@ -2975,6 +3039,8 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <SimpleDepositWithdraw
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
                     ref="deposit_modal"
                     action="deposit"
                     fiatModal={false}
@@ -2999,6 +3065,8 @@ class Exchange extends React.Component {
 
                 {/* Bridge modal */}
                 <SimpleDepositBlocktradesBridge
+                    visible={this.state.isDepositBridgeModalVisible}
+                    hideModal={this.hideDepositBridgeModal}
                     ref="bridge_modal"
                     action="deposit"
                     account={currentAccount.get("name")}

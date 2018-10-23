@@ -131,6 +131,7 @@ class App extends React.Component {
                 ? true
                 : false;
         this.state = {
+            isBrowserSupportModalVisible: false,
             loading: false,
             synced: this._syncStatus(),
             syncFail,
@@ -143,6 +144,9 @@ class App extends React.Component {
         this._chainStoreSub = this._chainStoreSub.bind(this);
         this._syncStatus = this._syncStatus.bind(this);
         this._getWindowHeight = this._getWindowHeight.bind(this);
+
+        this.showBrowserSupportModal = this.showBrowserSupportModal.bind(this);
+        this.hideBrowserSupportModal = this.hideBrowserSupportModal.bind(this);
     }
 
     componentWillUnmount() {
@@ -187,6 +191,18 @@ class App extends React.Component {
         }
     }
 
+    hideBrowserSupportModal() {
+        this.setState({
+            isBrowserSupportModalVisible: false
+        });
+    }
+
+    showBrowserSupportModal() {
+        this.setState({
+            isBrowserSupportModalVisible: true
+        });
+    }
+
     _syncStatus(setState = false) {
         let synced = this.getBlockTimeDelta() < 5;
         if (setState && synced !== this.state.synced) {
@@ -224,7 +240,7 @@ class App extends React.Component {
                 user_agent.indexOf("edge") > -1
             )
         ) {
-            this.refs.browser_modal.show();
+            this.showBrowserSupportModal();
         }
 
         this.props.history.listen(this._rebuildTooltips);
@@ -490,7 +506,11 @@ class App extends React.Component {
                         <TransactionConfirm />
                         <BrowserNotifications />
                         <WalletUnlockModal />
-                        <BrowserSupportModal ref="browser_modal" />
+                        <BrowserSupportModal
+                            visible={this.state.isBrowserSupportModalVisible}
+                            hideModal={this.hideBrowserSupportModal}
+                            showModal={this.showBrowserSupportModal}
+                        />
                     </div>
                 </BodyClassName>
             </div>
