@@ -540,6 +540,7 @@
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quick_deposit": "Quick Deposit",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
         "quote_supply": "Назначить запас",
