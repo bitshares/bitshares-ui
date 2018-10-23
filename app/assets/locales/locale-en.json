@@ -432,7 +432,8 @@
         "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
         "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
         "worker_create_failure": "Failed to create worker: %(error_msg)",
-        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued"
+        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)"
     },
     "browser_notification_messages": {
         "money_received_body": "Sent you %(amount)s %(symbol)s",
