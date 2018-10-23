@@ -4,7 +4,6 @@ import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
 import counterpart from "counterpart";
 import classNames from "classnames";
-import notify from "actions/NotificationActions";
 import AccountActions from "actions/AccountActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletActions from "actions/WalletActions";
