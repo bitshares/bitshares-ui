@@ -39,7 +39,8 @@ class AccountOverview extends React.Component {
                 // "OPEN.MAID",
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
-            ]
+            ],
+            hideFishingProposals: true
         };
 
         this._handleFilterInput = this._handleFilterInput.bind(this);
@@ -626,8 +627,7 @@ class AccountOverview extends React.Component {
                                 />
                             </Tab>
 
-                            {account.get("proposals") &&
-                            account.get("proposals").size ? (
+                            {true ? (
                                 <Tab
                                     title="explorer.proposals.title"
                                     subText={String(
@@ -636,9 +636,28 @@ class AccountOverview extends React.Component {
                                             : 0
                                     )}
                                 >
+                                    <div>
+                                        <input
+                                            type="checkbox"
+                                            onChange={() => {
+                                                this.setState({
+                                                    hideFishingProposals: !this
+                                                        .state
+                                                        .hideFishingProposals
+                                                });
+                                            }}
+                                            checked={
+                                                this.state.hideFishingProposals
+                                            }
+                                        />
+                                        <Translate content="account.deactivate_suspicious_proposals" />
+                                    </div>
                                     <Proposals
                                         className="dashboard-table"
                                         account={account.get("id")}
+                                        hideFishingProposals={
+                                            this.state.hideFishingProposals
+                                        }
                                     />
                                 </Tab>
                             ) : null}

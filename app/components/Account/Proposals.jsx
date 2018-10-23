@@ -14,6 +14,7 @@ import counterpart from "counterpart";
 import pu from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AccountStore from "stores/AccountStore";
+import accountUtils from "common/account_utils";
 
 class Proposals extends Component {
     static propTypes = {
@@ -51,6 +52,18 @@ class Proposals extends Component {
             proposal.available_owner_approvals.length ||
             proposal.available_key_approvals.length
         );
+    }
+    _isSucpicious(proposer) {
+        const proposerName = proposer.get("name");
+        const blackList = this.props.account.get("blacklisting_accounts");
+
+        let isBlackListed = blackList.some(blackListAccount => {
+            return blackListAccount.get("name") === proposerName;
+        });
+
+        let isScammer = accountUtils.isKnownScammer(proposerName);
+
+        return isScammer || isBlackListed;
     }
 
     render() {
@@ -182,7 +195,10 @@ class Proposals extends Component {
                     });
                 }
 
-                const canApprove = accountNames.length + keyNames.length > 0;
+                const canApprove =
+                    accountNames.length + keyNames.length > 0 &&
+                    (!this.props.hideFishingProposals ||
+                        !this._isSucpicious(proposer));
 
                 result.push(
                     <tr

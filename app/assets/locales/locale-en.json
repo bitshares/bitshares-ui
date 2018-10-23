@@ -20,6 +20,7 @@
         "contacts": "Contacts",
         "create_account": "Create account",
         "create_new": "Create A New Account",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Deposit/Withdraw",
