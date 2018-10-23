@@ -3,8 +3,9 @@ import {connect} from "alt-react";
 import ApplicationApi from "api/ApplicationApi";
 import AccountStore from "stores/AccountStore";
 import utils from "common/utils";
-import notify from "actions/NotificationActions";
 import Translate from "react-translate-component";
+import counterpart from "counterpart";
+import {Notification} from "bitshares-ui-style-guide";
 
 class CreateWorker extends React.Component {
     constructor() {
@@ -40,10 +41,13 @@ class CreateWorker extends React.Component {
                     ? error.message.split("stack")[0]
                     : "unknown error";
 
-            notify.addNotification({
-                message: `Failed to create worker: ${error_msg}`,
-                level: "error",
-                autoDismiss: 10
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.worker_create_failure",
+                    {
+                        error_msg: error_msg
+                    }
+                )
             });
         });
     }
@@ -183,13 +187,16 @@ class CreateWorker extends React.Component {
     }
 }
 
-export default (CreateWorker = connect(CreateWorker, {
-    listenTo() {
-        return [AccountStore];
-    },
-    getProps() {
-        return {
-            currentAccount: AccountStore.getState().currentAccount
-        };
+export default (CreateWorker = connect(
+    CreateWorker,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount: AccountStore.getState().currentAccount
+            };
+        }
     }
-}));
+));
