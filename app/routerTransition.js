@@ -50,26 +50,6 @@ class RouterTransitioner {
         this._statusCallback = null;
     }
 
-    _getLatencyPreferences() {
-        // those settings are not used anywhere in the UI and thus do not need a store
-        return ss.get("latency_preferences", {});
-    }
-
-    _setLatencyPreferences(preferences) {
-        ss.set("latency_preferences", preferences);
-    }
-
-    _getLatencyChecks() {
-        if (ss.has("latencyChecks")) {
-            ss.remove("latencyChecks");
-        }
-        return ss.get("latency_checks", 0);
-    }
-
-    _setLatencyChecks(number) {
-        ss.set("latency_checks", number);
-    }
-
     /**
      * Is called once when router is initialized, and then if a connection error occurs or user manually
      * switches nodes
@@ -211,11 +191,9 @@ class RouterTransitioner {
     /**
      * Updates the latency of all target nodes
      *
-     * @param refresh boolean true reping all existing nodes
-     *                        false only reping all reachable nodes
-     * @param beSatisfiedWith integer if appropriate number of nodes for each of the keys in this latency map are found, pinging is stopped.
-     *                                Values correspond to AccessSettings display (low, medium latency)
-     * @param range integer ping range amount of nodes at the same time, default 5
+     * @param discardOldLatencies boolean if true drop all old latencies and reping
+     * @param pingAll boolean if true, resolve promise after all nodes are pinged, if false resolve when sufficiently small latency has been found
+     * @param pingInBackground integer if true, pinging will continue in background after promise is resolved
      * @returns {Promise}
      */
     doLatencyUpdate(
@@ -310,6 +288,26 @@ class RouterTransitioner {
                 this._getLatencyPreferences()
             );
         });
+    }
+
+    _getLatencyPreferences() {
+        // those settings are not used anywhere in the UI and thus do not need a store
+        return ss.get("latency_preferences", {});
+    }
+
+    _setLatencyPreferences(preferences) {
+        ss.set("latency_preferences", preferences);
+    }
+
+    _getLatencyChecks() {
+        if (ss.has("latencyChecks")) {
+            ss.remove("latencyChecks");
+        }
+        return ss.get("latency_checks", 0);
+    }
+
+    _setLatencyChecks(number) {
+        ss.set("latency_checks", number);
     }
 
     _clearLatencies() {
@@ -777,7 +775,20 @@ class RouterTransitioner {
 export let routerTransitioner = new RouterTransitioner();
 export default routerTransitioner.willTransitionTo.bind(routerTransitioner);
 
+/**
+ * FIXME should be taken out of routerTransition
+ *
+ * Helper class to manage the latency check of all nodes.
+ * When pinging is done, the given callback is executed.
+ *
+ */
 class Pinger {
+    /**
+     * @param connectionManager bitsharesjs connectionmanager
+     * @param updateLatencies callback to update the settings object
+     * @param updateTransitionTarget callback to update the message displayed to the user
+     * @param pingAll if true, resolve after pinging all
+     */
     constructor(
         connectionManager,
         updateLatencies,
@@ -794,6 +805,13 @@ class Pinger {
         }
     }
 
+    /**
+     * Adds the given nodes to this pinger. Duplicates are ignored.
+     *
+     * @param nodes given list of node urls
+     * @param reset if true, reset the internal node list before adding new nodes
+     * @param translationKey key to display to the user (updateTransitionTarget)
+     */
     addNodes(nodes, reset = true, translationKey = null) {
         this._translationKey = translationKey;
         if (reset || this._nodeURLs === undefined) {
@@ -813,10 +831,17 @@ class Pinger {
         }
     }
 
+    /**
+     * The pinger constructs its own latencyMap in addition to what is saved in localStorage
+     * @returns {}
+     */
     getLocalLatencyMap() {
         return this._localLatencyCache;
     }
 
+    /**
+     * This call enables background pinging (all nodes are pinged)
+     */
     enableBackgroundPinging() {
         this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
         this._counter = {instant: 0, low: 0, medium: 0};
@@ -824,6 +849,12 @@ class Pinger {
         this._pingInBackGround = true;
     }
 
+    /**
+     * Ping the currently stored nodes and call the callback when done.
+     *
+     * @param callbackFunc function handle callback when pinging is done
+     * @param nodes optional, add to internal node list before pinging
+     */
     pingNodes(callbackFunc, nodes = null) {
         if (nodes != null) {
             this.addNodes(nodes, true);
@@ -945,6 +976,18 @@ class Pinger {
     }
 }
 
+/**
+ * Ping Strategy that leverages the hardcoded location of the nodes.
+ *
+ * Order:
+ *  - ping last connected node
+ *  - ping 2 nodes in each region, then continue with best country (lowest latency)
+ *  - ping all nodes in best country, then all from region
+ *  - if preferences are given, ping those in the preferred country and region first
+ *
+ * Pinging will stop according to the underlying pinger, this class merely adjusts the order of pinging.
+ *
+ */
 class PingStrategy {
     constructor(nodesToPing, pinger, callback, getNodes) {
         this._nodesToPing = nodesToPing;
