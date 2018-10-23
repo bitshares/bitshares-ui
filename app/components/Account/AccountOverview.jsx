@@ -534,6 +534,23 @@ class AccountOverview extends React.Component {
                                         </div>
                                     </div>
                                 </div>
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        onChange={() => {
+                                            this.setState({
+                                                hideFishingProposals: !this
+                                                    .state.hideFishingProposals
+                                            });
+                                        }}
+                                        checked={
+                                            this.state.hideFishingProposals
+                                        }
+                                    />
+                                    <label>
+                                        Deactivate suspicious proposals
+                                    </label>
+                                </div>
 
                                 {shownAssets != "visual" ? (
                                     shownAssets === "hidden" &&
@@ -627,7 +644,8 @@ class AccountOverview extends React.Component {
                                 />
                             </Tab>
 
-                            {true ? (
+                            {account.get("proposals") &&
+                            account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"
                                     subText={String(
@@ -655,9 +673,6 @@ class AccountOverview extends React.Component {
                                     <Proposals
                                         className="dashboard-table"
                                         account={account.get("id")}
-                                        hideFishingProposals={
-                                            this.state.hideFishingProposals
-                                        }
                                     />
                                 </Tab>
                             ) : null}
