@@ -11,7 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
-import notify from "actions/NotificationActions";
 import assetUtils from "common/asset_utils";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
@@ -34,6 +33,7 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
+import {Notification} from "bitshares-ui-style-guide";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -784,9 +784,8 @@ class Exchange extends React.Component {
             coreBalance.getAmount()
         );
         if (!feeID) {
-            return notify.addNotification({
-                message: "Insufficient funds to pay fees",
-                level: "error"
+            return Notification.error({
+                message: "Insufficient funds to pay fees"
             });
         }
 
@@ -815,13 +814,12 @@ class Exchange extends React.Component {
         ]);
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
-            return notify.addNotification({
+            return Notification.error({
                 message:
                     "Insufficient funds to place order, you need at least " +
                     current.for_sale.getAmount({real: true}) +
                     " " +
-                    sellAsset.get("symbol"),
-                level: "error"
+                    sellAsset.get("symbol")
             });
         }
         //
@@ -831,9 +829,8 @@ class Exchange extends React.Component {
                 current.to_receive.getAmount() > 0
             )
         ) {
-            return notify.addNotification({
-                message: "Please enter a valid amount and price",
-                level: "error"
+            return Notification.warning({
+                message: "Please enter a valid amount and price"
             });
         }
         //
@@ -888,13 +885,12 @@ class Exchange extends React.Component {
             .then(result => {
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
-                        notify.addNotification({
+                        Notification.error({
                             message:
                                 "Unknown error. Failed to place order for " +
                                 current.to_receive.getAmount({real: true}) +
                                 " " +
-                                current.to_receive.asset_id,
-                            level: "error"
+                                current.to_receive.asset_id
                         });
                 }
                 console.log("order success");
@@ -957,13 +953,12 @@ class Exchange extends React.Component {
                 result => {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
-                            notify.addNotification({
+                            Notification.error({
                                 message:
                                     "Unknown error. Failed to place order for " +
                                     buyAssetAmount +
                                     " " +
-                                    buyAsset.symbol,
-                                level: "error"
+                                    buyAsset.symbol
                             });
                     }
                 }
