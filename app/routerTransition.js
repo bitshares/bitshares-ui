@@ -249,7 +249,7 @@ class RouterTransitioner {
                 // update preferences
                 thiz._setLatencyPreferences({
                     region: _nodes[0].region,
-                    city: _nodes[0].country
+                    country: _nodes[0].country
                 });
 
                 if (
@@ -288,7 +288,7 @@ class RouterTransitioner {
                             setTimeout(_func, 2000);
                         }
                     };
-                    _func();
+                    setTimeout(_func, 5000);
                 }
             }
 
@@ -305,7 +305,10 @@ class RouterTransitioner {
                 thiz.getNodes.bind(thiz)
             );
 
-            strategy.ping(originalURL, this._getLatencyPreferences());
+            strategy.ping(
+                this.isAutoSelection() ? null : this._getLastNode(),
+                this._getLatencyPreferences()
+            );
         });
     }
 
@@ -815,6 +818,9 @@ class Pinger {
     }
 
     enableBackgroundPinging() {
+        this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
+        this._counter = {instant: 0, low: 0, medium: 0};
+        this._suitableNodeFound = false;
         this._pingInBackGround = true;
     }
 
@@ -959,22 +965,27 @@ class PingStrategy {
             this._pinger.pingNodes(this._callback);
         }
 
-        function ping_all_from_one_region() {
-            let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+        function ping_all_from_one_region(region = null) {
+            if (region == null) {
+                let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+                region = bestOne[0].region;
+            }
             this._pinger.addNodes(
-                this.getFromRegion(bestOne[0].region).map(a => a.url),
+                this.getFromRegion(region).map(a => a.url),
                 false,
                 "app_init.check_latency_feedback_region"
             );
             this._pinger.pingNodes(ping_the_rest.bind(this));
         }
 
-        function ping_all_from_one_country() {
-            let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+        function ping_all_from_one_country(region = null, country = null) {
+            if (region == null) {
+                let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+                region = bestOne[0].region;
+                country = bestOne[0].country;
+            }
             this._pinger.addNodes(
-                this.getFromRegion(bestOne[0].region, bestOne[0].country).map(
-                    a => a.url
-                ),
+                this.getFromRegion(region, country).map(a => a.url),
                 false,
                 "app_init.check_latency_feedback_country"
             );
@@ -990,13 +1001,29 @@ class PingStrategy {
             this._pinger.pingNodes(ping_all_from_one_country.bind(this));
         }
 
-        // ping first one first
-        this._pinger.addNodes(
-            [firstURL],
-            false,
-            "app_init.check_latency_feedback_last"
-        );
-        this._pinger.pingNodes(ping_the_world.bind(this));
+        function decideNext() {
+            if (!!preferences.region && !!preferences.country) {
+                ping_all_from_one_country.bind(this)(
+                    preferences.region,
+                    preferences.country
+                );
+            } else if (!!preferences.region) {
+                ping_all_from_one_region.bind(this)(preferences.region);
+            } else {
+                ping_the_world.bind(this)();
+            }
+        }
+
+        if (!!firstURL) {
+            this._pinger.addNodes(
+                [firstURL],
+                false,
+                "app_init.check_latency_feedback_last"
+            );
+            this._pinger.pingNodes(decideNext.bind(this));
+        } else {
+            decideNext.bind(this)();
+        }
     }
 
     getFromEachRegion(amount = 2, randomOrder = true) {
