@@ -386,6 +386,7 @@
         "check_latency_feedback_last": "Latency check for last connected node (%(pinged)s/%(totalToPing)s nodes) ...",
         "check_latency_feedback_world": "Latency check in each region (%(pinged)s/%(totalToPing)s nodes) ...",
         "check_latency_feedback_region": "Latency check in best region (%(pinged)s/%(totalToPing)s nodes) ...",
+        "check_latency_feedback_country": "Latency check in best country (if applicable) (%(pinged)s/%(totalToPing)s nodes) ...",
         "check_latency_feedback_rest": "Latency check for remaining nodes (%(pinged)s/%(totalToPing)s nodes) ...",
         "connected": "Connected",
         "connecting": "Connecting to API server: %(server)s",

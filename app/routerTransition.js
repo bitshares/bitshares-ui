@@ -50,6 +50,26 @@ class RouterTransitioner {
         this._statusCallback = null;
     }
 
+    _getLatencyPreferences() {
+        // those settings are not used anywhere in the UI and thus do not need a store
+        return ss.get("latency_preferences", {});
+    }
+
+    _setLatencyPreferences(preferences) {
+        ss.set("latency_preferences", preferences);
+    }
+
+    _getLatencyChecks() {
+        if (ss.has("latencyChecks")) {
+            ss.remove("latencyChecks");
+        }
+        return ss.get("latency_checks", 0);
+    }
+
+    _setLatencyChecks(number) {
+        ss.set("latency_checks", number);
+    }
+
     /**
      * Is called once when router is initialized, and then if a connection error occurs or user manually
      * switches nodes
@@ -71,15 +91,15 @@ class RouterTransitioner {
             const apiLatencies = SettingsStore.getState().apiLatencies;
             let latenciesEstablished = Object.keys(apiLatencies).length > 0;
 
-            let latencyChecks = ss.get("latencyChecks", 1);
-            if (latencyChecks >= 5) {
+            let latencyChecks = this._getLatencyChecks(1);
+            if (latencyChecks >= 8) {
                 // every x connect attempts we refresh the api latency list
                 // automatically
                 ss.set("latencyChecks", 0);
                 latenciesEstablished = false;
             } else {
                 // otherwise increase the counter
-                if (appInit) ss.set("latencyChecks", latencyChecks + 1);
+                if (appInit) this._setLatencyChecks(latencyChecks + 1);
             }
 
             let urls = this._getNodesToConnectTo(false, apiLatencies);
@@ -117,7 +137,23 @@ class RouterTransitioner {
     }
 
     isTransitionInProgress() {
-        return !!this._willTransitionToInProgress;
+        return (
+            !!this._willTransitionToInProgress &&
+            typeof this._willTransitionToInProgress !== "object"
+        );
+    }
+
+    isBackgroundPingingInProgress() {
+        return (
+            !!this._willTransitionToInProgress &&
+            typeof this._willTransitionToInProgress === "object"
+        );
+    }
+
+    getBackgroundPingingTarget() {
+        if (this.isBackgroundPingingInProgress())
+            return this._willTransitionToInProgress.key;
+        return null;
     }
 
     getTransitionTarget() {
@@ -182,7 +218,11 @@ class RouterTransitioner {
      * @param range integer ping range amount of nodes at the same time, default 5
      * @returns {Promise}
      */
-    doLatencyUpdate(discardOldLatencies = false, pingAll = false) {
+    doLatencyUpdate(
+        discardOldLatencies = false,
+        pingAll = false,
+        pingInBackground = true
+    ) {
         this.updateTransitionTarget(
             counterpart.translate("app_init.check_latency")
         );
@@ -201,11 +241,17 @@ class RouterTransitioner {
             }
 
             let originalURL = this._connectionManager.url;
-            let originalURLs = this._connectionManager.urls;
 
             function done_pinging() {
                 // resort the api nodes with the new pings
-                thiz._connectionManager.urls = thiz._getNodesToConnectTo();
+                let _nodes = thiz._getNodesToConnectTo(false, null, true);
+                thiz._connectionManager.urls = _nodes.map(a => a.url);
+                // update preferences
+                thiz._setLatencyPreferences({
+                    region: _nodes[0].region,
+                    city: _nodes[0].country
+                });
+
                 if (
                     thiz.isAutoSelection() &&
                     originalURL !== thiz._connectionManager.urls[0]
@@ -221,9 +267,30 @@ class RouterTransitioner {
                     thiz._connectionManager.url = originalURL;
                 }
                 thiz._transitionDone(resolve);
-            }
 
-            console.log("asdasd");
+                if (pingInBackground) {
+                    let _func = function() {
+                        // wait for transition to be completed
+                        if (!thiz._willTransitionToInProgress) {
+                            pinger.enableBackgroundPinging();
+                            pinger.pingNodes(() => {
+                                let _nodes = thiz._getNodesToConnectTo(
+                                    false,
+                                    null,
+                                    true
+                                );
+                                thiz._connectionManager.urls = _nodes.map(
+                                    a => a.url
+                                );
+                                thiz._transitionDone();
+                            });
+                        } else {
+                            setTimeout(_func, 2000);
+                        }
+                    };
+                    _func();
+                }
+            }
 
             let pinger = new Pinger(
                 thiz._connectionManager,
@@ -238,7 +305,7 @@ class RouterTransitioner {
                 thiz.getNodes.bind(thiz)
             );
 
-            strategy.ping(originalURL);
+            strategy.ping(originalURL, this._getLatencyPreferences());
         });
     }
 
@@ -267,9 +334,12 @@ class RouterTransitioner {
      * @param resolveOrReject
      * @private
      */
-    _transitionDone(resolveOrReject) {
-        resolveOrReject();
+    _transitionDone(resolveOrReject = null) {
+        if (resolveOrReject != null) {
+            resolveOrReject();
+        }
         this._willTransitionToInProgress = false;
+        this._statusCallback = null;
     }
 
     _initConnectionManager(urls = null) {
@@ -568,6 +638,7 @@ class RouterTransitioner {
     _onResetError(failingNodeUrl, err) {
         console.error("onResetError:", err, failingNodeUrl);
         this._willTransitionToInProgress = false;
+        this._statusCallback = false;
         this._oldChain = "old";
         notify.addNotification({
             message: counterpart.translate("settings.connection_error", {
@@ -732,7 +803,7 @@ class Pinger {
             this._pingInBackGround = false;
         } else {
             nodes.forEach(node => {
-                if (!(node in this._localLatencyCache)) {
+                if (this._nodeURLs.indexOf(node) === -1) {
                     this._nodeURLs.push(node);
                 }
             });
@@ -741,6 +812,10 @@ class Pinger {
 
     getLocalLatencyMap() {
         return this._localLatencyCache;
+    }
+
+    enableBackgroundPinging() {
+        this._pingInBackGround = true;
     }
 
     pingNodes(callbackFunc, nodes = null) {
@@ -800,12 +875,22 @@ class Pinger {
                 this._translationKey == null
                     ? "app_init.check_latency_feedback"
                     : this._translationKey;
-            this._updateTransitionTarget(
-                counterpart.translate(key, {
-                    pinged: this._current,
-                    totalToPing: this._nodeURLs.length
-                })
-            );
+            if (!this._pingInBackGround) {
+                this._updateTransitionTarget(
+                    counterpart.translate(key, {
+                        pinged: this._current,
+                        totalToPing: this._nodeURLs.length
+                    })
+                );
+            } else {
+                this._updateTransitionTarget({
+                    background: true,
+                    key: counterpart.translate(key, {
+                        pinged: this._current,
+                        totalToPing: this._nodeURLs.length
+                    })
+                });
+            }
             this._connectionManager
                 .checkConnections()
                 .then(this._handlePingResult.bind(this))
@@ -863,7 +948,7 @@ class PingStrategy {
         this._sortNodesToTree();
     }
 
-    ping(firstURL) {
+    ping(firstURL, preferences = {}) {
         // if background pinging is active this needs some more attention due to race pinging
         function ping_the_rest() {
             this._pinger.addNodes(
@@ -884,13 +969,25 @@ class PingStrategy {
             this._pinger.pingNodes(ping_the_rest.bind(this));
         }
 
+        function ping_all_from_one_country() {
+            let bestOne = this._getNodes(this._pinger.getLocalLatencyMap());
+            this._pinger.addNodes(
+                this.getFromRegion(bestOne[0].region, bestOne[0].country).map(
+                    a => a.url
+                ),
+                false,
+                "app_init.check_latency_feedback_country"
+            );
+            this._pinger.pingNodes(ping_all_from_one_region.bind(this));
+        }
+
         function ping_the_world() {
             this._pinger.addNodes(
                 this.getFromEachRegion().map(a => a.url),
                 false,
                 "app_init.check_latency_feedback_world"
             );
-            this._pinger.pingNodes(ping_all_from_one_region.bind(this));
+            this._pinger.pingNodes(ping_all_from_one_country.bind(this));
         }
 
         // ping first one first
@@ -923,11 +1020,23 @@ class PingStrategy {
         }
     }
 
-    getFromRegion(regionKey, amount = 2, randomOrder = true) {
+    getFromRegion(
+        regionKey,
+        countryKey = null,
+        amount = 10,
+        randomOrder = true
+    ) {
         let filtered = [];
 
-        Object.keys(this._nodeTree[regionKey]).forEach(countryKey => {
-            let allFromRegion = this._nodeTree[regionKey][countryKey];
+        let countryKeys = null;
+        if (!countryKey) {
+            countryKeys = ["all"];
+        } else {
+            countryKeys = [countryKey];
+        }
+
+        countryKeys.forEach(_countryKey => {
+            let allFromRegion = this._nodeTree[regionKey][_countryKey];
 
             let shuffled = randomOrder
                 ? this._getShuffleArray(allFromRegion)

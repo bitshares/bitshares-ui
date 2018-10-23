@@ -460,7 +460,7 @@ class AccessSettings extends React.Component {
 
     _recalculateLatency(event, feedback) {
         feedback("settings.pinging");
-        routerTransitioner.doLatencyUpdate(true, true).finally(() => {
+        routerTransitioner.doLatencyUpdate(true, true, false).finally(() => {
             feedback();
         });
     }
@@ -567,10 +567,6 @@ class AccessSettings extends React.Component {
                 <div
                     className="nodes"
                     style={{
-                        display:
-                            props.selectedNode === autoSelectionUrl
-                                ? "none"
-                                : "",
                         position: "relative",
                         marginBottom: "2em"
                     }}
