@@ -114,8 +114,8 @@ class WalletUnlockModal extends React.Component {
                     dbWallet &&
                     Apis.instance().chain_id !== dbWallet.chain_id
                 ) {
-                    Notification.error(
-                        counterpart.translate(
+                    Notification.error({
+                        message: counterpart.translate(
                             "notifications.wallet_unlock_different_block_chain",
                             {
                                 expectedWalletId: dbWallet.chain_id
@@ -126,7 +126,7 @@ class WalletUnlockModal extends React.Component {
                                     .toUpperCase()
                             }
                         )
-                    );
+                    });
                     WalletUnlockActions.cancel();
                 }
             }
