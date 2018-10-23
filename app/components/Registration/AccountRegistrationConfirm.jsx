@@ -11,10 +11,6 @@ import Translate from "react-translate-component";
 import {FetchChain} from "bitsharesjs/es";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "components/Icon/Icon";
-import ls from "common/localStorage";
-
-const STORAGE_KEY = "__graphene__";
-const ss = new ls(STORAGE_KEY);
 
 class AccountRegistrationConfirm extends React.Component {
     static propTypes = {

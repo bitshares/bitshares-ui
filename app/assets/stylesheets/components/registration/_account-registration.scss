@@ -167,12 +167,13 @@ div.registration {
         padding: 10px;
         border-radius: 0 5px 5px 0;
         display: inline;
-        right: 35px;
+        right: 0;
         position: absolute;
     }
 
     .generated-password-section {
         position: relative;
+        display: inline;
     }
 }
 
@@ -192,12 +193,6 @@ div.registration {
                 font-size: 12px;
                 letter-spacing: 0.05px;
                 line-height: 16px;
-            }
-
-            .facolor-error,
-            .facolor-warning {
-                margin-top: 2px;
-                line-height: 17px;
             }
 
             button.button-primary {

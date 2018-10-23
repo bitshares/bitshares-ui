@@ -22,6 +22,7 @@ let icons = [
     "eye-striked",
     "fi-star",
     "folder",
+    "grouping",
     "hamburger-x",
     "hamburger",
     "hourglass",
