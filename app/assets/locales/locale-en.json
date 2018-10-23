@@ -431,7 +431,8 @@
         "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
         "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
         "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)"
+        "worker_create_failure": "Failed to create worker: %(error_msg)",
+        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued"
     },
     "browser_notification_messages": {
         "money_received_body": "Sent you %(amount)s %(symbol)s",
