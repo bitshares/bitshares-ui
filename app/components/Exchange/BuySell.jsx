@@ -1154,10 +1154,20 @@ class BuySell extends React.Component {
                                                 onClick={this.props.onDeposit.bind(
                                                     this
                                                 )}
-                                                disabled={!this.props.currentAccount || this.props.currentAccount.get("id") === "1.2.3"}
-                                                data-tip={counterpart.translate("exchange.quick_deposit_tooltip", { 
-                                                    asset: this.props.backedCoin.name 
-                                                })}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: this.props
+                                                            .backedCoin.name
+                                                    }
+                                                )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
@@ -1165,6 +1175,13 @@ class BuySell extends React.Component {
                                         {this.props.onBorrow ? (
                                             <Button
                                                 style={{margin: 5}}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
                                                 onClick={this.props.onBorrow}
                                             >
                                                 <Translate content="exchange.borrow" />
@@ -1176,10 +1193,21 @@ class BuySell extends React.Component {
                                                 onClick={this.props.onBuy.bind(
                                                     this
                                                 )}
-                                                disabled={!this.props.currentAccount || this.props.currentAccount.get("id") === "1.2.3"}
-                                                data-tip={counterpart.translate("exchange.quick_deposit_tooltip", { 
-                                                    asset: isBid ? baseName : quoteName 
-                                                })}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
+                                                )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
