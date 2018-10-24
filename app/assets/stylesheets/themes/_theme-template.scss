@@ -120,6 +120,17 @@
     .negative {
         color: $negative-color !important;
     }
+    .amount-selector-field {
+        .amount-selector-field--label {
+        }
+        .amount-selector-field--balance {
+            float: right;
+            cursor: pointer;
+            &:hover {
+                color: $link-text-color;
+            }
+        }
+    }
     .dark-text-color {
         color: $dark-text-color;
     }
@@ -269,6 +280,13 @@
             }
         }
     }
+
+    .account-browsing-mode {
+        button {
+            margin-right: 24px;
+        }
+    }
+
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {
@@ -2321,12 +2339,6 @@
                 }
             }
         }
-    }
-
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 
     i.anticon.icon-fill {
