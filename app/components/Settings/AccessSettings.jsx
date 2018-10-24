@@ -445,7 +445,7 @@ class AccessSettings extends React.Component {
 
     _recalculateLatency(event, feedback) {
         routerTransitioner.doLatencyUpdate(true, false, 1).finally(() => {
-            forceUpdate();
+            this.forceUpdate();
             feedback();
         });
     }
