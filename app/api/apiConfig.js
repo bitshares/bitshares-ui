@@ -185,7 +185,7 @@ export const settingsAPIs = {
             url: "wss://status200.bitshares.apasia.tech/ws",
             location: "New Jersey",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -193,7 +193,7 @@ export const settingsAPIs = {
             url: "wss://new-york.bitshares.apasia.tech/ws",
             location: "New York",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -201,7 +201,7 @@ export const settingsAPIs = {
             url: "wss://dallas.bitshares.apasia.tech/ws",
             location: "Dallas",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -209,7 +209,7 @@ export const settingsAPIs = {
             url: "wss://chicago.bitshares.apasia.tech/ws",
             location: "Chicago",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -217,7 +217,7 @@ export const settingsAPIs = {
             url: "wss://atlanta.bitshares.apasia.tech/ws",
             location: "Atlanta",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -225,7 +225,7 @@ export const settingsAPIs = {
             url: "wss://us-la.bitshares.apasia.tech/ws",
             location: "Los Angeles",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -233,7 +233,7 @@ export const settingsAPIs = {
             url: "wss://seattle.bitshares.apasia.tech/ws",
             location: "Seattle",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -241,7 +241,7 @@ export const settingsAPIs = {
             url: "wss://miami.bitshares.apasia.tech/ws",
             location: "Miami",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -249,7 +249,7 @@ export const settingsAPIs = {
             url: "wss://valley.bitshares.apasia.tech/ws",
             location: "Silicone Valley",
             country: "U.S.A.",
-            region: "Central America",
+            region: "Northern America",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
         },
@@ -621,7 +621,7 @@ export const settingsAPIs = {
         {
             url: "wss://us-east-1.bts.crypto-bridge.org",
             region: "Northern America",
-            country: "United States of America",
+            country: "U.S.A.",
             location: "North Virginia",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
@@ -629,7 +629,7 @@ export const settingsAPIs = {
         {
             url: "wss://us-west-1.bts.crypto-bridge.org",
             region: "Northern America",
-            country: "United States of America",
+            country: "U.S.A.",
             location: "North California",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"

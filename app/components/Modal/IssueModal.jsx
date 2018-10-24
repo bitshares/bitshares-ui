@@ -7,7 +7,7 @@ import counterpart from "counterpart";
 import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
-import notify from "actions/NotificationActions";
+import {Notification, Modal, Button} from "bitshares-ui-style-guide";
 
 class IssueModal extends React.Component {
     static propTypes = {
@@ -40,6 +40,7 @@ class IssueModal extends React.Component {
     }
 
     onSubmit() {
+        this.props.hideModal();
         let {asset_to_issue} = this.props;
         let precision = utils.get_asset_precision(
             asset_to_issue.get("precision")
@@ -57,10 +58,10 @@ class IssueModal extends React.Component {
                 : this.state.memo
         ).catch(err => {
             console.log("issue error caught here:", err);
-            notify.addNotification({
-                message: `Failed to issue the asset, probably due to an invalid amount being issued`, //: ${this.state.wallet_public_name}
-                level: "error",
-                autoDismiss: 10
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.asset_issue_failure"
+                ) //: ${this.state.wallet_public_name}
             });
         });
 
@@ -80,77 +81,78 @@ class IssueModal extends React.Component {
         let asset_to_issue = this.props.asset_to_issue.get("id");
         let tabIndex = 1;
 
+        let footer = [
+            <Button
+                type="primary"
+                key="submit"
+                onClick={this.onSubmit.bind(
+                    this,
+                    this.state.to,
+                    this.state.amount
+                )}
+                disabled={!this.state.to_id || !this.state.amount}
+            >
+                {counterpart.translate("modal.issue.submit")}
+            </Button>,
+            <Button key="cancel" onClick={this.props.hideModal}>
+                {counterpart.translate("cancel")}
+            </Button>
+        ];
+
         return (
-            <form className="grid-block vertical full-width-content">
-                <div className="grid-container " style={{paddingTop: "2rem"}}>
-                    {/* T O */}
-                    <div className="content-block">
-                        <AccountSelector
-                            label={"modal.issue.to"}
-                            accountName={this.state.to}
-                            onAccountChanged={this.onToAccountChanged.bind(
-                                this
-                            )}
-                            onChange={this.onToChanged.bind(this)}
-                            account={this.state.to}
-                            tabIndex={tabIndex++}
-                        />
-                    </div>
+            <Modal
+                title={counterpart.translate("modal.issue.submit")}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                footer={footer}
+            >
+                <form className="grid-block vertical full-width-content">
+                    <div className="grid-container ">
+                        {/* T O */}
+                        <div className="content-block">
+                            <AccountSelector
+                                label={"modal.issue.to"}
+                                accountName={this.state.to}
+                                onAccountChanged={this.onToAccountChanged.bind(
+                                    this
+                                )}
+                                onChange={this.onToChanged.bind(this)}
+                                account={this.state.to}
+                                tabIndex={tabIndex++}
+                            />
+                        </div>
 
-                    {/* A M O U N T */}
-                    <div className="content-block">
-                        <AmountSelector
-                            label="modal.issue.amount"
-                            amount={this.state.amount}
-                            onChange={this.onAmountChanged.bind(this)}
-                            asset={asset_to_issue}
-                            assets={[asset_to_issue]}
-                            tabIndex={tabIndex++}
-                        />
-                    </div>
+                        {/* A M O U N T */}
+                        <div className="content-block">
+                            <AmountSelector
+                                label="modal.issue.amount"
+                                amount={this.state.amount}
+                                onChange={this.onAmountChanged.bind(this)}
+                                asset={asset_to_issue}
+                                assets={[asset_to_issue]}
+                                tabIndex={tabIndex++}
+                            />
+                        </div>
 
-                    {/*  M E M O  */}
-                    <div className="content-block">
-                        <label>
-                            <Translate
-                                component="span"
-                                content="transfer.memo"
-                            />{" "}
-                            (<Translate content="transfer.optional" />)
-                        </label>
-                        <textarea
-                            rows="3"
-                            value={this.state.memo}
-                            tabIndex={tabIndex++}
-                            onChange={this.onMemoChanged.bind(this)}
-                        />
+                        {/*  M E M O  */}
+                        <div className="content-block">
+                            <label>
+                                <Translate
+                                    component="span"
+                                    content="transfer.memo"
+                                />{" "}
+                                (<Translate content="transfer.optional" />)
+                            </label>
+                            <textarea
+                                rows="3"
+                                value={this.state.memo}
+                                tabIndex={tabIndex++}
+                                onChange={this.onMemoChanged.bind(this)}
+                            />
+                        </div>
                     </div>
-
-                    <div className="content-block button-group">
-                        <button
-                            type="submit"
-                            className="button primary"
-                            onClick={this.onSubmit.bind(
-                                this,
-                                this.state.to,
-                                this.state.amount
-                            )}
-                            disabled={!this.state.to_id || !this.state.amount}
-                            tabIndex={tabIndex++}
-                        >
-                            {counterpart.translate("modal.issue.submit")}
-                        </button>
-
-                        <button
-                            className="button primary hollow"
-                            onClick={this.props.onClose}
-                            tabIndex={tabIndex++}
-                        >
-                            {counterpart.translate("cancel")}
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </Modal>
         );
     }
 }

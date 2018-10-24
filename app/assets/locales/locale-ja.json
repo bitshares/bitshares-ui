@@ -540,6 +540,7 @@
         "price_market": "マーケット価格",
         "quantity": "数量",
         "quick_deposit": "Quick Deposit",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "クオート通貨:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "クオート供給量",

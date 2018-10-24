@@ -4,7 +4,6 @@ import {ChainStore} from "bitsharesjs/es";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalCitadel from "./WithdrawModalCitadel";
-import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
@@ -15,6 +14,7 @@ import LoadingIndicator from "components/LoadingIndicator";
 import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Modal} from "bitshares-ui-style-guide";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 class CitadelGatewayDepositRequest extends React.Component {
@@ -50,6 +50,7 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
 
         this.state = {
+            isModalVisible: false,
             receive_address: null,
             url: props.url || urls[props.gateway],
             loading: false,
@@ -57,6 +58,20 @@ class CitadelGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     _getDepositObject() {
@@ -533,34 +548,39 @@ class CitadelGatewayDepositRequest extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <BaseModal id={withdraw_modal_id} overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <WithdrawModalCitadel
-                                account={this.props.account.get("name")}
-                                issuer={this.props.issuer_account.get("name")}
-                                asset={this.props.receive_asset.get("symbol")}
-                                url={this.state.url}
-                                output_coin_name={this.props.deposit_asset_name}
-                                gateFee={gateFee}
-                                output_coin_symbol={this.props.deposit_asset}
-                                output_coin_type={this.props.deposit_coin_type}
-                                output_wallet_type={
-                                    this.props.deposit_wallet_type
-                                }
-                                output_supports_memos={
-                                    this.props.supports_output_memos
-                                }
-                                memo_prefix={withdraw_memo_prefix}
-                                modal_id={withdraw_modal_id}
-                                balance={
-                                    this.props.account.get("balances").toJS()[
-                                        this.props.receive_asset.get("id")
-                                    ]
-                                }
-                            />
-                        </div>
-                    </BaseModal>
+                    <Modal
+                        onCancel={this.hideModal}
+                        title={counterpart.translate("gateway.withdraw_coin", {
+                            coin: this.props.deposit_asset_name,
+                            symbol: this.props.deposit_asset
+                        })}
+                        footer={null}
+                        visible={this.state.isModalVisible}
+                        id={withdraw_modal_id}
+                        overlay={true}
+                    >
+                        <WithdrawModalCitadel
+                            account={this.props.account.get("name")}
+                            issuer={this.props.issuer_account.get("name")}
+                            asset={this.props.receive_asset.get("symbol")}
+                            url={this.state.url}
+                            output_coin_name={this.props.deposit_asset_name}
+                            gateFee={gateFee}
+                            output_coin_symbol={this.props.deposit_asset}
+                            output_coin_type={this.props.deposit_coin_type}
+                            output_wallet_type={this.props.deposit_wallet_type}
+                            output_supports_memos={
+                                this.props.supports_output_memos
+                            }
+                            memo_prefix={withdraw_memo_prefix}
+                            modal_id={withdraw_modal_id}
+                            balance={
+                                this.props.account.get("balances").toJS()[
+                                    this.props.receive_asset.get("id")
+                                ]
+                            }
+                        />
+                    </Modal>
                 </div>
             );
         }

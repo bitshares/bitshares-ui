@@ -5,9 +5,6 @@ import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import DisableCopyText from "../DisableCopyText";
 import RuDexWithdrawModal from "./RuDexWithdrawModal";
-import Modal from "react-foundation-apps/src/modal";
-import Trigger from "react-foundation-apps/src/trigger";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import RuDexDepositAddressCache from "common/RuDexDepositAddressCache";
 import AssetName from "components/Utility/AssetName";
@@ -16,6 +13,7 @@ import utils from "common/utils";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
 import CopyToClipboard from "react-copy-to-clipboard";
+import {Modal} from "bitshares-ui-style-guide";
 
 class RuDexGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -42,10 +40,25 @@ class RuDexGatewayDepositRequest extends React.Component {
         this.deposit_address_cache = new RuDexDepositAddressCache();
 
         this.state = {
+            isModalVisible: false,
             receive_address: null
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     _getDepositObject() {
@@ -87,7 +100,7 @@ class RuDexGatewayDepositRequest extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+        this.showModal();
     }
 
     render() {
@@ -489,38 +502,38 @@ class RuDexGatewayDepositRequest extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <Modal id={withdraw_modal_id} overlay={true}>
-                        <Trigger close={withdraw_modal_id}>
-                            <a href="#" className="close-button">
-                                &times;
-                            </a>
-                        </Trigger>
-                        <br />
-                        <div className="grid-block vertical">
-                            <RuDexWithdrawModal
-                                account={this.props.account.get("name")}
-                                issuer={this.props.issuer_account.get("name")}
-                                asset={this.props.receive_asset.get("symbol")}
-                                output_coin_name={this.props.deposit_asset_name}
-                                output_coin_symbol={this.props.deposit_asset}
-                                output_coin_type={this.props.deposit_coin_type}
-                                output_wallet_type={
-                                    this.props.deposit_wallet_type
-                                }
-                                output_supports_memos={
-                                    this.props.supports_output_memos
-                                }
-                                memo_prefix={withdraw_memo_prefix}
-                                modal_id={withdraw_modal_id}
-                                min_amount={this.props.min_amount}
-                                asset_precision={this.props.asset_precision}
-                                balance={
-                                    this.props.account.get("balances").toJS()[
-                                        this.props.receive_asset.get("id")
-                                    ]
-                                }
-                            />
-                        </div>
+                    <Modal
+                        onCancel={this.hideModal}
+                        title={counterpart.translate("gateway.withdraw_coin", {
+                            coin: this.props.deposit_asset_name,
+                            symbol: this.props.deposit_asset
+                        })}
+                        footer={null}
+                        visible={this.state.isModalVisible}
+                    >
+                        <RuDexWithdrawModal
+                            hideModal={this.hideModal}
+                            showModal={this.showModal}
+                            account={this.props.account.get("name")}
+                            issuer={this.props.issuer_account.get("name")}
+                            asset={this.props.receive_asset.get("symbol")}
+                            output_coin_name={this.props.deposit_asset_name}
+                            output_coin_symbol={this.props.deposit_asset}
+                            output_coin_type={this.props.deposit_coin_type}
+                            output_wallet_type={this.props.deposit_wallet_type}
+                            output_supports_memos={
+                                this.props.supports_output_memos
+                            }
+                            memo_prefix={withdraw_memo_prefix}
+                            modal_id={withdraw_modal_id}
+                            min_amount={this.props.min_amount}
+                            asset_precision={this.props.asset_precision}
+                            balance={
+                                this.props.account.get("balances").toJS()[
+                                    this.props.receive_asset.get("id")
+                                ]
+                            }
+                        />
                     </Modal>
                 </div>
             );

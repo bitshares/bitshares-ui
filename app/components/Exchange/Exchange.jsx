@@ -11,7 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
-import notify from "actions/NotificationActions";
 import assetUtils from "common/asset_utils";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
@@ -34,7 +33,8 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
-
+import {Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
@@ -90,6 +90,18 @@ class Exchange extends React.Component {
 
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
+
+        this.showDepositBridgeModal = this.showDepositBridgeModal.bind(this);
+        this.hideDepositBridgeModal = this.hideDepositBridgeModal.bind(this);
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showBorrowQuoteModal = this.showBorrowQuoteModal.bind(this);
+        this.hideBorrowQuoteModal = this.hideBorrowQuoteModal.bind(this);
+
+        this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
+        this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
 
         this.psInit = true;
     }
@@ -220,8 +232,12 @@ class Exchange extends React.Component {
         }
 
         return {
+            isDepositBridgeModalVisible: false,
+            isDepositModalVisible: false,
             isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
+            isBorrowQuoteModalVisible: false,
+            isBorrowBaseModalVisible: false,
             history: [],
             isConfirmBuyOrderModalVisible: false,
             isConfirmSellOrderModalVisible: false,
@@ -293,6 +309,54 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: true
+        });
+    }
+
+    hideBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: false
+        });
+    }
+
+    showBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: true
+        });
+    }
+
+    hideBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: false
+        });
+    }
+
+    showDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: true
+        });
+    }
+
+    hideDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
@@ -720,9 +784,10 @@ class Exchange extends React.Component {
             coreBalance.getAmount()
         );
         if (!feeID) {
-            return notify.addNotification({
-                message: "Insufficient funds to pay fees",
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_for_fees"
+                )
             });
         }
 
@@ -751,13 +816,14 @@ class Exchange extends React.Component {
         ]);
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
-            return notify.addNotification({
-                message:
-                    "Insufficient funds to place order, you need at least " +
-                    current.for_sale.getAmount({real: true}) +
-                    " " +
-                    sellAsset.get("symbol"),
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_to_place_order",
+                    {
+                        amount: current.for_sale.getAmount({real: true}),
+                        symbol: sellAsset.get("symbol")
+                    }
+                )
             });
         }
         //
@@ -767,9 +833,10 @@ class Exchange extends React.Component {
                 current.to_receive.getAmount() > 0
             )
         ) {
-            return notify.addNotification({
-                message: "Please enter a valid amount and price",
-                level: "error"
+            return Notification.warning({
+                message: counterpart.translate(
+                    "notifications.exchange_enter_valid_values"
+                )
             });
         }
         //
@@ -824,13 +891,16 @@ class Exchange extends React.Component {
             .then(result => {
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
-                        notify.addNotification({
-                            message:
-                                "Unknown error. Failed to place order for " +
-                                current.to_receive.getAmount({real: true}) +
-                                " " +
-                                current.to_receive.asset_id,
-                            level: "error"
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: current.to_receive.getAmount({
+                                        real: true
+                                    }),
+                                    symbol: current.to_receive.asset_id
+                                }
+                            )
                         });
                 }
                 console.log("order success");
@@ -893,13 +963,14 @@ class Exchange extends React.Component {
                 result => {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
-                            notify.addNotification({
-                                message:
-                                    "Unknown error. Failed to place order for " +
-                                    buyAssetAmount +
-                                    " " +
-                                    buyAsset.symbol,
-                                level: "error"
+                            Notification.error({
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: buyAssetAmount,
+                                        symbol: buyAsset.symbol
+                                    }
+                                )
                             });
                     }
                 }
@@ -1313,11 +1384,11 @@ class Exchange extends React.Component {
     }
 
     _borrowQuote() {
-        this.refs.borrowQuote.show();
+        this.showBorrowQuoteModal();
     }
 
     _borrowBase() {
-        this.refs.borrowBase.show();
+        this.showBorrowBaseModal();
     }
 
     _onDeposit(type, e) {
@@ -1326,7 +1397,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.deposit_modal.show();
+        this.showDepositModal();
     }
 
     _onBuy(type, e) {
@@ -1335,7 +1406,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.bridge_modal.show();
+        this.showDepositBridgeModal();
     }
 
     _getSettlementInfo() {
@@ -2949,8 +3020,8 @@ class Exchange extends React.Component {
 
                 {quoteIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowQuote"
-                        modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                        visible={this.state.isBorrowQuoteModalVisible}
+                        hideModal={this.hideBorrowQuoteModal}
                         quote_asset={quoteAsset.get("id")}
                         backing_asset={quoteAsset.getIn([
                             "bitasset",
@@ -2962,8 +3033,8 @@ class Exchange extends React.Component {
                 ) : null}
                 {baseIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowBase"
-                        modalId={"borrow_modal_base_" + baseAsset.get("id")}
+                        visible={this.state.isBorrowBaseModalVisible}
+                        hideModal={this.hideBorrowBaseModal}
                         quote_asset={baseAsset.get("id")}
                         backing_asset={baseAsset.getIn([
                             "bitasset",
@@ -2975,6 +3046,8 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <SimpleDepositWithdraw
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
                     ref="deposit_modal"
                     action="deposit"
                     fiatModal={false}
@@ -2999,6 +3072,8 @@ class Exchange extends React.Component {
 
                 {/* Bridge modal */}
                 <SimpleDepositBlocktradesBridge
+                    visible={this.state.isDepositBridgeModalVisible}
+                    hideModal={this.hideDepositBridgeModal}
                     ref="bridge_modal"
                     action="deposit"
                     account={currentAccount.get("name")}
