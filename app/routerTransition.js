@@ -19,7 +19,7 @@ import counterpart from "counterpart";
 // Actions
 import PrivateKeyActions from "actions/PrivateKeyActions";
 import SettingsActions from "actions/SettingsActions";
-import notify from "actions/NotificationActions";
+import {Notification} from "bitshares-ui-style-guide";
 
 ChainStore.setDispatchFrequency(60);
 
@@ -637,13 +637,11 @@ class RouterTransitioner {
         console.error("onResetError:", err, failingNodeUrl);
         this._willTransitionToInProgress = false;
         this._oldChain = "old";
-        notify.addNotification({
+        Notification.error({
             message: counterpart.translate("settings.connection_error", {
                 url: failingNodeUrl || "",
                 error: err
-            }),
-            level: "error",
-            autoDismiss: 10
+            })
         });
         let apiLatencies = SettingsStore.getState().apiLatencies;
         delete apiLatencies[failingNodeUrl];

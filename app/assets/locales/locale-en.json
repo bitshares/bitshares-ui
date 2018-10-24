@@ -424,6 +424,26 @@
         "update": "Update",
         "use_max": "Use Max"
     },
+    "notifications": {
+        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
+        "exchange_enter_valid_values": "Please enter a valid amount and price",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
+        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "worker_create_failure": "Failed to create worker: %(error_msg)",
+        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
+        "password_change_success": "Password changed",
+        "password_change_failure": "Unable to change password: %(error_msg)",
+        "invalid_password": "Invalid Password",
+        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
+        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "import_keys_already_imported": "This wallet has already been imported",
+        "backup_file_save_unsupported": "File saving is not supported",
+        "balance_claim_error": "Error claiming balance: %(error_msg)"
+    },
     "browser_notification_messages": {
         "money_received_body": "Sent you %(amount)s %(symbol)s",
         "money_received_title": "Transfer from %(from)s"

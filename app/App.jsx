@@ -18,7 +18,8 @@ import Incognito from "./components/Layout/Incognito";
 import {isIncognito} from "feature_detect";
 import {updateGatewayBackers} from "common/gatewayUtils";
 import titleUtils from "common/titleUtils";
-import {BodyClassName} from "bitshares-ui-style-guide";
+import {BodyClassName, Notification} from "bitshares-ui-style-guide";
+import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
 
 import {Route, Switch} from "react-router-dom";
@@ -147,6 +148,11 @@ class App extends React.Component {
 
         this.showBrowserSupportModal = this.showBrowserSupportModal.bind(this);
         this.hideBrowserSupportModal = this.hideBrowserSupportModal.bind(this);
+
+        Notification.config({
+            duration: DEFAULT_NOTIFICATION_DURATION,
+            top: 90
+        });
     }
 
     componentWillUnmount() {

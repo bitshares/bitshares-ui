@@ -4,7 +4,6 @@ import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
 import counterpart from "counterpart";
 import classNames from "classnames";
-import notify from "actions/NotificationActions";
 import AccountActions from "actions/AccountActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletActions from "actions/WalletActions";
@@ -17,6 +16,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import Icon from "../Icon/Icon";
+import {Notification} from "bitshares-ui-style-guide";
 
 class WalletRegistrationForm extends React.Component {
     static propTypes = {
@@ -141,10 +141,14 @@ class WalletRegistrationForm extends React.Component {
                             ? error.base[0]
                             : "unknown error";
                     if (error.remote_ip) [errorMsg] = error.remote_ip;
-                    notify.addNotification({
-                        message: `Failed to create account: ${name} - ${errorMsg}`,
-                        level: "error",
-                        autoDismiss: 10
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.account_create_failure",
+                            {
+                                account_name: name,
+                                error_msg: errorMsg
+                            }
+                        )
                     });
                     this.setState({loading: false});
                 });
@@ -160,10 +164,13 @@ class WalletRegistrationForm extends React.Component {
             })
             .catch(err => {
                 console.log("CreateWallet failed:", err);
-                notify.addNotification({
-                    message: `Failed to create wallet: ${err}`,
-                    level: "error",
-                    autoDismiss: 10
+                Notification.error({
+                    message: counterpart.translate(
+                        "notifications.account_wallet_create_failure",
+                        {
+                            error_msg: err
+                        }
+                    )
                 });
             });
     }

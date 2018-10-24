@@ -23,19 +23,19 @@ import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
-import notify from "actions/NotificationActions";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Notification} from "bitshares-ui-style-guide";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
 );
 
-const disabledBackingAssetChangeCallback = () =>
-    notify.error(
-        counterpart.translate(
+const disabledBackingAssetChangeCallback = () => {
+    Notification.error({
+        message: counterpart.translate(
             "account.user_issued_assets.invalid_backing_asset_change"
         )
-    );
+    });
+};
 
 class AccountAssetUpdate extends React.Component {
     static propTypes = {
@@ -734,11 +734,11 @@ class AccountAssetUpdate extends React.Component {
         )[key];
 
         if (this._getCurrentSupply() > 0 && disabled) {
-            notify.error(
-                counterpart.translate(
+            Notification.error({
+                message: counterpart.translate(
                     "account.user_issued_assets.invalid_permissions_change"
                 )
-            );
+            });
             return;
         }
 

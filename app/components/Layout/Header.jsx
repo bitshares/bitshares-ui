@@ -20,13 +20,13 @@ import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import {Apis} from "bitsharesjs-ws";
-import notify from "actions/NotificationActions";
 import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
+import {Notification} from "bitshares-ui-style-guide";
 import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 
 import {getLogo} from "branding";
@@ -251,13 +251,10 @@ class Header extends React.Component {
         }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
-            notify.addNotification({
+            Notification.success({
                 message: counterpart.translate("header.account_notify", {
                     account: account_name
-                }),
-                level: "success",
-                autoDismiss: 2,
-                position: "br"
+                })
             });
             this._closeDropdown();
         }

@@ -2,7 +2,6 @@ import React from "react";
 import BaseModal from "../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import PasswordInput from "../Forms/PasswordInput";
-import notify from "actions/NotificationActions";
 import AltContainer from "alt-container";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockStore from "stores/WalletUnlockStore";
@@ -35,6 +34,7 @@ import {
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
+import {Notification} from "bitshares-ui-style-guide";
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -114,14 +114,19 @@ class WalletUnlockModal extends React.Component {
                     dbWallet &&
                     Apis.instance().chain_id !== dbWallet.chain_id
                 ) {
-                    notify.error(
-                        "This wallet was intended for a different block-chain; expecting " +
-                            dbWallet.chain_id.substring(0, 4).toUpperCase() +
-                            ", but got " +
-                            Apis.instance()
-                                .chain_id.substring(0, 4)
-                                .toUpperCase()
-                    );
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.wallet_unlock_different_block_chain",
+                            {
+                                expectedWalletId: dbWallet.chain_id
+                                    .substring(0, 4)
+                                    .toUpperCase(),
+                                actualWalletId: Apis.instance()
+                                    .chain_id.substring(0, 4)
+                                    .toUpperCase()
+                            }
+                        )
+                    });
                     WalletUnlockActions.cancel();
                 }
             }

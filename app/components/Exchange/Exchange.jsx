@@ -11,7 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
-import notify from "actions/NotificationActions";
 import assetUtils from "common/asset_utils";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
@@ -34,7 +33,8 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
-
+import {Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
@@ -784,9 +784,10 @@ class Exchange extends React.Component {
             coreBalance.getAmount()
         );
         if (!feeID) {
-            return notify.addNotification({
-                message: "Insufficient funds to pay fees",
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_for_fees"
+                )
             });
         }
 
@@ -815,13 +816,14 @@ class Exchange extends React.Component {
         ]);
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
-            return notify.addNotification({
-                message:
-                    "Insufficient funds to place order, you need at least " +
-                    current.for_sale.getAmount({real: true}) +
-                    " " +
-                    sellAsset.get("symbol"),
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_to_place_order",
+                    {
+                        amount: current.for_sale.getAmount({real: true}),
+                        symbol: sellAsset.get("symbol")
+                    }
+                )
             });
         }
         //
@@ -831,9 +833,10 @@ class Exchange extends React.Component {
                 current.to_receive.getAmount() > 0
             )
         ) {
-            return notify.addNotification({
-                message: "Please enter a valid amount and price",
-                level: "error"
+            return Notification.warning({
+                message: counterpart.translate(
+                    "notifications.exchange_enter_valid_values"
+                )
             });
         }
         //
@@ -888,13 +891,16 @@ class Exchange extends React.Component {
             .then(result => {
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
-                        notify.addNotification({
-                            message:
-                                "Unknown error. Failed to place order for " +
-                                current.to_receive.getAmount({real: true}) +
-                                " " +
-                                current.to_receive.asset_id,
-                            level: "error"
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: current.to_receive.getAmount({
+                                        real: true
+                                    }),
+                                    symbol: current.to_receive.asset_id
+                                }
+                            )
                         });
                 }
                 console.log("order success");
@@ -957,13 +963,14 @@ class Exchange extends React.Component {
                 result => {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
-                            notify.addNotification({
-                                message:
-                                    "Unknown error. Failed to place order for " +
-                                    buyAssetAmount +
-                                    " " +
-                                    buyAsset.symbol,
-                                level: "error"
+                            Notification.error({
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: buyAssetAmount,
+                                        symbol: buyAsset.symbol
+                                    }
+                                )
                             });
                     }
                 }

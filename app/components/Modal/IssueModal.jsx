@@ -7,8 +7,7 @@ import counterpart from "counterpart";
 import ApplicationApi from "api/ApplicationApi";
 import AccountSelector from "../Account/AccountSelector";
 import AmountSelector from "../Utility/AmountSelector";
-import notify from "actions/NotificationActions";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Notification, Modal, Button} from "bitshares-ui-style-guide";
 
 class IssueModal extends React.Component {
     static propTypes = {
@@ -59,10 +58,10 @@ class IssueModal extends React.Component {
                 : this.state.memo
         ).catch(err => {
             console.log("issue error caught here:", err);
-            notify.addNotification({
-                message: `Failed to issue the asset, probably due to an invalid amount being issued`, //: ${this.state.wallet_public_name}
-                level: "error",
-                autoDismiss: 10
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.asset_issue_failure"
+                ) //: ${this.state.wallet_public_name}
             });
         });
 
