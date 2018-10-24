@@ -1,13 +1,12 @@
 import React from "react";
-import Translate from "react-translate-component";
 import BalanceComponent from "../Utility/BalanceComponent";
 import counterpart from "counterpart";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import AssetActions from "actions/AssetActions";
 import {ChainStore} from "bitsharesjs";
 import {Asset} from "common/MarketClasses";
 import AssetWrapper from "../Utility/AssetWrapper";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Form, Input} from "bitshares-ui-style-guide";
 
 class ReserveAssetModal extends React.Component {
     constructor(props) {
@@ -82,46 +81,37 @@ class ReserveAssetModal extends React.Component {
                     </Button>
                 ]}
             >
-                <form
-                    className="grid-block vertical full-width-content"
-                    style={{paddingTop: 0}}
-                >
-                    <div className="grid-container">
-                        <div className="content-block">
-                            <AmountSelector
-                                label="modal.reserve.amount"
-                                amount={this.state.amount}
-                                onChange={this.onAmountChanged.bind(this)}
-                                asset={assetId}
-                                assets={[assetId]}
-                                display_balance={
-                                    <div
-                                        onClick={() => {
-                                            this.state.amountAsset.setAmount({
-                                                sats: currentBalance.get(
-                                                    "balance"
-                                                )
-                                            });
-                                            this.setState({
-                                                amount: this.state.amountAsset.getAmount(
-                                                    {real: true}
-                                                )
-                                            });
-                                        }}
-                                    >
-                                        <BalanceComponent
-                                            balance={this.props.account.getIn([
-                                                "balances",
-                                                assetId
-                                            ])}
-                                        />
-                                    </div>
-                                }
-                                tabIndex={1}
-                            />
-                        </div>
-                    </div>
-                </form>
+                <Form layout="vertical">
+                    <AmountSelector
+                        label="modal.reserve.amount"
+                        amount={this.state.amount}
+                        onChange={this.onAmountChanged.bind(this)}
+                        asset={assetId}
+                        assets={[assetId]}
+                        display_balance={
+                            <div
+                                onClick={() => {
+                                    this.state.amountAsset.setAmount({
+                                        sats: currentBalance.get("balance")
+                                    });
+                                    this.setState({
+                                        amount: this.state.amountAsset.getAmount(
+                                            {real: true}
+                                        )
+                                    });
+                                }}
+                            >
+                                <BalanceComponent
+                                    balance={this.props.account.getIn([
+                                        "balances",
+                                        assetId
+                                    ])}
+                                />
+                            </div>
+                        }
+                        tabIndex={1}
+                    />
+                </Form>
             </Modal>
         );
     }

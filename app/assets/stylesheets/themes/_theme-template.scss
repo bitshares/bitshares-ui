@@ -120,6 +120,17 @@
     .negative {
         color: $negative-color !important;
     }
+    .amount-selector-field {
+        .amount-selector-field--label {
+        }
+        .amount-selector-field--balance {
+            float: right;
+            cursor: pointer;
+            &:hover {
+                color: $link-text-color;
+            }
+        }
+    }
     .dark-text-color {
         color: $dark-text-color;
     }
@@ -2321,12 +2332,6 @@
                 }
             }
         }
-    }
-
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 
     i.anticon.icon-fill {
