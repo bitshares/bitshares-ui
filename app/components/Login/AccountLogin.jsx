@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import AltContainer from "alt-container";
-import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import WalletDb from "stores/WalletDb";
 import AccountStore from "stores/AccountStore";
@@ -35,24 +34,6 @@ class AccountLogin extends React.Component {
             account: null,
             passwordVisible: false
         };
-    }
-
-    componentWillMount() {
-        SettingsActions.changeSetting({
-            setting: "passwordLogin",
-            value: true
-        });
-    }
-
-    componentDidMount() {
-        if (this.state.accountName) {
-            this.refs.password.focus();
-        } else if (
-            this.refs.accountName &&
-            this.refs.accountName.refs.bound_component
-        ) {
-            this.refs.accountName.refs.bound_component.refs.user_input.focus();
-        }
     }
 
     componentDidUpdate(previousProps) {
@@ -105,6 +86,10 @@ class AccountLogin extends React.Component {
             }
             this.refs.password.value = "";
             AccountActions.setPasswordAccount(account);
+            SettingsActions.changeSetting({
+                setting: "passwordLogin",
+                value: true
+            });
             this.props.history.push("/");
             WalletUnlockActions.change();
         }, 550);

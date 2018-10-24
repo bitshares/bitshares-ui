@@ -76,7 +76,6 @@ class AccountRegistrationConfirm extends React.Component {
                 } else {
                     FetchChain("getAccount", name).then(() => {});
                     this.unlockAccount(name, password);
-                    ss.set("isAuthentificated", true);
                     this.props.history.push("/");
                 }
             })
