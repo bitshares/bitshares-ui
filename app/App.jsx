@@ -151,7 +151,7 @@ class App extends React.Component {
 
         Notification.config({
             duration: DEFAULT_NOTIFICATION_DURATION,
-            top: 64
+            top: 90
         });
     }
 
