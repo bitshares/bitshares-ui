@@ -280,6 +280,13 @@
             }
         }
     }
+
+    .account-browsing-mode {
+        button {
+            margin-right: 24px;
+        }
+    }
+
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {

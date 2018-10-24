@@ -428,6 +428,14 @@
         "money_received_body": "Sent you %(amount)s %(symbol)s",
         "money_received_title": "Transfer from %(from)s"
     },
+    "account_browsing_mode": {
+        "modal_title": "View Only Mode",
+        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
+        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account.",
+        "go_back": "Go back to my account",
+        "view_mode": "View Mode",
+        "never_show_again": "Never show again"
+    },
     "cancel": "Cancel",
     "connection": {
         "automatic_reconnect": " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
