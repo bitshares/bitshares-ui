@@ -54,15 +54,13 @@ class Proposals extends Component {
         );
     }
     _isSucpicious(proposer) {
-        const proposerName = proposer.get("name");
-        const blackList = this.props.account.get("blacklisting_accounts");
+        const proposerName = ChainStore.getObject(proposer).get("name");
+        const blackList = this.props.account.get("blacklisted_accounts");
+        const isScammer = accountUtils.isKnownScammer(proposerName);
 
-        let isBlackListed = blackList.some(blackListAccount => {
-            return blackListAccount.get("name") === proposerName;
+        const isBlackListed = blackList.some(blackListId => {
+            return blackListId === proposer;
         });
-
-        let isScammer = accountUtils.isKnownScammer(proposerName);
-
         return isScammer || isBlackListed;
     }
 
