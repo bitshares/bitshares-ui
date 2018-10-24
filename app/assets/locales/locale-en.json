@@ -430,8 +430,9 @@
     "account_browsing_mode": {
         "modal_title": "Account Browsing Mode",
         "modal_description": "You're switching an account which you don't have active authority over. You will view this account as the active account, but in view mode only",
-        "you_are_in_browsing_mode": "You're in browsing mode by using not yours account",
+        "you_are_in_browsing_mode": "You're in browsing mode by using not yours account. Click this button to get back to your account",
         "go_back": "Go back to my account",
+        "view_mode": "View Mode",
         "never_show_again": "Never show again"
     },
     "cancel": "Cancel",

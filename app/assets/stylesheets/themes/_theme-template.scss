@@ -270,14 +270,9 @@
         }
     }
 
-    .account-browsing-mode .account-browsing-mode--container {
-        height: 48px;
-        line-height: 48px;
-        background-color: $panel-bg-color;
-        color: $light-text-color;
-        text-align: center;
+    .account-browsing-mode {
         button {
-            margin-left: 16px;
+            margin-right: 24px;
         }
     }
 

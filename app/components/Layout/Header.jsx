@@ -27,6 +27,7 @@ import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
+import AccountBrowsingMode from "../Account/AccountBrowsingMode";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -1061,13 +1062,16 @@ class Header extends React.Component {
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <div
-                        className="text account-name"
-                        onClick={this._toggleAccountDropdownMenu}
-                    >
-                        {currentAccount}
+                    <AccountBrowsingMode />
+                    <div>
+                        <div
+                            className="text account-name"
+                            onClick={this._toggleAccountDropdownMenu}
+                        >
+                            {currentAccount}
+                        </div>
+                        {walletBalance}
                     </div>
-                    {walletBalance}
 
                     {hasLocalWallet && (
                         <ul

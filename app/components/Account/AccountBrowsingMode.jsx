@@ -104,16 +104,18 @@ class AccountBrowsingMode extends React.Component {
                     )}
                 </Modal>
                 {!this.isMyAccount() ? (
-                    <div className="account-browsing-mode--container">
-                        {counterpart.translate(
+                    <Button
+                        data-place="bottom"
+                        data-tip={counterpart.translate(
                             "account_browsing_mode.you_are_in_browsing_mode"
                         )}
-                        <Button onClick={this.handleSwitchBack}>
-                            {counterpart.translate(
-                                "account_browsing_mode.go_back"
-                            )}
-                        </Button>
-                    </div>
+                        onClick={this.handleSwitchBack}
+                        className="account-browsing-mode--button"
+                    >
+                        {counterpart.translate(
+                            "account_browsing_mode.view_mode"
+                        )}
+                    </Button>
                 ) : null}
             </div>
         );
