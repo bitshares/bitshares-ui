@@ -128,7 +128,7 @@ class Personalize extends React.Component {
                                         data-tip={counterpart.translate(
                                             "exchange.settings.tooltip.chart_reload"
                                         )}
-                                        type="reload"
+                                        type="info-circle"
                                         theme="filled"
                                     />
                                 </h6>
@@ -211,7 +211,7 @@ class Personalize extends React.Component {
                                             data-tip={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="reload"
+                                            type="info-circle"
                                             theme="filled"
                                         />
                                     </h6>
@@ -247,7 +247,7 @@ class Personalize extends React.Component {
                                             data-tip={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="reload"
+                                            type="info-circle"
                                             theme="filled"
                                         />
                                     </h6>
@@ -690,7 +690,7 @@ class Personalize extends React.Component {
                                         data-tip={counterpart.translate(
                                             "exchange.settings.tooltip.reload"
                                         )}
-                                        type="reload"
+                                        type="info-circle"
                                         theme="filled"
                                     />
                                 </h6>
