@@ -23,7 +23,7 @@ import AssetWhitelist from "./AssetWhitelist";
 import AssetFeedProducers from "./AssetFeedProducers";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {withRouter} from "react-router-dom";
-import {Modal, Button, Notification} from "bitshares-ui-style-guide";
+import {Modal, Button, Notification, Switch} from "bitshares-ui-style-guide";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -831,17 +831,10 @@ class AccountAssetUpdate extends React.Component {
                                 :
                             </td>
                             <td style={{border: "none"}}>
-                                <div
-                                    className="switch"
-                                    style={{marginBottom: "10px"}}
-                                    onClick={onClick}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                    />
-                                    <label />
-                                </div>
+                                <Switch
+                                    checked={isChecked}
+                                    onChange={onClick}
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -888,21 +881,13 @@ class AccountAssetUpdate extends React.Component {
                                     :
                                 </td>
                                 <td style={{border: "none"}}>
-                                    <div
-                                        className="switch"
-                                        style={{marginBottom: "10px"}}
-                                        onClick={this._onPermissionChange.bind(
+                                    <Switch
+                                        checked={permissionBooleans[key]}
+                                        onChange={this._onPermissionChange.bind(
                                             this,
                                             key
                                         )}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={permissionBooleans[key]}
-                                            onChange={() => {}}
-                                        />
-                                        <label />
-                                    </div>
+                                    />
                                 </td>
                             </tr>
                         </tbody>
@@ -1435,26 +1420,15 @@ class AccountAssetUpdate extends React.Component {
                                                                 border: "none"
                                                             }}
                                                         >
-                                                            <div
-                                                                className="switch"
-                                                                style={{
-                                                                    marginBottom:
-                                                                        "10px"
-                                                                }}
-                                                                onClick={this._onFlagChange.bind(
+                                                            <Switch
+                                                                checked={
+                                                                    flagBooleans.charge_market_fee
+                                                                }
+                                                                onChange={this._onFlagChange.bind(
                                                                     this,
                                                                     "charge_market_fee"
                                                                 )}
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    onChange={() => {}}
-                                                                    checked={
-                                                                        flagBooleans.charge_market_fee
-                                                                    }
-                                                                />
-                                                                <label />
-                                                            </div>
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </tbody>
