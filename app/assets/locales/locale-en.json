@@ -428,9 +428,9 @@
         "money_received_title": "Transfer from %(from)s"
     },
     "account_browsing_mode": {
-        "modal_title": "Account Browsing Mode",
-        "modal_description": "You're switching an account which you don't have active authority over. You will view this account as the active account, but in view mode only",
-        "you_are_in_browsing_mode": "You're in browsing mode by using not yours account. Click this button to get back to your account",
+        "modal_title": "View Only Mode",
+        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
+        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account.",
         "go_back": "Go back to my account",
         "view_mode": "View Mode",
         "never_show_again": "Never show again"
