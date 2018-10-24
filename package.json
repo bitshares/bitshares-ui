@@ -189,6 +189,7 @@
         "react-tooltip": "^3.6.1",
         "react-transition-group": "^1.2.0",
         "react-translate-component": "^0.15.1",
+        "soundex-code": "^1.0.3",
         "steem-js-api": "^0.7.1",
         "tcomb": "2.5.2",
         "whatwg-fetch": "^2.0.1",

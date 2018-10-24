@@ -18,6 +18,8 @@ import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
+import soundex from "soundex-code";
+import {hiddenProposals} from "../../lib/common/hideProposals";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -551,21 +553,34 @@ class AccountVoting extends React.Component {
 
         let voteThreshold = 0;
         const hideProposals = filteredWorker => {
-            let dublicated = workerArray.some(worker => {
+            const dublicated = workerArray.some(worker => {
+                const isSimilarName =
+                    soundex(filteredWorker.get("name")) ===
+                    soundex(worker.get("name"));
                 return (
-                    (filteredWorker.get("name").includes(worker.get("name")) ||
-                        worker
-                            .get("name")
-                            .includes(filteredWorker.get("name"))) &&
+                    isSimilarName &&
+                    approvalState &&
                     worker.get("worker_account") ===
                         filteredWorker.get("worker_account") &&
                     new Date(worker.get("work_begin_date")) >
                         new Date(filteredWorker.get("work_begin_date"))
                 );
             });
-            let hasStarted =
+            const hasStarted =
                 new Date(filteredWorker.get("work_begin_date") + "Z") <= now;
-            let approvalState = this.state.vote_ids.has(
+            const votesLimit = 10000000;
+            const newDate = new Date();
+            const totalVotes =
+                filteredWorker.get("total_votes_for") -
+                filteredWorker.get("total_votes_against");
+            const toOld =
+                new Date(filteredWorker.get("work_begin_date") + "Z") <=
+                    new Date(newDate.setMonth(newDate.getMonth() - 1)) &&
+                totalVotes < votesLimit;
+            const manualHidden = hiddenProposals.includes(
+                filteredWorker.get("id")
+            );
+            const approvalState = this.state.vote_ids.has(
                 filteredWorker.get("vote_for")
             )
                 ? true
@@ -575,7 +590,11 @@ class AccountVoting extends React.Component {
                     ? false
                     : null;
             return this.state.hideLegacyProposals
-                ? !approvalState && hasStarted && !dublicated
+                ? !approvalState &&
+                      hasStarted &&
+                      !dublicated &&
+                      !toOld &&
+                      !manualHidden
                 : true;
         };
 
@@ -861,9 +880,6 @@ class AccountVoting extends React.Component {
                                             "active_witnesses"
                                         )}
                                         proxy={this.state.proxy_account_id}
-                                        hideLegacy={
-                                            this.state.hideLegacyProposals
-                                        }
                                     />
                                 </div>
                             </Tab>
@@ -977,7 +993,6 @@ class AccountVoting extends React.Component {
                                     </div>
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
-
                                         {hideLegacy}
                                         <div
                                             style={{
