@@ -95,20 +95,23 @@ class LoadingButton extends React.Component {
             overrideMessage: null,
             loadingButtonWidth: null
         };
+        this.processingOnClick = false;
     }
 
-    shouldComponentUpdate(nextProps) {
-        console.log(nextProps);
-        return nextProps.isLoading !== this.props.isLoading;
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            nextProps.isLoading !== this.props.isLoading ||
+            nextState.loading !== this.state.loading
+        );
     }
 
     _feedback(done = null, message = null) {
         if (done == null) {
             this.setState({
                 overrideMessage: null,
-                loading: false,
-                processingOnClick: false
+                loading: false
             });
+            this.processingOnClick = false;
         } else if (typeof done === "string") {
             this.setState({
                 overrideMessage: done
@@ -120,17 +123,15 @@ class LoadingButton extends React.Component {
                 });
             } else {
                 this.setState({
-                    loading: false,
-                    processingOnClick: false
+                    loading: false
                 });
+                this.processingOnClick = false;
             }
         }
     }
 
     _onClick(event) {
-        this.setState({
-            processingOnClick: true
-        });
+        this.processingOnClick = true;
         if (this.state.loading) {
             return true;
         }
@@ -149,7 +150,7 @@ class LoadingButton extends React.Component {
     }
 
     _isLoading() {
-        return this.state.processingOnClick
+        return this.processingOnClick
             ? this.state.loading
             : this.props.isLoading == null
                 ? false

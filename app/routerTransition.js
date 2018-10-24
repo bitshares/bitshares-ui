@@ -193,13 +193,13 @@ class RouterTransitioner {
      *
      * @param discardOldLatencies boolean if true drop all old latencies and reping
      * @param pingAll boolean if true, resolve promise after all nodes are pinged, if false resolve when sufficiently small latency has been found
-     * @param pingInBackground integer if true, pinging will continue in background after promise is resolved
+     * @param pingInBackground integer if > 0, pinging will continue in background after promise is resolved, Integer value will be used as delay to start background ping
      * @returns {Promise}
      */
     doLatencyUpdate(
         discardOldLatencies = false,
         pingAll = false,
-        pingInBackground = true
+        pingInBackground = 5000
     ) {
         this.updateTransitionTarget(
             counterpart.translate("app_init.check_latency")
@@ -246,7 +246,7 @@ class RouterTransitioner {
                 }
                 thiz._transitionDone(resolve);
 
-                if (pingInBackground) {
+                if (pingInBackground > 0) {
                     let _func = function() {
                         // wait for transition to be completed
                         if (!thiz._willTransitionToInProgress) {
@@ -266,7 +266,7 @@ class RouterTransitioner {
                             setTimeout(_func, 2000);
                         }
                     };
-                    setTimeout(_func, 5000);
+                    setTimeout(_func, pingInBackground);
                 }
             }
 
@@ -846,6 +846,16 @@ class Pinger {
         this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
         this._counter = {instant: 0, low: 0, medium: 0};
         this._suitableNodeFound = false;
+        this._pingInBackGround = true;
+    }
+
+    /**
+     * This call enables background pinging (all nodes are pinged)
+     */
+    doCallbackAndEnableBackgroundPinging() {
+        this._beSatisfiedWith = {instant: 0, low: 0, medium: 0};
+        this._counter = {instant: 0, low: 0, medium: 0};
+        this._suitableNodeFound = true;
         this._pingInBackGround = true;
     }
 
