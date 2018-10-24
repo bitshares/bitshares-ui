@@ -120,6 +120,8 @@ import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
 
+import AccountBrowsingMode from "./components/Account/AccountBrowsingMode";
+
 class App extends React.Component {
     constructor() {
         super();
@@ -344,6 +346,7 @@ class App extends React.Component {
         } else {
             content = (
                 <div className="grid-frame vertical">
+                    <AccountBrowsingMode />
                     <Header height={this.state.height} {...others} />
                     <div id="mainContainer" className="grid-block">
                         <div className="grid-block vertical">

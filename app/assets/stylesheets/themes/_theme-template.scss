@@ -269,6 +269,18 @@
             }
         }
     }
+
+    .account-browsing-mode .account-browsing-mode--container {
+        height: 48px;
+        line-height: 48px;
+        background-color: $panel-bg-color;
+        color: $light-text-color;
+        text-align: center;
+        button {
+            margin-left: 16px;
+        }
+    }
+
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {

@@ -427,6 +427,13 @@
         "money_received_body": "Sent you %(amount)s %(symbol)s",
         "money_received_title": "Transfer from %(from)s"
     },
+    "account_browsing_mode": {
+        "modal_title": "Account Browsing Mode",
+        "modal_description": "You're switching an account which you don't have active authority over. You will view this account as the active account, but in view mode only",
+        "you_are_in_browsing_mode": "You're in browsing mode by using not yours account",
+        "go_back": "Go back to my account",
+        "never_show_again": "Never show again"
+    },
     "cancel": "Cancel",
     "connection": {
         "automatic_reconnect": " After %(reconnect_in_seconds)s seconds a reconnection attempt will be made automatically.",
