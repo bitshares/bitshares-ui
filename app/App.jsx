@@ -116,6 +116,7 @@ const CreateWorker = Loadable({
 });
 
 import LoginSelector from "./components/LoginSelector";
+import Login from "./components/Login/Login";
 import RegistrationSelector from "./components/Registration/RegistrationSelector";
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
@@ -391,6 +392,7 @@ class App extends React.Component {
                                     path="/create-account"
                                     component={LoginSelector}
                                 />
+                                <Route path="/login" component={Login} />
                                 <Route
                                     path="/registration"
                                     exact
