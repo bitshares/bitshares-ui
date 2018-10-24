@@ -403,6 +403,12 @@ class OrderBook extends React.Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            autoScroll: nextProps.autoScroll
+        });
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.horizontal &&
@@ -939,7 +945,8 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
-                                {flipOrderBook ? (
+                                {flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -1085,7 +1092,8 @@ class OrderBook extends React.Component {
                                         </span>
                                     </div>
                                 ) : null}
-                                {!flipOrderBook ? (
+                                {!flipOrderBook &&
+                                !this.props.hideFunctionButtons ? (
                                     <div className="float-right header-sub-title grouped_order">
                                         {trackedGroupsConfig ? (
                                             <GroupOrderLimitSelector
@@ -1102,6 +1110,19 @@ class OrderBook extends React.Component {
                                         ) : null}
                                     </div>
                                 ) : null}
+                                {currentGroupOrderLimit !== 0 &&
+                                    this.props.hideFunctionButtons && (
+                                        <Icon
+                                            name="grouping"
+                                            className="float-right icon-14px"
+                                            title={translator.translate(
+                                                "icons.order_grouping"
+                                            )}
+                                            style={{
+                                                marginLeft: "0.5rem"
+                                            }}
+                                        />
+                                    )}
                                 {this.props.onTogglePosition &&
                                 !this.props.hideFunctionButtons ? (
                                     <span
