@@ -134,7 +134,7 @@
     "dependencies": {
         "alt": "^0.18.6",
         "alt-container": "^1.0.0",
-        "alt-react": "git+https://github.com/bitshares/react.git",
+        "alt-react": "git+https://github.com/bitshares/react.git#9d8cf202bc5c81aa31f0719b80fda77e3a04fa5a",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
         "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#1cadac0d6ccced4f23f230d54c3e87bf7b7dd973",
