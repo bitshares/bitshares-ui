@@ -13,7 +13,13 @@ import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import Operation from "components/Blockchain/Operation";
 import notify from "actions/NotificationActions";
-import {Modal, Button, Icon as AIcon, Alert} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Button,
+    Icon as AIcon,
+    Alert,
+    Switch
+} from "bitshares-ui-style-guide";
 
 class TransactionConfirm extends React.Component {
     constructor(props) {
@@ -85,8 +91,7 @@ class TransactionConfirm extends React.Component {
         TransactionConfirmActions.close();
     }
 
-    onProposeClick(e) {
-        e.preventDefault();
+    onProposeClick() {
         TransactionConfirmActions.togglePropose();
     }
 
@@ -264,22 +269,17 @@ class TransactionConfirm extends React.Component {
                                 <div className="align-right grid-block">
                                     <label
                                         style={{
-                                            paddingTop: "0.5rem",
                                             paddingRight: "0.5rem"
                                         }}
                                     >
                                         <Translate content="propose" />:
                                     </label>
-                                    <div
-                                        className="switch"
-                                        onClick={this.onProposeClick.bind(this)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={this.props.propose}
-                                        />
-                                        <label />
-                                    </div>
+                                    <Switch
+                                        checked={this.props.propose}
+                                        onChange={this.onProposeClick.bind(
+                                            this
+                                        )}
+                                    />
                                 </div>
                             ) : null}
                         </div>

@@ -5,12 +5,13 @@ import Clipboard from "react-clipboard.js";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import WalletDb from "stores/WalletDb";
-import notify from "actions/NotificationActions";
+import counterpart from "counterpart";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import Translate from "react-translate-component";
 import {FetchChain} from "bitsharesjs/es";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "components/Icon/Icon";
+import {Notification} from "bitshares-ui-style-guide";
 
 class AccountRegistrationConfirm extends React.Component {
     static propTypes = {
@@ -90,10 +91,11 @@ class AccountRegistrationConfirm extends React.Component {
                 if (error.remote_ip) {
                     [errorMsg] = error.remote_ip;
                 }
-                notify.addNotification({
-                    message: `Failed to create account: ${name} - ${errorMsg}`,
-                    level: "error",
-                    autoDismiss: 10
+                Notification.error({
+                    message: counterpart.translate("account_create_failure", {
+                        account_name: name,
+                        error_msg: errorMsg
+                    })
                 });
             });
     }

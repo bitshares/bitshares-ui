@@ -399,22 +399,24 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 ) : null}
                             </ul>
-                            <ul className="market-stats stats top-stats">
+                            <ul
+                                className="market-stats stats top-stats"
+                                data-position={"left"}
+                                data-step="1"
+                                data-intro={translator.translate(
+                                    "walkthrough.personalize"
+                                )}
+                            >
                                 <li
                                     className="stressed-stat input clickable"
                                     style={{padding: "16px 16px 16px 0px"}}
-                                    onClick={this.props.onToggleSettings.bind(
+                                    onClick={this.props.onTogglePersonalize.bind(
                                         this
                                     )}
-                                    
                                 >
                                     <AntIcon
                                         type="setting"
                                         style={{paddingRight: 5}}
-                                        data-position={"left"}
-                                        data-intro={translator.translate(
-                                            "walkthrough.personalize"
-                                        )}
                                     />
                                     <Translate
                                         className="column-hide-xs"

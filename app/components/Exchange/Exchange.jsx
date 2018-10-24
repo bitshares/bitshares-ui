@@ -11,7 +11,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import SettingsActions from "actions/SettingsActions";
 import MarketsActions from "actions/MarketsActions";
-import notify from "actions/NotificationActions";
 import assetUtils from "common/asset_utils";
 import market_utils from "common/market_utils";
 import {Asset, Price, LimitOrderCreate} from "common/MarketClasses";
@@ -24,7 +23,8 @@ import {OrderBook} from "./OrderBook";
 import MarketHistory from "./MarketHistory";
 import MyMarkets from "./MyMarkets";
 import MarketPicker from "./MarketPicker";
-import Settings from "./Settings";
+import ConfirmOrderModal from "./ConfirmOrderModal";
+import Personalize from "./Personalize";
 import TradingViewPriceChart from "./TradingViewPriceChart";
 import DepthHighChart from "./DepthHighChart";
 import LoadingIndicator from "../LoadingIndicator";
@@ -33,7 +33,8 @@ import AccountNotifications from "../Notifier/NotifierContainer";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
-
+import {Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
@@ -70,11 +71,37 @@ class Exchange extends React.Component {
             this
         );
 
-        this.showSettingsModal = this.showSettingsModal.bind(this);
-        this.hideSettingsModal = this.hideSettingsModal.bind(this);
+        this.showPersonalizeModal = this.showPersonalizeModal.bind(this);
+        this.hidePersonalizeModal = this.hidePersonalizeModal.bind(this);
+
+        this.showConfirmSellOrderModal = this.showConfirmSellOrderModal.bind(
+            this
+        );
+        this.hideConfirmSellOrderModal = this.hideConfirmSellOrderModal.bind(
+            this
+        );
+
+        this.showConfirmBuyOrderModal = this.showConfirmBuyOrderModal.bind(
+            this
+        );
+        this.hideConfirmBuyOrderModal = this.hideConfirmBuyOrderModal.bind(
+            this
+        );
 
         this.showMarketPickerModal = this.showMarketPickerModal.bind(this);
         this.hideMarketPickerModal = this.hideMarketPickerModal.bind(this);
+
+        this.showDepositBridgeModal = this.showDepositBridgeModal.bind(this);
+        this.hideDepositBridgeModal = this.hideDepositBridgeModal.bind(this);
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showBorrowQuoteModal = this.showBorrowQuoteModal.bind(this);
+        this.hideBorrowQuoteModal = this.hideBorrowQuoteModal.bind(this);
+
+        this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
+        this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
 
         this.psInit = true;
     }
@@ -198,11 +225,23 @@ class Exchange extends React.Component {
         let ws = props.viewSettings;
         let {ask, bid} = this._initialOrderState(props);
 
+        let chart_height = ws.get("chartHeight", 620);
+        if (chart_height == 620 && window.innerWidth < 640) {
+            // assume user is on default setting, use smaller for mobile
+            chart_height = 400;
+        }
+
         return {
-            isSettingsModalVisible: false,
+            isDepositBridgeModalVisible: false,
+            isDepositModalVisible: false,
+            isPersonalizeModalVisible: false,
             isMarketPickerModalVisible: false,
+            isBorrowQuoteModalVisible: false,
+            isBorrowBaseModalVisible: false,
             history: [],
-            tabVerticalPanel: ws.get("tabVerticalPanel", "order_book"),
+            isConfirmBuyOrderModalVisible: false,
+            isConfirmSellOrderModalVisible: false,
+            tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
             buySellOpen: ws.get("buySellOpen", true),
             bid,
@@ -220,15 +259,15 @@ class Exchange extends React.Component {
             verticalOrderForm: ws.get("verticalOrderForm", false),
             hidePanel: ws.get("hidePanel", false),
             hideScrollbars: ws.get("hideScrollbars", false),
-            dynamicOrderForm: ws.get("dynamicOrderForm", true),
+            singleColumnOrderForm: ws.get("singleColumnOrderForm", true),
             flipOrderBook: ws.get("flipOrderBook", false),
             flipBuySell: ws.get("flipBuySell", false),
             orderBookReversed: ws.get("orderBookReversed", false),
             chartType: ws.get("chartType", "price_chart"),
-            chartHeight: ws.get("chartHeight", 620),
+            chartHeight: chart_height,
             chartZoom: ws.get("chartZoom", true),
             chartTools: ws.get("chartTools", true),
-            hideFunctionButtons: ws.get("hideFunctionButtons", false),
+            hideFunctionButtons: ws.get("hideFunctionButtons", true),
             currentPeriod: ws.get("currentPeriod", 3600 * 24 * 30 * 3), // 3 months
             showMarketPicker: false,
             activePanels: ws.get("activePanels", ["left", "right"]),
@@ -261,21 +300,93 @@ class Exchange extends React.Component {
         });
     }
 
-    showSettingsModal() {
+    showPersonalizeModal() {
         this.setState({
-            isSettingsModalVisible: true
+            isPersonalizeModalVisible: true
         });
     }
 
-    hideSettingsModal() {
+    hidePersonalizeModal() {
         this.setState({
-            isSettingsModalVisible: false
+            isPersonalizeModalVisible: false
+        });
+    }
+
+    showBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: true
+        });
+    }
+
+    hideBorrowQuoteModal() {
+        this.setState({
+            isBorrowQuoteModalVisible: false
+        });
+    }
+
+    showBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: true
+        });
+    }
+
+    hideBorrowBaseModal() {
+        this.setState({
+            isBorrowBaseModalVisible: false
+        });
+    }
+
+    showDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: true
+        });
+    }
+
+    hideDepositBridgeModal() {
+        this.setState({
+            isDepositBridgeModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
     _getLastMarketKey() {
         const chainID = Apis.instance().chain_id;
         return `lastMarket${chainID ? "_" + chainID.substr(0, 8) : ""}`;
+    }
+
+    showConfirmBuyOrderModal() {
+        this.setState({
+            isConfirmBuyOrderModalVisible: true
+        });
+    }
+
+    hideConfirmBuyOrderModal() {
+        this.setState({
+            isConfirmBuyOrderModalVisible: false
+        });
+    }
+
+    showConfirmSellOrderModal() {
+        this.setState({
+            isConfirmSellOrderModalVisible: true
+        });
+    }
+
+    hideConfirmSellOrderModal() {
+        this.setState({
+            isConfirmSellOrderModalVisible: false
+        });
     }
 
     componentWillMount() {
@@ -673,16 +784,17 @@ class Exchange extends React.Component {
             coreBalance.getAmount()
         );
         if (!feeID) {
-            return notify.addNotification({
-                message: "Insufficient funds to pay fees",
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_for_fees"
+                )
             });
         }
 
         if (type === "buy" && lowestAsk) {
             let diff = this.state.bid.price.toReal() / lowestAsk.getPrice();
             if (diff > 1.2) {
-                this.refs.buy.show();
+                this.showConfirmBuyOrderModal();
                 return this.setState({
                     buyDiff: diff
                 });
@@ -691,7 +803,7 @@ class Exchange extends React.Component {
             let diff =
                 1 / (this.state.ask.price.toReal() / highestBid.getPrice());
             if (diff > 1.2) {
-                this.refs.sell.show();
+                this.showConfirmSellOrderModal();
                 return this.setState({
                     sellDiff: diff
                 });
@@ -704,13 +816,14 @@ class Exchange extends React.Component {
         ]);
 
         if (current.for_sale.gt(sellBalance) && !isPredictionMarket) {
-            return notify.addNotification({
-                message:
-                    "Insufficient funds to place order, you need at least " +
-                    current.for_sale.getAmount({real: true}) +
-                    " " +
-                    sellAsset.get("symbol"),
-                level: "error"
+            return Notification.error({
+                message: counterpart.translate(
+                    "notifications.exchange_insufficient_funds_to_place_order",
+                    {
+                        amount: current.for_sale.getAmount({real: true}),
+                        symbol: sellAsset.get("symbol")
+                    }
+                )
             });
         }
         //
@@ -720,9 +833,10 @@ class Exchange extends React.Component {
                 current.to_receive.getAmount() > 0
             )
         ) {
-            return notify.addNotification({
-                message: "Please enter a valid amount and price",
-                level: "error"
+            return Notification.warning({
+                message: counterpart.translate(
+                    "notifications.exchange_enter_valid_values"
+                )
             });
         }
         //
@@ -777,13 +891,16 @@ class Exchange extends React.Component {
             .then(result => {
                 if (result.error) {
                     if (result.error.message !== "wallet locked")
-                        notify.addNotification({
-                            message:
-                                "Unknown error. Failed to place order for " +
-                                current.to_receive.getAmount({real: true}) +
-                                " " +
-                                current.to_receive.asset_id,
-                            level: "error"
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_order",
+                                {
+                                    amount: current.to_receive.getAmount({
+                                        real: true
+                                    }),
+                                    symbol: current.to_receive.asset_id
+                                }
+                            )
                         });
                 }
                 console.log("order success");
@@ -846,13 +963,14 @@ class Exchange extends React.Component {
                 result => {
                     if (result.error) {
                         if (result.error.message !== "wallet locked")
-                            notify.addNotification({
-                                message:
-                                    "Unknown error. Failed to place order for " +
-                                    buyAssetAmount +
-                                    " " +
-                                    buyAsset.symbol,
-                                level: "error"
+                            Notification.error({
+                                message: counterpart.translate(
+                                    "notifications.exchange_unknown_error_place_order",
+                                    {
+                                        amount: buyAssetAmount,
+                                        symbol: buyAsset.symbol
+                                    }
+                                )
                             });
                     }
                 }
@@ -1040,6 +1158,42 @@ class Exchange extends React.Component {
         });
     }
 
+    _chartZoom = () => {
+        SettingsActions.changeViewSetting({
+            chartZoom: !this.state.chartZoom
+        });
+
+        let chartType = this.state.chartType;
+        this.setState({
+            chartZoom: !this.state.chartZoom,
+            chartType: "hidden_chart"
+        });
+        // force reload
+        setTimeout(() => {
+            this.setState({
+                chartType: chartType
+            });
+        }, 100);
+    };
+
+    _chartTools = () => {
+        SettingsActions.changeViewSetting({
+            chartTools: !this.state.chartTools
+        });
+
+        let chartType = this.state.chartType;
+        this.setState({
+            chartTools: !this.state.chartTools,
+            chartType: "hidden_chart"
+        });
+        // force reload
+        setTimeout(() => {
+            this.setState({
+                chartType: chartType
+            });
+        }, 100);
+    };
+
     _flipBuySell() {
         this.setState({
             flipBuySell: !this.state.flipBuySell
@@ -1075,26 +1229,6 @@ class Exchange extends React.Component {
 
         this.setState({
             orderBookReversed: !this.state.orderBookReversed
-        });
-    };
-
-    _chartZoom = () => {
-        SettingsActions.changeViewSetting({
-            chartZoom: !this.state.chartZoom
-        });
-
-        this.setState({
-            chartZoom: !this.state.chartZoom
-        });
-    };
-
-    _chartTools = () => {
-        SettingsActions.changeViewSettings({
-            chartTools: !this.state.chartTools
-        });
-
-        this.setState({
-            chartTools: !this.state.chartTools
         });
     };
 
@@ -1155,12 +1289,12 @@ class Exchange extends React.Component {
         this.setState({verticalOrderForm: !this.state.verticalOrderForm});
     }
 
-    _toggleSettings() {
-        if (!this.state.showSettings) {
-            this.showSettingsModal();
+    _togglePersonalize() {
+        if (!this.state.showPersonalize) {
+            this.showPersonalizeModal();
         }
 
-        this.setState({showSettings: !this.state.showSettings});
+        this.setState({showPersonalize: !this.state.showPersonalize});
     }
 
     _toggleScrollbars() {
@@ -1173,13 +1307,13 @@ class Exchange extends React.Component {
         });
     }
 
-    _toggleDynamicOrderForm() {
+    _toggleSingleColumnOrderForm() {
         SettingsActions.changeViewSetting({
-            dynamicOrderForm: !this.state.dynamicOrderForm
+            singleColumnOrderForm: !this.state.singleColumnOrderForm
         });
 
         this.setState({
-            dynamicOrderForm: !this.state.dynamicOrderForm
+            singleColumnOrderForm: !this.state.singleColumnOrderForm
         });
     }
 
@@ -1250,11 +1384,11 @@ class Exchange extends React.Component {
     }
 
     _borrowQuote() {
-        this.refs.borrowQuote.show();
+        this.showBorrowQuoteModal();
     }
 
     _borrowBase() {
-        this.refs.borrowBase.show();
+        this.showBorrowBaseModal();
     }
 
     _onDeposit(type, e) {
@@ -1263,7 +1397,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.deposit_modal.show();
+        this.showDepositModal();
     }
 
     _onBuy(type, e) {
@@ -1272,7 +1406,7 @@ class Exchange extends React.Component {
             modalType: type
         });
 
-        this.refs.bridge_modal.show();
+        this.showDepositBridgeModal();
     }
 
     _getSettlementInfo() {
@@ -1616,7 +1750,7 @@ class Exchange extends React.Component {
             mirrorPanels,
             panelTabsActive,
             panelTabs,
-            dynamicOrderForm,
+            singleColumnOrderForm,
             flipOrderBook,
             orderBookReversed,
             chartZoom,
@@ -1848,7 +1982,7 @@ class Exchange extends React.Component {
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
-                dynamicOrderForm={dynamicOrderForm}
+                singleColumnOrderForm={singleColumnOrderForm}
                 hideFunctionButtons={hideFunctionButtons}
             />
         );
@@ -1957,7 +2091,7 @@ class Exchange extends React.Component {
                 verticalOrderForm={!smallScreen ? verticalOrderForm : false}
                 isPanelActive={isPanelActive}
                 activePanels={activePanels}
-                dynamicOrderForm={dynamicOrderForm}
+                singleColumnOrderForm={singleColumnOrderForm}
                 hideFunctionButtons={hideFunctionButtons}
             />
         );
@@ -2223,7 +2357,7 @@ class Exchange extends React.Component {
             );
 
         let tradingViewChart =
-            (!tinyScreen && (!chartType || chartType != "price_chart")) ||
+            (!tinyScreen && !(chartType == "price_chart")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("tradingViewChart")) ? null : (
                 <TradingViewPriceChart
@@ -2244,7 +2378,7 @@ class Exchange extends React.Component {
             );
 
         let deptHighChart =
-            (!tinyScreen && (!chartType || chartType != "market_depth")) ||
+            (!tinyScreen && !(chartType == "market_depth")) ||
             (tinyScreen &&
                 !this.state.mobileKey.includes("deptHighChart")) ? null : (
                 <DepthHighChart
@@ -2643,11 +2777,12 @@ class Exchange extends React.Component {
                     style={{display: "block"}}
                     key={`actionCard_${actionCardIndex++}`}
                 >
-                    <div 
+                    <div
                         className="v-align no-padding align-center grid-block footer shrink column"
                         data-intro={translator.translate(
                             "walkthrough.my_markets"
-                        )}>
+                        )}
+                    >
                         <Tabs
                             defaultActiveKey="my-market"
                             activeKey={tabVerticalPanel}
@@ -2756,7 +2891,7 @@ class Exchange extends React.Component {
                     marketStats={marketStats}
                     selectedMarketPickerAsset={this.state.marketPickerAsset}
                     onToggleMarketPicker={this._toggleMarketPicker.bind(this)}
-                    onToggleSettings={this._toggleSettings.bind(this)}
+                    onTogglePersonalize={this._togglePersonalize.bind(this)}
                     showVolumeChart={showVolumeChart}
                 />
 
@@ -2771,14 +2906,14 @@ class Exchange extends React.Component {
                         )}
                         {...this.props}
                     />
-                    <Settings
-                        visible={this.state.isSettingsModalVisible}
-                        showModal={this.showSettingsModal}
-                        hideModal={this.hideSettingsModal}
+                    <Personalize
+                        visible={this.state.isPersonalizeModalVisible}
+                        showModal={this.showPersonalizeModal}
+                        hideModal={this.hidePersonalizeModal}
                         viewSettings={this.props.viewSettings}
                         chartType={chartType}
                         chartHeight={chartHeight}
-                        onToggleSettings={this._toggleSettings.bind(this)}
+                        onTogglePersonalize={this._togglePersonalize.bind(this)}
                         onChangeChartHeight={this.onChangeChartHeight.bind(
                             this
                         )}
@@ -2791,11 +2926,12 @@ class Exchange extends React.Component {
                         hideScrollbars={hideScrollbars}
                         mirrorPanels={mirrorPanels}
                         panelTabs={panelTabs}
-                        dynamicOrderForm={dynamicOrderForm}
+                        singleColumnOrderForm={singleColumnOrderForm}
                         buySellTop={buySellTop}
                         flipBuySell={flipBuySell}
                         flipOrderBook={flipOrderBook}
                         tinyScreen={tinyScreen}
+                        smallScreen={smallScreen}
                         orderBookReversed={orderBookReversed}
                         chartZoom={chartZoom}
                         chartTools={chartTools}
@@ -2806,7 +2942,7 @@ class Exchange extends React.Component {
                         onSetAutoscroll={this._setAutoscroll.bind(this)}
                         onToggleChart={this._toggleChart.bind(this)}
                         onSetPanelTabs={this._setPanelTabs.bind(this)}
-                        onToggleDynamicOrderForm={this._toggleDynamicOrderForm.bind(
+                        onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
                             this
                         )}
                         onToggleBuySellPosition={this._toggleBuySellPosition.bind(
@@ -2839,9 +2975,13 @@ class Exchange extends React.Component {
                             className="grid-block vertical no-padding ps-container"
                             id="CenterContent"
                             ref="center"
-                            data-intro={tinyScreen 
-                                ? translator.translate("walkthrough.collapsed_items") 
-                                : null}
+                            data-intro={
+                                tinyScreen
+                                    ? translator.translate(
+                                          "walkthrough.collapsed_items"
+                                      )
+                                    : null
+                            }
                         >
                             {!tinyScreen ? (
                                 <div>
@@ -2880,8 +3020,8 @@ class Exchange extends React.Component {
 
                 {quoteIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowQuote"
-                        modalId={"borrow_modal_quote_" + quoteAsset.get("id")}
+                        visible={this.state.isBorrowQuoteModalVisible}
+                        hideModal={this.hideBorrowQuoteModal}
                         quote_asset={quoteAsset.get("id")}
                         backing_asset={quoteAsset.getIn([
                             "bitasset",
@@ -2893,8 +3033,8 @@ class Exchange extends React.Component {
                 ) : null}
                 {baseIsBitAsset ? (
                     <BorrowModal
-                        ref="borrowBase"
-                        modalId={"borrow_modal_base_" + baseAsset.get("id")}
+                        visible={this.state.isBorrowBaseModalVisible}
+                        hideModal={this.hideBorrowBaseModal}
                         quote_asset={baseAsset.get("id")}
                         backing_asset={baseAsset.getIn([
                             "bitasset",
@@ -2906,6 +3046,8 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <SimpleDepositWithdraw
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
                     ref="deposit_modal"
                     action="deposit"
                     fiatModal={false}
@@ -2921,14 +3063,17 @@ class Exchange extends React.Component {
                     balance={modalType === "bid" ? baseBalance : quoteBalance}
                     {...this.props.backedCoins.find(
                         a =>
-                            (a.symbol === modalType) === "bid"
+                            a.symbol ===
+                            (modalType === "bid"
                                 ? base.get("symbol")
-                                : quote.get("symbol")
+                                : quote.get("symbol"))
                     )}
                 />
 
                 {/* Bridge modal */}
                 <SimpleDepositBlocktradesBridge
+                    visible={this.state.isDepositBridgeModalVisible}
+                    hideModal={this.hideDepositBridgeModal}
                     ref="bridge_modal"
                     action="deposit"
                     account={currentAccount.get("name")}
@@ -2950,6 +3095,38 @@ class Exchange extends React.Component {
                                 : quote.get("symbol")
                         ) || null
                     }
+                />
+
+                {/* Confirm Modal */}
+
+                <ConfirmOrderModal
+                    visible={this.state.isConfirmBuyOrderModalVisible}
+                    hideModal={this.hideConfirmBuyOrderModal}
+                    type="buy"
+                    onForce={this._forceBuy.bind(
+                        this,
+                        "buy",
+                        buyFeeAsset,
+                        baseBalance,
+                        coreBalance
+                    )}
+                    diff={buyDiff}
+                    hasOrders={combinedAsks.length > 0}
+                />
+
+                <ConfirmOrderModal
+                    visible={this.state.isConfirmSellOrderModalVisible}
+                    hideModal={this.hideConfirmSellOrderModal}
+                    type="sell"
+                    onForce={this._forceSell.bind(
+                        this,
+                        "sell",
+                        sellFeeAsset,
+                        quoteBalance,
+                        coreBalance
+                    )}
+                    diff={sellDiff}
+                    hasOrders={combinedBids.length > 0}
                 />
             </div>
         );

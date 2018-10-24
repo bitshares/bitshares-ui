@@ -87,7 +87,8 @@ class BuySell extends React.Component {
                 this.props.expirationCustomTime ||
             nextProps.parentWidth !== this.props.parentWidth ||
             nextState.forceReRender !== this.state.forceReRender ||
-            nextProps.dynamicOrderForm !== this.props.dynamicOrderForm ||
+            nextProps.singleColumnOrderForm !==
+                this.props.singleColumnOrderForm ||
             nextProps.hideFunctionButtons !== this.props.hideFunctionButtons
         );
     }
@@ -130,10 +131,13 @@ class BuySell extends React.Component {
             verticalOrderForm
         } = this.props;
 
-        //let clientWidth = this.refs.order_form
-        //    ? this.refs.order_form.clientWidth
-        //    : 0;
-        let singleColumnForm = true; // clientWidth < 450 || !this.props.dynamicOrderForm ? true : false;
+        let clientWidth = this.refs.order_form
+            ? this.refs.order_form.clientWidth
+            : 0;
+        let singleColumnForm =
+            clientWidth < 450 || this.props.singleColumnOrderForm
+                ? true
+                : false;
 
         let amount, price, total;
 
@@ -902,12 +906,13 @@ class BuySell extends React.Component {
                 className={cnames(this.props.className)}
                 style={this.props.styles}
             >
-                <div className="buy-sell-container" style={{paddingRight: 5}}>
+                <div
+                    className="buy-sell-container"
+                    style={{paddingRight: 5}}
+                    data-intro={dataIntro}
+                >
                     {!hideHeader ? (
-                        <div
-                            className={"exchange-content-header " + type}
-                            data-intro={dataIntro}
-                        >
+                        <div className={"exchange-content-header " + type}>
                             <span>
                                 <TranslateWithLinks
                                     string="exchange.buysell_formatter"
@@ -1149,6 +1154,20 @@ class BuySell extends React.Component {
                                                 onClick={this.props.onDeposit.bind(
                                                     this
                                                 )}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: this.props
+                                                            .backedCoin.name
+                                                    }
+                                                )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
@@ -1156,6 +1175,13 @@ class BuySell extends React.Component {
                                         {this.props.onBorrow ? (
                                             <Button
                                                 style={{margin: 5}}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
                                                 onClick={this.props.onBorrow}
                                             >
                                                 <Translate content="exchange.borrow" />
@@ -1166,6 +1192,21 @@ class BuySell extends React.Component {
                                                 style={{margin: 5}}
                                                 onClick={this.props.onBuy.bind(
                                                     this
+                                                )}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
                                                 )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />

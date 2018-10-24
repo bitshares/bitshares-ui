@@ -37,8 +37,12 @@ class AccountPortfolioList extends React.Component {
         super();
 
         this.state = {
+            isBridgeModalVisible: false,
             isSettleModalVisible: false,
             isBorrowModalVisible: false,
+            isDepositModalVisible: false,
+            isWithdrawModalVisible: false,
+            isBurnModalVisible: false,
             borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
@@ -59,8 +63,20 @@ class AccountPortfolioList extends React.Component {
         this.showSettleModal = this.showSettleModal.bind(this);
         this.hideSettleModal = this.hideSettleModal.bind(this);
 
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showWithdrawModal = this.showWithdrawModal.bind(this);
+        this.hideWithdrawModal = this.hideWithdrawModal.bind(this);
+
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
+
+        this.showBurnModal = this.showBurnModal.bind(this);
+        this.hideBurnModal = this.hideBurnModal.bind(this);
+
+        this.showBridgeModal = this.showBridgeModal.bind(this);
+        this.hideBridgeModal = this.hideBridgeModal.bind(this);
     }
 
     componentWillMount() {
@@ -116,6 +132,42 @@ class AccountPortfolioList extends React.Component {
         );
     }
 
+    showBridgeModal() {
+        this.setState({
+            isBridgeModalVisible: true
+        });
+    }
+
+    hideBridgeModal() {
+        this.setState({
+            isBridgeModalVisible: false
+        });
+    }
+
+    showWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: true
+        });
+    }
+
+    hideWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: false
+        });
+    }
+
+    showBurnModal() {
+        this.setState({
+            isBurnModalVisible: true
+        });
+    }
+
+    hideBurnModal() {
+        this.setState({
+            isBurnModalVisible: false
+        });
+    }
+
     showSettleModal() {
         this.setState({
             isSettleModalVisible: true
@@ -125,6 +177,18 @@ class AccountPortfolioList extends React.Component {
     hideSettleModal() {
         this.setState({
             isSettleModalVisible: false
+        });
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
         });
     }
 
@@ -232,13 +296,13 @@ class AccountPortfolioList extends React.Component {
     _burnAsset(asset, e) {
         e.preventDefault();
         this.setState({reserve: asset});
-        ZfApi.publish("reserve_asset", "open");
+        this.showBurnModal();
     }
 
     _showDepositModal(asset, e) {
         e.preventDefault();
         this.setState({depositAsset: asset}, () => {
-            this.refs.deposit_modal_new.show();
+            this.showDepositModal();
         });
     }
 
@@ -254,7 +318,17 @@ class AccountPortfolioList extends React.Component {
                 fiatModal
             },
             () => {
-                this.refs[action].show();
+                if (action === "bridge_modal") {
+                    this.showBridgeModal();
+                    return true;
+                }
+
+                if (action === "deposit_modal") {
+                    this.showDepositModal();
+                    return true;
+                }
+
+                this.showWithdrawModal();
             }
         );
     }
@@ -943,7 +1017,6 @@ class AccountPortfolioList extends React.Component {
             !this.state.borrow.backingAsset ||
             !this.state.borrow.account
         ) {
-            console.log("prevent render", this.state);
             return null;
         }
 
@@ -955,8 +1028,8 @@ class AccountPortfolioList extends React.Component {
                 showModal={this.showBorrowModal}
                 hideModal={this.hideBorrowModal}
                 account={this.state.borrow && this.state.borrow.account}
-                quoteAsset={this.state.borrow && this.state.borrow.quoteAsset}
-                backingAsset={
+                quote_asset={this.state.borrow && this.state.borrow.quoteAsset}
+                backing_asset={
                     this.state.borrow && this.state.borrow.backingAsset
                 }
             />
@@ -1002,31 +1075,19 @@ class AccountPortfolioList extends React.Component {
                     {this._renderSendModal()}
                     {this._renderSettleModal()}
                     {this._renderBorrowModal()}
-                    {/* Withdraw Modal*/}
-                    <SimpleDepositWithdraw
-                        ref="withdraw_modal"
-                        action="withdraw"
-                        fiatModal={this.state.fiatModal}
-                        account={this.props.account.get("name")}
-                        sender={this.props.account.get("id")}
-                        asset={this.state.withdrawAsset}
-                        modalId="simple_withdraw_modal"
-                        balances={this.props.balances}
-                        {...currentWithdrawAsset}
-                        isDown={this.props.gatewayDown.get("OPEN")}
-                    />
 
                     <WithdrawModal
-                        ref="withdraw_modal_new"
-                        modalId="withdraw_modal_new"
+                        hideModal={this.hideWithdrawModal}
+                        visible={this.state.isWithdrawModalVisible}
                         backedCoins={this.props.backedCoins}
                         initialSymbol={this.state.withdrawAsset}
                     />
 
                     {/* Deposit Modal */}
                     <DepositModal
-                        ref="deposit_modal_new"
-                        modalId="deposit_modal_new"
+                        visible={this.state.isDepositModalVisible}
+                        showModal={this.showDepositModal}
+                        hideModal={this.hideDepositModal}
                         asset={this.state.depositAsset}
                         account={this.props.account.get("name")}
                         backedCoins={this.props.backedCoins}
@@ -1034,30 +1095,28 @@ class AccountPortfolioList extends React.Component {
 
                     {/* Bridge modal */}
                     <SimpleDepositBlocktradesBridge
-                        ref="bridge_modal"
+                        visible={this.state.isBridgeModalVisible}
+                        showModal={this.showBridgeModal}
+                        hideModal={this.hideBridgeModal}
                         action="deposit"
                         account={this.props.account.get("name")}
                         sender={this.props.account.get("id")}
                         asset={this.state.bridgeAsset}
-                        modalId="simple_bridge_modal"
                         balances={this.props.balances}
                         bridges={currentBridges}
                         isDown={this.props.gatewayDown.get("TRADE")}
                     />
 
-                    {/* Burn modal */}
-                    <BaseModal id="reserve_asset" overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <ReserveAssetModal
-                                asset={this.state.reserve}
-                                account={this.props.account}
-                                onClose={() => {
-                                    ZfApi.publish("reserve_asset", "close");
-                                }}
-                            />
-                        </div>
-                    </BaseModal>
+                    {/* Burn Modal */}
+                    <ReserveAssetModal
+                        visible={this.state.isBurnModalVisible}
+                        hideModal={this.hideBurnModal}
+                        asset={this.state.reserve}
+                        account={this.props.account}
+                        onClose={() => {
+                            ZfApi.publish("reserve_asset", "close");
+                        }}
+                    />
                 </PaginatedList>
             </div>
         );

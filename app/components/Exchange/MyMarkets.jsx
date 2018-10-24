@@ -422,7 +422,9 @@ class MyMarkets extends React.Component {
         }
 
         if (this.state.activeTab !== this.props.activeTab) {
-            this._changeTab(this.props.activeTab);
+            setTimeout(() => {
+                this._changeTab(this.props.activeTab);
+            }, 100);
         }
     }
 
@@ -1207,7 +1209,6 @@ class MyMarkets extends React.Component {
                     visible={this.state.isQuoteModalVisible}
                     hideModal={this.hideQuoteModal}
                     showModal={this.showQuoteModal}
-                    visible={this.state.isQuoteModalVisible}
                     quotes={this.props.preferredBases}
                 />
             </div>
