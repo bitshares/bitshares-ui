@@ -475,7 +475,18 @@ class Footer extends React.Component {
                         </div>
                         {!!routerTransitioner &&
                             routerTransitioner.isBackgroundPingingInProgress() && (
-                                <div className="grid-block shrink txtlabel">
+                                <div
+                                    onClick={() => {
+                                        this.setState({
+                                            showNodesPopup: !this.state
+                                                .showNodesPopup
+                                        });
+                                    }}
+                                    style={{
+                                        cursor: "pointer"
+                                    }}
+                                    className="grid-block shrink txtlabel"
+                                >
                                     {routerTransitioner.getBackgroundPingingTarget()}
                                     <div
                                         style={{
