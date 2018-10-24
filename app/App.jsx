@@ -150,7 +150,8 @@ class App extends React.Component {
         this.hideBrowserSupportModal = this.hideBrowserSupportModal.bind(this);
 
         Notification.config({
-            duration: DEFAULT_NOTIFICATION_DURATION
+            duration: DEFAULT_NOTIFICATION_DURATION,
+            top: 64
         });
     }
 
