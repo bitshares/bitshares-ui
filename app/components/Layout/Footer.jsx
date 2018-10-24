@@ -473,6 +473,21 @@ class Footer extends React.Component {
                                 )}
                             </div>
                         </div>
+                        {!!routerTransitioner &&
+                            routerTransitioner.isBackgroundPingingInProgress() && (
+                                <div className="grid-block shrink txtlabel">
+                                    {routerTransitioner.getBackgroundPingingTarget()}
+                                    <div
+                                        style={{
+                                            marginTop: "0.4rem",
+                                            marginLeft: "0.5rem"
+                                        }}
+                                    >
+                                        <LoadingIndicator type="circle" />
+                                    </div>
+                                    &nbsp; &nbsp;
+                                </div>
+                            )}
                         {synced ? null : (
                             <div className="grid-block shrink txtlabel cancel">
                                 <Translate content="footer.nosync" />
