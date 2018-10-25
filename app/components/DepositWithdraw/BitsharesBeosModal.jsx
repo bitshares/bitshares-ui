@@ -8,7 +8,7 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import BindToChainState from "components/Utility/BindToChainState";
 import PropTypes from "prop-types";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import {checkBalance} from "common/trxHelper";
+import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
@@ -41,8 +41,10 @@ class BitsharesBeosModal extends React.Component {
             ram: this.props.ram,
             is_account_creation: false,
             account_contract: this.props.account_contract,
+            from_account: props.account,
             action: this.props.action,
-            fee_amount: 10000,
+            fee_amount_creation: 0,
+            fee_asset_id: "1.3.0",
             from: this.props.from,
             empty_amount_to_send_error: false,
             balance_error: false,
@@ -52,13 +54,79 @@ class BitsharesBeosModal extends React.Component {
         };
     }
 
+    componentWillMount() {
+        this._updateFee();
+    }
+
+    componentWillUnmount() {
+        this.unMounted = true;
+    }
+
+    componentWillReceiveProps(np) {
+        if (
+            np.account !== this.state.from_account &&
+            np.account !== this.props.account
+        ) {
+            this.setState(
+                {
+                    from_account: np.account,
+                    fee_asset_id: "1.3.0",
+                    fee_amount: new Asset({amount: 0})
+                },
+                () => {
+                    this._updateFee();
+                }
+            );
+        }
+    }
+
+    _updateFee(state = this.state) {
+        let {fee_asset_id, from_account} = state;
+        let newMemo = "";
+
+        if (this.state.is_account_creation) {
+            newMemo =
+                "beos:receiving_beos_account_name:" +
+                this.state.memo +
+                ":create";
+        } else if (this.state.memo === "" && !this.state.is_account_creation) {
+            newMemo = "beos:receiving_beos_account_name";
+        } else if (this.state.memo !== "" && !this.state.is_account_creation) {
+            newMemo = "beos:receiving_beos_account_name:" + this.state.memo;
+        }
+
+        if (!from_account) return null;
+        checkFeeStatusAsync({
+            accountID: from_account.get("id"),
+            feeID: fee_asset_id,
+            options: ["price_per_kbyte"],
+            data: {
+                type: "memo",
+                content: newMemo
+            }
+        }).then(({fee}) => {
+            if (this.unMounted) return;
+
+            this.setState(
+                {
+                    fee_amount: fee
+                },
+                this._checkBalance
+            );
+        });
+    }
+
     _checkBalance() {
-        const {amount_to_send} = this.state;
+        const {amount_to_send, fee_amount, fee_amount_creation} = this.state;
         const {asset, balance} = this.props;
+        let fee_amount_amount = 0;
+        if (fee_amount) {
+            fee_amount_amount = fee_amount.amount;
+        }
         let feeAmount = new Asset({
-            amount: this.state.fee_amount,
-            asset_id: this.props.asset.get("id"),
-            precision: this.props.asset.get("precision")
+            amount: fee_amount_creation + fee_amount_amount,
+            asset_id: asset.get("id"),
+            precision: asset.get("precision")
         });
         if (!balance || !feeAmount) return;
         const hasBalance = checkBalance(
@@ -171,8 +239,14 @@ class BitsharesBeosModal extends React.Component {
                 precision: this.props.asset.get("precision")
             });
 
+            let fee_amount_amount = 0;
+
+            if (this.state.fee_amount) {
+                fee_amount_amount = this.state.fee_amount.amount;
+            }
+
             let totalFeeAmount = new Asset({
-                amount: this.state.fee_amount,
+                amount: this.state.fee_amount_creation + fee_amount_amount,
                 asset_id: this.props.asset.get("id"),
                 precision: this.props.asset.get("precision")
             });
@@ -206,7 +280,7 @@ class BitsharesBeosModal extends React.Component {
         } else {
             this.setState({account_validation_error: true});
         }
-        this.setState({account: e.target.value});
+        this.setState({account: e.target.value}, this._updateFee);
     }
 
     onAmountToSendChange({amount}) {
@@ -255,7 +329,7 @@ class BitsharesBeosModal extends React.Component {
         if (this.state.is_account_creation) {
             this.setState(
                 {
-                    fee_amount: 0,
+                    fee_amount_creation: 0,
                     is_account_creation: !this.state.is_account_creation
                 },
                 this._checkBalance
@@ -263,7 +337,7 @@ class BitsharesBeosModal extends React.Component {
         } else {
             this.setState(
                 {
-                    fee_amount: 10000,
+                    fee_amount_creation: 10000000,
                     is_account_creation: !this.state.is_account_creation
                 },
                 this._checkBalance
@@ -272,7 +346,7 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value});
+        this.setState({memo: e.target.value}, this._updateFee);
     }
 
     onSubmit() {
@@ -295,7 +369,7 @@ class BitsharesBeosModal extends React.Component {
         }
 
         if (this.state.is_account_creation) {
-            newAmountToSend = newAmountToSend + this.state.fee_amount;
+            newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
         }
 
         /*AccountActions.transfer(
@@ -303,7 +377,10 @@ class BitsharesBeosModal extends React.Component {
             this.props.issuer.get("id"),
             newAmountToSend,
             this.props.asset.get("id"),
-            newMemo
+            newMemo,
+            null,
+            this.state.fee_asset_id
+
         ).catch(() => {
             this.onMaintenance();
         });*/

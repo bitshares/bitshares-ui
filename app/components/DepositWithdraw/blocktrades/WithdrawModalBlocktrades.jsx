@@ -239,6 +239,7 @@ class WithdrawModalBlocktrades extends React.Component {
 
     _checkBalance() {
         const {feeAmount, withdraw_amount} = this.state;
+        console.log("feeAmount", feeAmount);
         const {asset, balance} = this.props;
         if (!balance || !feeAmount) return;
         const hasBalance = checkBalance(
@@ -669,7 +670,8 @@ class WithdrawModalBlocktrades extends React.Component {
                         <Translate
                             component="span"
                             content="transfer.available"
-                        />&nbsp;:&nbsp;
+                        />
+                        &nbsp;:&nbsp;
                         <span
                             className="set-cursor"
                             onClick={this.onAccountBalance.bind(this)}
