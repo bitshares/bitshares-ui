@@ -2896,67 +2896,70 @@ class Exchange extends React.Component {
                 />
 
                 <div className="grid-block page-layout market-layout">
-                    <MarketPicker
-                        visible={this.state.isMarketPickerModalVisible}
-                        showModal={this.showMarketPickerModal}
-                        hideModal={this.hideMarketPickerModal}
-                        marketPickerAsset={this.state.marketPickerAsset}
-                        onToggleMarketPicker={this._toggleMarketPicker.bind(
-                            this
-                        )}
-                        {...this.props}
-                    />
-                    <Personalize
-                        visible={this.state.isPersonalizeModalVisible}
-                        showModal={this.showPersonalizeModal}
-                        hideModal={this.hidePersonalizeModal}
-                        viewSettings={this.props.viewSettings}
-                        chartType={chartType}
-                        chartHeight={chartHeight}
-                        onTogglePersonalize={this._togglePersonalize.bind(this)}
-                        onChangeChartHeight={this.onChangeChartHeight.bind(
-                            this
-                        )}
-                        handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
-                            this
-                        )}
-                        trackedGroupsConfig={trackedGroupsConfig}
-                        currentGroupOrderLimit={currentGroupOrderLimit}
-                        verticalOrderBook={verticalOrderBook}
-                        hideScrollbars={hideScrollbars}
-                        mirrorPanels={mirrorPanels}
-                        panelTabs={panelTabs}
-                        singleColumnOrderForm={singleColumnOrderForm}
-                        buySellTop={buySellTop}
-                        flipBuySell={flipBuySell}
-                        flipOrderBook={flipOrderBook}
-                        tinyScreen={tinyScreen}
-                        smallScreen={smallScreen}
-                        orderBookReversed={orderBookReversed}
-                        chartZoom={chartZoom}
-                        chartTools={chartTools}
-                        hideFunctionButtons={hideFunctionButtons}
-                        onMoveOrderBook={this._moveOrderBook.bind(this)}
-                        onMirrorPanels={this._mirrorPanels.bind(this)}
-                        onToggleScrollbars={this._toggleScrollbars.bind(this)}
-                        onSetAutoscroll={this._setAutoscroll.bind(this)}
-                        onToggleChart={this._toggleChart.bind(this)}
-                        onSetPanelTabs={this._setPanelTabs.bind(this)}
-                        onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
-                            this
-                        )}
-                        onToggleBuySellPosition={this._toggleBuySellPosition.bind(
-                            this
-                        )}
-                        onFlipBuySell={this._flipBuySell.bind(this)}
-                        onFlipOrderBook={this._flipOrderBook.bind(this)}
-                        onOrderBookReversed={this._orderBookReversed.bind(this)}
-                        onChartZoom={this._chartZoom.bind(this)}
-                        onChartTools={this._chartTools.bind(this)}
-                        onHideFunctionButtons={this._hideFunctionButtons.bind(
-                            this
-                        )}
-                    />
+                    {this.state.isMarketPickerModalVisible ? 
+                        <MarketPicker
+                            visible={this.state.isMarketPickerModalVisible}
+                            showModal={this.showMarketPickerModal}
+                            hideModal={this.hideMarketPickerModal}
+                            marketPickerAsset={this.state.marketPickerAsset}
+                            onToggleMarketPicker={this._toggleMarketPicker.bind(
+                                this
+                            )}
+                            {...this.props}
+                        /> : null}
+
+                    {this.state.isPersonalizeModalVisible ? 
+                        <Personalize
+                            visible={this.state.isPersonalizeModalVisible}
+                            showModal={this.showPersonalizeModal}
+                            hideModal={this.hidePersonalizeModal}
+                            viewSettings={this.props.viewSettings}
+                            chartType={chartType}
+                            chartHeight={chartHeight}
+                            onTogglePersonalize={this._togglePersonalize.bind(this)}
+                            onChangeChartHeight={this.onChangeChartHeight.bind(
+                                this
+                            )}
+                            handleGroupOrderLimitChange={this._onGroupOrderLimitChange.bind(
+                                this
+                            )}
+                            trackedGroupsConfig={trackedGroupsConfig}
+                            currentGroupOrderLimit={currentGroupOrderLimit}
+                            verticalOrderBook={verticalOrderBook}
+                            hideScrollbars={hideScrollbars}
+                            mirrorPanels={mirrorPanels}
+                            panelTabs={panelTabs}
+                            singleColumnOrderForm={singleColumnOrderForm}
+                            buySellTop={buySellTop}
+                            flipBuySell={flipBuySell}
+                            flipOrderBook={flipOrderBook}
+                            tinyScreen={tinyScreen}
+                            smallScreen={smallScreen}
+                            orderBookReversed={orderBookReversed}
+                            chartZoom={chartZoom}
+                            chartTools={chartTools}
+                            hideFunctionButtons={hideFunctionButtons}
+                            onMoveOrderBook={this._moveOrderBook.bind(this)}
+                            onMirrorPanels={this._mirrorPanels.bind(this)}
+                            onToggleScrollbars={this._toggleScrollbars.bind(this)}
+                            onSetAutoscroll={this._setAutoscroll.bind(this)}
+                            onToggleChart={this._toggleChart.bind(this)}
+                            onSetPanelTabs={this._setPanelTabs.bind(this)}
+                            onToggleSingleColumnOrderForm={this._toggleSingleColumnOrderForm.bind(
+                                this
+                            )}
+                            onToggleBuySellPosition={this._toggleBuySellPosition.bind(
+                                this
+                            )}
+                            onFlipBuySell={this._flipBuySell.bind(this)}
+                            onFlipOrderBook={this._flipOrderBook.bind(this)}
+                            onOrderBookReversed={this._orderBookReversed.bind(this)}
+                            onChartZoom={this._chartZoom.bind(this)}
+                            onChartTools={this._chartTools.bind(this)}
+                            onHideFunctionButtons={this._hideFunctionButtons.bind(
+                                this
+                            )}
+                        /> : null}
 
                     <AccountNotifications />
                     {/* Main vertical block with content */}
@@ -3018,7 +3021,7 @@ class Exchange extends React.Component {
                     {/* End of Second Vertical Block */}
                 </div>
 
-                {quoteIsBitAsset ? (
+                {quoteIsBitAsset && this.state.isBorrowQuoteModalVisible ? (
                     <BorrowModal
                         visible={this.state.isBorrowQuoteModalVisible}
                         hideModal={this.hideBorrowQuoteModal}
@@ -3031,7 +3034,7 @@ class Exchange extends React.Component {
                         account={currentAccount}
                     />
                 ) : null}
-                {baseIsBitAsset ? (
+                {baseIsBitAsset && this.state.isBorrowBaseModalVisible? (
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
                         hideModal={this.hideBorrowBaseModal}
@@ -3045,89 +3048,93 @@ class Exchange extends React.Component {
                     />
                 ) : null}
 
-                <SimpleDepositWithdraw
-                    visible={this.state.isDepositModalVisible}
-                    hideModal={this.hideDepositModal}
-                    ref="deposit_modal"
-                    action="deposit"
-                    fiatModal={false}
-                    account={currentAccount.get("name")}
-                    sender={currentAccount.get("id")}
-                    asset={
-                        modalType === "bid" ? base.get("id") : quote.get("id")
-                    }
-                    modalId={
-                        "simple_deposit_modal" +
-                        (modalType === "bid" ? "" : "_ask")
-                    }
-                    balance={modalType === "bid" ? baseBalance : quoteBalance}
-                    {...this.props.backedCoins.find(
-                        a =>
-                            a.symbol ===
-                            (modalType === "bid"
-                                ? base.get("symbol")
-                                : quote.get("symbol"))
-                    )}
-                />
+                {this.state.isDepositModalVisible ? 
+                    <SimpleDepositWithdraw
+                        visible={this.state.isDepositModalVisible}
+                        hideModal={this.hideDepositModal}
+                        ref="deposit_modal"
+                        action="deposit"
+                        fiatModal={false}
+                        account={currentAccount.get("name")}
+                        sender={currentAccount.get("id")}
+                        asset={
+                            modalType === "bid" ? base.get("id") : quote.get("id")
+                        }
+                        modalId={
+                            "simple_deposit_modal" +
+                            (modalType === "bid" ? "" : "_ask")
+                        }
+                        balance={modalType === "bid" ? baseBalance : quoteBalance}
+                        {...this.props.backedCoins.find(
+                            a =>
+                                a.symbol ===
+                                (modalType === "bid"
+                                    ? base.get("symbol")
+                                    : quote.get("symbol"))
+                        )}
+                    /> : null}
 
                 {/* Bridge modal */}
-                <SimpleDepositBlocktradesBridge
-                    visible={this.state.isDepositBridgeModalVisible}
-                    hideModal={this.hideDepositBridgeModal}
-                    ref="bridge_modal"
-                    action="deposit"
-                    account={currentAccount.get("name")}
-                    sender={currentAccount.get("id")}
-                    asset={
-                        modalType === "bid" ? base.get("id") : quote.get("id")
-                    }
-                    modalId={
-                        "simple_bridge_modal" +
-                        (modalType === "bid" ? "" : "_ask")
-                    }
-                    balances={[
-                        modalType === "bid" ? baseBalance : quoteBalance
-                    ]}
-                    bridges={
-                        this.props.bridgeCoins.get(
-                            modalType === "bid"
-                                ? base.get("symbol")
-                                : quote.get("symbol")
-                        ) || null
-                    }
-                />
+                {this.state.isDepositBridgeModalVisible ? 
+                    <SimpleDepositBlocktradesBridge
+                        visible={this.state.isDepositBridgeModalVisible}
+                        hideModal={this.hideDepositBridgeModal}
+                        ref="bridge_modal"
+                        action="deposit"
+                        account={currentAccount.get("name")}
+                        sender={currentAccount.get("id")}
+                        asset={
+                            modalType === "bid" ? base.get("id") : quote.get("id")
+                        }
+                        modalId={
+                            "simple_bridge_modal" +
+                            (modalType === "bid" ? "" : "_ask")
+                        }
+                        balances={[
+                            modalType === "bid" ? baseBalance : quoteBalance
+                        ]}
+                        bridges={
+                            this.props.bridgeCoins.get(
+                                modalType === "bid"
+                                    ? base.get("symbol")
+                                    : quote.get("symbol")
+                            ) || null
+                        }
+                    />
+                    : null}
 
                 {/* Confirm Modal */}
+                {this.state.isConfirmBuyOrderModalVisible ? 
+                    <ConfirmOrderModal
+                        visible={this.state.isConfirmBuyOrderModalVisible}
+                        hideModal={this.hideConfirmBuyOrderModal}
+                        type="buy"
+                        onForce={this._forceBuy.bind(
+                            this,
+                            "buy",
+                            buyFeeAsset,
+                            baseBalance,
+                            coreBalance
+                        )}
+                        diff={buyDiff}
+                        hasOrders={combinedAsks.length > 0}
+                    /> : null}
 
-                <ConfirmOrderModal
-                    visible={this.state.isConfirmBuyOrderModalVisible}
-                    hideModal={this.hideConfirmBuyOrderModal}
-                    type="buy"
-                    onForce={this._forceBuy.bind(
-                        this,
-                        "buy",
-                        buyFeeAsset,
-                        baseBalance,
-                        coreBalance
-                    )}
-                    diff={buyDiff}
-                    hasOrders={combinedAsks.length > 0}
-                />
-
-                <ConfirmOrderModal
-                    visible={this.state.isConfirmSellOrderModalVisible}
-                    hideModal={this.hideConfirmSellOrderModal}
-                    type="sell"
-                    onForce={this._forceSell.bind(
-                        this,
-                        "sell",
-                        sellFeeAsset,
-                        quoteBalance,
-                        coreBalance
-                    )}
-                    diff={sellDiff}
-                    hasOrders={combinedBids.length > 0}
-                />
+                {this.state.isConfirmSellOrderModalVisible ? 
+                    <ConfirmOrderModal
+                        visible={this.state.isConfirmSellOrderModalVisible}
+                        hideModal={this.hideConfirmSellOrderModal}
+                        type="sell"
+                        onForce={this._forceSell.bind(
+                            this,
+                            "sell",
+                            sellFeeAsset,
+                            quoteBalance,
+                            coreBalance
+                        )}
+                        diff={sellDiff}
+                        hasOrders={combinedBids.length > 0}
+                    /> : null}
             </div>
         );
     }
