@@ -20,6 +20,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
 import soundex from "soundex-code";
 import {hiddenProposals} from "../../lib/common/hideProposals";
+import {Switch} from "bitshares-ui-style-guide";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -553,12 +554,6 @@ class AccountVoting extends React.Component {
 
         let voteThreshold = 0;
         const hideProposals = filteredWorker => {
-            const isActive = worker => {
-                return (
-                    Date(worker.get("work_end_date") + "Z") > now &&
-                    new Date(worker.get("work_begin_date") + "Z") <= now
-                );
-            };
             const dublicated = workerArray.some(worker => {
                 const isSimilarName =
                     soundex(filteredWorker.get("name")) ===
@@ -569,12 +564,6 @@ class AccountVoting extends React.Component {
                           filteredWorker.get("worker_account")
                             ? new Date(worker.get("work_begin_date")) >
                               new Date(filteredWorker.get("work_begin_date"))
-                                ? isActive(filteredWorker)
-                                    ? isActive(worker)
-                                    : false
-                                : !isActive(worker)
-                                    ? true
-                                    : false
                             : false
                         : false
                     : false;
@@ -825,16 +814,16 @@ class AccountVoting extends React.Component {
 
         const hideLegacy = (
             <div>
-                <input
-                    type="checkbox"
+                <Switch
+                    style={{margin: 6}}
+                    checked={this.state.hideLegacyProposals}
                     onChange={() => {
                         this.setState({
                             hideLegacyProposals: !this.state.hideLegacyProposals
                         });
                     }}
-                    checked={this.state.hideLegacyProposals}
                 />
-                <label>Hide Legacy Proposals</label>
+                <Translate content="account.votes.hide_legacy_proposals" />
             </div>
         );
 
