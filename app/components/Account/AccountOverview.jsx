@@ -112,6 +112,11 @@ class AccountOverview extends React.Component {
             });
         }
     }
+    _toggleHideProposal() {
+        this.setState({
+            hideFishingProposals: !this.state.hideFishingProposals
+        });
+    }
 
     getHeader() {
         let {settings} = this.props;
@@ -537,19 +542,14 @@ class AccountOverview extends React.Component {
                                 <div>
                                     <input
                                         type="checkbox"
-                                        onChange={() => {
-                                            this.setState({
-                                                hideFishingProposals: !this
-                                                    .state.hideFishingProposals
-                                            });
-                                        }}
+                                        onChange={this._toggleHideProposal.bind(
+                                            this
+                                        )}
                                         checked={
                                             this.state.hideFishingProposals
                                         }
                                     />
-                                    <label>
-                                        Deactivate suspicious proposals
-                                    </label>
+                                    <Translate content="account.deactivate_suspicious_proposals" />
                                 </div>
 
                                 {shownAssets != "visual" ? (
