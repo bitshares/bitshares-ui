@@ -22,15 +22,14 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import {debounce} from "lodash-es";
-import {DecimalChecker} from "../Exchange/ExchangeInput";
+import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
-
-// import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
-// import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
+import {Modal} from "bitshares-ui-style-guide";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
+        balance: ChainTypes.ChainObject,
         sender: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
         coreAsset: ChainTypes.ChainAsset.isRequired,
@@ -289,9 +288,17 @@ class DepositWithdrawContent extends DecimalChecker {
     }
 
     _getCurrentBalance() {
-        return this.props.balances.find(b => {
-            return b && b.get("asset_type") === this.props.asset.get("id");
-        });
+        let balances = this.props.balance
+            ? [this.props.balance]
+            : this.props.balances;
+
+        return !!balances
+            ? balances.find(b => {
+                  return (
+                      b && b.get("asset_type") === this.props.asset.get("id")
+                  );
+              })
+            : null;
     }
 
     _checkBalance() {
@@ -681,7 +688,8 @@ class DepositWithdrawContent extends DecimalChecker {
                             className="help-tooltip"
                             content="gateway.deposit_to"
                             asset={assetName}
-                        />:
+                        />
+                        :
                         <label className="fz_12 left-label">
                             <Translate content="gateway.deposit_notice_delay" />
                         </label>
@@ -797,7 +805,8 @@ class DepositWithdrawContent extends DecimalChecker {
                 <label style={{fontSize: "1rem"}}>
                     {counterpart.translate("gateway.balance_asset", {
                         asset: assetName
-                    })}:
+                    })}
+                    :
                     <span className="inline-label">
                         <input
                             disabled
@@ -850,20 +859,6 @@ class DepositWithdrawContent extends DecimalChecker {
 
         return (
             <div className="SimpleTrade__modal">
-                <div className="Modal__header">
-                    <h3>
-                        <Translate
-                            content={
-                                isDeposit
-                                    ? "gateway.deposit"
-                                    : "modal.withdraw.submit"
-                            }
-                        />{" "}
-                        {assetName}
-                    </h3>
-                </div>
-                <div className="Modal__divider" />
-
                 <div
                     className="grid-block vertical no-overflow"
                     style={{
@@ -899,19 +894,30 @@ export default class SimpleDepositWithdrawModal extends React.Component {
     }
 
     render() {
-        return !this.state.open ? null : (
-            <BaseModal
-                id={this.props.modalId}
+        const isDeposit = this.props.action === "deposit";
+
+        const title = isDeposit
+            ? counterpart.translate("gateway.deposit")
+            : counterpart.translate("modal.withdraw.submit");
+
+        return (
+            <Modal
+                title={title}
+                footer={[]}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                className="test"
                 onClose={this.onClose.bind(this)}
                 overlay={true}
+                id={this.props.modalId}
             >
-                {this.state.open ? (
+                {this.props.visible ? (
                     <DepositWithdrawContent
                         {...this.props}
-                        open={this.state.open}
+                        open={this.props.visible}
                     />
                 ) : null}
-            </BaseModal>
+            </Modal>
         );
     }
 }
