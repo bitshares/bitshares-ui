@@ -1350,6 +1350,8 @@ class WithdrawModalWrapper extends React.Component {
     render() {
         const {props} = this;
 
+        if (!props.account) return null;
+
         let balances = props.account.get("balances");
         let assets = Immutable.fromJS({});
         balances.forEach((item, id) => {

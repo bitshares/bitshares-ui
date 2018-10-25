@@ -209,11 +209,11 @@
         "total_value": "Total value",
         "trade": "Trade",
         "transactions": {
+            "fee": "Fee",
             "id": "ID",
             "info": "Info",
             "time": "Time",
-            "type": "Type",
-            "fee": "Fee"
+            "type": "Type"
         },
         "transfer_actions": "Transfer actions",
         "unfollow": "Remove contact",
@@ -379,6 +379,14 @@
             "whitelist_authorities": "Whitelist authority"
         }
     },
+    "account_browsing_mode": {
+        "go_back": "Go back to my account",
+        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
+        "modal_title": "View Only Mode",
+        "never_show_again": "Never show again",
+        "view_mode": "View Mode",
+        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account."
+    },
     "alert": {
         "warning": "Warning"
     },
@@ -387,11 +395,11 @@
         "browser_text": "The Browser you are using has not been fully tested to support the %(wallet_name)s Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice. Use at your own risk.",
         "check_latency": "Running latency checks...",
         "check_latency_feedback": "Running latency checks (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_last": "Latency check for last connected node (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_world": "Latency check in each region (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_region": "Latency check in best region (%(pinged)s/%(totalToPing)s nodes)",
         "check_latency_feedback_country": "Latency check in best country (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_last": "Latency check for last connected node (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_region": "Latency check in best region (%(pinged)s/%(totalToPing)s nodes)",
         "check_latency_feedback_rest": "Latency check for remaining nodes (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_world": "Latency check in each region (%(pinged)s/%(totalToPing)s nodes)",
         "connected": "Connected",
         "connecting": "Connecting to API server: %(server)s",
         "database": "Connection established, initializing local databases",
@@ -429,37 +437,9 @@
         "update": "Update",
         "use_max": "Use Max"
     },
-    "notifications": {
-        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
-        "exchange_enter_valid_values": "Please enter a valid amount and price",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
-        "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)",
-        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
-        "password_change_success": "Password changed",
-        "password_change_failure": "Unable to change password: %(error_msg)",
-        "invalid_password": "Invalid Password",
-        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
-        "import_keys_error_unknown": "Key import error: %(error_msg)",
-        "import_keys_already_imported": "This wallet has already been imported",
-        "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)"
-    },
     "browser_notification_messages": {
         "money_received_body": "Sent you %(amount)s %(symbol)s",
         "money_received_title": "Transfer from %(from)s"
-    },
-    "account_browsing_mode": {
-        "modal_title": "View Only Mode",
-        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
-        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account.",
-        "go_back": "Go back to my account",
-        "view_mode": "View Mode",
-        "never_show_again": "Never show again"
     },
     "cancel": "Cancel",
     "connection": {
@@ -1340,6 +1320,26 @@
         },
         "news": "News",
         "subject": "Subject"
+    },
+    "notifications": {
+        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
+        "backup_file_save_unsupported": "File saving is not supported",
+        "balance_claim_error": "Error claiming balance: %(error_msg)",
+        "exchange_enter_valid_values": "Please enter a valid amount and price",
+        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "import_keys_already_imported": "This wallet has already been imported",
+        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
+        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "invalid_password": "Invalid Password",
+        "password_change_failure": "Unable to change password: %(error_msg)",
+        "password_change_success": "Password changed",
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
+        "worker_create_failure": "Failed to create worker: %(error_msg)"
     },
     "openledger": {
         "deposit_amount": "Deposit Amount",
