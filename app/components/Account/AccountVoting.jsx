@@ -553,18 +553,31 @@ class AccountVoting extends React.Component {
 
         let voteThreshold = 0;
         const hideProposals = filteredWorker => {
+            const isActive = worker => {
+                return (
+                    Date(worker.get("work_end_date") + "Z") > now &&
+                    new Date(worker.get("work_begin_date") + "Z") <= now
+                );
+            };
             const dublicated = workerArray.some(worker => {
                 const isSimilarName =
                     soundex(filteredWorker.get("name")) ===
                     soundex(worker.get("name"));
-                return (
-                    isSimilarName &&
-                    approvalState &&
-                    worker.get("worker_account") ===
-                        filteredWorker.get("worker_account") &&
-                    new Date(worker.get("work_begin_date")) >
-                        new Date(filteredWorker.get("work_begin_date"))
-                );
+                return isSimilarName
+                    ? worker.get("id") !== filteredWorker.get("id")
+                        ? worker.get("worker_account") ===
+                          filteredWorker.get("worker_account")
+                            ? new Date(worker.get("work_begin_date")) >
+                              new Date(filteredWorker.get("work_begin_date"))
+                                ? isActive(filteredWorker)
+                                    ? isActive(worker)
+                                    : false
+                                : !isActive(worker)
+                                    ? true
+                                    : false
+                            : false
+                        : false
+                    : false;
             });
             const hasStarted =
                 new Date(filteredWorker.get("work_begin_date") + "Z") <= now;
@@ -577,6 +590,7 @@ class AccountVoting extends React.Component {
                 new Date(filteredWorker.get("work_begin_date") + "Z") <=
                     new Date(newDate.setMonth(newDate.getMonth() - 1)) &&
                 totalVotes < votesLimit;
+
             const manualHidden = hiddenProposals.includes(
                 filteredWorker.get("id")
             );
