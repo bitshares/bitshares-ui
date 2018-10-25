@@ -75,7 +75,7 @@ class RouterTransitioner {
             if (latencyChecks >= 8) {
                 // every x connect attempts we refresh the api latency list
                 // automatically
-                ss.set("latencyChecks", 0);
+                this._setLatencyChecks(0);
                 latenciesEstablished = false;
             } else {
                 // otherwise increase the counter
