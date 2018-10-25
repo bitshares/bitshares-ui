@@ -1057,6 +1057,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "showcases": "Showcases",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",

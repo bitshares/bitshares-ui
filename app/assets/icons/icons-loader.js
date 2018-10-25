@@ -37,6 +37,7 @@ let icons = [
     "server",
     "settle",
     "share",
+    "showcases",
     "shuffle",
     "text",
     "thumb-tack",
