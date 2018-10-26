@@ -13,6 +13,9 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import {RecentTransactions} from "./RecentTransactions";
 import notify from "actions/NotificationActions";
+import jsPDF from "jspdf";
+import QRCode from "qrcode";
+import WalletDb from "stores/WalletDb";
 
 class AccountPermissions extends React.Component {
     constructor(props) {
@@ -270,6 +273,56 @@ class AccountPermissions extends React.Component {
         this.setState(newState);
     }
 
+    async onPdfCreate(publicKeys) {
+        const width = 300;
+        const height = 450;
+        let rowHeight = 170;
+        const textWidth = 190,
+            textHeight = 8;
+        publicKeys = [
+            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs",
+            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs",
+            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs"
+        ];
+        let gQrcode = (qrcode, rowWidth, rowHeight) => {
+            QRCode.toDataURL(qrcode)
+                .then(url => {
+                    pdf.addImage(url, "JPEG", rowWidth, rowHeight);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        };
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            format: [width, height]
+        });
+
+        pdf.text("Account:", 18, 150);
+        pdf.text("sschiessl", 42, 150);
+
+        let content = publicKeys.map(async publicKey => {
+            let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
+            pdf.line(2, rowHeight + 2, width - 2, rowHeight + 2);
+            pdf.text("Public", 18, rowHeight + 8);
+            pdf.text("Active Key", 120, rowHeight + 8);
+            pdf.text("Private", 253, rowHeight + 8);
+            pdf.line(2, rowHeight + 9, width - 2, rowHeight + 9);
+            gQrcode(publicKey, 5, rowHeight + 10);
+            gQrcode(privateKey, 240, rowHeight + 10);
+            pdf.text("PublicKey", 50, rowHeight + 20);
+            pdf.text(publicKey, 50, rowHeight + 30);
+            pdf.rect(49, rowHeight + 24, textWidth, textHeight);
+            pdf.text("PrivateKey", 50, rowHeight + 40);
+            pdf.text(privateKey, 50, rowHeight + 50);
+            pdf.rect(49, rowHeight + 44, textWidth, textHeight);
+            rowHeight += 60;
+        });
+        Promise.all(content).then(() => {
+            pdf.save("download.pdf");
+        });
+    }
+
     render() {
         let error1, error2;
 
@@ -354,6 +407,17 @@ class AccountPermissions extends React.Component {
                                         tabIndex={9}
                                     >
                                         <Translate content="account.perm.publish" />
+                                    </button>
+                                    <button
+                                        className={"ewrerwer"}
+                                        onClick={() => {
+                                            this.onPdfCreate(
+                                                this.state.active_keys
+                                            );
+                                        }}
+                                        tabIndex={10}
+                                    >
+                                        <Translate content="account.perm.create_Pdf" />
                                     </button>
                                 </div>
                             }

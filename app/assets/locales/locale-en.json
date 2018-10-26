@@ -142,6 +142,7 @@
             "new_memo": "New memo key",
             "new_owner": "New owner key",
             "owner": "Owner Permissions",
+            "create_Pdf": "PDF",
             "password_model": "Cloud Wallet",
             "password_model_1": "If you want to be able to login from anywhere using only your password and account name, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
             "password_model_2": "Add password generated keys",
