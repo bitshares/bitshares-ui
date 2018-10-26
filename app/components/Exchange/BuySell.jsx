@@ -210,7 +210,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -238,7 +238,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -266,7 +266,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -301,7 +301,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -330,7 +330,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -359,7 +359,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -387,7 +387,7 @@ class BuySell extends React.Component {
                         id="emptyPlaceholder"
                         defaultValue="0"
                         addonAfter={
-                            <span style={{fontSize: "75%"}}>
+                            <span>
                                 <AssetName
                                     style={{width: 100}}
                                     noTip
@@ -516,7 +516,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -545,7 +545,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={quote.get("symbol")}
@@ -568,7 +568,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -590,14 +590,13 @@ class BuySell extends React.Component {
                                 defaultValue={
                                     !hasFeeBalance
                                         ? counterpart.translate(
-                                              "transfer.errors.insufficient"
-                                          )
-                                        : fee.getAmount({real: true})
+                                            "transfer.errors.insufficient"
+                                        ) : fee.getAmount({real: true})
                                 }
                                 disabled
                                 addonAfter={
                                     <Select
-                                        style={{width: 100, fontSize: "75%"}}
+                                        style={{width: 100}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
                                             this.props.feeAsset
@@ -629,7 +628,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -658,7 +657,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={quote.get("symbol")}
@@ -681,7 +680,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -710,7 +709,7 @@ class BuySell extends React.Component {
                                 disabled
                                 addonAfter={
                                     <Select
-                                        style={{width: 100, fontSize: "75%"}}
+                                        style={{width: 100}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
                                             this.props.feeAsset
@@ -765,7 +764,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={base.get("symbol")}
@@ -823,7 +822,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={base.get("symbol")}
@@ -849,7 +848,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={quote.get("symbol")}
@@ -878,10 +877,7 @@ class BuySell extends React.Component {
                                     disabled
                                     addonAfter={
                                         <Select
-                                            style={{
-                                                width: 100,
-                                                fontSize: "75%"
-                                            }}
+                                            style={{width: 100}}
                                             disabled={feeAssets.length === 1}
                                             defaultValue={feeAssets.indexOf(
                                                 this.props.feeAsset
