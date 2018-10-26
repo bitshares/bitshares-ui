@@ -232,6 +232,12 @@ class Exchange extends React.Component {
         }
 
         return {
+            isDepositBridgeModelLoaded: false,
+            isDepositModalLoaded: false,
+            isPersonalizeModalLoaded: false,
+            isMarketPickerModalLoaded: false,
+            isBorrowQuoteModalLoaded: false,
+            isBorrowBaseModalLoaded: false,
             isDepositBridgeModalVisible: false,
             isDepositModalVisible: false,
             isPersonalizeModalVisible: false,
@@ -240,7 +246,9 @@ class Exchange extends React.Component {
             isBorrowBaseModalVisible: false,
             history: [],
             isConfirmBuyOrderModalVisible: false,
+            isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
+            isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
             buySellOpen: ws.get("buySellOpen", true),
@@ -290,7 +298,8 @@ class Exchange extends React.Component {
 
     showMarketPickerModal() {
         this.setState({
-            isMarketPickerModalVisible: true
+            isMarketPickerModalVisible: true,
+            isMarketPickerModalLoaded: true
         });
     }
 
@@ -302,7 +311,8 @@ class Exchange extends React.Component {
 
     showPersonalizeModal() {
         this.setState({
-            isPersonalizeModalVisible: true
+            isPersonalizeModalVisible: true,
+            isPersonalizeModalLoaded: true
         });
     }
 
@@ -314,7 +324,8 @@ class Exchange extends React.Component {
 
     showBorrowQuoteModal() {
         this.setState({
-            isBorrowQuoteModalVisible: true
+            isBorrowQuoteModalVisible: true,
+            isBorrowQuoteModalLoaded: true
         });
     }
 
@@ -326,7 +337,8 @@ class Exchange extends React.Component {
 
     showBorrowBaseModal() {
         this.setState({
-            isBorrowBaseModalVisible: true
+            isBorrowBaseModalVisible: true,
+            isBorrowBaseModalLoaded: true
         });
     }
 
@@ -338,7 +350,8 @@ class Exchange extends React.Component {
 
     showDepositBridgeModal() {
         this.setState({
-            isDepositBridgeModalVisible: true
+            isDepositBridgeModalVisible: true,
+            isDepositBridgeModalLoaded: true
         });
     }
 
@@ -350,7 +363,8 @@ class Exchange extends React.Component {
 
     showDepositModal() {
         this.setState({
-            isDepositModalVisible: true
+            isDepositModalVisible: true,
+            isDepositModalLoaded: true
         });
     }
 
@@ -367,7 +381,8 @@ class Exchange extends React.Component {
 
     showConfirmBuyOrderModal() {
         this.setState({
-            isConfirmBuyOrderModalVisible: true
+            isConfirmBuyOrderModalVisible: true,
+            isConfirmBuyOrderModalLoaded: true
         });
     }
 
@@ -379,7 +394,8 @@ class Exchange extends React.Component {
 
     showConfirmSellOrderModal() {
         this.setState({
-            isConfirmSellOrderModalVisible: true
+            isConfirmSellOrderModalVisible: true,
+            isConfirmSellOrderModalLoaded: true
         });
     }
 
@@ -1290,11 +1306,17 @@ class Exchange extends React.Component {
     }
 
     _togglePersonalize() {
-        if (!this.state.showPersonalize) {
-            this.showPersonalizeModal();
+        if (!this.state.isPersonalizeModalVisible) {
+            this.setState({
+                isPersonalizeModalVisible: !this.state
+                    .isPersonalizeModalVisible,
+                isPersonalizeModalLoaded: true
+            });
+        } else {
+            this.setState({
+                isPersonalizeModalVisible: !this.state.isPersonalizeModalVisible
+            });
         }
-
-        this.setState({showPersonalize: !this.state.showPersonalize});
     }
 
     _toggleScrollbars() {
@@ -2896,7 +2918,8 @@ class Exchange extends React.Component {
                 />
 
                 <div className="grid-block page-layout market-layout">
-                    {this.state.isMarketPickerModalVisible ? 
+                    {this.state.isMarketPickerModalVisible ||
+                    this.state.isMarketPickerModalLoaded ? (
                         <MarketPicker
                             visible={this.state.isMarketPickerModalVisible}
                             showModal={this.showMarketPickerModal}
@@ -2906,9 +2929,11 @@ class Exchange extends React.Component {
                                 this
                             )}
                             {...this.props}
-                        /> : null}
+                        />
+                    ) : null}
 
-                    {this.state.isPersonalizeModalVisible ? 
+                    {this.state.isPersonalizeModalVisible ||
+                    this.state.isPersonalizeModalLoaded ? (
                         <Personalize
                             visible={this.state.isPersonalizeModalVisible}
                             showModal={this.showPersonalizeModal}
@@ -2916,7 +2941,9 @@ class Exchange extends React.Component {
                             viewSettings={this.props.viewSettings}
                             chartType={chartType}
                             chartHeight={chartHeight}
-                            onTogglePersonalize={this._togglePersonalize.bind(this)}
+                            onTogglePersonalize={this._togglePersonalize.bind(
+                                this
+                            )}
                             onChangeChartHeight={this.onChangeChartHeight.bind(
                                 this
                             )}
@@ -2941,7 +2968,9 @@ class Exchange extends React.Component {
                             hideFunctionButtons={hideFunctionButtons}
                             onMoveOrderBook={this._moveOrderBook.bind(this)}
                             onMirrorPanels={this._mirrorPanels.bind(this)}
-                            onToggleScrollbars={this._toggleScrollbars.bind(this)}
+                            onToggleScrollbars={this._toggleScrollbars.bind(
+                                this
+                            )}
                             onSetAutoscroll={this._setAutoscroll.bind(this)}
                             onToggleChart={this._toggleChart.bind(this)}
                             onSetPanelTabs={this._setPanelTabs.bind(this)}
@@ -2953,13 +2982,16 @@ class Exchange extends React.Component {
                             )}
                             onFlipBuySell={this._flipBuySell.bind(this)}
                             onFlipOrderBook={this._flipOrderBook.bind(this)}
-                            onOrderBookReversed={this._orderBookReversed.bind(this)}
+                            onOrderBookReversed={this._orderBookReversed.bind(
+                                this
+                            )}
                             onChartZoom={this._chartZoom.bind(this)}
                             onChartTools={this._chartTools.bind(this)}
                             onHideFunctionButtons={this._hideFunctionButtons.bind(
                                 this
                             )}
-                        /> : null}
+                        />
+                    ) : null}
 
                     <AccountNotifications />
                     {/* Main vertical block with content */}
@@ -3021,7 +3053,9 @@ class Exchange extends React.Component {
                     {/* End of Second Vertical Block */}
                 </div>
 
-                {quoteIsBitAsset && this.state.isBorrowQuoteModalVisible ? (
+                {quoteIsBitAsset &&
+                (this.state.isBorrowQuoteModalVisible ||
+                    this.state.isBorrowQuoteModalLoaded) ? (
                     <BorrowModal
                         visible={this.state.isBorrowQuoteModalVisible}
                         hideModal={this.hideBorrowQuoteModal}
@@ -3034,7 +3068,9 @@ class Exchange extends React.Component {
                         account={currentAccount}
                     />
                 ) : null}
-                {baseIsBitAsset && this.state.isBorrowBaseModalVisible? (
+                {baseIsBitAsset &&
+                (this.state.isBorrowBaseModalVisible ||
+                    this.state.isBorrowBaseModalLoaded) ? (
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
                         hideModal={this.hideBorrowBaseModal}
@@ -3048,7 +3084,8 @@ class Exchange extends React.Component {
                     />
                 ) : null}
 
-                {this.state.isDepositModalVisible ? 
+                {this.state.isDepositModalVisible ||
+                this.state.isDepositModalLoaded ? (
                     <SimpleDepositWithdraw
                         visible={this.state.isDepositModalVisible}
                         hideModal={this.hideDepositModal}
@@ -3058,13 +3095,17 @@ class Exchange extends React.Component {
                         account={currentAccount.get("name")}
                         sender={currentAccount.get("id")}
                         asset={
-                            modalType === "bid" ? base.get("id") : quote.get("id")
+                            modalType === "bid"
+                                ? base.get("id")
+                                : quote.get("id")
                         }
                         modalId={
                             "simple_deposit_modal" +
                             (modalType === "bid" ? "" : "_ask")
                         }
-                        balance={modalType === "bid" ? baseBalance : quoteBalance}
+                        balance={
+                            modalType === "bid" ? baseBalance : quoteBalance
+                        }
                         {...this.props.backedCoins.find(
                             a =>
                                 a.symbol ===
@@ -3072,10 +3113,12 @@ class Exchange extends React.Component {
                                     ? base.get("symbol")
                                     : quote.get("symbol"))
                         )}
-                    /> : null}
+                    />
+                ) : null}
 
                 {/* Bridge modal */}
-                {this.state.isDepositBridgeModalVisible ? 
+                {this.state.isDepositBridgeModalVisible ||
+                this.state.isDepositBridgeModalLoaded ? (
                     <SimpleDepositBlocktradesBridge
                         visible={this.state.isDepositBridgeModalVisible}
                         hideModal={this.hideDepositBridgeModal}
@@ -3084,7 +3127,9 @@ class Exchange extends React.Component {
                         account={currentAccount.get("name")}
                         sender={currentAccount.get("id")}
                         asset={
-                            modalType === "bid" ? base.get("id") : quote.get("id")
+                            modalType === "bid"
+                                ? base.get("id")
+                                : quote.get("id")
                         }
                         modalId={
                             "simple_bridge_modal" +
@@ -3101,10 +3146,11 @@ class Exchange extends React.Component {
                             ) || null
                         }
                     />
-                    : null}
+                ) : null}
 
                 {/* Confirm Modal */}
-                {this.state.isConfirmBuyOrderModalVisible ? 
+                {this.state.isConfirmBuyOrderModalVisible ||
+                this.state.isConfirmBuyOrderModalLoaded ? (
                     <ConfirmOrderModal
                         visible={this.state.isConfirmBuyOrderModalVisible}
                         hideModal={this.hideConfirmBuyOrderModal}
@@ -3118,9 +3164,11 @@ class Exchange extends React.Component {
                         )}
                         diff={buyDiff}
                         hasOrders={combinedAsks.length > 0}
-                    /> : null}
+                    />
+                ) : null}
 
-                {this.state.isConfirmSellOrderModalVisible ? 
+                {this.state.isConfirmSellOrderModalVisible ||
+                this.state.isConfirmSellOrderModalLoaded ? (
                     <ConfirmOrderModal
                         visible={this.state.isConfirmSellOrderModalVisible}
                         hideModal={this.hideConfirmSellOrderModal}
@@ -3134,7 +3182,8 @@ class Exchange extends React.Component {
                         )}
                         diff={sellDiff}
                         hasOrders={combinedBids.length > 0}
-                    /> : null}
+                    />
+                ) : null}
             </div>
         );
     }
