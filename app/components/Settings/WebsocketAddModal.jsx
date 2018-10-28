@@ -186,7 +186,11 @@ class WebsocketAddModal extends React.Component {
                             <Translate
                                 component="span"
                                 content="settings.confirm_remove"
-                                with={{name: this.props.removeNode.name}}
+                                with={{
+                                    name:
+                                        this.props.removeNode &&
+                                        this.props.removeNode.name
+                                }}
                             />
                         </p>
                     </section>
