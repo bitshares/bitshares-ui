@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import BaseModal from "./Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletDb from "stores/WalletDb";
 import Translate from "react-translate-component";
 import PrivateKeyStore from "stores/PrivateKeyStore";
 import QrcodeModal from "./Modal/QrcodeModal";
+import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 export default class PrivateKeyView extends Component {
     static propTypes = {
@@ -16,21 +16,49 @@ export default class PrivateKeyView extends Component {
     constructor() {
         super();
         this.state = this._getInitialState();
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+
+        this.showQrModal = this.showQrModal.bind(this);
+        this.hideQrModal = this.hideQrModal.bind(this);
+
+        this.onClose = this.onClose.bind(this);
     }
 
     _getInitialState() {
-        return {wif: null};
+        return {
+            isModalVisible: false,
+            isQrModalVisible: false,
+            wif: null
+        };
     }
 
     reset() {
         this.setState(this._getInitialState());
     }
 
-    componentDidMount() {
-        var modalId = "key_view_modal" + this.props.pubkey;
-        ZfApi.subscribe(modalId, (name, msg) => {
-            if (name !== modalId) return;
-            if (msg === "close") this.reset();
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideQrModal() {
+        this.setState({
+            isQrModalVisible: false
+        });
+    }
+
+    showQrModal() {
+        this.setState({
+            isQrModalVisible: true
         });
     }
 
@@ -41,18 +69,24 @@ export default class PrivateKeyView extends Component {
         var has_private = keys.has(this.props.pubkey);
         if (!has_private) return <span>{this.props.children}</span>;
         var key = keys.get(this.props.pubkey);
+
+        const footer = [
+            <Button key="cancel" onClick={this.onClose}>
+                {counterpart.translate("transfer.close")}
+            </Button>
+        ];
+
         return (
             <span>
                 <a onClick={this.onOpen.bind(this)}>{this.props.children}</a>
-                <BaseModal
+                <Modal
+                    visible={this.state.isModalVisible}
+                    title={counterpart.translate("account.perm.key_viewer")}
                     ref={modalId}
                     id={modalId}
-                    overlay={true}
-                    overlayClose={false}
+                    onCancel={this.onClose}
+                    footer={footer}
                 >
-                    <h3>
-                        <Translate content="account.perm.key_viewer" />
-                    </h3>
                     <div className="grid-block vertical">
                         <div className="content-block">
                             <div className="grid-content">
@@ -84,9 +118,7 @@ export default class PrivateKeyView extends Component {
                                                 </div>
                                                 <div
                                                     className="clickable"
-                                                    onClick={this.showQrCode.bind(
-                                                        this
-                                                    )}
+                                                    onClick={this.showQrModal}
                                                 >
                                                     <img
                                                         style={{height: 50}}
@@ -131,29 +163,24 @@ export default class PrivateKeyView extends Component {
                             ) : null}
                         </div>
                     </div>
-                    <div className="button-group">
-                        <div
-                            onClick={this.onClose.bind(this)}
-                            className=" button"
-                        >
-                            <Translate content="transfer.close" />
-                        </div>
-                    </div>
-                </BaseModal>
-                <QrcodeModal ref="qrmodal" keyValue={this.state.wif} />
+                </Modal>
+                <QrcodeModal
+                    showModal={this.showQrModal}
+                    hideModal={this.hideQrModal}
+                    visible={this.state.isQrModalVisible}
+                    keyValue={this.state.wif}
+                />
             </span>
         );
     }
 
     onOpen() {
-        var modalId = "key_view_modal" + this.props.pubkey;
-        ZfApi.publish(modalId, "open");
+        this.showModal();
     }
 
     onClose() {
         this.reset();
-        var modalId = "key_view_modal" + this.props.pubkey;
-        ZfApi.publish(modalId, "close");
+        this.hideModal();
     }
 
     onShow() {
@@ -167,9 +194,5 @@ export default class PrivateKeyView extends Component {
 
     onHide() {
         this.setState({wif: null});
-    }
-
-    showQrCode() {
-        this.refs.qrmodal.show();
     }
 }

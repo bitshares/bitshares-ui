@@ -55,7 +55,10 @@ class Settings extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.match.params.tab !== this.props.match.params.tab) {
+        if (
+            prevProps.match.params.tab !== this.props.match.params.tab &&
+            !!this.props.match.params.tab
+        ) {
             this._onChangeMenu(this.props.match.params.tab);
         }
     }
