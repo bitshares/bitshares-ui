@@ -126,6 +126,7 @@ class WebsocketAddModal extends React.Component {
                 ref="ws_modal_add"
                 title={counterpart.translate("settings.add_ws")}
                 overlay={true}
+                onCancel={this.props.onClose}
                 overlayClose={false}
                 footer={[
                     <Button

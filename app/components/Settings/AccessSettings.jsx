@@ -593,7 +593,7 @@ class AccessSettings extends React.Component {
                         >
                             <div
                                 className="button"
-                                onClick={props.triggerModal.bind(this)}
+                                onClick={props.triggerModal}
                             >
                                 <Translate
                                     id="add"
