@@ -137,7 +137,7 @@
         "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#8de91543dee53d11cf11c9d3dee20da3573326c5",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#991fb4c7c12ff7217404e690b3a0dcb58a1ad4eb",
         "bitsharesjs": "^1.8.2",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
