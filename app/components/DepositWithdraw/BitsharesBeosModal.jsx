@@ -185,7 +185,7 @@ class BitsharesBeosModal extends React.Component {
         });
         let validation_url =
             url +
-            "/wallets/steem/address-validator?address=" +
+            "/wallets/beos/address-validator?address=" +
             account +
             "&requestBalances=true";
         let validation_promise = fetch(validation_url, {
@@ -372,7 +372,7 @@ class BitsharesBeosModal extends React.Component {
             newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
         }
 
-        /*AccountActions.transfer(
+        AccountActions.transfer(
             this.props.account.get("id"),
             this.props.issuer.get("id"),
             newAmountToSend,
@@ -380,10 +380,9 @@ class BitsharesBeosModal extends React.Component {
             newMemo,
             null,
             this.state.fee_asset_id
-
         ).catch(() => {
             this.onMaintenance();
-        });*/
+        });
     }
 
     render() {
