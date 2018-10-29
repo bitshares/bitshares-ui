@@ -2132,7 +2132,7 @@ class Exchange extends React.Component {
                         width: "100%",
                         display: !smallScreen ? "display: none" : ""
                     }}
-                    noHeader={smallScreen ? false : true}
+                    noHeader={true}
                     listHeight={this.state.height - 450}
                     columns={[
                         {name: "star", index: 1},
@@ -2150,12 +2150,9 @@ class Exchange extends React.Component {
                     current={`${quoteSymbol}_${baseSymbol}`}
                     location={this.props.location}
                     history={this.props.history}
-                    activeTab={
-                        smallScreen
-                            ? "my-market"
-                            : tabVerticalPanel
-                                ? tabVerticalPanel
-                                : "my-market"
+                    activeTab={tabVerticalPanel
+                        ? tabVerticalPanel
+                        : "my-market"
                     }
                 />
             );
@@ -2596,6 +2593,14 @@ class Exchange extends React.Component {
             });
         });
 
+        let groupTabsCount = groupStandalone.length;
+
+        Object.keys(groupTabs).map(tab => {
+            if(groupTabs[tab].length) {
+                groupTabsCount++;
+            }
+        });
+        
         let groupTabbed1 =
             groupTabs[1].length > 0 ? (
                 <div
@@ -2603,9 +2608,9 @@ class Exchange extends React.Component {
                     className={cnames(
                         verticalOrderBook ? "xlarge-order-2" : "xlarge-order-2",
                         centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4 "
+                            ? groupTabsCount == 1 ? "medium-12 xlarge-4" : "medium-6 xlarge-4 "
                             : centerContainerWidth > 800
-                                ? "medium-6"
+                                ? groupTabsCount == 1 ? "medium-12" : "medium-6"
                                 : "",
                         "small-12 order-5"
                     )}
@@ -2626,9 +2631,9 @@ class Exchange extends React.Component {
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
                         centerContainerWidth > 1200
-                            ? "medium-6 large-6 xlarge-4"
+                            ? groupTabsCount == 1 ? "medium-12 xlarge-4" : "medium-6 xlarge-4 "
                             : centerContainerWidth > 800
-                                ? "medium-6"
+                                ? groupTabsCount == 1 ? "medium-12" : "medium-6"
                                 : "",
                         "small-12 order-6"
                     )}
@@ -2746,6 +2751,22 @@ class Exchange extends React.Component {
                         header={translator.translate("exchange.market_name")}
                         key="myMarkets"
                     >
+                        <Tabs
+                            defaultActiveKey="my-market"
+                            activeKey={tabVerticalPanel}
+                            onChange={this._setTabVerticalPanel.bind(this)}
+                        >
+                            <Tabs.TabPane
+                                tab={translator.translate(
+                                    "exchange.market_name"
+                                )}
+                                key="my-market"
+                            />
+                            <Tabs.TabPane
+                                tab={translator.translate("exchange.more")}
+                                key="find-market"
+                            />
+                        </Tabs>
                         {myMarkets}
                     </Collapse.Panel>
                 </Collapse>
