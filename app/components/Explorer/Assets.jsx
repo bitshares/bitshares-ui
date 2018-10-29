@@ -154,7 +154,11 @@ class Assets extends React.Component {
                     title: "symbol",
                     dataIndex: "symbol",
                     sorter: (a, b) => {
-                        return a.rank > b.rank ? 1 : a.rank < b.rank ? -1 : 0;
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
                     },
                     render: item => {
                         return (
@@ -168,6 +172,13 @@ class Assets extends React.Component {
                     key: "issuer",
                     title: "issuer",
                     dataIndex: "issuer",
+                    sorter: (a, b) => {
+                        return a.issuer > b.issuer
+                            ? 1
+                            : a.issuer < b.issuer
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return this.linkToAccount(item);
                     }
@@ -176,6 +187,15 @@ class Assets extends React.Component {
                     key: "currentSupply",
                     title: "Supply",
                     dataIndex: "currentSupply",
+                    sorter: (a, b) => {
+                        a.currentSupply = parseFloat(a.currentSupply);
+                        b.currentSupply = parseFloat(b.currentSupply);
+                        return a.currentSupply > b.currentSupply
+                            ? 1
+                            : a.currentSupply < b.currentSupply
+                                ? -1
+                                : 0;
+                    },
                     render: (item, record) => {
                         return (
                             <FormattedAsset
@@ -239,6 +259,13 @@ class Assets extends React.Component {
                     key: "symbol",
                     title: "symbol",
                     dataIndex: "symbol",
+                    sorter: (a, b) => {
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return (
                             <Link to={`/asset/${item}`}>
@@ -251,6 +278,13 @@ class Assets extends React.Component {
                     key: "issuer",
                     title: "issuer",
                     dataIndex: "issuer",
+                    sorter: (a, b) => {
+                        return a.issuer > b.issuer
+                            ? 1
+                            : a.issuer < b.issuer
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return this.linkToAccount(item);
                     }
@@ -259,6 +293,15 @@ class Assets extends React.Component {
                     key: "currentSupply",
                     title: "Supply",
                     dataIndex: "currentSupply",
+                    sorter: (a, b) => {
+                        a.currentSupply = parseFloat(a.currentSupply);
+                        b.currentSupply = parseFloat(b.currentSupply);
+                        return a.currentSupply > b.currentSupply
+                            ? 1
+                            : a.currentSupply < b.currentSupply
+                                ? -1
+                                : 0;
+                    },
                     render: (item, record) => {
                         return (
                             <FormattedAsset
