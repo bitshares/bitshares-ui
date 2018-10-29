@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BRIDGE.BTC", "NLG", "TATCHCOIN", "EUR", "USD"];
+    return ["BTC", "NLG", "TATCHCOIN", "EUR", "USD"];
 }
 
 /**
