@@ -228,6 +228,15 @@ class Assets extends React.Component {
                         a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
                 })
+                .sort((a, b) => {
+                    if (a && b) {
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
+                    }
+                })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
                         asset.options.description
@@ -334,6 +343,15 @@ class Assets extends React.Component {
                         !a.bitasset_data.is_prediction_market &&
                         a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
+                })
+                .sort((a, b) => {
+                    if (a && b) {
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
+                    }
                 })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
