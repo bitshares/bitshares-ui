@@ -16,6 +16,9 @@ import notify from "actions/NotificationActions";
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import WalletDb from "stores/WalletDb";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import image from "../../assets/icons/dollar-green.svg";
+import canvg from "canvg";
 
 class AccountPermissions extends React.Component {
     constructor(props) {
@@ -273,54 +276,107 @@ class AccountPermissions extends React.Component {
         this.setState(newState);
     }
 
-    async onPdfCreate(publicKeys) {
-        const width = 300;
-        const height = 450;
-        let rowHeight = 170;
-        const textWidth = 190,
+    onPdfCreate(ownerkeys, activeKeys, memoKey, accountName) {
+        const width = 300,
+            height = 450,
+            lineMargin = 5,
+            qrSize = 50,
+            textMarginLeft = qrSize + 7,
+            qrMargin = 5,
+            qrRightPos = width - qrSize - qrMargin,
+            textWidth = width - qrSize * 2 - qrMargin * 2 - 3,
             textHeight = 8;
-        publicKeys = [
-            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs",
-            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs",
-            "BTS7mpJJaVged9UbEExW2upLFozHA4uaZFQPFBh1H1WDouc5GwwQs"
-        ];
-        let gQrcode = (qrcode, rowWidth, rowHeight) => {
-            QRCode.toDataURL(qrcode)
-                .then(url => {
-                    pdf.addImage(url, "JPEG", rowWidth, rowHeight);
-                })
-                .catch(err => {
-                    console.error(err);
+        let rowHeight = 170;
+
+        const keys = [ownerkeys, activeKeys, memoKey];
+        const keysName = ["Owner Key", "Active Key", "Memo Key"];
+
+        WalletUnlockActions.unlock()
+            .then(() => {
+                const pdf = new jsPDF({
+                    orientation: "portrait",
+                    format: [width, height]
                 });
-        };
-        const pdf = new jsPDF({
-            orientation: "portrait",
-            format: [width, height]
-        });
 
-        pdf.text("Account:", 18, 150);
-        pdf.text("sschiessl", 42, 150);
+                const keyRow = publicKey => {
+                    let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
+                    pdf.addImage(imgData, "PNG", 40, 40, 75, 75);
+                    gQrcode(publicKey, qrMargin, rowHeight + 10);
+                    gQrcode(privateKey, qrRightPos, rowHeight + 10);
+                    pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
+                    pdf.text(publicKey, textMarginLeft, rowHeight + 30);
+                    pdf.rect(
+                        textMarginLeft - 1,
+                        rowHeight + 24,
+                        textWidth,
+                        textHeight
+                    );
+                    pdf.text("PrivateKey", textMarginLeft, rowHeight + 40);
+                    pdf.text(privateKey, textMarginLeft, rowHeight + 50);
+                    pdf.rect(
+                        textMarginLeft - 1,
+                        rowHeight + 44,
+                        textWidth,
+                        textHeight
+                    );
+                    rowHeight += 70;
+                };
+                const gQrcode = (qrcode, rowWidth, rowHeight) => {
+                    QRCode.toDataURL(qrcode)
+                        .then(url => {
+                            pdf.addImage(
+                                url,
+                                "JPEG",
+                                rowWidth,
+                                rowHeight,
+                                qrSize,
+                                qrSize
+                            );
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+                };
+                let logo = image;
+                if (logo) logo = logo.replace(/\r?\n|\r/g, "").trim();
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                canvg(canvas, logo);
+                const imgData = canvas.toDataURL("image/png");
 
-        let content = publicKeys.map(async publicKey => {
-            let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
-            pdf.line(2, rowHeight + 2, width - 2, rowHeight + 2);
-            pdf.text("Public", 18, rowHeight + 8);
-            pdf.text("Active Key", 120, rowHeight + 8);
-            pdf.text("Private", 253, rowHeight + 8);
-            pdf.line(2, rowHeight + 9, width - 2, rowHeight + 9);
-            gQrcode(publicKey, 5, rowHeight + 10);
-            gQrcode(privateKey, 240, rowHeight + 10);
-            pdf.text("PublicKey", 50, rowHeight + 20);
-            pdf.text(publicKey, 50, rowHeight + 30);
-            pdf.rect(49, rowHeight + 24, textWidth, textHeight);
-            pdf.text("PrivateKey", 50, rowHeight + 40);
-            pdf.text(privateKey, 50, rowHeight + 50);
-            pdf.rect(49, rowHeight + 44, textWidth, textHeight);
-            rowHeight += 60;
-        });
-        Promise.all(content).then(() => {
-            pdf.save("download.pdf");
-        });
+                pdf.text("Account:", 18, 150);
+                pdf.text(accountName, 42, 150);
+
+                let content = keys.map((publicKeys, index) => {
+                    pdf.text("Public", 18, rowHeight + 8);
+                    pdf.text(keysName[index], 120, rowHeight + 8);
+                    pdf.text("Private", 253, rowHeight + 8);
+                    pdf.line(
+                        lineMargin,
+                        rowHeight + 2,
+                        width - lineMargin,
+                        rowHeight + 2
+                    );
+                    pdf.line(
+                        lineMargin,
+                        rowHeight + 9,
+                        width - lineMargin,
+                        rowHeight + 9
+                    );
+                    if (typeof publicKeys === "string") {
+                        keyRow(publicKeys);
+                    } else {
+                        publicKeys.map(publicKey => {
+                            keyRow(publicKey);
+                        });
+                    }
+                });
+                Promise.all(content).then(() => {
+                    pdf.save("download.pdf");
+                });
+            })
+            .catch(() => {});
     }
 
     render() {
@@ -409,10 +465,14 @@ class AccountPermissions extends React.Component {
                                         <Translate content="account.perm.publish" />
                                     </button>
                                     <button
-                                        className={"ewrerwer"}
+                                        className={"button"}
+                                        style={{marginLeft: 10}}
                                         onClick={() => {
                                             this.onPdfCreate(
-                                                this.state.active_keys
+                                                this.state.owner_keys,
+                                                this.state.active_keys,
+                                                this.state.memo_key,
+                                                this.props.account.get("name")
                                             );
                                         }}
                                         tabIndex={10}

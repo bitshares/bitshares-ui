@@ -140,6 +140,7 @@
         "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#f37e27b79a205410cdd23d5e3060eb382d999658",
         "bitsharesjs": "^1.8.2",
         "browser-locale": "^1.0.3",
+        "canvg": "^1.5.3",
         "classnames": "^2.2.1",
         "cookies-js": "^1.2.1",
         "copy-webpack-plugin": "^4.5.1",
