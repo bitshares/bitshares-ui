@@ -53,11 +53,16 @@ class AppInit extends React.Component {
             apiError: false,
             syncError: null,
             status: "",
-            extendeLogText: []
+            extendeLogText: [] // used to cache logs when not mounted
         };
         this.mounted = true;
+        this.persistentLogEnabled = false;
     }
 
+    /**
+     * Global error catching and forwarding to log handler
+     * @param error
+     */
     componentDidCatch(error) {
         this.saveExtendedLog("error", [error]);
     }
@@ -65,6 +70,7 @@ class AppInit extends React.Component {
     componentDidUpdate(nextProps, nextState) {
         LogsActions.setLog(nextState.extendeLogText);
     }
+
     saveExtendedLog(type, logText) {
         const maxlogslength = 19;
         const logState = this.state.extendeLogText;
@@ -73,7 +79,7 @@ class AppInit extends React.Component {
         for (const value of logText) {
             text += value;
         }
-        text = ["~ ", type, ": ", text].join("");
+        text = [type, ": ", text].join("");
         if (logState.length > maxlogslength) {
             logState.splice(0, 1);
         }
@@ -86,7 +92,9 @@ class AppInit extends React.Component {
             }
         }
     }
-    componentWillMount() {
+
+    _enablePersistingLog() {
+        if (this.persistentLogEnabled) return;
         if (!this.state.extendeLogText.length) {
             LogsActions.getLogs().then(data => {
                 if (data) {
@@ -139,6 +147,12 @@ class AppInit extends React.Component {
         console.debug = function() {
             saveLog("debug", arguments);
         };
+
+        this.persistentLogEnabled = true;
+    }
+
+    componentWillMount() {
+        this._enablePersistingLog();
 
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {
