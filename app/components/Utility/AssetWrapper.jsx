@@ -51,7 +51,9 @@ function AssetWrapper(Component, options = {}) {
     const finalPropTypes = options.propNames.reduce((res, type) => {
         res[type] = options.asList
             ? ChainTypes.ChainAssetsList
-            : ChainTypes.ChainAsset.isRequired;
+            : options.optional
+                ? ChainTypes.ChainAsset
+                : ChainTypes.ChainAsset.isRequired;
         return res;
     }, {});
 
