@@ -265,7 +265,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"][("BTS", "SPARKDEX.BTC")],
+        ["BTS", "HERTZ"],
+        ["BTS", "SPARKDEX.BTC"],
         ["BTS", "SPARKDEX.ETH"]
     ].filter(a => {
         if (!quotes.length) return true;
