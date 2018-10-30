@@ -345,8 +345,8 @@ class AccountPermissions extends React.Component {
                 canvg(canvas, logo);
                 const imgData = canvas.toDataURL("image/png");
 
-                pdf.text("Account:", 18, 150);
-                pdf.text(accountName, 42, 150);
+                pdf.text("Account:", 18, rowHeight - 10);
+                pdf.text(accountName, 42, rowHeight - 10);
 
                 let content = keys.map((publicKeys, index) => {
                     pdf.text("Public", 18, rowHeight + 8);
