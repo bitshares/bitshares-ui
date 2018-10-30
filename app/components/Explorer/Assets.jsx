@@ -140,12 +140,12 @@ class Assets extends React.Component {
         let placeholder = counterpart.translate("markets.filter").toUpperCase();
         let coreAsset = ChainStore.getAsset("1.3.0");
 
-        let uia;
-        let mia;
         let pm;
 
         let dataSource = [];
         let columns = [];
+
+        // Default sorting of the ant table is defined through defaultSortOrder prop
 
         if (activeFilter == "user") {
             columns = [
@@ -153,6 +153,7 @@ class Assets extends React.Component {
                     key: "symbol",
                     title: "symbol",
                     dataIndex: "symbol",
+                    defaultSortOrder: "ascend",
                     sorter: (a, b) => {
                         return a.symbol > b.symbol
                             ? 1
@@ -228,15 +229,6 @@ class Assets extends React.Component {
                         a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
                 })
-                .sort((a, b) => {
-                    if (a && b) {
-                        return a.symbol > b.symbol
-                            ? 1
-                            : a.symbol < b.symbol
-                                ? -1
-                                : 0;
-                    }
-                })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
                         asset.options.description
@@ -258,8 +250,7 @@ class Assets extends React.Component {
                         assetId: asset.id,
                         marketId: marketID
                     });
-                })
-                .toArray();
+                });
         }
 
         if (activeFilter == "market") {
@@ -268,6 +259,7 @@ class Assets extends React.Component {
                     key: "symbol",
                     title: "symbol",
                     dataIndex: "symbol",
+                    defaultSortOrder: "ascend",
                     sorter: (a, b) => {
                         return a.symbol > b.symbol
                             ? 1
@@ -336,22 +328,13 @@ class Assets extends React.Component {
                 }
             ];
 
-            mia = assets
+            assets
                 .filter(a => {
                     return (
                         a.bitasset_data &&
                         !a.bitasset_data.is_prediction_market &&
                         a.symbol.indexOf(this.state.filterSearch) !== -1
                     );
-                })
-                .sort((a, b) => {
-                    if (a && b) {
-                        return a.symbol > b.symbol
-                            ? 1
-                            : a.symbol < b.symbol
-                                ? -1
-                                : 0;
-                    }
                 })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
@@ -374,8 +357,7 @@ class Assets extends React.Component {
                         assetId: asset.id,
                         marketId: marketID
                     });
-                })
-                .toArray();
+                });
         }
 
         if (activeFilter == "prediction") {
@@ -398,6 +380,15 @@ class Assets extends React.Component {
                                     this.state.filterSearch.toLowerCase()
                                 ) !== -1)
                     );
+                })
+                .sort((a, b) => {
+                    if (a.symbol < b.symbol) {
+                        return -1;
+                    } else if (a.symbol > b.symbol) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
@@ -468,38 +459,8 @@ class Assets extends React.Component {
                         </tr>
                     );
                 })
-                .sort((a, b) => {
-                    if (a.key > b.key) {
-                        return -1;
-                    } else if (a.key < b.key) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                })
                 .toArray();
         }
-
-        let assetListHeader = (
-            <tr>
-                <th>
-                    <Translate
-                        component="span"
-                        content="explorer.assets.symbol"
-                    />
-                </th>
-                <th>
-                    <Translate
-                        component="span"
-                        content="explorer.assets.issuer"
-                    />
-                </th>
-                <th>
-                    <Translate component="span" content="markets.supply" />
-                </th>
-                <th />
-            </tr>
-        );
 
         return (
             <div className="grid-block vertical">
