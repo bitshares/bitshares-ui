@@ -185,6 +185,11 @@ export default class ExchangeHeader extends React.Component {
                                         marginTop: "1px"
                                     }}
                                 >
+                                    <AntIcon
+                                        onClick={this.props.showPriceAlertModal}
+                                        type={"bell"}
+                                        className="exchange--price-alert--show-modal"
+                                    />
                                     <span
                                         onClick={this.marketPicker.bind(
                                             this,

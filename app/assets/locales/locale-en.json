@@ -468,6 +468,12 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "price_alert": {
+            "lower_than": "Lower Than",
+            "higher_than": "Higher Than",
+            "add_rule": "add rule",
+            "amount": "Amount"
+        },
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -1222,6 +1228,7 @@
         "title": "Notice"
     },
     "modal": {
+        "save": "save",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",

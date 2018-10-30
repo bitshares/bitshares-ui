@@ -34,6 +34,7 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
+import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
@@ -102,6 +103,9 @@ class Exchange extends React.Component {
 
         this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
         this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
+
+        this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
+        this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
 
         this.psInit = true;
     }
@@ -248,6 +252,7 @@ class Exchange extends React.Component {
             isConfirmBuyOrderModalVisible: false,
             isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
+            isPriceAlertModalVisible: false,
             isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -319,6 +324,18 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showPriceAlertModal() {
+        this.setState({
+            isPriceAlertModalVisible: true
+        });
+    }
+
+    hidePriceAlertModal() {
+        this.setState({
+            isPriceAlertModalVisible: false
         });
     }
 
@@ -2944,6 +2961,7 @@ class Exchange extends React.Component {
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
                 <ExchangeHeader
+                    showPriceAlertModal={this.showPriceAlertModal}
                     account={this.props.currentAccount}
                     quoteAsset={quoteAsset}
                     baseAsset={baseAsset}
@@ -3230,6 +3248,12 @@ class Exchange extends React.Component {
                         hasOrders={combinedBids.length > 0}
                     />
                 ) : null}
+
+                <PriceAlert
+                    visible={this.state.isPriceAlertModalVisible}
+                    showModal={this.showPriceAlertModal}
+                    hideModal={this.hidePriceAlertModal}
+                />
             </div>
         );
     }
