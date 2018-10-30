@@ -121,6 +121,7 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 
 class App extends React.Component {
     constructor() {
@@ -429,6 +430,11 @@ class App extends React.Component {
                                     exact
                                     path="/block/:height/:txIndex"
                                     component={Block}
+                                />
+
+                                <Route
+                                    path="/showcases"
+                                    component={ShowcaseGrid}
                                 />
 
                                 {/* Wallet backup/restore routes */}
