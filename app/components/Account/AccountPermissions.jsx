@@ -17,7 +17,7 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import image from "../../assets/icons/dollar-green.svg";
+import image from "../../assets/icons/paper-wallet-header.svg";
 import canvg from "canvg";
 
 class AccountPermissions extends React.Component {
@@ -286,7 +286,7 @@ class AccountPermissions extends React.Component {
             qrRightPos = width - qrSize - qrMargin,
             textWidth = width - qrSize * 2 - qrMargin * 2 - 3,
             textHeight = 8;
-        let rowHeight = 170;
+        let rowHeight = 80;
 
         const keys = [ownerkeys, activeKeys, memoKey];
         const keysName = ["Owner Key", "Active Key", "Memo Key"];
@@ -300,7 +300,7 @@ class AccountPermissions extends React.Component {
 
                 const keyRow = publicKey => {
                     let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
-                    pdf.addImage(imgData, "PNG", 40, 40, 75, 75);
+                    pdf.addImage(imgData, "PNG", 10, 20);
                     gQrcode(publicKey, qrMargin, rowHeight + 10);
                     gQrcode(privateKey, qrRightPos, rowHeight + 10);
                     pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
