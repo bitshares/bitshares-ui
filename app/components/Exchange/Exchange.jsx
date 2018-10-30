@@ -2691,7 +2691,27 @@ class Exchange extends React.Component {
             actionCards.push(groupStandalone);
             actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
-            actionCards.push(myMarkets);
+            actionCards.push(
+                <div className="order-10 small-12">
+                    <Tabs
+                        defaultActiveKey="my-market"
+                        activeKey={tabVerticalPanel}
+                        onChange={this._setTabVerticalPanel.bind(this)}
+                    >
+                        <Tabs.TabPane
+                            tab={translator.translate(
+                                "exchange.market_name"
+                            )}
+                            key="my-market"
+                        />
+                        <Tabs.TabPane
+                            tab={translator.translate("exchange.more")}
+                            key="find-market"
+                        />
+                    </Tabs>
+                    {myMarkets}
+                </div>
+            );
         } else {
             actionCards = (
                 <Collapse
