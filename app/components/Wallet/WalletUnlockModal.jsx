@@ -37,6 +37,7 @@ import {withRouter} from "react-router-dom";
 import {Notification} from "bitshares-ui-style-guide";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import Translate from "react-translate-component";
+import SettingsActions from "actions/SettingsActions";
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -404,6 +405,35 @@ class WalletUnlockModal extends React.Component {
         // Modal overlayClose must be false pending a fix that allows us to detect
         // this event and clear the password (via this.refs.password_input.clear())
         // https://github.com/akiran/react-foundation-apps/issues/34
+
+        let footer = [];
+        if (passwordLogin) {
+            footer.push(
+                <div
+                    style={{float: "left", cursor: "pointer"}}
+                    onClick={this.handleRememberMe.bind(this)}
+                    data-tip={counterpart.translate(
+                        "wallet.remember_me_explanation"
+                    )}
+                >
+                    <Translate content="wallet.remember_me" />
+                    <Switch
+                        checked={this.state.rememberMe}
+                        onChange={this.handleRememberMe.bind(this)}
+                    />
+                </div>
+            );
+        }
+        footer.push(
+            <Button onClick={this.handleLogin} key="login-btn">
+                {counterpart.translate(
+                    this.shouldUseBackupLogin()
+                        ? "wallet.backup_login"
+                        : "header.unlock_short"
+                )}
+            </Button>
+        );
+
         return (
             // U N L O C K
             <Modal
@@ -418,25 +448,7 @@ class WalletUnlockModal extends React.Component {
                 modalHeader="header.unlock_short"
                 onCancel={this.handleModalClose}
                 leftHeader
-                footer={[
-                    <div
-                        style={{float: "left", cursor: "pointer"}}
-                        onClick={this.handleRememberMe.bind(this)}
-                    >
-                        <Translate content="wallet.remember_me" />
-                        <Switch
-                            checked={this.state.rememberMe}
-                            onChange={this.handleRememberMe.bind(this)}
-                        />
-                    </div>,
-                    <Button onClick={this.handleLogin} key="login-btn">
-                        {counterpart.translate(
-                            this.shouldUseBackupLogin()
-                                ? "wallet.backup_login"
-                                : "header.unlock_short"
-                        )}
-                    </Button>
-                ]}
+                footer={footer}
             >
                 <Form className="full-width" layout="vertical">
                     <LoginTypeSelector />

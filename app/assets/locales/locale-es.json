@@ -2096,8 +2096,7 @@
         "wallet_model_2": "La billetera local tiene la mejor seguridad, pero está restringida a su navegador y computadora actuales. Para migrar la billetera a otro navegador o computadora, puede usar el archivo de copia de seguridad o Brainkey.",
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
-        "wallet_password": "Inicie sesión en cualquier lugar con su contraseña",
-        "remember_me": "Remember me"
+        "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
     },
     "winex": {
         "gateway": {

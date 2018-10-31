@@ -2096,8 +2096,7 @@
         "wallet_model_2": "钱包模式的安全性最高，但只能在此电脑和此浏览器下使用。要在其他电脑或其他浏览器中使用该钱包的话，需要使用备份文件或脑钱包密钥对钱包进行迁移。",
         "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
-        "wallet_password": "从任意地点使用密码登录",
-        "remember_me": "Remember me"
+        "wallet_password": "从任意地点使用密码登录"
     },
     "winex": {
         "gateway": {

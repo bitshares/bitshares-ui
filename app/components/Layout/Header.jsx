@@ -28,6 +28,7 @@ import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
 import {Notification} from "bitshares-ui-style-guide";
 import AccountBrowsingMode from "../Account/AccountBrowsingMode";
+import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -184,6 +185,9 @@ class Header extends React.Component {
         } else {
             WalletUnlockActions.lock();
             if (!WalletUnlockStore.getState().rememberMe) {
+                if (!isPersistantType()) {
+                    setLocalStorageType("persistant");
+                }
                 AccountStore.reset();
             }
         }
