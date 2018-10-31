@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "alt-react";
 import cname from "classnames";
-import notify from "actions/NotificationActions";
 import {PrivateKey, Aes, PublicKey, hash} from "bitsharesjs";
 import {ChainConfig} from "bitsharesjs-ws";
 import PrivateKeyStore from "stores/PrivateKeyStore";
@@ -16,6 +15,8 @@ import BalanceClaimActiveActions from "actions/BalanceClaimActiveActions";
 import BalanceClaimAssetTotal from "components/Wallet/BalanceClaimAssetTotal";
 import WalletDb from "stores/WalletDb";
 import ImportKeysStore from "stores/ImportKeysStore";
+
+import {Notification} from "bitshares-ui-style-guide";
 
 import GenesisFilter from "chain/GenesisFilter";
 
@@ -402,7 +403,9 @@ class ImportKeys extends Component {
                 } missing encrypted_private_keys`;
                 console.error(error);
                 if (format_error1_once) {
-                    notify.error(error);
+                    Notification.error({
+                        message: error
+                    });
                     format_error1_once = false;
                 }
                 continue;
@@ -485,10 +488,15 @@ class ImportKeys extends Component {
                 } catch (e) {
                     console.log(e, e.stack);
                     let message = e.message || e;
-                    notify.error(
-                        `Account ${account_name} had a private key import error: ` +
-                            message
-                    );
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.import_keys_error",
+                            {
+                                account_name: account_name,
+                                error_msg: message
+                            }
+                        )
+                    });
                 }
             }
         }
@@ -518,7 +526,11 @@ class ImportKeys extends Component {
             dups[public_key_string] = true;
         }
         if (Object.keys(this.state.imported_keys_public).length === 0) {
-            notify.error("This wallet has already been imported");
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.import_keys_already_imported"
+                )
+            });
             return;
         }
         let keys_to_account = this.state.keys_to_account;
@@ -557,11 +569,15 @@ class ImportKeys extends Component {
                 ImportKeysStore.importing(false);
                 let import_count = private_key_objs.length;
 
-                notify.success(
-                    counterpart.translate("wallet.import_key_success", {
-                        count: import_count
-                    })
-                );
+                Notification.success({
+                    message: counterpart.translate(
+                        "wallet.import_key_success",
+                        {
+                            count: import_count
+                        }
+                    )
+                });
+
                 this.setState({
                     importSuccess: true
                 });
@@ -574,7 +590,15 @@ class ImportKeys extends Component {
                 try {
                     message = error.target.error.message;
                 } catch (e) {}
-                notify.error(`Key import error: ${message}`);
+
+                Notification.error({
+                    message: counterpart.translate(
+                        "notifications.import_keys_error_unknown",
+                        {
+                            error_msg: message
+                        }
+                    )
+                });
             });
     }
 

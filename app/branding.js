@@ -265,7 +265,8 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
         ["BTS", "ZEPH"],
-        ["BTS", "HERTZ"][("BTS", "SPARKDEX.BTC")],
+        ["BTS", "HERTZ"],
+        ["BTS", "SPARKDEX.BTC"],
         ["BTS", "SPARKDEX.ETH"]
     ].filter(a => {
         if (!quotes.length) return true;
@@ -280,15 +281,14 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-        "TRADE.",
         "OPEN.",
-        "METAEX.",
-        "BRIDGE.",
         "RUDEX.",
-        "GDEX.",
         "WIN.",
+        "BRIDGE.",
+        "GDEX.",
         "XBTSX.",
-        "SPARKDEX."
+        "SPARKDEX.",
+        "CITADEL."
     ];
 }
 
@@ -308,9 +308,16 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        ["OPEN", "RUDEX", "WIN", "BRIDGE", "GDEX", "XBTSX", "SPARKDEX"].indexOf(
-            gateway
-        ) >= 0
+        [
+            "OPEN",
+            "RUDEX",
+            "WIN",
+            "BRIDGE",
+            "GDEX",
+            "XBTSX",
+            "SPARKDEX",
+            "CITADEL"
+        ].indexOf(gateway) >= 0
     );
 }
 

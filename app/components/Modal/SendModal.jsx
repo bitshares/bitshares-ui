@@ -1,6 +1,5 @@
 import React from "react";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
@@ -22,6 +21,25 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
+import {Modal, Button} from "bitshares-ui-style-guide";
+
+const EqualWidthContainer = ({children}) => (
+    <div
+        style={{
+            display: "flex",
+            justifyContent: "center"
+        }}
+    >
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: children.map(() => "1fr").join(" ")
+            }}
+        >
+            {children}
+        </div>
+    </div>
+);
 
 class SendModal extends React.Component {
     constructor(props) {
@@ -38,12 +56,30 @@ class SendModal extends React.Component {
         ZfApi.subscribe("transaction_confirm_actions", (name, msg) => {
             if (msg == "close") {
                 this.setState({hidden: false});
+                this.hideModal();
             }
+        });
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
         });
     }
 
     getInitialState() {
         return {
+            isModalVisible: false,
             from_name: "",
             to_name: "",
             from_account: null,
@@ -68,7 +104,7 @@ class SendModal extends React.Component {
 
     show() {
         this.setState({open: true, hidden: false}, () => {
-            ZfApi.publish(this.props.id, "open");
+            this.showModal();
             this._initForm();
         });
     }
@@ -99,7 +135,7 @@ class SendModal extends React.Component {
                 hidden: false
             },
             () => {
-                if (publishClose) ZfApi.publish(this.props.id, "close");
+                if (publishClose) this.hideModal();
             }
         );
     }
@@ -402,6 +438,14 @@ class SendModal extends React.Component {
         this.setState({to_name, error: null});
     }
 
+    fromChanged(from_name) {
+        if (this.state.propose) this.setState({from_name});
+    }
+
+    onFromAccountChanged(from_account) {
+        this.setState({from_account});
+    }
+
     onToAccountChanged(to_account) {
         this.setState({to_account, error: null});
     }
@@ -462,7 +506,7 @@ class SendModal extends React.Component {
         }
     }
 
-    onPropose(e) {
+    onPropose = () => {
         let {
             propose,
             orig_account,
@@ -471,19 +515,16 @@ class SendModal extends React.Component {
             from_account,
             from_name
         } = this.state;
-        e.preventDefault();
-
-        if (!to_account || !to_name || to_name == from_name) return;
 
         // Store Original Account
-        if (!propose && !orig_account) {
+        if (!propose) {
             this.setState({orig_account: from_account});
         }
 
         // ReStore Original Account
         if (propose) {
-            to_account = orig_account;
-            to_name = orig_account.get("name");
+            from_account = orig_account;
+            from_name = orig_account.get("name");
         }
 
         // toggle switch
@@ -491,13 +532,11 @@ class SendModal extends React.Component {
 
         this.setState({
             propose,
-            propose_account: null,
-            from_account: to_account,
-            from_name: to_name,
-            to_account: from_account,
-            to_name: from_name
+            propose_account: propose ? from_account : null,
+            from_account: propose ? null : from_account,
+            from_name: propose ? "" : from_name
         });
-    }
+    };
 
     onProposeAccount(propose_account) {
         this.setState({propose_account});
@@ -603,14 +642,15 @@ class SendModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isSendNotValid =
+        const isSubmitNotValid =
             !from_account ||
+            !to_account ||
             !isAmountValid ||
             !asset ||
             from_error ||
             propose_incomplete ||
             balanceError ||
-            (!AccountStore.isMyAccount(from_account) && !propose);
+            from_account.get("id") == to_account.get("id");
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
 
@@ -619,64 +659,108 @@ class SendModal extends React.Component {
                 id="send_modal_wrapper"
                 className={hidden || !this.state.open ? "hide" : ""}
             >
-                <BaseModal
+                <Modal
+                    visible={this.state.isModalVisible}
                     id={this.props.id}
                     overlay={true}
-                    onClose={this.onClose.bind(this, false)}
+                    onCancel={this.hideModal}
+                    footer={[
+                        <Button
+                            key={"send"}
+                            disabled={isSubmitNotValid}
+                            onClick={
+                                !isSubmitNotValid
+                                    ? this.onSubmit.bind(this)
+                                    : null
+                            }
+                        >
+                            {propose
+                                ? counterpart.translate("propose")
+                                : counterpart.translate("transfer.send")}
+                        </Button>,
+                        <Button
+                            key="Cancel"
+                            tabIndex={tabIndex++}
+                            onClick={this.onClose}
+                        >
+                            <Translate
+                                component="span"
+                                content="transfer.cancel"
+                            />
+                        </Button>
+                    ]}
                 >
                     <div className="grid-block vertical no-overflow">
+                        <div className="content-block">
+                            <EqualWidthContainer>
+                                <Button
+                                    type={propose ? "ghost" : "primary"}
+                                    onClick={this.onPropose}
+                                >
+                                    <Translate content="transfer.send" />
+                                </Button>
+                                <Button
+                                    type={propose ? "primary" : "ghost"}
+                                    onClick={this.onPropose}
+                                >
+                                    <Translate content="propose" />
+                                </Button>
+                            </EqualWidthContainer>
+                        </div>
                         <div
                             className="content-block"
-                            style={{textAlign: "center", textTransform: "none"}}
+                            style={{textAlign: "center"}}
                         >
-                            {!propose ? (
-                                <div
-                                    style={{
-                                        fontSize: "1.8rem",
-                                        fontFamily:
-                                            "Roboto-Medium, arial, sans-serif"
-                                    }}
-                                >
-                                    <Translate
-                                        unsafe
-                                        content="modal.send.header"
-                                        with={{fromName: from_name}}
-                                    />
-                                </div>
-                            ) : (
-                                <div
-                                    style={{
-                                        fontSize: "1.8rem",
-                                        fontFamily:
-                                            "Roboto-Medium, arial, sans-serif"
-                                    }}
-                                >
-                                    <Translate
-                                        unsafe
-                                        content="modal.send.header_propose"
-                                        with={{fromName: from_name}}
-                                    />
-                                </div>
-                            )}
-                            <div
-                                style={{
-                                    marginTop: 10,
-                                    fontSize: "0.9rem",
-                                    marginLeft: "auto",
-                                    marginRight: "auto"
-                                }}
-                            >
-                                <p>
-                                    <Translate
-                                        content="transfer.header_subheader"
-                                        wallet_name={getWalletName()}
-                                    />
-                                </p>
-                            </div>
+                            <Translate
+                                content={
+                                    propose
+                                        ? "transfer.header_subheader_propose"
+                                        : "transfer.header_subheader"
+                                }
+                                wallet_name={getWalletName()}
+                            />
                         </div>
                         {this.state.open ? (
                             <form noValidate>
                                 <div>
+                                    {!!propose && (
+                                        <React.Fragment>
+                                            <div className="content-block">
+                                                <AccountSelector
+                                                    label="transfer.by"
+                                                    accountName={
+                                                        this.props
+                                                            .currentAccount
+                                                    }
+                                                    account={
+                                                        this.props
+                                                            .currentAccount
+                                                    }
+                                                    size={60}
+                                                    tabIndex={tabIndex++}
+                                                    hideImage
+                                                />
+                                            </div>
+                                            <div className="modal-separator" />
+                                        </React.Fragment>
+                                    )}
+                                    <div className="content-block">
+                                        <AccountSelector
+                                            label="transfer.from"
+                                            accountName={from_name}
+                                            account={from_account}
+                                            onChange={this.fromChanged.bind(
+                                                this
+                                            )}
+                                            onAccountChanged={this.onFromAccountChanged.bind(
+                                                this
+                                            )}
+                                            size={60}
+                                            typeahead={propose || undefined}
+                                            tabIndex={tabIndex++}
+                                            hideImage
+                                        />
+                                    </div>
                                     {/* T O */}
                                     <div className="content-block">
                                         <AccountSelector
@@ -796,112 +880,11 @@ class SendModal extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {propose ? (
-                                        <div className="content-block transfer-input">
-                                            <label className="left-label">
-                                                <Translate content="account.propose_from" />
-                                            </label>
-                                            <AccountSelect
-                                                account_names={AccountStore.getMyAccounts()}
-                                                onChange={this.onProposeAccount.bind(
-                                                    this
-                                                )}
-                                                tabIndex={tabIndex++}
-                                            />
-                                        </div>
-                                    ) : null}
-
-                                    <div className="content-block transfer-input">
-                                        <div className="no-margin no-padding">
-                                            <div
-                                                className="small-6"
-                                                style={{
-                                                    display: "inline-block",
-                                                    paddingRight: "10px"
-                                                }}
-                                            >
-                                                {propose ? (
-                                                    <button
-                                                        className={classnames(
-                                                            "button primary",
-                                                            {
-                                                                disabled: isSendNotValid
-                                                            }
-                                                        )}
-                                                        type="submit"
-                                                        value="Submit"
-                                                        onClick={
-                                                            !isSendNotValid
-                                                                ? this.onSubmit.bind(
-                                                                      this
-                                                                  )
-                                                                : null
-                                                        }
-                                                        tabIndex={tabIndex++}
-                                                    >
-                                                        <Translate
-                                                            component="span"
-                                                            content="propose"
-                                                        />
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className={classnames(
-                                                            "button primary",
-                                                            {
-                                                                disabled: isSendNotValid
-                                                            }
-                                                        )}
-                                                        type="submit"
-                                                        value="Submit"
-                                                        onClick={
-                                                            !isSendNotValid
-                                                                ? this.onSubmit.bind(
-                                                                      this
-                                                                  )
-                                                                : null
-                                                        }
-                                                        tabIndex={tabIndex++}
-                                                    >
-                                                        <Translate
-                                                            component="span"
-                                                            content="transfer.send"
-                                                        />
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <div
-                                                className="small-6"
-                                                style={{
-                                                    display: "inline-block",
-                                                    paddingRight: "10px"
-                                                }}
-                                            >
-                                                <button
-                                                    className={classnames(
-                                                        "button hollow primary"
-                                                    )}
-                                                    type="submit"
-                                                    value="Cancel"
-                                                    tabIndex={tabIndex++}
-                                                    onClick={this.onClose.bind(
-                                                        this
-                                                    )}
-                                                >
-                                                    <Translate
-                                                        component="span"
-                                                        content="transfer.cancel"
-                                                    />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </form>
                         ) : null}
                     </div>
-                </BaseModal>
+                </Modal>
             </div>
         );
     }

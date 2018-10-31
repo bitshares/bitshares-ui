@@ -1,5 +1,4 @@
 import React from "react";
-import Trigger from "react-foundation-apps/src/trigger";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
@@ -8,14 +7,13 @@ import BalanceComponent from "components/Utility/BalanceComponent";
 import counterpart from "counterpart";
 import AmountSelector from "components/Utility/AmountSelector";
 import AccountActions from "actions/AccountActions";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {validateAddress, WithdrawAddresses} from "common/gdexMethods";
 import {ChainStore} from "bitsharesjs";
-import Modal from "react-foundation-apps/src/modal";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset, Price} from "common/MarketClasses";
 import {debounce} from "lodash-es";
 import PropTypes from "prop-types";
+import {Button, Modal} from "bitshares-ui-style-guide";
 
 class GdexWithdrawModal extends React.Component {
     static propTypes = {
@@ -30,6 +28,7 @@ class GdexWithdrawModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isConfirmationModalVisible: false,
             withdraw_amount: this.props.amount_to_withdraw,
             withdraw_address: WithdrawAddresses.getLast(props.output_coin_name),
             withdraw_address_check_in_progress: true,
@@ -56,6 +55,9 @@ class GdexWithdrawModal extends React.Component {
 
         this._checkBalance = this._checkBalance.bind(this);
         this._updateFee = debounce(this._updateFee.bind(this), 250);
+
+        this.showConfirmationModal = this.showConfirmationModal.bind(this);
+        this.hideConfirmationModal = this.hideConfirmationModal.bind(this);
     }
 
     componentWillMount() {
@@ -95,6 +97,18 @@ class GdexWithdrawModal extends React.Component {
                 }
             );
         }
+    }
+
+    showConfirmationModal() {
+        this.setState({
+            isConfirmationModalVisible: true
+        });
+    }
+
+    hideConfirmationModal() {
+        this.setState({
+            isConfirmationModalVisible: false
+        });
     }
 
     _assembleMemo() {
@@ -354,7 +368,7 @@ class GdexWithdrawModal extends React.Component {
             this.state.withdraw_amount !== null
         ) {
             if (!this.state.withdraw_address_is_valid) {
-                ZfApi.publish(this.getWithdrawModalId(), "open");
+                this.showConfirmationModal();
             } else if (parseFloat(this.state.withdraw_amount) > 0) {
                 if (!WithdrawAddresses.has(this.props.output_coin_symbol)) {
                     let withdrawals = [];
@@ -420,7 +434,7 @@ class GdexWithdrawModal extends React.Component {
     }
 
     onSubmitConfirmation() {
-        ZfApi.publish(this.getWithdrawModalId(), "close");
+        this.hideConfirmationModal();
 
         if (!WithdrawAddresses.has(this.props.output_coin_symbol)) {
             let withdrawals = [];
@@ -656,32 +670,34 @@ class GdexWithdrawModal extends React.Component {
                 }
 
                 confirmation = (
-                    <Modal id={withdrawModalId} overlay={true}>
-                        <Trigger close={withdrawModalId}>
-                            <a href="#" className="close-button">
-                                &times;
-                            </a>
-                        </Trigger>
-                        <br />
+                    <Modal
+                        closable={false}
+                        footer={[
+                            <Button
+                                key="submit"
+                                type="primary"
+                                onClick={this.onSubmitConfirmation.bind(this)}
+                            >
+                                {counterpart.translate(
+                                    "modal.confirmation.accept"
+                                )}
+                            </Button>,
+                            <Button
+                                key="cancel"
+                                style={{marginLeft: "8px"}}
+                                onClick={this.hideConfirmationModal}
+                            >
+                                {counterpart.translate(
+                                    "modal.confirmation.cancel"
+                                )}
+                            </Button>
+                        ]}
+                        visible={this.state.isConfirmationModalVisible}
+                        onCancel={this.hideConfirmationModal}
+                    >
                         <label>
                             <Translate content="modal.confirmation.title" />
                         </label>
-                        <br />
-                        <div className="content-block">
-                            <input
-                                type="submit"
-                                className="button"
-                                onClick={this.onSubmitConfirmation.bind(this)}
-                                value={counterpart.translate(
-                                    "modal.confirmation.accept"
-                                )}
-                            />
-                            <Trigger close={withdrawModalId}>
-                                <a className="secondary button">
-                                    <Translate content="modal.confirmation.cancel" />
-                                </a>
-                            </Trigger>
-                        </div>
                     </Modal>
                 );
             }
@@ -760,19 +776,20 @@ class GdexWithdrawModal extends React.Component {
             balance = "No funds";
         }
 
-        return (
-            <form className="grid-block vertical full-width-content">
-                <div className="grid-container">
-                    <div className="content-block">
-                        <h3>
-                            <Translate
-                                content="gateway.withdraw_coin"
-                                coin={this.props.output_coin_symbol}
-                                symbol={this.props.output_coin_name}
-                            />
-                        </h3>
-                    </div>
+        const disableSubmit =
+            this.state.below_minumum_withdraw_value ||
+            this.state.memo_error ||
+            this.state.memo_length_error ||
+            this.state.error ||
+            this.state.balanceError ||
+            this.state.precision_error;
 
+        return (
+            <form
+                className="grid-block vertical full-width-content"
+                style={{paddingTop: "0"}}
+            >
+                <div className="grid-container">
                     {/* Withdraw amount */}
                     <div className="content-block">
                         <AmountSelector
@@ -918,29 +935,21 @@ class GdexWithdrawModal extends React.Component {
                     {withdraw_memo}
 
                     {/* Withdraw/Cancel buttons */}
-                    <div className="button-group">
-                        <div
+                    <div>
+                        <Button
+                            type="primary"
+                            disabled={disableSubmit}
                             onClick={this.onSubmit.bind(this)}
-                            className={
-                                "button" +
-                                (this.state.below_minumum_withdraw_value ||
-                                this.state.memo_error ||
-                                this.state.memo_length_error ||
-                                this.state.error ||
-                                this.state.balanceError ||
-                                this.state.precision_error
-                                    ? " disabled"
-                                    : "")
-                            }
                         >
-                            <Translate content="modal.withdraw.submit" />
-                        </div>
+                            {counterpart.translate("modal.withdraw.submit")}
+                        </Button>
 
-                        <Trigger close={this.props.modal_id}>
-                            <div className="button">
-                                <Translate content="account.perm.cancel" />
-                            </div>
-                        </Trigger>
+                        <Button
+                            onClick={this.props.hideModal}
+                            style={{marginLeft: "8px"}}
+                        >
+                            {counterpart.translate("account.perm.cancel")}
+                        </Button>
                     </div>
                     {confirmation}
                 </div>

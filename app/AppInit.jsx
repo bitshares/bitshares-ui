@@ -10,6 +10,7 @@ import alt from "alt-instance";
 import {connect, supplyFluxContext} from "alt-react";
 import {IntlProvider} from "react-intl";
 import willTransitionTo from "./routerTransition";
+import {BodyClassName} from "bitshares-ui-style-guide";
 import LoadingIndicator from "./components/LoadingIndicator";
 import InitError from "./components/InitError";
 import SyncError from "./components/SyncError";
@@ -124,7 +125,9 @@ class AppInit extends React.Component {
                             ) : syncError ? (
                                 <SyncError />
                             ) : (
-                                <InitError />
+                                <BodyClassName className={theme}>
+                                    <InitError />
+                                </BodyClassName>
                             )}
                         </div>
                     </div>

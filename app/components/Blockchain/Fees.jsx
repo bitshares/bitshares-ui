@@ -9,6 +9,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
+import {Card} from "bitshares-ui-style-guide";
 const {operations} = grapheneChainTypes;
 let ops = Object.keys(operations);
 
@@ -188,7 +189,7 @@ class FeeGroup extends React.Component {
 
         return (
             <div className="asset-card">
-                <div className="card-divider">{this.props.title}</div>
+                <Card>{this.props.title.toUpperCase()}</Card>
                 <table className="table">
                     <thead>
                         <tr>
