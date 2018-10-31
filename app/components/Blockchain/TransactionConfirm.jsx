@@ -153,7 +153,9 @@ class TransactionConfirm extends React.Component {
 
         if (this.props.error || this.props.included) {
             header = this.props.error
-                ? counterpart.translate("transaction.broadcast_fail")
+                ? counterpart.translate("transaction.broadcast_fail", {
+                      message: ""
+                  })
                 : counterpart.translate("transaction.transaction_confirmed");
 
             footer = [

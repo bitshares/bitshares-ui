@@ -246,7 +246,9 @@ class Footer extends React.Component {
 
         if (!connected) {
             console.log("Your connection was lost");
-            this._triggerReconnect();
+            setTimeout(() => {
+                this._triggerReconnect();
+            }, 50);
         } else if (!this.props.synced) {
             // If the blockchain is out of sync the footer will be rerendered one last time and then
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
@@ -285,10 +287,12 @@ class Footer extends React.Component {
                 }, askToReconnectAfterSeconds * 1000);
             }
         } else {
-            this._closeOutOfSyncModal();
-            this.setState({
-                choiceModalShowOnce: false
-            });
+            setTimeout(() => {
+                this._closeOutOfSyncModal();
+                this.setState({
+                    choiceModalShowOnce: false
+                });
+            }, 50);
         }
     }
 

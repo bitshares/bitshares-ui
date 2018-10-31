@@ -1268,6 +1268,7 @@ class OrderBook extends React.Component {
                                 <td
                                     className="cell center-cell"
                                     colSpan="3"
+                                    style={{padding: 0}}
                                     data-intro={translator.translate(
                                         "walkthrough.vertical_order"
                                     )}

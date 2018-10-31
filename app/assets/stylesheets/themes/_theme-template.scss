@@ -707,6 +707,10 @@
             background-color: $bg-color !important;
         }
     }
+    // Sticky Order-Row
+    div.sticky-table-row.order-row:hover {
+        background-color: lighten($bg-color, 4%);
+    }
     // block-list
     .block-list {
         color: $primary-text-color;
@@ -1418,7 +1422,7 @@
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
-            padding: 10px 0 !important;
+            padding: 7px 0 !important;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1455,11 +1459,11 @@
             }
         }
     }
-    .order-table {
-        > tbody > tr:nth-of-type(even) {
-            background-color: $row-accent-color;
-        }
-    }
+    // .order-table {
+    //     > tbody > tr:nth-of-type(even) {
+    //         background-color: $row-accent-color;
+    //     }
+    // }
     .mymarkets-header {
         background-color: $header-color;
     }
@@ -1537,9 +1541,9 @@
         cursor: pointer;
     }
 
-    .table > tbody > tr:nth-of-type(even) {
-        background-color: lighten($bg-color, 4%);
-    }
+    // .table > tbody > tr:nth-of-type(even) {
+    //     background-color: lighten($bg-color, 4%);
+    // }
     // bottom stats
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
@@ -2405,6 +2409,21 @@
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
     }
+
+    /* Ant Design Hacks */
+    .ant-select-arrow {
+        color: $light-text-color !important;
+    }
+
+    .ant-select-selection-selected-value {
+        color: $light-text-color !important;
+    }
+
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
+    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;
@@ -2484,7 +2503,7 @@
     .menu-dropdown-wrapper {
         height: 65px;
         width: 65px;
-        text-align: center;
+        text-align: left;
         border-radius: 0;
         .hamburger .icon {
             position: relative;
