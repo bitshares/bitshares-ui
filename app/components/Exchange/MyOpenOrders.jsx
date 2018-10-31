@@ -761,7 +761,7 @@ class MyOpenOrders extends React.Component {
                             lineHeight: "13px"
                         }}
                     >
-                        <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
+                        <table className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}
                         </table>
                     </div>
