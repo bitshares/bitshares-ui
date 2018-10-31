@@ -29,7 +29,6 @@ div#CenterContent {
                 cursor: default;
             }
         }
-        
     }
 
     > .left-column {
@@ -88,8 +87,15 @@ div#CenterContent {
         padding-bottom: 4px;
     }
 
-    .sticky-table-container  {
+    .sticky-table-container {
         width: 100%;
+    }
+}
+
+// Mozilla Specific Padding Issues on Sticky Table Wrapper
+@-moz-document url-prefix() {
+    .order-table-container .sticky-table .sticky-table-y-wrapper {
+        padding-right: 0px !important;
     }
 }
 
@@ -207,7 +213,6 @@ form.order-form {
             padding-right: $scrollBarSpacePadding;
         }
         .text-center.spread {
-            color: grey;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -233,7 +238,7 @@ form.order-form {
     }
     .order-table-container {
         width: 100%;
-        height: calc(100% - 6rem);
+        height: 100%;
     }
     .top-header {
         text-align: right;
@@ -345,10 +350,6 @@ ul.market-stats {
     /*border-right: 1px solid $border-color;*/
     min-height: 42px;
     margin-left: 25px;
-}
-
-.bottom-stats li {
-    // border-right: 1px solid $border-color;
 }
 
 .stats .stat {
@@ -494,7 +495,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .market-right-padding-only {
-    table td:nth-last-child(1), table th:nth-last-child(1) {
+    table td:nth-last-child(1),
+    table th:nth-last-child(1) {
         padding: 0 0.6rem 0 0 !important;
     }
 }
@@ -515,8 +517,12 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
-    padding: 10px 0px 20px 20px;
+    padding: 10px 5px 12px 10px;
     overflow: hidden;
+}
+
+.exchange-padded {
+    padding-right: 5px !important;
 }
 
 .mymarkets-base-select {
@@ -544,7 +550,8 @@ table thead tr th.mymarkets-header {
 }
 
 .table-no-padding {
-    tr, td { 
+    tr,
+    td {
         padding: 0px !important;
     }
 }
@@ -580,6 +587,11 @@ table thead tr th.mymarkets-header {
     fill: #cc9f00 !important;
 }
 
+@media (max-width: 450px) {
+    .hide-order-0 {
+        display: none !important;
+    }
+}
 @media (max-width: 570px) {
     .hide-order-1 {
         display: none !important;
@@ -606,6 +618,12 @@ table thead tr th.mymarkets-header {
     }
 }
 @media (max-width: 1340px) {
+    .hide-order-6 {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1220px) {
     .hide-order-6 {
         display: none !important;
     }
@@ -758,7 +776,6 @@ tbody.orderbook > tr.my-order > td {
 }
 
 .marketPicker {
-
     .marketPicker__header {
         padding: 0 5px;
         margin-top: 1px;
@@ -785,8 +802,8 @@ tbody.orderbook > tr.my-order > td {
     }
 
     .marketPicker__subHeader {
-        padding: 10px 5px 0px 5px;
         font-size: 1rem;
+        margin-bottom: 16px;
     }
 
     input {
@@ -813,4 +830,3 @@ tbody.orderbook > tr.my-order > td {
 .tether-element {
     z-index: 100;
 }
-

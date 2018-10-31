@@ -4,16 +4,17 @@ import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
 import WithdrawModalBlocktrades from "./WithdrawModalBlocktrades";
-import BaseModal from "../../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
 import {requestDepositAddress, getDepositAddress} from "common/gatewayMethods";
 import {blockTradesAPIs, openledgerAPIs} from "api/apiConfig";
 import LoadingIndicator from "components/LoadingIndicator";
+import DisableCopyText from "../DisableCopyText";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import CopyToClipboard from "react-copy-to-clipboard";
+import {Modal} from "bitshares-ui-style-guide";
 
 class OpenledgerGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -47,6 +48,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
         };
 
         this.state = {
+            isModalVisible: false,
             receive_address: null,
             url: props.url || urls[props.gateway],
             loading: false,
@@ -54,25 +56,20 @@ class OpenledgerGatewayDepositRequest extends React.Component {
         };
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
-        this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
-    _copy(e) {
-        try {
-            if (this.state.clipboardText)
-                e.clipboardData.setData("text/plain", this.state.clipboardText);
-            else
-                e.clipboardData.setData(
-                    "text/plain",
-                    counterpart
-                        .translate("gateway.use_copy_button")
-                        .toUpperCase()
-                );
-            e.preventDefault();
-        } catch (err) {
-            console.error(err);
-        }
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     _getDepositObject() {
@@ -91,10 +88,6 @@ class OpenledgerGatewayDepositRequest extends React.Component {
             account: this.props.account.get("name"),
             stateCallback: this.addDepositAddress
         });
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener("copy", this._copy);
     }
 
     componentWillReceiveProps(np) {
@@ -141,17 +134,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
-    }
-
-    toClipboard(clipboardText) {
-        try {
-            this.setState({clipboardText}, () => {
-                document.execCommand("copy");
-            });
-        } catch (err) {
-            console.error(err);
-        }
+        this.showModal();
     }
 
     render() {
@@ -208,6 +191,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
+        let addressToCopy = null;
         let deposit_memo = null;
         // if (this.props.deprecated_in_favor_of)
         // {
@@ -221,6 +205,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
             deposit_address_fragment = (
                 <span>{this.props.deposit_account}</span>
             );
+            addressToCopy = this.props.deposit_account;
             clipboardText =
                 this.props.receive_coin_type +
                 ":" +
@@ -228,6 +213,7 @@ class OpenledgerGatewayDepositRequest extends React.Component {
             deposit_memo = <span>{clipboardText}</span>;
             var withdraw_memo_prefix = this.props.deposit_coin_type + ":";
         } else {
+            addressToCopy = (receive_address && receive_address.address) || "";
             if (receive_address.memo) {
                 // This is a client that uses a deposit memo (like ethereum), we need to display both the address and the memo they need to send
                 memoText = receive_address.memo;
@@ -392,7 +378,13 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                             {emptyAddressDeposit ? (
                                 <Translate content="gateway.please_generate_address" />
                             ) : (
-                                deposit_address_fragment
+                                <DisableCopyText
+                                    replaceCopyText={counterpart.translate(
+                                        "gateway.use_copy_button"
+                                    )}
+                                >
+                                    {deposit_address_fragment}
+                                </DisableCopyText>
                             )}
                             <div>
                                 {deposit_memo && (
@@ -404,26 +396,18 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                                 style={{paddingTop: 10}}
                             >
                                 {deposit_address_fragment ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            clipboardText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_address" />
-                                    </div>
+                                    <CopyToClipboard text={addressToCopy}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_address" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 {memoText ? (
-                                    <div
-                                        className="button"
-                                        onClick={this.toClipboard.bind(
-                                            this,
-                                            memoText
-                                        )}
-                                    >
-                                        <Translate content="gateway.copy_memo" />
-                                    </div>
+                                    <CopyToClipboard text={memoText}>
+                                        <div className="button">
+                                            <Translate content="gateway.copy_memo" />
+                                        </div>
+                                    </CopyToClipboard>
                                 ) : null}
                                 <button
                                     className={"button spinner-button-circle"}
@@ -571,34 +555,41 @@ class OpenledgerGatewayDepositRequest extends React.Component {
                             </button>
                         </div>
                     </div>
-                    <BaseModal id={withdraw_modal_id} overlay={true}>
-                        <br />
-                        <div className="grid-block vertical">
-                            <WithdrawModalBlocktrades
-                                account={this.props.account.get("name")}
-                                issuer={this.props.issuer_account.get("name")}
-                                asset={this.props.receive_asset.get("symbol")}
-                                url={this.state.url}
-                                output_coin_name={this.props.deposit_asset_name}
-                                gateFee={gateFee}
-                                output_coin_symbol={this.props.deposit_asset}
-                                output_coin_type={this.props.deposit_coin_type}
-                                output_wallet_type={
-                                    this.props.deposit_wallet_type
-                                }
-                                output_supports_memos={
-                                    this.props.supports_output_memos
-                                }
-                                memo_prefix={withdraw_memo_prefix}
-                                modal_id={withdraw_modal_id}
-                                balance={
-                                    this.props.account.get("balances").toJS()[
-                                        this.props.receive_asset.get("id")
-                                    ]
-                                }
-                            />
-                        </div>
-                    </BaseModal>
+                    <Modal
+                        onCancel={this.hideModal}
+                        title={counterpart.translate("gateway.withdraw_coin", {
+                            coin: this.props.deposit_asset_name,
+                            symbol: this.props.deposit_asset
+                        })}
+                        footer={null}
+                        visible={this.state.isModalVisible}
+                        id={withdraw_modal_id}
+                        overlay={true}
+                    >
+                        <WithdrawModalBlocktrades
+                            hideModal={this.hideModal}
+                            showModal={this.showModal}
+                            account={this.props.account.get("name")}
+                            issuer={this.props.issuer_account.get("name")}
+                            asset={this.props.receive_asset.get("symbol")}
+                            url={this.state.url}
+                            output_coin_name={this.props.deposit_asset_name}
+                            gateFee={gateFee}
+                            output_coin_symbol={this.props.deposit_asset}
+                            output_coin_type={this.props.deposit_coin_type}
+                            output_wallet_type={this.props.deposit_wallet_type}
+                            output_supports_memos={
+                                this.props.supports_output_memos
+                            }
+                            memo_prefix={withdraw_memo_prefix}
+                            modal_id={withdraw_modal_id}
+                            balance={
+                                this.props.account.get("balances").toJS()[
+                                    this.props.receive_asset.get("id")
+                                ]
+                            }
+                        />
+                    </Modal>
                 </div>
             );
         }

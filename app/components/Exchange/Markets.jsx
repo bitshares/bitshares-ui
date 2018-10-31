@@ -36,12 +36,10 @@ class Markets extends React.Component {
 
     render() {
         return (
-            <div ref="wrapper" className="grid-block no-overflow">
+            <div ref="wrapper" className="grid-block page-layout no-overflow">
                 <MyMarkets
                     style={{width: "100%", padding: 20}}
-                    listHeight={
-                        this.state.height ? this.state.height : null
-                    }
+                    listHeight={this.state.height ? this.state.height : null}
                     className="no-overflow"
                     headerStyle={{paddingTop: 0, borderTop: "none"}}
                     tabHeader={true}

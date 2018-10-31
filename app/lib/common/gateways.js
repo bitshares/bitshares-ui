@@ -5,6 +5,7 @@
 
 import {
     rudexAPIs,
+    bitsparkAPIs,
     widechainAPIs,
     openledgerAPIs,
     cryptoBridgeAPIs,
@@ -36,6 +37,17 @@ export const availableGateways = {
         simpleAssetGateway: true,
         fixedMemo: {prepend: "dex:", append: ""},
         addressValidatorMethod: "POST",
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
+    SPARKDEX: {
+        id: "SPARKDEX",
+        name: "SPARKDEX",
+        baseAPI: bitsparkAPIs,
+        isEnabled: allowedGateway("SPARKDEX"),
+        selected: false,
         options: {
             enabled: false,
             selected: false
@@ -81,7 +93,7 @@ export const availableGateways = {
         id: "XBTSX",
         name: "XBTSX",
         baseAPI: xbtsxAPIs,
-        isEnabled: true, //allowedGateway("XBTSX"),
+        isEnabled: allowedGateway("XBTSX"),
         isSimple: true,
         selected: false,
         simpleAssetGateway: false,
@@ -95,7 +107,7 @@ export const availableGateways = {
         id: "CITADEL",
         name: "CITADEL",
         baseAPI: citadelAPIs,
-        isEnabled: true,
+        isEnabled: allowedGateway("CITADEL"),
         selected: false,
         assetWithdrawlAlias: {monero: "xmr"}, // if asset name doesn't equal to memo
         options: {

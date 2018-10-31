@@ -40,6 +40,12 @@ class Settings extends React.Component {
         general.push("reset");
 
         this.state = {
+            isAddNodeModalVisible: false,
+            isRemoveNodeModalVisible: false,
+            removeNode: {
+                name: null,
+                url: null
+            },
             apiServer: props.settings.get("apiServer"),
             activeSetting,
             menuEntries,
@@ -49,13 +55,21 @@ class Settings extends React.Component {
             }
         };
 
+        this.showAddNodeModal = this.showAddNodeModal.bind(this);
+        this.hideAddNodeModal = this.hideAddNodeModal.bind(this);
+        this.showRemoveNodeModal = this.showRemoveNodeModal.bind(this);
+        this.hideRemoveNodeModal = this.hideRemoveNodeModal.bind(this);
+
         this._handleNotificationChange = this._handleNotificationChange.bind(
             this
         );
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.match.params.tab !== this.props.match.params.tab) {
+        if (
+            prevProps.match.params.tab !== this.props.match.params.tab &&
+            !!this.props.match.params.tab
+        ) {
             this._onChangeMenu(this.props.match.params.tab);
         }
     }
@@ -88,6 +102,38 @@ class Settings extends React.Component {
         }
     }
 
+    showAddNodeModal() {
+        this.setState({
+            isAddNodeModalVisible: true
+        });
+    }
+
+    hideAddNodeModal() {
+        this.setState({
+            isAddNodeModalVisible: false
+        });
+    }
+
+    showRemoveNodeModal(url, name) {
+        this.setState({
+            isRemoveNodeModalVisible: true,
+            removeNode: {
+                url,
+                name
+            }
+        });
+    }
+
+    hideRemoveNodeModal() {
+        this.setState({
+            isRemoveNodeModalVisible: false,
+            removeNode: {
+                url: null,
+                name: null
+            }
+        });
+    }
+
     _getMenuEntries(props) {
         if (props.deprecated) {
             return ["wallet", "backup"];
@@ -97,7 +143,7 @@ class Settings extends React.Component {
         menuEntries.push("general");
         if (!props.settings.get("passwordLogin")) menuEntries.push("wallet");
         menuEntries.push("accounts");
-        menuEntries.push("password");
+        if (!props.settings.get("passwordLogin")) menuEntries.push("password");
         if (!props.settings.get("passwordLogin")) menuEntries.push("backup");
         if (!props.settings.get("passwordLogin")) menuEntries.push("restore");
         menuEntries.push("access");
@@ -283,7 +329,8 @@ class Settings extends React.Component {
                         faucet={settings.get("faucet_address")}
                         nodes={defaults.apiServer}
                         onChange={this._onChangeSetting.bind(this)}
-                        triggerModal={this.triggerModal.bind(this)}
+                        showAddNodeModal={this.showAddNodeModal}
+                        showRemoveNodeModal={this.showRemoveNodeModal}
                     />
                 );
                 break;
@@ -371,10 +418,15 @@ class Settings extends React.Component {
                     <div
                         className="grid-content"
                         style={{
-                            maxWidth: 1000
+                            height: "100%"
                         }}
                     >
-                        <div className="grid-block small-12 no-margin vertical">
+                        <div
+                            className="grid-block small-12 no-margin vertical"
+                            style={{
+                                maxWidth: 1000
+                            }}
+                        >
                             <Translate
                                 component="h3"
                                 content={
@@ -396,7 +448,13 @@ class Settings extends React.Component {
                     </div>
                 </div>
                 <WebsocketAddModal
-                    ref="ws_modal"
+                    removeNode={this.state.removeNode}
+                    isAddNodeModalVisible={this.state.isAddNodeModalVisible}
+                    isRemoveNodeModalVisible={
+                        this.state.isRemoveNodeModalVisible
+                    }
+                    onAddNodeClose={this.hideAddNodeModal}
+                    onRemoveNodeClose={this.hideRemoveNodeModal}
                     apis={defaults["apiServer"]}
                     api={defaults["apiServer"]
                         .filter(a => {

@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Translate from "react-translate-component";
-import notify from "actions/NotificationActions";
 import cname from "classnames";
 import WalletDb from "stores/WalletDb";
 import PasswordConfirm from "./PasswordConfirm";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Notification} from "bitshares-ui-style-guide";
 
 export default class WalletChangePassword extends Component {
     constructor() {
@@ -19,7 +19,11 @@ export default class WalletChangePassword extends Component {
         var {old_password, new_password} = this.state;
         WalletDb.changePassword(old_password, new_password, true /*unlock*/)
             .then(() => {
-                notify.success("Password changed");
+                Notification.success({
+                    message: counterpart.translate(
+                        "notifications.password_change_success"
+                    )
+                });
                 this.setState({success: true});
                 // window.history.back();
             })
@@ -27,7 +31,14 @@ export default class WalletChangePassword extends Component {
                 // Programmer or database error ( validation missed something? )
                 // .. translation may be unnecessary
                 console.error(error);
-                notify.error("Unable to change password: " + error);
+                Notification.error({
+                    message: counterpart.translate(
+                        "notifications.password_change_failure",
+                        {
+                            error_msg: error
+                        }
+                    )
+                });
             });
     }
 
@@ -123,7 +134,11 @@ class WalletPassword extends Component {
         if (success) {
             this.setState({verified: true});
             this.props.onValid(this.state.password);
-        } else notify.error("Invalid Password");
+        } else {
+            Notification.error({
+                message: counterpart.translate("notifications.invalid_password")
+            });
+        }
     }
 
     formChange(event) {
@@ -147,7 +162,7 @@ class WalletPassword extends Component {
                                 "wallet.current_pass"
                             )}
                             type="password"
-                            id="current-password"
+                            id="password"
                             autoComplete="current-password"
                             onChange={this.formChange.bind(this)}
                             value={this.state.password}

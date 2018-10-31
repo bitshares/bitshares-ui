@@ -602,7 +602,7 @@ class AccountOverview extends React.Component {
                                                 <td>{marginValue}</td>
                                                 <td className="column-hide-small" />
                                                 <td className="column-hide-small" />
-                                                <td colSpan="3" />
+                                                <td colSpan="4" />
                                             </tr>
                                         </MarginPositions>
                                     </div>

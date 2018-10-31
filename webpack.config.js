@@ -269,7 +269,9 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2")
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/alt-container"),
+                        path.join(root_dir, "node_modules/alt-react")
                     ],
                     use: [
                         {
@@ -333,6 +335,10 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
+                    exclude: [
+                        path.resolve(root_dir, "app/assets/model-type-images"),
+                        path.resolve(root_dir, "app/assets/bin-file")
+                    ],
                     use: [
                         {
                             loader: "svg-inline-loader"
