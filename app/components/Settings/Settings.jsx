@@ -418,10 +418,15 @@ class Settings extends React.Component {
                     <div
                         className="grid-content"
                         style={{
-                            maxWidth: 1000
+                            height: "100%"
                         }}
                     >
-                        <div className="grid-block small-12 no-margin vertical">
+                        <div
+                            className="grid-block small-12 no-margin vertical"
+                            style={{
+                                maxWidth: 1000
+                            }}
+                        >
                             <Translate
                                 component="h3"
                                 content={
