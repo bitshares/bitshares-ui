@@ -57,6 +57,10 @@ class HelpContent extends React.Component {
         section: PropTypes.string
     };
 
+    static defaultProps = {
+        hide_issuer: "false"
+    };
+
     constructor(props) {
         super(props);
         window._onClickLink = this.onClickLink.bind(this);
@@ -66,8 +70,7 @@ class HelpContent extends React.Component {
         let locale = this.props.locale || counterpart.getLocale() || "en";
 
         // Only load helpData for the current locale as well as the fallback 'en'
-        req
-            .keys()
+        req.keys()
             .filter(a => {
                 return (
                     a.indexOf(`/${locale}/`) !== -1 || a.indexOf("/en/") !== -1
@@ -187,6 +190,15 @@ class HelpContent extends React.Component {
         if (!value) {
             console.error(
                 `help section not found ${this.props.path}#${
+                    this.props.section
+                }`
+            );
+            return null;
+        }
+
+        if (typeof value === "object") {
+            console.error(
+                `help section content invalid ${this.props.path}#${
                     this.props.section
                 }`
             );

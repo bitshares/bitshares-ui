@@ -120,6 +120,17 @@
     .negative {
         color: $negative-color !important;
     }
+    .amount-selector-field {
+        .amount-selector-field--label {
+        }
+        .amount-selector-field--balance {
+            float: right;
+            cursor: pointer;
+            &:hover {
+                color: $link-text-color;
+            }
+        }
+    }
     .dark-text-color {
         color: $dark-text-color;
     }
@@ -269,6 +280,13 @@
             }
         }
     }
+
+    .account-browsing-mode {
+        button {
+            margin-right: 24px;
+        }
+    }
+
     .__react_component_tooltip.type-light {
         @include color($light-text-color, $super-light-panel-bg-color, true);
         &.place-bottom:after {
@@ -688,6 +706,10 @@
             color: $account-dimmed !important;
             background-color: $bg-color !important;
         }
+    }
+    // Sticky Order-Row
+    div.sticky-table-row.order-row:hover {
+        background-color: lighten($bg-color, 4%);
     }
     // block-list
     .block-list {
@@ -1400,7 +1422,7 @@
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
-            padding: 10px 0 !important;
+            padding: 7px 0 !important;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1437,11 +1459,11 @@
             }
         }
     }
-    .order-table {
-        > tbody > tr:nth-of-type(even) {
-            background-color: $row-accent-color;
-        }
-    }
+    // .order-table {
+    //     > tbody > tr:nth-of-type(even) {
+    //         background-color: $row-accent-color;
+    //     }
+    // }
     .mymarkets-header {
         background-color: $header-color;
     }
@@ -1519,10 +1541,9 @@
         cursor: pointer;
     }
 
-    .table > tbody > tr:nth-of-type(even) {
-        background-color: lighten($bg-color, 4%);
-    }
-
+    // .table > tbody > tr:nth-of-type(even) {
+    //     background-color: lighten($bg-color, 4%);
+    // }
     // bottom stats
 
     .bucket-option {
@@ -2304,6 +2325,42 @@
             }
         }
 
+        .file-input-container {
+            background-color: darken($modal-bg-color, 5);
+            border-color: transparentize($button-bg-color, 0.5);
+
+            .upload-text {
+                color: transparentize($light-text-color, 0.3);
+            }
+
+            &:hover,
+            &.dropHover {
+                border-color: $button-bg-color;
+                background-color: darken($modal-bg-color, 10);
+            }
+
+            &.downloaded {
+                border-color: $button-bg-color;
+                background-color: transparentize($button-bg-color, 0.8);
+            }
+
+            &.invalid {
+                border-color: $negative-color-alternative;
+                background-color: transparentize(
+                    $negative-color-alternative,
+                    0.9
+                );
+            }
+        }
+
+        .dismiss-icon {
+            color: $negative-color-alternative;
+        }
+
+        .approve-icon svg path {
+            fill: $positive-color-alternative;
+        }
+
         @include breakpoint(small only) {
             .plate {
                 background-color: darken($modal-bg-color, 10);
@@ -2322,13 +2379,15 @@
                     }
                 }
             }
-        }
-    }
+            .small-container {
+                border: 1px solid transparentize($light-text-color, 0.8);
+                background-color: transparentize($light-text-color, 0.9);
 
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
+                .active-upload-text {
+                    background-color: transparentize($dark-text-color, 0.9);
+                }
+            }
+        }
     }
 
     i.anticon.icon-fill {
@@ -2350,6 +2409,21 @@
 
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
+    }
+
+    /* Ant Design Hacks */
+    .ant-select-arrow {
+        color: $light-text-color !important;
+    }
+
+    .ant-select-selection-selected-value {
+        color: $light-text-color !important;
+    }
+
+    .ant-input {
+        border-left: 1px solid $super-light-panel-bg-color !important;
+        border-top: 1px solid $super-light-panel-bg-color !important;
+        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 }
 .rc-time-picker-panel {
@@ -2430,7 +2504,7 @@
     .menu-dropdown-wrapper {
         height: 65px;
         width: 65px;
-        text-align: center;
+        text-align: left;
         border-radius: 0;
         .hamburger .icon {
             position: relative;

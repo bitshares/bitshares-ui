@@ -18,10 +18,10 @@ import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
 import counterpart from "counterpart";
 import ChoiceModal from "../Modal/ChoiceModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
 import {getWalletName} from "branding";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -37,6 +37,8 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {
+            choiceModalShowOnce: false,
+            isChoiceModalVisible: false,
             showNodesPopup: false,
             showConnectingPopup: false
         };
@@ -47,6 +49,20 @@ class Footer extends React.Component {
         };
 
         this.getNode = this.getNode.bind(this);
+        this.showChoiceModal = this.showChoiceModal.bind(this);
+        this.hideChoiceModal = this.hideChoiceModal.bind(this);
+    }
+
+    showChoiceModal() {
+        this.setState({
+            isChoiceModalVisible: true
+        });
+    }
+
+    hideChoiceModal() {
+        this.setState({
+            isChoiceModalVisible: false
+        });
     }
 
     componentDidMount() {
@@ -62,6 +78,8 @@ class Footer extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
+            nextState.isChoiceModalVisible !==
+                this.state.isChoiceModalVisible ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
             nextProps.rpc_connection_status !==
@@ -204,12 +222,7 @@ class Footer extends React.Component {
      * @private
      */
     _closeOutOfSyncModal() {
-        if (
-            !!this.confirmOutOfSync.modal &&
-            this.confirmOutOfSync.modal.state.show
-        ) {
-            ZfApi.publish(this.confirmOutOfSync.modal.props.modalId, "close");
-        }
+        this.hideChoiceModal();
     }
 
     /**
@@ -234,7 +247,9 @@ class Footer extends React.Component {
 
         if (!connected) {
             console.log("Your connection was lost");
-            this._triggerReconnect();
+            setTimeout(() => {
+                this._triggerReconnect();
+            }, 50);
         } else if (!this.props.synced) {
             // If the blockchain is out of sync the footer will be rerendered one last time and then
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
@@ -263,16 +278,22 @@ class Footer extends React.Component {
                     // Only ask the user once, and only continue if still out of sync
                     if (
                         this.getBlockTimeDelta() > 3 &&
-                        this.confirmOutOfSync.shownOnce == false
+                        this.state.choiceModalShowOnce === false
                     ) {
-                        this.confirmOutOfSync.shownOnce = true;
-                        this.confirmOutOfSync.modal.show();
+                        this.setState({
+                            choiceModalShowOnce: true
+                        });
+                        this.showChoiceModal();
                     }
                 }, askToReconnectAfterSeconds * 1000);
             }
         } else {
-            this._closeOutOfSyncModal();
-            this.confirmOutOfSync.shownOnce = false;
+            setTimeout(() => {
+                this._closeOutOfSyncModal();
+                this.setState({
+                    choiceModalShowOnce: false
+                });
+            }, 50);
         }
     }
 
@@ -347,10 +368,9 @@ class Footer extends React.Component {
                         />
                     )}
                 <ChoiceModal
-                    modalId="footer_out_of_sync"
-                    ref={thiz => {
-                        this.confirmOutOfSync.modal = thiz;
-                    }}
+                    showModal={this.showChoiceModal}
+                    hideModal={this.hideChoiceModal}
+                    visible={this.state.isChoiceModalVisible}
                     choices={[
                         {
                             translationKey: "connection.manual_reconnect",
@@ -371,15 +391,6 @@ class Footer extends React.Component {
                     ]}
                 >
                     <div>
-                        <Translate
-                            content="connection.title_out_of_sync"
-                            out_of_sync_seconds={parseInt(
-                                this.getBlockTimeDelta()
-                            )}
-                            component="h2"
-                        />
-                        <br />
-                        <br />
                         <Translate
                             content="connection.out_of_sync"
                             out_of_sync_seconds={parseInt(
@@ -472,6 +483,32 @@ class Footer extends React.Component {
                                 )}
                             </div>
                         </div>
+                        {!!routerTransitioner &&
+                            routerTransitioner.isBackgroundPingingInProgress() && (
+                                <div
+                                    onClick={() => {
+                                        this.setState({
+                                            showNodesPopup: !this.state
+                                                .showNodesPopup
+                                        });
+                                    }}
+                                    style={{
+                                        cursor: "pointer"
+                                    }}
+                                    className="grid-block shrink txtlabel"
+                                >
+                                    {routerTransitioner.getBackgroundPingingTarget()}
+                                    <div
+                                        style={{
+                                            marginTop: "0.4rem",
+                                            marginLeft: "0.5rem"
+                                        }}
+                                    >
+                                        <LoadingIndicator type="circle" />
+                                    </div>
+                                    &nbsp; &nbsp;
+                                </div>
+                            )}
                         {synced ? null : (
                             <div className="grid-block shrink txtlabel cancel">
                                 <Translate content="footer.nosync" />

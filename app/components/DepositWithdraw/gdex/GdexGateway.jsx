@@ -9,8 +9,8 @@ import SettingsActions from "actions/SettingsActions";
 import GdexCache from "../../../lib/common/GdexCache";
 import GdexHistory from "./GdexHistory";
 import GdexAgreementModal from "./GdexAgreementModal";
-import BaseModal from "../../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import {Modal, Button} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 import {
     fetchWithdrawRule,
     userAgreement
@@ -33,6 +33,7 @@ class GdexGateway extends React.Component {
         );
 
         this.state = {
+            isAgreementVisible: false,
             coins: null,
             activeCoinInfo: this._getActiveCoinInfo(props, {action}),
             action,
@@ -47,6 +48,21 @@ class GdexGateway extends React.Component {
             memo_rule: null
         };
         this.user_info_cache = new GdexCache();
+
+        this.showAgreement = this.showAgreement.bind(this);
+        this.hideAgreement = this.hideAgreement.bind(this);
+    }
+
+    showAgreement() {
+        this.setState({
+            isAgreementVisible: true
+        });
+    }
+
+    hideAgreement() {
+        this.setState({
+            isAgreementVisible: false
+        });
     }
 
     _getActiveCoinInfo(props, state) {
@@ -76,45 +92,43 @@ class GdexGateway extends React.Component {
     _transformCoin(data) {
         var result = [];
         try {
-            data
-                .filter(asset => {
-                    return asset.status != 0;
-                })
-                .forEach(asset => {
-                    let coin = {};
-                    if (asset.type == 1) {
-                        // inner asset
-                        coin.innerAssetId = asset.assetId;
-                        coin.innerAssetName = asset.assetName;
-                        coin.innerSymbol = asset.assetSymbol;
-                        coin.outerAssetId = asset.relationId;
-                        coin.outerAssetName = asset.relationSymbol;
-                        coin.outerSymbol = asset.relationSymbol;
-                        coin.status = asset.withdrawStatus;
-                        coin.gateFee = asset.withdrawFees;
-                        coin.needMemo = asset.needMemo;
-                        coin.minTransactionAmount = asset.minWithdrawAmount;
-                        coin.type = asset.type;
-                        coin.relationPrecision = asset.relationPrecision;
-                    } else if (asset.type == 2) {
-                        // outer asset
-                        coin.innerAssetId = asset.relationId;
-                        coin.innerAssetName = asset.relationSymbol;
-                        coin.innerSymbol = asset.relationSymbol;
-                        coin.outerAssetId = asset.assetId;
-                        coin.outerAssetName = asset.assetName;
-                        coin.outerSymbol = asset.assetSymbol;
-                        coin.status = asset.depositStatus;
-                        coin.gateFee = asset.depositFees;
-                        coin.needMemo = asset.needMemo;
-                        coin.minTransactionAmount = asset.minDepositAmount;
-                        coin.type = asset.type;
-                        coin.relationPrecision = asset.relationPrecision;
-                    } else {
-                        coin = null;
-                    }
-                    if (coin) result.push(coin);
-                });
+            data.filter(asset => {
+                return asset.status != 0;
+            }).forEach(asset => {
+                let coin = {};
+                if (asset.type == 1) {
+                    // inner asset
+                    coin.innerAssetId = asset.assetId;
+                    coin.innerAssetName = asset.assetName;
+                    coin.innerSymbol = asset.assetSymbol;
+                    coin.outerAssetId = asset.relationId;
+                    coin.outerAssetName = asset.relationSymbol;
+                    coin.outerSymbol = asset.relationSymbol;
+                    coin.status = asset.withdrawStatus;
+                    coin.gateFee = asset.withdrawFees;
+                    coin.needMemo = asset.needMemo;
+                    coin.minTransactionAmount = asset.minWithdrawAmount;
+                    coin.type = asset.type;
+                    coin.relationPrecision = asset.relationPrecision;
+                } else if (asset.type == 2) {
+                    // outer asset
+                    coin.innerAssetId = asset.relationId;
+                    coin.innerAssetName = asset.relationSymbol;
+                    coin.innerSymbol = asset.relationSymbol;
+                    coin.outerAssetId = asset.assetId;
+                    coin.outerAssetName = asset.assetName;
+                    coin.outerSymbol = asset.assetSymbol;
+                    coin.status = asset.depositStatus;
+                    coin.gateFee = asset.depositFees;
+                    coin.needMemo = asset.needMemo;
+                    coin.minTransactionAmount = asset.minDepositAmount;
+                    coin.type = asset.type;
+                    coin.relationPrecision = asset.relationPrecision;
+                } else {
+                    coin = null;
+                }
+                if (coin) result.push(coin);
+            });
         } catch (err) {
             console.log("Transform coin failed: ", err);
         }
@@ -280,7 +294,7 @@ class GdexGateway extends React.Component {
     }
 
     _showUserAgreement() {
-        ZfApi.publish("gdex_agreement", "open");
+        this.showAgreement();
     }
 
     _registerUser() {
@@ -392,14 +406,27 @@ class GdexGateway extends React.Component {
                             />
                         </span>
                     </div>
-                    <BaseModal id={"gdex_agreement"} overlay={true}>
+                    <Modal
+                        footer={[
+                            <Button
+                                type="primary"
+                                key="close"
+                                onClick={this.hideAgreement}
+                            >
+                                {counterpart.translate("modal.close")}
+                            </Button>
+                        ]}
+                        visible={this.state.isAgreementVisible}
+                        onCancel={this.hideAgreement}
+                    >
                         <br />
                         <div className="grid-block vertical">
                             <GdexAgreementModal
+                                onCancel={this.hideAgreement}
                                 locale={this.props.settings.get("locale", "en")}
                             />
                         </div>
-                    </BaseModal>
+                    </Modal>
                     {supportContent}
                 </div>
             );
@@ -496,7 +523,8 @@ class GdexGateway extends React.Component {
                             >
                                 <Translate
                                     content={"gateway.choose_" + action}
-                                />:{" "}
+                                />
+                                :{" "}
                             </label>
                             <select
                                 className="external-coin-types bts-select"
@@ -591,14 +619,17 @@ class GdexGateway extends React.Component {
     }
 }
 
-export default connect(GdexGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings,
-            settings: SettingsStore.getState().settings
-        };
+export default connect(
+    GdexGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings,
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);

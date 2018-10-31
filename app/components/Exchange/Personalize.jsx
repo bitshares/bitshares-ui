@@ -106,11 +106,9 @@ class Personalize extends React.Component {
                 ref={this.props.modalId}
             >
                 <Form.Item>
-                    {!this.props.tinyScreen ? (
-                        <header>
-                            <Translate content="exchange.settings.header.chart_options" />
-                        </header>
-                    ) : null}
+                    <header>
+                        <Translate content="exchange.settings.header.chart_options" />
+                    </header>
 
                     {!this.props.tinyScreen ? (
                         <div className="grid-block no-overflow wrap shrink">
@@ -130,7 +128,7 @@ class Personalize extends React.Component {
                                         data-tip={counterpart.translate(
                                             "exchange.settings.tooltip.chart_reload"
                                         )}
-                                        type="reload"
+                                        type="info-circle"
                                         theme="filled"
                                     />
                                 </h6>
@@ -166,35 +164,33 @@ class Personalize extends React.Component {
                         </div>
                     ) : null}
 
-                    {!this.props.tinyScreen ? (
-                        <div className="grid-block no-overflow wrap shrink">
-                            <div className="small-6">
-                                <h6 style={{margin: 9}}>
-                                    <Translate content="exchange.settings.title.chart_height" />
-                                    &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
-                                            "exchange.settings.tooltip.chart_height"
-                                        )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
-                                </h6>
-                            </div>
-                            <div className="small-6">
-                                <Slider
-                                    min={300}
-                                    max={1000}
-                                    onChange={this.setChartHeight.bind(this)}
-                                    value={
-                                        typeof chartHeight === "number"
-                                            ? chartHeight
-                                            : 300
-                                    }
+                    <div className="grid-block no-overflow wrap shrink">
+                        <div className="small-6">
+                            <h6 style={{margin: 9}}>
+                                <Translate content="exchange.settings.title.chart_height" />
+                                &nbsp;
+                                <Icon
+                                    data-tip={counterpart.translate(
+                                        "exchange.settings.tooltip.chart_height"
+                                    )}
+                                    type="question-circle"
+                                    theme="filled"
                                 />
-                            </div>
+                            </h6>
                         </div>
-                    ) : null}
+                        <div className="small-6">
+                            <Slider
+                                min={300}
+                                max={1000}
+                                onChange={this.setChartHeight.bind(this)}
+                                value={
+                                    typeof chartHeight === "number"
+                                        ? chartHeight
+                                        : 300
+                                }
+                            />
+                        </div>
+                    </div>
 
                     {!this.props.tinyScreen &&
                         chartType == "price_chart" && (
@@ -215,7 +211,7 @@ class Personalize extends React.Component {
                                             data-tip={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="reload"
+                                            type="info-circle"
                                             theme="filled"
                                         />
                                     </h6>
@@ -251,7 +247,7 @@ class Personalize extends React.Component {
                                             data-tip={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="reload"
+                                            type="info-circle"
                                             theme="filled"
                                         />
                                     </h6>
@@ -694,7 +690,7 @@ class Personalize extends React.Component {
                                         data-tip={counterpart.translate(
                                             "exchange.settings.tooltip.reload"
                                         )}
-                                        type="reload"
+                                        type="info-circle"
                                         theme="filled"
                                     />
                                 </h6>
