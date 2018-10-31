@@ -13,7 +13,7 @@ import WalletActions from "actions/WalletActions";
 import BackupActions, {restore, backup} from "actions/BackupActions";
 import AccountActions from "actions/AccountActions";
 import {Apis} from "bitsharesjs-ws";
-import {Modal, Button, Form, Input} from "bitshares-ui-style-guide";
+import {Modal, Button, Form, Input, Switch} from "bitshares-ui-style-guide";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelectorAnt";
 import {PrivateKey} from "bitsharesjs";
@@ -419,6 +419,16 @@ class WalletUnlockModal extends React.Component {
                 onCancel={this.handleModalClose}
                 leftHeader
                 footer={[
+                    <div
+                        style={{float: "left", cursor: "pointer"}}
+                        onClick={this.handleRememberMe.bind(this)}
+                    >
+                        <Translate content="wallet.remember_me" />
+                        <Switch
+                            checked={this.state.rememberMe}
+                            onChange={this.handleRememberMe.bind(this)}
+                        />
+                    </div>,
                     <Button onClick={this.handleLogin} key="login-btn">
                         {counterpart.translate(
                             this.shouldUseBackupLogin()
@@ -539,36 +549,6 @@ class WalletUnlockModal extends React.Component {
                             </Form.Item>
                         </div>
                     )}
-
-                    <div
-                        className="remember-check"
-                        onClick={this.handleRememberMe}
-                    >
-                        <label
-                            style={{
-                                position: "relative",
-                                float: "right",
-                                paddingTop: "10px"
-                            }}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={this.state.rememberMe}
-                                onChange={() => {}}
-                                style={{
-                                    position: "absolute"
-                                }}
-                            />
-                            <div
-                                style={{
-                                    paddingLeft: "30px",
-                                    paddingTop: "12px"
-                                }}
-                            >
-                                <Translate content="wallet.remember_me" />
-                            </div>
-                        </label>
-                    </div>
 
                     {this.shouldShowBackupWarning() && (
                         <BackupWarning
