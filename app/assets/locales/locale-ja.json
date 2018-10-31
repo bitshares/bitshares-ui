@@ -1305,15 +1305,6 @@
             "quantity": "数量",
             "submit": "出金",
             "withdraw": "出金"
-        },
-        "report": {
-            "button": "レポートについてのレポート",
-            "takeScreenshot": "Take screenshot",
-            "copyLog": "Copy Log",
-            "copySuccess": "Copy ended",
-            "showLog": "Show Log",
-            "hideLog": "Hide Log",
-            "explanatory_text": "Some explanatory text"
         }
     },
     "news": {

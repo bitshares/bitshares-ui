@@ -1305,15 +1305,6 @@
             "quantity": "Quantity",
             "submit": "Retirar",
             "withdraw": "Withdraw"
-        },
-        "report": {
-            "button": "Report about errors",
-            "takeScreenshot": "Take screenshot",
-            "copyLog": "Copy Log",
-            "copySuccess": "Copy ended",
-            "showLog": "Show Log",
-            "hideLog": "Hide Log",
-            "explanatory_text": "Some explanatory text"
         }
     },
     "news": {
