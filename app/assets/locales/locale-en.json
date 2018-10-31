@@ -317,6 +317,7 @@
             "expired": "Expired",
             "funding": "Funding",
             "go_proxy": "Go to",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Backup",
             "info": "Info",
             "line": "Line",
