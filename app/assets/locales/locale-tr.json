@@ -1637,6 +1637,20 @@
         "hide_asset": "Bu dijital varlığı gizlemek için tıklayın.",
         "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
         "login": "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+        "login-tooltip": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
         "login-tooltips": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",

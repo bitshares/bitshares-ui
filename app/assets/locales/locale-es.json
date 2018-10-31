@@ -1637,6 +1637,20 @@
         "hide_asset": "Haga clic aquí para ocultar este activo de esta lista.",
         "latest_price": "Este es el utlimo precio en el mercado.",
         "login": "Esta billetera de BitShares no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
+        "login-tooltip": {
+            "incorrectPassword": {
+                "begin": "Enter another password or try ",
+                "end": " to login.",
+                "model": "Local wallet"
+            },
+            "withoutBinFileBlock": {
+                "begin": "If you haven’t .bin-file try ",
+                "brainkey": "Brainkey",
+                "end": " to login.",
+                "middle": " or use ",
+                "model": "Cloud wallet"
+            }
+        },
         "login-tooltips": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
