@@ -2283,7 +2283,8 @@ class Exchange extends React.Component {
                                     ? "medium-6"
                                     : ""
                             : "medium-12",
-                        "no-padding no-overflow middle-content small-12 order-5"
+                        "no-padding no-overflow middle-content small-12",
+                        verticalOrderBook || verticalOrderForm ? "order-4" : "order-3"
                     )}
                     innerClass={!tinyScreen ? "exchange-padded" : ""}
                     innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
@@ -2609,13 +2610,13 @@ class Exchange extends React.Component {
                 <div
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
-                        verticalOrderBook ? "xlarge-order-2" : "",
                         centerContainerWidth > 1200
                             ? groupTabsCount == 1 ? "medium-12 xlarge-4" : "medium-6 xlarge-4 "
                             : centerContainerWidth > 800
                                 ? groupTabsCount == 1 ? "medium-12" : "medium-6"
                                 : "",
-                        "small-12 order-5"
+                        "small-12 order-5",
+                        !verticalOrderForm ? "xlarge-order-2" : "",
                     )}
                     style={{paddingRight: 5}}
                 >
@@ -2651,12 +2652,11 @@ class Exchange extends React.Component {
                 </div>
             ) : null;
 
-        let emptyDiv = (
+        let emptyDiv = groupTabsCount > 2 ? null : (
             <div
                 className={cnames(
                     centerContainerWidth > 1200 && verticalOrderBook ? "xlarge-order-4 xlarge-8 order-9" : "",
                     centerContainerWidth > 1200 && verticalOrderForm ? "xlarge-order-6 xlarge-8 order-9" : "",
-                    "medium-12 large-12",
                     "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
                 )}
             >
