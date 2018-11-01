@@ -40,7 +40,7 @@ class BackupCreate extends Component {
                 <Create
                     noText={this.props.noText}
                     newAccount={
-                        this.props.location
+                        this.props.location && this.props.location.query
                             ? this.props.location.query.newAccount
                             : null
                     }
