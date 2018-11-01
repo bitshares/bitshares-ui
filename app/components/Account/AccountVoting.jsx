@@ -823,7 +823,16 @@ class AccountVoting extends React.Component {
                         });
                     }}
                 />
-                <Translate content="account.votes.hide_legacy_proposals" />
+
+                <span
+                    className="tooltip"
+                    data-place="top"
+                    data-tip={counterpart.translate(
+                        "tooltip.legacy_explanation"
+                    )}
+                >
+                    <Translate content="account.votes.hide_legacy_proposals" />
+                </span>
             </div>
         );
 
@@ -993,10 +1002,12 @@ class AccountVoting extends React.Component {
                                                 <Translate content="account.votes.expired" />
                                             </div>
                                         ) : null}
+                                        <div className="inline-block">
+                                            {hideLegacy}
+                                        </div>
                                     </div>
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
-                                        {hideLegacy}
                                         <div
                                             style={{
                                                 float: "right",
