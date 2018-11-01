@@ -1,6 +1,4 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import ChainTypes from "../Utility/ChainTypes";
@@ -12,6 +10,7 @@ import WalletApi from "api/WalletApi";
 import NestedApprovalState from "../Account/NestedApprovalState";
 import pu from "common/permission_utils";
 import {ChainStore} from "bitsharesjs";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 export const finalRequiredPerms = (
     requiredPermissions,
@@ -122,7 +121,7 @@ class ProposalModal extends React.Component {
             WalletDb.process_transaction(tr, null, true, neededKeys);
         }
 
-        ZfApi.publish(this.props.modalId, "close");
+        this.props.hideModal();
     }
 
     onChangePayee(account) {
@@ -136,7 +135,7 @@ class ProposalModal extends React.Component {
     }
 
     onCancel() {
-        ZfApi.publish(this.props.modalId, "close");
+        this.props.hideModal();
     }
 
     render() {
@@ -184,120 +183,118 @@ class ProposalModal extends React.Component {
 
         let myAccounts = AccountStore.getMyAccounts();
 
+        let footer = [
+            <Button
+                key="submit"
+                type="primary"
+                onClick={this._onProposalAction.bind(this, proposal)}
+            >
+                {counterpart.translate(`proposal.${this.props.action}`)}
+            </Button>,
+            <Button key="cancel" onClick={this.onCancel.bind(this)}>
+                {counterpart.translate("account.perm.cancel")}
+            </Button>
+        ];
+
         return (
-            <form className="grid-block vertical full-width-content">
-                <div className="grid-container">
-                    <div className="content-block">
-                        <h4>
-                            <Translate
-                                content={`modal.proposals.actions.${
-                                    this.props.action
-                                }`}
-                            />
-                        </h4>
-                    </div>
-                    <div
-                        className="content-block"
-                        style={{paddingRight: "20%"}}
+            <Modal
+                visible={this.props.visible}
+                title={counterpart.translate(
+                    `modal.proposals.actions.${this.props.action}`
+                )}
+                footer={footer}
+                onCancel={this.props.hideModal}
+            >
+                <div className="grid-block vertical">
+                    <form
+                        className="grid-block vertical full-width-content"
+                        style={{paddingTop: 0}}
                     >
-                        <NestedApprovalState
-                            expanded
-                            proposal={proposal.get("id")}
-                            type={type}
-                            added={
-                                isAdd
-                                    ? this.state.key
-                                        ? this.state.key
-                                        : this.state[type] || null
-                                    : null
-                            }
-                            removed={
-                                !isAdd
-                                    ? this.state.key
-                                        ? this.state.key
-                                        : this.state[type] || null
-                                    : null
-                            }
-                            noFail
-                        />
-                    </div>
-
-                    <div className="content-block full-width-content">
-                        <div className="full-width-content form-group">
-                            <Translate
-                                content="modal.proposals.pay_with"
-                                component="label"
-                            />
-                            <AccountSelect
-                                account_names={myAccounts}
-                                onChange={this.onChangePayee.bind(this)}
-                            />
-                        </div>
-
-                        {this.props.action !== "delete" &&
-                        (accountNames.length || keyNames.length) ? (
-                            <div className="full-width-content form-group">
-                                <Translate
-                                    content={`modal.proposals.approval_${
-                                        isAdd ? "add" : "remove"
-                                    }`}
-                                    component="label"
-                                />
-                                <AccountSelect
-                                    account_names={accountNames.concat(
-                                        keyNames
-                                    )}
-                                    onChange={this.onActiveAccount.bind(
-                                        this,
-                                        accountMap,
-                                        keyMap,
-                                        type
-                                    )}
+                        <div className="grid-container">
+                            <div
+                                className="content-block"
+                                style={{paddingRight: "20%"}}
+                            >
+                                <NestedApprovalState
+                                    expanded
+                                    proposal={proposal.get("id")}
+                                    type={type}
+                                    added={
+                                        isAdd
+                                            ? this.state.key
+                                                ? this.state.key
+                                                : this.state[type] || null
+                                            : null
+                                    }
+                                    removed={
+                                        !isAdd
+                                            ? this.state.key
+                                                ? this.state.key
+                                                : this.state[type] || null
+                                            : null
+                                    }
+                                    noFail
                                 />
                             </div>
-                        ) : null}
 
-                        {false && keyNames.length ? (
-                            <div className="full-width-content form-group">
-                                <Translate
-                                    content={`modal.proposals.key_approval_${
-                                        isAdd ? "add" : "remove"
-                                    }`}
-                                    component="label"
-                                />
-                                <AccountSelect
-                                    account_names={keyNames}
-                                    onChange={this.onActiveAccount.bind(
-                                        this,
-                                        keyMap,
-                                        "key"
-                                    )}
-                                />
+                            <div className="content-block full-width-content">
+                                <div className="full-width-content form-group">
+                                    <Translate
+                                        content="modal.proposals.pay_with"
+                                        component="label"
+                                    />
+                                    <AccountSelect
+                                        account_names={myAccounts}
+                                        onChange={this.onChangePayee.bind(this)}
+                                    />
+                                </div>
+
+                                {this.props.action !== "delete" &&
+                                (accountNames.length || keyNames.length) ? (
+                                    <div className="full-width-content form-group">
+                                        <Translate
+                                            content={`modal.proposals.approval_${
+                                                isAdd ? "add" : "remove"
+                                            }`}
+                                            component="label"
+                                        />
+                                        <AccountSelect
+                                            account_names={accountNames.concat(
+                                                keyNames
+                                            )}
+                                            onChange={this.onActiveAccount.bind(
+                                                this,
+                                                accountMap,
+                                                keyMap,
+                                                type
+                                            )}
+                                        />
+                                    </div>
+                                ) : null}
+
+                                {false && keyNames.length ? (
+                                    <div className="full-width-content form-group">
+                                        <Translate
+                                            content={`modal.proposals.key_approval_${
+                                                isAdd ? "add" : "remove"
+                                            }`}
+                                            component="label"
+                                        />
+                                        <AccountSelect
+                                            account_names={keyNames}
+                                            onChange={this.onActiveAccount.bind(
+                                                this,
+                                                keyMap,
+                                                "key"
+                                            )}
+                                        />
+                                    </div>
+                                ) : null}
                             </div>
-                        ) : null}
-                    </div>
-
-                    <div className="content-block">
-                        <input
-                            type="submit"
-                            className="button"
-                            onClick={this._onProposalAction.bind(
-                                this,
-                                proposal
-                            )}
-                            value={counterpart.translate(
-                                `proposal.${this.props.action}`
-                            )}
-                        />
-                        <div
-                            onClick={this.onCancel.bind(this)}
-                            className=" button"
-                        >
-                            <Translate content="account.perm.cancel" />
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </Modal>
         );
     }
 }
@@ -370,37 +367,10 @@ class FirstLevel extends React.Component {
 FirstLevel = BindToChainState(FirstLevel);
 
 export default class ModalWrapper extends React.Component {
-    constructor() {
-        super();
-
-        this.state = {
-            open: false
-        };
-    }
-
-    componentDidMount() {
-        ZfApi.subscribe(this.props.modalId, (msg, data) => {
-            this.setState({
-                open: data === "open"
-            });
-        });
-    }
-
-    show() {
-        ZfApi.publish(this.props.modalId, "open");
-    }
-
     render() {
-        let {modalId, proposal} = this.props;
+        if (!this.props.account || !this.props.proposal || !this.props.action)
+            return null;
 
-        return (
-            <BaseModal id={modalId} overlay={true} ref={modalId}>
-                {this.state.open ? (
-                    <div className="grid-block vertical">
-                        <FirstLevel {...this.props} />
-                    </div>
-                ) : null}
-            </BaseModal>
-        );
+        return <FirstLevel {...this.props} />;
     }
 }

@@ -11,7 +11,6 @@ import BackupActions, {
     backup,
     decryptWalletBackup
 } from "actions/BackupActions";
-import notify from "actions/NotificationActions";
 import {saveAs} from "file-saver";
 import cname from "classnames";
 import Translate from "react-translate-component";
@@ -19,6 +18,8 @@ import {PrivateKey} from "bitsharesjs";
 import SettingsActions from "actions/SettingsActions";
 import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";
+import {Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 const connectObject = {
     listenTo() {
@@ -298,7 +299,11 @@ class Download extends Component {
 
     componentDidMount() {
         if (!this.isFileSaverSupported) {
-            notify.error("File saving is not supported");
+            Notification.error({
+                message: counterpart.translate(
+                    "notifications.backup_file_save_unsupported"
+                )
+            });
         }
 
         if (this.props.confirmation) {
@@ -617,9 +622,17 @@ class DecryptBackup extends Component {
                     error,
                     error.stack
                 );
-                if (error === "invalid_decryption_key")
-                    notify.error("Invalid Password");
-                else notify.error("" + error);
+                if (error === "invalid_decryption_key") {
+                    Notification.error({
+                        message: counterpart.translate(
+                            "notifications.invalid_password"
+                        )
+                    });
+                } else {
+                    Notification.error({
+                        message: error
+                    });
+                }
             });
     }
 

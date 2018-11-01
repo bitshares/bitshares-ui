@@ -1,5 +1,4 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import notify from "actions/NotificationActions";
 import WalletDb from "stores/WalletDb";
 import {
     Aes,
@@ -10,6 +9,7 @@ import {
     ChainStore
 } from "bitsharesjs";
 import counterpart from "counterpart";
+import {Notification} from "bitshares-ui-style-guide";
 
 const ApplicationApi = {
     create_account(
@@ -147,12 +147,10 @@ const ApplicationApi = {
                     );
 
                     if (!memo_from_privkey) {
-                        notify.addNotification({
+                        Notification.error({
                             message: counterpart.translate(
                                 "account.errors.memo_missing"
-                            ),
-                            level: "error",
-                            autoDismiss: 10
+                            )
                         });
                         throw new Error(
                             "Missing private memo key for sender: " +

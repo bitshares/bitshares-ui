@@ -18,6 +18,7 @@ import AmountSelector from "../Utility/AmountSelector";
 import assetConstants from "chain/asset_constants";
 import {estimateFee} from "common/trxHelper";
 import PropTypes from "prop-types";
+import {Switch} from "bitshares-ui-style-guide";
 
 let GRAPHENE_MAX_SHARE_SUPPLY = new big(
     assetConstants.GRAPHENE_MAX_SHARE_SUPPLY
@@ -750,17 +751,10 @@ class AccountAssetCreate extends React.Component {
                                 :
                             </td>
                             <td style={{border: "none"}}>
-                                <div
-                                    className="switch"
-                                    style={{marginBottom: "10px"}}
-                                    onClick={onClick}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={isChecked}
-                                    />
-                                    <label />
-                                </div>
+                                <Switch
+                                    checked={isChecked}
+                                    onChange={onClick}
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -805,21 +799,13 @@ class AccountAssetCreate extends React.Component {
                                 :
                             </td>
                             <td style={{border: "none"}}>
-                                <div
-                                    className="switch"
-                                    style={{marginBottom: "10px"}}
-                                    onClick={this._onPermissionChange.bind(
+                                <Switch
+                                    checked={permissionBooleans[key]}
+                                    onChange={this._onPermissionChange.bind(
                                         this,
                                         key
                                     )}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={permissionBooleans[key]}
-                                        onChange={() => {}}
-                                    />
-                                    <label />
-                                </div>
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -940,21 +926,12 @@ class AccountAssetCreate extends React.Component {
                                                     :
                                                 </td>
                                                 <td style={{border: "none"}}>
-                                                    <div
-                                                        className="switch"
-                                                        style={{
-                                                            marginBottom: "10px"
-                                                        }}
-                                                        onClick={this._onToggleBitAsset.bind(
+                                                    <Switch
+                                                        checked={isBitAsset}
+                                                        onChange={this._onToggleBitAsset.bind(
                                                             this
                                                         )}
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={isBitAsset}
-                                                        />
-                                                        <label />
-                                                    </div>
+                                                    />
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -980,24 +957,14 @@ class AccountAssetCreate extends React.Component {
                                                     <td
                                                         style={{border: "none"}}
                                                     >
-                                                        <div
-                                                            className="switch"
-                                                            style={{
-                                                                marginBottom:
-                                                                    "10px"
-                                                            }}
-                                                            onClick={this._onTogglePM.bind(
+                                                        <Switch
+                                                            checked={
+                                                                is_prediction_market
+                                                            }
+                                                            onChange={this._onTogglePM.bind(
                                                                 this
                                                             )}
-                                                        >
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={
-                                                                    is_prediction_market
-                                                                }
-                                                            />
-                                                            <label />
-                                                        </div>
+                                                        />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -1302,25 +1269,15 @@ class AccountAssetCreate extends React.Component {
                                                                 border: "none"
                                                             }}
                                                         >
-                                                            <div
-                                                                className="switch"
-                                                                style={{
-                                                                    marginBottom:
-                                                                        "10px"
-                                                                }}
-                                                                onClick={this._onFlagChange.bind(
+                                                            <Switch
+                                                                checked={
+                                                                    flagBooleans.charge_market_fee
+                                                                }
+                                                                onChange={this._onFlagChange.bind(
                                                                     this,
                                                                     "charge_market_fee"
                                                                 )}
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    checked={
-                                                                        flagBooleans.charge_market_fee
-                                                                    }
-                                                                />
-                                                                <label />
-                                                            </div>
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </tbody>
