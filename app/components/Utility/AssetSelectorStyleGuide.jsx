@@ -29,6 +29,7 @@ const AssetSelectorLabel = AssetWrapper(AssetSelectorLabelView, {
 class AssetSelector extends PureComponent {
     static propTypes = {
         // common
+        selectMode: PropTypes.bool, // if true, forces select mode
         assets: PropTypes.array, // an array of assets. If not provided, the component will display in text input mode
         asset: ChainTypes.ChainAsset, // the selected asset
         placeholder: PropTypes.string, // the placeholder text to be displayed when there is preselected value
@@ -92,37 +93,38 @@ class AssetSelector extends PureComponent {
             placeholder,
             formItemStyle,
             inputStyle,
-            style
+            style,
+            selectMode: selectModeProp
         } = this.props;
 
         const value = isAssetObj(asset) && asset.get("symbol");
 
-        const select =
-            assets.length !== 0 ? (
-                <Select
-                    showSearch
-                    value={value || undefined}
-                    style={selectStyle}
-                    onChange={onChange}
-                    onSelect={this.handleSelect}
-                    placeholder={placeholder}
-                >
-                    {assets.filter(isAssetObj).map(asset => {
-                        return (
-                            <Select.Option key={asset.get("symbol")}>
-                                {asset.get("symbol")}
-                            </Select.Option>
-                        );
-                    })}
-                </Select>
-            ) : (
-                <Input
-                    value={assetInput}
-                    onChange={this.handleInputChange}
-                    style={inputStyle}
-                    placeholder={placeholder}
-                />
-            );
+        const selectMode = selectModeProp || assets.length !== 0;
+
+        const select = selectMode ? (
+            <Select
+                showSearch
+                value={value || undefined}
+                style={selectStyle}
+                onChange={onChange}
+                onSelect={this.handleSelect}
+                placeholder={placeholder}
+            >
+                {assets.filter(isAssetObj).map(asset => {
+                    return (
+                        <Select.Option key={asset.get("symbol")}>
+                            {asset.get("symbol")}
+                        </Select.Option>
+                    );
+                })}
+            </Select>
+        ) : (
+            <Input
+                value={assetInput}
+                onChange={this.handleInputChange}
+                style={inputStyle}
+            />
+        );
 
         return (
             <div className="asset-selector" style={style}>
@@ -132,7 +134,7 @@ class AssetSelector extends PureComponent {
                         label={
                             <AssetSelectorLabel
                                 label={label}
-                                noValidation={assets.length !== 0}
+                                noValidation={selectMode}
                                 asset={assetInput || " "}
                             />
                         }
