@@ -7,27 +7,17 @@ import {
     Icon,
     Select
 } from "bitshares-ui-style-guide";
+import {Link} from "react-router-dom";
+import AssetName from "../Utility/AssetName";
 import {PRICE_ALERT_TYPES} from "../../services/Exchange";
+import AssetWrapper from "../Utility/AssetWrapper";
 import counterpart from "counterpart";
 
 class PriceAlert extends React.Component {
     constructor(props) {
         super(props);
 
-        const testRules = [
-            {
-                type: PRICE_ALERT_TYPES.HIGHER_THAN,
-                amount: 10.3254
-            },
-            {
-                type: PRICE_ALERT_TYPES.HIGHER_THAN,
-                amount: 15.55555
-            },
-            {
-                type: PRICE_ALERT_TYPES.LOWER_THAN,
-                amount: 8.88888
-            }
-        ];
+        const testRules = [];
 
         this.state = {
             rules: [...testRules]
@@ -36,7 +26,8 @@ class PriceAlert extends React.Component {
         this.handleAddRule = this.handleAddRule.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleDeleteRule = this.handleDeleteRule.bind(this);
-        this.handleAmountChange = this.handleAmountChange.bind(this);
+        this.handlePriceChange = this.handlePriceChange.bind(this);
+        this.handlePriceFieldBlur = this.handlePriceFieldBlur.bind(this);
     }
 
     handleTypeChange(key) {
@@ -44,8 +35,15 @@ class PriceAlert extends React.Component {
             let rules = this.state.rules.map((rule, ruleKey) => {
                 if (Number(key) !== Number(ruleKey)) return rule;
 
+                let validate = this.validatePrice(
+                    value,
+                    Number(rule.price),
+                    Number(this.props.latestPrice)
+                );
+
                 return {
                     ...rule,
+                    ...validate,
                     type: String(value)
                 };
             });
@@ -56,14 +54,75 @@ class PriceAlert extends React.Component {
         };
     }
 
-    handleAmountChange(key) {
+    validatePrice(type, price, latest) {
+        if (type === PRICE_ALERT_TYPES.HIGHER_THAN && price < latest) {
+            return {
+                validateStatus: "error",
+                help: "Price of Alert should be higher than current price"
+            };
+        }
+
+        if (type === PRICE_ALERT_TYPES.LOWER_THAN && price > latest) {
+            return {
+                validateStatus: "error",
+                help: "Price of Alert  should be lower than current price"
+            };
+        }
+
+        return {
+            validateStatus: "success",
+            help: ""
+        };
+    }
+
+    validatePriceFieldByKey(key) {
+        let rules = this.state.rules.map((rule, ruleKey) => {
+            if (Number(key) !== Number(ruleKey)) return rule;
+
+            const validate = this.validatePrice(
+                rule.type,
+                Number(rule.price),
+                Number(this.props.latestPrice)
+            );
+
+            return {
+                ...rule,
+                validateStatus: validate.validateStatus,
+                help: validate.help
+            };
+        });
+
+        this.setState({
+            rules: rules
+        });
+    }
+
+    handlePriceFieldBlur(key) {
+        return () => {
+            this.validatePriceFieldByKey(key);
+        };
+    }
+
+    handlePriceChange(key) {
         return event => {
             let rules = this.state.rules.map((rule, ruleKey) => {
                 if (Number(key) !== Number(ruleKey)) return rule;
 
+                let validate = {};
+
+                // validate on a fly if field was touched previously
+                if (rule.validateStatus) {
+                    validate = this.validatePrice(
+                        rule.type,
+                        Number(event.target.value),
+                        Number(this.props.latestPrice)
+                    );
+                }
+
                 return {
                     ...rule,
-                    amount: event.target.value
+                    ...validate,
+                    price: event.target.value
                 };
             });
 
@@ -78,7 +137,9 @@ class PriceAlert extends React.Component {
 
         rules.push({
             type: PRICE_ALERT_TYPES.HIGHER_THAN,
-            amount: null
+            price: this.props.latestPrice
+                ? Number(this.props.latestPrice).toFixed(5)
+                : null
         });
 
         this.setState({
@@ -99,6 +160,14 @@ class PriceAlert extends React.Component {
     }
 
     render() {
+        if (
+            !this.props.quoteAsset ||
+            !this.props.quoteAsset.get ||
+            !this.props.baseAsset ||
+            !this.props.baseAsset.get
+        )
+            return null;
+
         const footer = [
             <Button key="submit" type="primary">
                 {counterpart.translate("modal.save")}
@@ -108,79 +177,124 @@ class PriceAlert extends React.Component {
             </Button>
         ];
 
+        const baseAssetSymbol = this.props.baseAsset.get("symbol");
+        const quoteAssetSymbol = this.props.quoteAsset.get("symbol");
+
+        const linkToExchange = `${quoteAssetSymbol}_${baseAssetSymbol}`;
+
         return (
             <Modal
                 visible={this.props.visible}
                 onCancel={this.props.hideModal}
-                title={"Price Alert"}
+                title={counterpart.translate("exchange.price_alert.title")}
                 footer={footer}
             >
                 <div className="exchange--price-alert">
                     <div className="exchange--price-alert--description">
-                        Alert me when then btc/bitUSD price:
+                        {this.state.rules.length ? (
+                            <div>
+                                {counterpart.translate(
+                                    "exchange.price_alert.alert_when"
+                                )}{" "}
+                                <Link to={linkToExchange}>
+                                    <AssetName name={quoteAssetSymbol} />/
+                                    <AssetName name={baseAssetSymbol} />
+                                </Link>{" "}
+                                price:
+                            </div>
+                        ) : (
+                            <div>
+                                {counterpart.translate(
+                                    "exchange.price_alert.use_button"
+                                )}
+                                <Link to={linkToExchange}>
+                                    <AssetName name={quoteAssetSymbol} />/
+                                    <AssetName name={baseAssetSymbol} />
+                                </Link>
+                                :
+                            </div>
+                        )}
+
                         <Form layout="vertical">
                             <div className="exchange--price-alert--items">
                                 {this.state.rules.map((rule, key) => (
-                                    <Input.Group
-                                        className={
-                                            "exchange--price-alert--item"
+                                    <Form.Item
+                                        key={key}
+                                        validateStatus={
+                                            rule.validateStatus || null
                                         }
-                                        compact
+                                        help={rule.help || null}
                                     >
-                                        <Select
-                                            value={rule.type}
-                                            style={{width: "200px"}}
-                                            onChange={this.handleTypeChange(
-                                                key
-                                            )}
+                                        <Input.Group
+                                            className={
+                                                "exchange--price-alert--item"
+                                            }
+                                            compact
                                         >
-                                            <Select.Option
-                                                value={
-                                                    PRICE_ALERT_TYPES.HIGHER_THAN
-                                                }
-                                                key={"1"}
-                                            >
-                                                {counterpart.translate(
-                                                    "exchange.price_alert.higher_than"
+                                            <Select
+                                                value={rule.type}
+                                                style={{width: "200px"}}
+                                                onChange={this.handleTypeChange(
+                                                    key
                                                 )}
-                                            </Select.Option>
-                                            <Select.Option
-                                                value={
-                                                    PRICE_ALERT_TYPES.LOWER_THAN
-                                                }
-                                                key={"2"}
                                             >
-                                                {counterpart.translate(
-                                                    "exchange.price_alert.lower_than"
+                                                <Select.Option
+                                                    value={
+                                                        PRICE_ALERT_TYPES.HIGHER_THAN
+                                                    }
+                                                    key={"1"}
+                                                >
+                                                    {counterpart.translate(
+                                                        "exchange.price_alert.higher_than"
+                                                    )}
+                                                </Select.Option>
+                                                <Select.Option
+                                                    value={
+                                                        PRICE_ALERT_TYPES.LOWER_THAN
+                                                    }
+                                                    key={"2"}
+                                                >
+                                                    {counterpart.translate(
+                                                        "exchange.price_alert.lower_than"
+                                                    )}
+                                                </Select.Option>
+                                            </Select>
+
+                                            <Input
+                                                onBlur={this.handlePriceFieldBlur(
+                                                    key
                                                 )}
-                                            </Select.Option>
-                                        </Select>
+                                                style={{
+                                                    width:
+                                                        "calc(100% - 200px - 32px)",
+                                                    marginTop: "1px"
+                                                }}
+                                                onChange={this.handlePriceChange(
+                                                    key
+                                                )}
+                                                value={rule.price}
+                                                className="exchange--price-alert--item--price"
+                                                placeholder={counterpart.translate(
+                                                    "exchange.price_alert.price"
+                                                )}
+                                                addonAfter={
+                                                    <AssetName
+                                                        name={baseAssetSymbol}
+                                                    />
+                                                }
+                                            />
 
-                                        <Input
-                                            style={{
-                                                width:
-                                                    "calc(100% - 200px - 32px)",
-                                                marginTop: "1px"
-                                            }}
-                                            onChange={this.handleAmountChange(
-                                                key
-                                            )}
-                                            value={rule.amount}
-                                            className="exchange--price-alert--item--amount"
-                                            placeholder={counterpart.translate(
-                                                "exchange.price_alert.amount"
-                                            )}
-                                            addonAfter={"bitEUR"}
-                                        />
-
-                                        <Button
-                                            style={{width: "32px"}}
-                                            onClick={this.handleDeleteRule(key)}
-                                            className="exchange--price-alert--item--control"
-                                            type="icon"
-                                            icon="delete"
-                                        />
-                                    </Input.Group>
+                                            <Button
+                                                style={{width: "32px"}}
+                                                onClick={this.handleDeleteRule(
+                                                    key
+                                                )}
+                                                className="exchange--price-alert--item--control"
+                                                type="icon"
+                                                icon="delete"
+                                            />
+                                        </Input.Group>
+                                    </Form.Item>
                                 ))}
                             </div>
 
@@ -189,6 +303,7 @@ class PriceAlert extends React.Component {
                                     href="javascript:void(0)"
                                     onClick={this.handleAddRule}
                                 >
+                                    <Icon type="plus" />{" "}
                                     {counterpart.translate(
                                         "exchange.price_alert.add_rule"
                                     )}
@@ -201,5 +316,9 @@ class PriceAlert extends React.Component {
         );
     }
 }
+
+PriceAlert = AssetWrapper(PriceAlert, {
+    propNames: ["quoteAsset", "baseAsset"]
+});
 
 export default PriceAlert;

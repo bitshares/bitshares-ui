@@ -3250,6 +3250,9 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <PriceAlert
+                    latestPrice={latest && latest.getPrice()}
+                    quoteAsset={this.props.quoteAsset.get("id")}
+                    baseAsset={this.props.baseAsset.get("id")}
                     visible={this.state.isPriceAlertModalVisible}
                     showModal={this.showPriceAlertModal}
                     hideModal={this.hidePriceAlertModal}

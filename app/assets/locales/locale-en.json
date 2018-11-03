@@ -469,10 +469,13 @@
     },
     "exchange": {
         "price_alert": {
+            "use_button": "Use \"add rule\" button to create price alert for ",
+            "alert_when": "Alert me when",
+            "title": "Price Alert",
             "lower_than": "Lower Than",
             "higher_than": "Higher Than",
             "add_rule": "add rule",
-            "amount": "Amount"
+            "price": "Price"
         },
         "add_quote": "Add",
         "asks": "Sell orders",
