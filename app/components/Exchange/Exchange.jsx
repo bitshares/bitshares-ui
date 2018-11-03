@@ -107,7 +107,58 @@ class Exchange extends React.Component {
         this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
         this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
 
+        this.handlePriceAlertSave = this.handlePriceAlertSave.bind(this);
+
         this.psInit = true;
+    }
+
+    handlePriceAlertSave(savedRules = []) {
+        // add info about market asset pair
+        savedRules = savedRules.map(rule => ({
+            type: rule.type,
+            price: rule.price,
+            baseAssetSymbol: this.props.baseAsset.get("symbol"),
+            quoteAssetSymbol: this.props.quoteAsset.get("symbol")
+        }));
+
+        // drop old rules for current market pair
+        let rules = this.props.priceAlert.filter(rule => {
+            return (
+                rule &&
+                this.props.baseAsset &&
+                this.props.quoteAsset &&
+                (rule.get("baseAssetSymbol") !==
+                    this.props.baseAsset.get("symbol") ||
+                    rule.get("quoteAssetSymbol") !==
+                        this.props.quoteAsset.get("symbol"))
+            );
+        });
+
+        // pushing new rules
+        rules = [...rules, ...savedRules];
+
+        // saving rules
+        SettingsActions.setPriceAlert(rules);
+
+        this.hidePriceAlertModal();
+    }
+
+    getPriceAlertRules() {
+        //getting rules based on market pairs
+
+        let rules = this.props.priceAlert.filter(rule => {
+            return (
+                rule &&
+                this.props.baseAsset &&
+                this.props.quoteAsset &&
+                rule.get("baseAssetSymbol") ===
+                    this.props.baseAsset.get("symbol") &&
+                rule.get("quoteAssetSymbol") ===
+                    this.props.quoteAsset.get("symbol")
+            );
+        });
+
+        return rules.toJS();
     }
 
     _handleExpirationChange(type, e) {
@@ -2961,6 +3012,7 @@ class Exchange extends React.Component {
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
                 <ExchangeHeader
+                    hasAnyPriceAlert={this.props.hasAnyPriceAlert}
                     showPriceAlertModal={this.showPriceAlertModal}
                     account={this.props.currentAccount}
                     quoteAsset={quoteAsset}
@@ -3250,6 +3302,8 @@ class Exchange extends React.Component {
                 ) : null}
 
                 <PriceAlert
+                    onSave={this.handlePriceAlertSave}
+                    rules={this.getPriceAlertRules()}
                     latestPrice={latest && latest.getPrice()}
                     quoteAsset={this.props.quoteAsset.get("id")}
                     baseAsset={this.props.baseAsset.get("id")}

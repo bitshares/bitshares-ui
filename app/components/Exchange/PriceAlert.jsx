@@ -23,11 +23,20 @@ class PriceAlert extends React.Component {
             rules: [...testRules]
         };
 
+        this.handleSave = this.handleSave.bind(this);
         this.handleAddRule = this.handleAddRule.bind(this);
         this.handleTypeChange = this.handleTypeChange.bind(this);
         this.handleDeleteRule = this.handleDeleteRule.bind(this);
         this.handlePriceChange = this.handlePriceChange.bind(this);
         this.handlePriceFieldBlur = this.handlePriceFieldBlur.bind(this);
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.visible && this.props.visible) {
+            this.setState({
+                rules: this.props.rules || []
+            });
+        }
     }
 
     handleTypeChange(key) {
@@ -138,7 +147,7 @@ class PriceAlert extends React.Component {
         rules.push({
             type: PRICE_ALERT_TYPES.HIGHER_THAN,
             price: this.props.latestPrice
-                ? Number(this.props.latestPrice).toFixed(5)
+                ? Number(this.props.latestPrice)
                 : null
         });
 
@@ -159,6 +168,10 @@ class PriceAlert extends React.Component {
         };
     }
 
+    handleSave() {
+        this.props.onSave(this.state.rules);
+    }
+
     render() {
         if (
             !this.props.quoteAsset ||
@@ -169,7 +182,7 @@ class PriceAlert extends React.Component {
             return null;
 
         const footer = [
-            <Button key="submit" type="primary">
+            <Button key="submit" type="primary" onClick={this.handleSave}>
                 {counterpart.translate("modal.save")}
             </Button>,
             <Button key="cancel" onClick={this.props.hideModal}>

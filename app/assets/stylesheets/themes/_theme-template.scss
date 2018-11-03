@@ -63,6 +63,10 @@
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    .exchange--price-alert--show-modal--active {
+        color: $link-text-color;
+    }
+
     .explore-witness--info {
         width: 100%;
 
