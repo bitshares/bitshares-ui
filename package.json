@@ -11,7 +11,7 @@
     ],
     "license": "MIT",
     "engines": {
-        "node": ">=9.x",
+        "node": ">=10.x",
         "npm": ">=6.x",
         "yarn": ">=0.21.3"
     },
@@ -215,8 +215,8 @@
         "copyfiles": "^1.2.0",
         "cross-env": "^5.0.5",
         "css-loader": "^0.28.11",
-        "electron": "^2.0.0",
-        "electron-builder": "^20.13.2",
+        "electron": "^2.0.13",
+        "electron-builder": "^20.31.2",
         "es6-promise": "^3.0.2",
         "eslint": "^4.19.0",
         "eslint-plugin-json": "^1.2.0",
