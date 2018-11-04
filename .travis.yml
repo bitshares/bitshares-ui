@@ -26,8 +26,6 @@ addons:
             - graphicsmagick
             - xz-utils
 install:
-    - npm -v
-    - npm install -g npm@6
     - npm ci
 script: "./build.sh"
 after_success: "./deploy.sh"
