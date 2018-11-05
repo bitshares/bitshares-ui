@@ -14,6 +14,7 @@ import DepositWithdrawAssetSelector from "../DepositWithdrawAssetSelector";
 import Immutable from "immutable";
 import LoadingIndicator from "../../LoadingIndicator";
 import PropTypes from "prop-types";
+import AssetTradingPairInfo from "../../Utility/AssetTraidingPairInfo";
 
 class CryptoBridgeGateway extends React.Component {
     static propTypes = {
@@ -76,18 +77,6 @@ class CryptoBridgeGateway extends React.Component {
         SettingsActions.changeViewSetting(setting);
     };
 
-    _getCoinIsDisabled(coin) {
-        return (
-            coin.tradingPairInfo.find(info => {
-                return (
-                    info.disabled === true &&
-                    (info.inputCoinType === coin.symbol.toLowerCase() ||
-                        info.outputCoinType === coin.symbol.toLowerCase())
-                );
-            }) !== undefined
-        );
-    }
-
     render() {
         let {coins, account, provider} = this.props;
         let {activeCoin, action} = this.state;
@@ -127,7 +116,10 @@ class CryptoBridgeGateway extends React.Component {
 
         if (!coin) coin = filteredCoins[0];
 
-        const coinIsDisabled = this._getCoinIsDisabled(coin);
+        const tradingPairMessages = assetUtils.getTradingPairInfoMessages(
+            coin,
+            isDeposit
+        );
 
         return (
             <div style={this.props.style}>
@@ -157,71 +149,58 @@ class CryptoBridgeGateway extends React.Component {
                     </div>
 
                     <div className="medium-6 medium-offset-1">
-                        {coinIsDisabled ? (
-                            <div>
-                                {coin.tradingPairInfo.map((info, i) => {
-                                    return (
-                                        <label
-                                            className="label warning"
-                                            key={"tradingPairInfo" + i}
-                                            style={{
-                                                whiteSpace: "normal",
-                                                lineHeight: 1.4
-                                            }}
+                        <div>
+                            <label
+                                style={{minHeight: "2rem"}}
+                                className="left-label"
+                            >
+                                <Translate content="gateway.gateway_text" />:
+                            </label>
+                            <div style={{paddingBottom: 15}}>
+                                <ul className="button-group segmented no-margin">
+                                    {coin.depositAllowed ? (
+                                        <li
+                                            className={
+                                                isDeposit ? "is-active" : ""
+                                            }
                                         >
-                                            {info.message}
-                                        </label>
-                                    );
-                                })}
+                                            <a
+                                                onClick={this.changeAction.bind(
+                                                    this,
+                                                    "deposit"
+                                                )}
+                                            >
+                                                <Translate content="gateway.deposit" />
+                                            </a>
+                                        </li>
+                                    ) : null}
+                                    {coin.withdrawalAllowed ? (
+                                        <li
+                                            className={
+                                                !isDeposit ? "is-active" : ""
+                                            }
+                                        >
+                                            <a
+                                                onClick={this.changeAction.bind(
+                                                    this,
+                                                    "withdraw"
+                                                )}
+                                            >
+                                                <Translate content="gateway.withdraw" />
+                                            </a>
+                                        </li>
+                                    ) : null}
+                                </ul>
                             </div>
-                        ) : (
+                        </div>
+                        {tradingPairMessages.length ? (
                             <div>
-                                <label
-                                    style={{minHeight: "2rem"}}
-                                    className="left-label"
-                                >
-                                    <Translate content="gateway.gateway_text" />:
-                                </label>
-                                <div style={{paddingBottom: 15}}>
-                                    <ul className="button-group segmented no-margin">
-                                        {coin.depositAllowed ? (
-                                            <li
-                                                className={
-                                                    isDeposit ? "is-active" : ""
-                                                }
-                                            >
-                                                <a
-                                                    onClick={this.changeAction.bind(
-                                                        this,
-                                                        "deposit"
-                                                    )}
-                                                >
-                                                    <Translate content="gateway.deposit" />
-                                                </a>
-                                            </li>
-                                        ) : null}
-                                        {coin.withdrawalAllowed ? (
-                                            <li
-                                                className={
-                                                    !isDeposit
-                                                        ? "is-active"
-                                                        : ""
-                                                }
-                                            >
-                                                <a
-                                                    onClick={this.changeAction.bind(
-                                                        this,
-                                                        "withdraw"
-                                                    )}
-                                                >
-                                                    <Translate content="gateway.withdraw" />
-                                                </a>
-                                            </li>
-                                        ) : null}
-                                    </ul>
-                                </div>
+                                <AssetTradingPairInfo
+                                    asset={coin}
+                                    deposit={isDeposit}
+                                />
                             </div>
-                        )}
+                        ) : null}
                     </div>
                 </div>
 
@@ -230,10 +209,10 @@ class CryptoBridgeGateway extends React.Component {
                         <div
                             style={{
                                 marginBottom: 15,
-                                marginTop: coinIsDisabled ? 30 : 0
+                                marginTop: tradingPairMessages.length ? 30 : 0
                             }}
                         >
-                            {coinIsDisabled ? null : (
+                            {tradingPairMessages.length ? null : (
                                 <CryptoBridgeGatewayDepositRequest
                                     key={`${coin.symbol}`}
                                     gateway={provider}

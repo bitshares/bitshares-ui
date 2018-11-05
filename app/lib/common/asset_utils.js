@@ -1,5 +1,4 @@
 import assetConstants from "../chain/asset_constants";
-import utils from "./utils";
 
 export default class AssetUtils {
     static getFlagBooleans(mask, isBitAsset = false) {
@@ -132,5 +131,29 @@ export default class AssetUtils {
         }
 
         return symbol;
+    }
+
+    static getTradingPairInfoMessages(asset, deposit) {
+        if (!asset || !asset.tradingPairInfo) {
+            return [];
+        }
+
+        return asset.tradingPairInfo.filter(info => {
+            if (
+                deposit &&
+                info.disabled &&
+                info.outputCoinType === asset.symbol.toLowerCase()
+            ) {
+                return true;
+            }
+            if (
+                !deposit &&
+                info.disabled &&
+                info.inputCoinType === asset.symbol.toLowerCase()
+            ) {
+                return true;
+            }
+            return false;
+        });
     }
 }

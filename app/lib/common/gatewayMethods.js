@@ -376,6 +376,12 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                     inputCoin.backingCoinType
                 ];
 
+            const tradingPairInfo = (
+                additional_trading_pair_info[inputCoin.coinType] || []
+            ).concat(
+                additional_trading_pair_info[inputCoin.backingCoinType] || []
+            );
+
             backedCoins.push({
                 name: outputCoin.name,
                 intermediateAccount: !!gatewayStatus.intermediateAccount
@@ -405,8 +411,7 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 depositFeePercentageLowAmounts:
                     outputCoin.depositFeePercentageLowAmounts,
                 info: outputCoin.info,
-                tradingPairInfo:
-                    additional_trading_pair_info[outputCoin.coinType] || []
+                tradingPairInfo
             });
         }
     });
