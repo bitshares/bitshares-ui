@@ -4,7 +4,8 @@ node_js:
 
 env:
   PATH=$PATH:$HOME/.local/bin
-  S3_BUCKET_NAME="wallet.testnet.crypto-bridge.org"
+  S3_BUCKET_NAME_TEST="wallet.testnet.crypto-bridge.org"
+  S3_BUCKET_NAME_STAGE="wallet.stage.crypto-bridge.org"
 
 cache:
   directories:
@@ -14,18 +15,37 @@ cache:
 install:
   - pip install --user awscli
 
+stages:
+  - name: build-testnet
+    if: branch = develop
+  - name: deploy-testnet
+    if: branch = develop
+
+  - name: build-stage
+    if: branch = master
+  - name: deploy-stage
+    if: branch = master
+
 jobs:
   include:
     # - stage: lint
     #   script:
     #     - npm install
     #     - npm run lint
-    - stage: build
+    - stage: build-testnet
       script:
         - npm install
         - npm run build-testnet
-    - stage: deploy
+    - stage: deploy-testnet
       script:
         - ls -la ./build/dist/
-        - cat ./build/dist/index.html
-        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME/ --delete
+        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_TEST/ --delete
+
+    - stage: build-stage
+      script:
+        - npm install
+        - npm run build
+    - stage: deploy-stage
+      script:
+        - ls -la ./build/dist/
+        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_STAGE/ --delete
