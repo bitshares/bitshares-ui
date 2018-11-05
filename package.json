@@ -1,6 +1,6 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.181031",
+    "version": "2.0.181031b",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -12,7 +12,7 @@
     ],
     "license": "MIT",
     "engines": {
-        "node": ">=9.x",
+        "node": ">=10.x",
         "npm": ">=6.x",
         "yarn": ">=0.21.3"
     },
@@ -138,7 +138,7 @@
         "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#8de91543dee53d11cf11c9d3dee20da3573326c5",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#36c1d3f1adcf9063e27bae90a0f82456739c68b8",
         "bitsharesjs": "^1.8.2",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
@@ -216,8 +216,8 @@
         "copyfiles": "^1.2.0",
         "cross-env": "^5.0.5",
         "css-loader": "^0.28.11",
-        "electron": "^2.0.0",
-        "electron-builder": "^20.13.2",
+        "electron": "^2.0.13",
+        "electron-builder": "^20.31.2",
         "es6-promise": "^3.0.2",
         "eslint": "^4.19.0",
         "eslint-plugin-json": "^1.2.0",
