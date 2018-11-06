@@ -300,7 +300,7 @@ class AccountPermissions extends React.Component {
 
                 const keyRow = publicKey => {
                     let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
-                    pdf.addImage(imgData, "PNG", 10, 20);
+                    pdf.addImage(imgData, "PNG", 100, 0);
                     gQrcode(publicKey, qrMargin, rowHeight + 10);
                     gQrcode(privateKey, qrRightPos, rowHeight + 10);
                     pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
@@ -340,8 +340,6 @@ class AccountPermissions extends React.Component {
                 let logo = image;
                 if (logo) logo = logo.replace(/\r?\n|\r/g, "").trim();
                 const canvas = document.createElement("canvas");
-                const context = canvas.getContext("2d");
-                context.clearRect(0, 0, canvas.width, canvas.height);
                 canvg(canvas, logo);
                 const imgData = canvas.toDataURL("image/png");
 
@@ -349,14 +347,14 @@ class AccountPermissions extends React.Component {
                 pdf.text(accountName, 42, rowHeight - 10);
 
                 let content = keys.map((publicKeys, index) => {
-                    pdf.text("Public", 18, rowHeight + 8);
-                    pdf.text(keysName[index], 120, rowHeight + 8);
-                    pdf.text("Private", 253, rowHeight + 8);
+                    pdf.text("Public", 22, rowHeight + 7);
+                    pdf.text(keysName[index], 120, rowHeight + 7);
+                    pdf.text("Private", 260, rowHeight + 7);
                     pdf.line(
                         lineMargin,
-                        rowHeight + 2,
+                        rowHeight + 1,
                         width - lineMargin,
-                        rowHeight + 2
+                        rowHeight + 1
                     );
                     pdf.line(
                         lineMargin,
@@ -373,7 +371,7 @@ class AccountPermissions extends React.Component {
                     }
                 });
                 Promise.all(content).then(() => {
-                    pdf.save("download.pdf");
+                    pdf.save("bitshares-paper-wallet_" + accountName + ".pdf");
                 });
             })
             .catch(() => {});
