@@ -25,6 +25,7 @@ class Proposals extends Component {
         super();
 
         this.forceUpdate = this.forceUpdate.bind(this);
+        this._isSucpicious = this._isSucpicious.bind(this);
     }
 
     componentDidMount() {
@@ -56,12 +57,12 @@ class Proposals extends Component {
     _isSucpicious(proposer) {
         const proposerName = ChainStore.getObject(proposer).get("name");
         const isScammer = accountUtils.isKnownScammer(proposerName);
-        return (
-            isScammer ||
-            this.props.account.get("blacklisted_accounts").some(item => {
-                item === proposer;
-            })
-        );
+        return this.props.hideFishingProposals
+            ? isScammer ||
+                  this.props.account.get("blacklisted_accounts").some(item => {
+                      return item === proposer;
+                  })
+            : false;
     }
 
     render() {
@@ -98,7 +99,8 @@ class Proposals extends Component {
                 const expiration = proposal.proposal.get("expiration_time");
                 let text = proposal.operations
                     .map((o, index) => {
-                        if (o.getIn([1, "to"]) === "1.2.153124") isScam = true;
+                        if (this._isSucpicious(o.getIn([1, "to"])))
+                            isScam = true;
                         return (
                             <ProposedOperation
                                 key={
@@ -193,10 +195,7 @@ class Proposals extends Component {
                     });
                 }
 
-                const canApprove =
-                    accountNames.length + keyNames.length > 0 &&
-                    (!this.props.hideFishingProposals ||
-                        !this._isSucpicious(proposer));
+                const canApprove = accountNames.length + keyNames.length > 0;
 
                 result.push(
                     <tr

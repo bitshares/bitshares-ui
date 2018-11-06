@@ -18,6 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
+import {Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -539,18 +540,6 @@ class AccountOverview extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        onChange={this._toggleHideProposal.bind(
-                                            this
-                                        )}
-                                        checked={
-                                            this.state.hideFishingProposals
-                                        }
-                                    />
-                                    <Translate content="account.deactivate_suspicious_proposals" />
-                                </div>
 
                                 {shownAssets != "visual" ? (
                                     shownAssets === "hidden" &&
@@ -655,18 +644,14 @@ class AccountOverview extends React.Component {
                                     )}
                                 >
                                     <div>
-                                        <input
-                                            type="checkbox"
-                                            onChange={() => {
-                                                this.setState({
-                                                    hideFishingProposals: !this
-                                                        .state
-                                                        .hideFishingProposals
-                                                });
-                                            }}
+                                        <Switch
+                                            style={{margin: 16}}
                                             checked={
                                                 this.state.hideFishingProposals
                                             }
+                                            onChange={this._toggleHideProposal.bind(
+                                                this
+                                            )}
                                         />
                                         <Translate content="account.deactivate_suspicious_proposals" />
                                     </div>
