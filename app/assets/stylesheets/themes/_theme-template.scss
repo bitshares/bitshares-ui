@@ -2409,21 +2409,6 @@
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
     }
-
-    /* Ant Design Hacks */
-    .ant-select-arrow {
-        color: $light-text-color !important;
-    }
-
-    .ant-select-selection-selected-value {
-        color: $light-text-color !important;
-    }
-
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
-    }
 }
 .rc-time-picker-panel {
     z-index: 9999 !important;
