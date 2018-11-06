@@ -18,7 +18,7 @@ import counterpart from "counterpart";
 import {EquivalentValueComponent} from "../Utility/EquivalentValueComponent";
 import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
-import soundex from "soundex-code";
+import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
 import {Switch} from "bitshares-ui-style-guide";
 
@@ -553,64 +553,60 @@ class AccountVoting extends React.Component {
         let workerArray = this._getWorkerArray();
 
         let voteThreshold = 0;
-        const hideProposals = filteredWorker => {
-            const dublicated = workerArray.some(worker => {
+        const hideProposals = (filteredWorker, compareWith) => {
+            if (!this.state.hideLegacyProposals) {
+                return true;
+            }
+
+            let duplicated = compareWith.some(worker => {
                 const isSimilarName =
-                    soundex(filteredWorker.get("name")) ===
-                    soundex(worker.get("name"));
-                return isSimilarName
-                    ? worker.get("id") !== filteredWorker.get("id")
-                        ? worker.get("worker_account") ===
-                          filteredWorker.get("worker_account")
-                            ? new Date(worker.get("work_begin_date")) >
-                              new Date(filteredWorker.get("work_begin_date"))
-                            : false
-                        : false
-                    : false;
+                    stringSimilarity.compareTwoStrings(
+                        filteredWorker.get("name"),
+                        worker.get("name")
+                    ) > 0.8;
+                const sameId = worker.get("id") === filteredWorker.get("id");
+                const isNewer =
+                    worker.get("id").substr(5, worker.get("id").length) >
+                    filteredWorker.get("id").substr(5, worker.get("id").length);
+                return isSimilarName && !sameId && isNewer;
             });
-            const hasStarted =
-                new Date(filteredWorker.get("work_begin_date") + "Z") <= now;
-            const votesLimit = 10000000;
             const newDate = new Date();
             const totalVotes =
                 filteredWorker.get("total_votes_for") -
                 filteredWorker.get("total_votes_against");
-            const toOld =
+            const hasLittleVotes = totalVotes < 2000000000000;
+            const hasStartedOverAMonthAgo =
                 new Date(filteredWorker.get("work_begin_date") + "Z") <=
-                    new Date(newDate.setMonth(newDate.getMonth() - 1)) &&
-                totalVotes < votesLimit;
+                new Date(newDate.setMonth(newDate.getMonth() - 2));
 
             const manualHidden = hiddenProposals.includes(
                 filteredWorker.get("id")
             );
-            const approvalState = this.state.vote_ids.has(
-                filteredWorker.get("vote_for")
-            )
-                ? true
-                : this.state[hasProxy ? "proxy_vote_ids" : "vote_ids"].has(
-                      filteredWorker.get("vote_against")
-                  )
-                    ? false
-                    : null;
-            return this.state.hideLegacyProposals
-                ? !approvalState &&
-                      hasStarted &&
-                      !dublicated &&
-                      !toOld &&
-                      !manualHidden
-                : true;
+
+            console.log(
+                filteredWorker,
+                hasStartedOverAMonthAgo && hasLittleVotes
+            );
+
+            let hidden =
+                ((!!duplicated || hasStartedOverAMonthAgo) && hasLittleVotes) ||
+                manualHidden;
+
+            return !hidden;
         };
 
-        let workers = workerArray
+        let workers = workerArray.filter(a => {
+            if (!a) {
+                return false;
+            }
+            return (
+                new Date(a.get("work_end_date") + "Z") > now &&
+                new Date(a.get("work_begin_date") + "Z") <= now
+            );
+        });
+        workers = workers
             .filter(a => {
-                if (!a) {
-                    return false;
-                }
-                return (
-                    hideProposals(a) &&
-                    new Date(a.get("work_end_date") + "Z") > now &&
-                    new Date(a.get("work_begin_date") + "Z") <= now
-                );
+                return hideProposals(a, workers);
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -646,20 +642,21 @@ class AccountVoting extends React.Component {
 
         // unusedBudget = Math.max(0, workerBudget);
 
-        let newWorkers = workerArray
-            .filter(a => {
-                if (!a) {
-                    return false;
-                }
+        let newWorkers = workerArray.filter(a => {
+            if (!a) {
+                return false;
+            }
 
-                let votes =
-                    a.get("total_votes_for") - a.get("total_votes_against");
-                return (
-                    hideProposals(a) &&
-                    ((new Date(a.get("work_end_date") + "Z") > now &&
-                        votes < voteThreshold) ||
-                        new Date(a.get("work_begin_date") + "Z") > now)
-                );
+            let votes = a.get("total_votes_for") - a.get("total_votes_against");
+            return (
+                (new Date(a.get("work_end_date") + "Z") > now &&
+                    votes < voteThreshold) ||
+                new Date(a.get("work_begin_date") + "Z") > now
+            );
+        });
+        newWorkers = newWorkers
+            .filter(a => {
+                return hideProposals(a, newWorkers);
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -691,10 +688,7 @@ class AccountVoting extends React.Component {
                     return false;
                 }
 
-                return (
-                    hideProposals(a) &&
-                    new Date(a.get("work_end_date") + "Z") <= now
-                );
+                return new Date(a.get("work_end_date") + "Z") <= now;
             })
             .sort((a, b) => {
                 return this._getTotalVotes(b) - this._getTotalVotes(a);
@@ -813,9 +807,9 @@ class AccountVoting extends React.Component {
         );
 
         const hideLegacy = (
-            <div>
+            <div className="inline-block" style={{marginLeft: "0.5em"}}>
                 <Switch
-                    style={{margin: 6}}
+                    style={{marginRight: 6}}
                     checked={this.state.hideLegacyProposals}
                     onChange={() => {
                         this.setState({
@@ -993,10 +987,11 @@ class AccountVoting extends React.Component {
                                                 <Translate content="account.votes.expired" />
                                             </div>
                                         ) : null}
+
+                                        {hideLegacy}
                                     </div>
                                     <div style={{marginTop: "2rem"}}>
                                         {proxyInput}
-                                        {hideLegacy}
                                         <div
                                             style={{
                                                 float: "right",
