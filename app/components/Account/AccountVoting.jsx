@@ -807,26 +807,21 @@ class AccountVoting extends React.Component {
         );
 
         const hideLegacy = (
-            <div className="inline-block" style={{marginLeft: "0.5em"}}>
+            <div
+                className="inline-block"
+                style={{marginLeft: "0.5em"}}
+                data-tip={counterpart.translate("tooltip.legacy_explanation")}
+                onClick={() => {
+                    this.setState({
+                        hideLegacyProposals: !this.state.hideLegacyProposals
+                    });
+                }}
+            >
                 <Switch
                     style={{marginRight: 6}}
                     checked={this.state.hideLegacyProposals}
-                    onChange={() => {
-                        this.setState({
-                            hideLegacyProposals: !this.state.hideLegacyProposals
-                        });
-                    }}
                 />
-
-                <span
-                    className="tooltip"
-                    data-place="top"
-                    data-tip={counterpart.translate(
-                        "tooltip.legacy_explanation"
-                    )}
-                >
-                    <Translate content="account.votes.hide_legacy_proposals" />
-                </span>
+                <Translate content="account.votes.hide_legacy_proposals" />
             </div>
         );
 
