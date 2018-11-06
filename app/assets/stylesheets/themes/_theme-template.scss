@@ -67,6 +67,28 @@
         color: $link-text-color;
     }
 
+    .price-alert--notification--pair-name {
+        font-weight: 600;
+    }
+
+    .price-alert--notification--icon {
+        &.price-alert--notification--icon--up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--icon--down {
+            color: $negative-color;
+        }
+    }
+
+    .price-alert--notification--actual-price {
+        &.price-alert--notification--actual-price-up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--actual-price-down {
+            color: $negative-color;
+        }
+    }
+
     .explore-witness--info {
         width: 100%;
 

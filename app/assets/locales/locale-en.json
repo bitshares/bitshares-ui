@@ -475,7 +475,11 @@
             "lower_than": "Lower Than",
             "higher_than": "Higher Than",
             "add_rule": "add rule",
-            "price": "Price"
+            "price": "Price",
+            "notification": {
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s",
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s"
+            }
         },
         "add_quote": "Add",
         "asks": "Sell orders",
