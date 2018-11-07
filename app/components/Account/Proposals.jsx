@@ -99,8 +99,7 @@ class Proposals extends Component {
                 const expiration = proposal.proposal.get("expiration_time");
                 let text = proposal.operations
                     .map((o, index) => {
-                        if (this._isSucpicious(o.getIn([1, "to"])))
-                            isScam = true;
+                        if (o.getIn([1, "to"]) === "1.2.153124") isScam = true;
                         return (
                             <ProposedOperation
                                 key={
@@ -231,6 +230,15 @@ class Proposals extends Component {
                                     className="tooltip has-error scam-error"
                                 >
                                     SCAM
+                                </div>
+                            ) : this._isSucpicious(proposer) ? (
+                                <div
+                                    data-tip={counterpart.translate(
+                                        "tooltip.propose_posible_scam"
+                                    )}
+                                    className="tooltip has-error scam-error"
+                                >
+                                    POSIBLE SCAM
                                 </div>
                             ) : (
                                 <button

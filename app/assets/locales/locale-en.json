@@ -1572,6 +1572,7 @@
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
         "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+        "propose_posible_scam": "This proposal posible was created by a scammer, do not approve it!",
         "propose_tip": "Propose another user to initiate a transaction",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
