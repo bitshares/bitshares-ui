@@ -24,11 +24,6 @@ stages:
   - name: deploy-stage
     if: branch = master
 
-#  - name: build-preview
-#    if: tag = /^v\d+\.\d+(\.\d+)?$/
-#  - name: deploy-preview
-#    if: tag = /^v\d+\.\d+(\.\d+)?$/
-
 jobs:
   include:
     # - stage: lint
@@ -57,13 +52,19 @@ jobs:
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete
 
-#    - stage: build-preview
-#      script:
-#        - npm install
-#        - npm run build
-#    - stage: deploy-preview
-#      script:
-#        - ls -la ./build/dist/
-#        - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
-#        - export AWS_SECRET_ACCESS_KEY=$PREVIEW_AWS_SECRET_ACCESS_KEY
-#        - aws s3 sync ./build/dist/ s3://wallet.preview.crypto-bridge.org/ --delete
+    - stage: build-preview
+      on:
+        all_branches: true
+        condition: $TRAVIS_TAG =~ ^v\d+\.\d+(\.\d+)?$
+      script:
+        - npm install
+        - npm run build
+    - stage: deploy-preview
+      on:
+        all_branches: true
+        condition: $TRAVIS_TAG =~ ^v\d+\.\d+(\.\d+)?$
+      script:
+        - ls -la ./build/dist/
+        - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$PREVIEW_AWS_SECRET_ACCESS_KEY
+        - aws s3 sync ./build/dist/ s3://wallet.preview.crypto-bridge.org/ --delete
