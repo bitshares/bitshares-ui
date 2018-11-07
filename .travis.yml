@@ -24,9 +24,9 @@ stages:
   - name: deploy-stage
     if: branch = master
 
-  - name: build-preview
+  - name: build-prod
     if: tag =~ ^v\d+\.\d+(\.\d+)?$
-  - name: deploy-preview
+  - name: deploy-prod
     if: tag =~ ^v\d+\.\d+(\.\d+)?$
 
 jobs:
@@ -53,13 +53,13 @@ jobs:
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete
 
-    - stage: build-preview
+    - stage: build-prod
       script:
         - npm install
         - npm run build
-    - stage: deploy-preview
+    - stage: deploy-prod
       script:
         - ls -la ./build/dist/
-        - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
-        - export AWS_SECRET_ACCESS_KEY=$PREVIEW_AWS_SECRET_ACCESS_KEY
-        - aws s3 sync ./build/dist/ s3://wallet.preview.crypto-bridge.org/ --delete
+        - export AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY
+        - aws s3 sync ./build/dist/ s3://wallet.crypto-bridge.org/ --delete
