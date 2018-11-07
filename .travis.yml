@@ -13,19 +13,29 @@ cache:
 install:
   - pip install --user awscli
 
+stages:
+  - name: build-testnet
+    if: branch = develop
+  - name: deploy-testnet
+    if: branch = develop
+
+  - name: build-stage
+    if: branch = master
+  - name: deploy-stage
+    if: branch = master
+
+  - name: build-preview
+    if: tag =~ ^v\d+\.\d+(\.\d+)?$
+  - name: deploy-preview
+    if: tag =~ ^v\d+\.\d+(\.\d+)?$
+
 jobs:
   include:
     - stage: build-testnet
-      on:
-        branch: develop
-        condition: $TRAVIS_TAG = ""
       script:
         - npm install
         - npm run build-testnet
     - stage: deploy-testnet
-      on:
-        branch: develop
-        condition: $TRAVIS_TAG = ""
       script:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$TEST_AWS_ACCESS_KEY_ID
@@ -33,16 +43,10 @@ jobs:
         - aws s3 sync ./build/dist/ s3://wallet.testnet.crypto-bridge.org/ --delete
 
     - stage: build-stage
-      on:
-        branch: master
-        condition: $TRAVIS_TAG = ""
       script:
         - npm install
         - npm run build
     - stage: deploy-stage
-      on:
-        branch: master
-        condition: $TRAVIS_TAG = ""
       script:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
@@ -50,16 +54,10 @@ jobs:
         - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete
 
     - stage: build-preview
-      on:
-        all_branches: true
-        condition: $TRAVIS_TAG =~ ^v\d+\.\d+(\.\d+)?$
       script:
         - npm install
         - npm run build
     - stage: deploy-preview
-      on:
-        all_branches: true
-        condition: $TRAVIS_TAG =~ ^v\d+\.\d+(\.\d+)?$
       script:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
