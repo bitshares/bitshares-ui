@@ -253,6 +253,9 @@ class SettingsStore {
                 ],
                 markets_2821abbb: [
                     // CRYPTOBRIDGE TESTNET
+                ],
+                markets_85aebba3: [
+                    // CRYPTOBRIDGE DEVNET
                 ]
             };
 
@@ -276,13 +279,18 @@ class SettingsStore {
                 markets_2821abbb: [
                     // CRYPTOBRIDGE TESTNET
                     "BRIDGE.BTC"
+                ],
+                markets_85aebba3: [
+                    // CRYPTOBRIDGE DEVNET
+                    "BRIDGE.BTC"
                 ]
             };
 
             let coreAssets = {
                 markets_4018d784: "BTS",
                 markets_39f5e2ed: "TEST",
-                markets_2821abbb: "BTS" // CRYPTOBRIDGE
+                markets_2821abbb: "BTS", // CRYPTOBRIDGE TESTNET
+                markets_92e31f3a: "BTS" // CRYPTOBRIDGE DEVNET
             };
             let coreAsset = coreAssets[this.starredKey] || "BTS";
             this.defaults.unit[0] = coreAsset;

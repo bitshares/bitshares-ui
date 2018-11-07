@@ -33,7 +33,7 @@
         "start-electron": "electron build/electron/index.js",
         "fix-locale-files": "node ./app/assets/locales-fixup.js",
         "postfix-locale-files": "./node_modules/prettier/bin-prettier.js app/assets/locales/locale-*.json --write",
-        "dev": "cross-env NODE_ENV=development __TESTNET__=true __CB_BASE_URL__='http://localhost:3000' node server.js",
+        "dev": "cross-env NODE_ENV=development __TESTNET__=true __CB_BASE_URL__='http://localhost:5000' node server.js",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
         "build-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.noUgly",
         "build-hash": "cross-env NODE_ENV=production webpack --env.prod --env.hash --env.baseUrl=''",
