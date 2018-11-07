@@ -6,6 +6,7 @@ env:
   PATH=$PATH:$HOME/.local/bin
   S3_BUCKET_NAME_TEST="wallet.testnet.crypto-bridge.org"
   S3_BUCKET_NAME_STAGE="wallet.stage.crypto-bridge.org"
+  S3_BUCKET_NAME_PREVIEW="wallet.preview.crypto-bridge.org"
 
 cache:
   directories:
@@ -25,6 +26,11 @@ stages:
     if: branch = master
   - name: deploy-stage
     if: branch = master
+
+  - name: build-preview
+    if: tag = /^v\d+\.\d+(\.\d+)?$/
+  - name: deploy-preview
+    if: tag = /^v\d+\.\d+(\.\d+)?$/
 
 jobs:
   include:
@@ -53,3 +59,14 @@ jobs:
         - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_STAGE/ --delete
+
+    - stage: build-preview
+      script:
+        - npm install
+        - npm run build
+    - stage: deploy-preview
+      script:
+        - ls -la ./build/dist/
+        - export AWS_ACCESS_KEY_ID=$PREVIEW_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$PREVIEW_AWS_SECRET_ACCESS_KEY
+        - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_PREVIEW/ --delete
