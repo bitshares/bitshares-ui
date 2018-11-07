@@ -32,8 +32,8 @@ class BitsharesBeosModal extends React.Component {
 
         this.state = {
             account: "",
-            account_exist_error: false,
             is_account_validation: false,
+            is_account_creation_checkbox: false,
             account_validation_error: false,
             amount_to_send: "",
             creator: this.props.creator,
@@ -142,10 +142,7 @@ class BitsharesBeosModal extends React.Component {
 
     onAlternativeAccountValidation(url, account) {
         let validation_url =
-            url +
-            "/wallets/steem/address-validator?address=" +
-            account +
-            "&requestBalances=true";
+            url + "/wallets/steem/address-validator?address=" + account;
         let validation_promise = fetch(validation_url, {
             method: "get",
             headers: new Headers({Accept: "application/json"})
@@ -158,13 +155,18 @@ class BitsharesBeosModal extends React.Component {
                         this.setState({
                             no_account_error: true
                         });
-                    }
-                    if (result.isValid && this.state.is_account_creation) {
-                        this.setState({
-                            account_exist_error: true
-                        });
+                    } else {
+                        this.setState(
+                            {
+                                fee_amount_creation: 0,
+                                is_account_creation: false,
+                                no_account_error: false
+                            },
+                            this._checkBalance
+                        );
                     }
                     this.setState({
+                        is_account_creation_checkbox: !result.isValid,
                         is_account_validation: false
                     });
                 }, 300);
@@ -181,13 +183,11 @@ class BitsharesBeosModal extends React.Component {
 
     onAccountValidation(url, account) {
         this.setState({
+            is_account_creation_checkbox: false,
             is_account_validation: true
         });
         let validation_url =
-            url +
-            "/wallets/beos/address-validator?address=" +
-            account +
-            "&requestBalances=true";
+            url + "/wallets/steem/address-validator?address=" + account;
         let validation_promise = fetch(validation_url, {
             method: "get",
             headers: new Headers({Accept: "application/json"})
@@ -200,13 +200,18 @@ class BitsharesBeosModal extends React.Component {
                         this.setState({
                             no_account_error: true
                         });
-                    }
-                    if (result.isValid && this.state.is_account_creation) {
-                        this.setState({
-                            account_exist_error: true
-                        });
+                    } else {
+                        this.setState(
+                            {
+                                fee_amount_creation: 0,
+                                is_account_creation: false,
+                                no_account_error: false
+                            },
+                            this._checkBalance
+                        );
                     }
                     this.setState({
+                        is_account_creation_checkbox: !result.isValid,
                         is_account_validation: false
                     });
                 }, 300);
@@ -266,19 +271,21 @@ class BitsharesBeosModal extends React.Component {
     onAccountChanged(e) {
         let re = /^[a-z1-5]+$/;
         this.setState({
-            account_exist_error: false,
             is_account_validation: false,
             maintenance_error: false,
             no_account_error: false
         });
-        if (e.target.value.length === 12 && re.test(e.target.value)) {
+        if (e.target.value.length < 13 && re.test(e.target.value)) {
             this.onAccountValidation(
                 "https://api.blocktrades.us/v2",
                 e.target.value
             );
             this.setState({account_validation_error: false});
         } else {
-            this.setState({account_validation_error: true});
+            this.setState({
+                is_account_creation_checkbox: false,
+                account_validation_error: true
+            });
         }
         this.setState({account: e.target.value}, this._updateFee);
     }
@@ -298,13 +305,7 @@ class BitsharesBeosModal extends React.Component {
         if (this.state.is_account_creation) {
             let re = /^[a-z1-5]+$/;
             if (
-                this.state.account.length === 12 &&
-                re.test(this.state.account) &&
-                this.state.account_exist_error
-            ) {
-                this.setState({account_exist_error: false});
-            } else if (
-                this.state.account.length === 12 &&
+                this.state.account.length < 13 &&
                 re.test(this.state.account) &&
                 !this.state.no_account_error
             ) {
@@ -313,17 +314,11 @@ class BitsharesBeosModal extends React.Component {
         } else {
             let re = /^[a-z1-5]+$/;
             if (
-                this.state.account.length === 12 &&
+                this.state.account.length < 13 &&
                 re.test(this.state.account) &&
                 this.state.no_account_error
             ) {
                 this.setState({no_account_error: false});
-            } else if (
-                this.state.account.length === 12 &&
-                re.test(this.state.account) &&
-                !this.state.account_exist_error
-            ) {
-                this.setState({account_exist_error: true});
             }
         }
         if (this.state.is_account_creation) {
@@ -386,6 +381,7 @@ class BitsharesBeosModal extends React.Component {
     }
 
     render() {
+        let account_creation_checkbox = null;
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
@@ -426,13 +422,48 @@ class BitsharesBeosModal extends React.Component {
             balance = "No funds";
         }
 
+        if (this.state.is_account_creation_checkbox) {
+            account_creation_checkbox = (
+                <table className="table" style={{width: "inherit"}}>
+                    <tbody>
+                        <tr>
+                            <td style={{border: "none"}}>
+                                <Translate
+                                    content={
+                                        "gateway.bitshares_beos.create_account_checkbox"
+                                    }
+                                />
+                                :
+                            </td>
+                            <td style={{border: "none"}}>
+                                <div
+                                    className="switch"
+                                    style={{
+                                        marginBottom: "10px"
+                                    }}
+                                    onClick={this.onCreateAccountCheckbox.bind(
+                                        this
+                                    )}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={this.state.is_account_creation}
+                                    />
+                                    <label />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            );
+        }
+
         const disableSubmit =
             !this.state.amount_to_send ||
             this.state.balance_error ||
             this.state.account === "" ||
             this.state.account_validation_error ||
             this.state.no_account_error ||
-            this.state.account_exist_error ||
             this.state.is_account_validation ||
             this.state.maintenance_error;
 
@@ -529,48 +560,7 @@ class BitsharesBeosModal extends React.Component {
                             />
                         </div>
                         {/* Create account enabled/disabled */}
-                        <table className="table" style={{width: "inherit"}}>
-                            <tbody>
-                                <tr>
-                                    <td style={{border: "none"}}>
-                                        <Translate
-                                            content={
-                                                "gateway.bitshares_beos.create_account_checkbox"
-                                            }
-                                        />
-                                        :
-                                    </td>
-                                    <td style={{border: "none"}}>
-                                        <div
-                                            className="switch"
-                                            style={{
-                                                marginBottom: "10px"
-                                            }}
-                                            onClick={this.onCreateAccountCheckbox.bind(
-                                                this
-                                            )}
-                                        >
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    this.state
-                                                        .is_account_creation
-                                                }
-                                            />
-                                            <label />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        {this.state.account_exist_error ? (
-                            <p
-                                className="has-error no-margin"
-                                style={{paddingBottom: 15}}
-                            >
-                                <Translate content="gateway.bitshares_beos.account_exist_error" />
-                            </p>
-                        ) : null}
+                        {account_creation_checkbox}
                         {this.state.no_account_error ? (
                             <p
                                 className="has-error no-margin"
