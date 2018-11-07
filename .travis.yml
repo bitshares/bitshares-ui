@@ -39,6 +39,8 @@ jobs:
     - stage: deploy-testnet
       script:
         - ls -la ./build/dist/
+        - export AWS_ACCESS_KEY_ID=$TEST_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$TEST_AWS_SECRET_ACCESS_KEY
         - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_TEST/ --delete
 
     - stage: build-stage
@@ -48,4 +50,6 @@ jobs:
     - stage: deploy-stage
       script:
         - ls -la ./build/dist/
+        - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
+        - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 sync ./build/dist/ s3://$S3_BUCKET_NAME_STAGE/ --delete
