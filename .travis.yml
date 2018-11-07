@@ -13,28 +13,19 @@ cache:
 install:
   - pip install --user awscli
 
-stages:
-  - name: build-testnet
-    if: branch = develop
-  - name: deploy-testnet
-    if: branch = develop
-
-  - name: build-stage
-    if: branch = master
-  - name: deploy-stage
-    if: branch = master
-
 jobs:
   include:
-    # - stage: lint
-    #   script:
-    #     - npm install
-    #     - npm run lint
     - stage: build-testnet
+      on:
+        branch: develop
+        tags: false
       script:
         - npm install
         - npm run build-testnet
     - stage: deploy-testnet
+      on:
+        branch: develop
+        tags: false
       script:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$TEST_AWS_ACCESS_KEY_ID
@@ -42,10 +33,16 @@ jobs:
         - aws s3 sync ./build/dist/ s3://wallet.testnet.crypto-bridge.org/ --delete
 
     - stage: build-stage
+      on:
+        branch: master
+        tags: false
       script:
         - npm install
         - npm run build
     - stage: deploy-stage
+      on:
+        branch: master
+        tags: false
       script:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
