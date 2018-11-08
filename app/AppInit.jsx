@@ -152,7 +152,9 @@ class AppInit extends React.Component {
     }
 
     componentWillMount() {
-        this._enablePersistingLog();
+        if (!__DEV__) {
+            this._enablePersistingLog();
+        }
 
         willTransitionTo(true, this._statusCallback.bind(this))
             .then(() => {

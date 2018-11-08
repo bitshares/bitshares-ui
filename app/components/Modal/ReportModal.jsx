@@ -1,34 +1,23 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
-import BaseModal from "./BaseModal";
-import AccountStore from "stores/AccountStore";
 import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
 import CopyButton from "../Utility/CopyButton";
 import html2canvas from "html2canvas";
-import {connect} from "alt-react";
+import {Modal} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class ReportModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = this.getInitialState(props);
-        this.nestedRef = null;
-
-        ZfApi.subscribe("transaction_confirm_actions", (name, msg) => {
-            if (msg == "close") {
-                this.setState({hidden: false});
-            }
-        });
         this.showLog = this.showLog.bind(this);
     }
 
     getInitialState() {
         return {
-            open: false,
             loadingImage: false,
             logEntries: [],
-            hidden: false,
             logsCopySuccess: false,
             showLog: false,
             imageURI: null,
@@ -36,47 +25,33 @@ class ReportModal extends React.Component {
         };
     }
 
-    show() {
-        this.getLogs();
-        this.setState({open: true, hidden: false}, () => {
-            ZfApi.publish(this.props.id, "open");
-        });
-        html2canvas(content)
-            .then(canvas => {
-                return canvas.toDataURL("image/png");
-            })
-            .then(
-                uri => this.setState({imageURI: uri}),
-                error => {
-                    console.error("Screenshot could not be captured", error);
-                    this.setState({
-                        imageURI: "Screenshot could not be captured"
-                    });
-                }
-            );
+    shouldComponentUpdate(nextProps) {
+        let should = this.props.visible !== nextProps.visible;
+        if (nextProps.visible) {
+            this.getLogs();
+            html2canvas(content)
+                .then(canvas => {
+                    return canvas.toDataURL("image/png");
+                })
+                .then(
+                    uri => this.setState({imageURI: uri}),
+                    error => {
+                        console.error(
+                            "Screenshot could not be captured",
+                            error
+                        );
+                        this.setState({
+                            imageURI: "Screenshot could not be captured"
+                        });
+                    }
+                );
+        }
+        return should;
     }
 
     onMemoChanged(e) {
         this.setState({logEntries: [e.target.value]});
     }
-
-    onClose = (publishClose = true) => {
-        ZfApi.unsubscribe("transaction_confirm_actions");
-        this.setState(
-            {
-                open: false,
-                loadingImage: false,
-                logEntries: [],
-                hidden: false,
-                logsCopySuccess: false,
-                showLog: false,
-                showScreen: false
-            },
-            () => {
-                if (publishClose) ZfApi.publish(this.props.id, "close");
-            }
-        );
-    };
 
     showScreenshot = () => {
         // Take screenshot
@@ -90,16 +65,6 @@ class ReportModal extends React.Component {
             this.setState({
                 logEntries: data.join("\n")
             });
-        });
-    };
-
-    copyLogs = () => {
-        const copyText = document.getElementById("logsText");
-        copyText.select();
-        document.execCommand("copy");
-
-        this.setState({
-            logsCopySuccess: true
         });
     };
 
@@ -167,178 +132,151 @@ class ReportModal extends React.Component {
             }
         };
 
-        return !open ? null : (
-            <div id="report_modal" className={hidden || !open ? "hide" : ""}>
-                <BaseModal
-                    id={this.props.id}
-                    overlay={true}
-                    onClose={() => this.onClose(this, false)}
-                >
-                    <div className="grid-block vertical no-overflow">
+        return (
+            <Modal
+                title={counterpart.translate("modal.report.title")}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+            >
+                <div className="grid-block vertical no-overflow">
+                    <Translate content="modal.report.title" component="h1" />
+                    <p>
                         <Translate
-                            content="modal.report.title"
-                            component="h1"
+                            content="modal.report.explanatory_text_1"
+                            component="label"
                         />
-                        <p>
-                            <Translate
-                                content="modal.report.explanatory_text_1"
-                                component="label"
-                            />
-                        </p>
-                        <span
-                            className="raw"
-                            style={{
-                                border: "1px solid darkgray",
-                                marginBottom: "1em"
-                            }}
+                    </p>
+                    <span
+                        className="raw"
+                        style={{
+                            border: "1px solid darkgray",
+                            marginBottom: "1em"
+                        }}
+                    >
+                        <div
+                            className="right-label"
+                            style={{paddingBottom: "0em"}}
                         >
-                            <div
-                                className="right-label"
-                                style={{paddingBottom: "0em"}}
-                            >
-                                <CopyButton text={this.state.logEntries} />
-                            </div>
+                            <CopyButton text={this.state.logEntries} />
+                        </div>
 
-                            <Translate
-                                className="left-label"
-                                component="label"
-                                content="modal.report.lastLogEntries"
-                                style={{
-                                    paddingTop: "1em",
-                                    paddingLeft: "0.5em"
-                                }}
-                            />
-
-                            {logsArea()}
-                        </span>
-                        <span
-                            className="raw"
+                        <Translate
+                            className="left-label"
+                            component="label"
+                            content="modal.report.lastLogEntries"
                             style={{
-                                border: "1px solid darkgray",
-                                marginBottom: "1em"
+                                paddingTop: "1em",
+                                paddingLeft: "0.5em"
                             }}
+                        />
+
+                        {logsArea()}
+                    </span>
+                    <span
+                        className="raw"
+                        style={{
+                            border: "1px solid darkgray",
+                            marginBottom: "1em"
+                        }}
+                    >
+                        <div
+                            className="right-label"
+                            style={{paddingBottom: "0em"}}
                         >
-                            <div
-                                className="right-label"
-                                style={{paddingBottom: "0em"}}
-                            >
-                                {this.state.imageURI != null ? (
-                                    <img
-                                        style={{
-                                            height: "2.8em",
-                                            marginTop: "0em",
-                                            marginRight: "0em"
-                                        }}
-                                        src={this.state.imageURI}
-                                    />
-                                ) : (
-                                    "Failed"
-                                )}
-                            </div>
-                            <div
-                                className="right-label"
-                                style={{paddingBottom: "0em"}}
-                            >
-                                <Translate
-                                    component="label"
-                                    content="modal.report.copyScreenshot"
+                            {this.state.imageURI != null ? (
+                                <img
                                     style={{
-                                        paddingTop: "1em",
-                                        paddingRight: "0.5em"
+                                        height: "2.8em",
+                                        marginTop: "0em",
+                                        marginRight: "0em"
                                     }}
+                                    src={this.state.imageURI}
                                 />
-                            </div>
+                            ) : (
+                                "Failed"
+                            )}
+                        </div>
+                        <div
+                            className="right-label"
+                            style={{paddingBottom: "0em"}}
+                        >
                             <Translate
-                                className="left-label"
                                 component="label"
-                                content="modal.report.screenshot"
+                                content="modal.report.copyScreenshot"
                                 style={{
                                     paddingTop: "1em",
-                                    paddingLeft: "0.5em"
+                                    paddingRight: "0.5em"
                                 }}
                             />
+                        </div>
+                        <Translate
+                            className="left-label"
+                            component="label"
+                            content="modal.report.screenshot"
+                            style={{
+                                paddingTop: "1em",
+                                paddingLeft: "0.5em"
+                            }}
+                        />
 
-                            {screenshotArea()}
-                        </span>
-                        <br />
-                        {decriptionArea()}
-                        <div className="content-block transfer-input">
-                            <div className="no-margin no-padding">
+                        {screenshotArea()}
+                    </span>
+                    <br />
+                    {decriptionArea()}
+                    <div className="content-block transfer-input">
+                        <div className="no-margin no-padding">
+                            <div
+                                className="small-6"
+                                style={{
+                                    display: "inline-block",
+                                    paddingRight: "10px"
+                                }}
+                            >
                                 <div
-                                    className="small-6"
-                                    style={{
-                                        display: "inline-block",
-                                        paddingRight: "10px"
-                                    }}
+                                    className="button primary"
+                                    onClick={this.showLog}
                                 >
-                                    <div
-                                        className="button primary"
-                                        onClick={this.showLog}
-                                    >
-                                        {this.state.showLog ? (
-                                            <Translate content="modal.report.hideLog" />
-                                        ) : (
-                                            <Translate content="modal.report.showLog" />
-                                        )}
-                                    </div>
+                                    {this.state.showLog ? (
+                                        <Translate content="modal.report.hideLog" />
+                                    ) : (
+                                        <Translate content="modal.report.showLog" />
+                                    )}
                                 </div>
+                            </div>
+                            <div
+                                className="small-6"
+                                style={{
+                                    display: "inline-block",
+                                    paddingRight: "10px"
+                                }}
+                            >
                                 <div
-                                    className="small-6"
-                                    style={{
-                                        display: "inline-block",
-                                        paddingRight: "10px"
-                                    }}
+                                    className="button primary"
+                                    onClick={this.showScreenshot}
                                 >
-                                    <div
-                                        className="button primary"
-                                        onClick={this.showScreenshot}
-                                    >
-                                        {this.state.showScreen ? (
-                                            <Translate content="modal.report.hideScreenshot" />
-                                        ) : (
-                                            <Translate content="modal.report.takeScreenshot" />
-                                        )}
-                                    </div>
+                                    {this.state.showScreen ? (
+                                        <Translate content="modal.report.hideScreenshot" />
+                                    ) : (
+                                        <Translate content="modal.report.takeScreenshot" />
+                                    )}
                                 </div>
                             </div>
                         </div>
-                        {loadingImage && (
-                            <div style={{textAlign: "center"}}>
-                                <LoadingIndicator type="three-bounce" />
-                            </div>
-                        )}
-                        {logsCopySuccess && (
-                            <p>
-                                <Translate content="modal.report.copySuccess" />
-                            </p>
-                        )}
                     </div>
-                </BaseModal>
-            </div>
+                    {loadingImage && (
+                        <div style={{textAlign: "center"}}>
+                            <LoadingIndicator type="three-bounce" />
+                        </div>
+                    )}
+                    {logsCopySuccess && (
+                        <p>
+                            <Translate content="modal.report.copySuccess" />
+                        </p>
+                    )}
+                </div>
+            </Modal>
         );
     }
 }
 
-class ReportModalConnectWrapper extends React.Component {
-    render() {
-        return <ReportModal {...this.props} ref={this.props.refCallback} />;
-    }
-}
-
-ReportModalConnectWrapper = connect(
-    ReportModalConnectWrapper,
-    {
-        listenTo() {
-            return [AccountStore];
-        },
-        getProps(props) {
-            return {
-                currentAccount: AccountStore.getState().currentAccount,
-                passwordAccount: AccountStore.getState().passwordAccount,
-                tabIndex: props.tabIndex || 0
-            };
-        }
-    }
-);
-
-export default ReportModalConnectWrapper;
+export default ReportModal;

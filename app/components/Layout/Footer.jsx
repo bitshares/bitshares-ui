@@ -39,6 +39,7 @@ class Footer extends React.Component {
         this.state = {
             choiceModalShowOnce: false,
             isChoiceModalVisible: false,
+            isReportModalVisible: false,
             showNodesPopup: false,
             showConnectingPopup: false
         };
@@ -51,6 +52,8 @@ class Footer extends React.Component {
         this.getNode = this.getNode.bind(this);
         this.showChoiceModal = this.showChoiceModal.bind(this);
         this.hideChoiceModal = this.hideChoiceModal.bind(this);
+        this.showReportModal = this.showReportModal.bind(this);
+        this.hideReportModal = this.hideReportModal.bind(this);
     }
 
     showChoiceModal() {
@@ -62,6 +65,18 @@ class Footer extends React.Component {
     hideChoiceModal() {
         this.setState({
             isChoiceModalVisible: false
+        });
+    }
+
+    showReportModal() {
+        this.setState({
+            isReportModalVisible: true
+        });
+    }
+
+    hideReportModal() {
+        this.setState({
+            isReportModalVisible: false
         });
     }
 
@@ -319,11 +334,6 @@ class Footer extends React.Component {
                 console.log("... done trying to reconnect");
             });
         }
-    }
-
-    _showReport(e) {
-        e.preventDefault();
-        if (this.reportModal) this.reportModal.show();
     }
 
     render() {
@@ -601,7 +611,7 @@ class Footer extends React.Component {
                                     <div
                                         className="introjs-launcher"
                                         onClick={e => {
-                                            this._showReport(e);
+                                            this.showReportModal(e);
                                         }}
                                     >
                                         <Translate content="modal.report.button" />
@@ -649,7 +659,9 @@ class Footer extends React.Component {
                     <Translate content="global.help" />
                 </div>
                 <ReportModal
-                    id="report_modal"
+                    showModal={this.showReportModal}
+                    hideModal={this.hideReportModal}
+                    visible={this.state.isReportModalVisible}
                     refCallback={e => {
                         if (e) this.reportModal = e;
                     }}
