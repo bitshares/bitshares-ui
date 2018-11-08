@@ -8,12 +8,12 @@ import {ChainStore, key} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
-import PasswordInput from "components/Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import Icon from "../Icon/Icon";
+import CopyButton from "../Utility/CopyButton";
 
 class AccountRegistrationForm extends React.Component {
     static propTypes = {
@@ -25,7 +25,6 @@ class AccountRegistrationForm extends React.Component {
         this.state = {
             validAccountName: false,
             accountName: "",
-            validPassword: false,
             registrarAccount: null,
             loading: false,
             generatedPassword: `P${key.get_random_key().toWif()}`
@@ -34,7 +33,6 @@ class AccountRegistrationForm extends React.Component {
         this.onRegistrarAccountChange = this.onRegistrarAccountChange.bind(
             this
         );
-        this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onAccountNameChange = this.onAccountNameChange.bind(this);
         this.accountNameInput = null;
     }
@@ -79,15 +77,11 @@ class AccountRegistrationForm extends React.Component {
         }
     }
 
-    onPasswordChange(e) {
-        this.setState({validPassword: e.valid});
-    }
-
     isValid() {
         const firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) {
-            valid = valid && this.state.validPassword;
+            valid = valid;
         }
         if (!firstAccount) {
             valid = valid && this.state.registrarAccount;
@@ -138,16 +132,16 @@ class AccountRegistrationForm extends React.Component {
                         noLabel
                     />
 
-                    <PasswordInput
-                        value={this.state.generatedPassword}
-                        confirmation
-                        onChange={this.onPasswordChange}
-                        noLabel
-                        placeholder={counterpart.translate("settings.password")}
-                        copy
-                        readonly
-                        visible
-                    />
+                    <span className="inline-label">
+                        <textarea rows="3" readOnly disabled>
+                            {this.state.generatedPassword}
+                        </textarea>
+                        <CopyButton
+                            text={this.state.generatedPassword}
+                            tip="tooltip.copy_password"
+                            dataPlace="top"
+                        />
+                    </span>
 
                     {firstAccount ? null : (
                         <div className="full-width-content form-group no-overflow">

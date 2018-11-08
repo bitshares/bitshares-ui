@@ -31,6 +31,19 @@ div.registration {
         padding: 0 15px;
         text-align: left;
 
+        span.inline-label {
+            width: 30rem;
+
+            textarea {
+                padding: 0px;
+                margin-bottom: 0px;
+            }
+
+            .button {
+                border-radius: 0;
+            }
+        }
+
         @include breakpoint(large) {
             .account-name,
             .account-selector {
