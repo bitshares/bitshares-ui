@@ -60,7 +60,7 @@ If you'd like to host your own wallet somewhere, you should create a production 
 ```
 npm run build
 ```
-This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
+This will create a bundle in the ./build/dist folder that can be hosted with the web server of your choice.
 
 
 ### Installable wallets
