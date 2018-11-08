@@ -40,7 +40,7 @@ class DecryptBackup extends Component {
         this.formChange = this.formChange.bind(this);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.props.active) {
             this.refs.passwordInput.focus();
         }
