@@ -148,34 +148,50 @@ class BitsharesBeosModal extends React.Component {
             headers: new Headers({Accept: "application/json"})
         }).then(response => response.json());
 
-        Promise.resolve(validation_promise)
+        validation_promise
             .then(result => {
+                let re = /^[a-z1-5]+$/;
                 setTimeout(() => {
-                    if (!result.isValid && !this.state.is_account_creation) {
+                    if (account.length < 13 && re.test(account)) {
+                        if (
+                            !result.isValid &&
+                            !this.state.is_account_creation
+                        ) {
+                            this.setState({
+                                no_account_error: true
+                            });
+                        } else {
+                            this.setState(
+                                {
+                                    fee_amount_creation: 0,
+                                    is_account_creation: false,
+                                    no_account_error: false
+                                },
+                                this._checkBalance
+                            );
+                        }
                         this.setState({
-                            no_account_error: true
+                            is_account_creation_checkbox: !result.isValid,
+                            is_account_validation: false
                         });
                     } else {
-                        this.setState(
-                            {
-                                fee_amount_creation: 0,
-                                is_account_creation: false,
-                                no_account_error: false
-                            },
-                            this._checkBalance
-                        );
+                        this.setState({
+                            is_account_creation_checkbox: false,
+                            is_account_validation: false,
+                            account_validation_error: true,
+                            no_account_error: false
+                        });
                     }
-                    this.setState({
-                        is_account_creation_checkbox: !result.isValid,
-                        is_account_validation: false
-                    });
                 }, 300);
             })
-            .catch(() => {
+            .catch(error => {
                 setTimeout(() => {
                     this.setState({
                         is_account_validation: false,
-                        maintenance_error: true
+                        maintenance_error: true,
+                        is_account_creation_checkbox: false,
+                        account_validation_error: false,
+                        no_account_error: false
                     });
                 }, 300);
             });
@@ -192,31 +208,43 @@ class BitsharesBeosModal extends React.Component {
             method: "get",
             headers: new Headers({Accept: "application/json"})
         }).then(response => response.json());
-
-        Promise.resolve(validation_promise)
+        validation_promise
             .then(result => {
+                let re = /^[a-z1-5]+$/;
                 setTimeout(() => {
-                    if (!result.isValid && !this.state.is_account_creation) {
+                    if (account.length < 13 && re.test(account)) {
+                        if (
+                            !result.isValid &&
+                            !this.state.is_account_creation
+                        ) {
+                            this.setState({
+                                no_account_error: true
+                            });
+                        } else {
+                            this.setState(
+                                {
+                                    fee_amount_creation: 0,
+                                    is_account_creation: false,
+                                    no_account_error: false
+                                },
+                                this._checkBalance
+                            );
+                        }
                         this.setState({
-                            no_account_error: true
+                            is_account_creation_checkbox: !result.isValid,
+                            is_account_validation: false
                         });
                     } else {
-                        this.setState(
-                            {
-                                fee_amount_creation: 0,
-                                is_account_creation: false,
-                                no_account_error: false
-                            },
-                            this._checkBalance
-                        );
+                        this.setState({
+                            is_account_creation_checkbox: false,
+                            is_account_validation: false,
+                            account_validation_error: true,
+                            no_account_error: false
+                        });
                     }
-                    this.setState({
-                        is_account_creation_checkbox: !result.isValid,
-                        is_account_validation: false
-                    });
                 }, 300);
             })
-            .catch(() => {
+            .catch(error => {
                 this.onAlternativeAccountValidation(
                     "https://api.blocktrades.info/v2",
                     account
@@ -269,24 +297,16 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAccountChanged(e) {
-        let re = /^[a-z1-5]+$/;
         this.setState({
             is_account_validation: false,
             maintenance_error: false,
             no_account_error: false
         });
-        if (e.target.value.length < 13 && re.test(e.target.value)) {
-            this.onAccountValidation(
-                "https://api.blocktrades.us/v2",
-                e.target.value
-            );
-            this.setState({account_validation_error: false});
-        } else {
-            this.setState({
-                is_account_creation_checkbox: false,
-                account_validation_error: true
-            });
-        }
+        this.onAccountValidation(
+            "https://api.blocktrades.us/v2",
+            e.target.value
+        );
+        this.setState({account_validation_error: false});
         this.setState({account: e.target.value}, this._updateFee);
     }
 
@@ -422,7 +442,10 @@ class BitsharesBeosModal extends React.Component {
             balance = "No funds";
         }
 
-        if (this.state.is_account_creation_checkbox) {
+        if (
+            this.state.is_account_creation_checkbox &&
+            this.state.account !== ""
+        ) {
             account_creation_checkbox = (
                 <table className="table" style={{width: "inherit"}}>
                     <tbody>
@@ -520,7 +543,8 @@ class BitsharesBeosModal extends React.Component {
                                     onChange={this.onAccountChanged.bind(this)}
                                 />
                             </div>
-                            {this.state.account_validation_error ? (
+                            {this.state.account_validation_error &&
+                            this.state.account !== "" ? (
                                 <p
                                     className="has-error no-margin"
                                     style={{paddingTop: 10}}
@@ -561,7 +585,8 @@ class BitsharesBeosModal extends React.Component {
                         </div>
                         {/* Create account enabled/disabled */}
                         {account_creation_checkbox}
-                        {this.state.no_account_error ? (
+                        {this.state.no_account_error &&
+                        this.state.account !== "" ? (
                             <p
                                 className="has-error no-margin"
                                 style={{paddingBottom: 15}}
