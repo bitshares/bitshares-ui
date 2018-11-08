@@ -192,9 +192,11 @@
             color: lighten($link-text-color, 4%);
         }
     }
-    label,
-    label > span {
-        color: $primary-text-color;
+    *#{$ant-fix} > {
+        label,
+        label > span {
+            color: $primary-text-color;
+        }
     }
     // select:hover {
     // background-color: $panel-bg-color;
