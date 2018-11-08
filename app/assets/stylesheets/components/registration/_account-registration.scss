@@ -34,13 +34,12 @@ div.registration {
         span.inline-label {
             width: 30rem;
 
-            textarea {
-                padding: 0px;
-                margin-bottom: 0px;
-            }
-
             .button {
                 border-radius: 0;
+            }
+
+            input {
+                padding-right: 0;
             }
         }
 

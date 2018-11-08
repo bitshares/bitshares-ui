@@ -133,9 +133,12 @@ class AccountRegistrationForm extends React.Component {
                     />
 
                     <span className="inline-label">
-                        <textarea rows="3" readOnly disabled>
-                            {this.state.generatedPassword}
-                        </textarea>
+                        <textarea
+                            rows="2"
+                            readOnly
+                            disabled
+                            defaultValue={this.state.generatedPassword}
+                        />
                         <CopyButton
                             text={this.state.generatedPassword}
                             tip="tooltip.copy_password"

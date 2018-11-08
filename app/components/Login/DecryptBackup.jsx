@@ -44,6 +44,9 @@ class DecryptBackup extends Component {
         if (this.props.active) {
             this.refs.passwordInput.focus();
         }
+        if (!prevProps.currentAccount && this.props.currentAccount) {
+            this.props.history.push("/");
+        }
     }
 
     onRestore() {
@@ -55,7 +58,6 @@ class DecryptBackup extends Component {
             value: false
         });
         BackupActions.reset();
-        this.props.history.push("/");
     }
 
     onPassword(e) {
