@@ -590,8 +590,9 @@ class BuySell extends React.Component {
                                 defaultValue={
                                     !hasFeeBalance
                                         ? counterpart.translate(
-                                            "transfer.errors.insufficient"
-                                        ) : fee.getAmount({real: true})
+                                              "transfer.errors.insufficient"
+                                          )
+                                        : fee.getAmount({real: true})
                                 }
                                 disabled
                                 addonAfter={

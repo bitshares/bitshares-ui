@@ -2102,7 +2102,9 @@
         "wallet_model_2": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password"
+        "wallet_password": "Login anywhere using your password",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings."
     },
     "winex": {
         "gateway": {

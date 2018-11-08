@@ -107,7 +107,8 @@ class SettingsStore {
                 additional: {
                     transferToMe: true
                 }
-            }
+            },
+            rememberMe: true
         };
     }
 
@@ -138,7 +139,14 @@ class SettingsStore {
             passwordLogin: [
                 {translate: "cloud_login"},
                 {translate: "local_wallet"}
-            ]
+            ],
+            browser_notifications: {
+                allow: [true, false],
+                additional: {
+                    transferToMe: [true, false]
+                }
+            },
+            rememberMe: [true, false]
         };
     }
 
