@@ -27,13 +27,15 @@ class AccountRegistrationForm extends React.Component {
             accountName: "",
             registrarAccount: null,
             loading: false,
-            generatedPassword: `P${key.get_random_key().toWif()}`
+            generatedPassword: `P${key.get_random_key().toWif()}`,
+            confirmPassword: ""
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onRegistrarAccountChange = this.onRegistrarAccountChange.bind(
             this
         );
         this.onAccountNameChange = this.onAccountNameChange.bind(this);
+        this.onConfirmation = this.onConfirmation.bind(this);
         this.accountNameInput = null;
     }
 
@@ -75,6 +77,14 @@ class AccountRegistrationForm extends React.Component {
                 password: this.state.generatedPassword
             });
         }
+    }
+
+    onConfirmation(e) {
+        const value = e.currentTarget.value;
+        this.setState({
+            confirmPassword: value,
+            passwordConfirmed: value === this.state.generatedPassword
+        });
     }
 
     isValid() {
@@ -131,9 +141,12 @@ class AccountRegistrationForm extends React.Component {
                         }
                         noLabel
                     />
-
-                    <span className="inline-label">
+                    <label className="left-label" htmlFor="password">
+                        <Translate content="wallet.generated" />
+                    </label>
+                    <span className="inline-label generated-password-field">
                         <textarea
+                            id="password"
                             rows="2"
                             readOnly
                             disabled
@@ -145,6 +158,24 @@ class AccountRegistrationForm extends React.Component {
                             dataPlace="top"
                         />
                     </span>
+                    <label className="left-label" htmlFor="confirmPassword">
+                        <Translate content="wallet.confirm_password" />
+                    </label>
+                    <span className="inline-label">
+                        <input
+                            type="password"
+                            name="password"
+                            id="confirmPassword"
+                            value={this.state.confirmPassword}
+                            onChange={this.onConfirmation}
+                        />
+                    </span>
+                    {this.state.confirmPassword &&
+                    !this.state.passwordConfirmed ? (
+                        <div className="has-error">
+                            <Translate content="wallet.confirm_error" />
+                        </div>
+                    ) : null}
 
                     {firstAccount ? null : (
                         <div className="full-width-content form-group no-overflow">
@@ -171,7 +202,11 @@ class AccountRegistrationForm extends React.Component {
                     ) : (
                         <button
                             className="button-primary"
-                            disabled={!valid || (registrarAccount && !isLTM)}
+                            disabled={
+                                !valid ||
+                                !this.state.passwordConfirmed ||
+                                (registrarAccount && !isLTM)
+                            }
                         >
                             <Translate content="registration.continue" />
                         </button>
