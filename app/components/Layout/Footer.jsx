@@ -95,6 +95,8 @@ class Footer extends React.Component {
         return (
             nextState.isChoiceModalVisible !==
                 this.state.isChoiceModalVisible ||
+            nextState.isReportModalVisible !==
+                this.state.isReportModalVisible ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
             nextProps.rpc_connection_status !==

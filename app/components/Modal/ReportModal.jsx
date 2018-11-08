@@ -76,8 +76,6 @@ class ReportModal extends React.Component {
 
     render() {
         let {
-            open,
-            hidden,
             logEntries,
             loadingImage,
             logsCopySuccess,
