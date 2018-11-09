@@ -9,7 +9,12 @@ import Icon from "../Icon/Icon";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountStore from "stores/AccountStore";
 import LoadingIndicator from "../LoadingIndicator";
-import {Table} from "bitshares-ui-style-guide";
+import {
+    Table,
+    Select,
+    Input,
+    Icon as IconStyleGuide
+} from "bitshares-ui-style-guide";
 import {ChainStore} from "bitsharesjs";
 
 class Accounts extends React.Component {
@@ -17,10 +22,12 @@ class Accounts extends React.Component {
         super();
         this.state = {
             searchTerm: props.searchTerm,
-            isLoading: false
+            isLoading: false,
+            rowsOnPage: "25"
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
+        this.handleRowsChange = this.handleRowsChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -56,6 +63,13 @@ class Accounts extends React.Component {
     _onRemoveContact(account, e) {
         e.preventDefault();
         AccountActions.removeAccountContact(account);
+        this.forceUpdate();
+    }
+
+    handleRowsChange(rows) {
+        this.setState({
+            rowsOnPage: rows
+        });
         this.forceUpdate();
     }
 
@@ -234,34 +248,80 @@ class Accounts extends React.Component {
         }
 
         return (
-            <div className="grid-block">
-                <div className="grid-block vertical medium-6 medium-offset-3">
-                    <div className="grid-content shrink">
-                        <Translate
-                            component="h3"
-                            content="explorer.accounts.title"
-                        />
-                        <input
-                            type="text"
-                            value={this.state.searchTerm}
-                            onChange={this._onSearchChange.bind(this)}
-                        />
-                    </div>
-                    <Table
-                        style={{width: "100%", marginTop: "16px"}}
-                        rowKey="accountId"
-                        columns={columns}
-                        dataSource={dataSource}
-                        pagination={{
-                            position: "bottom",
-                            pageSize: Number(this.state.rowsOnPage)
-                        }}
-                    />
-                    {this.state.isLoading ? (
-                        <div style={{textAlign: "center", padding: 10}}>
-                            <LoadingIndicator type="three-bounce" />
+            <div className="grid-block vertical">
+                <div className="grid-block vertical">
+                    <div className="grid-block main-content small-12 medium-10 medium-offset-1 main-content vertical">
+                        <div className="generic-bordered-box">
+                            <div
+                                style={{
+                                    textAlign: "right",
+                                    marginBottom: "24px"
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        display: "inline-block",
+                                        width: "24px",
+                                        marginTop: "2px",
+                                        float: "left",
+                                        fontSize: "18px"
+                                    }}
+                                >
+                                    {this.state.isLoading ? (
+                                        <IconStyleGuide type="loading" />
+                                    ) : null}
+                                </span>
+
+                                <Select
+                                    style={{width: "150px", marginLeft: "24px"}}
+                                    value={this.state.rowsOnPage}
+                                    onChange={this.handleRowsChange}
+                                >
+                                    <Select.Option key={"10"}>
+                                        10 rows
+                                    </Select.Option>
+                                    <Select.Option key={"25"}>
+                                        25 rows
+                                    </Select.Option>
+                                    <Select.Option key={"50"}>
+                                        50 rows
+                                    </Select.Option>
+                                    <Select.Option key={"100"}>
+                                        100 rows
+                                    </Select.Option>
+                                    <Select.Option key={"200"}>
+                                        200 rows
+                                    </Select.Option>
+                                </Select>
+
+                                <Input
+                                    placeholder={"Quick Search"}
+                                    value={this.state.searchTerm}
+                                    style={{width: "200px", marginLeft: "24px"}}
+                                    onChange={this._onSearchChange.bind(this)}
+                                    addonAfter={
+                                        <IconStyleGuide type="search" />
+                                    }
+                                />
+                            </div>
+
+                            <Table
+                                style={{width: "100%", marginTop: "16px"}}
+                                rowKey="accountId"
+                                columns={columns}
+                                dataSource={dataSource}
+                                pagination={{
+                                    position: "bottom",
+                                    pageSize: Number(this.state.rowsOnPage)
+                                }}
+                            />
+                            {this.state.isLoading ? (
+                                <div style={{textAlign: "center", padding: 10}}>
+                                    <LoadingIndicator type="three-bounce" />
+                                </div>
+                            ) : null}
                         </div>
-                    ) : null}
+                    </div>
                 </div>
             </div>
         );
