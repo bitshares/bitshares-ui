@@ -190,6 +190,7 @@
         "react-transition-group": "^1.2.0",
         "react-translate-component": "^0.15.1",
         "steem-js-api": "^0.7.1",
+        "string-similarity": "^2.0.0",
         "tcomb": "2.5.2",
         "whatwg-fetch": "^2.0.1",
         "xss": "^1.0.3",
