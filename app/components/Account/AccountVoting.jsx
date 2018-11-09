@@ -583,11 +583,6 @@ class AccountVoting extends React.Component {
                 filteredWorker.get("id")
             );
 
-            console.log(
-                filteredWorker,
-                hasStartedOverAMonthAgo && hasLittleVotes
-            );
-
             let hidden =
                 ((!!duplicated || hasStartedOverAMonthAgo) && hasLittleVotes) ||
                 manualHidden;
