@@ -32,6 +32,7 @@ class BitsharesBeosModal extends React.Component {
 
         this.state = {
             account: "",
+            btsAmount: "100",
             is_account_validation: false,
             is_account_creation_checkbox: false,
             account_validation_error: false,
@@ -150,9 +151,18 @@ class BitsharesBeosModal extends React.Component {
 
         validation_promise
             .then(result => {
-                let re = /^[a-z1-5]+$/;
+                let re = /^[a-z1-5.]+$/;
                 setTimeout(() => {
                     if (account.length < 13 && re.test(account)) {
+                        if (account.length === 12) {
+                            this.setState({
+                                btsAmount: "100"
+                            });
+                        } else if (account.length < 12) {
+                            this.setState({
+                                btsAmount: "200"
+                            });
+                        }
                         if (
                             !result.isValid &&
                             !this.state.is_account_creation
@@ -210,9 +220,18 @@ class BitsharesBeosModal extends React.Component {
         }).then(response => response.json());
         validation_promise
             .then(result => {
-                let re = /^[a-z1-5]+$/;
+                let re = /^[a-z1-5.]+$/;
                 setTimeout(() => {
                     if (account.length < 13 && re.test(account)) {
+                        if (account.length === 12) {
+                            this.setState({
+                                btsAmount: "100"
+                            });
+                        } else if (account.length < 12) {
+                            this.setState({
+                                btsAmount: "200"
+                            });
+                        }
                         if (
                             !result.isValid &&
                             !this.state.is_account_creation
@@ -323,7 +342,7 @@ class BitsharesBeosModal extends React.Component {
 
     onCreateAccountCheckbox() {
         if (this.state.is_account_creation) {
-            let re = /^[a-z1-5]+$/;
+            let re = /^[a-z1-5.]+$/;
             if (
                 this.state.account.length < 13 &&
                 re.test(this.state.account) &&
@@ -332,7 +351,7 @@ class BitsharesBeosModal extends React.Component {
                 this.setState({no_account_error: true});
             }
         } else {
-            let re = /^[a-z1-5]+$/;
+            let re = /^[a-z1-5.]+$/;
             if (
                 this.state.account.length < 13 &&
                 re.test(this.state.account) &&
@@ -350,13 +369,23 @@ class BitsharesBeosModal extends React.Component {
                 this._checkBalance
             );
         } else {
-            this.setState(
-                {
-                    fee_amount_creation: 10000000,
-                    is_account_creation: !this.state.is_account_creation
-                },
-                this._checkBalance
-            );
+            if (this.state.account.length === 12) {
+                this.setState(
+                    {
+                        fee_amount_creation: 10000000,
+                        is_account_creation: !this.state.is_account_creation
+                    },
+                    this._checkBalance
+                );
+            } else if (this.state.account.length < 12) {
+                this.setState(
+                    {
+                        fee_amount_creation: 20000000,
+                        is_account_creation: !this.state.is_account_creation
+                    },
+                    this._checkBalance
+                );
+            }
         }
     }
 
@@ -591,7 +620,10 @@ class BitsharesBeosModal extends React.Component {
                                 className="has-error no-margin"
                                 style={{paddingBottom: 15}}
                             >
-                                <Translate content="gateway.bitshares_beos.no_account_error" />
+                                <Translate
+                                    content="gateway.bitshares_beos.no_account_error"
+                                    btsAmount={this.state.btsAmount}
+                                />
                             </p>
                         ) : null}
                         {/* Send/Cancel buttons */}
