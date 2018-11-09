@@ -22,6 +22,7 @@ export const scamAccountsBittrex = [
 ];
 
 export const scamAccountsOther = [
+    "blockchainprojectsbv-test-3",
     "aacoin",
     "abucoins",
     "acinq",
@@ -76,6 +77,7 @@ export const scamAccountsOther = [
     "bitbill.app",
     "bitbns",
     "bitcoinindonesi",
+    "bitcoinindonesia",
     "bitcointrade",
     "bitfinexdep1",
     "bitflip",
@@ -418,6 +420,7 @@ export const scamAccountsOther = [
     "onchainfx.com",
     "ooex",
     "ooobtc",
+    "openledger-support",
     "otcbtc",
     "otcbtcdotcom",
     "otcbtcdotnet",
