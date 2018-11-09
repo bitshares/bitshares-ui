@@ -1169,17 +1169,17 @@ export default class ModalWrapper extends React.Component {
     }
 
     render() {
-        let {quoteAsset, backingAsset, account} = this.props;
+        let {quote_asset, backing_asset, account} = this.props;
         let accountBalance = account.get("balances").toJS();
         let coreBalance, bitAssetBalance;
 
         if (accountBalance) {
             for (var id in accountBalance) {
-                if (id === backingAsset) {
+                if (id === backing_asset) {
                     coreBalance = accountBalance[id];
                 }
 
-                if (id === quoteAsset) {
+                if (id === quote_asset) {
                     bitAssetBalance = accountBalance[id];
                 }
             }
@@ -1190,7 +1190,7 @@ export default class ModalWrapper extends React.Component {
                 visible={this.props.visible}
                 hideModal={this.props.hideModal}
                 showModal={this.props.showModal}
-                quote_asset={quoteAsset}
+                quote_asset={quote_asset}
                 call_orders={account.get("call_orders", List()).toList()}
                 hasCallOrders={
                     account.get("call_orders") &&
@@ -1199,7 +1199,7 @@ export default class ModalWrapper extends React.Component {
                 modalId={this.props.modalId}
                 bitasset_balance={bitAssetBalance}
                 backing_balance={coreBalance}
-                backing_asset={backingAsset}
+                backing_asset={backing_asset}
                 hide_help={this.state.smallScreen}
                 account={account}
             />

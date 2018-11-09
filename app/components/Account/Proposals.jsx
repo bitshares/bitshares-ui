@@ -23,7 +23,18 @@ class Proposals extends Component {
     constructor() {
         super();
 
+        this.state = {
+            isModalVisible: false,
+            modal: {
+                action: null,
+                proposalId: null,
+                accountId: null
+            }
+        };
+
         this.forceUpdate = this.forceUpdate.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
     componentDidMount() {
@@ -39,10 +50,30 @@ class Proposals extends Component {
         ChainStore.unsubscribe(this.forceUpdate);
     }
 
-    _onApproveModal(id, action) {
-        if (this.refs[id + "_" + action]) {
-            this.refs[id + "_" + action].show();
-        }
+    showModal({action, proposalId, accountId}) {
+        this.setState({
+            isModalVisible: true,
+            modal: {
+                action,
+                proposalId,
+                accountId
+            }
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false,
+            modal: {
+                action: null,
+                proposalId: null,
+                accountId: null
+            }
+        });
+    }
+
+    _onApproveModal(proposalId, accountId, action) {
+        this.showModal({action, proposalId, accountId});
     }
 
     _canReject(proposal) {
@@ -226,6 +257,7 @@ class Proposals extends Component {
                                             ? this._onApproveModal.bind(
                                                   this,
                                                   proposalId,
+                                                  proposal.account.get("id"),
                                                   "approve"
                                               )
                                             : () => {}
@@ -240,18 +272,12 @@ class Proposals extends Component {
                                     </span>
                                 </button>
                             )}
-                            <ProposalModal
-                                ref={proposalId + "_" + "approve"}
-                                modalId={proposalId + "_" + "approve"}
-                                account={proposal.account.get("id")}
-                                proposal={proposalId}
-                                action="approve"
-                            />
                             {canReject ? (
                                 <button
                                     onClick={this._onApproveModal.bind(
                                         this,
                                         proposalId,
+                                        proposal.account.get("id"),
                                         "reject"
                                     )}
                                     className="button primary hollow"
@@ -259,30 +285,17 @@ class Proposals extends Component {
                                     <Translate content="proposal.reject" />
                                 </button>
                             ) : null}
-                            <ProposalModal
-                                ref={proposalId + "_" + "reject"}
-                                modalId={proposalId + "_" + "reject"}
-                                account={proposal.account.get("id")}
-                                proposal={proposalId}
-                                action="reject"
-                            />
                             <button
                                 onClick={this._onApproveModal.bind(
                                     this,
                                     proposalId,
+                                    proposal.account.get("id"),
                                     "delete"
                                 )}
                                 className="button primary hollow"
                             >
                                 <Translate content="proposal.delete" />
                             </button>
-                            <ProposalModal
-                                ref={proposalId + "_" + "delete"}
-                                modalId={proposalId + "_" + "delete"}
-                                account={proposal.account.get("id")}
-                                proposal={proposalId}
-                                action="delete"
-                            />
                         </td>
                     </tr>
                 );
@@ -297,27 +310,40 @@ class Proposals extends Component {
             }, []);
 
         return (
-            <table
-                className={"table proposals compact " + this.props.className}
-            >
-                <thead>
-                    <tr>
-                        <th>
-                            <Translate content="proposal.proposals" />
-                        </th>
-                        <th>
-                            <Translate content="proposal.approvers" />
-                        </th>
-                        <th>
-                            <Translate content="proposal.status" />
-                        </th>
-                        <th>
-                            <Translate content="proposal.action" />
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>{proposalRows}</tbody>
-            </table>
+            <div>
+                <table
+                    className={
+                        "table proposals compact " + this.props.className
+                    }
+                >
+                    <thead>
+                        <tr>
+                            <th>
+                                <Translate content="proposal.proposals" />
+                            </th>
+                            <th>
+                                <Translate content="proposal.approvers" />
+                            </th>
+                            <th>
+                                <Translate content="proposal.status" />
+                            </th>
+                            <th>
+                                <Translate content="proposal.action" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>{proposalRows}</tbody>
+                </table>
+                <ProposalModal
+                    ref={"modal"}
+                    visible={this.state.isModalVisible}
+                    hideModal={this.hideModal}
+                    showModal={this.showModal}
+                    account={this.state && this.state.modal.accountId}
+                    proposal={this.state && this.state.modal.proposalId}
+                    action={this.state && this.state.modal.action}
+                />
+            </div>
         );
     }
 }

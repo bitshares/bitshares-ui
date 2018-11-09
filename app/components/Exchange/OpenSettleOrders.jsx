@@ -146,7 +146,14 @@ class OpenSettleOrders extends React.Component {
             return (
                 <tbody>
                     <tr>
-                        <td style={{textAlign: "center", lineHeight: 4, fontStyle: "italic"}} colSpan="5">
+                        <td
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 4,
+                                fontStyle: "italic"
+                            }}
+                            colSpan="5"
+                        >
                             <Translate content="account.no_orders" />
                         </td>
                     </tr>

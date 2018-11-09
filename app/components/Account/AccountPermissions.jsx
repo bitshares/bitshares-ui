@@ -12,7 +12,8 @@ import PubKeyInput from "../Forms/PubKeyInput";
 import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import {RecentTransactions} from "./RecentTransactions";
-import notify from "actions/NotificationActions";
+import {Notification} from "bitshares-ui-style-guide";
+
 import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import WalletDb from "stores/WalletDb";
@@ -185,11 +186,10 @@ class AccountPermissions extends React.Component {
             s.owner_accounts.size === 1 &&
             s.owner_accounts.first() === updated_account.id
         ) {
-            return notify.addNotification({
-                message:
-                    "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-                level: "error",
-                autoDismiss: 10
+            return Notification.warning({
+                message: counterpart.translate(
+                    "notifications.account_permissions_update_warning"
+                )
             });
         }
         if (

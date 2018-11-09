@@ -97,7 +97,9 @@ class BlockTradesDepositAddressCache {
             ss.set("deposit_keys", deposit_keys);
         } else {
             // Clean the wallet stored entries, remove undefined/unknown keys
-            delete wallet.deposit_keys.undefined;
+            if (!!wallet.deposit_keys && wallet.deposit_keys.undefined) {
+                delete wallet.deposit_keys.undefined;
+            }
             Object.keys(wallet.deposit_keys || {}).forEach(key => {
                 for (let k in wallet.deposit_keys[key]) {
                     if (

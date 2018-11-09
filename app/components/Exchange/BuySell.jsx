@@ -210,7 +210,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -238,7 +238,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -266,7 +266,7 @@ class BuySell extends React.Component {
                             id="baseMarketFee"
                             defaultValue={baseFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         noTip
                                         name={base.get("symbol")}
@@ -301,7 +301,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -330,7 +330,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -359,7 +359,7 @@ class BuySell extends React.Component {
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
                             addonAfter={
-                                <span style={{fontSize: "75%"}}>
+                                <span>
                                     <AssetName
                                         style={{width: 100}}
                                         noTip
@@ -387,7 +387,7 @@ class BuySell extends React.Component {
                         id="emptyPlaceholder"
                         defaultValue="0"
                         addonAfter={
-                            <span style={{fontSize: "75%"}}>
+                            <span>
                                 <AssetName
                                     style={{width: 100}}
                                     noTip
@@ -516,7 +516,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -545,7 +545,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={quote.get("symbol")}
@@ -568,7 +568,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -597,7 +597,7 @@ class BuySell extends React.Component {
                                 disabled
                                 addonAfter={
                                     <Select
-                                        style={{width: 100, fontSize: "75%"}}
+                                        style={{width: 100}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
                                             this.props.feeAsset
@@ -629,7 +629,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -658,7 +658,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={quote.get("symbol")}
@@ -681,7 +681,7 @@ class BuySell extends React.Component {
                                 autoComplete="off"
                                 placeholder="0.0"
                                 addonAfter={
-                                    <span style={{fontSize: "75%"}}>
+                                    <span>
                                         <AssetName
                                             dataPlace="right"
                                             name={base.get("symbol")}
@@ -710,7 +710,7 @@ class BuySell extends React.Component {
                                 disabled
                                 addonAfter={
                                     <Select
-                                        style={{width: 100, fontSize: "75%"}}
+                                        style={{width: 100}}
                                         disabled={feeAssets.length === 1}
                                         defaultValue={feeAssets.indexOf(
                                             this.props.feeAsset
@@ -765,7 +765,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={base.get("symbol")}
@@ -823,7 +823,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={base.get("symbol")}
@@ -849,7 +849,7 @@ class BuySell extends React.Component {
                                     autoComplete="off"
                                     placeholder="0.0"
                                     addonAfter={
-                                        <span style={{fontSize: "75%"}}>
+                                        <span>
                                             <AssetName
                                                 dataPlace="right"
                                                 name={quote.get("symbol")}
@@ -878,10 +878,7 @@ class BuySell extends React.Component {
                                     disabled
                                     addonAfter={
                                         <Select
-                                            style={{
-                                                width: 100,
-                                                fontSize: "75%"
-                                            }}
+                                            style={{width: 100}}
                                             disabled={feeAssets.length === 1}
                                             defaultValue={feeAssets.indexOf(
                                                 this.props.feeAsset
@@ -1154,6 +1151,20 @@ class BuySell extends React.Component {
                                                 onClick={this.props.onDeposit.bind(
                                                     this
                                                 )}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: this.props
+                                                            .backedCoin.name
+                                                    }
+                                                )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />
                                             </Button>
@@ -1161,6 +1172,13 @@ class BuySell extends React.Component {
                                         {this.props.onBorrow ? (
                                             <Button
                                                 style={{margin: 5}}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
                                                 onClick={this.props.onBorrow}
                                             >
                                                 <Translate content="exchange.borrow" />
@@ -1171,6 +1189,21 @@ class BuySell extends React.Component {
                                                 style={{margin: 5}}
                                                 onClick={this.props.onBuy.bind(
                                                     this
+                                                )}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
                                                 )}
                                             >
                                                 <Translate content="exchange.quick_deposit" />

@@ -56,7 +56,8 @@ let icons = [
     "fire",
     "question-in-circle",
     "attention",
-    "checkmark"
+    "checkmark",
+    "paperclip"
 ];
 
 let iconsMap = {};

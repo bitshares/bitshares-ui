@@ -294,6 +294,8 @@ class RecentTransactions extends React.Component {
             });
         }
 
+        let hideFee = false;
+
         let display_history = history.length
             ? history.slice(0, limit).map(o => {
                   return (
@@ -307,7 +309,7 @@ class RecentTransactions extends React.Component {
                           txIndex={o.trx_in_block}
                           block={o.block_num}
                           current={current_account_id}
-                          hideFee
+                          hideFee={hideFee}
                           inverted={false}
                           hideOpLabel={compactView}
                           fullDate={true}
@@ -444,6 +446,11 @@ class RecentTransactions extends React.Component {
                                     <th style={alignLeft}>
                                         <Translate content="account.transactions.info" />
                                     </th>
+                                    {!hideFee && (
+                                        <th style={alignLeft}>
+                                            <Translate content="account.transactions.fee" />
+                                        </th>
+                                    )}
                                     <th>
                                         <Translate content="account.transactions.time" />
                                     </th>
