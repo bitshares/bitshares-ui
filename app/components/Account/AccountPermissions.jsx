@@ -374,7 +374,9 @@ class AccountPermissions extends React.Component {
                     pdf.save("bitshares-paper-wallet_" + accountName + ".pdf");
                 });
             })
-            .catch(() => {});
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {
