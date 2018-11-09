@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "./BaseModal";
+import counterpart from "counterpart";
 import Translate from "react-translate-component";
 import QRCode from "qrcode.react";
 import {Aes} from "bitsharesjs";
+import {Modal, Button} from "bitshares-ui-style-guide";
 
 class QrcodeModal extends React.Component {
     constructor(props) {
@@ -23,12 +23,8 @@ class QrcodeModal extends React.Component {
         };
     }
 
-    show() {
-        ZfApi.publish(this.props.modalId, "open");
-    }
-
     onCancel() {
-        ZfApi.publish(this.props.modalId, "close");
+        this.props.hideModal();
         this.onClose();
     }
 
@@ -60,13 +56,32 @@ class QrcodeModal extends React.Component {
     render() {
         let pos = null;
         if (this.state.isShowQrcode) pos = {textAlign: "center"};
+
+        const footer = [];
+
+        if (!this.state.isShowQrcode) {
+            footer.push(
+                <Button
+                    type="primary"
+                    key="submit"
+                    onClick={this.onPasswordEnter}
+                >
+                    {counterpart.translate("modal.ok")}
+                </Button>
+            );
+        }
+
+        footer.push(
+            <Button key="cancel" onClick={this.onCancel}>
+                {counterpart.translate("cancel")}
+            </Button>
+        );
+
         return (
-            <BaseModal
-                onClose={this.onClose}
-                id={this.props.modalId}
-                ref="modal"
-                overlay={true}
-                overlayClose={false}
+            <Modal
+                visible={this.props.visible}
+                onCancel={this.onCancel}
+                footer={footer}
             >
                 <div className="text-center">
                     <div style={{margin: "1.5rem 0"}}>
@@ -121,27 +136,9 @@ class QrcodeModal extends React.Component {
                                 </section>
                             )}
                         </div>
-                        <div style={pos}>
-                            <div className="button-group">
-                                {this.state.isShowQrcode == false ? (
-                                    <button
-                                        className="button"
-                                        onClick={this.onPasswordEnter}
-                                    >
-                                        <Translate content="modal.ok" />
-                                    </button>
-                                ) : null}
-                                <button
-                                    className="button primary hollow"
-                                    onClick={this.onCancel}
-                                >
-                                    <Translate content="cancel" />
-                                </button>
-                            </div>
-                        </div>
                     </form>
                 </div>
-            </BaseModal>
+            </Modal>
         );
     }
 }

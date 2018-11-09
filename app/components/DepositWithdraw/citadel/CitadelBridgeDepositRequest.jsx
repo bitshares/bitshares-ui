@@ -1,9 +1,8 @@
+import counterpart from "counterpart";
 import React from "react";
 import Translate from "react-translate-component";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import BaseModal from "../../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
 import WithdrawModalCitadel from "./WithdrawModalCitadel";
 import CitadelDepositAddressCache from "common/CitadelDepositAddressCache";
@@ -17,6 +16,7 @@ import {Asset} from "common/MarketClasses";
 import {ChainStore} from "bitsharesjs/es";
 import {getConversionJson} from "common/gatewayMethods";
 import PropTypes from "prop-types";
+import {Modal} from "bitshares-ui-style-guide";
 
 class ButtonWithdraw extends React.Component {
     static propTypes = {
@@ -29,7 +29,7 @@ class ButtonWithdraw extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+        this.props.showModal();
     }
 
     render() {
@@ -67,32 +67,37 @@ class ButtonWithdraw extends React.Component {
                         <Translate content="gateway.withdraw_now" />{" "}
                     </button>
                 </span>
-                <BaseModal id={withdraw_modal_id} overlay={true}>
-                    <br />
-                    <div className="grid-block vertical">
-                        <WithdrawModalCitadel
-                            key={`${this.props.key}`}
-                            account={this.props.account.get("name")}
-                            issuer={this.props.issuer}
-                            asset={this.props.asset.get("id")}
-                            output_coin_name={this.props.output_coin_name}
-                            output_coin_symbol={this.props.output_coin_symbol}
-                            output_coin_type={this.props.output_coin_type}
-                            output_supports_memos={
-                                this.props.output_supports_memos
-                            }
-                            amount_to_withdraw={this.props.amount_to_withdraw}
-                            modal_id={withdraw_modal_id}
-                            url={this.props.url}
-                            output_wallet_type={this.props.output_wallet_type}
-                            balance={
-                                this.props.account.get("balances").toJS()[
-                                    this.props.asset.get("id")
-                                ]
-                            }
-                        />
-                    </div>
-                </BaseModal>
+                <Modal
+                    title={counterpart.translate("gateway.withdraw_coin", {
+                        coin: this.props.output_coin_name,
+                        symbol: this.props.output_coin_symbol
+                    })}
+                    visible={this.props.visible}
+                    onCancel={this.props.hideModal}
+                    footer={null}
+                >
+                    <WithdrawModalCitadel
+                        showModal={this.props.showModal}
+                        hideModal={this.props.hideModal}
+                        key={`${this.props.key}`}
+                        account={this.props.account.get("name")}
+                        issuer={this.props.issuer}
+                        asset={this.props.asset.get("id")}
+                        output_coin_name={this.props.output_coin_name}
+                        output_coin_symbol={this.props.output_coin_symbol}
+                        output_coin_type={this.props.output_coin_type}
+                        output_supports_memos={this.props.output_supports_memos}
+                        amount_to_withdraw={this.props.amount_to_withdraw}
+                        modal_id={withdraw_modal_id}
+                        url={this.props.url}
+                        output_wallet_type={this.props.output_wallet_type}
+                        balance={
+                            this.props.account.get("balances").toJS()[
+                                this.props.asset.get("id")
+                            ]
+                        }
+                    />
+                </Modal>
             </span>
         );
     }
@@ -111,6 +116,9 @@ class ButtonWithdrawContainer extends React.Component {
     render() {
         let withdraw_button = (
             <ButtonWithdraw
+                showModal={this.props.showModal}
+                hideModal={this.props.hideModal}
+                visible={this.props.visible}
                 key={this.props.key}
                 account={this.props.account}
                 issuer={this.props.issuer}
@@ -169,6 +177,7 @@ class CitadelBridgeDepositRequest extends React.Component {
         };
 
         this.state = {
+            isModalVisible: false,
             coin_symbol: "xmr",
             key_for_withdrawal_dialog: "xmr",
             supports_output_memos: "",
@@ -217,6 +226,21 @@ class CitadelBridgeDepositRequest extends React.Component {
             // announcements data
             announcements: []
         };
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
     }
 
     urlConnection(checkUrl, state_coin_info) {
@@ -1103,7 +1127,7 @@ class CitadelBridgeDepositRequest extends React.Component {
     }
 
     onWithdraw() {
-        ZfApi.publish(this.getWithdrawModalId(), "open");
+        this.showModal();
     }
 
     onInputCoinTypeChanged(deposit_withdraw_or_convert, event) {
@@ -1666,6 +1690,9 @@ class CitadelBridgeDepositRequest extends React.Component {
 
                 let withdraw_button = (
                     <ButtonWithdrawContainer
+                        showModal={this.showModal}
+                        hideModal={this.hideModal}
+                        visible={this.state.isModalVisible}
                         key={this.state.key_for_withdrawal_dialog}
                         account={this.props.account.get("name")}
                         issuer={this.props.issuer_account.get("name")}
