@@ -86,13 +86,15 @@ class ControlledAssetInput extends PureComponent {
     };
 
     getValidateStatus = () => {
-        const {validateStatus, asset, resolved} = this.props;
+        const {validateStatus, asset, resolved, value} = this.props;
         return typeof validateStatus === "string"
             ? validateStatus
             : resolved
             ? Map.isMap(asset)
                 ? "success"
-                : "error"
+                : value
+                ? "error"
+                : undefined
             : "validating";
     };
 
