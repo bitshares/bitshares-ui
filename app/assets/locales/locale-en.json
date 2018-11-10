@@ -1902,7 +1902,9 @@
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
-        "total_x_operations": "Total of %(count)s operations"
+        "total_x_operations": "Total of %(count)s operations",
+        "asset_select_placeholder": "Select asset",
+        "asset_input_placeholder": "Enter asset symbol"
     },
     "walkthrough": {
         "buy_form": "Place buy orders using this form.",
