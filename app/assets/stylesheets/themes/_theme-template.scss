@@ -614,10 +614,9 @@
             color: $link-text-color;
         }
     }
-    .header-container .anticon {
-        color: $primary-text-color !important;
-        background-color: $primary-text-color !important;
-        fill: $primary-text-color !important;
+
+    .blue {
+        color: $button-bg-color;        
     }
 
     .grp-menu-item button {
