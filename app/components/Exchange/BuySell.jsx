@@ -17,7 +17,7 @@ import assetUtils from "common/asset_utils";
 import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
-import {Button, Select} from "bitshares-ui-style-guide";
+import {Button, Select, Popover} from "bitshares-ui-style-guide";
 
 class BuySell extends React.Component {
     static propTypes = {
@@ -89,7 +89,8 @@ class BuySell extends React.Component {
             nextState.forceReRender !== this.state.forceReRender ||
             nextProps.singleColumnOrderForm !==
                 this.props.singleColumnOrderForm ||
-            nextProps.hideFunctionButtons !== this.props.hideFunctionButtons
+            nextProps.hideFunctionButtons !== this.props.hideFunctionButtons ||
+            nextState.isQuickDepositVisible !== this.state.isQuickDepositVisible
         );
     }
 
@@ -107,6 +108,24 @@ class BuySell extends React.Component {
 
     _setPrice(price) {
         this.props.priceChange({target: {value: price.toString()}});
+    }
+
+    handleQuickDepositVisibleChange = (visible) => {
+        this.setState({ isQuickDepositVisible: visible });
+    }
+
+    onDeposit() {
+        this.setState({ 
+            isQuickDepositVisible: false 
+        });
+        this.props.onDeposit();
+    }
+
+    onBuy() {
+        this.setState({ 
+            isQuickDepositVisible: false 
+        });
+        this.props.onBuy();
     }
 
     render() {
@@ -1145,46 +1164,8 @@ class BuySell extends React.Component {
                                         >
                                             Clear
                                         </Button> */}
-                                        {this.props.backedCoin ? (
-                                            <Button
-                                                style={{margin: 5}}
-                                                onClick={this.props.onDeposit.bind(
-                                                    this
-                                                )}
-                                                disabled={
-                                                    !this.props
-                                                        .currentAccount ||
-                                                    this.props.currentAccount.get(
-                                                        "id"
-                                                    ) === "1.2.3"
-                                                }
-                                                data-tip={counterpart.translate(
-                                                    "exchange.quick_deposit_tooltip",
-                                                    {
-                                                        asset: this.props
-                                                            .backedCoin.name
-                                                    }
-                                                )}
-                                            >
-                                                <Translate content="exchange.quick_deposit" />
-                                            </Button>
-                                        ) : null}
-                                        {this.props.onBorrow ? (
-                                            <Button
-                                                style={{margin: 5}}
-                                                disabled={
-                                                    !this.props
-                                                        .currentAccount ||
-                                                    this.props.currentAccount.get(
-                                                        "id"
-                                                    ) === "1.2.3"
-                                                }
-                                                onClick={this.props.onBorrow}
-                                            >
-                                                <Translate content="exchange.borrow" />
-                                            </Button>
-                                        ) : null}
-                                        {this.props.currentBridges ? (
+                                        
+                                        {this.props.currentBridges && !this.props.backedCoin ? (
                                             <Button
                                                 style={{margin: 5}}
                                                 onClick={this.props.onBuy.bind(
@@ -1206,9 +1187,83 @@ class BuySell extends React.Component {
                                                     }
                                                 )}
                                             >
-                                                <Translate content="exchange.quick_deposit" />
+                                                <Translate 
+                                                    content="exchange.quick_deposit" 
+                                                    asset={isBid ? baseName : quoteName} 
+                                                />
                                             </Button>
                                         ) : null}
+                                        {this.props.backedCoin && !this.props.currentBridges ? (
+                                            <Button
+                                                style={{margin: 5}}
+                                                onClick={this.props.onDeposit.bind(
+                                                    this
+                                                )}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_tooltip",
+                                                    {
+                                                        asset: this.props
+                                                            .backedCoin.name
+                                                    }
+                                                )}
+                                            >
+                                                <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
+                                            </Button>
+                                        ) : null}
+                                        {this.props.currentBridges && this.props.backedCoin ? (
+                                            <Popover 
+                                                trigger="click"
+                                                visible={this.state.isQuickDepositVisible}
+                                                onVisibleChange={this.handleQuickDepositVisibleChange}
+                                                content={
+                                                    <div>
+                                                        <Button style={{marginRight: 5}} onClick={this.onDeposit.bind(this)}>
+                                                            <Translate content="exchange.quick_deposit_gateway" />
+                                                        </Button>
+                                                        <Button onClick={this.onBuy.bind(this)}>
+                                                            <Translate content="exchange.quick_deposit_bridge" />
+                                                        </Button>
+                                                    </div>
+                                                }
+                                            >
+                                                <Button
+                                                    style={{margin: 5}}
+                                                    
+                                                    disabled={
+                                                        !this.props
+                                                            .currentAccount ||
+                                                        this.props.currentAccount.get(
+                                                            "id"
+                                                        ) === "1.2.3"
+                                                    }
+                                                >
+                                                    <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
+                                                </Button>
+                                            </Popover>
+                                        ) : null}
+                                        {this.props.onBorrow ? (
+                                            <Button
+                                                style={{margin: 5}}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                onClick={this.props.onBorrow}
+                                            >
+                                                <Translate content="exchange.borrow" />
+                                            </Button>
+                                        ) : null}
+                                        
                                     </div>
                                 </div>
                             </div>

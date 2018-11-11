@@ -1413,8 +1413,7 @@ class Exchange extends React.Component {
         this.showBorrowBaseModal();
     }
 
-    _onDeposit(type, e) {
-        e.preventDefault();
+    _onDeposit(type) {
         this.setState({
             modalType: type
         });
@@ -1422,8 +1421,7 @@ class Exchange extends React.Component {
         this.showDepositModal();
     }
 
-    _onBuy(type, e) {
-        e.preventDefault();
+    _onBuy(type) {
         this.setState({
             modalType: type
         });
