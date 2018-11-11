@@ -2619,7 +2619,8 @@ class Exchange extends React.Component {
                                     : "medium-6"
                                 : "",
                         "small-12 order-5",
-                        !verticalOrderForm ? "xlarge-order-2" : "",
+                        verticalOrderBook ? "xlarge-order-5" : "",
+                        !verticalOrderBook && !verticalOrderForm ? "xlarge-order-2" : ""
                     )}
                     style={{paddingRight: 5}}
                 >
@@ -2662,8 +2663,7 @@ class Exchange extends React.Component {
         let emptyDiv = groupTabsCount > 2 ? null : (
             <div
                 className={cnames(
-                    centerContainerWidth > 1200 && verticalOrderBook ? "xlarge-order-4 xlarge-8 order-9" : "",
-                    centerContainerWidth > 1200 && verticalOrderForm ? "xlarge-order-6 xlarge-8 order-9" : "",
+                    centerContainerWidth > 1200 && (verticalOrderBook || verticalOrderBook) ? "xlarge-order-6 xlarge-8 order-9" : "",
                     "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
                 )}
             >
