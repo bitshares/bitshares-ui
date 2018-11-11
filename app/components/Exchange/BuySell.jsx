@@ -1178,14 +1178,7 @@ class BuySell extends React.Component {
                                                         "id"
                                                     ) === "1.2.3"
                                                 }
-                                                data-tip={counterpart.translate(
-                                                    "exchange.quick_deposit_tooltip",
-                                                    {
-                                                        asset: isBid
-                                                            ? baseName
-                                                            : quoteName
-                                                    }
-                                                )}
+                                                data-tip={counterpart.translate("tooltip.bridge")}
                                             >
                                                 <Translate 
                                                     content="exchange.quick_deposit" 
@@ -1206,30 +1199,38 @@ class BuySell extends React.Component {
                                                         "id"
                                                     ) === "1.2.3"
                                                 }
-                                                data-tip={counterpart.translate(
-                                                    "exchange.quick_deposit_tooltip",
-                                                    {
-                                                        asset: this.props
-                                                            .backedCoin.name
-                                                    }
-                                                )}
+                                                data-tip={counterpart.translate("tooltip.gateway")}
                                             >
                                                 <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
                                             </Button>
                                         ) : null}
                                         {this.props.currentBridges && this.props.backedCoin ? (
                                             <Popover 
+                                                title={
+                                                    <Translate 
+                                                        content="exchange.quick_deposit_tooltip" 
+                                                        asset={isBid ? baseName : quoteName} 
+                                                    />
+                                                }
                                                 trigger="click"
                                                 visible={this.state.isQuickDepositVisible}
                                                 onVisibleChange={this.handleQuickDepositVisibleChange}
                                                 content={
                                                     <div>
-                                                        <Button style={{marginRight: 5}} onClick={this.onDeposit.bind(this)}>
-                                                            <Translate content="exchange.quick_deposit_gateway" />
-                                                        </Button>
-                                                        <Button onClick={this.onBuy.bind(this)}>
-                                                            <Translate content="exchange.quick_deposit_bridge" />
-                                                        </Button>
+                                                        <Popover content={<Translate content="tooltip.gateway" />}>
+                                                            <Button 
+                                                                style={{marginRight: 5}} 
+                                                                onClick={this.onDeposit.bind(this)}
+                                                            >
+                                                                <Translate content="exchange.quick_deposit_gateway" />
+                                                            </Button>
+                                                        </Popover>
+
+                                                        <Popover content={<Translate content="tooltip.bridge" />}>
+                                                            <Button onClick={this.onBuy.bind(this)}>
+                                                                <Translate content="exchange.quick_deposit_bridge" />
+                                                            </Button>
+                                                        </Popover>
                                                     </div>
                                                 }
                                             >
@@ -1243,6 +1244,14 @@ class BuySell extends React.Component {
                                                             "id"
                                                         ) === "1.2.3"
                                                     }
+                                                    data-tip={counterpart.translate(
+                                                        "exchange.quick_deposit_tooltip",
+                                                        {
+                                                            asset: isBid
+                                                                ? baseName
+                                                                : quoteName
+                                                        }
+                                                    )}
                                                 >
                                                     <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
                                                 </Button>

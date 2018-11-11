@@ -1625,6 +1625,7 @@
     },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+        "bridge": "Bridges enabled external trade for deposits to the DEX",
         "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
         "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
         "call_limit": "This is the call price of the least collateralized margin position in the market.",
