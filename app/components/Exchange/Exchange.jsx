@@ -2337,8 +2337,11 @@ class Exchange extends React.Component {
             );
 
         let settlementOrders =
-            tinyScreen &&
-            !this.state.mobileKey.includes("settlementOrders") ? null : (
+            marketSettleOrders.size === 0 ||
+            (
+                tinyScreen &&
+                !this.state.mobileKey.includes("settlementOrders")
+            ) ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
@@ -2530,7 +2533,7 @@ class Exchange extends React.Component {
                     groupStandalone.push(myOpenOrders);
                 }
 
-                if (a == "open_settlement") {
+                if (a == "open_settlement" && settlementOrders !== null) {
                     groupStandalone.push(settlementOrders);
                 }
             } else {
@@ -2567,7 +2570,7 @@ class Exchange extends React.Component {
                     );
                 }
 
-                if (a == "open_settlement") {
+                if (a == "open_settlement" && settlementOrders !== null) {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane
                             tab={translator.translate("exchange.settle_orders")}
@@ -2754,12 +2757,14 @@ class Exchange extends React.Component {
                     >
                         {marketHistory}
                     </Collapse.Panel>
-                    <Collapse.Panel
-                        header={translator.translate("exchange.settle_orders")}
-                        key="settlementOrders"
-                    >
-                        {settlementOrders}
-                    </Collapse.Panel>
+                    {settlementOrders !== null ? 
+                        <Collapse.Panel
+                            header={translator.translate("exchange.settle_orders")}
+                            key="settlementOrders"
+                        >
+                            {settlementOrders}
+                        </Collapse.Panel> : null
+                    }
                     <Collapse.Panel
                         header={translator.translate("exchange.my_history")}
                         key="myMarketHistory"
