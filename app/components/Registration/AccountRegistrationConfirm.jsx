@@ -136,23 +136,21 @@ class AccountRegistrationConfirm extends React.Component {
                                 content="registration.copyPassword"
                             />
                         </label>
-                        <div className="input-block">
-                            <span className="inline-label">
-                                <textarea
-                                    id="password"
-                                    className="create-account-input"
-                                    rows="2"
-                                    readOnly
-                                    disabled
-                                    defaultValue={this.props.password}
-                                />
-                                <CopyButton
-                                    text={this.state.generatedPassword}
-                                    tip="tooltip.copy_password"
-                                    dataPlace="top"
-                                />
-                            </span>
-                        </div>
+                        <span className="inline-label">
+                            <textarea
+                                id="password"
+                                className="create-account-input"
+                                rows="2"
+                                readOnly
+                                disabled
+                                defaultValue={this.props.password}
+                            />
+                            <CopyButton
+                                text={this.state.generatedPassword}
+                                tip="tooltip.copy_password"
+                                dataPlace="top"
+                            />
+                        </span>
                     </div>
 
                     <div>{this.renderWarning()}</div>

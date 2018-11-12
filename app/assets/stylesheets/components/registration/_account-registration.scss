@@ -32,7 +32,7 @@ div.registration {
         text-align: left;
 
         span.inline-label {
-            width: 30rem;
+            max-width: 30rem;
 
             &.generated-password-field {
                 margin-bottom: 1.5rem;
