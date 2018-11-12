@@ -468,6 +468,19 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "price_alert": {
+            "use_button": "Use \"add rule\" button to create price alert for ",
+            "alert_when": "Alert me when",
+            "title": "Price Alert",
+            "lower_than": "Lower Than",
+            "higher_than": "Higher Than",
+            "add_rule": "add rule",
+            "price": "Price",
+            "notification": {
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s",
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s"
+            }
+        },
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -1227,6 +1240,7 @@
         "title": "Notice"
     },
     "modal": {
+        "save": "save",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
