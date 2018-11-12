@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "alt-react";
-import Clipboard from "react-clipboard.js";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import WalletDb from "stores/WalletDb";
@@ -12,6 +11,7 @@ import {FetchChain} from "bitsharesjs/es";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "components/Icon/Icon";
 import {Notification} from "bitshares-ui-style-guide";
+import CopyButton from "../Utility/CopyButton";
 
 class AccountRegistrationConfirm extends React.Component {
     static propTypes = {
@@ -136,24 +136,21 @@ class AccountRegistrationConfirm extends React.Component {
                                 content="registration.copyPassword"
                             />
                         </label>
-                        <div className="input-block">
-                            <input
+                        <span className="inline-label">
+                            <textarea
                                 id="password"
-                                type="text"
+                                className="create-account-input"
+                                rows="2"
+                                readOnly
+                                disabled
                                 defaultValue={this.props.password}
-                                className="input create-account-input"
                             />
-                            <Clipboard
-                                component="button"
-                                className="no-width btn-clipboard"
-                                data-clipboard-text={this.props.password}
-                            >
-                                <Icon
-                                    name="copy"
-                                    className="copy-icon icon-opacity icon-14px"
-                                />
-                            </Clipboard>
-                        </div>
+                            <CopyButton
+                                text={this.state.generatedPassword}
+                                tip="tooltip.copy_password"
+                                dataPlace="top"
+                            />
+                        </span>
                     </div>
 
                     <div>{this.renderWarning()}</div>
