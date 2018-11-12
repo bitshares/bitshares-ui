@@ -33,8 +33,22 @@ class PriceAlert extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!prevProps.visible && this.props.visible) {
+            let example = {
+                type: PRICE_ALERT_TYPES.HIGHER_THAN,
+                price: null
+            };
+
+            let rules = [];
+
+            if (!this.props.rules.length) {
+                rules = !this.state.openedPreviously ? [example] : [];
+            } else {
+                rules = this.props.rules;
+            }
+
             this.setState({
-                rules: this.props.rules || []
+                rules: rules,
+                openedPreviously: true
             });
         }
     }
