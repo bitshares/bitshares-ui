@@ -285,8 +285,11 @@ class AccountPermissions extends React.Component {
             qrMargin = 5,
             qrRightPos = width - qrSize - qrMargin,
             textWidth = width - qrSize * 2 - qrMargin * 2 - 3,
-            textHeight = 8;
-        let rowHeight = 80;
+            textHeight = 8,
+            logoWidth = (width * 3) / 4,
+            logoHeight = logoWidth / 2.8, //  logo original width/height=2.8
+            logoPositionX = (width - logoWidth) / 2;
+        let rowHeight = logoHeight + 20;
 
         const keys = [ownerkeys, activeKeys, memoKey];
         const keysName = ["Owner Key", "Active Key", "Memo Key"];
@@ -300,7 +303,6 @@ class AccountPermissions extends React.Component {
 
                 const keyRow = publicKey => {
                     let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
-                    pdf.addImage(imgData, "PNG", 100, 0);
                     gQrcode(publicKey, qrMargin, rowHeight + 10);
                     gQrcode(privateKey, qrRightPos, rowHeight + 10);
                     pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
@@ -343,6 +345,14 @@ class AccountPermissions extends React.Component {
                 canvg(canvas, logo);
                 const imgData = canvas.toDataURL("image/png");
 
+                pdf.addImage(
+                    imgData,
+                    "PNG",
+                    logoPositionX,
+                    0,
+                    logoWidth,
+                    logoHeight
+                );
                 pdf.text("Account:", 18, rowHeight - 10);
                 pdf.text(accountName, 42, rowHeight - 10);
 
