@@ -397,18 +397,6 @@ class OrderBook extends React.Component {
         this.centerText = React.createRef();
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            autoScroll: nextProps.autoScroll
-        });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            autoScroll: nextProps.autoScroll
-        });
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.horizontal &&
