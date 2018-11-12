@@ -18,6 +18,7 @@ import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 import {Button, Select, Popover} from "bitshares-ui-style-guide";
+import ReactTooltip from "react-tooltip";
 
 class BuySell extends React.Component {
     static propTypes = {
@@ -110,20 +111,25 @@ class BuySell extends React.Component {
         this.props.priceChange({target: {value: price.toString()}});
     }
 
-    handleQuickDepositVisibleChange = (visible) => {
-        this.setState({ isQuickDepositVisible: visible });
-    }
+    handleQuickDepositVisibleChange = visible => {
+        this.setState({isQuickDepositVisible: visible});
+        if (visible) {
+            setTimeout(() => {
+                ReactTooltip.rebuild();
+            }, 20);
+        }
+    };
 
     onDeposit() {
-        this.setState({ 
-            isQuickDepositVisible: false 
+        this.setState({
+            isQuickDepositVisible: false
         });
         this.props.onDeposit();
     }
 
     onBuy() {
-        this.setState({ 
-            isQuickDepositVisible: false 
+        this.setState({
+            isQuickDepositVisible: false
         });
         this.props.onBuy();
     }
@@ -1164,8 +1170,9 @@ class BuySell extends React.Component {
                                         >
                                             Clear
                                         </Button> */}
-                                        
-                                        {this.props.currentBridges && !this.props.backedCoin ? (
+
+                                        {this.props.currentBridges &&
+                                        !this.props.backedCoin ? (
                                             <Button
                                                 style={{margin: 5}}
                                                 onClick={this.props.onBuy.bind(
@@ -1178,15 +1185,27 @@ class BuySell extends React.Component {
                                                         "id"
                                                     ) === "1.2.3"
                                                 }
-                                                data-tip={counterpart.translate("tooltip.bridge")}
+                                                data-tip={counterpart.translate(
+                                                    "exchange.quick_deposit_bridge",
+                                                    {
+                                                        target: isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
+                                                )}
                                             >
-                                                <Translate 
-                                                    content="exchange.quick_deposit" 
-                                                    asset={isBid ? baseName : quoteName} 
+                                                <Translate
+                                                    content="exchange.quick_deposit"
+                                                    asset={
+                                                        isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
                                                 />
                                             </Button>
                                         ) : null}
-                                        {this.props.backedCoin && !this.props.currentBridges ? (
+                                        {this.props.backedCoin &&
+                                        !this.props.currentBridges ? (
                                             <Button
                                                 style={{margin: 5}}
                                                 onClick={this.props.onDeposit.bind(
@@ -1199,44 +1218,83 @@ class BuySell extends React.Component {
                                                         "id"
                                                     ) === "1.2.3"
                                                 }
-                                                data-tip={counterpart.translate("tooltip.gateway")}
+                                                data-tip={counterpart.translate(
+                                                    "tooltip.gateway"
+                                                )}
                                             >
-                                                <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
+                                                <Translate
+                                                    content="exchange.quick_deposit"
+                                                    asset={
+                                                        isBid
+                                                            ? baseName
+                                                            : quoteName
+                                                    }
+                                                />
                                             </Button>
                                         ) : null}
-                                        {this.props.currentBridges && this.props.backedCoin ? (
-                                            <Popover 
+                                        {this.props.currentBridges &&
+                                        this.props.backedCoin ? (
+                                            <Popover
                                                 title={
-                                                    <Translate 
-                                                        content="exchange.quick_deposit_tooltip" 
-                                                        asset={isBid ? baseName : quoteName} 
+                                                    <Translate
+                                                        content="exchange.quick_deposit"
+                                                        asset={
+                                                            isBid
+                                                                ? baseName
+                                                                : quoteName
+                                                        }
                                                     />
                                                 }
                                                 trigger="click"
-                                                visible={this.state.isQuickDepositVisible}
-                                                onVisibleChange={this.handleQuickDepositVisibleChange}
+                                                visible={
+                                                    this.state
+                                                        .isQuickDepositVisible
+                                                }
+                                                onVisibleChange={
+                                                    this
+                                                        .handleQuickDepositVisibleChange
+                                                }
                                                 content={
                                                     <div>
-                                                        <Popover content={<Translate content="tooltip.gateway" />}>
-                                                            <Button 
-                                                                style={{marginRight: 5}} 
-                                                                onClick={this.onDeposit.bind(this)}
-                                                            >
-                                                                <Translate content="exchange.quick_deposit_gateway" />
-                                                            </Button>
-                                                        </Popover>
+                                                        <Button
+                                                            style={{
+                                                                marginRight: 5
+                                                            }}
+                                                            onClick={this.onDeposit.bind(
+                                                                this
+                                                            )}
+                                                            data-tip={counterpart.translate(
+                                                                "exchange.quick_deposit_gateway",
+                                                                {
+                                                                    asset: isBid
+                                                                        ? baseName
+                                                                        : quoteName
+                                                                }
+                                                            )}
+                                                        >
+                                                            <Translate content="exchange.quick_deposit_gateway_button" />
+                                                        </Button>
 
-                                                        <Popover content={<Translate content="tooltip.bridge" />}>
-                                                            <Button onClick={this.onBuy.bind(this)}>
-                                                                <Translate content="exchange.quick_deposit_bridge" />
-                                                            </Button>
-                                                        </Popover>
+                                                        <Button
+                                                            onClick={this.onBuy.bind(
+                                                                this
+                                                            )}
+                                                            data-tip={counterpart.translate(
+                                                                "exchange.quick_deposit_bridge",
+                                                                {
+                                                                    target: isBid
+                                                                        ? baseName
+                                                                        : quoteName
+                                                                }
+                                                            )}
+                                                        >
+                                                            <Translate content="exchange.quick_deposit_bridge_button" />
+                                                        </Button>
                                                     </div>
                                                 }
                                             >
                                                 <Button
                                                     style={{margin: 5}}
-                                                    
                                                     disabled={
                                                         !this.props
                                                             .currentAccount ||
@@ -1253,7 +1311,14 @@ class BuySell extends React.Component {
                                                         }
                                                     )}
                                                 >
-                                                    <Translate content="exchange.quick_deposit" asset={isBid ? baseName : quoteName} />
+                                                    <Translate
+                                                        content="exchange.quick_deposit"
+                                                        asset={
+                                                            isBid
+                                                                ? baseName
+                                                                : quoteName
+                                                        }
+                                                    />
                                                 </Button>
                                             </Popover>
                                         ) : null}
@@ -1272,7 +1337,6 @@ class BuySell extends React.Component {
                                                 <Translate content="exchange.borrow" />
                                             </Button>
                                         ) : null}
-                                        
                                     </div>
                                 </div>
                             </div>
