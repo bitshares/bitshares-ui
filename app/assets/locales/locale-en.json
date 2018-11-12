@@ -652,7 +652,7 @@
         "value": "Value",
         "vertical": "Vertical",
         "vol_short": "Vol",
-        "volume": "Market Depth",
+        "volume": "Volume",
         "volume_24": "24hr Volume",
         "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
         "your_price": "Your Call Price",
