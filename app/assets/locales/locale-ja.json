@@ -554,8 +554,6 @@
         "price_market": "マーケット価格",
         "quantity": "数量",
         "quick_deposit": "Deposit %(asset)s",
-        "quick_deposit_bridge": "Use a Bridge",
-        "quick_deposit_gateway": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "クオート通貨:",
         "quote_selection": "Modify quote selection",

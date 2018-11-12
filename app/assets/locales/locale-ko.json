@@ -554,8 +554,6 @@
         "price_market": "Market Price",
         "quantity": "총량",
         "quick_deposit": "Deposit %(asset)s",
-        "quick_deposit_bridge": "Use a Bridge",
-        "quick_deposit_gateway": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",

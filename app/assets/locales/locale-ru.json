@@ -554,8 +554,6 @@
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quick_deposit": "Быстрый депозит",
-        "quick_deposit_bridge": "Use a Bridge",
-        "quick_deposit_gateway": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
