@@ -514,6 +514,7 @@
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
+        "market_depth": "Market Depth",
         "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
         "market_name": "My Markets",
         "market_picker": {

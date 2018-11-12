@@ -993,7 +993,7 @@ class OrderBook extends React.Component {
                                     style={{lineHeight: "16px"}}
                                     className="header-sub-title float-right"
                                 >
-                                    <Translate content="exchange.volume" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalAsks,
@@ -1153,7 +1153,7 @@ class OrderBook extends React.Component {
                                     style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
                                 >
-                                    <Translate content="exchange.volume" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalBids,
