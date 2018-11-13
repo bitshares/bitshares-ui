@@ -25,9 +25,13 @@ class ReportModal extends React.Component {
         };
     }
 
-    shouldComponentUpdate(nextProps) {
-        let should = this.props.visible !== nextProps.visible;
-        if (nextProps.visible) {
+    shouldComponentUpdate(nextProps, nextState) {
+        let should =
+            this.props.visible !== nextProps.visible ||
+            this.state.imageURI !== nextState.imageURI ||
+            this.state.showLog !== nextState.showLog ||
+            this.state.showScreen !== nextState.showScreen;
+        if (nextProps.visible && this.props.visible !== nextProps.visible) {
             this.getLogs();
             html2canvas(content)
                 .then(canvas => {
@@ -135,6 +139,7 @@ class ReportModal extends React.Component {
                 title={counterpart.translate("modal.report.title")}
                 visible={this.props.visible}
                 onCancel={this.props.hideModal}
+                onOk={this.props.hideModal}
             >
                 <div className="grid-block vertical no-overflow">
                     <Translate content="modal.report.title" component="h1" />
