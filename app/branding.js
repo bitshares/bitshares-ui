@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["BTS", "USD", "CNY", "BTC", "EUR", "BRIDGE.NLG"];
+        return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN"];
     else if (chainId === "39f5e2ed") return ["TEST"];
 }
 
@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["BRIDGE.BTC", "NLG", "TATCHCOIN", "EUR", "USD"];
+    return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN"];
 }
 
 /**
@@ -88,10 +88,7 @@ export function getMyMarketsBases() {
 export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
-            "BTS",
-            "EUR",
-            "USD",
-            "CNY"
+            "BTS"
         ],
         bridgeTokens: [
             "BRIDGE.BCO", 
@@ -107,6 +104,12 @@ export function getMyMarketsQuotes() {
             "TATCHCOIN",
             "TCLGULDEN",
             "TCLSILVER"
+	],
+	tatchgateways: [
+	   "TATCH.EUR",
+	   "TATCH.USD",
+	   "TATCH.BTC",
+	   "TATCH.NLG"
          ],
         openledgerTokens: [
             "OBITS",
@@ -245,9 +248,9 @@ export function getFeaturedMarkets(quotes = []) {
 export function getAssetNamespaces() {
     return [
   "BRIDGE.",
-	"OPEN.",
-	"bit",
-  "TATCH.",
+  "OPEN.",
+  "bit",
+  "TATCH."
     ];
 }
 
@@ -258,8 +261,8 @@ export function getAssetNamespaces() {
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
     return [
-	"TATCH."
-	"bit",
+	"TATCH.",
+	"bit"
     ];
 }
 
