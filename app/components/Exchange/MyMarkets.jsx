@@ -654,12 +654,9 @@ class MyMarkets extends React.Component {
 
         const cryptoBridgeMarketGroups = {
             "BRIDGE.BTC": [],
-            // "BRIDGE.BCO": [],
             "BRIDGE.LTC": [],
+            "BRIDGE.ETH": [],
             "BRIDGE.RVN": [],
-            "BRIDGE.SMART": [],
-            // "BRIDGE.ZNY": [],
-            "BRIDGE.MONA": [],
             BTS: [],
             OTHER: []
         };
