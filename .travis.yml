@@ -40,7 +40,7 @@ jobs:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$TEST_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$TEST_AWS_SECRET_ACCESS_KEY
-        - aws s3 sync ./build/dist/ s3://wallet.testnet.crypto-bridge.org/ --delete
+        - aws s3 sync ./build/dist/ s3://wallet.testnet.crypto-bridge.org/ --delete --exclude "assets/*"
 
     - stage: build-stage
       script:
@@ -51,7 +51,7 @@ jobs:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
-        - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete
+        - aws s3 sync ./build/dist/ s3://wallet.stage.crypto-bridge.org/ --delete --exclude "assets/*"
 
     - stage: build-prod
       script:
@@ -62,4 +62,4 @@ jobs:
         - ls -la ./build/dist/
         - export AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY
-        - aws s3 sync ./build/dist/ s3://wallet.crypto-bridge.org/ --delete
+        - aws s3 sync ./build/dist/ s3://wallet.crypto-bridge.org/ --delete --exclude "assets/*"

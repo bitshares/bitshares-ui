@@ -142,14 +142,17 @@ class CreateAccountPassword extends React.Component {
                     TransactionConfirmStore.listen(this.onFinishConfirm);
                 } else {
                     // Account registered by the faucet
-                    FetchChain("getAccount", name, undefined, {
-                        [name]: true
-                    }).then(() => {
-                        this.setState({
-                            step: 2
+                    setTimeout(() => {
+                        // give the faucet & blockchain some time to assert registration
+                        FetchChain("getAccount", name, undefined, {
+                            [name]: true
+                        }).then(() => {
+                            this.setState({
+                                step: 2
+                            });
+                            this._unlockAccount(name, password);
                         });
-                        this._unlockAccount(name, password);
-                    });
+                    }, 5000);
                 }
             })
             .catch(error => {
