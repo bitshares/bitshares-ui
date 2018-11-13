@@ -252,33 +252,21 @@ class Accounts extends React.Component {
                 <div className="grid-block vertical">
                     <div className="grid-block main-content small-12 medium-10 medium-offset-1 main-content vertical">
                         <div className="generic-bordered-box">
-                            <div className="grid-content shrink">
-                                {this.state.searchTerm.length == 0 ? (
-                                    <Translate
-                                        component="h3"
-                                        content="account.search"
-                                    />
-                                ) : null}
-                            </div>
                             <div
                                 style={{
-                                    textAlign: "right",
+                                    textAlign: "left",
                                     marginBottom: "24px"
                                 }}
                             >
-                                <span
-                                    style={{
-                                        display: "inline-block",
-                                        width: "24px",
-                                        marginTop: "2px",
-                                        float: "left",
-                                        fontSize: "18px"
-                                    }}
-                                >
-                                    {this.state.isLoading ? (
-                                        <IconStyleGuide type="loading" />
-                                    ) : null}
-                                </span>
+                                <Input
+                                    placeholder={"Search"}
+                                    value={this.state.searchTerm}
+                                    style={{width: "200px"}}
+                                    onChange={this._onSearchChange.bind(this)}
+                                    addonAfter={
+                                        <IconStyleGuide type="search" />
+                                    }
+                                />
 
                                 <Select
                                     style={{width: "150px", marginLeft: "24px"}}
@@ -302,15 +290,16 @@ class Accounts extends React.Component {
                                     </Select.Option>
                                 </Select>
 
-                                <Input
-                                    placeholder={"Quick Search"}
-                                    value={this.state.searchTerm}
-                                    style={{width: "200px", marginLeft: "24px"}}
-                                    onChange={this._onSearchChange.bind(this)}
-                                    addonAfter={
-                                        <IconStyleGuide type="search" />
-                                    }
-                                />
+                                <div
+                                    style={{
+                                        display: "inline-block",
+                                        marginLeft: "24px"
+                                    }}
+                                >
+                                    {this.state.searchTerm.length == 0 ? (
+                                        <Translate content="account.start_typing_to_search" />
+                                    ) : null}
+                                </div>
                             </div>
 
                             <Table
