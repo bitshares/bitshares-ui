@@ -36,6 +36,7 @@ class LoginSelector extends React.Component {
             locales: SettingsStore.getState().defaults.locale,
             currentLocale: SettingsStore.getState().settings.get("locale")
         };
+        this.unmounted = false;
 
         this.handleLanguageSelect = this.handleLanguageSelect.bind(this);
     }
@@ -59,8 +60,14 @@ class LoginSelector extends React.Component {
 
     componentWillMount() {
         isIncognito(incognito => {
-            this.setState({incognito});
+            if (!this.unmounted) {
+                this.setState({incognito});
+            }
         });
+    }
+
+    componentWillUnmount() {
+        this.unmounted = true;
     }
 
     onSelect(route) {

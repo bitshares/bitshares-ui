@@ -1,5 +1,5 @@
-import {Fraction} from "fractional";
 import utils from "./utils";
+import {BigNumber} from "bignumber.js";
 
 const GRAPHENE_100_PERCENT = 10000;
 
@@ -235,10 +235,11 @@ class Price {
             * larger than 100k do not need more than 5 decimals. Without this we
             * quickly encounter JavaScript floating point errors for large numbers.
             */
+
             if (real > 100000) {
                 real = limitByPrecision(real, 5);
             }
-            let frac = new Fraction(real);
+            let frac = new BigNumber(real.toString()).toFraction();
             let baseSats = base.toSats(),
                 quoteSats = quote.toSats();
             let numRatio = baseSats / quoteSats,
@@ -250,8 +251,8 @@ class Price {
                 numRatio = 1;
             }
 
-            base.setAmount({sats: frac.numerator * numRatio});
-            quote.setAmount({sats: frac.denominator * denRatio});
+            base.setAmount({sats: frac[0] * numRatio});
+            quote.setAmount({sats: frac[1] * denRatio});
         } else if (real === 0) {
             base.setAmount({sats: 0});
             quote.setAmount({sats: 0});

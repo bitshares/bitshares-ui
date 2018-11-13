@@ -22,6 +22,7 @@ let icons = [
     "eye-striked",
     "fi-star",
     "folder",
+    "grouping",
     "hamburger-x",
     "hamburger",
     "hourglass",
@@ -52,7 +53,11 @@ let icons = [
     "info-circle-o",
     "zoom",
     "people",
-    "fire"
+    "fire",
+    "question-in-circle",
+    "attention",
+    "checkmark",
+    "paperclip"
 ];
 
 let iconsMap = {};

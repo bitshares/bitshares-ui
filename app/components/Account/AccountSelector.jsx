@@ -39,7 +39,8 @@ class AccountSelector extends React.Component {
         disableActionButton: PropTypes.bool, // use it if you need to disable action button,
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
         typeahead: PropTypes.bool,
-        excludeAccounts: PropTypes.array // array of accounts to exclude from the typeahead
+        excludeAccounts: PropTypes.array, // array of accounts to exclude from the typeahead
+        focus: PropTypes.bool
     };
 
     static defaultProps = {
@@ -65,6 +66,12 @@ class AccountSelector extends React.Component {
 
         if (!this.props.typeahead && accountName)
             this.onInputChanged(accountName);
+    }
+
+    componentDidUpdate() {
+        if (this.props.focus) {
+            this.refs.user_input.focus();
+        }
     }
 
     componentWillReceiveProps(newProps) {

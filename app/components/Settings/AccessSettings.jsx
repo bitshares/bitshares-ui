@@ -8,6 +8,7 @@ import {connect} from "alt-react";
 import cnames from "classnames";
 import Icon from "../Icon/Icon";
 import LoadingButton from "../Utility/LoadingButton";
+import {Switch} from "bitshares-ui-style-guide";
 
 const autoSelectionUrl = "wss://fake.automatic-selection.com";
 
@@ -53,26 +54,18 @@ class AutoSelectionNode extends React.Component {
         if (popup) {
             return (
                 <div>
-                    <span
-                        className="switch"
+                    <Switch
                         style={{
                             float: "right",
                             position: "relative",
                             top: "-15px"
                         }}
-                        onClick={this.activate.bind(
+                        checked={isActive}
+                        onChange={this.activate.bind(
                             this,
                             isActive ? connectedNode.url : autoSelectionUrl
                         )}
-                    >
-                        <input
-                            id="automatic_node_switcher"
-                            type="checkbox"
-                            checked={isActive}
-                            onChange={() => {}}
-                        />
-                        <label />
-                    </span>
+                    />
 
                     <p style={{fontSize: "80%"}}>
                         <Translate content="settings.automatic_short" />:
@@ -83,24 +76,16 @@ class AutoSelectionNode extends React.Component {
             return (
                 <div className="auto-node">
                     <div>
-                        <span
-                            className="switch"
-                            onClick={this.activate.bind(
+                        <Switch
+                            checked={isActive}
+                            onChange={this.activate.bind(
                                 this,
                                 isActive ? connectedNode.url : autoSelectionUrl
                             )}
-                        >
-                            <input
-                                id="automatic_node_switcher"
-                                type="checkbox"
-                                checked={isActive}
-                                onChange={() => {}}
-                            />
-                            <label />
-                        </span>
+                        />
                         <Translate
                             component="div"
-                            style={{paddingLeft: "1rem", paddingTop: "0.5rem"}}
+                            style={{paddingLeft: "1rem", paddingTop: "0.1rem"}}
                             content="settings.automatic"
                             totalNodes={totalNodes}
                         />
@@ -146,9 +131,8 @@ class ApiNode extends React.Component {
         }
     }
 
-    remove(url, name, e) {
-        e.target.id = "remove"; // Override target.id to allow Removal Node Modal
-        this.props.triggerModal(e, url, name);
+    remove(url, name) {
+        this.props.showRemoveNodeModal(url, name);
     }
 
     show(url) {
@@ -278,7 +262,8 @@ class ApiNode extends React.Component {
                         <p className="api-node-title">{title}</p>
                         {!!node.operator && (
                             <p className="api-node-operator">
-                                {node.operator}&nbsp;&nbsp;&nbsp;
+                                {node.operator}
+                                &nbsp;&nbsp;&nbsp;
                             </p>
                         )}
                         <p
@@ -322,7 +307,7 @@ class ApiNode extends React.Component {
                             </a>
                         )}
                         {canBeRemoved && (
-                            <a onClick={this.remove.bind(this, url, name)}>
+                            <a onClick={this.remove.bind(this, url, title)}>
                                 <Icon
                                     name={"times"}
                                     title="icons.times"
@@ -430,7 +415,7 @@ class AccessSettings extends React.Component {
             <ApiNode
                 node={node}
                 key={node.url}
-                triggerModal={props.triggerModal}
+                showRemoveNodeModal={props.showRemoveNodeModal}
                 isActive={node.url == connectedNode.url}
                 popup={props.popup}
             />
@@ -458,8 +443,8 @@ class AccessSettings extends React.Component {
     }
 
     _recalculateLatency(event, feedback) {
-        feedback("settings.pinging");
-        routerTransitioner.doLatencyUpdate(true, null).finally(() => {
+        routerTransitioner.doLatencyUpdate(true, false, 1).finally(() => {
+            this.forceUpdate();
             feedback();
         });
     }
@@ -523,6 +508,10 @@ class AccessSettings extends React.Component {
 
         let popupCount = 0;
 
+        let backgroundPinging =
+            !!routerTransitioner &&
+            routerTransitioner.isBackgroundPingingInProgress();
+
         return this.props.popup ? (
             <div>
                 <div style={{fontWeight: "bold", height: 40}}>
@@ -549,11 +538,14 @@ class AccessSettings extends React.Component {
         ) : (
             <div style={{paddingTop: "1em"}}>
                 {this.renderAutoSelection(connectedNode)}
+
                 <div className="active-node">
                     <LoadingButton
                         style={{float: "right"}}
+                        isLoading={backgroundPinging}
                         caption="settings.ping"
                         loadingType="inside-feedback-resize"
+                        loadingMessage="settings.pinging"
                         onClick={this._recalculateLatency.bind(this)}
                     />
                     <Translate
@@ -566,10 +558,6 @@ class AccessSettings extends React.Component {
                 <div
                     className="nodes"
                     style={{
-                        display:
-                            props.selectedNode === autoSelectionUrl
-                                ? "none"
-                                : "",
                         position: "relative",
                         marginBottom: "2em"
                     }}
@@ -604,7 +592,7 @@ class AccessSettings extends React.Component {
                         >
                             <div
                                 className="button"
-                                onClick={props.triggerModal.bind(this)}
+                                onClick={props.showAddNodeModal}
                             >
                                 <Translate
                                     id="add"
@@ -639,19 +627,26 @@ class AccessSettings extends React.Component {
     }
 }
 
-AccessSettings = connect(AccessSettings, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            // apiServer and activeNode are ambiguous definition when dealing with isActive, autoSelectionActive etc..
-            // using distinct names
-            selectedNode: SettingsStore.getState().settings.get("apiServer"),
-            connectedNode: SettingsStore.getState().settings.get("activeNode"),
-            apiLatencies: SettingsStore.getState().apiLatencies
-        };
+AccessSettings = connect(
+    AccessSettings,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                // apiServer and activeNode are ambiguous definition when dealing with isActive, autoSelectionActive etc..
+                // using distinct names
+                selectedNode: SettingsStore.getState().settings.get(
+                    "apiServer"
+                ),
+                connectedNode: SettingsStore.getState().settings.get(
+                    "activeNode"
+                ),
+                apiLatencies: SettingsStore.getState().apiLatencies
+            };
+        }
     }
-});
+);
 
 export default AccessSettings;

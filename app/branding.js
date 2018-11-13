@@ -244,9 +244,10 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-        "BRIDGE.",
+  "BRIDGE.",
 	"OPEN.",
 	"bit",
+  "TATCH.",
     ];
 }
 
@@ -257,8 +258,7 @@ export function getAssetNamespaces() {
 export function getAssetHideNamespaces() {
     // e..g "OPEN.", "bit"
     return [
-	"BRIDGE.",
-	"OPEN.",
+	"TATCH."
 	"bit",
     ];
 }
@@ -271,6 +271,7 @@ export function getAssetHideNamespaces() {
 export function allowedGateway(gateway) {
     return (
         ["BRIDGE", "OPEN"]
+
     );
 }
 
