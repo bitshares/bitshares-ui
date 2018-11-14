@@ -1572,6 +1572,7 @@
     //     background-color: lighten($bg-color, 4%);
     // }
     // bottom stats
+
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1973,7 +1974,7 @@
         }
     }
     .introjs-launcher {
-        margin-left: 15px;
+        margin-left: 5px;
         background-color: $bs-blue;
         padding: 0 10px;
         font-size: 18px;
