@@ -28,6 +28,7 @@ import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
 import {Notification} from "bitshares-ui-style-guide";
 import AccountBrowsingMode from "../Account/AccountBrowsingMode";
+import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -183,6 +184,12 @@ class Header extends React.Component {
                 .catch(() => {});
         } else {
             WalletUnlockActions.lock();
+            if (!WalletUnlockStore.getState().rememberMe) {
+                if (!isPersistantType()) {
+                    setLocalStorageType("persistant");
+                }
+                AccountStore.reset();
+            }
         }
         this._closeDropdown();
     }
@@ -1059,13 +1066,16 @@ class Header extends React.Component {
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <AccountBrowsingMode />
+                    <AccountBrowsingMode location={this.props.location} />
                     <div>
-                        <div
-                            className="text account-name"
-                            onClick={this._toggleAccountDropdownMenu}
-                        >
-                            {currentAccount}
+                        <div className="text account-name">
+                            <span onClick={this._toggleAccountDropdownMenu}>
+                                {currentAccount}
+                            </span>
+                            <AccountBrowsingMode
+                                location={this.props.location}
+                                usernameViewIcon={true}
+                            />
                         </div>
                         {walletBalance}
                     </div>

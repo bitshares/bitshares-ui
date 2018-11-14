@@ -1,87 +1,106 @@
 /* ***** declarations ****** */
+@import "./../style-guide-fixes";
 
 @mixin font-face($font-family, $file-path, $font-weight, $font-style) {
-  @font-face {
-    font-family: $font-family;
-    src: url('#{$file-path}.woff') format('woff');
-    font-weight: $font-weight;
-    font-style: $font-style;
-  }
+    @font-face {
+        font-family: $font-family;
+        src: url("#{$file-path}.woff") format("woff");
+        font-weight: $font-weight;
+        font-style: $font-style;
+    }
 }
 
-@include font-face(Roboto-Light, 'vendors/Roboto-Light', 300, normal);
+@include font-face(Roboto-Light, "vendors/Roboto-Light", 300, normal);
 @mixin RobotoLight {
-  font-family: 'Roboto-Light', arial, sans-serif;
-  font-weight: lighter;
-  font-style: normal;
+    font-family: "Roboto-Light", arial, sans-serif;
+    font-weight: lighter;
+    font-style: normal;
 }
 
-@include font-face(Roboto-Medium, 'vendors/Roboto-Medium', normal, normal);
+@include font-face(Roboto-Medium, "vendors/Roboto-Medium", normal, normal);
 @mixin RobotoMedium {
-  font-family: 'Roboto-Medium', arial, sans-serif;
-  font-weight: normal;
-  font-style: normal;
+    font-family: "Roboto-Medium", arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
 }
 
-@include font-face(Roboto-Regular, 'vendors/Roboto-Regular', normal, normal);
+@include font-face(Roboto-Regular, "vendors/Roboto-Regular", normal, normal);
 @mixin RobotoRegular {
-  font-family: 'Roboto-Regular', arial, sans-serif;
-  font-weight: normal;
-  font-style: normal;
+    font-family: "Roboto-Regular", arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
 }
 
-@include font-face(RobotoCondensed-Regular, 'vendors/RobotoCondensed-Regular', normal, normal);
+@include font-face(
+    RobotoCondensed-Regular,
+    "vendors/RobotoCondensed-Regular",
+    normal,
+    normal
+);
 @mixin RobotoCondensed {
-  font-family: 'RobotoCondensed-Regular', arial, sans-serif;
-  font-weight: normal;
-  font-style: normal;
+    font-family: "RobotoCondensed-Regular", arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
 }
 
 @mixin SegoeUILight {
-  font-family: 'wf_SegoeUILight', 'Segoe UI Light', 'Segoe WP Light', 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
-  font-size: 90%;
-  font-weight: lighter;
+    font-family: "wf_SegoeUILight", "Segoe UI Light", "Segoe WP Light",
+        "wf_SegoeUI", "Segoe UI", "Segoe", "Segoe WP", "Tahoma", "Verdana",
+        arial, sans-serif;
+    font-size: 90%;
+    font-weight: lighter;
 }
 
 @mixin SegoeUIRegular {
-  font-family: 'wf_SegoeUI', 'Segoe UI', 'Segoe', 'Segoe WP', 'Tahoma', 'Verdana', arial, sans-serif;
-  font-size: 90%;
-  font-weight: normal;
+    font-family: "wf_SegoeUI", "Segoe UI", "Segoe", "Segoe WP", "Tahoma",
+        "Verdana", arial, sans-serif;
+    font-size: 90%;
+    font-weight: normal;
 }
 
 @mixin MonospaceFont {
-  font-family: "Lucida Console", Monaco, monospace !important;
+    font-family: "Lucida Console", Monaco, monospace !important;
 }
 
 /* ***** styles ****** */
 
-body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto-Regular', arial, sans-serif;
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Roboto-Regular", arial, sans-serif;
 }
 
 .monospace {
-  @include MonospaceFont;
+    @include MonospaceFont;
 }
 
-label, label > span {
-  @include RobotoMedium;
-  text-transform: uppercase;
+*#{$ant-fix} > {
+    label,
+    label > span {
+        @include RobotoMedium;
+        text-transform: uppercase;
+    }
 }
 
 .json-inspector__key {
-  @include MonospaceFont;
-  text-transform: none;
+    @include MonospaceFont;
+    text-transform: none;
 }
 
 .json-inspector__value {
-  @include MonospaceFont;
-  text-transform: none;
+    @include MonospaceFont;
+    text-transform: none;
 }
 
-button, .button {
-  @include RobotoCondensed;
-  text-transform: uppercase;
-  font-size: 0.875rem;
+button,
+.button {
+    @include RobotoCondensed;
+    text-transform: uppercase;
+    font-size: 0.875rem;
 }
 
 // .content-block > h3 {
@@ -98,12 +117,12 @@ button, .button {
 // }
 
 .txtann {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .txtlabel {
-  @include RobotoRegular;
-  text-transform: uppercase;
+    @include RobotoRegular;
+    text-transform: uppercase;
 }
 
 // span.time {
@@ -111,31 +130,36 @@ button, .button {
 // }
 
 .account-drop-down a.button {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .button {
-  @include RobotoCondensed;
+    @include RobotoCondensed;
 }
 
 .footer .logo {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .tabs > .tab-item {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
-.label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-  @include RobotoRegular;
+.label,
+.label.warning,
+.label.success,
+.label.info,
+.label.cancel,
+.label.alert {
+    @include RobotoRegular;
 }
 
 .table > thead > tr > th {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .vertical-order-table-cell {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .table.dashboard-table {
@@ -153,68 +177,81 @@ button, .button {
 // }
 
 .win32 {
-  @include RobotoRegular;
+    @include RobotoRegular;
 }
 
 .win32 {
-  h1, h2, h3, h4, h5, h6 {
-    @include RobotoRegular;
-  }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @include RobotoRegular;
+    }
 
-  label, label > span {
-    @include RobotoRegular;
-  }
+    label,
+    label > span {
+        @include RobotoRegular;
+    }
 
-  button, .button {
-    @include RobotoLight;
-  }
+    button,
+    .button {
+        @include RobotoLight;
+    }
 
-  .content-block > h3 {
-    @include RobotoRegular;
-  }
+    .content-block > h3 {
+        @include RobotoRegular;
+    }
 
-  .page-header > h3 {
-    @include RobotoRegular;
-  }
+    .page-header > h3 {
+        @include RobotoRegular;
+    }
 
-  a.currency, span.currency {
-    @include RobotoRegular;
-  }
+    a.currency,
+    span.currency {
+        @include RobotoRegular;
+    }
 
-  .txtlabel {
-    @include RobotoRegular;
-  }
+    .txtlabel {
+        @include RobotoRegular;
+    }
 
-  span.time {
-    @include RobotoRegular;
-  }
+    span.time {
+        @include RobotoRegular;
+    }
 
-  .account-drop-down a.button {
-    @include RobotoCondensed;
-  }
+    .account-drop-down a.button {
+        @include RobotoCondensed;
+    }
 
-  .footer .logo {
-    @include RobotoRegular;
-  }
+    .footer .logo {
+        @include RobotoRegular;
+    }
 
-  .tabs > .tab-item {
-    @include RobotoRegular;
-  }
+    .tabs > .tab-item {
+        @include RobotoRegular;
+    }
 
-  .label, .label.warning, .label.success, .label.info, .label.cancel, .label.alert {
-    @include RobotoRegular;
-  }
+    .label,
+    .label.warning,
+    .label.success,
+    .label.info,
+    .label.cancel,
+    .label.alert {
+        @include RobotoRegular;
+    }
 
-   .key-value-table tr > td:first-child {
-    @include RobotoRegular;
-  }
-
+    .key-value-table tr > td:first-child {
+        @include RobotoRegular;
+    }
 }
 
 .menu-bar li span:nth-of-type(2) {
-  @include RobotoMedium;
+    @include RobotoMedium;
 }
 
-strong, b {
-  @include RobotoMedium;
+strong,
+b {
+    @include RobotoMedium;
 }
