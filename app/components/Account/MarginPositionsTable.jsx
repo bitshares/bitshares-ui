@@ -6,6 +6,7 @@ import AssetWrapper from "../Utility/AssetWrapper";
 import {ChainStore} from "bitsharesjs";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
+import utils from "common/utils";
 import {List} from "immutable";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
@@ -26,7 +27,7 @@ class ListGenerator extends React.Component {
 
         this.state = {
             assetsPropsCount: 0,
-            callOrdersCount: 0
+            ordersJson: ""
         };
     }
 
@@ -59,22 +60,25 @@ class ListGenerator extends React.Component {
             if (nextProps.callOrders.length > 0) {
                 // add to iterated bitasets items that wasn't listed by default (component's callOrders prop)
                 nextProps.callOrders.forEach(o => {
-                    let assetId = o.getIn(["call_price", "quote", "asset_id"]);
+                    // sometimes we get undefined resonses on very first api requests
+                    if (!!o) {
+                        let assetId = o.getIn(["call_price", "quote", "asset_id"]);
 
-                    if (assetsMap[assetId] == null) {
-                        let newAssetInfo = ChainStore.getObject(assetId);
-                        if (typeof newAssetInfo != "undefined") {
-                            assetsMap[assetId] = index++;
-                            assets.push({
-                                asset: newAssetInfo,
-                                has_margin_order: true,
-                                order: o
-                            });
+                        if (assetsMap[assetId] == null) {
+                            let newAssetInfo = ChainStore.getObject(assetId);
+                            if (typeof newAssetInfo != "undefined") {
+                                assetsMap[assetId] = index++;
+                                assets.push({
+                                    asset: newAssetInfo,
+                                    has_margin_order: true,
+                                    order: o
+                                });
+                            }
+                        } else {
+                            // mark as margin order
+                            assets[assetsMap[assetId]].has_margin_order = true;
+                            assets[assetsMap[assetId]].order = o;
                         }
-                    } else {
-                        // mark as margin order
-                        assets[assetsMap[assetId]].has_margin_order = true;
-                        assets[assetsMap[assetId]].order = o;
                     }
                 });
             }
@@ -90,18 +94,32 @@ class ListGenerator extends React.Component {
     }
 
     render() {
-        let {account, callOrders} = this.props;
-        callOrders = callOrders.filter(o => !!o);
+        let {account} = this.props;
 
         let rows = this.state.assets
             .sort((a, b) => {
                 // a,b - order ChainObject's
                 // could be done via component's property `order_by`
 
-                let aVal = a.has_margin_order ? a.order.get("debt") : 0;
-                let bVal = b.has_margin_order ? b.order.get("debt") : 0;
+                // if both have an order, sort by debt
+                if (a.has_margin_order && b.has_margin_order) {
+                  return b.order.get("debt") - a.order.get("debt");
 
-                return bVal - aVal;
+                } else if (a.has_margin_order || b.has_margin_order){
+                  // having an order goes above having no order
+
+                  return a.has_margin_order?-1:1;
+                } else {
+                  // if both have no order, sort by symbol
+
+                  let aName = utils.replaceName(a.asset);
+                  let bName = utils.replaceName(b.asset);
+
+                  let aSymbol = (aName.prefix != null?aName.prefix:"")+aName.name;
+                  let bSymbol = (bName.prefix != null?bName.prefix:"")+bName.name;
+
+                  return aSymbol.localeCompare(bSymbol);
+                }
             })
             .map(a => {
                 let debtAsset,
@@ -168,7 +186,7 @@ ListGenerator = AssetWrapper(ListGenerator, {
     asList: true
 });
 
-const CollateralTable = ({
+const MarginPositionsTable = ({
     callOrders,
     account,
     className,
@@ -252,4 +270,4 @@ const CollateralTable = ({
     );
 };
 
-export default CollateralTable;
+export default MarginPositionsTable;

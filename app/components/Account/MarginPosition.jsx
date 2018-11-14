@@ -346,7 +346,6 @@ class MarginPosition extends React.Component {
                         />
                     ) : null}
                 </td>
-                {/* <td><AssetName name={debtAsset.get("symbol")} />/<AssetName name={collateralAsset.get("symbol")} /></td> */}
                 <td style={{textAlign: "center"}}>
                     <Link
                         to={`/market/${debtAsset.get(
