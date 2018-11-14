@@ -4,8 +4,9 @@ import LoadingIndicator from "../LoadingIndicator";
 import LogsActions from "actions/LogsActions";
 import CopyButton from "../Utility/CopyButton";
 import html2canvas from "html2canvas";
-import {Modal} from "bitshares-ui-style-guide";
+import {Modal, Button} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
+import Icon from "../Icon/Icon";
 
 class ReportModal extends React.Component {
     constructor(props) {
@@ -53,7 +54,7 @@ class ReportModal extends React.Component {
         return should;
     }
 
-    onMemoChanged(e) {
+    onLogEntryChanged(e) {
         this.setState({logEntries: [e.target.value]});
     }
 
@@ -66,6 +67,11 @@ class ReportModal extends React.Component {
 
     getLogs = () => {
         LogsActions.getLogs().then(data => {
+            if (__DEV__) {
+                data.unshift(
+                    "Running in DEV mode, persistant capturing of logs deactivated!"
+                );
+            }
             this.setState({
                 logEntries: data.join("\n")
             });
@@ -94,6 +100,7 @@ class ReportModal extends React.Component {
                     <p>
                         <Translate content="modal.report.explanatory_text_2" />
                         <br />
+                        &nbsp;&nbsp;
                         <a
                             href="https://github.com/bitshares/bitshares-ui/issues"
                             target="_blank"
@@ -103,6 +110,18 @@ class ReportModal extends React.Component {
                         </a>
                         <br />
                         <Translate content="modal.report.explanatory_text_3" />
+                        <br />
+                        <br />
+                        <Translate content="modal.report.explanatory_text_4" />
+                        <br />
+                        &nbsp;&nbsp;
+                        <a
+                            href="https://hackthedex.io"
+                            target="_blank"
+                            style={{textAlign: "center", width: "100%"}}
+                        >
+                            https://hackthedex.io
+                        </a>
                     </p>
                 );
             }
@@ -116,7 +135,7 @@ class ReportModal extends React.Component {
                         style={{}}
                         rows="20"
                         value={logEntries}
-                        onChange={this.onMemoChanged.bind(this)}
+                        onChange={this.onLogEntryChanged.bind(this)}
                     />
                 );
             }
@@ -139,15 +158,15 @@ class ReportModal extends React.Component {
                 title={counterpart.translate("modal.report.title")}
                 visible={this.props.visible}
                 onCancel={this.props.hideModal}
-                onOk={this.props.hideModal}
+                footer={[
+                    <Button key={"submit"} onClick={this.props.hideModal}>
+                        {counterpart.translate("modal.ok")}
+                    </Button>
+                ]}
             >
                 <div className="grid-block vertical no-overflow">
-                    <Translate content="modal.report.title" component="h1" />
                     <p>
-                        <Translate
-                            content="modal.report.explanatory_text_1"
-                            component="label"
-                        />
+                        <Translate content="modal.report.explanatory_text_1" />
                     </p>
                     <span
                         className="raw"
@@ -163,15 +182,32 @@ class ReportModal extends React.Component {
                             <CopyButton text={this.state.logEntries} />
                         </div>
 
-                        <Translate
-                            className="left-label"
-                            component="label"
-                            content="modal.report.lastLogEntries"
-                            style={{
-                                paddingTop: "1em",
-                                paddingLeft: "0.5em"
-                            }}
-                        />
+                        <div
+                            onClick={this.showLog}
+                            style={{cursor: "pointer"}}
+                            data-tip={
+                                this.state.showLog
+                                    ? counterpart.translate(
+                                          "modal.report.hideLog"
+                                      )
+                                    : counterpart.translate(
+                                          "modal.report.showLog"
+                                      )
+                            }
+                        >
+                            <label
+                                className="left-label"
+                                style={{
+                                    paddingTop: "1em",
+                                    paddingLeft: "0.5em",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                {this.state.showLog ? "-" : "+"}
+                                &nbsp;
+                                <Translate content="modal.report.lastLogEntries" />
+                            </label>
+                        </div>
 
                         {logsArea()}
                     </span>
@@ -201,71 +237,46 @@ class ReportModal extends React.Component {
                         </div>
                         <div
                             className="right-label"
-                            style={{paddingBottom: "0em"}}
+                            style={{
+                                paddingBottom: "0em",
+                                paddingTop: "1em",
+                                paddingRight: "0.5em"
+                            }}
                         >
-                            <Translate
-                                component="label"
-                                content="modal.report.copyScreenshot"
+                            <Translate content="modal.report.copyScreenshot" />
+                        </div>
+
+                        <div
+                            onClick={this.showScreenshot}
+                            style={{cursor: "pointer"}}
+                            data-tip={
+                                this.state.showScreen
+                                    ? counterpart.translate(
+                                          "modal.report.hideScreenshot"
+                                      )
+                                    : counterpart.translate(
+                                          "modal.report.takeScreenshot"
+                                      )
+                            }
+                        >
+                            <label
+                                className="left-label"
                                 style={{
                                     paddingTop: "1em",
-                                    paddingRight: "0.5em"
+                                    paddingLeft: "0.5em",
+                                    cursor: "pointer"
                                 }}
-                            />
+                            >
+                                {this.state.showScreen ? "-" : "+"}
+                                &nbsp;
+                                <Translate content="modal.report.screenshot" />
+                            </label>
                         </div>
-                        <Translate
-                            className="left-label"
-                            component="label"
-                            content="modal.report.screenshot"
-                            style={{
-                                paddingTop: "1em",
-                                paddingLeft: "0.5em"
-                            }}
-                        />
 
                         {screenshotArea()}
                     </span>
                     <br />
                     {decriptionArea()}
-                    <div className="content-block transfer-input">
-                        <div className="no-margin no-padding">
-                            <div
-                                className="small-6"
-                                style={{
-                                    display: "inline-block",
-                                    paddingRight: "10px"
-                                }}
-                            >
-                                <div
-                                    className="button primary"
-                                    onClick={this.showLog}
-                                >
-                                    {this.state.showLog ? (
-                                        <Translate content="modal.report.hideLog" />
-                                    ) : (
-                                        <Translate content="modal.report.showLog" />
-                                    )}
-                                </div>
-                            </div>
-                            <div
-                                className="small-6"
-                                style={{
-                                    display: "inline-block",
-                                    paddingRight: "10px"
-                                }}
-                            >
-                                <div
-                                    className="button primary"
-                                    onClick={this.showScreenshot}
-                                >
-                                    {this.state.showScreen ? (
-                                        <Translate content="modal.report.hideScreenshot" />
-                                    ) : (
-                                        <Translate content="modal.report.takeScreenshot" />
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     {loadingImage && (
                         <div style={{textAlign: "center"}}>
                             <LoadingIndicator type="three-bounce" />

@@ -95,6 +95,7 @@ class AppInit extends React.Component {
 
     _enablePersistingLog() {
         if (this.persistentLogEnabled) return;
+
         if (!this.state.extendeLogText.length) {
             LogsActions.getLogs().then(data => {
                 if (data) {
