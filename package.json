@@ -117,6 +117,12 @@
                 }
             ]
         },
+        "nsis": {
+            "allowElevation": true,
+            "allowToChangeInstallationDirectory": true,
+            "oneClick": false,
+            "perMachine": false
+        },
         "linux": {
             "category": "Finance",
             "target": [
