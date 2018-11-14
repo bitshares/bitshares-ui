@@ -18,8 +18,7 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
-import image from "../../assets/icons/paper-wallet-header.svg";
-import canvg from "canvg";
+import image from "../../assets/icons/paper-wallet-header.png";
 
 class AccountPermissions extends React.Component {
     constructor(props) {
@@ -339,14 +338,11 @@ class AccountPermissions extends React.Component {
                             console.error(err);
                         });
                 };
-                let logo = image;
-                if (logo) logo = logo.replace(/\r?\n|\r/g, "").trim();
-                const canvas = document.createElement("canvas");
-                canvg(canvas, logo);
-                const imgData = canvas.toDataURL("image/png");
 
+                let img = new Image();
+                img.src = image;
                 pdf.addImage(
-                    imgData,
+                    img,
                     "PNG",
                     logoPositionX,
                     0,
