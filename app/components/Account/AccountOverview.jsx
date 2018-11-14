@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AssetName from "../Utility/AssetName";
-import MarginPositions from "./MarginPositions";
+import CollateralTable from "./CollateralTable";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "bitsharesjs";
@@ -585,7 +585,7 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <MarginPositions
+                                        <CollateralTable
                                             preferredUnit={preferredUnit}
                                             className="dashboard-table"
                                             callOrders={call_orders}
@@ -604,7 +604,7 @@ class AccountOverview extends React.Component {
                                                 <td className="column-hide-small" />
                                                 <td colSpan="4" />
                                             </tr>
-                                        </MarginPositions>
+                                        </CollateralTable>
                                     </div>
                                 </div>
                             </Tab>
