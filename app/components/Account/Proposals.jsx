@@ -101,12 +101,8 @@ class Proposals extends Component {
         console.log(touchedAccounts);
 
         touchedAccounts.forEach(_account => {
-            let _accountObj = ChainStore.getObject(_account, false, false);
-            if (!!_accountObj) {
-                const _accountName = _accountObj.get("name");
-                if (accountUtils.isKnownScammer(_accountName)) {
-                    isSuspicious = true;
-                }
+            if (accountUtils.isKnownScammer(_account)) {
+                isSuspicious = true;
             }
             if (
                 this.props.account.get("blacklisted_accounts").some(item => {
