@@ -288,101 +288,100 @@ class AccountPermissions extends React.Component {
             logoWidth = (width * 3) / 4,
             logoHeight = logoWidth / 2.8, //  logo original width/height=2.8
             logoPositionX = (width - logoWidth) / 2;
-        let rowHeight = logoHeight + 20;
+        let rowHeight = logoHeight + 50;
 
         const keys = [ownerkeys, activeKeys, memoKey];
-        const keysName = ["Owner Key", "Active Key", "Memo Key"];
+        const keysName = ["Active Key", "Owner Key", "Memo Key"];
 
-        WalletUnlockActions.unlock()
-            .then(() => {
-                const pdf = new jsPDF({
-                    orientation: "portrait",
-                    format: [width, height]
-                });
+        let locked = WalletDb.isLocked();
 
-                const keyRow = publicKey => {
-                    let privateKey = WalletDb.getPrivateKey(publicKey).toWif();
-                    gQrcode(publicKey, qrMargin, rowHeight + 10);
-                    gQrcode(privateKey, qrRightPos, rowHeight + 10);
-                    pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
-                    pdf.text(publicKey, textMarginLeft, rowHeight + 30);
-                    pdf.rect(
-                        textMarginLeft - 1,
-                        rowHeight + 24,
-                        textWidth,
-                        textHeight
-                    );
-                    pdf.text("PrivateKey", textMarginLeft, rowHeight + 40);
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            format: [width, height]
+        });
+
+        const keyRow = publicKey => {
+            if (!locked) {
+                let privateKey = WalletDb.getPrivateKey(publicKey);
+                if (!!privateKey) {
+                    privateKey = privateKey.toWif();
+                }
+            }
+            gQrcode(publicKey, qrMargin, rowHeight + 10);
+            if (!locked && !!privateKey) {
+                gQrcode(privateKey, qrRightPos, rowHeight + 10);
+            }
+            pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
+            pdf.text(publicKey, textMarginLeft, rowHeight + 30);
+            pdf.rect(textMarginLeft - 1, rowHeight + 24, textWidth, textHeight);
+            if (!locked) {
+                pdf.text("PrivateKey", textMarginLeft, rowHeight + 40);
+                if (!!privateKey) {
                     pdf.text(privateKey, textMarginLeft, rowHeight + 50);
-                    pdf.rect(
-                        textMarginLeft - 1,
-                        rowHeight + 44,
-                        textWidth,
-                        textHeight
-                    );
-                    rowHeight += 70;
-                };
-                const gQrcode = (qrcode, rowWidth, rowHeight) => {
-                    QRCode.toDataURL(qrcode)
-                        .then(url => {
-                            pdf.addImage(
-                                url,
-                                "JPEG",
-                                rowWidth,
-                                rowHeight,
-                                qrSize,
-                                qrSize
-                            );
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
-                };
-
-                let img = new Image();
-                img.src = image;
-                pdf.addImage(
-                    img,
-                    "PNG",
-                    logoPositionX,
-                    0,
-                    logoWidth,
-                    logoHeight
+                } else {
+                    pdf.text("Not found.", textMarginLeft, rowHeight + 50);
+                }
+                pdf.rect(
+                    textMarginLeft - 1,
+                    rowHeight + 44,
+                    textWidth,
+                    textHeight
                 );
-                pdf.text("Account:", 18, rowHeight - 10);
-                pdf.text(accountName, 42, rowHeight - 10);
+            }
+            rowHeight += 70;
+        };
+        const gQrcode = (qrcode, rowWidth, rowHeight) => {
+            QRCode.toDataURL(qrcode)
+                .then(url => {
+                    pdf.addImage(
+                        url,
+                        "JPEG",
+                        rowWidth,
+                        rowHeight,
+                        qrSize,
+                        qrSize
+                    );
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        };
 
-                let content = keys.map((publicKeys, index) => {
-                    pdf.text("Public", 22, rowHeight + 7);
-                    pdf.text(keysName[index], 120, rowHeight + 7);
-                    pdf.text("Private", 260, rowHeight + 7);
-                    pdf.line(
-                        lineMargin,
-                        rowHeight + 1,
-                        width - lineMargin,
-                        rowHeight + 1
-                    );
-                    pdf.line(
-                        lineMargin,
-                        rowHeight + 9,
-                        width - lineMargin,
-                        rowHeight + 9
-                    );
-                    if (typeof publicKeys === "string") {
-                        keyRow(publicKeys);
-                    } else {
-                        publicKeys.map(publicKey => {
-                            keyRow(publicKey);
-                        });
-                    }
+        let img = new Image();
+        img.src = image;
+        pdf.addImage(img, "PNG", logoPositionX, 30, logoWidth, logoHeight);
+        pdf.text("Account:", 18, rowHeight - 10);
+        pdf.text(accountName, 42, rowHeight - 10);
+
+        let content = keys.map((publicKeys, index) => {
+            pdf.text("Public", 22, rowHeight + 7);
+            pdf.text(keysName[index], 120, rowHeight + 7);
+            if (!locked) {
+                pdf.text("Private", 260, rowHeight + 7);
+            }
+            pdf.line(
+                lineMargin,
+                rowHeight + 1,
+                width - lineMargin,
+                rowHeight + 1
+            );
+            pdf.line(
+                lineMargin,
+                rowHeight + 9,
+                width - lineMargin,
+                rowHeight + 9
+            );
+            if (typeof publicKeys === "string") {
+                keyRow(publicKeys);
+            } else {
+                publicKeys.map(publicKey => {
+                    keyRow(publicKey);
                 });
-                Promise.all(content).then(() => {
-                    pdf.save("bitshares-paper-wallet_" + accountName + ".pdf");
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            }
+        });
+        Promise.all(content).then(() => {
+            pdf.save("bitshares-paper-wallet_" + accountName + ".pdf");
+        });
     }
 
     render() {
@@ -473,6 +472,9 @@ class AccountPermissions extends React.Component {
                                     <button
                                         className={"button"}
                                         style={{marginLeft: 10}}
+                                        data-tip={counterpart.translate(
+                                            "account.perm.create_paperwallet_private_hint"
+                                        )}
                                         onClick={() => {
                                             this.onPdfCreate(
                                                 this.state.owner_keys,
@@ -483,7 +485,7 @@ class AccountPermissions extends React.Component {
                                         }}
                                         tabIndex={10}
                                     >
-                                        <Translate content="account.perm.create_Pdf" />
+                                        <Translate content="account.perm.create_paperwallet" />
                                     </button>
                                 </div>
                             }
