@@ -87,15 +87,15 @@ class BitsharesBeosModal extends React.Component {
 
         if (this.state.is_account_creation) {
             newMemo =
-                "beos:" +
+                "pxbts:" +
                 this.state.account +
                 ":" +
                 this.state.memo +
                 ":create";
         } else if (this.state.memo === "" && !this.state.is_account_creation) {
-            newMemo = "beos:" + this.state.account;
+            newMemo = "pxbts:" + this.state.account;
         } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo = "beos:" + this.state.account + ":" + this.state.memo;
+            newMemo = "pxbts:" + this.state.account + ":" + this.state.memo;
         }
 
         if (!from_account) return null;
@@ -287,7 +287,7 @@ class BitsharesBeosModal extends React.Component {
             })
             .catch(error => {
                 this.onAlternativeAccountValidation(
-                    "http://192.168.6.150/api/v2",
+                    "http://192.168.6.150/api/v2", // need to be set
                     account
                 );
             });
@@ -343,7 +343,7 @@ class BitsharesBeosModal extends React.Component {
             maintenance_error: false,
             no_account_error: false
         });
-        this.onAccountValidation("http://192.168.6.150/api/v2", e.target.value);
+        this.onAccountValidation("http://192.168.6.150/api/v2", e.target.value); // need to be set
         this.setState({account_validation_error: false});
         this.setState({account: e.target.value}, this._updateFee);
     }
@@ -393,7 +393,7 @@ class BitsharesBeosModal extends React.Component {
             if (this.state.account.length === 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 0,
+                        fee_amount_creation: 10, // need to be set
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -401,7 +401,7 @@ class BitsharesBeosModal extends React.Component {
             } else if (this.state.account.length < 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 0,
+                        fee_amount_creation: 20, // need to be set
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -435,20 +435,12 @@ class BitsharesBeosModal extends React.Component {
         } else if (this.state.memo === "" && !this.state.is_account_creation) {
             newMemo = "pxbts:" + this.state.account;
         } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo =
-                "pxbts:" +
-                this.state.account +
-                ":" +
-                this.state.memo +
-                ":create";
+            newMemo = "pxbts:" + this.state.account + ":" + this.state.memo;
         }
 
         if (this.state.is_account_creation) {
             newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
         }
-
-        console.log(this.props.issuer.get("id"));
-        console.log("newMemo", newMemo);
 
         AccountActions.transfer(
             this.props.account.get("id"),
