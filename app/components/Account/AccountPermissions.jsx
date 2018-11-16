@@ -297,12 +297,14 @@ class AccountPermissions extends React.Component {
 
         const pdf = new jsPDF({
             orientation: "portrait",
-            format: [width, height]
+            format: [width, height],
+            compressPdf: true
         });
 
         const keyRow = publicKey => {
+            let privateKey = null;
             if (!locked) {
-                let privateKey = WalletDb.getPrivateKey(publicKey);
+                privateKey = WalletDb.getPrivateKey(publicKey);
                 if (!!privateKey) {
                     privateKey = privateKey.toWif();
                 }
@@ -349,7 +351,16 @@ class AccountPermissions extends React.Component {
 
         let img = new Image();
         img.src = image;
-        pdf.addImage(img, "PNG", logoPositionX, 30, logoWidth, logoHeight);
+        pdf.addImage(
+            img,
+            "PNG",
+            logoPositionX,
+            30,
+            logoWidth,
+            logoHeight,
+            "",
+            "MEDIUM"
+        );
         pdf.text("Account:", 18, rowHeight - 10);
         pdf.text(accountName, 42, rowHeight - 10);
 
