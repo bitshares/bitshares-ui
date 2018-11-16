@@ -87,13 +87,15 @@ class BitsharesBeosModal extends React.Component {
 
         if (this.state.is_account_creation) {
             newMemo =
-                "beos:receiving_beos_account_name:" +
+                "beos:" +
+                this.state.account +
+                ":" +
                 this.state.memo +
                 ":create";
         } else if (this.state.memo === "" && !this.state.is_account_creation) {
-            newMemo = "beos:receiving_beos_account_name";
+            newMemo = "beos:" + this.state.account;
         } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo = "beos:receiving_beos_account_name:" + this.state.memo;
+            newMemo = "beos:" + this.state.account + ":" + this.state.memo;
         }
 
         if (!from_account) return null;
@@ -143,7 +145,7 @@ class BitsharesBeosModal extends React.Component {
 
     onAlternativeAccountValidation(url, account) {
         let validation_url =
-            url + "/wallets/steem/address-validator?address=" + account;
+            url + "/wallets/beos/address-validator?address=" + account;
         let validation_promise = fetch(validation_url, {
             method: "get",
             headers: new Headers({Accept: "application/json"})
@@ -153,7 +155,17 @@ class BitsharesBeosModal extends React.Component {
             .then(result => {
                 let re = /^[a-z1-5.]+$/;
                 setTimeout(() => {
-                    if (account.length < 13 && re.test(account)) {
+                    this.setState({
+                        account_validation_error: false,
+                        is_account_validation: false,
+                        maintenance_error: false,
+                        no_account_error: false
+                    });
+                    if (
+                        account.length < 13 &&
+                        re.test(account) &&
+                        account.substr(account.length - 1) !== "."
+                    ) {
                         if (account.length === 12) {
                             this.setState({
                                 btsAmount: "100"
@@ -213,7 +225,7 @@ class BitsharesBeosModal extends React.Component {
             is_account_validation: true
         });
         let validation_url =
-            url + "/wallets/steem/address-validator?address=" + account;
+            url + "/wallets/beos/address-validator?address=" + account;
         let validation_promise = fetch(validation_url, {
             method: "get",
             headers: new Headers({Accept: "application/json"})
@@ -222,7 +234,17 @@ class BitsharesBeosModal extends React.Component {
             .then(result => {
                 let re = /^[a-z1-5.]+$/;
                 setTimeout(() => {
-                    if (account.length < 13 && re.test(account)) {
+                    this.setState({
+                        account_validation_error: false,
+                        is_account_validation: false,
+                        maintenance_error: false,
+                        no_account_error: false
+                    });
+                    if (
+                        account.length < 13 &&
+                        re.test(account) &&
+                        account.substr(account.length - 1) !== "."
+                    ) {
                         if (account.length === 12) {
                             this.setState({
                                 btsAmount: "100"
@@ -265,7 +287,7 @@ class BitsharesBeosModal extends React.Component {
             })
             .catch(error => {
                 this.onAlternativeAccountValidation(
-                    "https://api.blocktrades.info/v2",
+                    "http://192.168.6.150/api/v2",
                     account
                 );
             });
@@ -321,10 +343,7 @@ class BitsharesBeosModal extends React.Component {
             maintenance_error: false,
             no_account_error: false
         });
-        this.onAccountValidation(
-            "https://api.blocktrades.us/v2",
-            e.target.value
-        );
+        this.onAccountValidation("http://192.168.6.150/api/v2", e.target.value);
         this.setState({account_validation_error: false});
         this.setState({account: e.target.value}, this._updateFee);
     }
@@ -346,7 +365,8 @@ class BitsharesBeosModal extends React.Component {
             if (
                 this.state.account.length < 13 &&
                 re.test(this.state.account) &&
-                !this.state.no_account_error
+                !this.state.no_account_error &&
+                this.state.account.substr(this.state.account.length - 1) !== "."
             ) {
                 this.setState({no_account_error: true});
             }
@@ -355,7 +375,8 @@ class BitsharesBeosModal extends React.Component {
             if (
                 this.state.account.length < 13 &&
                 re.test(this.state.account) &&
-                this.state.no_account_error
+                this.state.no_account_error &&
+                this.state.account.substr(this.state.account.length - 1) !== "."
             ) {
                 this.setState({no_account_error: false});
             }
@@ -372,7 +393,7 @@ class BitsharesBeosModal extends React.Component {
             if (this.state.account.length === 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 10000000,
+                        fee_amount_creation: 0,
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -380,7 +401,7 @@ class BitsharesBeosModal extends React.Component {
             } else if (this.state.account.length < 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 20000000,
+                        fee_amount_creation: 0,
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -390,7 +411,10 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onMemoChanged(e) {
-        this.setState({memo: e.target.value}, this._updateFee);
+        this.setState(
+            {memo: e.target.value.replace(/:/g, "")},
+            this._updateFee
+        );
     }
 
     onSubmit() {
@@ -403,18 +427,28 @@ class BitsharesBeosModal extends React.Component {
 
         if (this.state.is_account_creation) {
             newMemo =
-                "beos:receiving_beos_account_name:" +
+                "pxbts:" +
+                this.state.account +
+                ":" +
                 this.state.memo +
                 ":create";
         } else if (this.state.memo === "" && !this.state.is_account_creation) {
-            newMemo = "beos:receiving_beos_account_name";
+            newMemo = "pxbts:" + this.state.account;
         } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo = "beos:receiving_beos_account_name:" + this.state.memo;
+            newMemo =
+                "pxbts:" +
+                this.state.account +
+                ":" +
+                this.state.memo +
+                ":create";
         }
 
         if (this.state.is_account_creation) {
             newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
         }
+
+        console.log(this.props.issuer.get("id"));
+        console.log("newMemo", newMemo);
 
         AccountActions.transfer(
             this.props.account.get("id"),
@@ -510,14 +544,15 @@ class BitsharesBeosModal extends React.Component {
             );
         }
 
-        const disableSubmit =
+        /*const disableSubmit =
             !this.state.amount_to_send ||
             this.state.balance_error ||
             this.state.account === "" ||
             this.state.account_validation_error ||
             this.state.no_account_error ||
             this.state.is_account_validation ||
-            this.state.maintenance_error;
+            this.state.maintenance_error;*/
+        const disableSubmit = false;
 
         return (
             <div>
