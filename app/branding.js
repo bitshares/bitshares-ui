@@ -137,6 +137,7 @@ export function getFeaturedMarkets(quotes = []) {
 	["BRIDGE.PIVX","TATCH.EUR"],
 	["BTS","TATCH.EUR"],
 	["BRIDGE.BCO","TATCH.EUR"],
+	["BITEUR","TATCH.EUR"],
 	["BRIDGE.LTC","TATCH.EUR"],
 	["TATCH.NLG","TATCH.EUR"],
 	["TATCHCOIN","TATCH.EUR"],
