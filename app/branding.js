@@ -88,7 +88,8 @@ export function getMyMarketsBases() {
 export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
-            "BTS"
+            "BTS",
+	    "BITEUR"
         ],
         bridgeTokens: [
             "BRIDGE.LTC",
