@@ -153,9 +153,6 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-  "BRIDGE.",
-  "OPEN.",
-  "bit",
   "TATCH."
     ];
 }
