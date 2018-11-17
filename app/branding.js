@@ -91,10 +91,7 @@ export function getMyMarketsQuotes() {
             "BTS"
         ],
         bridgeTokens: [
-            "BRIDGE.BCO", 
-            "BRIDGE.BTC",
             "BRIDGE.LTC",
-            "BRIDGE.NLG",
 	    "BRIDGE.WSP",
 	    "BRIDGE.RPI",
 	    "BRIDGE.PIVX"
