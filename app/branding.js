@@ -109,21 +109,8 @@ export function getMyMarketsQuotes() {
 	   "TATCH.EUR",
 	   "TATCH.USD",
 	   "TATCH.BTC",
-	   "TATCH.NLG"
-         ],
-        openledgerTokens: [
-            "OBITS",
-            "OPEN.DOGE",
-            "OPEN.EOS",
-            "OPEN.ETH",
-            "OPEN.LISK",
-            "OPEN.NEO",
-            "OPEN.SBD",
-            "OPEN.STEEM",
-            "OPEN.WAVES",
-            "OPEN.XMR",
-            "OPEN.ZEC",
-            "OPEN.ZRX"
+	   "TATCH.NLG",
+	   "TATCHCOIN"
         ]
     };
 	
@@ -141,24 +128,13 @@ export function getMyMarketsQuotes() {
  */
 export function getFeaturedMarkets(quotes = []) {
     return [
- 
+ 	["BRIDGE.BCO","TATCH.NLG"],
+	["BRIDGE.LTC","TATCH.NLG"],
 	["TATCH.BTC","TATCH.NLG"],
 	["TATCH.EUR","TATCH.NLG"],
 	["TATCHCOIN","TATCH.NLG"],
 	["TCLGULDEN","TATCH.NLG"],
 	["TCLSILVER","TATCH.NLG"],
-	["OBITS","TATCH.NLG"],
-	["OPEN.DOGE","TATCH.NLG"],
-	["OPEN.EOS","TATCH.NLG"],
-	["OPEN.ETH","TATCH.NLG"],
-	["OPEN.LISK","TATCH.NLG"],
-	["OPEN.NEO","TATCH.NLG"],
-	["OPEN.SBD","TATCH.NLG"],
-	["OPEN.STEEM","TATCH.NLG"],
-	["OPEN.WAVES","TATCH.NLG"],
-	["OPEN.XMR","TATCH.NLG"],
-	["OPEN.ZEC","TATCH.NLG"],
-	["OPEN.ZRX","TATCH.NLG"],
 	["TATCH.BTC","TATCH.EUR"],
 	["BTS","TATCH.EUR"],
 	["BRIDGE.BCO","TATCH.EUR"],
@@ -167,19 +143,6 @@ export function getFeaturedMarkets(quotes = []) {
 	["TATCHCOIN","TATCH.EUR"],
 	["TCLGULDEN","TATCH.EUR"],
 	["TCLSILVER","TATCH.EUR"],
-	["OBITS","TATCH.EUR"],
-	["OPEN.DOGE","TATCH.EUR"],
-	["OPEN.EOS","TATCH.EUR"],
-	["OPEN.ETH","TATCH.EUR"],
-	["OPEN.LISK","TATCH.EUR"],
-	["OPEN.MAID","TATCH.EUR"],
-	["OPEN.NEO","TATCH.EUR"],
-	["OPEN.SBD","TATCH.EUR"],
-	["OPEN.STEEM","TATCH.EUR"],
-	["OPEN.WAVES","TATCH.EUR"],
-	["OPEN.XMR","TATCH.EUR"],
-	["OPEN.ZEC","TATCH.EUR"],
-	["OPEN.ZRX","TATCH.EUR"]
 	];
 }
 
