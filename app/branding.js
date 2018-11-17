@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN"];
+        return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN", "BTS"];
     else if (chainId === "39f5e2ed") return ["TEST"];
 }
 
@@ -77,7 +77,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["TATCH.EUR", "TATCH.NLG", "TATCH.BTC"];
+    return ["TATCH.EUR", "TATCH.NLG", "TATCH.BTC", "BTS"];
 }
 
 /**
@@ -107,7 +107,6 @@ export function getMyMarketsQuotes() {
 	   "TATCH.USD",
 	   "TATCH.BTC",
 	   "TATCH.NLG",
-	   "TATCHCOIN"
         ]
     };
 	
@@ -125,14 +124,17 @@ export function getMyMarketsQuotes() {
  */
 export function getFeaturedMarkets(quotes = []) {
     return [
- 	["BRIDGE.BCO","TATCH.NLG"],
 	["BRIDGE.LTC","TATCH.NLG"],
 	["TATCH.BTC","TATCH.NLG"],
 	["TATCH.EUR","TATCH.NLG"],
 	["TATCHCOIN","TATCH.NLG"],
 	["TCLGULDEN","TATCH.NLG"],
 	["TCLSILVER","TATCH.NLG"],
+	["BRIDGE.WSP","TATCH.NLG"],
+	["BRIDGE.PIVX","TATCH.NLG"],
 	["TATCH.BTC","TATCH.EUR"],
+	["BRIDGE.WSP","TATCH.EUR"],
+	["BRIDGE.PIVX","TATCH.EUR"],
 	["BTS","TATCH.EUR"],
 	["BRIDGE.BCO","TATCH.EUR"],
 	["BRIDGE.LTC","TATCH.EUR"],
