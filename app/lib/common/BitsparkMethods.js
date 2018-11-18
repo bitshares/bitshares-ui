@@ -14,9 +14,7 @@ function setCacheClearTimer(key) {
     }, fetchCacheTTL);
 }
 
-export function fetchCoins(
-    url = bitsparkAPIs.BASE + bitsparkAPIs.COINS_LIST
-) {
+export function fetchCoins(url = bitsparkAPIs.BASE + bitsparkAPIs.COINS_LIST) {
     const key = "fetchCoins_" + url;
     let currentPromise = fetchInProgess[key];
     if (fetchCache[key]) {
@@ -101,7 +99,6 @@ export function requestDepositAddress({
     stateCallback,
     selectedGateway
 }) {
-
     let gatewayStatus = availableGateways[selectedGateway];
 
     let body = {

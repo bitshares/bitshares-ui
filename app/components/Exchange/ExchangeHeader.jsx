@@ -170,6 +170,10 @@ export default class ExchangeHeader extends React.Component {
             !!this.state.selectedMarketPickerAsset &&
             this.state.selectedMarketPickerAsset == baseSymbol;
 
+        let PriceAlertBellClassName = this.props.hasAnyPriceAlert
+            ? "exchange--price-alert--show-modal--active"
+            : "";
+
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
@@ -185,6 +189,11 @@ export default class ExchangeHeader extends React.Component {
                                         marginTop: "1px"
                                     }}
                                 >
+                                    <AntIcon
+                                        onClick={this.props.showPriceAlertModal}
+                                        type={"bell"}
+                                        className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                                    />
                                     <span
                                         onClick={this.marketPicker.bind(
                                             this,

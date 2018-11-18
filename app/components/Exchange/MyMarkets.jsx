@@ -23,6 +23,8 @@ import debounceRender from "react-debounce-render";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {getPossibleGatewayPrefixes, gatewayPrefixes} from "common/gateways";
 import QuoteSelectionModal from "./QuoteSelectionModal";
+import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
+
 
 class MarketGroup extends React.Component {
     static defaultProps = {
@@ -968,7 +970,9 @@ class MyMarkets extends React.Component {
                         </div>
                         <div className="search-wrapper">
                             <form>
-                                <input
+                            <div className="filter inline-block">
+
+                                <Input
                                     autoComplete="off"
                                     style={{
                                         fontSize: "0.9rem",
@@ -987,12 +991,15 @@ class MyMarkets extends React.Component {
                                     required="required"
                                     value={this.state.myMarketFilter}
                                     onChange={this.handleSearchUpdate}
+                                    addonAfter={<Icon type="search" />}
+
                                 />
-                                <button
+                                </div>
+                                {/* <button
                                     className="clear-text"
                                     type="reset"
                                     onClick={this.clearInput}
-                                />
+                                /> */}
                             </form>
                         </div>
                     </div>

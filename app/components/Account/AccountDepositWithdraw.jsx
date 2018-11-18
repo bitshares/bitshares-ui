@@ -45,7 +45,10 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
-            bitsparkService: props.viewSettings.get("bitsparkService", "gateway"),
+            bitsparkService: props.viewSettings.get(
+                "bitsparkService",
+                "gateway"
+            ),
             xbtsxService: props.viewSettings.get("xbtsxService", "gateway"),
             btService: props.viewSettings.get("btService", "bridge"),
             citadelService: props.viewSettings.get("citadelService", "bridge"),

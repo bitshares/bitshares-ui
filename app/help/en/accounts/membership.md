@@ -14,12 +14,6 @@ Lifetime Members get a percentage cashback on every transaction fee they pay
 and income from referrals. A Lifetime membership is associated with a certain one-time fee
 defined in this [schedule](/explorer/fees).
 
-## Annual Members
-
-If a lifetime membership is too much you can still get the same cashback for the
-next year by becoming an annual subscriber for a smaller one-time fee which
-lasts for only one year.
-
 ### Fee Division
 
 Every time an account you referred pays a transaction fee, that fee is divided

@@ -553,7 +553,7 @@
         "price_history": "価格チャート",
         "price_market": "マーケット価格",
         "quantity": "数量",
-        "quick_deposit": "Quick Deposit",
+        "quick_deposit": "Deposit %(asset)s",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "クオート通貨:",
         "quote_selection": "Modify quote selection",

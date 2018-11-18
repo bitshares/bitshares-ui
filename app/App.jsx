@@ -11,6 +11,7 @@ import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
+import ReportModal from "./components/Modal/ReportModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
@@ -121,6 +122,7 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
     constructor() {
@@ -513,13 +515,16 @@ class App extends React.Component {
                         />
                         <TransactionConfirm />
                         <BrowserNotifications />
+                        <PriceAlertNotifications />
                         <WalletUnlockModal />
                         <BrowserSupportModal
                             visible={this.state.isBrowserSupportModalVisible}
                             hideModal={this.hideBrowserSupportModal}
                             showModal={this.showBrowserSupportModal}
                         />
+                        {/* <ReportModal /> */}
                     </div>
+                    <div id="screenshot" />
                 </BodyClassName>
             </div>
         );

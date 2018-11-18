@@ -40,9 +40,12 @@ class DecryptBackup extends Component {
         this.formChange = this.formChange.bind(this);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.props.active) {
             this.refs.passwordInput.focus();
+        }
+        if (!prevProps.currentAccount && this.props.currentAccount) {
+            this.props.history.push("/");
         }
     }
 
@@ -55,7 +58,6 @@ class DecryptBackup extends Component {
             value: false
         });
         BackupActions.reset();
-        this.props.history.push("/");
     }
 
     onPassword(e) {

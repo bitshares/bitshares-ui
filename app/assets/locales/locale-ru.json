@@ -981,6 +981,13 @@
             "support_block": "Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
             "under_construction": "Технические работы"
         },
+        "xbtsx": {
+            "coming_soon": "Скоро",
+            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
+            "min_amount_error": "Пожалуйста введите число >= минимума",
+            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
+            "under_construction": "Технические работы"
+        },
         "scan_qr": "Сканировать QR-код",
         "service": "Перевод средств",
         "status": "Статус",

@@ -31,6 +31,22 @@ div.registration {
         padding: 0 15px;
         text-align: left;
 
+        span.inline-label {
+            max-width: 30rem;
+
+            &.generated-password-field {
+                margin-bottom: 1.5rem;
+            }
+
+            .button {
+                border-radius: 0;
+            }
+
+            input {
+                padding-right: 0;
+            }
+        }
+
         @include breakpoint(large) {
             .account-name,
             .account-selector {

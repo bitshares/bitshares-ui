@@ -543,7 +543,7 @@ class MarketsActions {
                                 error
                             );
                             dispatch({unSub: false, market: subID});
-                            reject();
+                            reject(error);
                         });
                 });
             }
