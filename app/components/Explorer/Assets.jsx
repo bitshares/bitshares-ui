@@ -469,14 +469,14 @@ class Assets extends React.Component {
                         <div className="generic-bordered-box">
                             <div
                                 style={{
-                                    textAlign: "right",
+                                    textAlign: "left",
                                     marginBottom: "24px"
                                 }}
                             >
                                 <span
                                     style={{
                                         display: "inline-block",
-                                        width: "24px",
+                                        width: "0px",
                                         marginTop: "2px",
                                         float: "left",
                                         fontSize: "18px"
@@ -486,10 +486,20 @@ class Assets extends React.Component {
                                         <Icon type="loading" />
                                     ) : null}
                                 </span>
-
+                                <Input
+                                    placeholder={"Filter..."}
+                                    value={this.state.filterSearch}
+                                    style={{width: "200px"}}
+                                    onChange={this.handleFilterChange}
+                                    addonAfter={<Icon type="search" />}
+                                />
                                 <Radio.Group
                                     value={this.state.activeFilter}
                                     onChange={this._toggleFilter}
+                                    style={{
+                                        marginBottom: "7px",
+                                        marginLeft: "24px"
+                                    }}
                                 >
                                     <Radio value={"market"}>
                                         <Translate content="explorer.assets.market" />
@@ -524,13 +534,7 @@ class Assets extends React.Component {
                                     </Select.Option>
                                 </Select>
 
-                                <Input
-                                    placeholder={"Quick Search"}
-                                    value={this.state.filterSearch}
-                                    style={{width: "200px", marginLeft: "24px"}}
-                                    onChange={this.handleFilterChange}
-                                    addonAfter={<Icon type="search" />}
-                                />
+
                             </div>
 
                             {activeFilter == "prediction" ? (

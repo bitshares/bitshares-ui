@@ -259,7 +259,7 @@ class Accounts extends React.Component {
                                 }}
                             >
                                 <Input
-                                    placeholder={"Search"}
+                                    placeholder={"Filter..."}
                                     value={this.state.searchTerm}
                                     style={{width: "200px"}}
                                     onChange={this._onSearchChange.bind(this)}
