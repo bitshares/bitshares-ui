@@ -34,6 +34,7 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
+import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
 class Exchange extends React.Component {
     static propTypes = {
@@ -103,7 +104,61 @@ class Exchange extends React.Component {
         this.showBorrowBaseModal = this.showBorrowBaseModal.bind(this);
         this.hideBorrowBaseModal = this.hideBorrowBaseModal.bind(this);
 
+        this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
+        this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
+
+        this.handlePriceAlertSave = this.handlePriceAlertSave.bind(this);
+
         this.psInit = true;
+    }
+
+    handlePriceAlertSave(savedRules = []) {
+        // add info about market asset pair
+        savedRules = savedRules.map(rule => ({
+            type: rule.type,
+            price: rule.price,
+            baseAssetSymbol: this.props.baseAsset.get("symbol"),
+            quoteAssetSymbol: this.props.quoteAsset.get("symbol")
+        }));
+
+        // drop old rules for current market pair
+        let rules = this.props.priceAlert.filter(rule => {
+            return (
+                rule &&
+                this.props.baseAsset &&
+                this.props.quoteAsset &&
+                (rule.get("baseAssetSymbol") !==
+                    this.props.baseAsset.get("symbol") ||
+                    rule.get("quoteAssetSymbol") !==
+                        this.props.quoteAsset.get("symbol"))
+            );
+        });
+
+        // pushing new rules
+        rules = [...rules, ...savedRules];
+
+        // saving rules
+        SettingsActions.setPriceAlert(rules);
+
+        this.hidePriceAlertModal();
+    }
+
+    getPriceAlertRules() {
+        //getting rules based on market pairs
+
+        let rules = this.props.priceAlert.filter(rule => {
+            return (
+                rule &&
+                this.props.baseAsset &&
+                this.props.quoteAsset &&
+                rule.get("baseAssetSymbol") ===
+                    this.props.baseAsset.get("symbol") &&
+                rule.get("quoteAssetSymbol") ===
+                    this.props.quoteAsset.get("symbol")
+            );
+        });
+
+        return rules.toJS();
     }
 
     _handleExpirationChange(type, e) {
@@ -248,6 +303,7 @@ class Exchange extends React.Component {
             isConfirmBuyOrderModalVisible: false,
             isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
+            isPriceAlertModalVisible: false,
             isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -319,6 +375,18 @@ class Exchange extends React.Component {
     hidePersonalizeModal() {
         this.setState({
             isPersonalizeModalVisible: false
+        });
+    }
+
+    showPriceAlertModal() {
+        this.setState({
+            isPriceAlertModalVisible: true
+        });
+    }
+
+    hidePriceAlertModal() {
+        this.setState({
+            isPriceAlertModalVisible: false
         });
     }
 
@@ -1413,8 +1481,7 @@ class Exchange extends React.Component {
         this.showBorrowBaseModal();
     }
 
-    _onDeposit(type, e) {
-        e.preventDefault();
+    _onDeposit(type) {
         this.setState({
             modalType: type
         });
@@ -1422,8 +1489,7 @@ class Exchange extends React.Component {
         this.showDepositModal();
     }
 
-    _onBuy(type, e) {
-        e.preventDefault();
+    _onBuy(type) {
         this.setState({
             modalType: type
         });
@@ -2150,9 +2216,8 @@ class Exchange extends React.Component {
                     current={`${quoteSymbol}_${baseSymbol}`}
                     location={this.props.location}
                     history={this.props.history}
-                    activeTab={tabVerticalPanel
-                        ? tabVerticalPanel
-                        : "my-market"
+                    activeTab={
+                        tabVerticalPanel ? tabVerticalPanel : "my-market"
                     }
                 />
             );
@@ -2338,8 +2403,11 @@ class Exchange extends React.Component {
             );
 
         let settlementOrders =
-            tinyScreen &&
-            !this.state.mobileKey.includes("settlementOrders") ? null : (
+            marketSettleOrders.size === 0 ||
+            (
+                tinyScreen &&
+                !this.state.mobileKey.includes("settlementOrders")
+            ) ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
@@ -2531,7 +2599,7 @@ class Exchange extends React.Component {
                     groupStandalone.push(myOpenOrders);
                 }
 
-                if (a == "open_settlement") {
+                if (a == "open_settlement" && settlementOrders !== null) {
                     groupStandalone.push(settlementOrders);
                 }
             } else {
@@ -2568,7 +2636,7 @@ class Exchange extends React.Component {
                     );
                 }
 
-                if (a == "open_settlement") {
+                if (a == "open_settlement" && settlementOrders !== null) {
                     groupTabs[panelTabs[a]].push(
                         <Tabs.TabPane
                             tab={translator.translate("exchange.settle_orders")}
@@ -2596,11 +2664,11 @@ class Exchange extends React.Component {
         let groupTabsCount = groupStandalone.length;
 
         Object.keys(groupTabs).map(tab => {
-            if(groupTabs[tab].length) {
+            if (groupTabs[tab].length) {
                 groupTabsCount++;
             }
         });
-        
+
         let groupTabbed1 =
             groupTabs[1].length > 0 ? (
                 <div
@@ -2608,9 +2676,13 @@ class Exchange extends React.Component {
                     className={cnames(
                         verticalOrderBook ? "xlarge-order-2" : "xlarge-order-2",
                         centerContainerWidth > 1200
-                            ? groupTabsCount == 1 ? "medium-12 xlarge-4" : "medium-6 xlarge-4 "
+                            ? groupTabsCount == 1
+                                ? "medium-12 xlarge-4"
+                                : "medium-6 xlarge-4 "
                             : centerContainerWidth > 800
-                                ? groupTabsCount == 1 ? "medium-12" : "medium-6"
+                                ? groupTabsCount == 1
+                                    ? "medium-12"
+                                    : "medium-6"
                                 : "",
                         "small-12 order-5"
                     )}
@@ -2631,9 +2703,13 @@ class Exchange extends React.Component {
                     key={`actionCard_${actionCardIndex++}`}
                     className={cnames(
                         centerContainerWidth > 1200
-                            ? groupTabsCount == 1 ? "medium-12 xlarge-4" : "medium-6 xlarge-4 "
+                            ? groupTabsCount == 1
+                                ? "medium-12 xlarge-4"
+                                : "medium-6 xlarge-4 "
                             : centerContainerWidth > 800
-                                ? groupTabsCount == 1 ? "medium-12" : "medium-6"
+                                ? groupTabsCount == 1
+                                    ? "medium-12"
+                                    : "medium-6"
                                 : "",
                         "small-12 order-6"
                     )}
@@ -2699,9 +2775,7 @@ class Exchange extends React.Component {
                         onChange={this._setTabVerticalPanel.bind(this)}
                     >
                         <Tabs.TabPane
-                            tab={translator.translate(
-                                "exchange.market_name"
-                            )}
+                            tab={translator.translate("exchange.market_name")}
                             key="my-market"
                         />
                         <Tabs.TabPane
@@ -2749,12 +2823,14 @@ class Exchange extends React.Component {
                     >
                         {marketHistory}
                     </Collapse.Panel>
-                    <Collapse.Panel
-                        header={translator.translate("exchange.settle_orders")}
-                        key="settlementOrders"
-                    >
-                        {settlementOrders}
-                    </Collapse.Panel>
+                    {settlementOrders !== null ? 
+                        <Collapse.Panel
+                            header={translator.translate("exchange.settle_orders")}
+                            key="settlementOrders"
+                        >
+                            {settlementOrders}
+                        </Collapse.Panel> : null
+                    }
                     <Collapse.Panel
                         header={translator.translate("exchange.my_history")}
                         key="myMarketHistory"
@@ -2939,6 +3015,8 @@ class Exchange extends React.Component {
             <div className="grid-block vertical">
                 {!this.props.marketReady ? <LoadingIndicator /> : null}
                 <ExchangeHeader
+                    hasAnyPriceAlert={this.props.hasAnyPriceAlert}
+                    showPriceAlertModal={this.showPriceAlertModal}
                     account={this.props.currentAccount}
                     quoteAsset={quoteAsset}
                     baseAsset={baseAsset}
@@ -3225,6 +3303,17 @@ class Exchange extends React.Component {
                         hasOrders={combinedBids.length > 0}
                     />
                 ) : null}
+
+                <PriceAlert
+                    onSave={this.handlePriceAlertSave}
+                    rules={this.getPriceAlertRules()}
+                    latestPrice={latest && latest.getPrice()}
+                    quoteAsset={this.props.quoteAsset.get("id")}
+                    baseAsset={this.props.baseAsset.get("id")}
+                    visible={this.state.isPriceAlertModalVisible}
+                    showModal={this.showPriceAlertModal}
+                    hideModal={this.hidePriceAlertModal}
+                />
             </div>
         );
     }

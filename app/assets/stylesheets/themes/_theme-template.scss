@@ -63,6 +63,32 @@
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    .exchange--price-alert--show-modal--active {
+        color: $link-text-color;
+    }
+
+    .price-alert--notification--pair-name {
+        font-weight: 600;
+    }
+
+    .price-alert--notification--icon {
+        &.price-alert--notification--icon--up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--icon--down {
+            color: $negative-color;
+        }
+    }
+
+    .price-alert--notification--actual-price {
+        &.price-alert--notification--actual-price-up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--actual-price-down {
+            color: $negative-color;
+        }
+    }
+
     .explore-witness--info {
         width: 100%;
 
@@ -192,9 +218,11 @@
             color: lighten($link-text-color, 4%);
         }
     }
-    label,
-    label > span {
-        color: $primary-text-color;
+    *#{$ant-fix} > {
+        label,
+        label > span {
+            color: $primary-text-color;
+        }
     }
     // select:hover {
     // background-color: $panel-bg-color;
@@ -612,10 +640,9 @@
             color: $link-text-color;
         }
     }
-    .header-container .anticon {
-        color: $primary-text-color !important;
-        background-color: $primary-text-color !important;
-        fill: $primary-text-color !important;
+
+    .blue {
+        color: $button-bg-color;        
     }
 
     .grp-menu-item button {
@@ -1545,6 +1572,7 @@
     //     background-color: lighten($bg-color, 4%);
     // }
     // bottom stats
+
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1946,7 +1974,7 @@
         }
     }
     .introjs-launcher {
-        margin-left: 15px;
+        margin-left: 5px;
         background-color: $bs-blue;
         padding: 0 10px;
         font-size: 18px;
@@ -2408,21 +2436,6 @@
 
     .modal--transaction-confirm {
         zindex: 10000; // make transaction confirm modal above another modals
-    }
-
-    /* Ant Design Hacks */
-    .ant-select-arrow {
-        color: $light-text-color !important;
-    }
-
-    .ant-select-selection-selected-value {
-        color: $light-text-color !important;
-    }
-
-    .ant-input {
-        border-left: 1px solid $super-light-panel-bg-color !important;
-        border-top: 1px solid $super-light-panel-bg-color !important;
-        border-bottom: 1px solid $super-light-panel-bg-color !important;
     }
 }
 .rc-time-picker-panel {

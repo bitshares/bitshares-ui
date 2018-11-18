@@ -553,7 +553,7 @@
         "price_history": "Grafico del prezzo",
         "price_market": "Market Price",
         "quantity": "Quantità",
-        "quick_deposit": "Quick Deposit",
+        "quick_deposit": "Deposit %(asset)s",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",

@@ -8,12 +8,12 @@ import {ChainStore, key} from "bitsharesjs/es";
 import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
-import PasswordInput from "components/Forms/PasswordInput";
 import WalletDb from "stores/WalletDb";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import Icon from "../Icon/Icon";
+import CopyButton from "../Utility/CopyButton";
 
 class AccountRegistrationForm extends React.Component {
     static propTypes = {
@@ -25,17 +25,17 @@ class AccountRegistrationForm extends React.Component {
         this.state = {
             validAccountName: false,
             accountName: "",
-            validPassword: false,
             registrarAccount: null,
             loading: false,
-            generatedPassword: `P${key.get_random_key().toWif()}`
+            generatedPassword: `P${key.get_random_key().toWif()}`,
+            confirmPassword: ""
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onRegistrarAccountChange = this.onRegistrarAccountChange.bind(
             this
         );
-        this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onAccountNameChange = this.onAccountNameChange.bind(this);
+        this.onConfirmation = this.onConfirmation.bind(this);
         this.accountNameInput = null;
     }
 
@@ -79,15 +79,19 @@ class AccountRegistrationForm extends React.Component {
         }
     }
 
-    onPasswordChange(e) {
-        this.setState({validPassword: e.valid});
+    onConfirmation(e) {
+        const value = e.currentTarget.value;
+        this.setState({
+            confirmPassword: value,
+            passwordConfirmed: value === this.state.generatedPassword
+        });
     }
 
     isValid() {
         const firstAccount = AccountStore.getMyAccounts().length === 0;
         let valid = this.state.validAccountName;
         if (!WalletDb.getWallet()) {
-            valid = valid && this.state.validPassword;
+            valid = valid;
         }
         if (!firstAccount) {
             valid = valid && this.state.registrarAccount;
@@ -137,17 +141,41 @@ class AccountRegistrationForm extends React.Component {
                         }
                         noLabel
                     />
-
-                    <PasswordInput
-                        value={this.state.generatedPassword}
-                        confirmation
-                        onChange={this.onPasswordChange}
-                        noLabel
-                        placeholder={counterpart.translate("settings.password")}
-                        copy
-                        readonly
-                        visible
-                    />
+                    <label className="left-label" htmlFor="password">
+                        <Translate content="wallet.generated" />
+                    </label>
+                    <span className="inline-label generated-password-field">
+                        <textarea
+                            id="password"
+                            rows="2"
+                            readOnly
+                            disabled
+                            defaultValue={this.state.generatedPassword}
+                        />
+                        <CopyButton
+                            text={this.state.generatedPassword}
+                            tip="tooltip.copy_password"
+                            dataPlace="top"
+                        />
+                    </span>
+                    <label className="left-label" htmlFor="confirmPassword">
+                        <Translate content="wallet.confirm_password" />
+                    </label>
+                    <span className="inline-label">
+                        <input
+                            type="password"
+                            name="password"
+                            id="confirmPassword"
+                            value={this.state.confirmPassword}
+                            onChange={this.onConfirmation}
+                        />
+                    </span>
+                    {this.state.confirmPassword &&
+                    !this.state.passwordConfirmed ? (
+                        <div className="has-error">
+                            <Translate content="wallet.confirm_error" />
+                        </div>
+                    ) : null}
 
                     {firstAccount ? null : (
                         <div className="full-width-content form-group no-overflow">
@@ -174,7 +202,11 @@ class AccountRegistrationForm extends React.Component {
                     ) : (
                         <button
                             className="button-primary"
-                            disabled={!valid || (registrarAccount && !isLTM)}
+                            disabled={
+                                !valid ||
+                                !this.state.passwordConfirmed ||
+                                (registrarAccount && !isLTM)
+                            }
                         >
                             <Translate content="registration.continue" />
                         </button>

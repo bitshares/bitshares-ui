@@ -215,6 +215,7 @@ class WalletRegistrationForm extends React.Component {
                 confirmation
                 onChange={e => this.onPasswordChange(e)}
                 noLabel
+                checkStrength
                 placeholder={
                     <span>
                         <span className="vertical-middle">

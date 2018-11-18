@@ -1162,6 +1162,10 @@ export default class ModalWrapper extends React.Component {
         };
     }
 
+    show() {
+        this.props.showModal();
+    }
+
     componentWillMount() {
         this.setState({
             smallScreen: window.innerHeight <= 800
