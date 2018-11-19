@@ -11,6 +11,8 @@ import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelector";
 import Icon from "../Icon/Icon";
+import {Button} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class AccountLogin extends React.Component {
     static propTypes = {
@@ -121,17 +123,13 @@ class AccountLogin extends React.Component {
         return (
             <div className="button-group">
                 {this.props.active ? (
-                    <Translate
-                        component="button"
-                        className="button-primary"
-                        onClick={this.onPasswordEnter}
-                        content="login.loginButton"
-                    />
+                    <Button onClick={this.onPasswordEnter} type="primary">
+                        {counterpart.translate("login.loginButton")}
+                    </Button>
                 ) : (
-                    <Translate
-                        className="button-secondary"
-                        content="registration.select"
-                    />
+                    <Button>
+                        {counterpart.translate("registration.select")}
+                    </Button>
                 )}
             </div>
         );

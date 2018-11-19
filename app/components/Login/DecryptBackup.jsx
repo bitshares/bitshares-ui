@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import {connect} from "alt-react";
 import Translate from "react-translate-component";
@@ -13,6 +14,8 @@ import BackupActions, {restore} from "actions/BackupActions";
 import notify from "actions/NotificationActions";
 import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
+import {Button, Input} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class DecryptBackup extends Component {
     static propTypes = {
@@ -42,7 +45,11 @@ class DecryptBackup extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.active) {
-            this.refs.passwordInput.focus();
+            let node = ReactDOM.findDOMNode(this.refs.passwordInput);
+
+            if (node && node.focus) {
+                node.focus();
+            }
         }
         if (!prevProps.currentAccount && this.props.currentAccount) {
             this.props.history.push("/");
@@ -96,18 +103,13 @@ class DecryptBackup extends Component {
         return (
             <div className="button-group">
                 {this.props.active ? (
-                    <Translate
-                        component="button"
-                        type="submit"
-                        onClick={this.onPassword}
-                        className="button-primary"
-                        content="login.loginButton"
-                    />
+                    <Button onClick={this.onPassword} type="primary">
+                        {counterpart.translate("login.loginButton")}
+                    </Button>
                 ) : (
-                    <Translate
-                        className="button-secondary"
-                        content="registration.select"
-                    />
+                    <Button>
+                        {counterpart.translate("registration.select")}
+                    </Button>
                 )}
             </div>
         );
@@ -127,7 +129,7 @@ class DecryptBackup extends Component {
                     >
                         <Translate content="settings.password" />
                     </label>
-                    <input
+                    <Input
                         className={`${
                             this.state.passwordError
                                 ? "input-warning"
