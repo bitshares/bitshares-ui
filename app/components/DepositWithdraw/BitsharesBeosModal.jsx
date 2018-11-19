@@ -287,7 +287,7 @@ class BitsharesBeosModal extends React.Component {
             })
             .catch(error => {
                 this.onAlternativeAccountValidation(
-                    "http://192.168.6.150/api/v2", // need to be set
+                    "https://blocktrades.syncad.com/api/v2", // need to be set
                     account
                 );
             });
@@ -343,7 +343,10 @@ class BitsharesBeosModal extends React.Component {
             maintenance_error: false,
             no_account_error: false
         });
-        this.onAccountValidation("http://192.168.6.150/api/v2", e.target.value); // need to be set
+        this.onAccountValidation(
+            "https://blocktrades.syncad.com/api/v2",
+            e.target.value
+        ); // need to be set
         this.setState({account_validation_error: false});
         this.setState({account: e.target.value}, this._updateFee);
     }
@@ -536,15 +539,14 @@ class BitsharesBeosModal extends React.Component {
             );
         }
 
-        /*const disableSubmit =
+        const disableSubmit =
             !this.state.amount_to_send ||
             this.state.balance_error ||
             this.state.account === "" ||
             this.state.account_validation_error ||
             this.state.no_account_error ||
             this.state.is_account_validation ||
-            this.state.maintenance_error;*/
-        const disableSubmit = false;
+            this.state.maintenance_error;
 
         return (
             <div>
