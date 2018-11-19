@@ -67,15 +67,16 @@ class Tab extends React.Component {
             if (typeof subText === "string") {
                 subText = subText.trim();
             }
+            if (title.type === "span") {
+                title = title.props.children[2];
+            }
             return (
                 <option value={index} data-is-link-to={this.props.isLinkTo}>
-                    <span className="tab-title">
-                        {title}
-                        {updatedTab ? "*" : ""}
-                        {subText && " ("}
-                        {subText && subText}
-                        {subText && ")"}
-                    </span>
+                    {title}
+                    {updatedTab ? "*" : ""}
+                    {subText && " ("}
+                    {subText && subText}
+                    {subText && ")"}
                 </option>
             );
         }
@@ -260,14 +261,17 @@ class Tabs extends React.Component {
     }
 }
 
-Tabs = connect(Tabs, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {viewSettings: SettingsStore.getState().viewSettings};
+Tabs = connect(
+    Tabs,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {viewSettings: SettingsStore.getState().viewSettings};
+        }
     }
-});
+);
 
 Tabs = withRouter(Tabs);
 
