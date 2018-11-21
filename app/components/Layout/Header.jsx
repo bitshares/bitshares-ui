@@ -188,7 +188,7 @@ class Header extends React.Component {
                 if (!isPersistantType()) {
                     setLocalStorageType("persistant");
                 }
-                AccountStore.reset();
+                AccountStore.tryToSetCurrentAccount();
             }
         }
         this._closeDropdown();
