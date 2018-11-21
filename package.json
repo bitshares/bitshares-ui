@@ -3,8 +3,7 @@
     "version": "Tatch-Cloud-Wallet.0.Beta.6.ParaBellum.2",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/TatchCapital/Tatch-Cloud-Wallet.0.Beta.6.ParaBellum.2",
-    "author": "Tatch Capital Limited>"
-    ],
+    "author": "Tatch Capital Limited",
     "license": "MIT",
     "engines": {
         "node": ">=10.x",
