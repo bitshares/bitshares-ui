@@ -5,6 +5,7 @@ import ChainTypes from "components/Utility/ChainTypes";
 import Translate from "react-translate-component";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BindToChainState from "components/Utility/BindToChainState";
+import QueryString from "query-string";
 
 class BitsharesBeos extends React.Component {
     static propTypes = {
@@ -19,8 +20,19 @@ class BitsharesBeos extends React.Component {
         ZfApi.publish(this.getTransferBtsId(), "open");
     }
 
+    getParams() {
+        const {params} = this.props;
+        return {
+            beosFee: "0.001",
+            beosApiUrl: "https://blocktrades.syncad.com/api/v2",
+            beosIssuer: "tanda-radei",
+            ...QueryString.parse(params.search)
+        };
+    }
+
     render() {
         let transferBtsId = this.getTransferBtsId();
+        const {beosFee, beosIssuer, beosApiUrl} = this.getParams();
 
         return (
             <div>
@@ -28,9 +40,9 @@ class BitsharesBeos extends React.Component {
                     To participate in the BEOS reward program, you must deposit
                     BTS via this gateway to your BEOS network account. If you
                     don’t already have a BEOS account, you can create one via
-                    this gateway by paying a fee of 100 BTS. The gateway will
-                    read the public keys of the BitShares account you send the
-                    BTS from, and automatically assign the same keys to your
+                    this gateway by paying a fee of {beosFee} BTS. The gateway
+                    will read the public keys of the BitShares account you send
+                    the BTS from, and automatically assign the same keys to your
                     newly created BEOS account. This means you can use the same
                     private keys to control both your BitShares account and your
                     BEOS account. If you don’t want to use the same keys, you
@@ -41,8 +53,8 @@ class BitsharesBeos extends React.Component {
                 <p>
                     When you deposit BTS via the gateway, your BEOS account will
                     be credited with an equivalent amount of a BTS IOU token
-                    (minus 100 BTS if you are simultaneously creating your BEOS
-                    account).
+                    (minus {beosFee} BTS if you are simultaneously creating your
+                    BEOS account).
                 </p>
                 <p>
                     During the 89 days of the BEOS reward distribution period,
@@ -103,7 +115,9 @@ class BitsharesBeos extends React.Component {
                                 ]
                             }
                             creator={"eosio"}
-                            issuer="tanda-radei" // need to be set
+                            issuer={beosIssuer}
+                            beosApiUrl={beosApiUrl}
+                            beosFee={beosFee}
                             owner_key={
                                 "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
                             }

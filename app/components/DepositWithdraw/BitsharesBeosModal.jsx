@@ -24,7 +24,9 @@ class BitsharesBeosModal extends React.Component {
         account_contract: PropTypes.string.isRequired,
         action: PropTypes.string.isRequired,
         from: PropTypes.string.isRequired,
-        balance: ChainTypes.ChainObject
+        balance: ChainTypes.ChainObject,
+        beosApiUrl: PropTypes.string.isRequired,
+        beosFee: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -32,7 +34,7 @@ class BitsharesBeosModal extends React.Component {
 
         this.state = {
             account: "",
-            btsAmount: "100",
+            btsAmount: "0.001",
             is_account_validation: false,
             is_account_creation_checkbox: false,
             account_validation_error: false,
@@ -168,11 +170,11 @@ class BitsharesBeosModal extends React.Component {
                     ) {
                         if (account.length === 12) {
                             this.setState({
-                                btsAmount: "100"
+                                btsAmount: this.props.beosFee
                             });
                         } else if (account.length < 12) {
                             this.setState({
-                                btsAmount: "200"
+                                btsAmount: this.props.beosFee
                             });
                         }
                         if (
@@ -247,11 +249,11 @@ class BitsharesBeosModal extends React.Component {
                     ) {
                         if (account.length === 12) {
                             this.setState({
-                                btsAmount: "100"
+                                btsAmount: this.props.beosFee
                             });
                         } else if (account.length < 12) {
                             this.setState({
-                                btsAmount: "200"
+                                btsAmount: this.props.beosFee
                             });
                         }
                         if (
@@ -287,7 +289,7 @@ class BitsharesBeosModal extends React.Component {
             })
             .catch(error => {
                 this.onAlternativeAccountValidation(
-                    "https://blocktrades.syncad.com/api/v2", // need to be set
+                    this.props.beosApiUrl, // need to be set
                     account
                 );
             });
@@ -343,10 +345,7 @@ class BitsharesBeosModal extends React.Component {
             maintenance_error: false,
             no_account_error: false
         });
-        this.onAccountValidation(
-            "https://blocktrades.syncad.com/api/v2",
-            e.target.value
-        ); // need to be set
+        this.onAccountValidation(this.props.beosApiUrl, e.target.value); // need to be set
         this.setState({account_validation_error: false});
         this.setState({account: e.target.value}, this._updateFee);
     }
@@ -393,10 +392,13 @@ class BitsharesBeosModal extends React.Component {
                 this._checkBalance
             );
         } else {
+            // 5x0
+            const fee = parseFloat(this.props.beosFee) * 100000;
             if (this.state.account.length === 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 10, // need to be set
+                        // x
+                        fee_amount_creation: fee, // need to be set
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -404,7 +406,8 @@ class BitsharesBeosModal extends React.Component {
             } else if (this.state.account.length < 12) {
                 this.setState(
                     {
-                        fee_amount_creation: 20, // need to be set
+                        // x
+                        fee_amount_creation: fee, // need to be set
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
