@@ -468,3 +468,18 @@ div.tabs-container {
         @include RobotoRegular;
     }
 }
+
+.account-input-style-guide--account-status {
+    float: right;
+    color: $success-color;
+}
+
+.account-input-style-guide--account-status--scammer {
+    color: $alert-color;
+}
+
+.account-input-style-guide--label {
+}
+
+.account-input-style-guide {
+}
