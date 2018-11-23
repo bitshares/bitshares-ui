@@ -36,6 +36,8 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
+import {updateGatewayBackers} from "common/gatewayUtils";
+
 class Exchange extends React.Component {
     static propTypes = {
         marketCallOrders: PropTypes.object.isRequired,
@@ -478,7 +480,7 @@ class Exchange extends React.Component {
             capture: false,
             passive: true
         });
-
+        // updateGatewayBackers();
         this._checkFeeStatus();
     }
 
@@ -1483,7 +1485,7 @@ class Exchange extends React.Component {
 
     _onDeposit(type) {
         this.setState({
-            modalType: type
+            depositModalType: type
         });
 
         this.showDepositModal();
@@ -1491,7 +1493,7 @@ class Exchange extends React.Component {
 
     _onBuy(type) {
         this.setState({
-            modalType: type
+            buyModalType: type
         });
 
         this.showDepositBridgeModal();
@@ -1831,7 +1833,8 @@ class Exchange extends React.Component {
             tabVerticalPanel,
             hidePanel,
             hideScrollbars,
-            modalType,
+            buyModalType,
+            depositModalType,
             autoScroll,
             activePanels,
             panelWidth,
@@ -1965,7 +1968,6 @@ class Exchange extends React.Component {
         /***
          * Generate layout cards
          */
-
         let actionCardIndex = 0;
 
         let buyForm = isFrozen ? null : tinyScreen &&
@@ -2404,10 +2406,8 @@ class Exchange extends React.Component {
 
         let settlementOrders =
             marketSettleOrders.size === 0 ||
-            (
-                tinyScreen &&
-                !this.state.mobileKey.includes("settlementOrders")
-            ) ? null : (
+            (tinyScreen &&
+                !this.state.mobileKey.includes("settlementOrders")) ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
@@ -2823,14 +2823,16 @@ class Exchange extends React.Component {
                     >
                         {marketHistory}
                     </Collapse.Panel>
-                    {settlementOrders !== null ? 
+                    {settlementOrders !== null ? (
                         <Collapse.Panel
-                            header={translator.translate("exchange.settle_orders")}
+                            header={translator.translate(
+                                "exchange.settle_orders"
+                            )}
                             key="settlementOrders"
                         >
                             {settlementOrders}
-                        </Collapse.Panel> : null
-                    }
+                        </Collapse.Panel>
+                    ) : null}
                     <Collapse.Panel
                         header={translator.translate("exchange.my_history")}
                         key="myMarketHistory"
@@ -3214,21 +3216,23 @@ class Exchange extends React.Component {
                         account={currentAccount.get("name")}
                         sender={currentAccount.get("id")}
                         asset={
-                            modalType === "bid"
+                            depositModalType === "bid"
                                 ? base.get("id")
                                 : quote.get("id")
                         }
                         modalId={
                             "simple_deposit_modal" +
-                            (modalType === "bid" ? "" : "_ask")
+                            (depositModalType === "bid" ? "" : "_ask")
                         }
                         balance={
-                            modalType === "bid" ? baseBalance : quoteBalance
+                            depositModalType === "bid"
+                                ? baseBalance
+                                : quoteBalance
                         }
                         {...this.props.backedCoins.find(
                             a =>
                                 a.symbol ===
-                                (modalType === "bid"
+                                (depositModalType === "bid"
                                     ? base.get("symbol")
                                     : quote.get("symbol"))
                         )}
@@ -3246,20 +3250,20 @@ class Exchange extends React.Component {
                         account={currentAccount.get("name")}
                         sender={currentAccount.get("id")}
                         asset={
-                            modalType === "bid"
+                            buyModalType === "bid"
                                 ? base.get("id")
                                 : quote.get("id")
                         }
                         modalId={
                             "simple_bridge_modal" +
-                            (modalType === "bid" ? "" : "_ask")
+                            (buyModalType === "bid" ? "" : "_ask")
                         }
                         balances={[
-                            modalType === "bid" ? baseBalance : quoteBalance
+                            buyModalType === "bid" ? baseBalance : quoteBalance
                         ]}
                         bridges={
                             this.props.bridgeCoins.get(
-                                modalType === "bid"
+                                buyModalType === "bid"
                                     ? base.get("symbol")
                                     : quote.get("symbol")
                             ) || null

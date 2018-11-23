@@ -333,7 +333,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         <input
                             disabled
                             type="text"
-                            defaultValue={receiveName}
+                            value={receiveName}
                         />
                     </div>
                 </div>
