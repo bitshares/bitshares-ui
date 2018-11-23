@@ -203,6 +203,7 @@
             "verifymessage": "Verify Message",
             "verifyonchange": "Verify while typing"
         },
+        "start_typing_to_search": "Start typing to search for accounts",
         "submit_orders": "Submit",
         "total": "Totale ({asset})",
         "total_estimate": "Questa è una stima del valore di tutti i tuoi asset, inclusi asset nascosti, ordini aperti, debito e garanzia. La stima è ottenuta usando informazioni in tempo reale dalla blockchain, e potrebbe non essere del tutto accurata.",
@@ -318,6 +319,7 @@
             "expired": "Worker scaduti",
             "funding": "Finanziamento",
             "go_proxy": "Vai a",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Backup",
             "info": "Informazioni",
             "line": "Linea",
@@ -513,6 +515,7 @@
         "lowest_ask": "Offerta (ask) più bassa",
         "maintenance": "Prezzo Maintenance Call",
         "market": "Mercato",
+        "market_depth": "Market Depth",
         "market_frozen": "Il proprietario di %(asset)s ha disabilitato il trading in questo mercato.",
         "market_name": "I miei mercati",
         "market_picker": {
@@ -550,10 +553,27 @@
         "panels_mirror": "Mirror Panels",
         "period": "Periodo (giorni)",
         "price": "Prezzo",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "Grafico del prezzo",
         "price_market": "Market Price",
         "quantity": "Quantità",
         "quick_deposit": "Deposit %(asset)s",
+        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
+        "quick_deposit_bridge_button": "Use a Bridge",
+        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
+        "quick_deposit_gateway_button": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
@@ -1090,6 +1110,7 @@
             "remove": "Remove"
         },
         "dashboard": "Dashboard",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Deposit",
             "deposit_withdraw": "Deposit/Withdraw"
@@ -1272,12 +1293,30 @@
             "label": "qrcode",
             "title": "Codice QR della chiave privata"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Quantità da riservare",
             "from": "Account da cui riservare",
             "submit": "Riserva",
             "title": "Riserva (brucia) asset"
         },
+        "save": "save",
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
@@ -1616,6 +1655,7 @@
     },
     "tooltip": {
         "borrow": "Prendi in prestito %(asset)s dalla rete. Ciò crea uno smart contract che blocca la tua garanzia finché o modifichi la tua posizione oppure è richiesta una chiamata a margine.",
+        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
         "buy_min": "Riceverai come minimo questa quantità. Se vi sono ordini corrispondenti con un prezzo inferiore rispetto a quello che hai specificato, riceverai più di questa quantità.",
         "call_limit": "Questo è il prezzo di chiamata (call price) della posizione con margine nel mercato con la più bassa garanzia.",
@@ -1636,6 +1676,7 @@
         "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
         "hide_asset": "Clicca qui per nascondere quest'asset da questa lista.",
         "latest_price": "Questo è l'ultimo prezzo visto in questo mercato.",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Questo portafoglio BitShares non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
         "login-tooltip": {
             "incorrectPassword": {
@@ -2046,6 +2087,8 @@
         "pwd4brainkey": "Inserisci la tua password per mostrare la tua brainkey",
         "ready_to_restore": "Pronto al ripristino",
         "reenter_brainkey": "Reinserisci brainkey",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Reset",
         "restore": "Ripristina portafoglio da un backup",
         "restore_backup": "Ripristina backup",

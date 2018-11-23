@@ -203,6 +203,7 @@
             "verifymessage": "Проверить сообщение",
             "verifyonchange": "Проверить во время ввода"
         },
+        "start_typing_to_search": "Start typing to search for accounts",
         "submit_orders": "Подтвердить",
         "total": "Всего ({asset})",
         "total_estimate": "Это оценочная стоимость всех Ваших активов, включая скрытые активы, открытые ордера, долг и залоговое обеспечение. Оценка произведена на основе данных блокчейна в текущий момент и может иметь некоторую погрешность.",
@@ -318,6 +319,7 @@
             "expired": "Истекшие",
             "funding": "Финансирование",
             "go_proxy": "Перейти к",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Резервные",
             "info": "Информация",
             "line": "Линия",
@@ -513,6 +515,7 @@
         "lowest_ask": "Самый низкий запрос",
         "maintenance": "Цена требования дополнительного обеспечения",
         "market": "Рынок",
+        "market_depth": "Market Depth",
         "market_frozen": "Владелец %(asset)s запретил торговлю на этом рынке.",
         "market_name": "Мои Рынки",
         "market_picker": {
@@ -550,10 +553,27 @@
         "panels_mirror": "Отобразить панели зеркально",
         "period": "Временной период (дни)",
         "price": "Цена",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "График цен",
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quick_deposit": "Быстрый депозит",
+        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
+        "quick_deposit_bridge_button": "Use a Bridge",
+        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
+        "quick_deposit_gateway_button": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
@@ -981,13 +1001,6 @@
             "support_block": "Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
             "under_construction": "Технические работы"
         },
-        "xbtsx": {
-            "coming_soon": "Скоро",
-            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
-            "min_amount_error": "Пожалуйста введите число >= минимума",
-            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
-            "under_construction": "Технические работы"
-        },
         "scan_qr": "Сканировать QR-код",
         "service": "Перевод средств",
         "status": "Статус",
@@ -1103,6 +1116,7 @@
             "remove": "Удалить"
         },
         "dashboard": "Инфопанель",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Пополнить счет",
             "deposit_withdraw": "Пополнить/Вывести"
@@ -1285,12 +1299,30 @@
             "label": "QR-код",
             "title": "QR-код закрытого ключа"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Сумма к сожжению",
             "from": "Сжечь с аккаунта",
             "submit": "Сжечь",
             "title": "Сжечь (зарезервировать) актив"
         },
+        "save": "save",
         "send": {
             "header": "Отправить с <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Предложить отправить с <span class=\"send-name\">%(fromName)s</span>"
@@ -1629,6 +1661,7 @@
     },
     "tooltip": {
         "borrow": "Одолжить %(asset)s у сети. Это создаст смарт-контракт, который заблокирует Ваш залог до того момента, когда Вы измените позицию или потребуется марджин колл.",
+        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades – это сервис моста, поддерживающий мгновенную торговлю активами. Все детали и условия можно найти на https://blocktrades.us",
         "buy_min": "Вы получите, как минимум, это количество. Если обнаружатся подходящие сделки по цене меньшей, чем Вы указали, то Вы получите больше этого количества.",
         "call_limit": "Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -1649,6 +1682,7 @@
         "generate": "Сгенерированный пароль был создан локально в Вашем браузере. <br /><br /><strong>Никто, кроме Вас не имеет к нему доступа</strong>.<br /><br /> Вставьте его ниже и сохраните копию в надежном месте",
         "hide_asset": "Нажмите здесь, чтобы скрыть актив из этого списка.",
         "latest_price": "Это самая актуальная цена для этого рынка.",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Кошелек %(wallet_name)s не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается, и Вы выходите из аккаунта.",
         "login-tooltip": {
             "incorrectPassword": {
@@ -2059,6 +2093,8 @@
         "pwd4brainkey": "Введите Ваш пароль, чтобы увидеть Ваш Brainkey",
         "ready_to_restore": "Готов к восстановлению",
         "reenter_brainkey": "Введите Brainkey повторно",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Сбросить",
         "restore": "Восстановить локальный кошелек из резервной копии",
         "restore_backup": "Восстановить из резервной копии",
