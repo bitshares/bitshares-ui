@@ -189,7 +189,7 @@ export default connect(
         getProps() {
             return {
                 allMarketStats: MarketsStore.getState().allMarketStats,
-                priceAlert: SettingsStore.getState().priceAlert
+                priceAlert: SettingsStore.getState().priceAlert.toJS()
             };
         }
     }
