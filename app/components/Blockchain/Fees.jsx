@@ -132,9 +132,7 @@ class FeeGroup extends React.Component {
                 if (ltm_required.indexOf(opId) < 0) {
                     if (feeTypes[key] != "Annual Membership") {
                         rows.push(
-                            <tr
-                                key={opId.toString() + key}                                
-                            >
+                            <tr key={opId.toString() + key}>
                                 {title}
                                 <td>{feeTypes[key]}</td>
                                 <td style={{textAlign: "right"}}>

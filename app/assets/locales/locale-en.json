@@ -469,19 +469,6 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
-        "price_alert": {
-            "use_button": "Use \"add rule\" button to create price alert for ",
-            "alert_when": "Alert me when",
-            "title": "Price Alert",
-            "lower_than": "Lower Than",
-            "higher_than": "Higher Than",
-            "add_rule": "add rule",
-            "price": "Price",
-            "notification": {
-                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s",
-                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s"
-            }
-        },
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -566,6 +553,19 @@
         "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "Price Chart",
         "price_market": "Market Price",
         "quantity": "Quantity",
@@ -1006,6 +1006,9 @@
         "status": "Status",
         "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"OpenLedger TRANSFER SERVICE\", please contact Openledger at:",
         "support_gdex": "For support, please contact GDEX",
+        "bitspark": {
+            "support_block": "For DEPOSIT AND WITHDRAWAL issues using \"BitSpark TRANSFER SERVICE\", please contact BitSpark at:"
+        },
         "symbol": "Symbol",
         "time": "Time",
         "title": "Deposit & Withdraw",
@@ -1242,7 +1245,6 @@
         "title": "Notice"
     },
     "modal": {
-        "save": "save",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
@@ -1300,12 +1302,30 @@
             "label": "qrcode",
             "title": "Private key QR code"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
             "title": "Burn (reserve) asset"
         },
+        "save": "save",
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
@@ -1333,23 +1353,6 @@
             "quantity": "Quantity",
             "submit": "Withdraw",
             "withdraw": "Withdraw"
-        },
-        "report": {
-            "title": "Error report",
-            "button": "Report",
-            "takeScreenshot": "Show screenshot",
-            "hideScreenshot": "Hide screenshot",
-            "copyLog": "Copy Log",
-            "copySuccess": "Copy ended",
-            "showLog": "Show Log",
-            "hideLog": "Hide Log",
-            "lastLogEntries": "Last 20 log entries",
-            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
-            "explanatory_text_2": "Please report the issue you have found to GitHub:",
-            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
-            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
-            "copyScreenshot": "Right click in Image Preview -> Copy",
-            "screenshot": "Screenshot"
         }
     },
     "news": {
@@ -2093,6 +2096,8 @@
         "pwd4brainkey": "Enter your password to show your brainkey",
         "ready_to_restore": "Ready to Restore",
         "reenter_brainkey": "Re-Enter Brainkey",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Reset",
         "restore": "Restore Local Wallet from Backup",
         "restore_backup": "Restore Backup",
@@ -2143,9 +2148,7 @@
         "wallet_model_2": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password",
-        "remember_me": "Remember me",
-        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings."
+        "wallet_password": "Login anywhere using your password"
     },
     "winex": {
         "gateway": {
