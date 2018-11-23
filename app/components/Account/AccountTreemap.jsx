@@ -97,7 +97,7 @@ class AccountTreemap extends React.Component {
                         preferredAsset.get("precision")
                     );
                     const finalValue = eqValue / precision;
-                    const percent = finalValue / totalValue * 100;
+                    const percent = (finalValue / totalValue) * 100;
 
                     /*
                 * Filter out assets that make up a small percentage of
