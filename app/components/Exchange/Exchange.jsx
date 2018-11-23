@@ -480,7 +480,7 @@ class Exchange extends React.Component {
             capture: false,
             passive: true
         });
-        updateGatewayBackers();
+        // updateGatewayBackers();
         this._checkFeeStatus();
     }
 
@@ -2406,10 +2406,8 @@ class Exchange extends React.Component {
 
         let settlementOrders =
             marketSettleOrders.size === 0 ||
-            (
-                tinyScreen &&
-                !this.state.mobileKey.includes("settlementOrders")
-            ) ? null : (
+            (tinyScreen &&
+                !this.state.mobileKey.includes("settlementOrders")) ? null : (
                 <MyOpenOrders
                     key={`actionCard_${actionCardIndex++}`}
                     style={{marginBottom: !tinyScreen ? 15 : 0}}
@@ -2825,14 +2823,16 @@ class Exchange extends React.Component {
                     >
                         {marketHistory}
                     </Collapse.Panel>
-                    {settlementOrders !== null ? 
+                    {settlementOrders !== null ? (
                         <Collapse.Panel
-                            header={translator.translate("exchange.settle_orders")}
+                            header={translator.translate(
+                                "exchange.settle_orders"
+                            )}
                             key="settlementOrders"
                         >
                             {settlementOrders}
-                        </Collapse.Panel> : null
-                    }
+                        </Collapse.Panel>
+                    ) : null}
                     <Collapse.Panel
                         header={translator.translate("exchange.my_history")}
                         key="myMarketHistory"
@@ -3225,7 +3225,9 @@ class Exchange extends React.Component {
                             (depositModalType === "bid" ? "" : "_ask")
                         }
                         balance={
-                            depositModalType === "bid" ? baseBalance : quoteBalance
+                            depositModalType === "bid"
+                                ? baseBalance
+                                : quoteBalance
                         }
                         {...this.props.backedCoins.find(
                             a =>
