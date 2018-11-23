@@ -121,6 +121,7 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
     constructor() {
@@ -513,6 +514,7 @@ class App extends React.Component {
                         />
                         <TransactionConfirm />
                         <BrowserNotifications />
+                        <PriceAlertNotifications />
                         <WalletUnlockModal />
                         <BrowserSupportModal
                             visible={this.state.isBrowserSupportModalVisible}

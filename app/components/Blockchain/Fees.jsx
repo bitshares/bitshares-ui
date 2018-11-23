@@ -130,39 +130,34 @@ class FeeGroup extends React.Component {
                 }
 
                 if (ltm_required.indexOf(opId) < 0) {
-                    rows.push(
-                        <tr
-                            key={opId.toString() + key}
-                            className={
-                                feeTypes[key] === "Annual Membership"
-                                    ? "linethrough"
-                                    : ""
-                            }
-                        >
-                            {title}
-                            <td>{feeTypes[key]}</td>
-                            <td style={{textAlign: "right"}}>
-                                {assetAmount}
-                                {amount !== 0 && preferredUnit !== "BTS" ? (
-                                    <span>
-                                        &nbsp;/&nbsp;
-                                        {equivalentAmount}
-                                    </span>
-                                ) : null}
-                            </td>
-                            <td style={{textAlign: "right"}}>
-                                {feeIdx !== 8 ? assetAmountLTM : null}
-                                {feeIdx !== 8 &&
-                                amount !== 0 &&
-                                preferredUnit !== "BTS" ? (
-                                    <span>
-                                        &nbsp;/&nbsp;
-                                        {equivalentAmountLTM}
-                                    </span>
-                                ) : null}
-                            </td>
-                        </tr>
-                    );
+                    if (feeTypes[key] != "Annual Membership") {
+                        rows.push(
+                            <tr key={opId.toString() + key}>
+                                {title}
+                                <td>{feeTypes[key]}</td>
+                                <td style={{textAlign: "right"}}>
+                                    {assetAmount}
+                                    {amount !== 0 && preferredUnit !== "BTS" ? (
+                                        <span>
+                                            &nbsp;/&nbsp;
+                                            {equivalentAmount}
+                                        </span>
+                                    ) : null}
+                                </td>
+                                <td style={{textAlign: "right"}}>
+                                    {feeIdx !== 8 ? assetAmountLTM : null}
+                                    {feeIdx !== 8 &&
+                                    amount !== 0 &&
+                                    preferredUnit !== "BTS" ? (
+                                        <span>
+                                            &nbsp;/&nbsp;
+                                            {equivalentAmountLTM}
+                                        </span>
+                                    ) : null}
+                                </td>
+                            </tr>
+                        );
+                    }
                 } else {
                     rows.push(
                         <tr key={opId.toString() + key}>

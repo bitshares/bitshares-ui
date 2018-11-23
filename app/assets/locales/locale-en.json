@@ -203,6 +203,7 @@
             "verifymessage": "Verify Message",
             "verifyonchange": "Verify while typing"
         },
+        "start_typing_to_search": "Start typing to search for accounts",
         "submit_orders": "Submit",
         "total": "Total ({asset})",
         "total_estimate": "This is the estimated value of all your assets, including any hidden assets, open orders, debt and collateral. The estimate is done using only live blockchain data and may not be perfectly accurate.",
@@ -318,6 +319,7 @@
             "expired": "Expired",
             "funding": "Funding",
             "go_proxy": "Go to",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Backup",
             "info": "Info",
             "line": "Line",
@@ -513,6 +515,7 @@
         "lowest_ask": "Lowest ask",
         "maintenance": "Maintenance Call Price",
         "market": "Market",
+        "market_depth": "Market Depth",
         "market_frozen": "The owner of %(asset)s has disabled trading in this market.",
         "market_name": "My Markets",
         "market_picker": {
@@ -550,11 +553,28 @@
         "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "Price Chart",
         "price_market": "Market Price",
         "quantity": "Quantity",
-        "quick_deposit": "Quick Deposit",
-        "quick_deposit_tooltip": "Deposit %(asset)s",
+        "quick_deposit": "Deposit %(asset)s",
+        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
+        "quick_deposit_bridge_button": "Use a Bridge",
+        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
+        "quick_deposit_gateway_button": "Use a Gateway",
+        "quick_deposit_tooltip": "Deposit %(asset)s, click to open options",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "Quote supply",
@@ -1099,6 +1119,7 @@
             "remove": "Remove"
         },
         "dashboard": "Dashboard",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Deposit",
             "deposit_withdraw": "Deposit/Withdraw"
@@ -1281,12 +1302,30 @@
             "label": "qrcode",
             "title": "Private key QR code"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
             "title": "Burn (reserve) asset"
         },
+        "save": "save",
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
@@ -1625,6 +1664,7 @@
     },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
         "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
         "call_limit": "This is the call price of the least collateralized margin position in the market.",
@@ -1641,10 +1681,11 @@
         "filter_ops": "Use this list to filter your history by operation type.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
         "hide_asset": "Click here to hide this asset from this list.",
         "latest_price": "This is the latest price seen in this market.",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "This %(wallet_name)s wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "login-tooltip": {
             "incorrectPassword": {
@@ -2055,6 +2096,8 @@
         "pwd4brainkey": "Enter your password to show your brainkey",
         "ready_to_restore": "Ready to Restore",
         "reenter_brainkey": "Re-Enter Brainkey",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Reset",
         "restore": "Restore Local Wallet from Backup",
         "restore_backup": "Restore Backup",

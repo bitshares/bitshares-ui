@@ -3,8 +3,8 @@ import {connect} from "alt-react";
 import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import counterpart from "counterpart";
-
-import {Button, Modal} from "bitshares-ui-style-guide";
+import Translate from "react-translate-component";
+import {Button, Modal, Icon, Popover} from "bitshares-ui-style-guide";
 
 class AccountBrowsingMode extends React.Component {
     constructor(props) {
@@ -89,36 +89,54 @@ class AccountBrowsingMode extends React.Component {
             </Button>
         ];
 
-        return (
-            <div className="account-browsing-mode">
-                <Modal
-                    title={counterpart.translate(
-                        "account_browsing_mode.modal_title"
-                    )}
-                    closable={false}
-                    visible={this.state.isModalVisible}
-                    footer={footer}
+        if (this.props.usernameViewIcon) {
+            return window.innerWidth < 640 && !this.isMyAccount() ? (
+                <Popover
+                    content={
+                        <Translate content="account_browsing_mode.you_are_in_browsing_mode" />
+                    }
+                    placement="bottom"
                 >
-                    {counterpart.translate(
-                        "account_browsing_mode.modal_description"
-                    )}
-                </Modal>
-                {!this.isMyAccount() ? (
-                    <Button
-                        data-place="bottom"
-                        data-tip={counterpart.translate(
-                            "account_browsing_mode.you_are_in_browsing_mode"
-                        )}
+                    <Icon
+                        style={{marginLeft: 10}}
+                        className="blue"
+                        type="eye"
                         onClick={this.handleSwitchBack}
-                        className="account-browsing-mode--button"
+                    />
+                </Popover>
+            ) : null;
+        } else {
+            return (
+                <div className="account-browsing-mode">
+                    <Modal
+                        title={counterpart.translate(
+                            "account_browsing_mode.modal_title"
+                        )}
+                        closable={false}
+                        visible={this.state.isModalVisible}
+                        footer={footer}
                     >
                         {counterpart.translate(
-                            "account_browsing_mode.view_mode"
+                            "account_browsing_mode.modal_description"
                         )}
-                    </Button>
-                ) : null}
-            </div>
-        );
+                    </Modal>
+                    {!this.isMyAccount() ? (
+                        <Button
+                            data-place="bottom"
+                            data-tip={counterpart.translate(
+                                "account_browsing_mode.you_are_in_browsing_mode"
+                            )}
+                            onClick={this.handleSwitchBack}
+                            className="hide-for-small-only account-browsing-mode--button"
+                        >
+                            {counterpart.translate(
+                                "account_browsing_mode.view_mode"
+                            )}
+                        </Button>
+                    ) : null}
+                </div>
+            );
+        }
     }
 }
 
