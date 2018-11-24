@@ -130,7 +130,7 @@ class AccountRegistrationForm extends React.Component {
 
         return (
             <div>
-                <Form onSubmit={this.onSubmit}>
+                <Form onSubmit={this.onSubmit} layout={"vertical"}>
                     <AccountNameInput
                         cheapNameOnly={firstAccount}
                         onChange={this.onAccountNameChange}
