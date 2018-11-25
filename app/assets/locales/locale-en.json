@@ -721,14 +721,14 @@
             },
             "price_feed": {
                 "feed_lifetime": "Feed lifetime (hours)",
-                "min_feed": "Minimum feeds",
+                "min_feeds": "Minimum feeds",
                 "force_settlement_offset": "Force settlement offset",
                 "global_settlement_price": "Global settlement price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
                 "settlement_delay": "Settlement delay",
                 "settlement_price": "Settlement price",
-                "external_feed_price": "External Price",
+                "external_feed_price": "Average market price",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "title": "Price Feed"
             },
@@ -749,7 +749,7 @@
                 "max_settlement_volume_percentage": "Settlement volume / maintenance period",
                 "current_settled": "Current settled supply",
                 "settle_remaining_volume": "Remaining settable volume",
-                "global_settlement_description": "Asset is in Global Settlement. There is no delay in asset settlements, which will be covered by the Settlement Funds at the current Settlement Price"
+                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",

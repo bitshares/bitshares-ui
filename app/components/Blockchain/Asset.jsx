@@ -452,7 +452,7 @@ class Asset extends React.Component {
                         </tr>
                         <tr>
                             <td>
-                                <Translate content="explorer.asset.price_feed.min_Feeds" />
+                                <Translate content="explorer.asset.price_feed.min_feeds" />
                             </td>
                             <td>
                                 {bitAsset.options.minimum_feeds}
@@ -596,57 +596,49 @@ class Asset extends React.Component {
                                 </td>
                                 <td> {settlementOffset / 100}% </td>
                             </tr>
+                            <tr>
+                                <td>&nbsp;</td><td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.max_settlement_volume_percentage" />
+                                </td>
+                                <td>
+                                    {maxSettlementVolume / 100}%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.max_settle_volume" />
+                                </td>
+                                <td>
+                                    <FormattedAsset
+                                        asset={asset.id}
+                                        amount={currentSupply * (maxSettlementVolume / 10000)}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.current_settled" />   
+                                </td>
+                                <td>
+                                    <FormattedAsset
+                                        asset={asset.id}
+                                        amount={currentSettled} 
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.settle_remaining_volume" />
+                                </td>
+                                <td>
+                                    {currentSettled == 0 ? 100 : (currentSupply * (maxSettlementVolume / 10000) / currentSettled)}%
+                                </td>
+                            </tr>
                         </tbody>
                     )}
-                </table>
-                <table 
-                    className="table key-value-table table-hover"
-                    style={{padding: "1.2rem"}}
-                >
-                    <tbody>
-                       
-                        <tr>
-                            <td>&nbsp;</td><td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.settlement.max_settlement_volume_percentage" />
-                            </td>
-                            <td>
-                                {maxSettlementVolume / 100}%
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.settlement.max_settle_volume" />
-                            </td>
-                            <td>
-                                <FormattedAsset
-                                    asset={asset.id}
-                                    amount={currentSupply * (maxSettlementVolume / 10000)}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.settlement.current_settled" />   
-                            </td>
-                            <td>
-                                <FormattedAsset
-                                    asset={asset.id}
-                                    amount={currentSettled} 
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.settlement.settle_remaining_volume" />
-                            </td>
-                            <td>
-                                {currentSettled == 0 ? 100 : (currentSupply * (maxSettlementVolume / 10000) / currentSettled)}%
-                            </td>
-                        </tr>
-                    </tbody>
                 </table>
             </div>
         );
