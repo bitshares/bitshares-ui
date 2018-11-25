@@ -720,12 +720,16 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
+                "feed_lifetime": "Feed lifetime (hours)",
+                "min_feed": "Minimum feeds",
                 "force_settlement_offset": "Force settlement offset",
                 "global_settlement_price": "Global settlement price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
                 "settlement_delay": "Settlement delay",
                 "settlement_price": "Settlement price",
+                "external_feed_price": "External Price",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -736,6 +740,16 @@
                 "publisher": "Publisher",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed Data"
+            },
+            "settlement": {
+                "title": "Settlement",
+                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement funds",
+                "max_settle_volume": "Settlement volume / maintenance period",
+                "max_settlement_volume_percentage": "Settlement volume / maintenance period",
+                "current_settled": "Current settled supply",
+                "settle_remaining_volume": "Remaining settable volume",
+                "global_settlement_description": "Asset is in Global Settlement. There is no delay in asset settlements, which will be covered by the Settlement Funds at the current Settlement Price"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -763,7 +777,8 @@
             "symbol": "Symbol",
             "title": "Assets",
             "units": "Units",
-            "user": "User Issued Assets"
+            "user": "User Issued Assets",
+            "backing_asset": "Backing asset"
         },
         "block": {
             "account_upgrade": "Account to upgrade",
