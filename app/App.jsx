@@ -21,6 +21,7 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
+import EscrowedTransfer from "./components/Showcases/EscrowedTransfer";
 
 import {Route, Switch} from "react-router-dom";
 
@@ -435,6 +436,11 @@ class App extends React.Component {
                                 <Route
                                     path="/showcases"
                                     component={ShowcaseGrid}
+                                />
+
+                                <Route
+                                    path="/escrowed-transfer"
+                                    component={EscrowedTransfer}
                                 />
 
                                 {/* Wallet backup/restore routes */}
