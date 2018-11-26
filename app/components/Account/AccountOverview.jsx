@@ -18,6 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
+import {Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -39,7 +40,8 @@ class AccountOverview extends React.Component {
                 // "OPEN.MAID",
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
-            ]
+            ],
+            hideFishingProposals: true
         };
 
         this._handleFilterInput = this._handleFilterInput.bind(this);
@@ -110,6 +112,11 @@ class AccountOverview extends React.Component {
                 sortKey: key
             });
         }
+    }
+    _toggleHideProposal() {
+        this.setState({
+            hideFishingProposals: !this.state.hideFishingProposals
+        });
     }
 
     getHeader() {
@@ -636,9 +643,24 @@ class AccountOverview extends React.Component {
                                             : 0
                                     )}
                                 >
+                                    <div>
+                                        <Switch
+                                            style={{margin: 16}}
+                                            checked={
+                                                this.state.hideFishingProposals
+                                            }
+                                            onChange={this._toggleHideProposal.bind(
+                                                this
+                                            )}
+                                        />
+                                        <Translate content="account.deactivate_suspicious_proposals" />
+                                    </div>
                                     <Proposals
                                         className="dashboard-table"
                                         account={account.get("id")}
+                                        hideFishingProposals={
+                                            this.state.hideFishingProposals
+                                        }
                                     />
                                 </Tab>
                             ) : null}
