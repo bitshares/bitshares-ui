@@ -754,7 +754,7 @@
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",
