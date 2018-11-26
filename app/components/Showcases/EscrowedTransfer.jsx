@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
-import {Input, Card, Col, Row} from "bitshares-ui-style-guide";
+import {Input, Card, Col, Row, Button} from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import AccountAssets from "../Account/AccountAssets";
 
@@ -72,6 +72,7 @@ export default class Showcase extends Component {
                             </Row>
                         </div>
                     )}
+                    <Button>Propose</Button>
                 </Card>
             </div>
         );
