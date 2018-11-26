@@ -695,7 +695,7 @@
             },
             "price_feed": {
                 "force_settlement_offset": "強制決済オフセット",
-                "global_settlement_price": "グローバル決済価格",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "維持担保率 (MCR)",
                 "maximum_short_squeeze_ratio": "最大ショート・スクイーズ比率 (MSSR)",
                 "settlement_delay": "決済遅延",
