@@ -10,24 +10,29 @@ export default class ShowcaseGrid extends Component {
     render() {
         const tiles = [
             {
-                title: "Some title",
+                title: "showcases.paper_wallet.title",
                 target: () => {},
-                description: "Some longer but not too long text",
-                icon: "dashboard" // see Icons app/compoentns/Icon/Icon
+                description: "showcases.paper_wallet.description",
+                icon: "wallet" // see Icons app/compoentns/Icon/Icon
             },
             {
-                title: "Off the book trade",
+                title: "showcases.barter_transaction.title",
                 target: () => {},
-                description: "Trade directly with another user (swap assets)",
-                icon: "dashboard"
+                description: "showcases.barter_transaction.description",
+                icon: "barter"
             }
             // .... even more tiles in this list
         ];
         return (
-            <div className="grid-block overflow-visible">
+            <div
+                className="grid-block overflow-visible"
+                style={{
+                    align: "center"
+                }}
+            >
                 {tiles.map(tile => {
                     return (
-                        <div className="grid-block no-overflow wrap shrink">
+                        <div key={tile.title} className="">
                             <Showcase
                                 target={tile.target}
                                 title={tile.title}

@@ -2129,5 +2129,15 @@
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
+    },
+    "showcases": {
+        "paper_wallet": {
+            "title": "Paper Wallet",
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well."
+        },
+        "barter_transaction": {
+            "title": "Barter",
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
+        }
     }
 }

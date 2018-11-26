@@ -17,20 +17,28 @@ export default class Showcase extends Component {
 
     render() {
         return (
-            <div className="small-12 padding">
-                <div
-                    className="grid-block vertical medium-horizontal padding"
-                    style={{"background-color": "gray"}}
-                >
+            <div
+                className="padding"
+                style={{
+                    maxWidth: "400px"
+                }}
+            >
+                <div style={{backgroundColor: "gray"}}>
                     <Translate
-                        className="small-12 showcase-label padding"
-                        content="transfer.fee"
+                        content={this.props.title}
+                        className={"padding"}
+                        component={"h2"}
                     />
-                    <label className="small-12 showcase-label padding">
-                        {this.props.description}
-                    </label>
-                    <div className="small-3 ">
-                        <Icon name={this.props.icon} />
+                    <div
+                        style={{
+                            display: "flex"
+                        }}
+                        className={"padding"}
+                    >
+                        <Icon name={this.props.icon} size={"5x"} />
+                        <span className={"padding"}>
+                            <Translate content={this.props.description} />
+                        </span>
                     </div>
                 </div>
             </div>

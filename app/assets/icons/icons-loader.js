@@ -2,6 +2,7 @@ let icons = [
     "photo-camera",
     "adjust",
     "assets",
+    "barter",
     "checkmark-circle",
     "chevron-down",
     "clippy",
@@ -58,7 +59,8 @@ let icons = [
     "question-in-circle",
     "attention",
     "checkmark",
-    "paperclip"
+    "paperclip",
+    "wallet"
 ];
 
 let iconsMap = {};
