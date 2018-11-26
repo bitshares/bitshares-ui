@@ -7,7 +7,8 @@ import {
     Input,
     InputNumber,
     Modal,
-    Icon
+    Icon,
+    Tooltip
 } from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
 import React from "react";
@@ -116,21 +117,27 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.chart_type" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.chart_type"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.chart_reload"
                                         )}
-                                        type="info-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="info-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -169,21 +176,26 @@ class Personalize extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.chart_height" />
                                 &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    title={counterpart.translate(
                                         "exchange.settings.tooltip.chart_height"
                                     )}
-                                    type="question-circle"
-                                    theme="filled"
-                                />
+                                >
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
                             </h6>
                         </div>
                         <div className="small-6">
-                            <InputNumber 
+                            <InputNumber
                                 value={
-                                    typeof chartHeight === "number" && chartHeight > 1000
-                                        ? 1000 : chartHeight
-                                } 
+                                    typeof chartHeight === "number" &&
+                                    chartHeight > 1000
+                                        ? 1000
+                                        : chartHeight
+                                }
                                 onChange={this.setChartHeight.bind(this)}
                             />
                         </div>
@@ -196,21 +208,27 @@ class Personalize extends React.Component {
                                     <h6 style={{margin: 9}}>
                                         <Translate content="exchange.settings.title.chart_tools" />
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_tools"
                                             )}
-                                            type="question-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="question-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="info-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="info-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                     </h6>
                                 </div>
                                 <div className="small-6">
@@ -232,21 +250,27 @@ class Personalize extends React.Component {
                                     <h6 style={{margin: 9}}>
                                         <Translate content="exchange.settings.title.chart_zoom" />
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_zoom"
                                             )}
-                                            type="question-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="question-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.chart_reload"
                                             )}
-                                            type="info-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="info-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                     </h6>
                                 </div>
                                 <div className="small-6">
@@ -269,13 +293,16 @@ class Personalize extends React.Component {
                             <h6 style={{margin: 9}}>
                                 <Translate content="exchange.settings.title.order_book_grouping" />
                                 &nbsp;
-                                <Icon
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    title={counterpart.translate(
                                         "exchange.settings.tooltip.order_book_grouping"
                                     )}
-                                    type="question-circle"
-                                    theme="filled"
-                                />
+                                >
+                                    <Icon
+                                        type="question-circle"
+                                        theme="filled"
+                                    />
+                                </Tooltip>
                             </h6>
                         </div>
                         <div className="small-6">
@@ -303,13 +330,16 @@ class Personalize extends React.Component {
                                     <h6 style={{margin: 9}}>
                                         <Translate content="exchange.settings.title.order_style" />
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.order_style"
                                             )}
-                                            type="question-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="question-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                     </h6>
                                 </div>
                                 <div className="small-6">
@@ -346,13 +376,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_form" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.position_order_form"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -389,13 +422,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_orders" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.position_order_orders"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -432,13 +468,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.position_order_asset" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.position_order_asset"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -472,13 +511,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.orderbook_auto_scroll" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.orderbook_auto_scroll"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -497,13 +539,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.reverse_order_book" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.reverse_order_book"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -524,13 +569,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.single_colum_order_form" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.single_colum_order_form"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -549,13 +597,13 @@ class Personalize extends React.Component {
                         <header>
                             <Translate content="exchange.settings.header.panel_grouping" />
                             &nbsp;
-                            <Icon
-                                data-tip={counterpart.translate(
+                            <Tooltip
+                                title={counterpart.translate(
                                     "exchange.settings.tooltip.panel_grouping"
                                 )}
-                                type="question-circle"
-                                theme="filled"
-                            />
+                            >
+                                <Icon type="question-circle" theme="filled" />
+                            </Tooltip>
                         </header>
                     )}
                     {!this.props.tinyScreen && (
@@ -638,13 +686,16 @@ class Personalize extends React.Component {
                                     <h6 style={{margin: 9}}>
                                         <Translate content="exchange.settings.title.market_location" />
                                         &nbsp;
-                                        <Icon
-                                            data-tip={counterpart.translate(
+                                        <Tooltip
+                                            title={counterpart.translate(
                                                 "exchange.settings.tooltip.market_location"
                                             )}
-                                            type="question-circle"
-                                            theme="filled"
-                                        />
+                                        >
+                                            <Icon
+                                                type="question-circle"
+                                                theme="filled"
+                                            />
+                                        </Tooltip>
                                     </h6>
                                 </div>
                                 <div className="small-6">
@@ -675,21 +726,27 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.reduce_scrollbars" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.reduce_scrollbars"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.reload"
                                         )}
-                                        type="info-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="info-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
@@ -710,13 +767,16 @@ class Personalize extends React.Component {
                                 <h6 style={{margin: 9}}>
                                     <Translate content="exchange.settings.title.hide_function_buttons" />
                                     &nbsp;
-                                    <Icon
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        title={counterpart.translate(
                                             "exchange.settings.tooltip.hide_function_buttons"
                                         )}
-                                        type="question-circle"
-                                        theme="filled"
-                                    />
+                                    >
+                                        <Icon
+                                            type="question-circle"
+                                            theme="filled"
+                                        />
+                                    </Tooltip>
                                 </h6>
                             </div>
                             <div className="small-6">
