@@ -695,7 +695,7 @@
             },
             "price_feed": {
                 "force_settlement_offset": "Force settlement offset",
-                "global_settlement_price": "Global settlement price",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance Kollateral-Verhältnis",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze Verhältnis",
                 "settlement_delay": "Settlement delay",

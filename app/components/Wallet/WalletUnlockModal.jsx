@@ -452,7 +452,7 @@ class WalletUnlockModal extends React.Component {
                 onCancel={this.handleModalClose}
                 leftHeader
                 footer={footer}
-                zIndex={100000} // always on top
+                zIndex={1001} // always on top
             >
                 <Form className="full-width" layout="vertical">
                     <LoginTypeSelector />
