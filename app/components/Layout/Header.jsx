@@ -188,7 +188,7 @@ class Header extends React.Component {
                 if (!isPersistantType()) {
                     setLocalStorageType("persistant");
                 }
-                AccountStore.reset();
+                AccountStore.tryToSetCurrentAccount();
             }
         }
         this._closeDropdown();
@@ -1068,13 +1068,14 @@ class Header extends React.Component {
                 >
                     <AccountBrowsingMode location={this.props.location} />
                     <div>
-                        <div
-                            className="text account-name"
-                        >
+                        <div className="text account-name">
                             <span onClick={this._toggleAccountDropdownMenu}>
                                 {currentAccount}
                             </span>
-                            <AccountBrowsingMode location={this.props.location} usernameViewIcon={true} />
+                            <AccountBrowsingMode
+                                location={this.props.location}
+                                usernameViewIcon={true}
+                            />
                         </div>
                         {walletBalance}
                     </div>

@@ -533,8 +533,6 @@ class Assets extends React.Component {
                                         200 rows
                                     </Select.Option>
                                 </Select>
-
-
                             </div>
 
                             {activeFilter == "prediction" ? (
