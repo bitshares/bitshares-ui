@@ -743,6 +743,28 @@ class Header extends React.Component {
                 </a>
             );
         }
+        if (active.indexOf("/escrowed-transfer") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/escrowed-transfer") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="thumbs-up"
+                        title="icons.thumbs_up"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="account.escrowed_transfer"
+                    />
+                </a>
+            );
+        }
 
         const submenus = {
             [SUBMENUS.SETTINGS]: (
@@ -1068,13 +1090,14 @@ class Header extends React.Component {
                 >
                     <AccountBrowsingMode location={this.props.location} />
                     <div>
-                        <div
-                            className="text account-name"
-                        >
+                        <div className="text account-name">
                             <span onClick={this._toggleAccountDropdownMenu}>
                                 {currentAccount}
                             </span>
-                            <AccountBrowsingMode location={this.props.location} usernameViewIcon={true} />
+                            <AccountBrowsingMode
+                                location={this.props.location}
+                                usernameViewIcon={true}
+                            />
                         </div>
                         {walletBalance}
                     </div>

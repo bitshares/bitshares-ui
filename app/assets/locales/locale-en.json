@@ -32,6 +32,7 @@
             "not_yours": "Not your account",
             "unknown": "Unknown account"
         },
+        "escrowed_transfer": "Escrowed transfer",
         "estimate_value": "Estimated Account value",
         "existing_accounts": "Existing Accounts",
         "existing_user": "Existing user",
@@ -467,6 +468,10 @@
         "starred_markets": "Favorites",
         "table_empty": "No market matched",
         "top_markets": "Top Markets"
+    },
+    "escrowed_transfer": {
+        "account": "Account",
+        "asset": "Bastering Asset"
     },
     "exchange": {
         "price_alert": {

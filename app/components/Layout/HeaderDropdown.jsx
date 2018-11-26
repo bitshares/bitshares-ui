@@ -521,6 +521,23 @@ export default class DropDownMenu extends React.Component {
                         </div>
                     </li>
                 ) : null}
+                <li
+                    className={cnames("divider", {
+                        active: active.indexOf("/escrowed-transfer") !== -1,
+                        disabled: !showAccountLinks
+                    })}
+                    onClick={this.props.onNavigate.bind(
+                        this,
+                        "/escrowed-transfer"
+                    )}
+                >
+                    <div className="table-cell">
+                        <Icon size="2x" name="warning" title="icons.warning" />
+                    </div>
+                    <div className="table-cell">
+                        <Translate content="account.escrowed_transfer" />
+                    </div>
+                </li>
             </ul>
         );
     }
