@@ -701,7 +701,7 @@
             },
             "price_feed": {
                 "force_settlement_offset": "Смещение принудительного погашения",
-                "global_settlement_price": "Цена глобального погашения",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Коэффициент обеспечения поддержки (MCR)",
                 "maximum_short_squeeze_ratio": "Максимальный коэффициент краткого сжатия (MSSR)",
                 "settlement_delay": "Задержка погашения",

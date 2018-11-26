@@ -195,7 +195,12 @@ class Asset extends React.Component {
         );
     }
 
-    formattedPrice(price, hide_symbols = false, hide_value = false, factor = 0) {
+    formattedPrice(
+        price,
+        hide_symbols = false,
+        hide_value = false,
+        factor = 0
+    ) {
         var base = price.base;
         var quote = price.quote;
         return (
@@ -395,13 +400,18 @@ class Asset extends React.Component {
                             </td>
                             <td> {asset.precision} </td>
                         </tr>
-                        {asset.bitasset ? ( 
+                        {asset.bitasset ? (
                             <tr>
                                 <td>
                                     <Translate content="explorer.assets.backing_asset" />
                                 </td>
-                                <td> 
-                                    <LinkToAssetById asset={asset.bitasset.options.short_backing_asset} />
+                                <td>
+                                    <LinkToAssetById
+                                        asset={
+                                            asset.bitasset.options
+                                                .short_backing_asset
+                                        }
+                                    />
                                 </td>
                             </tr>
                         ) : null}
@@ -424,14 +434,8 @@ class Asset extends React.Component {
         var currentFeed = bitAsset.current_feed;
 
         let settlementOffset = bitAsset.options.force_settlement_offset_percent;
-        
+
         var feedPrice = this.formattedPrice(currentFeed.settlement_price);
-        var settlePrice = this.formattedPrice(
-            currentFeed.settlement_price, false, false,
-            1 - settlementOffset / 10000
-        );
-
-
 
         return (
             <div className="asset-card no-padding">
@@ -444,6 +448,12 @@ class Asset extends React.Component {
                     <tbody>
                         <tr>
                             <td>
+                                <Translate content="explorer.asset.price_feed.external_feed_price" />
+                            </td>
+                            <td>{feedPrice}</td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <Translate content="explorer.asset.price_feed.feed_lifetime" />
                             </td>
                             <td>
@@ -454,27 +464,8 @@ class Asset extends React.Component {
                             <td>
                                 <Translate content="explorer.asset.price_feed.min_feeds" />
                             </td>
-                            <td>
-                                {bitAsset.options.minimum_feeds}
-                            </td>
+                            <td>{bitAsset.options.minimum_feeds}</td>
                         </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.price_feed.external_feed_price" />
-                            </td>
-                            <td>
-                                {feedPrice}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Translate content="explorer.asset.price_feed.settlement_price" />
-                            </td>
-                            <td>
-                                {settlePrice}
-                            </td>
-                        </tr>
-
                         <tr>
                             <td>
                                 <Translate content="explorer.asset.price_feed.maintenance_collateral_ratio" />
@@ -493,7 +484,6 @@ class Asset extends React.Component {
                                 {currentFeed.maximum_short_squeeze_ratio / 1000}
                             </td>
                         </tr>
-                        
                     </tbody>
                 </table>
             </div>
@@ -508,31 +498,44 @@ class Asset extends React.Component {
         let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
         if (dynamic) dynamic = dynamic.toJS();
         var currentSupply = dynamic ? dynamic.current_supply : 0;
-        
+
         var currentSettled = bitAsset.force_settled_volume;
 
         var currentFeed = bitAsset.current_feed;
 
-        let maxSettlementVolume = bitAsset.options.maximum_force_settlement_volume;
+        let maxSettlementVolume =
+            bitAsset.options.maximum_force_settlement_volume;
         let settlementDelay = bitAsset.options.force_settlement_delay_sec;
         let settlementOffset = bitAsset.options.force_settlement_offset_percent;
 
         var globalSettlementPrice = this.getGlobalSettlementPrice();
         var msspPrice = this.formattedPrice(
-            currentFeed.settlement_price, false, false, 
+            currentFeed.settlement_price,
+            false,
+            false,
             currentFeed.maximum_short_squeeze_ratio / 1000
         );
-        
+
         var settlementFund = bitAsset.settlement_fund;
         var settlementPrice = this.formattedPrice(bitAsset.settlement_price);
         var isGlobalSettle = asset.bitasset.settlement_fund > 0 ? true : false;
 
-        return(
+        var settlePrice = this.formattedPrice(
+            currentFeed.settlement_price,
+            false,
+            false,
+            1 - settlementOffset / 10000
+        );
+
+        return (
             <div className="asset-card no-padding">
                 <div className="card-divider">{title}</div>
-                {isGlobalSettle ? 
-                    <Translate component="p" content="explorer.asset.settlement.global_settlement_description" /> 
-                    : null}
+                {isGlobalSettle ? (
+                    <Translate
+                        component="p"
+                        content="explorer.asset.settlement.global_settlement_description"
+                    />
+                ) : null}
 
                 <table
                     className="table key-value-table table-hover"
@@ -540,14 +543,11 @@ class Asset extends React.Component {
                 >
                     {isGlobalSettle ? (
                         <tbody>
-                            
                             <tr>
                                 <td>
                                     <Translate content="explorer.asset.settlement.settlement_price" />
                                 </td>
-                                <td>
-                                    {settlementPrice}
-                                </td>
+                                <td>{settlementPrice}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -555,22 +555,21 @@ class Asset extends React.Component {
                                 </td>
                                 <td>
                                     <FormattedAsset
-                                        asset={bitAsset.options.short_backing_asset}
+                                        asset={
+                                            bitAsset.options.short_backing_asset
+                                        }
                                         amount={settlementFund}
                                     />
                                 </td>
                             </tr>
                         </tbody>
                     ) : (
-
                         <tbody>
                             <tr>
                                 <td>
                                     <Translate content="explorer.asset.price_feed.maximum_short_squeeze_price" />
                                 </td>
-                                <td>
-                                    {msspPrice}
-                                </td>
+                                <td>{msspPrice}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -583,8 +582,33 @@ class Asset extends React.Component {
                                 </td>
                             </tr>
                             <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+
+                            <tr>
                                 <td>
-                                    <Translate content="explorer.asset.price_feed.settlement_delay" />
+                                    <Translate
+                                        style={{
+                                            fontWeight: "bold"
+                                        }}
+                                        content="explorer.asset.settlement.force_settlement"
+                                    />
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.price" />
+                                    &nbsp; ({settlementOffset / 100}%{" "}
+                                    <Translate content="explorer.asset.settlement.offset" />
+                                    )
+                                </td>
+                                <td>{settlePrice}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.delay" />
                                 </td>
                                 <td>
                                     <FormattedTime time={settlementDelay} />
@@ -592,40 +616,29 @@ class Asset extends React.Component {
                             </tr>
                             <tr>
                                 <td>
-                                    <Translate content="explorer.asset.price_feed.force_settlement_offset" />
-                                </td>
-                                <td> {settlementOffset / 100}% </td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td><td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <Translate content="explorer.asset.settlement.max_settlement_volume_percentage" />
-                                </td>
-                                <td>
-                                    {maxSettlementVolume / 100}%
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
                                     <Translate content="explorer.asset.settlement.max_settle_volume" />
+                                    &nbsp;(
+                                    {maxSettlementVolume / 100}
+                                    %)
                                 </td>
                                 <td>
                                     <FormattedAsset
                                         asset={asset.id}
-                                        amount={currentSupply * (maxSettlementVolume / 10000)}
+                                        amount={
+                                            currentSupply *
+                                            (maxSettlementVolume / 10000)
+                                        }
                                     />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <Translate content="explorer.asset.settlement.current_settled" />   
+                                    <Translate content="explorer.asset.settlement.current_settled" />
                                 </td>
                                 <td>
                                     <FormattedAsset
                                         asset={asset.id}
-                                        amount={currentSettled} 
+                                        amount={currentSettled}
                                     />
                                 </td>
                             </tr>
@@ -634,7 +647,12 @@ class Asset extends React.Component {
                                     <Translate content="explorer.asset.settlement.settle_remaining_volume" />
                                 </td>
                                 <td>
-                                    {currentSettled == 0 ? 100 : (currentSupply * (maxSettlementVolume / 10000) / currentSettled)}%
+                                    {currentSettled == 0
+                                        ? 100
+                                        : (currentSupply *
+                                              (maxSettlementVolume / 10000)) /
+                                          currentSettled}
+                                    %
                                 </td>
                             </tr>
                         </tbody>
@@ -955,8 +973,7 @@ class Asset extends React.Component {
     // the global settlement price is defined as the
     // the price at which the least collateralize short's
     // collateral no longer enough to back the debt
-    // he/she owes. If the feed price goes above this,
-    // then
+    // he/she owes.
     getGlobalSettlementPrice() {
         if (!this.state.callOrders) {
             return null;
@@ -1372,7 +1389,6 @@ class Asset extends React.Component {
                                             {this.renderSettlement(asset)}
                                         </div>
                                     ) : null}
-
                                 </div>
                                 {priceFeedData ? priceFeedData : null}
                             </Tab>
@@ -1426,10 +1442,11 @@ class AssetContainer extends React.Component {
         }
         let backingAsset = this.props.asset.has("bitasset")
             ? this.props.asset.getIn([
-                "bitasset",
-                "options",
-                "short_backing_asset"
-            ]) : "1.3.0";
+                  "bitasset",
+                  "options",
+                  "short_backing_asset"
+              ])
+            : "1.3.0";
         return <Asset {...this.props} backingAsset={backingAsset} />;
     }
 }
