@@ -515,6 +515,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Group",
         "hide": "Hide",
         "highest_bid": "Highest bid",
@@ -720,12 +721,14 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
-                "force_settlement_offset": "Force settlement offset",
-                "global_settlement_price": "Global settlement price",
+                "feed_lifetime": "Feed lifetime (hours)",
+                "min_feeds": "Minimum feeds",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-                "settlement_delay": "Settlement delay",
-                "settlement_price": "Settlement price",
+                "settlement_price": "Force Settlement price",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -736,6 +739,19 @@
                 "publisher": "Publisher",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed Data"
+            },
+            "settlement": {
+                "title": "Settlement",
+                "price": "Price",
+                "delay": "Delay",
+                "offset": "offset included",
+                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement funds",
+                "force_settlement": "Force Settlement",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "current_settled": "Already settled supply",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -763,7 +779,8 @@
             "symbol": "Symbol",
             "title": "Assets",
             "units": "Units",
-            "user": "User Issued Assets"
+            "user": "User Issued Assets",
+            "backing_asset": "Backing asset"
         },
         "block": {
             "account_upgrade": "Account to upgrade",
@@ -1731,6 +1748,7 @@
         },
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "This is the price at which settle orders will execute.",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "show_asset": "Click here to show this asset in the main list.",
         "show_block": "Click here to show block #%(block)s where this transaction occurred.",
         "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
