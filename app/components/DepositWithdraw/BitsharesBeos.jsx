@@ -1,23 +1,46 @@
 import React from "react";
-import BaseModal from "../Modal/BaseModal";
 import BitsharesBeosModal from "./BitsharesBeosModal";
+import counterpart from "counterpart";
 import ChainTypes from "components/Utility/ChainTypes";
 import Translate from "react-translate-component";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import BindToChainState from "components/Utility/BindToChainState";
 import QueryString from "query-string";
+import {Modal} from "bitshares-ui-style-guide";
 
 class BitsharesBeos extends React.Component {
     static propTypes = {
         asset: ChainTypes.ChainAsset.isRequired
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isModalVisible: false
+        };
+
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            isModalVisible: true
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            isModalVisible: false
+        });
+    }
+
     getTransferBtsId() {
         return "transfer_bts";
     }
 
     onTransferBts() {
-        ZfApi.publish(this.getTransferBtsId(), "open");
+        this.showModal();
     }
 
     getParams() {
@@ -102,33 +125,40 @@ class BitsharesBeos extends React.Component {
                 >
                     <Translate content="gateway.bitshares_beos.transfer_button_label" />
                 </button>
-                <BaseModal id={transferBtsId} overlay={true}>
-                    <br />
-                    <div className="grid-block vertical">
-                        <BitsharesBeosModal
-                            key={"transfer_bts"}
-                            account={this.props.account.get("name")}
-                            asset={this.props.asset.get("symbol")}
-                            balance={
-                                this.props.account.get("balances").toJS()[
-                                    this.props.asset.get("id")
-                                ]
-                            }
-                            creator={"eosio"}
-                            issuer={beosIssuer}
-                            beosApiUrl={beosApiUrl}
-                            beosFee={beosFee}
-                            owner_key={
-                                "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
-                            }
-                            ram={"0.0006 SYS"}
-                            account_contract={"beos.token"}
-                            action={"lock"}
-                            from={"beos.token"}
-                            modal_id={transferBtsId}
-                        />
-                    </div>
-                </BaseModal>
+                <Modal
+                    onCancel={this.hideModal}
+                    title={counterpart.translate(
+                        "gateway.bitshares_beos.modal_title"
+                    )}
+                    footer={null}
+                    visible={this.state.isModalVisible}
+                    id={transferBtsId}
+                    overlay={true}
+                >
+                    <BitsharesBeosModal
+                        key={"transfer_bts"}
+                        hideModal={this.hideModal}
+                        showModal={this.showModal}
+                        account={this.props.account.get("name")}
+                        asset={this.props.asset.get("symbol")}
+                        balance={
+                            this.props.account.get("balances").toJS()[
+                                this.props.asset.get("id")
+                            ]
+                        }
+                        creator={"eosio"}
+                        issuer={beosIssuer}
+                        beosApiUrl={beosApiUrl}
+                        beosFee={beosFee}
+                        owner_key={
+                            "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV"
+                        }
+                        ram={"0.0006 SYS"}
+                        account_contract={"beos.token"}
+                        action={"lock"}
+                        from={"beos.token"}
+                    />
+                </Modal>
             </div>
         );
     }

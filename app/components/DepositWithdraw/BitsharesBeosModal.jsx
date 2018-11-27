@@ -1,17 +1,16 @@
 import React from "react";
 import AmountSelector from "components/Utility/AmountSelector";
-import Modal from "react-foundation-apps/src/modal";
 import Translate from "react-translate-component";
-import Trigger from "react-foundation-apps/src/trigger";
+import counterpart from "counterpart";
 import ChainTypes from "components/Utility/ChainTypes";
 import BalanceComponent from "components/Utility/BalanceComponent";
 import BindToChainState from "components/Utility/BindToChainState";
 import PropTypes from "prop-types";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 import {Asset} from "common/MarketClasses";
 import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
+import {Button, Modal} from "bitshares-ui-style-guide";
 
 class BitsharesBeosModal extends React.Component {
     static propTypes = {
@@ -37,6 +36,7 @@ class BitsharesBeosModal extends React.Component {
             btsAmount: "0.001",
             is_account_validation: false,
             is_account_creation_checkbox: false,
+            isConfirmationModalVisible: false,
             account_validation_error: false,
             amount_to_send: "",
             creator: this.props.creator,
@@ -55,6 +55,9 @@ class BitsharesBeosModal extends React.Component {
             memo: "",
             no_account_error: false
         };
+
+        this.showConfirmationModal = this.showConfirmationModal.bind(this);
+        this.hideConfirmationModal = this.hideConfirmationModal.bind(this);
     }
 
     componentWillMount() {
@@ -81,6 +84,18 @@ class BitsharesBeosModal extends React.Component {
                 }
             );
         }
+    }
+
+    showConfirmationModal() {
+        this.setState({
+            isConfirmationModalVisible: true
+        });
+    }
+
+    hideConfirmationModal() {
+        this.setState({
+            isConfirmationModalVisible: false
+        });
     }
 
     _updateFee(state = this.state) {
@@ -295,12 +310,8 @@ class BitsharesBeosModal extends React.Component {
             });
     }
 
-    getMaintenanceId() {
-        return "maintenance";
-    }
-
     onMaintenance() {
-        ZfApi.publish(this.getMaintenanceId(), "open");
+        this.showConfirmationModal();
     }
 
     onAccountBalance() {
@@ -471,7 +482,7 @@ class BitsharesBeosModal extends React.Component {
         let balance = null;
         let account_balances = this.props.account.get("balances").toJS();
         let asset_types = Object.keys(account_balances);
-        let maintenanceId = this.getMaintenanceId();
+        let maintenanceDialog = null;
 
         if (asset_types.length > 0) {
             let current_asset_id = this.props.asset.get("id");
@@ -548,6 +559,24 @@ class BitsharesBeosModal extends React.Component {
             );
         }
 
+        maintenanceDialog = (
+            <Modal
+                onCancel={this.hideConfirmationModal}
+                footer={null}
+                visible={this.state.isConfirmationModalVisible}
+            >
+                <label>
+                    <Translate content="gateway.bitshares_beos.maintenance_modal_label" />
+                </label>
+                <br />
+                <Button key="cancel" onClick={this.hideConfirmationModal}>
+                    {counterpart.translate(
+                        "gateway.bitshares_beos.maintenance_button_label"
+                    )}
+                </Button>
+            </Modal>
+        );
+
         const disableSubmit =
             !this.state.amount_to_send ||
             this.state.balance_error ||
@@ -560,11 +589,6 @@ class BitsharesBeosModal extends React.Component {
             <div>
                 <form className="grid-block vertical full-width-content">
                     <div className="grid-container">
-                        <div className="content-block">
-                            <h3>
-                                <Translate content="gateway.bitshares_beos.modal_title" />
-                            </h3>
-                        </div>
                         {/* Amount to send to BEOS account */}
                         <div className="content-block">
                             <AmountSelector
@@ -665,44 +689,27 @@ class BitsharesBeosModal extends React.Component {
                             </p>
                         ) : null}
                         {/* Send/Cancel buttons */}
-                        <div className="button-group">
-                            <div
+                        <div>
+                            <Button
+                                type="primary"
+                                disabled={disableSubmit}
                                 onClick={this.onSubmit.bind(this)}
-                                className={
-                                    "button" +
-                                    (disableSubmit ? " disabled" : "")
-                                }
                             >
-                                <Translate content="gateway.bitshares_beos.send_button_label" />
-                            </div>
+                                {counterpart.translate(
+                                    "gateway.bitshares_beos.send_button_label"
+                                )}
+                            </Button>
 
-                            <Trigger close={this.props.modal_id}>
-                                <div className="button">
-                                    <Translate content="account.perm.cancel" />
-                                </div>
-                            </Trigger>
+                            <Button
+                                onClick={this.props.hideModal}
+                                style={{marginLeft: "8px"}}
+                            >
+                                {counterpart.translate("account.perm.cancel")}
+                            </Button>
                         </div>
+                        {maintenanceDialog}
                     </div>
                 </form>
-                <Modal id={maintenanceId} overlay={true}>
-                    <Trigger close={maintenanceId}>
-                        <a href="#" className="close-button">
-                            &times;
-                        </a>
-                    </Trigger>
-                    <br />
-                    <label>
-                        <Translate content="gateway.bitshares_beos.maintenance_modal_label" />
-                    </label>
-                    <br />
-                    <div className="content-block">
-                        <Trigger close={maintenanceId}>
-                            <a className="button">
-                                <Translate content="gateway.bitshares_beos.maintenance_button_label" />
-                            </a>
-                        </Trigger>
-                    </div>
-                </Modal>
             </div>
         );
     }
