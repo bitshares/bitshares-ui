@@ -4,7 +4,7 @@ import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
 import {Input, Card, Col, Row, Button} from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
-import AccountAssets from "../Account/AccountAssets";
+import AssetSelector from "../Utility/AssetSelector";
 
 export default class Showcase extends Component {
     constructor() {
@@ -21,15 +21,7 @@ export default class Showcase extends Component {
                     allowPubKey={true}
                     allowUppercase={true}
                 />
-
-                <Translate
-                    className="showcase-label padding"
-                    content="escrowed_transfer.asset"
-                />
-                {/* <AccountAssets 
-                    symbol="BTS"
-                />  */}
-                <Input addonAfter="BTSv" />
+                <AssetSelector label="escrowed_transfer.asset" />
             </Card>
         );
         let offers = (
