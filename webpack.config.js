@@ -82,9 +82,7 @@ module.exports = function(env) {
             __ELECTRON__: !!env.electron,
             __HASH_HISTORY__: !!env.hash,
             __BASE_URL__: JSON.stringify(baseUrl),
-            __UI_API__: JSON.stringify(
-                env.apiUrl || "https://ui.bitshares.eu/api"
-            ),
+            __UI_API__: JSON.stringify(env.apiUrl),
             __TESTNET__: !!env.testnet,
             __DEPRECATED__: !!env.deprecated,
             DEFAULT_SYMBOL: "BTS",
@@ -269,7 +267,9 @@ module.exports = function(env) {
                     test: /\.js$/,
                     include: [
                         path.join(root_dir, "app"),
-                        path.join(root_dir, "node_modules/react-datepicker2")
+                        path.join(root_dir, "node_modules/react-datepicker2"),
+                        path.join(root_dir, "node_modules/alt-container"),
+                        path.join(root_dir, "node_modules/alt-react")
                     ],
                     use: [
                         {
@@ -333,6 +333,10 @@ module.exports = function(env) {
                 },
                 {
                     test: /.*\.svg$/,
+                    exclude: [
+                        path.resolve(root_dir, "app/assets/model-type-images"),
+                        path.resolve(root_dir, "app/assets/bin-file")
+                    ],
                     use: [
                         {
                             loader: "svg-inline-loader"

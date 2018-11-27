@@ -131,13 +131,14 @@ class Row extends React.Component {
                         </Link>
                     </td>
                 )}
+
                 <td style={{padding: "8px 5px", textAlign: "left"}}>
                     <div>
                         <span>{this.props.info}</span>
                     </div>
                     <div style={{fontSize: 14, paddingTop: 5}}>
                         {/*<span>{counterpart.translate("explorer.block.title").toLowerCase()} <Link to={`/block/${block}`}>{utils.format_number(block, 0)}</Link></span>*/}
-                        {!this.props.hideFee ? (
+                        {/*{!this.props.hideFee ? (
                             <span className="facolor-fee">
                                 {" "}
                                 -{" "}
@@ -146,10 +147,18 @@ class Row extends React.Component {
                                     asset={fee.asset_id}
                                 />
                             </span>
-                        ) : null}
+                        ) : null}*/}
                         {pending ? <span> - {pending}</span> : null}
                     </div>
                 </td>
+                {!this.props.hideFee && (
+                    <td style={{textAlign: "left"}}>
+                        <FormattedAsset
+                            amount={fee.amount}
+                            asset={fee.asset_id}
+                        />
+                    </td>
+                )}
                 <td>
                     {!this.props.hideDate ? (
                         <BlockTime
@@ -878,10 +887,12 @@ class Operation extends React.Component {
                                         arg: "account"
                                     },
                                     {
-                                        value: (
+                                        value: this.props.result ? (
                                             <ShortObjectId
                                                 objectId={this.props.result[1]}
                                             />
+                                        ) : (
+                                            ""
                                         ),
                                         arg: "proposal"
                                     }

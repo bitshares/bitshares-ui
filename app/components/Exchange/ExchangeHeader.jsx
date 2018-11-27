@@ -9,19 +9,23 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
-import BaseModal from "../Modal/BaseModal";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
+import {Icon as AntIcon} from "bitshares-ui-style-guide";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
         super();
 
         this.state = {
+            isModalVisible: false,
             volumeShowQuote: true,
-            chartHeight: props.chartHeight
+            selectedMarketPickerAsset: props.selectedMarketPickerAsset
         };
+    }
 
-        this.setChartHeight = this.setChartHeight.bind(this);
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            selectedMarketPickerAsset: nextProps.selectedMarketPickerAsset
+        });
     }
 
     shouldComponentUpdate(nextProps) {
@@ -58,10 +62,6 @@ export default class ExchangeHeader extends React.Component {
         this.props.onToggleMarketPicker(selectedMarketPickerAsset);
     }
 
-    setChartHeight() {
-        this.props.onChangeChartHeight({value: this.state.chartHeight});
-    }
-
     render() {
         const {
             quoteAsset,
@@ -74,7 +74,6 @@ export default class ExchangeHeader extends React.Component {
             marketReady,
             latestPrice,
             marketStats,
-            showDepthChart,
             account
         } = this.props;
 
@@ -145,18 +144,18 @@ export default class ExchangeHeader extends React.Component {
 
             /* Settlment Offset */
             let settleAsset =
-                baseAsset.get("id") == "1.3.0"
+                baseId == "1.3.0"
                     ? quoteAsset
-                    : quoteAsset.get("id") == "1.3.0"
+                    : quoteId == "1.3.0"
                         ? baseAsset
-                        : null;
+                        : quoteAsset;
 
             if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
                     .getIn(["bitasset", "options"])
                     .toJS().force_settlement_offset_percent;
                 settlePrice =
-                    baseAsset.get("id") == "1.3.0"
+                    baseId == "1.3.0"
                         ? feedPrice.toReal() / (1 + offset_percent / 10000)
                         : feedPrice.toReal() * (1 + offset_percent / 10000);
             }
@@ -171,6 +170,10 @@ export default class ExchangeHeader extends React.Component {
             !!this.state.selectedMarketPickerAsset &&
             this.state.selectedMarketPickerAsset == baseSymbol;
 
+        let PriceAlertBellClassName = this.props.hasAnyPriceAlert
+            ? "exchange--price-alert--show-modal--active"
+            : "";
+
         return (
             <div className="grid-block shrink no-padding overflow-visible top-bar">
                 <div className="grid-block overflow-visible">
@@ -180,10 +183,17 @@ export default class ExchangeHeader extends React.Component {
                                 <div
                                     style={{
                                         padding: "0 5px",
-                                        fontSize: "18px",
+                                        fontSize: this.props.tinyScreen
+                                            ? "13px"
+                                            : "18px",
                                         marginTop: "1px"
                                     }}
                                 >
+                                    <AntIcon
+                                        onClick={this.props.showPriceAlertModal}
+                                        type={"bell"}
+                                        className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                                    />
                                     <span
                                         onClick={this.marketPicker.bind(
                                             this,
@@ -329,7 +339,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.volume_24"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
@@ -363,6 +373,7 @@ export default class ExchangeHeader extends React.Component {
                                     <ExchangeHeaderCollateral
                                         object={collOrderObject}
                                         account={account}
+                                        className="hide-order-1"
                                     />
                                 ) : null}
                                 {lowestCallPrice && showCallLimit ? (
@@ -397,96 +408,34 @@ export default class ExchangeHeader extends React.Component {
                                     />
                                 ) : null}
                             </ul>
-                            <ul className="market-stats stats top-stats">
+                            <ul
+                                className="market-stats stats top-stats"
+                                data-position={"left"}
+                                data-step="1"
+                                data-intro={translator.translate(
+                                    "walkthrough.personalize"
+                                )}
+                            >
                                 <li
                                     className="stressed-stat input clickable"
-                                    style={{padding: "16px"}}
-                                    onClick={() => {
-                                        ZfApi.publish("chart_options", "open");
-                                    }}
+                                    style={{padding: "16px 16px 16px 0px"}}
+                                    onClick={this.props.onTogglePersonalize.bind(
+                                        this
+                                    )}
                                 >
-                                    <Translate content="exchange.chart_modal" />
+                                    <AntIcon
+                                        type="setting"
+                                        style={{paddingRight: 5}}
+                                    />
+                                    <Translate
+                                        className="column-hide-xs"
+                                        content="exchange.settings.header.title"
+                                    />
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-
-                <BaseModal
-                    id="chart_options"
-                    overlay={true}
-                    modalHeader="exchange.chart_modal"
-                    noLogo
-                >
-                    <section className="block-list no-border-bottom">
-                        <header>
-                            <Translate content="exchange.chart_type" />:
-                        </header>
-                        <ul>
-                            <li className="with-dropdown">
-                                <select
-                                    value={
-                                        showDepthChart
-                                            ? "depth_chart"
-                                            : "price_chart"
-                                    }
-                                    className="settings-select"
-                                    onChange={e => {
-                                        if (
-                                            (showDepthChart &&
-                                                e.target.value ===
-                                                    "price_chart") ||
-                                            (!showDepthChart &&
-                                                e.target.value ===
-                                                    "market_depth")
-                                        ) {
-                                            this.props.onToggleCharts();
-                                        }
-                                    }}
-                                >
-                                    <option value="market_depth">
-                                        {counterpart.translate(
-                                            "exchange.order_depth"
-                                        )}
-                                    </option>
-                                    <option value="price_chart">
-                                        {counterpart.translate(
-                                            "exchange.price_history"
-                                        )}
-                                    </option>
-                                </select>
-                            </li>
-                        </ul>
-                    </section>
-                    <section className="block-list no-border-bottom">
-                        <header>
-                            <Translate content="exchange.chart_height" />:
-                        </header>
-                        <label>
-                            <span className="inline-label">
-                                <input
-                                    onKeyDown={e => {
-                                        if (e.keyCode === 13)
-                                            this.setChartHeight();
-                                    }}
-                                    type="number"
-                                    value={this.state.chartHeight}
-                                    onChange={e =>
-                                        this.setState({
-                                            chartHeight: e.target.value
-                                        })
-                                    }
-                                />
-                                <div
-                                    className="button no-margin"
-                                    onClick={this.setChartHeight}
-                                >
-                                    Set
-                                </div>
-                            </span>
-                        </label>
-                    </section>
-                </BaseModal>
             </div>
         );
     }

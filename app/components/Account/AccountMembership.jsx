@@ -76,11 +76,11 @@ class AccountMembership extends React.Component {
         let lifetime_fee = account.lifetime_referrer_fee_percentage / 100;
         let referrer_total_fee = 100 - network_fee - lifetime_fee;
         let referrer_fee =
-            referrer_total_fee * account.referrer_rewards_percentage / 10000;
+            (referrer_total_fee * account.referrer_rewards_percentage) / 10000;
         let registrar_fee = 100 - referrer_fee - lifetime_fee - network_fee;
 
         let lifetime_cost =
-            gprops.getIn([
+            (gprops.getIn([
                 "parameters",
                 "current_fees",
                 "parameters",
@@ -88,7 +88,7 @@ class AccountMembership extends React.Component {
                 1,
                 "membership_lifetime_fee"
             ]) *
-            gprops.getIn(["parameters", "current_fees", "scale"]) /
+                gprops.getIn(["parameters", "current_fees", "scale"])) /
             10000;
 
         let member_status = ChainStore.getAccountMemberStatus(
@@ -181,7 +181,8 @@ class AccountMembership extends React.Component {
                                                         <Translate
                                                             content="account.member.referral_text"
                                                             wallet_name={getWalletName()}
-                                                        />:
+                                                        />
+                                                        :
                                                         <h5>
                                                             {getWalletURL() +
                                                                 `/?r=${
@@ -206,7 +207,8 @@ class AccountMembership extends React.Component {
                                                         <tr>
                                                             <td>
                                                                 <Translate content="account.member.lifetime_referrer" />{" "}
-                                                                &nbsp; (<Link
+                                                                &nbsp; (
+                                                                <Link
                                                                     to={`account/${
                                                                         account.lifetime_referrer_name
                                                                     }`}
@@ -214,7 +216,8 @@ class AccountMembership extends React.Component {
                                                                     {
                                                                         account.lifetime_referrer_name
                                                                     }
-                                                                </Link>)
+                                                                </Link>
+                                                                )
                                                             </td>
                                                             <td>
                                                                 {lifetime_fee}%
@@ -223,7 +226,8 @@ class AccountMembership extends React.Component {
                                                         <tr>
                                                             <td>
                                                                 <Translate content="account.member.registrar" />{" "}
-                                                                &nbsp; (<Link
+                                                                &nbsp; (
+                                                                <Link
                                                                     to={`account/${
                                                                         account.registrar_name
                                                                     }`}
@@ -231,7 +235,8 @@ class AccountMembership extends React.Component {
                                                                     {
                                                                         account.registrar_name
                                                                     }
-                                                                </Link>)
+                                                                </Link>
+                                                                )
                                                             </td>
                                                             <td>
                                                                 {registrar_fee}%
@@ -240,7 +245,8 @@ class AccountMembership extends React.Component {
                                                         <tr>
                                                             <td>
                                                                 <Translate content="account.member.referrer" />{" "}
-                                                                &nbsp; (<Link
+                                                                &nbsp; (
+                                                                <Link
                                                                     to={`account/${
                                                                         account.referrer_name
                                                                     }`}
@@ -248,7 +254,8 @@ class AccountMembership extends React.Component {
                                                                     {
                                                                         account.referrer_name
                                                                     }
-                                                                </Link>)
+                                                                </Link>
+                                                                )
                                                             </td>
                                                             <td>
                                                                 {referrer_fee}%

@@ -9,7 +9,7 @@ It *stores all keys locally* in the browser, *never exposing your keys to anyone
 
 ## Getting started
 
-BitShares-UI depends node Node.js, and version 6+ is required.
+BitShares-UI depends node Node.js, and version 8+ is required.
 
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
 
@@ -17,8 +17,8 @@ To install NVM for Linux/OSX, simply copy paste the following in a terminal:
 
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
-nvm install v6
-nvm use v6
+nvm install v9
+nvm use v9
 ```
 
 Once you have Node installed, you can clone the repo:
@@ -60,7 +60,7 @@ If you'd like to host your own wallet somewhere, you should create a production 
 ```
 npm run build
 ```
-This will create a bundle in the /dist folder that can be hosted with the web server of your choice.
+This will create a bundle in the ./build/dist folder that can be hosted with the web server of your choice.
 
 
 ### Installable wallets
@@ -84,7 +84,7 @@ This will compile the UI with some special modifications for use with Electron, 
 
 ### Docker
 
-Clone this repository, run `docker-compose up` and visit localhost:8080 
+Clone this repository, run `docker-compose up` and visit localhost:8080
 
 
 ## Contributing
@@ -106,19 +106,22 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
 - We pay **bounties** for issues that have been estimated. An estimated issue is prefixed with a number in brackets like this: `[2] An nasty bug`. In this example, the bug is valued at two hours ($125 per hour). If you fix this issue according to these guidelines and your PR is accepted, this will earn you $250 bitUSD. You must have a Bitshares wallet and a Bitshares account to receive payment.
-- To claim an issue, simply leave a comment with your request to work on it. 
+- To claim an issue, simply leave a comment with your request to work on it.
 - If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will have no assigned dev, but have the developers name in brackets.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
 - If an issue missed the intended milestone completion, be sure to make a comment on your progress including the reason for the delay. The issue is pushed to the next milestone. Failing to comment or complete the issue once more will result in release of the assigned issue.
 
 **Please keep comments constructive and clean**
 
+The BitShares UI is integrated with BrowserStack (https://www.browserstack.com) to allow manual compatibility testing across devices and browser versions. In the future we will switch to a automated Selenium testing framework.
+![image](https://user-images.githubusercontent.com/33128181/48697885-05f8d880-ebe6-11e8-95a2-d87516cbb3d9.png)
+
 ## Release Branches
-Development is processed through milestones, by 2 week intervals. 
+Development is processed through milestones, by 2 week intervals.
 There are three branches that forms the current release process.
 
 ### Develop
-All PRs should be pushed to the `develop` branch. At the end of each milestone this branch is pushed to `staging`. 
+All PRs should be pushed to the `develop` branch. At the end of each milestone this branch is pushed to `staging`.
 New commits are automatically deployed to this branch and published for review.
 
 Available for browsing on https://develop.bitshares.org/

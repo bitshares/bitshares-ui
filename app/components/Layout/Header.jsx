@@ -1,7 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {connect} from "alt-react";
-import ActionSheet from "react-foundation-apps/src/action-sheet";
 import AccountActions from "actions/AccountActions";
 import AccountStore from "stores/AccountStore";
 import SettingsStore from "stores/SettingsStore";
@@ -21,13 +20,15 @@ import cnames from "classnames";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import ReactTooltip from "react-tooltip";
 import {Apis} from "bitsharesjs-ws";
-import notify from "actions/NotificationActions";
 import AccountImage from "../Account/AccountImage";
 import {ChainStore} from "bitsharesjs";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import {List} from "immutable";
 import DropDownMenu from "./HeaderDropdown";
 import {withRouter} from "react-router-dom";
+import {Notification} from "bitshares-ui-style-guide";
+import AccountBrowsingMode from "../Account/AccountBrowsingMode";
+import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 
 import {getLogo} from "branding";
 var logo = getLogo();
@@ -47,7 +48,9 @@ class Header extends React.Component {
             active: props.location.pathname,
             accountsListDropdownActive: false,
             dropdownActive: false,
-            dropdownSubmenuActive: false
+            dropdownSubmenuActive: false,
+            isDepositModalVisible: false,
+            isWithdrawModalVisible: false
         };
 
         this.unlisten = null;
@@ -62,7 +65,38 @@ class Header extends React.Component {
         this._closeAccountsListDropdown = this._closeAccountsListDropdown.bind(
             this
         );
+
+        this.showDepositModal = this.showDepositModal.bind(this);
+        this.hideDepositModal = this.hideDepositModal.bind(this);
+
+        this.showWithdrawModal = this.showWithdrawModal.bind(this);
+        this.hideWithdrawModal = this.hideWithdrawModal.bind(this);
+
         this.onBodyClick = this.onBodyClick.bind(this);
+    }
+
+    showDepositModal() {
+        this.setState({
+            isDepositModalVisible: true
+        });
+    }
+
+    hideDepositModal() {
+        this.setState({
+            isDepositModalVisible: false
+        });
+    }
+
+    showWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: true
+        });
+    }
+
+    hideWithdrawModal() {
+        this.setState({
+            isWithdrawModalVisible: false
+        });
     }
 
     componentWillMount() {
@@ -125,14 +159,14 @@ class Header extends React.Component {
 
     _showDeposit(e) {
         e.preventDefault();
-        this.refs.deposit_modal_new.show();
+        this.showDepositModal();
         this._closeDropdown();
     }
 
     _showWithdraw(e) {
         e.preventDefault();
         this._closeDropdown();
-        this.refs.withdraw_modal_new.show();
+        this.showWithdrawModal();
     }
 
     _triggerMenu(e) {
@@ -150,6 +184,12 @@ class Header extends React.Component {
                 .catch(() => {});
         } else {
             WalletUnlockActions.lock();
+            if (!WalletUnlockStore.getState().rememberMe) {
+                if (!isPersistantType()) {
+                    setLocalStorageType("persistant");
+                }
+                AccountStore.tryToSetCurrentAccount();
+            }
         }
         this._closeDropdown();
     }
@@ -218,13 +258,10 @@ class Header extends React.Component {
         }
         if (account_name !== this.props.currentAccount) {
             AccountActions.setCurrentAccount.defer(account_name);
-            notify.addNotification({
+            Notification.success({
                 message: counterpart.translate("header.account_notify", {
                     account: account_name
-                }),
-                level: "success",
-                autoDismiss: 2,
-                position: "br"
+                })
             });
             this._closeDropdown();
         }
@@ -357,23 +394,7 @@ class Header extends React.Component {
             </a>
         );
 
-        let createAccountLink =
-            myAccountCount === 0 ? (
-                <ActionSheet.Button title="" setActiveState={() => {}}>
-                    <a
-                        className="button create-account"
-                        onClick={this._onNavigate.bind(this, "/create-account")}
-                        style={{padding: "1rem", border: "none"}}
-                    >
-                        <Icon
-                            className="icon-14px"
-                            name="user"
-                            title="icons.user.create_account"
-                        />{" "}
-                        <Translate content="header.create_account" />
-                    </a>
-                </ActionSheet.Button>
-            ) : null;
+        let createAccountLink = myAccountCount === 0 ? true : null;
 
         // let lock_unlock = ((!!this.props.current_wallet) || passwordLogin) ? (
         //     <div className="grp-menu-item" >
@@ -1045,13 +1066,19 @@ class Header extends React.Component {
                     className="truncated active-account"
                     style={{cursor: "pointer"}}
                 >
-                    <div
-                        className="text account-name"
-                        onClick={this._toggleAccountDropdownMenu}
-                    >
-                        {currentAccount}
+                    <AccountBrowsingMode location={this.props.location} />
+                    <div>
+                        <div className="text account-name">
+                            <span onClick={this._toggleAccountDropdownMenu}>
+                                {currentAccount}
+                            </span>
+                            <AccountBrowsingMode
+                                location={this.props.location}
+                                usernameViewIcon={true}
+                            />
+                        </div>
+                        {walletBalance}
                     </div>
-                    {walletBalance}
 
                     {hasLocalWallet && (
                         <ul
@@ -1161,12 +1188,18 @@ class Header extends React.Component {
                 />
 
                 <DepositModal
+                    visible={this.state.isDepositModalVisible}
+                    hideModal={this.hideDepositModal}
+                    showModal={this.showDepositModal}
                     ref="deposit_modal_new"
                     modalId="deposit_modal_new"
                     account={currentAccount}
                     backedCoins={this.props.backedCoins}
                 />
                 <WithdrawModal
+                    visible={this.state.isWithdrawModalVisible}
+                    hideModal={this.hideWithdrawModal}
+                    showModal={this.showWithdrawModal}
                     ref="withdraw_modal_new"
                     modalId="withdraw_modal_new"
                     backedCoins={this.props.backedCoins}

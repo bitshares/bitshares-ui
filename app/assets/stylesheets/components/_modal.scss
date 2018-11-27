@@ -8,12 +8,8 @@
     max-width: 500px;
 }
 
+.ant-modal,
 .modal {
-    max-width: 700px;
-    border-radius: 8px;
-    overflow: auto !important;
-    padding: 1rem 2rem 1rem 2rem;
-
     .modal__header {
         text-align: center;
         padding-top: 1rem;
@@ -91,6 +87,13 @@
     }
 }
 
+.modal {
+    max-width: 700px;
+    border-radius: 8px;
+    overflow: auto !important;
+    padding: 1rem 2rem 1rem 2rem;
+}
+
 @media screen and (max-width: 600px) {
     .modal {
         width: 100%;
@@ -135,9 +138,9 @@
     text-transform: none !important;
 }
 
-// Ant Overrides
-label.ant-checkbox-wrapper {
-    > span {
-        text-transform: none;
-    }
+.modal-separator {
+    border-width: 1px;
+    border-style: solid;
+    width: 100%;
+    margin-bottom: 30px;
 }

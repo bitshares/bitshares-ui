@@ -22,7 +22,7 @@ import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs";
 import {List} from "immutable";
 import Icon from "../Icon/Icon";
-import {Checkbox} from "bitshares-ui-style-guide";
+import {Checkbox, Modal, Button} from "bitshares-ui-style-guide";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -44,8 +44,10 @@ class BorrowModalContent extends React.Component {
     };
 
     constructor(props) {
-        super();
+        super(props);
         this.state = this._initialState(props);
+
+        this._onSubmit = this._onSubmit.bind(this);
     }
 
     _initialState(props) {
@@ -111,6 +113,7 @@ class BorrowModalContent extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
+            this.props.visible !== nextProps.visible ||
             !utils.are_equal_shallow(nextState, this.state) ||
             !Immutable.is(nextProps.quote_asset, this.props.quote_asset) ||
             !nextProps.backing_asset.get("symbol") ===
@@ -432,6 +435,8 @@ class BorrowModalContent extends React.Component {
     _onSubmit(e) {
         e.preventDefault();
 
+        this.props.hideModal();
+
         let quotePrecision = utils.get_asset_precision(
             this.props.quote_asset.get("precision")
         );
@@ -724,110 +729,137 @@ class BorrowModalContent extends React.Component {
                 original_position.collateral
             ) < maintenanceRatio;
 
-        if (!isPredictionMarket && isNaN(feed_price)) {
-            return (
-                <div>
-                    <form
-                        className="grid-container text-center no-overflow"
-                        noValidate
-                    >
-                        <Translate
-                            component="h3"
-                            content="borrow.no_valid"
-                            asset_symbol={quote_asset.get("symbol")}
-                        />
-                    </form>
-                    <div className="grid-content button-group text-center no-overflow">
-                        <Trigger close={this.props.modalId}>
-                            <div className=" button warning">
-                                <Translate content="account.perm.cancel" />
-                            </div>
-                        </Trigger>
-                    </div>
-                </div>
-            );
-        }
-
-        return (
+        const noValidComponent = (
             <div>
                 <form
-                    className="grid-container small-10 small-offset-1 no-overflow"
+                    className="grid-container text-center no-overflow"
                     noValidate
                 >
                     <Translate
                         component="h3"
-                        content="borrow.title"
+                        content="borrow.no_valid"
                         asset_symbol={quote_asset.get("symbol")}
                     />
-                    <div style={{textAlign: "left"}}>
-                        {this.props.hide_help ? null : (
-                            <HelpContent
-                                path={
-                                    "components/" +
-                                    (isPredictionMarket
-                                        ? "BorrowModalPrediction"
-                                        : "BorrowModal")
-                                }
-                                debt={quote_asset.get("symbol")}
-                                collateral={backing_asset.get("symbol")}
-                                borrower={this.props.account.get("name")}
-                                mr={maintenanceRatio}
-                            />
-                        )}
+                </form>
+            </div>
+        );
 
-                        {isOriginalBelowMCR ? (
-                            <Translate
-                                component="h6"
-                                className="has-warning"
-                                content="borrow.errors.below_info"
-                            />
-                        ) : null}
+        const footer = [];
 
-                        {!isPredictionMarket ? (
-                            <div
-                                style={{
-                                    paddingTop: "1rem",
-                                    paddingBottom: "1rem"
-                                }}
-                            >
-                                <div className="borrow-price-feeds">
-                                    <span className="borrow-price-label">
-                                        <Translate content="transaction.feed_price" />
-                                        :&nbsp;
-                                    </span>
-                                    <FormattedPrice
-                                        noPopOver
-                                        quote_amount={quote_asset.getIn([
-                                            "bitasset",
-                                            "current_feed",
-                                            "settlement_price",
-                                            "base",
-                                            "amount"
-                                        ])}
-                                        quote_asset={quote_asset.getIn([
-                                            "bitasset",
-                                            "current_feed",
-                                            "settlement_price",
-                                            "base",
-                                            "asset_id"
-                                        ])}
-                                        base_asset={quote_asset.getIn([
-                                            "bitasset",
-                                            "current_feed",
-                                            "settlement_price",
-                                            "quote",
-                                            "asset_id"
-                                        ])}
-                                        base_amount={quote_asset.getIn([
-                                            "bitasset",
-                                            "current_feed",
-                                            "settlement_price",
-                                            "quote",
-                                            "amount"
-                                        ])}
+        const resetModal = () => {
+            this.props.hideModal();
+            this.setState(this._initialState(this.props));
+        };
+
+        if (!isPredictionMarket && isNaN(feed_price)) {
+            footer.push(
+                <Button onClick={this.props.hideModal}>
+                    {counterpart.translate("account.perm.cancel")}
+                </Button>
+            );
+        } else {
+            footer.push(
+                <Button key="submit" type="primary" onClick={this._onSubmit}>
+                    {counterpart.translate("borrow.adjust")}
+                </Button>
+            );
+            footer.push(
+                <Button key="cancel" onClick={resetModal}>
+                    {counterpart.translate("wallet.reset")}
+                </Button>
+            );
+        }
+
+        return (
+            <Modal
+                title={counterpart.translate("borrow.title", {
+                    asset_symbol: quote_asset.get("symbol")
+                })}
+                visible={this.props.visible}
+                onCancel={this.props.hideModal}
+                footer={footer}
+            >
+                {!isPredictionMarket && isNaN(feed_price) ? (
+                    noValidComponent
+                ) : (
+                    <div>
+                        <form
+                            className="grid-container small-10 small-offset-1 no-overflow"
+                            noValidate
+                        >
+                            <div style={{textAlign: "left"}}>
+                                {this.props.hide_help ? null : (
+                                    <HelpContent
+                                        path={
+                                            "components/" +
+                                            (isPredictionMarket
+                                                ? "BorrowModalPrediction"
+                                                : "BorrowModal")
+                                        }
+                                        debt={quote_asset.get("symbol")}
+                                        collateral={backing_asset.get("symbol")}
+                                        borrower={this.props.account.get(
+                                            "name"
+                                        )}
+                                        mr={maintenanceRatio}
                                     />
-                                </div>
-                                {/* <div className="borrow-price-feeds">
+                                )}
+
+                                {isOriginalBelowMCR ? (
+                                    <Translate
+                                        component="h6"
+                                        className="has-warning"
+                                        content="borrow.errors.below_info"
+                                    />
+                                ) : null}
+
+                                {!isPredictionMarket ? (
+                                    <div
+                                        style={{
+                                            paddingTop: "1rem",
+                                            paddingBottom: "1rem"
+                                        }}
+                                    >
+                                        <div className="borrow-price-feeds">
+                                            <span className="borrow-price-label">
+                                                <Translate content="transaction.feed_price" />
+                                                :&nbsp;
+                                            </span>
+                                            <FormattedPrice
+                                                noPopOver
+                                                quote_amount={quote_asset.getIn(
+                                                    [
+                                                        "bitasset",
+                                                        "current_feed",
+                                                        "settlement_price",
+                                                        "base",
+                                                        "amount"
+                                                    ]
+                                                )}
+                                                quote_asset={quote_asset.getIn([
+                                                    "bitasset",
+                                                    "current_feed",
+                                                    "settlement_price",
+                                                    "base",
+                                                    "asset_id"
+                                                ])}
+                                                base_asset={quote_asset.getIn([
+                                                    "bitasset",
+                                                    "current_feed",
+                                                    "settlement_price",
+                                                    "quote",
+                                                    "asset_id"
+                                                ])}
+                                                base_amount={quote_asset.getIn([
+                                                    "bitasset",
+                                                    "current_feed",
+                                                    "settlement_price",
+                                                    "quote",
+                                                    "amount"
+                                                ])}
+                                            />
+                                        </div>
+                                        {/* <div className="borrow-price-feeds">
                                 <span
                                     className="inline-block tooltip borrow-price-label"
                                     data-place="bottom"
@@ -843,267 +875,278 @@ class BorrowModalContent extends React.Component {
                                     base_amount={squeezeRatio * quote_asset.getIn(["bitasset", "current_feed", "settlement_price", "quote", "amount"])}
                                     />
                             </div> */}
-                                <b />
-                                <div
-                                    className={
-                                        "borrow-price-final " +
-                                        (errors.below_maintenance
-                                            ? "has-error"
-                                            : errors.close_maintenance
-                                                ? "has-warning"
-                                                : "")
-                                    }
-                                >
-                                    <span className="borrow-price-label">
-                                        <Translate content="exchange.your_price" />
-                                        :&nbsp;
-                                    </span>
-                                    {this.state.newPosition ? (
-                                        <FormattedPrice
-                                            noPopOver
-                                            quote_amount={
-                                                maintenanceRatio *
-                                                this.state.short_amount *
-                                                quotePrecision
-                                            }
-                                            quote_asset={quote_asset.get("id")}
-                                            base_asset={backing_asset.get("id")}
-                                            base_amount={
-                                                this.state.collateral *
-                                                backingPrecision
-                                            }
-                                        />
-                                    ) : null}
-                                </div>
-                            </div>
-                        ) : null}
-
-                        <div className="form-group">
-                            <span style={{position: "absolute", left: 20}}>
-                                <Icon
-                                    onClick={this.toggleLockedCR.bind(this)}
-                                    name={
-                                        !this.state.lockedCR
-                                            ? "locked"
-                                            : "unlocked"
-                                    }
-                                    size="1_5x"
-                                    style={{position: "relative", top: -10}}
-                                />
-                            </span>
-                            <AmountSelector
-                                label="transaction.borrow_amount"
-                                amount={short_amount.toString()}
-                                onChange={this._onBorrowChange.bind(this)}
-                                asset={quote_asset.get("id")}
-                                assets={[quote_asset.get("id")]}
-                                display_balance={bitAssetBalanceText}
-                                placeholder="0.0"
-                                tabIndex={1}
-                            />
-                        </div>
-                        <div className={collateralClass}>
-                            <span style={{position: "absolute", left: 20}}>
-                                <Icon
-                                    onClick={this.toggleLockedCR.bind(this)}
-                                    name={
-                                        this.state.lockedCR
-                                            ? "locked"
-                                            : "unlocked"
-                                    }
-                                    size="1_5x"
-                                    style={{position: "relative", top: -10}}
-                                />
-                            </span>
-                            <AmountSelector
-                                label="transaction.collateral"
-                                amount={collateral.toString()}
-                                onChange={this._onCollateralChange.bind(this)}
-                                asset={backing_asset.get("id")}
-                                assets={[backing_asset.get("id")]}
-                                display_balance={backingBalanceText}
-                                placeholder="0.0"
-                                tabIndex={1}
-                            />
-                            {errors.collateral_balance ? (
-                                <div
-                                    className="float-left"
-                                    style={{
-                                        paddingTop: 5
-                                    }}
-                                >
-                                    {errors.collateral_balance}
-                                </div>
-                            ) : null}
-                        </div>
-                        {!isPredictionMarket ? (
-                            <div>
-                                <div
-                                    className={collateralRatioClass}
-                                    style={{marginBottom: "3.5rem"}}
-                                >
-                                    <Translate
-                                        component="label"
-                                        content="borrow.coll_ratio"
-                                    />
-                                    <span>
-                                        <input
-                                            value={
-                                                collateral_ratio == 0
-                                                    ? ""
-                                                    : collateral_ratio
-                                            }
-                                            onChange={this._onRatioChange.bind(
-                                                this
-                                            )}
-                                            type="text"
-                                            style={{
-                                                width: "12%",
-                                                float: "right",
-                                                marginTop: -10
-                                            }}
-                                        />
-                                        <input
-                                            style={{width: "85%"}}
-                                            min="0"
-                                            max="6"
-                                            step="0.01"
-                                            onChange={this._onRatioChange.bind(
-                                                this
-                                            )}
-                                            value={collateral_ratio}
-                                            type="range"
-                                        />
-                                    </span>
-                                    {errors.below_maintenance ||
-                                    errors.close_maintenance ? (
+                                        <b />
                                         <div
-                                            style={{
-                                                height: "1em",
-                                                maxWidth: "85%"
-                                            }}
-                                            className="float-left"
+                                            className={
+                                                "borrow-price-final " +
+                                                (errors.below_maintenance
+                                                    ? "has-error"
+                                                    : errors.close_maintenance
+                                                        ? "has-warning"
+                                                        : "")
+                                            }
                                         >
-                                            {errors.below_maintenance}
-                                            {errors.close_maintenance}
+                                            <span className="borrow-price-label">
+                                                <Translate content="exchange.your_price" />
+                                                :&nbsp;
+                                            </span>
+                                            {this.state.newPosition ? (
+                                                <FormattedPrice
+                                                    noPopOver
+                                                    quote_amount={
+                                                        maintenanceRatio *
+                                                        this.state
+                                                            .short_amount *
+                                                        quotePrecision
+                                                    }
+                                                    quote_asset={quote_asset.get(
+                                                        "id"
+                                                    )}
+                                                    base_asset={backing_asset.get(
+                                                        "id"
+                                                    )}
+                                                    base_amount={
+                                                        this.state.collateral *
+                                                        backingPrecision
+                                                    }
+                                                />
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                ) : null}
+
+                                <div className="form-group">
+                                    <span
+                                        style={{position: "absolute", left: 20}}
+                                    >
+                                        <Icon
+                                            onClick={this.toggleLockedCR.bind(
+                                                this
+                                            )}
+                                            name={
+                                                !this.state.lockedCR
+                                                    ? "locked"
+                                                    : "unlocked"
+                                            }
+                                            size="1_5x"
+                                            style={{
+                                                position: "relative",
+                                                top: -10
+                                            }}
+                                        />
+                                    </span>
+                                    <AmountSelector
+                                        label="transaction.borrow_amount"
+                                        amount={short_amount.toString()}
+                                        onChange={this._onBorrowChange.bind(
+                                            this
+                                        )}
+                                        asset={quote_asset.get("id")}
+                                        assets={[quote_asset.get("id")]}
+                                        display_balance={bitAssetBalanceText}
+                                        placeholder="0.0"
+                                        tabIndex={1}
+                                    />
+                                </div>
+                                <div className={collateralClass}>
+                                    <span
+                                        style={{position: "absolute", left: 20}}
+                                    >
+                                        <Icon
+                                            onClick={this.toggleLockedCR.bind(
+                                                this
+                                            )}
+                                            name={
+                                                this.state.lockedCR
+                                                    ? "locked"
+                                                    : "unlocked"
+                                            }
+                                            size="1_5x"
+                                            style={{
+                                                position: "relative",
+                                                top: -10
+                                            }}
+                                        />
+                                    </span>
+                                    <AmountSelector
+                                        label="transaction.collateral"
+                                        amount={collateral.toString()}
+                                        onChange={this._onCollateralChange.bind(
+                                            this
+                                        )}
+                                        asset={backing_asset.get("id")}
+                                        assets={[backing_asset.get("id")]}
+                                        display_balance={backingBalanceText}
+                                        placeholder="0.0"
+                                        tabIndex={1}
+                                    />
+                                    {errors.collateral_balance ? (
+                                        <div
+                                            className="float-left"
+                                            style={{
+                                                paddingTop: 5
+                                            }}
+                                        >
+                                            {errors.collateral_balance}
                                         </div>
                                     ) : null}
                                 </div>
-                                <div
-                                    className={"form-group"}
-                                    style={{marginBottom: "3.5rem"}}
-                                >
-                                    <span>
-                                        <label>
-                                            <Translate content="borrow.target_collateral_ratio" />
-                                            &nbsp;&nbsp;
-                                            <span
-                                                data-place="top"
-                                                data-html={true}
-                                                data-tip={counterpart.translate(
-                                                    "tooltip.target_collateral_ratio"
-                                                )}
-                                            >
-                                                <Icon
-                                                    name="question-circle"
-                                                    title="icons.question_circle"
-                                                />
-                                            </span>
-                                        </label>
-                                        {useTargetCollateral ? (
+                                {!isPredictionMarket ? (
+                                    <div>
+                                        <div
+                                            className={collateralRatioClass}
+                                            style={{marginBottom: "3.5rem"}}
+                                        >
+                                            <Translate
+                                                component="label"
+                                                content="borrow.coll_ratio"
+                                            />
                                             <span>
-                                                <div
-                                                    style={{
-                                                        marginBottom: "1em"
-                                                    }}
-                                                >
-                                                    <Checkbox
-                                                        onClick={this._setUseTargetCollateral.bind(
-                                                            this
-                                                        )}
-                                                        checked
-                                                    >
-                                                        <Translate content="borrow.enable_target_collateral_ratio" />
-                                                    </Checkbox>
-                                                </div>
-                                                <span>
-                                                    <input
-                                                        value={
-                                                            isNaN(
-                                                                target_collateral_ratio
-                                                            )
-                                                                ? "0"
-                                                                : target_collateral_ratio
-                                                        }
-                                                        onChange={this._onTargetRatioChange.bind(
-                                                            this
-                                                        )}
-                                                        type="text"
-                                                        style={{
-                                                            float: "right",
-                                                            marginTop: -10,
-                                                            width: "12%"
-                                                        }}
-                                                    />
-                                                    <input
-                                                        style={{width: "85%"}}
-                                                        min="0"
-                                                        max="6"
-                                                        step="0.01"
-                                                        onChange={this._onTargetRatioChange.bind(
-                                                            this
-                                                        )}
-                                                        value={
-                                                            isNaN(
-                                                                target_collateral_ratio
-                                                            )
-                                                                ? "0"
-                                                                : target_collateral_ratio
-                                                        }
-                                                        type="range"
-                                                    />
-                                                </span>
-                                            </span>
-                                        ) : (
-                                            <div style={{marginBottom: "1em"}}>
-                                                <Checkbox
-                                                    onClick={this._setUseTargetCollateral.bind(
+                                                <input
+                                                    value={
+                                                        collateral_ratio == 0
+                                                            ? ""
+                                                            : collateral_ratio
+                                                    }
+                                                    onChange={this._onRatioChange.bind(
                                                         this
                                                     )}
+                                                    type="text"
+                                                    style={{
+                                                        width: "12%",
+                                                        float: "right",
+                                                        marginTop: -10
+                                                    }}
+                                                />
+                                                <input
+                                                    style={{width: "85%"}}
+                                                    min="0"
+                                                    max="6"
+                                                    step="0.01"
+                                                    onChange={this._onRatioChange.bind(
+                                                        this
+                                                    )}
+                                                    value={collateral_ratio}
+                                                    type="range"
+                                                />
+                                            </span>
+                                            {errors.below_maintenance ||
+                                            errors.close_maintenance ? (
+                                                <div
+                                                    style={{
+                                                        height: "1em",
+                                                        maxWidth: "85%"
+                                                    }}
+                                                    className="float-left"
                                                 >
-                                                    <Translate content="borrow.enable_target_collateral_ratio" />
-                                                </Checkbox>
-                                            </div>
-                                        )}
-                                    </span>
-                                </div>
+                                                    {errors.below_maintenance}
+                                                    {errors.close_maintenance}
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                        <div
+                                            className={"form-group"}
+                                            style={{marginBottom: "3.5rem"}}
+                                        >
+                                            <span>
+                                                <label>
+                                                    <Translate content="borrow.target_collateral_ratio" />
+                                                    &nbsp;&nbsp;
+                                                    <span
+                                                        data-place="top"
+                                                        data-html={true}
+                                                        data-tip={counterpart.translate(
+                                                            "tooltip.target_collateral_ratio"
+                                                        )}
+                                                    >
+                                                        <Icon
+                                                            name="question-circle"
+                                                            title="icons.question_circle"
+                                                        />
+                                                    </span>
+                                                </label>
+                                                {useTargetCollateral ? (
+                                                    <span>
+                                                        <div
+                                                            style={{
+                                                                marginBottom:
+                                                                    "1em"
+                                                            }}
+                                                        >
+                                                            <Checkbox
+                                                                onClick={this._setUseTargetCollateral.bind(
+                                                                    this
+                                                                )}
+                                                                checked
+                                                            >
+                                                                <Translate content="borrow.enable_target_collateral_ratio" />
+                                                            </Checkbox>
+                                                        </div>
+                                                        <span>
+                                                            <input
+                                                                value={
+                                                                    isNaN(
+                                                                        target_collateral_ratio
+                                                                    )
+                                                                        ? "0"
+                                                                        : target_collateral_ratio
+                                                                }
+                                                                onChange={this._onTargetRatioChange.bind(
+                                                                    this
+                                                                )}
+                                                                type="text"
+                                                                style={{
+                                                                    float:
+                                                                        "right",
+                                                                    marginTop: -10,
+                                                                    width: "12%"
+                                                                }}
+                                                            />
+                                                            <input
+                                                                style={{
+                                                                    width: "85%"
+                                                                }}
+                                                                min="0"
+                                                                max="6"
+                                                                step="0.01"
+                                                                onChange={this._onTargetRatioChange.bind(
+                                                                    this
+                                                                )}
+                                                                value={
+                                                                    isNaN(
+                                                                        target_collateral_ratio
+                                                                    )
+                                                                        ? "0"
+                                                                        : target_collateral_ratio
+                                                                }
+                                                                type="range"
+                                                            />
+                                                        </span>
+                                                    </span>
+                                                ) : (
+                                                    <div
+                                                        style={{
+                                                            marginBottom: "1em"
+                                                        }}
+                                                    >
+                                                        <Checkbox
+                                                            onClick={this._setUseTargetCollateral.bind(
+                                                                this
+                                                            )}
+                                                        >
+                                                            <Translate content="borrow.enable_target_collateral_ratio" />
+                                                        </Checkbox>
+                                                    </div>
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : null}
                             </div>
-                        ) : null}
-                        <div className="no-padding grid-content button-group no-overflow">
-                            <div
-                                onClick={this._onSubmit.bind(this)}
-                                className={classNames("button")}
-                            >
-                                <Translate content="borrow.adjust" />
-                            </div>
-                            <div
-                                onClick={e => {
-                                    e.preventDefault();
-                                    this.setState(
-                                        this._initialState(this.props)
-                                    );
-                                }}
-                                className="button hollow primary"
-                            >
-                                <Translate content="wallet.reset" />
-                            </div>
-                            {/*<Trigger close={this.props.modalId}>
-                                <div className="button"><Translate content="account.perm.cancel" /></div>
-                            </Trigger>*/}
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
+                )}
+            </Modal>
         );
     }
 }
@@ -1120,13 +1163,7 @@ export default class ModalWrapper extends React.Component {
     }
 
     show() {
-        this.setState({open: true}, () => {
-            ZfApi.publish(this.props.modalId, "open");
-        });
-    }
-
-    onClose() {
-        this.setState({open: false});
+        this.props.showModal();
     }
 
     componentWillMount() {
@@ -1152,32 +1189,24 @@ export default class ModalWrapper extends React.Component {
             }
         }
 
-        return !this.state.open ? null : (
-            <BaseModal
-                id={this.props.modalId}
-                overlay={true}
-                onClose={this.onClose.bind(this)}
-                ref={this.props.modalId}
-            >
-                <div className="grid-block vertical">
-                    <BorrowModalContent
-                        quote_asset={quote_asset}
-                        call_orders={account
-                            .get("call_orders", List())
-                            .toList()}
-                        hasCallOrders={
-                            account.get("call_orders") &&
-                            account.get("call_orders").size > 0
-                        }
-                        modalId={this.props.modalId}
-                        bitasset_balance={bitAssetBalance}
-                        backing_balance={coreBalance}
-                        backing_asset={backing_asset}
-                        hide_help={this.state.smallScreen}
-                        account={account}
-                    />
-                </div>
-            </BaseModal>
+        return (
+            <BorrowModalContent
+                visible={this.props.visible}
+                hideModal={this.props.hideModal}
+                showModal={this.props.showModal}
+                quote_asset={quote_asset}
+                call_orders={account.get("call_orders", List()).toList()}
+                hasCallOrders={
+                    account.get("call_orders") &&
+                    account.get("call_orders").size > 0
+                }
+                modalId={this.props.modalId}
+                bitasset_balance={bitAssetBalance}
+                backing_balance={coreBalance}
+                backing_asset={backing_asset}
+                hide_help={this.state.smallScreen}
+                account={account}
+            />
         );
     }
 }
