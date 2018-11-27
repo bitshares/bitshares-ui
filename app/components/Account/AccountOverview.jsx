@@ -18,7 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Switch} from "bitshares-ui-style-guide";
+import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -477,10 +477,11 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <input
+                                        <Input
                                             type="text"
-                                            placeholder="Filter"
+                                            placeholder="Filter..."
                                             onChange={this._handleFilterInput}
+                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
                                     <div className="selector inline-block">

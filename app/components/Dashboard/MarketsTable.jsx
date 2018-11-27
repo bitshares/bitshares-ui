@@ -9,6 +9,7 @@ import SettingsStore from "stores/SettingsStore";
 import utils from "common/utils";
 import PaginatedList from "../Utility/PaginatedList";
 import MarketsRow from "./MarketsRow";
+import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -242,10 +243,11 @@ class MarketsTable extends React.Component {
             <div>
                 <div className="header-selector">
                     <div className="filter inline-block">
-                        <input
+                        <Input
                             type="text"
-                            placeholder="Filter"
+                            placeholder="Filter..."
                             onChange={this._handleFilterInput.bind(this)}
+                            addonAfter={<Icon type="search" />}
                         />
                     </div>
 
