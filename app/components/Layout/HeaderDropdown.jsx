@@ -523,19 +523,16 @@ export default class DropDownMenu extends React.Component {
                 ) : null}
                 <li
                     className={cnames("divider", {
-                        active: active.indexOf("/escrowed-transfer") !== -1,
+                        active: active.indexOf("/barter") !== -1,
                         disabled: !showAccountLinks
                     })}
-                    onClick={this.props.onNavigate.bind(
-                        this,
-                        "/escrowed-transfer"
-                    )}
+                    onClick={this.props.onNavigate.bind(this, "/barter")}
                 >
                     <div className="table-cell">
                         <Icon size="2x" name="warning" title="icons.warning" />
                     </div>
                     <div className="table-cell">
-                        <Translate content="account.escrowed_transfer" />
+                        <Translate content="account.barter" />
                     </div>
                 </li>
             </ul>

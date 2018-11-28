@@ -11,7 +11,6 @@ import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
-import ReportModal from "./components/Modal/ReportModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
@@ -22,7 +21,7 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
-import EscrowedTransfer from "./components/Showcases/EscrowedTransfer";
+import Barter from "./components/Showcases/Barter";
 
 import {Route, Switch} from "react-router-dom";
 
@@ -433,10 +432,7 @@ class App extends React.Component {
                                     path="/block/:height/:txIndex"
                                     component={Block}
                                 />
-                                <Route
-                                    path="/escrowed-transfer"
-                                    component={EscrowedTransfer}
-                                />
+                                <Route path="/barter" component={Barter} />
 
                                 {/* Wallet backup/restore routes */}
                                 <Route

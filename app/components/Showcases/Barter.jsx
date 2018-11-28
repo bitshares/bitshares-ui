@@ -6,7 +6,7 @@ import {Input, Card, Col, Row, Button} from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import AssetSelector from "../Utility/AssetSelector";
 
-export default class Showcase extends Component {
+export default class Barter extends Component {
     constructor() {
         super();
     }
@@ -16,12 +16,12 @@ export default class Showcase extends Component {
         let account = (
             <Card style={{borderRadius: "10px"}}>
                 <AccountSelector
-                    label="escrowed_transfer.account"
+                    label="showcases.barter.account"
                     placeholder="placeholder"
                     allowPubKey={true}
                     allowUppercase={true}
                 />
-                <AssetSelector label="escrowed_transfer.asset" />
+                <AssetSelector label="showcases.barter.title" />
             </Card>
         );
         let offers = (

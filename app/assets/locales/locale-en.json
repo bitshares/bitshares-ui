@@ -32,7 +32,6 @@
             "not_yours": "Not your account",
             "unknown": "Unknown account"
         },
-        "escrowed_transfer": "Escrowed transfer",
         "estimate_value": "Estimated Account value",
         "existing_accounts": "Existing Accounts",
         "existing_user": "Existing user",
@@ -468,10 +467,6 @@
         "starred_markets": "Favorites",
         "table_empty": "No market matched",
         "top_markets": "Top Markets"
-    },
-    "escrowed_transfer": {
-        "account": "Account",
-        "asset": "Bastering Asset"
     },
     "exchange": {
         "price_alert": {
@@ -1663,6 +1658,12 @@
         "sub_text_1": "Please verify that your computer clock is correct.",
         "sub_text_2": "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below.",
         "title": "Failed to sync with the API server"
+    },
+    "showcases": {
+        "barter": {
+            "title": "Barter",
+            "account": "account"
+        }
     },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",

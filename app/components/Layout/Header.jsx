@@ -743,24 +743,24 @@ class Header extends React.Component {
                 </a>
             );
         }
-        if (active.indexOf("/escrowed-transfer") !== -1) {
+        if (active.indexOf("/barter") !== -1) {
             dynamicMenuItem = (
                 <a
                     style={{flexFlow: "row"}}
                     className={cnames({
-                        active: active.indexOf("/escrowed-transfer") !== -1
+                        active: active.indexOf("/barter") !== -1
                     })}
                 >
                     <Icon
                         size="1_5x"
                         style={{position: "relative", top: 0, left: -8}}
-                        name="thumbs-up"
-                        title="icons.thumbs_up"
+                        name="barter"
+                        title="icons.barter"
                     />
                     <Translate
                         className="column-hide-small"
                         component="span"
-                        content="account.escrowed_transfer"
+                        content="showcases.barter.title"
                     />
                 </a>
             );
