@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import Showcase from "./Showcase";
 
 export default class ShowcaseGrid extends Component {
@@ -8,6 +7,7 @@ export default class ShowcaseGrid extends Component {
     }
 
     render() {
+        let thiz = this;
         const tiles = [
             {
                 title: "showcases.paper_wallet.title",
@@ -23,7 +23,11 @@ export default class ShowcaseGrid extends Component {
             },
             {
                 title: "showcases.voting.title",
-                target: () => {},
+                target: event => {
+                    thiz.props.history.push(
+                        "/account/" + "committee-account" + "/voting"
+                    );
+                },
                 description: "showcases.voting.description",
                 icon: "voting"
             }
