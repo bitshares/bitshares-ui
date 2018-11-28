@@ -20,10 +20,17 @@ export default class Showcase extends Component {
             <div
                 className="padding"
                 style={{
-                    maxWidth: "400px"
+                    maxWidth: "400px",
+                    minWidth: "320px"
                 }}
             >
-                <div style={{backgroundColor: "gray"}}>
+                <div
+                    style={{
+                        backgroundColor: "gray",
+                        borderRadius: "10px",
+                        cursor: "pointer"
+                    }}
+                >
                     <Translate
                         content={this.props.title}
                         className={"padding"}
