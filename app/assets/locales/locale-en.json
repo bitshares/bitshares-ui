@@ -1662,7 +1662,8 @@
     "showcases": {
         "barter": {
             "title": "Barter",
-            "account": "account"
+            "account": "account",
+            "bartering_asset": "Bartering asset"
         }
     },
     "tooltip": {

@@ -21,7 +21,7 @@ export default class Barter extends Component {
                     allowPubKey={true}
                     allowUppercase={true}
                 />
-                <AssetSelector label="showcases.barter.title" />
+                <AssetSelector label="showcases.barter.bartering_asset" />
             </Card>
         );
         let offers = (
