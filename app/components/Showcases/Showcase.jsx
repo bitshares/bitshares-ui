@@ -30,6 +30,7 @@ export default class Showcase extends Component {
                         borderRadius: "10px",
                         cursor: "pointer"
                     }}
+                    onClick={this.props.target}
                 >
                     <Translate
                         content={this.props.title}
