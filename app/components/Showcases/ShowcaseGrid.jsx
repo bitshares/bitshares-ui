@@ -20,6 +20,12 @@ export default class ShowcaseGrid extends Component {
                 target: () => {},
                 description: "showcases.barter_transaction.description",
                 icon: "barter"
+            },
+            {
+                title: "showcases.voting.title",
+                target: () => {},
+                description: "showcases.voting.description",
+                icon: "voting"
             }
             // .... even more tiles in this list
         ];

@@ -2138,6 +2138,10 @@
         "barter_transaction": {
             "title": "Barter",
             "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
+        },
+        "voting": {
+            "title": "Voting",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain."
         }
     }
 }

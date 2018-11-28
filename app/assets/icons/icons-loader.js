@@ -49,6 +49,7 @@ let icons = [
     "transfer",
     "unlocked",
     "user",
+    "voting",
     "warning",
     "withdraw",
     "filter",
