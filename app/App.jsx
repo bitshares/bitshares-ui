@@ -434,7 +434,7 @@ class App extends React.Component {
                                 />
 
                                 <Route
-                                    path="/showcases"
+                                    path="/spotlight"
                                     component={ShowcaseGrid}
                                 />
 

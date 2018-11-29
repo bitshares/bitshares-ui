@@ -1100,7 +1100,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
-        "showcases": "Showcases",
+        "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",
@@ -2203,6 +2203,10 @@
         "voting": {
             "title": "Voting",
             "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain."
+        },
+        "borrow": {
+            "title": "Collaterized Debt Position",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)"
         }
     }
 }

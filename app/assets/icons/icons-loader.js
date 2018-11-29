@@ -3,6 +3,7 @@ let icons = [
     "adjust",
     "assets",
     "barter",
+    "borrow",
     "checkmark-circle",
     "chevron-down",
     "clippy",
