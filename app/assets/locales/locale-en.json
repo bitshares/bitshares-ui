@@ -677,6 +677,7 @@
         "volume": "Volume",
         "volume_24": "24hr Volume",
         "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All"
