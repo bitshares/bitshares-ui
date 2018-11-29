@@ -647,7 +647,15 @@ class Asset extends React.Component {
                                 <td>
                                     {currentSettled == 0
                                         ? 100
-                                        : Math.round(100 - ((currentSettled / (currentSupply * (maxSettlementVolume / 10000))) * 100),2)}
+                                        : Math.round(
+                                              100 -
+                                                  (currentSettled /
+                                                      (currentSupply *
+                                                          (maxSettlementVolume /
+                                                              10000))) *
+                                                      100,
+                                              2
+                                          )}
                                     %
                                 </td>
                             </tr>
@@ -1400,9 +1408,6 @@ class Asset extends React.Component {
                                     {"bitasset" in asset &&
                                     !asset.bitasset.is_prediction_market
                                         ? this.renderFeedPublish(asset)
-                                        : null}
-                                    {"bitasset" in asset && asset.bitasset.settlement_fund > 0 ? 
-                                        this.renderCollateralBid(asset) 
                                         : null}
                                 </div>
                             </Tab>
