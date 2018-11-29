@@ -41,11 +41,22 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                                 : Number(orderBook.bids[0].price)
                     );
 
-                const settlementPrice = asset.getIn([
-                    "bitasset",
-                    "current_feed",
-                    "settlement_price"
-                ]);
+                let settlementPrice = null;
+                if (
+                    !!asset.get("bitasset") &&
+                    asset.get("bitasset").get("settlement_fund") > 0
+                ) {
+                    settlementPrice = asset
+                        .get("bitasset")
+                        .get("settlement_price");
+                } else {
+                    settlementPrice = asset.getIn([
+                        "bitasset",
+                        "current_feed",
+                        "settlement_price"
+                    ]);
+                }
+
                 const realSettlementPrice = new Price({
                     base: new Asset({
                         asset_id: shortBackingAssetId,
@@ -63,7 +74,9 @@ const withWorthLessSettlementFlag = WrappedComponent =>
                 realMarketPricePromise.then(realMarketPrice =>
                     this.setState({
                         worthLessSettlement:
-                            realMarketPrice > realSettlementPrice
+                            realMarketPrice > realSettlementPrice,
+                        marketPrice: realMarketPrice,
+                        settlementPrice: realSettlementPrice
                     })
                 );
             }
@@ -76,12 +89,14 @@ const withWorthLessSettlementFlag = WrappedComponent =>
             render() {
                 const {
                     props,
-                    state: {worthLessSettlement}
+                    state: {worthLessSettlement, marketPrice, settlementPrice}
                 } = this;
                 return (
                     <WrappedComponent
                         {...props}
                         worthLessSettlement={worthLessSettlement}
+                        marketPrice={marketPrice}
+                        settlementPrice={settlementPrice}
                     />
                 );
             }

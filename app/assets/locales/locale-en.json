@@ -588,6 +588,8 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settings": {
             "header": {
                 "chart_options": "Chart options",
@@ -754,7 +756,7 @@
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -1750,6 +1752,7 @@
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "settle_price": "This is the price at which settle orders will execute.",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "show_asset": "Click here to show this asset in the main list.",
