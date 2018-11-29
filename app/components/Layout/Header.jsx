@@ -502,6 +502,23 @@ class Header extends React.Component {
                 </a>
             );
         }
+        if (active.indexOf("spotlight") !== -1) {
+            dynamicMenuItem = (
+                <a style={{flexFlow: "row"}} className={cnames({active: true})}>
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="showcases"
+                        title="icons.showcases"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="header.showcases"
+                    />
+                </a>
+            );
+        }
         if (active.indexOf("settings") !== -1) {
             dynamicMenuItem = (
                 <a
@@ -1056,7 +1073,7 @@ class Header extends React.Component {
                                     />
                                 </a>
                             </li>
-                            <li>
+                            {/*                            <li>
                                 <a
                                     style={{flexFlow: "row"}}
                                     className={cnames(
@@ -1090,7 +1107,7 @@ class Header extends React.Component {
                                         content="header.showcases"
                                     />
                                 </a>
-                            </li>
+                            </li>*/}
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>

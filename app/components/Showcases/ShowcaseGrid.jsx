@@ -30,6 +30,16 @@ export default class ShowcaseGrid extends Component {
                 },
                 description: "showcases.voting.description",
                 icon: "voting"
+            },
+            {
+                title: "showcases.borrow.title",
+                target: event => {
+                    thiz.props.history.push(
+                        "/account/" + "committee-account" + "/voting"
+                    );
+                },
+                description: "showcases.borrow.description",
+                icon: "borrow"
             }
             // .... even more tiles in this list
         ];
