@@ -10,6 +10,7 @@ import utils from "common/utils";
 import PaginatedList from "../Utility/PaginatedList";
 import MarketsRow from "./MarketsRow";
 import { Input, Icon} from "bitshares-ui-style-guide";
+import ScaledOrder from "../Exchange/ScaledOrder";
 
 class MarketsTable extends React.Component {
     constructor() {
@@ -241,6 +242,12 @@ class MarketsTable extends React.Component {
             .filter(r => !!r);
         return (
             <div>
+                <ScaledOrder
+                    visible={true}
+                    quoteAsset={"1.3.113"}
+                    baseAsset={"1.3.0"}
+                    latestPrice={"0.32700114"}
+                />
                 <div className="header-selector">
                     <div className="filter inline-block">
                         <Input
