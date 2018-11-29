@@ -502,6 +502,7 @@
         "feed_price": "Котировка",
         "filter": "Фильтр...",
         "flip": "Инвертировать",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Групповой",
         "hide": "Скрыть",
         "highest_bid": "Наивысшая ставка",
@@ -653,7 +654,10 @@
             }
         },
         "settle": "Погашение",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Ордера на погашение",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Сократить",
         "show_all_orders": "Отобразить все %(rowcount)s ордера",
         "show_all_trades": "Отобразить все %(rowcount)s сделки",
@@ -720,11 +724,13 @@
                 "whitelist_markets": "Рынки белого списка"
             },
             "price_feed": {
-                "force_settlement_offset": "Смещение принудительного погашения",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Коэффициент обеспечения поддержки (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Максимальный коэффициент краткого сжатия (MSSR)",
-                "settlement_delay": "Задержка погашения",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "Расчетная цена",
                 "title": "Поточная цена"
             },
@@ -736,6 +742,19 @@
                 "publisher": "Издатель",
                 "settlement_price": "Расчетная цена",
                 "title": "Данные котировок"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "Тип актива",
@@ -755,6 +774,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "Идентификатор",
             "issuer": "Эмитент",
             "market": "Смарткойны",
@@ -1683,6 +1703,8 @@
         "follow_user_add": "Нажмите, чтобы подписаться на этого пользователя",
         "gateway": "Шлюзы подкрепляют депозиты реальными активами на 100% ",
         "generate": "Сгенерированный пароль был создан локально в Вашем браузере. <br /><br /><strong>Никто, кроме Вас не имеет к нему доступа</strong>.<br /><br /> Вставьте его ниже и сохраните копию в надежном месте",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Нажмите здесь, чтобы скрыть актив из этого списка.",
         "latest_price": "Это самая актуальная цена для этого рынка.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
