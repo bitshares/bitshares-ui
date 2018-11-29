@@ -131,9 +131,8 @@ class ApiNode extends React.Component {
         }
     }
 
-    remove(url, name, e) {
-        e.target.id = "remove"; // Override target.id to allow Removal Node Modal
-        this.props.triggerModal(e, url, name);
+    remove(url, name) {
+        this.props.showRemoveNodeModal(url, name);
     }
 
     show(url) {
@@ -308,7 +307,7 @@ class ApiNode extends React.Component {
                             </a>
                         )}
                         {canBeRemoved && (
-                            <a onClick={this.remove.bind(this, url, name)}>
+                            <a onClick={this.remove.bind(this, url, title)}>
                                 <Icon
                                     name={"times"}
                                     title="icons.times"
@@ -416,7 +415,7 @@ class AccessSettings extends React.Component {
             <ApiNode
                 node={node}
                 key={node.url}
-                triggerModal={props.triggerModal}
+                showRemoveNodeModal={props.showRemoveNodeModal}
                 isActive={node.url == connectedNode.url}
                 popup={props.popup}
             />
@@ -593,7 +592,7 @@ class AccessSettings extends React.Component {
                         >
                             <div
                                 className="button"
-                                onClick={props.triggerModal.bind(this)}
+                                onClick={props.showAddNodeModal}
                             >
                                 <Translate
                                     id="add"

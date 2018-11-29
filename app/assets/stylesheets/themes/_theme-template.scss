@@ -63,6 +63,32 @@
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    .exchange--price-alert--show-modal--active {
+        color: $link-text-color;
+    }
+
+    .price-alert--notification--pair-name {
+        font-weight: 600;
+    }
+
+    .price-alert--notification--icon {
+        &.price-alert--notification--icon--up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--icon--down {
+            color: $negative-color;
+        }
+    }
+
+    .price-alert--notification--actual-price {
+        &.price-alert--notification--actual-price-up {
+            color: $positive-color;
+        }
+        &.price-alert--notification--actual-price-down {
+            color: $negative-color;
+        }
+    }
+
     .explore-witness--info {
         width: 100%;
 
@@ -192,9 +218,11 @@
             color: lighten($link-text-color, 4%);
         }
     }
-    label,
-    label > span {
-        color: $primary-text-color;
+    *#{$ant-fix} > {
+        label,
+        label > span {
+            color: $primary-text-color;
+        }
     }
     // select:hover {
     // background-color: $panel-bg-color;
@@ -612,10 +640,9 @@
             color: $link-text-color;
         }
     }
-    .header-container .anticon {
-        color: $primary-text-color !important;
-        background-color: $primary-text-color !important;
-        fill: $primary-text-color !important;
+
+    .blue {
+        color: $button-bg-color;
     }
 
     .grp-menu-item button {
@@ -706,6 +733,10 @@
             color: $account-dimmed !important;
             background-color: $bg-color !important;
         }
+    }
+    // Sticky Order-Row
+    div.sticky-table-row.order-row:hover {
+        background-color: lighten($bg-color, 4%);
     }
     // block-list
     .block-list {
@@ -1418,7 +1449,7 @@
             background-color: $panel-bg-color !important;
             border-bottom: 1px solid grey !important;
             border-top: 1px solid grey !important;
-            padding: 10px 0 !important;
+            padding: 7px 0 !important;
         }
     }
     .sticky-table .sticky-table-column,
@@ -1455,11 +1486,11 @@
             }
         }
     }
-    .order-table {
-        > tbody > tr:nth-of-type(even) {
-            background-color: $row-accent-color;
-        }
-    }
+    // .order-table {
+    //     > tbody > tr:nth-of-type(even) {
+    //         background-color: $row-accent-color;
+    //     }
+    // }
     .mymarkets-header {
         background-color: $header-color;
     }
@@ -1537,10 +1568,11 @@
         cursor: pointer;
     }
 
-    .table > tbody > tr:nth-of-type(even) {
-        background-color: lighten($bg-color, 4%);
-    }
+    // .table > tbody > tr:nth-of-type(even) {
+    //     background-color: lighten($bg-color, 4%);
+    // }
     // bottom stats
+
     .bucket-option {
         @include button-focus($secondary-text-color, $panel-bg-color, 0);
         &:hover {
@@ -1942,7 +1974,7 @@
         }
     }
     .introjs-launcher {
-        margin-left: 15px;
+        margin-left: 5px;
         background-color: $bs-blue;
         padding: 0 10px;
         font-size: 18px;
@@ -2484,7 +2516,7 @@
     .menu-dropdown-wrapper {
         height: 65px;
         width: 65px;
-        text-align: center;
+        text-align: left;
         border-radius: 0;
         .hamburger .icon {
             position: relative;

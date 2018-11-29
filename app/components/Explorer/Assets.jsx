@@ -140,12 +140,12 @@ class Assets extends React.Component {
         let placeholder = counterpart.translate("markets.filter").toUpperCase();
         let coreAsset = ChainStore.getAsset("1.3.0");
 
-        let uia;
-        let mia;
         let pm;
 
         let dataSource = [];
         let columns = [];
+
+        // Default sorting of the ant table is defined through defaultSortOrder prop
 
         if (activeFilter == "user") {
             columns = [
@@ -153,8 +153,13 @@ class Assets extends React.Component {
                     key: "symbol",
                     title: "symbol",
                     dataIndex: "symbol",
+                    defaultSortOrder: "ascend",
                     sorter: (a, b) => {
-                        return a.rank > b.rank ? 1 : a.rank < b.rank ? -1 : 0;
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
                     },
                     render: item => {
                         return (
@@ -168,6 +173,13 @@ class Assets extends React.Component {
                     key: "issuer",
                     title: "issuer",
                     dataIndex: "issuer",
+                    sorter: (a, b) => {
+                        return a.issuer > b.issuer
+                            ? 1
+                            : a.issuer < b.issuer
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return this.linkToAccount(item);
                     }
@@ -176,6 +188,15 @@ class Assets extends React.Component {
                     key: "currentSupply",
                     title: "Supply",
                     dataIndex: "currentSupply",
+                    sorter: (a, b) => {
+                        a.currentSupply = parseFloat(a.currentSupply);
+                        b.currentSupply = parseFloat(b.currentSupply);
+                        return a.currentSupply > b.currentSupply
+                            ? 1
+                            : a.currentSupply < b.currentSupply
+                                ? -1
+                                : 0;
+                    },
                     render: (item, record) => {
                         return (
                             <FormattedAsset
@@ -229,8 +250,7 @@ class Assets extends React.Component {
                         assetId: asset.id,
                         marketId: marketID
                     });
-                })
-                .toArray();
+                });
         }
 
         if (activeFilter == "market") {
@@ -239,6 +259,14 @@ class Assets extends React.Component {
                     key: "symbol",
                     title: "symbol",
                     dataIndex: "symbol",
+                    defaultSortOrder: "ascend",
+                    sorter: (a, b) => {
+                        return a.symbol > b.symbol
+                            ? 1
+                            : a.symbol < b.symbol
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return (
                             <Link to={`/asset/${item}`}>
@@ -251,6 +279,13 @@ class Assets extends React.Component {
                     key: "issuer",
                     title: "issuer",
                     dataIndex: "issuer",
+                    sorter: (a, b) => {
+                        return a.issuer > b.issuer
+                            ? 1
+                            : a.issuer < b.issuer
+                                ? -1
+                                : 0;
+                    },
                     render: item => {
                         return this.linkToAccount(item);
                     }
@@ -259,6 +294,15 @@ class Assets extends React.Component {
                     key: "currentSupply",
                     title: "Supply",
                     dataIndex: "currentSupply",
+                    sorter: (a, b) => {
+                        a.currentSupply = parseFloat(a.currentSupply);
+                        b.currentSupply = parseFloat(b.currentSupply);
+                        return a.currentSupply > b.currentSupply
+                            ? 1
+                            : a.currentSupply < b.currentSupply
+                                ? -1
+                                : 0;
+                    },
                     render: (item, record) => {
                         return (
                             <FormattedAsset
@@ -284,7 +328,7 @@ class Assets extends React.Component {
                 }
             ];
 
-            mia = assets
+            assets
                 .filter(a => {
                     return (
                         a.bitasset_data &&
@@ -313,8 +357,7 @@ class Assets extends React.Component {
                         assetId: asset.id,
                         marketId: marketID
                     });
-                })
-                .toArray();
+                });
         }
 
         if (activeFilter == "prediction") {
@@ -337,6 +380,15 @@ class Assets extends React.Component {
                                     this.state.filterSearch.toLowerCase()
                                 ) !== -1)
                     );
+                })
+                .sort((a, b) => {
+                    if (a.symbol < b.symbol) {
+                        return -1;
+                    } else if (a.symbol > b.symbol) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 })
                 .map(asset => {
                     let description = assetUtils.parseDescription(
@@ -407,38 +459,8 @@ class Assets extends React.Component {
                         </tr>
                     );
                 })
-                .sort((a, b) => {
-                    if (a.key > b.key) {
-                        return -1;
-                    } else if (a.key < b.key) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                })
                 .toArray();
         }
-
-        let assetListHeader = (
-            <tr>
-                <th>
-                    <Translate
-                        component="span"
-                        content="explorer.assets.symbol"
-                    />
-                </th>
-                <th>
-                    <Translate
-                        component="span"
-                        content="explorer.assets.issuer"
-                    />
-                </th>
-                <th>
-                    <Translate component="span" content="markets.supply" />
-                </th>
-                <th />
-            </tr>
-        );
 
         return (
             <div className="grid-block vertical">

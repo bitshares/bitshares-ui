@@ -6,6 +6,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import MarketsActions from "actions/MarketsActions";
 import {Link} from "react-router-dom";
 import utils from "common/utils";
+import SettingsActions from "actions/SettingsActions";
 import cnames from "classnames";
 
 class MarketsRow extends React.Component {

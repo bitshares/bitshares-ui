@@ -397,18 +397,6 @@ class OrderBook extends React.Component {
         this.centerText = React.createRef();
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            autoScroll: nextProps.autoScroll
-        });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            autoScroll: nextProps.autoScroll
-        });
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
         if (
             this.props.horizontal &&
@@ -993,7 +981,7 @@ class OrderBook extends React.Component {
                                     style={{lineHeight: "16px"}}
                                     className="header-sub-title float-right"
                                 >
-                                    <Translate content="exchange.volume" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalAsks,
@@ -1153,7 +1141,7 @@ class OrderBook extends React.Component {
                                     style={{lineHeight: "16px"}}
                                     className="float-right header-sub-title"
                                 >
-                                    <Translate content="exchange.volume" />
+                                    <Translate content="exchange.market_depth" />
                                     <span>: </span>
                                     {utils.format_number(
                                         totalBids,
@@ -1268,6 +1256,7 @@ class OrderBook extends React.Component {
                                 <td
                                     className="cell center-cell"
                                     colSpan="3"
+                                    style={{padding: 0}}
                                     data-intro={translator.translate(
                                         "walkthrough.vertical_order"
                                     )}

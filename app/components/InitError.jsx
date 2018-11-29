@@ -187,8 +187,8 @@ class InitError extends React.Component {
 
                         <WebsocketAddModal
                             ref="ws_modal"
-                            isModalVisible={this.state.isModalVisible}
-                            onClose={this.handleModalClose}
+                            isAddNodeModalVisible={this.state.isModalVisible}
+                            onAddNodeClose={this.handleModalClose}
                             apis={this.props.apis}
                         />
                     </div>

@@ -12,6 +12,7 @@ import AccessSettings from "../Settings/AccessSettings";
 import Icon from "../Icon/Icon";
 import "intro.js/introjs.css";
 import guide from "intro.js";
+import ReportModal from "../Modal/ReportModal";
 import PropTypes from "prop-types";
 import {routerTransitioner} from "../../routerTransition";
 import LoadingIndicator from "../LoadingIndicator";
@@ -38,6 +39,7 @@ class Footer extends React.Component {
         this.state = {
             choiceModalShowOnce: false,
             isChoiceModalVisible: false,
+            isReportModalVisible: false,
             showNodesPopup: false,
             showConnectingPopup: false
         };
@@ -50,6 +52,8 @@ class Footer extends React.Component {
         this.getNode = this.getNode.bind(this);
         this.showChoiceModal = this.showChoiceModal.bind(this);
         this.hideChoiceModal = this.hideChoiceModal.bind(this);
+        this.showReportModal = this.showReportModal.bind(this);
+        this.hideReportModal = this.hideReportModal.bind(this);
     }
 
     showChoiceModal() {
@@ -61,6 +65,18 @@ class Footer extends React.Component {
     hideChoiceModal() {
         this.setState({
             isChoiceModalVisible: false
+        });
+    }
+
+    showReportModal() {
+        this.setState({
+            isReportModalVisible: true
+        });
+    }
+
+    hideReportModal() {
+        this.setState({
+            isReportModalVisible: false
         });
     }
 
@@ -79,6 +95,8 @@ class Footer extends React.Component {
         return (
             nextState.isChoiceModalVisible !==
                 this.state.isChoiceModalVisible ||
+            nextState.isReportModalVisible !==
+                this.state.isReportModalVisible ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
             nextProps.backup_recommended !== this.props.backup_recommended ||
             nextProps.rpc_connection_status !==
@@ -246,7 +264,9 @@ class Footer extends React.Component {
 
         if (!connected) {
             console.log("Your connection was lost");
-            this._triggerReconnect();
+            setTimeout(() => {
+                this._triggerReconnect();
+            }, 50);
         } else if (!this.props.synced) {
             // If the blockchain is out of sync the footer will be rerendered one last time and then
             // not receive anymore blocks, meaning no rerender. Thus we need to trigger any and all
@@ -285,10 +305,12 @@ class Footer extends React.Component {
                 }, askToReconnectAfterSeconds * 1000);
             }
         } else {
-            this._closeOutOfSyncModal();
-            this.setState({
-                choiceModalShowOnce: false
-            });
+            setTimeout(() => {
+                this._closeOutOfSyncModal();
+                this.setState({
+                    choiceModalShowOnce: false
+                });
+            }, 50);
         }
     }
 
@@ -586,7 +608,16 @@ class Footer extends React.Component {
                                         </span>
                                     </div>
                                 </div>
+
                                 <div className="grid-block">
+                                    <div
+                                        className="introjs-launcher"
+                                        onClick={e => {
+                                            this.showReportModal(e);
+                                        }}
+                                    >
+                                        <Translate content="modal.report.button" />
+                                    </div>
                                     <div
                                         className="introjs-launcher"
                                         onClick={() => {
@@ -629,6 +660,14 @@ class Footer extends React.Component {
                 >
                     <Translate content="global.help" />
                 </div>
+                <ReportModal
+                    showModal={this.showReportModal}
+                    hideModal={this.hideReportModal}
+                    visible={this.state.isReportModalVisible}
+                    refCallback={e => {
+                        if (e) this.reportModal = e;
+                    }}
+                />
             </div>
         );
     }

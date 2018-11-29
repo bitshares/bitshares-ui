@@ -40,6 +40,26 @@ class MarginPosition extends React.Component {
         tempComponent: "tr"
     };
 
+    constructor() {
+        super();
+
+        this.state = {
+            isBorrowModalVisible: false
+        };
+    }
+
+    showBorrowModal() {
+        this.setState({
+            isBorrowModalVisible: true
+        });
+    }
+
+    hideBorrowModal() {
+        this.setState({
+            isBorrowModalVisible: false
+        });
+    }
+
     _onUpdatePosition(e) {
         e.preventDefault();
         let ref =
@@ -343,6 +363,9 @@ class MarginPosition extends React.Component {
                     </div>
                     {debtAsset ? (
                         <BorrowModal
+                            visible={this.state.isBorrowModalVisible}
+                            showModal={this.showBorrowModal.bind(this)}
+                            hideModal={this.hideBorrowModal.bind(this)}
                             ref={"cp_modal_" + co.call_price.quote.asset_id}
                             modalId={"cp_modal_" + co.call_price.quote.asset_id}
                             quote_asset={co.call_price.quote.asset_id}
@@ -385,6 +408,26 @@ class MarginPositionWrapper extends React.Component {
 MarginPositionWrapper = BindToChainState(MarginPositionWrapper);
 
 class MarginPositionPlaceHolder extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            isBorrowModalVisible: false
+        };
+    }
+
+    showBorrowModal() {
+        this.setState({
+            isBorrowModalVisible: true
+        });
+    }
+
+    hideBorrowModal() {
+        this.setState({
+            isBorrowModalVisible: false
+        });
+    }
+
     static propTypes = {
         debtAsset: ChainTypes.ChainAsset.isRequired,
         collateralAsset: ChainTypes.ChainAsset.isRequired
@@ -528,6 +571,9 @@ class MarginPositionPlaceHolder extends React.Component {
                     {debtAsset ? (
                         <BorrowModal
                             ref={"cp_modal_" + debtAsset.get("id")}
+                            visible={this.state.isBorrowModalVisible}
+                            showModal={this.showBorrowModal.bind(this)}
+                            hideModal={this.hideBorrowModal.bind(this)}
                             modalId={"cp_modal_" + debtAsset.get("id")}
                             quote_asset={debtAsset.get("id")}
                             backing_asset={debtAsset.getIn([

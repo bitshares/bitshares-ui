@@ -436,56 +436,57 @@ class MyOpenOrders extends React.Component {
     }
 
     _getOrders() {
-        const {currentAccount, feedPrice} = this.props;
+        const {currentAccount, base, quote, feedPrice} = this.props;
         const orders = currentAccount.get("orders"),
             call_orders = currentAccount.get("call_orders");
-
-        const getOrderData = order => {
-            let orderObj = ChainStore.getObject(order).toJS();
-            if (!orderObj) return null;
-            let base = ChainStore.getAsset(orderObj.sell_price.base.asset_id);
-            let quote = ChainStore.getAsset(orderObj.sell_price.quote.asset_id);
-            const baseID = base.get("id"),
-                quoteID = quote.get("id");
-            const assets = {
-                [base.get("id")]: {precision: base.get("precision")},
-                [quote.get("id")]: {precision: quote.get("precision")}
-            };
-            let sellBase = orderObj.sell_price.base.asset_id,
-                sellQuote = orderObj.sell_price.quote.asset_id;
-            if (
-                (sellBase === baseID && sellQuote === quoteID) ||
-                (sellBase === quoteID && sellQuote === baseID)
-            ) {
-                return {orderObj, assets, id: [quote.get("id")]};
-            }
-            return {};
+        const baseID = base.get("id"),
+            quoteID = quote.get("id");
+        const assets = {
+            [base.get("id")]: {precision: base.get("precision")},
+            [quote.get("id")]: {precision: quote.get("precision")}
         };
-        const limitOrders = orders
+        let limitOrders = orders
             .toArray()
             .map(order => {
-                try {
-                    const {orderObj, assets, id} = getOrderData(order);
-                    if (orderObj) {
-                        return new LimitOrder(orderObj, assets, id);
-                    }
-                } catch (e) {
-                    console.error(e);
-                    return null;
+                let o = ChainStore.getObject(order);
+                if (!o) return null;
+                let sellBase = o.getIn(["sell_price", "base", "asset_id"]),
+                    sellQuote = o.getIn(["sell_price", "quote", "asset_id"]);
+                if (
+                    (sellBase === baseID && sellQuote === quoteID) ||
+                    (sellBase === quoteID && sellQuote === baseID)
+                ) {
+                    return new LimitOrder(o.toJS(), assets, quote.get("id"));
                 }
             })
             .filter(a => !!a);
 
-        const callOrders = call_orders
+        let callOrders = call_orders
             .toArray()
             .map(order => {
                 try {
-                    const {orderObj, assets, id} = getOrderData(order);
-                    if (orderObj && feedPrice) {
-                        return new CallOrder(orderObj, assets, id, feedPrice);
+                    let o = ChainStore.getObject(order);
+                    if (!o) return null;
+                    let sellBase = o.getIn(["call_price", "base", "asset_id"]),
+                        sellQuote = o.getIn([
+                            "call_price",
+                            "quote",
+                            "asset_id"
+                        ]);
+                    if (
+                        (sellBase === baseID && sellQuote === quoteID) ||
+                        (sellBase === quoteID && sellQuote === baseID)
+                    ) {
+                        return feedPrice
+                            ? new CallOrder(
+                                  o.toJS(),
+                                  assets,
+                                  quote.get("id"),
+                                  feedPrice
+                              )
+                            : null;
                     }
                 } catch (e) {
-                    console.error(e);
                     return null;
                 }
             })
@@ -761,7 +762,7 @@ class MyOpenOrders extends React.Component {
                             lineHeight: "13px"
                         }}
                     >
-                        <table className="table order-table table-highlight-hover no-stripes text-right fixed-table market-right-padding">
+                        <table className="table order-table table-highlight-hover table-hover no-stripes text-right fixed-table market-right-padding">
                             {contentContainer}
                         </table>
                     </div>

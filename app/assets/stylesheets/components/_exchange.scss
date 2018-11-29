@@ -2,6 +2,49 @@ div#CenterContent {
     padding-bottom: 2rem !important;
 }
 
+.exchange--price-alert--show-modal {
+    cursor: pointer;
+}
+
+.exchange--price-alert {
+    .exchange--price-alert--description {
+    }
+
+    .exchange--price-alert--items {
+        margin: 16px 0;
+    }
+
+    .exchange--price-alert--items--add {
+        text-align: right;
+        padding-right: 32px;
+    }
+
+    .exchange--price-alert--item {
+        margin: 8px 0 !important;
+
+        &:first-child {
+            margin-top: 0 !important;
+        }
+
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .exchange--price-alert--item--type {
+        }
+        .exchange--price-alert--item--price {
+        }
+        .exchange--price-alert--item--control {
+            padding: 0 !important;
+            border: 0 !important;
+
+            &:focus {
+                box-shadow: none !important;
+            }
+        }
+    }
+}
+
 .market-layout {
     .column-header {
         width: 100%;
@@ -517,7 +560,7 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 1rem;
     font-weight: 500;
     text-transform: uppercase;
-    padding: 10px 5px 12px 20px;
+    padding: 10px 5px 12px 10px;
     overflow: hidden;
 }
 

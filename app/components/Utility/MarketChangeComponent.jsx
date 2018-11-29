@@ -75,18 +75,21 @@ class Market24HourChangeComponent extends React.Component {
     }
 }
 
-Market24HourChangeComponent = connect(Market24HourChangeComponent, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps(props) {
-        return {
-            marketStats: MarketsStore.getState().allMarketStats.get(
-                props.marketId
-            ),
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+Market24HourChangeComponent = connect(
+    Market24HourChangeComponent,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps(props) {
+            return {
+                marketStats: MarketsStore.getState().allMarketStats.get(
+                    props.marketId
+                ),
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 export {Market24HourChangeComponent};
