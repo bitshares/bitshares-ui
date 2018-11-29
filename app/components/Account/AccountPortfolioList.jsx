@@ -550,6 +550,15 @@ class AccountPortfolioList extends React.Component {
             let {isBitAsset: isBackingBitAsset} = utils.replaceName(
                 backingAsset
             );
+            let settlePriceTitle;
+            if (
+                isBitAsset &&
+                asset.get("bitasset").get("settlement_fund") > 0
+            ) {
+                settlePriceTitle = "tooltip.global_settle";
+            } else {
+                settlePriceTitle = "tooltip.settle";
+            }
 
             let preferredAsset = ChainStore.getAsset(preferredUnit);
             this.valueRefs[asset.get("symbol")] =
@@ -712,7 +721,7 @@ class AccountPortfolioList extends React.Component {
                                 className="inline-block"
                                 data-place="bottom"
                                 data-tip={counterpart.translate(
-                                    "tooltip.settle",
+                                    settlePriceTitle,
                                     {
                                         asset: isAssetBitAsset
                                             ? "bit" + symbol
