@@ -24,7 +24,7 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
         settlementPrice
     }) => {
         switch (worthLessSettlement) {
-            case false:
+            case true:
                 return (
                     <div>
                         <TranslateWithLinks
