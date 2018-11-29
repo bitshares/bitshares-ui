@@ -502,6 +502,7 @@
         "feed_price": "フィード価格",
         "filter": "フィルター",
         "flip": "ひっくり返す",
+        "global_settle": "Global Settlement",
         "group_order_limit": "グループ",
         "hide": "非表示",
         "highest_bid": "最高ビッド価格",
@@ -647,7 +648,10 @@
             }
         },
         "settle": "決済",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "決済注文",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "ショート",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -714,11 +718,13 @@
                 "whitelist_markets": "ホワイトリストマーケット"
             },
             "price_feed": {
-                "force_settlement_offset": "強制決済オフセット",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "維持担保率 (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "最大ショート・スクイーズ比率 (MSSR)",
-                "settlement_delay": "決済遅延",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "決済価格",
                 "title": "価格フィード"
             },
@@ -730,6 +736,19 @@
                 "publisher": "公開者",
                 "settlement_price": "決済価格",
                 "title": "価格フィードデータ"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "アセット種別",
@@ -749,6 +768,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "発行者",
             "market": "スマートコイン",
@@ -1674,6 +1694,8 @@
         "follow_user_add": "このユーザーをフォローするにはクリックしてください",
         "gateway": "ゲートウェイはデポジットを100%の実際のアセットでバッキングしています",
         "generate": "生成パスワードはローカルでブラウザによって作成されたものです。 <br /><br /><strong> あなただけがアクセスできます。</strong><br /><br /> 以下の欄に貼り付けて、安全な場所にコピーを保存してください。",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "このリストからこのアセットを非表示にするにはここをクリックしてください。",
         "latest_price": "これはこの市場における最新の価格です。",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",

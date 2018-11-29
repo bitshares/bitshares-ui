@@ -502,6 +502,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Groupe",
         "hide": "Hide",
         "highest_bid": "Demande le plus haut",
@@ -647,7 +648,10 @@
             }
         },
         "settle": "Settlement",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Settle orders",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Short",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -714,11 +718,13 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
-                "force_settlement_offset": "Force settlement offset",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-                "settlement_delay": "Settlement delay",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed"
             },
@@ -730,6 +736,19 @@
                 "publisher": "Publisher",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed Data"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -749,6 +768,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "Créateur",
             "market": "SmartCoins",
@@ -1674,6 +1694,8 @@
         "follow_user_add": "Click to Follow this user",
         "gateway": "Gateways back desposits by 100% real assets",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Click here to hide this asset from this list.",
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",

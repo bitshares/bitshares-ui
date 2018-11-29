@@ -502,6 +502,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "global_settle": "Global Settlement",
         "group_order_limit": "分组",
         "hide": "隐藏",
         "highest_bid": "最高买价",
@@ -647,7 +648,10 @@
             }
         },
         "settle": "喂价",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "清算单",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "做空",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -714,11 +718,13 @@
                 "whitelist_markets": "允许交易对市场"
             },
             "price_feed": {
-                "force_settlement_offset": "Force settlement offset",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "维持抵押率",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "强制平仓比例上限",
-                "settlement_delay": "Settlement delay",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "清算价",
                 "title": "喂价"
             },
@@ -730,6 +736,19 @@
                 "publisher": "发布人",
                 "settlement_price": "清算价",
                 "title": "喂价数据"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "资产类型",
@@ -749,6 +768,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "发行人",
             "market": "智能币 SmartCoins",
@@ -1674,6 +1694,8 @@
         "follow_user_add": "点击关注该账户",
         "gateway": "Gateways back desposits by 100% real assets",
         "generate": "密码由您的浏览器在本地生成。<br /><br /><strong>只有您能看到此密码。</strong><br /><br />请将它粘贴到下方并保存在一个您认为安全的地方。",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "从列表中隐藏资产",
         "latest_price": "市场最新成交价",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
