@@ -1056,6 +1056,41 @@ class Header extends React.Component {
                                     />
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                    style={{flexFlow: "row"}}
+                                    className={cnames(
+                                        active.indexOf("showcases") !== -1
+                                            ? null
+                                            : "column-hide-xs",
+                                        {
+                                            active:
+                                                active.indexOf("showcases") !==
+                                                -1
+                                        }
+                                    )}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/showcases"
+                                    )}
+                                >
+                                    <Icon
+                                        size="2x"
+                                        style={{
+                                            position: "relative",
+                                            top: 0,
+                                            left: -8
+                                        }}
+                                        name="showcases"
+                                        title="icons.showcases"
+                                    />
+                                    <Translate
+                                        className="column-hide-small"
+                                        component="span"
+                                        content="header.showcases"
+                                    />
+                                </a>
+                            </li>
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>
