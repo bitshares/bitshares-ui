@@ -16,9 +16,11 @@ export default class ShowcaseGrid extends Component {
                 icon: "wallet" // see Icons app/compoentns/Icon/Icon
             },
             {
-                title: "showcases.barter_transaction.title",
-                target: () => {},
-                description: "showcases.barter_transaction.description",
+                title: "showcases.barter.title",
+                target: event => {
+                    thiz.props.history.push("/barter");
+                },
+                description: "showcases.barter.description",
                 icon: "barter"
             },
             {

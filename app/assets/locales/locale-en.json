@@ -1683,13 +1683,6 @@
         "sub_text_2": "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below.",
         "title": "Failed to sync with the API server"
     },
-    "showcases": {
-        "barter": {
-            "title": "Barter",
-            "account": "account",
-            "bartering_asset": "Bartering asset"
-        }
-    },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -2203,9 +2196,11 @@
             "title": "Paper Wallet",
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well."
         },
-        "barter_transaction": {
+        "barter": {
             "title": "Barter",
-            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "account": "account",
+            "bartering_asset": "Bartering asset"
         },
         "voting": {
             "title": "Voting",
