@@ -18,36 +18,28 @@ export default class Showcase extends Component {
     render() {
         return (
             <div
-                className="padding"
-                style={{
-                    maxWidth: "400px",
-                    minWidth: "320px"
-                }}
+                className="showcases-grid--wrapper--item--wrapper"
+                onClick={this.props.target}
+                tabIndex={"0"}
             >
+                <Translate
+                    content={this.props.title}
+                    className={"no-margin"}
+                    component={"h2"}
+                />
                 <div
-                    style={{
-                        backgroundColor: "gray",
-                        borderRadius: "10px",
-                        cursor: "pointer"
-                    }}
-                    onClick={this.props.target}
+                    className={
+                        "showcases-grid--wrapper--item--wrapper--content"
+                    }
                 >
-                    <Translate
-                        content={this.props.title}
-                        className={"padding"}
-                        component={"h2"}
-                    />
-                    <div
-                        style={{
-                            display: "flex"
-                        }}
-                        className={"padding"}
+                    <Icon name={this.props.icon} size={"5x"} />
+                    <span
+                        className={
+                            "padding showcases-grid--wrapper--item--wrapper--content--description"
+                        }
                     >
-                        <Icon name={this.props.icon} size={"5x"} />
-                        <span className={"padding"}>
-                            <Translate content={this.props.description} />
-                        </span>
-                    </div>
+                        <Translate content={this.props.description} />
+                    </span>
                 </div>
             </div>
         );
