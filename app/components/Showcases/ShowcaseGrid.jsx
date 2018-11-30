@@ -1,17 +1,34 @@
 import React, {Component} from "react";
 import Showcase from "./Showcase";
+import {connect} from "alt-react";
+import {ChainStore} from "bitsharesjs";
+import AccountStore from "../../stores/AccountStore";
+import {createPaperWalletAsPDF} from "common/paperWallet";
 
-export default class ShowcaseGrid extends Component {
+class ShowcaseGrid extends Component {
     constructor() {
         super();
+        this.state = {currentAccount: null};
+    }
+
+    componentWillMount() {
+        this.setState({
+            currentAccount: ChainStore.getAccount(this.props.currentAccount)
+        });
     }
 
     render() {
+        let hasAccount = this.state.currentAccount !== null;
+
         let thiz = this;
         const tiles = [
             {
                 title: "showcases.paper_wallet.title",
-                target: () => {},
+                target: () => {
+                    if (hasAccount) {
+                        createPaperWalletAsPDF(this.state.currentAccount);
+                    }
+                },
                 description: "showcases.paper_wallet.description",
                 icon: "wallet" // see Icons app/compoentns/Icon/Icon
             },
@@ -24,18 +41,20 @@ export default class ShowcaseGrid extends Component {
             {
                 title: "showcases.voting.title",
                 target: event => {
-                    thiz.props.history.push(
-                        "/account/" + "committee-account" + "/voting"
-                    );
+                    if (hasAccount) {
+                        thiz.props.history.push(
+                            "/account/" +
+                                this.state.currentAccount.get("name") +
+                                "/voting"
+                        );
+                    }
                 },
                 description: "showcases.voting.description",
                 icon: "voting"
             },
             {
                 title: "showcases.borrow.title",
-                target: event => {
-                    thiz.props.history.push("/borrow");
-                },
+                target: () => {},
                 description: "showcases.borrow.description",
                 icon: "borrow"
             }
@@ -69,3 +88,21 @@ export default class ShowcaseGrid extends Component {
         );
     }
 }
+
+ShowcaseGrid = connect(
+    ShowcaseGrid,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
+    }
+);
+
+export default ShowcaseGrid;
