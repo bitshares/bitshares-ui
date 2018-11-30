@@ -1,11 +1,10 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.181129",
+    "version": "2.0.181212-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
-        "BitShares UI Worker",
         "James Calfee",
         "Dan Larimer",
         "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
@@ -54,7 +53,8 @@
         "package-snap": "npm run prepackage && build  -p never --linux snap",
         "package-win": "npm run prepackage && build  -p never --windows",
         "package-mac": "npm run prepackage && build  -p never --mac dmg",
-        "postpackage": "node write_digest.js"
+        "postpackage": "node write_digest.js",
+        "scam": "node scamParser.js"
     },
     "jest": {
         "scriptPreprocessor": "<rootDir>/__tests__/jest-preprocessor.js",
@@ -118,6 +118,12 @@
                 }
             ]
         },
+        "nsis": {
+            "allowElevation": true,
+            "allowToChangeInstallationDirectory": true,
+            "oneClick": false,
+            "perMachine": false
+        },
         "linux": {
             "category": "Finance",
             "target": [
@@ -138,7 +144,7 @@
         "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#8cd3ca9627c596de51ccc7724837868f3eb4c2ac",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#ce9324cce6de7f3f115c07555c2e1e5dc35baea4",
         "bitsharesjs": "^1.8.2",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",
@@ -156,6 +162,7 @@
         "intro.js": "^2.8.0-alpha.1",
         "jdenticon": "git+https://github.com/cryptonomex/jdenticon.git",
         "js-sha256": "^0.2.3",
+        "jspdf": "^1.4.1",
         "lodash-es": "^4.17.10",
         "lzma": "2.1.6",
         "moment": "^2.22.2",
@@ -166,6 +173,7 @@
         "object-assign": "^4.0.1",
         "perfect-scrollbar": "git+https://github.com/bitshares/perfect-scrollbar.git",
         "prop-types": "^15.6.1",
+        "qrcode": "^1.3.0",
         "qrcode.react": "^0.7.1",
         "query-string": "^6.1.0",
         "react": "^16.4.1",
