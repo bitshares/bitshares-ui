@@ -53,12 +53,15 @@ class Borrow extends Component {
                 >
                     <Translate content={"showcases.borrow.title"} />
                     <br />
-                    <Translate content={"showcases.borrow.description_1"} />
+                    <Translate content={"showcases.borrow.1_concept"} />
                     <br />
-                    <Translate content={"showcases.borrow.description_2"} />
+                    <Translate content={"showcases.borrow.2_benefits"} />
                     <br />
-                    <Translate content={"showcases.borrow.description_3"} />
+                    <Translate content={"showcases.borrow.3_setup"} />
                     <br />
+                    <Translate content={"showcases.borrow.4_risks"} />
+                    <br />
+                    <Translate content={"showcases.borrow.5_cost"} />
                     <Button
                         style={{
                             margin: 5,
