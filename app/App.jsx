@@ -22,6 +22,7 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
+import Borrow from "./components/Showcases/Borrow";
 
 import {Route, Switch} from "react-router-dom";
 
@@ -432,6 +433,7 @@ class App extends React.Component {
                                     path="/block/:height/:txIndex"
                                     component={Block}
                                 />
+                                <Route path="/borrow" component={Borrow} />
 
                                 {/* Wallet backup/restore routes */}
                                 <Route
