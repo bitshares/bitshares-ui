@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
-import {Input, Button} from "bitshares-ui-style-guide";
+import {Input, Button, Card} from "bitshares-ui-style-guide";
 import debounceRender from "react-debounce-render";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {connect} from "alt-react";
@@ -43,18 +43,33 @@ class Borrow extends Component {
         if (!currentAccount || typeof currentAccount === "string") return null;
 
         return (
-            <div>
-                <Translate content={"showcases.borrow.title"} />
-                <Translate content={"showcases.borrow.description_1"} />
-                <Translate content={"showcases.borrow.description_2"} />
-                <Translate content={"showcases.borrow.description_3"} />
-                <Button
-                    style={{margin: 5}}
-                    disabled={currentAccount.get("id") === "1.2.3"}
-                    onClick={this.showBorrowModal}
+            <div className="container no-overflow wrap shrink center">
+                <Card
+                    style={{
+                        borderRadius: "50px",
+                        width: "50%",
+                        maxWidth: "50rem"
+                    }}
                 >
-                    <Translate content="exchange.borrow" />
-                </Button>
+                    <Translate content={"showcases.borrow.title"} />
+                    <br />
+                    <Translate content={"showcases.borrow.description_1"} />
+                    <br />
+                    <Translate content={"showcases.borrow.description_2"} />
+                    <br />
+                    <Translate content={"showcases.borrow.description_3"} />
+                    <br />
+                    <Button
+                        style={{
+                            margin: 5,
+                            float: "right"
+                        }}
+                        disabled={currentAccount.get("id") === "1.2.3"}
+                        onClick={this.showBorrowModal}
+                    >
+                        <Translate content="exchange.borrow" />
+                    </Button>
+                </Card>
                 {!!this.state.assetToBorrow && (
                     <BorrowModal
                         visible={this.state.isBorrowBaseModalVisible}
