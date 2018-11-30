@@ -122,6 +122,7 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
@@ -434,6 +435,11 @@ class App extends React.Component {
                                 />
                                 <Route path="/barter" component={Barter} />
 
+                                <Route
+                                    path="/spotlight"
+                                    component={ShowcaseGrid}
+                                />
+
                                 {/* Wallet backup/restore routes */}
                                 <Route
                                     path="/wallet"
@@ -523,9 +529,7 @@ class App extends React.Component {
                             hideModal={this.hideBrowserSupportModal}
                             showModal={this.showBrowserSupportModal}
                         />
-                        {/* <ReportModal /> */}
                     </div>
-                    <div id="screenshot" />
                 </BodyClassName>
             </div>
         );

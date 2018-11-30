@@ -20,6 +20,7 @@
         "contacts": "Contacts",
         "create_account": "Create account",
         "create_new": "Create A New Account",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Deposit/Withdraw",
@@ -142,6 +143,8 @@
             "new_memo": "New memo key",
             "new_owner": "New owner key",
             "owner": "Owner Permissions",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "password_model": "Cloud Wallet",
             "password_model_1": "If you want to be able to login from anywhere using only your password and account name, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
             "password_model_2": "Add password generated keys",
@@ -515,6 +518,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Group",
         "hide": "Hide",
         "highest_bid": "Highest bid",
@@ -584,6 +588,8 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settings": {
             "header": {
                 "chart_options": "Chart options",
@@ -674,6 +680,7 @@
         "volume": "Volume",
         "volume_24": "24hr Volume",
         "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All"
@@ -720,12 +727,14 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
-                "force_settlement_offset": "Force settlement offset",
-                "global_settlement_price": "Global settlement price",
+                "feed_lifetime": "Feed lifetime (hours)",
+                "min_feeds": "Minimum feeds",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-                "settlement_delay": "Settlement delay",
-                "settlement_price": "Settlement price",
+                "settlement_price": "Force Settlement price",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -736,6 +745,19 @@
                 "publisher": "Publisher",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed Data"
+            },
+            "settlement": {
+                "title": "Settlement",
+                "price": "Price",
+                "delay": "Delay",
+                "offset": "offset included",
+                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement funds",
+                "force_settlement": "Force Settlement",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "current_settled": "Already settled supply",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -763,7 +785,8 @@
             "symbol": "Symbol",
             "title": "Assets",
             "units": "Units",
-            "user": "User Issued Assets"
+            "user": "User Issued Assets",
+            "backing_asset": "Backing asset"
         },
         "block": {
             "account_upgrade": "Account to upgrade",
@@ -1077,6 +1100,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",
@@ -1725,7 +1749,7 @@
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
-        "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+        "propose_scam": "This proposal was created by a known scammer or from someone that you blacklisted!",
         "propose_tip": "Propose another user to initiate a transaction",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
@@ -1737,7 +1761,9 @@
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "settle_price": "This is the price at which settle orders will execute.",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "show_asset": "Click here to show this asset in the main list.",
         "show_block": "Click here to show block #%(block)s where this transaction occurred.",
         "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
@@ -2170,6 +2196,24 @@
         "withdraw": {
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
+        }
+    },
+    "showcases": {
+        "paper_wallet": {
+            "title": "Paper Wallet",
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well."
+        },
+        "barter_transaction": {
+            "title": "Barter",
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
+        },
+        "voting": {
+            "title": "Voting",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain."
+        },
+        "borrow": {
+            "title": "Collaterized Debt Position",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)"
         }
     }
 }
