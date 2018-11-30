@@ -45,23 +45,28 @@ export default class ShowcaseGrid extends Component {
         ];
         return (
             <div
-                className="grid-block overflow-visible"
+                className="overflow-visible showcases-grid"
                 style={{
                     align: "center"
                 }}
             >
-                {tiles.map(tile => {
-                    return (
-                        <div key={tile.title} className="">
-                            <Showcase
-                                target={tile.target}
-                                title={tile.title}
-                                description={tile.description}
-                                icon={tile.icon}
-                            />
-                        </div>
-                    );
-                })}
+                <div className="showcases-grid--wrapper">
+                    {tiles.map(tile => {
+                        return (
+                            <div
+                                key={tile.title}
+                                className="showcases-grid--wrapper--item"
+                            >
+                                <Showcase
+                                    target={tile.target}
+                                    title={tile.title}
+                                    description={tile.description}
+                                    icon={tile.icon}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         );
     }
