@@ -34,9 +34,7 @@ export default class ShowcaseGrid extends Component {
             {
                 title: "showcases.borrow.title",
                 target: event => {
-                    thiz.props.history.push(
-                        "/account/" + "committee-account" + "/voting"
-                    );
+                    thiz.props.history.push("/borrow");
                 },
                 description: "showcases.borrow.description",
                 icon: "borrow"
