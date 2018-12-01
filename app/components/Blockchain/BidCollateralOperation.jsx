@@ -133,7 +133,7 @@ class BidCollateralOperation extends React.Component {
                         onClick={this._onBidCollateral.bind(this)}
                         tabIndex={tabIndex++}
                     >
-                        <Translate content="transaction.trxTypes.asset_fund_fee_pool" />
+                        <Translate content="transaction.trxTypes.bid_collateral" />
                     </button>
                     <button className="button outline" onClick={this.reset.bind(this)} tabIndex={tabIndex++}>
                         <Translate content="account.perm.reset" />
