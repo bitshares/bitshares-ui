@@ -89,6 +89,11 @@ class Asset extends React.Component {
                 )]: this.props.backingAsset.toJS()
             };
 
+            const isPredictionMarket = this.props.asset.getIn(
+                ["bitasset", "is_prediction_market"],
+                false
+            );
+
             let feedPrice = this._getFeedPrice();
 
             try {

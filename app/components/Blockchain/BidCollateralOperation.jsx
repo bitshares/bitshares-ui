@@ -18,8 +18,8 @@ class BidCollateralOperation extends React.Component {
 
     initialState = () => ({
         account: ChainStore.getAccount(this.props.funderAccountName),
-        collateralAmount: 0,
-        debtAmount: 0,
+        collateralAmount: "0",
+        debtAmount: "0",
     });
 
     reset() {
@@ -39,14 +39,19 @@ class BidCollateralOperation extends React.Component {
     }
 
     _onBidCollateral() {
+        let {collateralAmount, debtAmount} = this.state;
+
+        collateralAmount = collateralAmount == 0 ? collateralAmount : collateralAmount.replace(/,/g, "");
+        debtAmount = debtAmount == 0 ? debtAmount : debtAmount.replace(/,/g, "");
+
         AssetActions.bidCollateral(
             this.state.account
                 ? this.state.account.get("id")
                 : null,
             this.props.core,
             this.props.asset,
-            this.state.collateralAmount.replace(/,/g, ""),
-            this.state.debtAmount.replace(/,/g, "")
+            collateralAmount,
+            debtAmount
         );
         setTimeout(() => {
             this.props.onUpdate();
@@ -71,8 +76,7 @@ class BidCollateralOperation extends React.Component {
     renderCollateralBid() {
         const {
             asset, 
-            core,
-            hasBid
+            core
         } = this.props;
         const {
             account, 
@@ -103,7 +107,7 @@ class BidCollateralOperation extends React.Component {
                 <AmountSelector
                     label="transaction.collateral"
                     display_balance={balanceText}
-                    amount={collateralAmount || "0"}
+                    amount={collateralAmount}
                     onChange={this._collateralBidInput.bind(this)}
                     asset={coreID}
                     assets={[coreID]}
@@ -114,7 +118,7 @@ class BidCollateralOperation extends React.Component {
 
                 <AmountSelector
                     label="transaction.borrow_amount"
-                    amount={debtAmount || "0"}
+                    amount={debtAmount}
                     onChange={this._debtBidInput.bind(this)}
                     asset={asset.get("id")}
                     assets={[asset.get("id")]}
