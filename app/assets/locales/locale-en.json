@@ -693,6 +693,16 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_text": "While the asset is in Global Settlement it is possible to bid on the current debt to increase the collateral. A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "title": "Collateral Bids",
+                "bid": "Bid Price",
+                "debt": "Debt Covered",
+                "collateral": "Additional Collateral"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -754,7 +764,11 @@
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "gs_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_revive": "Asset could be revived if auto revive price > feed price, collateral valuation > MCR or all debt is settled.",
+                "gs_revert": "Reverting Global Settlement",
+                "gs_auto_revive_price": "Auto Revive Price",
+                "gs_collateral_valuation": "Collateral Valuation (> %(mcr)s)"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -1424,11 +1438,13 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} instant settled {amount} for {price}",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
         "fill_order_buy": "{account} bought {amount} at {price} for order #%(order)s",
@@ -1770,6 +1786,7 @@
         "at": "at",
         "balance_id": "Balance ID",
         "balance_owner": "Balance owner key",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "Accepted bond offer of",
         "bond_cancel_offer": "Cancelled bond offer",
@@ -1852,6 +1869,7 @@
             "account_whitelist": "Account whitelist",
             "all": "Show all",
             "assert": "Assert operation",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Claim asset fees",
             "asset_claim_pool": "Claim asset fee pool",
