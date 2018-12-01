@@ -487,9 +487,9 @@ class Assets extends React.Component {
                                     ) : null}
                                 </span>
                                 <Input
-                                    placeholder={"Quick Search"}
+                                    placeholder={"Filter..."}
                                     value={this.state.filterSearch}
-                                    style={{width: "200px", marginLeft: "0px"}}
+                                    style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
                                     addonAfter={<Icon type="search" />}
                                 />
