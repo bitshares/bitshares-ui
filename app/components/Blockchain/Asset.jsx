@@ -433,8 +433,6 @@ class Asset extends React.Component {
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
 
-        let settlementOffset = bitAsset.options.force_settlement_offset_percent;
-
         var feedPrice = this.formattedPrice(currentFeed.settlement_price);
 
         return (
@@ -649,9 +647,15 @@ class Asset extends React.Component {
                                 <td>
                                     {currentSettled == 0
                                         ? 100
-                                        : (currentSupply *
-                                              (maxSettlementVolume / 10000)) /
-                                          currentSettled}
+                                        : Math.round(
+                                              100 -
+                                                  (currentSettled /
+                                                      (currentSupply *
+                                                          (maxSettlementVolume /
+                                                              10000))) *
+                                                      100,
+                                              2
+                                          )}
                                     %
                                 </td>
                             </tr>

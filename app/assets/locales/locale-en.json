@@ -588,6 +588,8 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settings": {
             "header": {
                 "chart_options": "Chart options",
@@ -678,6 +680,7 @@
         "volume": "Volume",
         "volume_24": "24hr Volume",
         "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All"
@@ -754,7 +757,7 @@
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Asset is in globals settlement. There is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -1097,6 +1100,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",
@@ -1750,6 +1754,7 @@
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "settle_price": "This is the price at which settle orders will execute.",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "show_asset": "Click here to show this asset in the main list.",
@@ -2184,6 +2189,24 @@
         "withdraw": {
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
+        }
+    },
+    "showcases": {
+        "paper_wallet": {
+            "title": "Paper Wallet",
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well."
+        },
+        "barter_transaction": {
+            "title": "Barter",
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
+        },
+        "voting": {
+            "title": "Voting",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain."
+        },
+        "borrow": {
+            "title": "Collaterized Debt Position",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)"
         }
     }
 }
