@@ -943,7 +943,6 @@ class Asset extends React.Component {
                     <FeePoolOperation
                         asset={asset.symbol}
                         funderAccountName={this.props.currentAccount}
-                        core={asset.bitasset.options.short_backing_asset}
                         hideBalance
                     />
                 </div>
