@@ -472,8 +472,8 @@ class Operation extends React.Component {
                     op[1].new_listing === listings.no_listing
                         ? "unlisted_by"
                         : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
+                        ? "whitelisted_by"
+                        : "blacklisted_by";
                 column = (
                     <span>
                         <TranslateWithLinks
@@ -683,9 +683,9 @@ class Operation extends React.Component {
                 color = "warning";
 
                 const baseAmount = op[1].amount;
-                const {
-                    result: [resultCode, quoteAmount]
-                } = this.props;
+                const [resultCode, quoteAmount] = this.props.result
+                    ? this.props.result
+                    : [0, 0];
                 const instantSettleCode = 2;
 
                 switch (resultCode) {
