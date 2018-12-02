@@ -681,63 +681,60 @@ class Operation extends React.Component {
 
             case "asset_settle":
                 color = "warning";
-
                 const baseAmount = op[1].amount;
-                const [resultCode, quoteAmount] = this.props.result
-                    ? this.props.result
-                    : [0, 0];
                 const instantSettleCode = 2;
-
-                switch (resultCode) {
-                    case instantSettleCode:
-                        column = (
-                            <span>
-                                <TranslateWithLinks
-                                    string="operation.asset_settle_instant"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].account,
-                                            arg: "account"
+                if (
+                    this.props.result &&
+                    this.props.result[0] == instantSettleCode
+                ) {
+                    const quoteAmount = this.props.result[1];
+                    column = (
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.asset_settle_instant"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        type: "amount",
+                                        value: baseAmount,
+                                        arg: "amount"
+                                    },
+                                    {
+                                        type: "price",
+                                        value: {
+                                            base: baseAmount,
+                                            quote: quoteAmount
                                         },
-                                        {
-                                            type: "amount",
-                                            value: baseAmount,
-                                            arg: "amount"
-                                        },
-                                        {
-                                            type: "price",
-                                            value: {
-                                                base: baseAmount,
-                                                quote: quoteAmount
-                                            },
-                                            arg: "price"
-                                        }
-                                    ]}
-                                />
-                            </span>
-                        );
-                        break;
-                    default:
-                        column = (
-                            <span>
-                                <TranslateWithLinks
-                                    string="operation.asset_settle"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].account,
-                                            arg: "account"
-                                        },
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount,
-                                            arg: "amount"
-                                        }
-                                    ]}
-                                />
-                            </span>
-                        );
+                                        arg: "price"
+                                    }
+                                ]}
+                            />
+                        </span>
+                    );
+                } else {
+                    column = (
+                        <span>
+                            <TranslateWithLinks
+                                string="operation.asset_settle"
+                                keys={[
+                                    {
+                                        type: "account",
+                                        value: op[1].account,
+                                        arg: "account"
+                                    },
+                                    {
+                                        type: "amount",
+                                        value: op[1].amount,
+                                        arg: "amount"
+                                    }
+                                ]}
+                            />
+                        </span>
+                    );
                 }
 
                 break;
