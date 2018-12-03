@@ -555,10 +555,9 @@ class Asset extends React.Component {
         );
     }
 
-    _analyzeBids(settlement_fund_debt, settlement_fund_collateral) {
+    _analyzeBids(settlement_fund_debt) {
         // Convert supply to calculable values
         let current_supply_value = settlement_fund_debt;
-        let current_collateral_value = settlement_fund_collateral;
 
         let bids_collateral_value = 0;
         let bids_debt_value = 0;
@@ -572,9 +571,8 @@ class Asset extends React.Component {
             let debt = bid.debt;
             if (bids_debt_value < current_supply_value) {
                 if (bids_debt_value + debt >= current_supply_value) {
-                    collateral =
-                        current_collateral_value - bids_collateral_value;
                     debt = current_supply_value - bids_debt_value;
+                    collateral = (debt / bid.debt) * collateral;
                     bid.consideredIfRevived = 2;
                 } else {
                     bid.consideredIfRevived = 1;
@@ -636,10 +634,7 @@ class Asset extends React.Component {
             let current_supply_value = currentSupply;
             let current_collateral_value = bitAsset.settlement_fund;
 
-            let bids = this._analyzeBids(
-                current_supply_value,
-                current_collateral_value
-            );
+            let bids = this._analyzeBids(current_supply_value);
 
             revive_price_with_bids = (
                 <FormattedPrice
@@ -667,16 +662,14 @@ class Asset extends React.Component {
                 feedPrice.toReal() /
                 current_supply_value;
 
-            bids.collateral =
+            let bids_collateral =
                 bids.collateral /
                 Math.pow(
                     10,
                     assets[bitAsset.options.short_backing_asset].precision
                 );
-            bids.debt = bids.debt / Math.pow(10, asset.precision);
-
             total_collateral_ratio =
-                (current_collateral_value + bids.collateral) /
+                (current_collateral_value + bids_collateral) /
                 feedPrice.toReal() /
                 current_supply_value;
         } else {
@@ -1616,7 +1609,7 @@ class Asset extends React.Component {
         if (dynamic) {
             dynamic = dynamic.toJS();
             var currentSupply = dynamic ? dynamic.current_supply : 0;
-            this._analyzeBids(currentSupply, bitAsset.settlement_fund);
+            this._analyzeBids(currentSupply);
         }
 
         // now we compute the collateral bid objects
