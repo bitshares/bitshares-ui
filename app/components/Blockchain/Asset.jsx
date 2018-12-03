@@ -638,7 +638,7 @@ class Asset extends React.Component {
 
             revive_price_with_bids = (
                 <FormattedPrice
-                    base_amount={bids.collateral}
+                    base_amount={bitAsset.settlement_fund / 1 + bids.collateral} // /1 is implicit type conversion
                     base_asset={assets[bitAsset.options.short_backing_asset].id}
                     quote_amount={bids.debt}
                     quote_asset={asset.id}
