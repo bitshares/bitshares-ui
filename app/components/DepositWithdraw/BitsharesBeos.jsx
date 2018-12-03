@@ -70,7 +70,7 @@ class BitsharesBeos extends React.Component {
                     private keys to control both your BitShares account and your
                     BEOS account. If you don’t want to use the same keys, you
                     can first create a new BitShares account and send the BTS
-                    from that account to start with a new set of keys. oYu can
+                    from that account to start with a new set of keys. You can
                     also change your keys at any time on either blockchain.
                 </p>
                 <p>
@@ -81,7 +81,7 @@ class BitsharesBeos extends React.Component {
                 </p>
                 <p>
                     During the 89 days of the BEOS reward distribution period,
-                    starting on November 12th 2018 (one week after the launch
+                    starting on December 13th 2018 (one week after the launch
                     date for the BEOS network), a fixed amount of BEOS will be
                     awarded hourly to BEOS accounts holding BTS IOU tokens,
                     based on their proportionate holding. For example, if there
@@ -89,13 +89,15 @@ class BitsharesBeos extends React.Component {
                     period, one holding 90 tokens and the other holding 10
                     tokens, the 90 holder will receive 90% of the BEOS awarded
                     for that reward period and the 10 holder will receive the
-                    remaining 10%. NEED TO ADD TOTAL AMOUNT TO BE DISTRIBUTED
-                    OVER 89 DAYS.
+                    remaining 10%. 3674470000 BEOS will be distributed during
+                    this period, with 2/7 being placed in the BEOS trustee
+                    account to fund future development and support of the chain,
+                    and the remaining 5/7 to be distributed to BTS depositors.
                 </p>
                 <p>
                     In a similar manner, RAM will also be awarded to BTS IOU
-                    holders, but over a longer period of time: PUT DETAILS OF
-                    DISTRIBUTION HERE.
+                    holders, but over a longer period of time: 64GB of RAM will
+                    be distributed over a 2 year period.
                 </p>
                 <p>
                     IMPORTANT NOTE: Until you make a withdrawal, the “actual
@@ -116,6 +118,13 @@ class BitsharesBeos extends React.Component {
                     gateway or the new BEOS chain itself could result in BTS
                     funds being locked up temporarily until the problem is
                     resolved.
+                </p>
+                <p>
+                    ** If you lose the keys to your BEOS account, the trustees
+                    cannot refund BTS locked up as BTS IOU tokens in your BEOS
+                    account because the trustees cannot reclaim the IOU tokens
+                    and have no way to determine if the account is permanently
+                    lost.
                 </p>
                 <button
                     style={{marginRight: 10, marginBottom: 30}}
