@@ -68,7 +68,7 @@ class Asset extends React.Component {
             callOrders: [],
             collateralBids: [],
             marginTableSort: "ratio",
-            collateralTableSort: "ratio",
+            collateralTableSort: "price",
             sortDirection: true,
             showCollateralBidInInfo: false
         };
