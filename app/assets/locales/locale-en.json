@@ -425,6 +425,7 @@
         "close": "Close position",
         "coll_ratio": "Ratio",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Your collateral ratio is below %(mr)s which is not allowed.",
@@ -696,6 +697,16 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the current debt in the Settlement Fund to increase the collateral. When the collateral ratio of the settlement fund, including all bids to cover the whole debt, is greater or equal to MCR, the asset is automatically revived and margin positions distributed relative to the bids. A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "title": "Collateral Bids",
+                "bid": "Bid Price",
+                "debt": "Debt Covered",
+                "collateral": "Additional Collateral"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -751,13 +762,22 @@
                 "price": "Price",
                 "delay": "Delay",
                 "offset": "offset included",
-                "settlement_price": "Settlement price",
-                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement Price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
                 "force_settlement": "Force Settlement",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_revive": "Asset will be revived automatically if auto revive price is greater than feed price, all debt is force settled or the collateral valuation is greater than MCR, including the additional backing from the included collateral bids",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions while receiving the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_see_actions": "see Asset actions",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -1428,11 +1448,13 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} instant settled {amount} for {price}",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
         "fill_order_buy": "{account} bought {amount} at {price} for order #%(order)s",
@@ -1775,6 +1797,7 @@
         "at": "at",
         "balance_id": "Balance ID",
         "balance_owner": "Balance owner key",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "Accepted bond offer of",
         "bond_cancel_offer": "Cancelled bond offer",
@@ -1857,6 +1880,7 @@
             "account_whitelist": "Account whitelist",
             "all": "Show all",
             "assert": "Assert operation",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Claim asset fees",
             "asset_claim_pool": "Claim asset fee pool",

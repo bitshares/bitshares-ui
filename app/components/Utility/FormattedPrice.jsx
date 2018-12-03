@@ -159,7 +159,11 @@ class FormattedPrice extends React.Component {
         if (!this.props.hide_value) {
             let value = price.toReal();
             if (this.props.factor) {
-                value = inverted ? value / (this.props.factor) : value * (this.props.factor);
+                if(this.props.negative_invert) {
+                    value = inverted ? value * (this.props.factor) : value / (this.props.factor);    
+                } else {
+                    value = inverted ? value / (this.props.factor) : value * (this.props.factor);
+                }
             }
             
             if (isNaN(value) || !isFinite(value)) {

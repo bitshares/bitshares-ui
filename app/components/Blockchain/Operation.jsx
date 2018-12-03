@@ -1501,8 +1501,33 @@ class Operation extends React.Component {
                 );
                 break;
 
+            case "bid_collateral":
+                column = (
+                    <TranslateWithLinks
+                        string="operation.bid_collateral"
+                        keys={[
+                            {
+                                type: "account",
+                                value: op[1].bidder,
+                                arg: "bid_account"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].additional_collateral,
+                                arg: "collateral"
+                            },
+                            {
+                                type: "amount",
+                                value: op[1].debt_covered,
+                                arg: "debt"
+                            }
+                        ]}
+                    />
+                );
+                break;
+
             default:
-                console.log("unimplemented op:", op);
+                console.log("unimplemented op '" + ops[op[0]] + "':", op);
                 column = (
                     <span>
                         <Link to={`/block/${block}`}>#{block}</Link>
