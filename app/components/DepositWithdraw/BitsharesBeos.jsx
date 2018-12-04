@@ -48,7 +48,7 @@ class BitsharesBeos extends React.Component {
         return {
             beosFee: "0.001",
             beosApiUrl: "https://blocktrades.syncad.com/api/v2",
-            beosIssuer: "tanda-radei",
+            beosIssuer: "delegate-dev1.btsnow",
             ...QueryString.parse(params.search)
         };
     }
