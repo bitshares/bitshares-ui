@@ -87,7 +87,7 @@ class BidCollateralOperation extends React.Component {
         let tabIndex = 1;
         const coreID = core.get("id") || "1.3.0";
         let balance = 0;
-        const coreBalanceID = account.getIn(["balances", coreID]);
+        const coreBalanceID = account ? account.getIn(["balances", coreID]) : null;
         if (coreBalanceID) {
             let balanceObject = ChainStore.getObject(coreBalanceID);
             if (balanceObject) {
