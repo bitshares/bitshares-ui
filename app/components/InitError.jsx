@@ -70,40 +70,23 @@ class InitError extends React.Component {
 
     render() {
         let uniqueNodes = this.props.apis.reduce((a, node) => {
-            let exists =
-                a.findIndex(n => {
-                    return n.url === node.url;
-                }) !== -1;
-
-            if (!exists) a.push(node);
+            // node is the minimum requirement of filled data to connect
+            if (!!node && !!node.url) {
+                let exists =
+                    a.findIndex(n => {
+                        return n.url === node.url;
+                    }) !== -1;
+                if (!exists) a.push(node);
+            }
             return a;
         }, []);
-
-        let options = uniqueNodes.map(entry => {
-            let onlyDescription =
-                entry.url.indexOf("fake.automatic-selection") !== -1;
-            let {location} = entry;
-            if (
-                location &&
-                typeof location === "object" &&
-                "translate" in location
-            )
-                location = counterpart.translate(location.translate);
-
-            return (
-                <option key={entry.url} value={entry.url}>
-                    {location || entry.url}{" "}
-                    {!onlyDescription && location ? `(${entry.url})` : null}
-                </option>
-            );
-        });
 
         let selectOptions = uniqueNodes.map(entry => {
             let onlyDescription =
                 entry.url.indexOf("fake.automatic-selection") !== -1;
             let {location} = entry;
             if (
-                location &&
+                !!location &&
                 typeof location === "object" &&
                 "translate" in location
             )
