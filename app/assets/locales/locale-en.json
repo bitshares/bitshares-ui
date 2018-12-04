@@ -699,7 +699,8 @@
             "actions": "Asset actions",
             "collateral": {
                 "bid": "Bid Collateral",
-                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the current debt in the Settlement Fund to increase the collateral. When the collateral ratio of the settlement fund, including all bids to cover the whole debt, is greater or equal to MCR, the asset is automatically revived and margin positions distributed relative to the bids. A bid can be removed by placing a zero collateral bid."
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
             },
             "collateral_bid": {
                 "title": "Collateral Bids",
@@ -769,9 +770,9 @@
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
-                "gs_revive": "Asset will be revived automatically if auto revive price is greater than feed price, all debt is force settled or the collateral valuation is greater than MCR, including the additional backing from the included collateral bids",
-                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions while receiving the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
                 "gs_see_actions": "see Asset actions",
                 "gs_or": "or",
                 "gs_place_bid": "click here to place a bid",
