@@ -23,7 +23,6 @@ import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
 import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
-import SettingsActions from "actions/SettingsActions";
 
 class AssetFlag extends React.Component {
     render() {
