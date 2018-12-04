@@ -1036,6 +1036,11 @@ class Asset extends React.Component {
                         content="explorer.asset.settlement.gs_included_on_revival"
                     />
 
+                    <Translate
+                        component="p"
+                        content="explorer.asset.collateral.remove_bid"
+                    />
+
                     <BidCollateralOperation
                         asset={asset.symbol}
                         funderAccountName={this.props.currentAccount}
