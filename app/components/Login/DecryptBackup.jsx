@@ -43,7 +43,9 @@ class DecryptBackup extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.active) {
-            this.refs.passwordInput.focus();
+            if (this.refs.passwordInput && this.refs.passwordInput.focus) {
+                this.refs.passwordInput.focus();
+            }
         }
         if (!prevProps.currentAccount && this.props.currentAccount) {
             this.props.history.push("/");
@@ -128,13 +130,17 @@ class DecryptBackup extends Component {
         };
 
         return (
-            <form onSubmit={this.onPassword}>
+            <div>
                 <div
                     className={`${
                         !this.props.active ? "display-none" : ""
                     } password-block`}
                 >
-                    <Form layout="vertical" style={{textAlign: "left"}}>
+                    <Form
+                        layout="vertical"
+                        style={{textAlign: "left"}}
+                        onSubmit={this.onPassword}
+                    >
                         <Form.Item
                             label={counterpart.translate("settings.password")}
                             validateStatus={getPasswordInputValidateStatus()}
@@ -191,7 +197,7 @@ class DecryptBackup extends Component {
                     )}
                 </div>
                 {this.renderButtons()}
-            </form>
+            </div>
         );
     }
 }
