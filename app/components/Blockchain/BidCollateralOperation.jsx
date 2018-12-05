@@ -1,8 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import Translate from "react-translate-component";
-import {Asset} from "common/MarketClasses";
-import AccountSelector from "../Account/AccountSelector";
+import FormattedPrice from "../Utility/FormattedPrice";
 import AmountSelector from "../Utility/AmountSelector";
 import FormattedAsset from "../Utility/FormattedAsset";
 import AssetActions from "actions/AssetActions";
@@ -19,12 +18,12 @@ class BidCollateralOperation extends React.Component {
     initialState = () => ({
         account: ChainStore.getAccount(this.props.funderAccountName),
         collateralAmount: "0",
-        debtAmount: "0",
+        debtAmount: "0"
     });
 
     reset() {
         this.setState(this.initialState());
-    };
+    }
 
     _collateralBidInput(value) {
         this.setState({
@@ -41,13 +40,15 @@ class BidCollateralOperation extends React.Component {
     _onBidCollateral() {
         let {collateralAmount, debtAmount} = this.state;
 
-        collateralAmount = collateralAmount == 0 ? collateralAmount : collateralAmount.replace(/,/g, "");
-        debtAmount = debtAmount == 0 ? debtAmount : debtAmount.replace(/,/g, "");
+        collateralAmount =
+            collateralAmount == 0
+                ? collateralAmount
+                : collateralAmount.replace(/,/g, "");
+        debtAmount =
+            debtAmount == 0 ? debtAmount : debtAmount.replace(/,/g, "");
 
         AssetActions.bidCollateral(
-            this.state.account
-                ? this.state.account.get("id")
-                : null,
+            this.state.account ? this.state.account.get("id") : null,
             this.props.core,
             this.props.asset,
             collateralAmount,
@@ -56,13 +57,11 @@ class BidCollateralOperation extends React.Component {
         setTimeout(() => {
             this.props.onUpdate();
         }, 6000);
-    };
+    }
 
     removeBid() {
         AssetActions.bidCollateral(
-            this.state.account
-                ? this.state.account.get("id")
-                : null,
+            this.state.account ? this.state.account.get("id") : null,
             this.props.core,
             this.props.asset,
             0,
@@ -74,20 +73,15 @@ class BidCollateralOperation extends React.Component {
     }
 
     renderCollateralBid() {
-        const {
-            asset, 
-            core
-        } = this.props;
-        const {
-            account, 
-            collateralAmount, 
-            debtAmount,
-        } = this.state;
+        const {asset, core} = this.props;
+        const {account, collateralAmount, debtAmount} = this.state;
 
         let tabIndex = 1;
         const coreID = core.get("id") || "1.3.0";
         let balance = 0;
-        const coreBalanceID = account.getIn(["balances", coreID]);
+        const coreBalanceID = account
+            ? account.getIn(["balances", coreID])
+            : null;
         if (coreBalanceID) {
             let balanceObject = ChainStore.getObject(coreBalanceID);
             if (balanceObject) {
@@ -97,7 +91,8 @@ class BidCollateralOperation extends React.Component {
 
         const balanceText = (
             <span>
-                <Translate component="span" content="transfer.available" />:&nbsp;
+                <Translate component="span" content="transfer.available" />
+                :&nbsp;
                 <FormattedAsset amount={balance} asset={coreID} />
             </span>
         );
@@ -127,6 +122,25 @@ class BidCollateralOperation extends React.Component {
                     style={{width: "100%", paddingTop: 16}}
                 />
 
+                {this.state.collateralAmount !== "0" &&
+                    this.state.debtAmount !== "0" && (
+                        <div
+                            style={{
+                                paddingTop: "1rem"
+                            }}
+                        >
+                            <Translate content="explorer.asset.collateral.bid_price" />
+                            &nbsp;
+                            <FormattedPrice
+                                base_amount={this.state.collateralAmount / 1}
+                                base_asset={coreID}
+                                quote_amount={this.state.debtAmount / 1}
+                                quote_asset={asset.get("id")}
+                                noPopOver
+                            />
+                        </div>
+                    )}
+
                 <div style={{paddingTop: "1rem"}} className="button-group">
                     <button
                         className={classnames("button")}
@@ -135,7 +149,11 @@ class BidCollateralOperation extends React.Component {
                     >
                         <Translate content="transaction.trxTypes.bid_collateral" />
                     </button>
-                    <button className="button outline" onClick={this.reset.bind(this)} tabIndex={tabIndex++}>
+                    <button
+                        className="button outline"
+                        onClick={this.reset.bind(this)}
+                        tabIndex={tabIndex++}
+                    >
                         <Translate content="account.perm.reset" />
                     </button>
                 </div>
@@ -144,9 +162,7 @@ class BidCollateralOperation extends React.Component {
     }
 
     render() {
-        return(
-            this.renderCollateralBid()
-        );
+        return this.renderCollateralBid();
     }
 }
 
