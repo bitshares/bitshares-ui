@@ -321,28 +321,6 @@ class Barter extends Component {
         };
     }
 
-    _setTotal(asset_id, balance_id) {
-        const {feeAmount} = this.state;
-        let balanceObject = ChainStore.getObject(balance_id);
-        let transferAsset = ChainStore.getObject(asset_id);
-
-        let balance = new Asset({
-            amount: balanceObject.get("balance"),
-            asset_id: transferAsset.get("id"),
-            precision: transferAsset.get("precision")
-        });
-
-        if (balanceObject) {
-            if (feeAmount.asset_id === balance.asset_id) {
-                balance.minus(feeAmount);
-            }
-            this.setState(
-                {maxAmount: true, to_amount: balance.getAmount({real: true})},
-                this._checkBalance
-            );
-        }
-    }
-
     addFromAmount() {
         this.state.from_barter.push("");
         this.setState({from_barter: this.state.from_barter});
