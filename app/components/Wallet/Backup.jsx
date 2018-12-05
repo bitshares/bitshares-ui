@@ -325,16 +325,23 @@ class Download extends Component {
             isReady = this.props.checkboxActive;
         }
         return (
-            <div
-                className={`${
-                    !isReady ? "disabled" : ""
-                } button button-primary download-btn`}
+            <Button
+                type={"primary"}
+                disabled={!isReady}
                 onClick={() => {
                     this.onDownload();
                 }}
+                style={
+                    this.props.confirmation
+                        ? {height: "initial", padding: 0}
+                        : {}
+                }
             >
                 {this.props.confirmation ? (
-                    <div className="download-block">
+                    <div
+                        className="download-block"
+                        style={{padding: "1.25rem"}}
+                    >
                         <img
                             className="bin-img"
                             src="/bin-file/default.svg"
@@ -345,7 +352,7 @@ class Download extends Component {
                                 className="download-text"
                                 content="registration.downloadFile"
                             />
-                            <p className="file-name">
+                            <p className="file-name" style={{marginBottom: 0}}>
                                 {this.props.backup.name}
                             </p>
                         </span>
@@ -353,7 +360,7 @@ class Download extends Component {
                 ) : (
                     <Translate content="wallet.download" />
                 )}
-            </div>
+            </Button>
         );
     }
 
