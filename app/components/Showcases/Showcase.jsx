@@ -22,9 +22,15 @@ export default class Showcase extends Component {
     }
 
     render() {
-        if (this.props.disabled) {
+        if (!!this.props.disabled) {
             return (
-                <Tooltip title={"Coming soon"}>
+                <Tooltip
+                    title={
+                        typeof this.props.disabled == "string"
+                            ? this.props.disabled
+                            : "Coming soon"
+                    }
+                >
                     <div
                         className="showcases-grid--wrapper--item--wrapper--disabled disabled"
                         onClick={() => {}}

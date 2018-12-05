@@ -58,7 +58,8 @@ class ShowcaseGrid extends Component {
                 target: () => {},
                 description: "showcases.borrow.description",
                 icon: "borrow",
-                disabled: true
+                disabled:
+                    "Easy wizard coming soon. Already available in Dashboard > Margin Positions"
             },
             {
                 title: "showcases.direct_debit.title",
