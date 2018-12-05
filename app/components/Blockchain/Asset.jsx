@@ -286,8 +286,9 @@ class Asset extends React.Component {
     renderAuthorityList(authorities) {
         return authorities.map(function(authority) {
             return (
-                <span>
+                <span key={authority}>
                     <LinkToAccountById account={authority} />
+                    &nbsp;
                 </span>
             );
         });
@@ -1165,24 +1166,54 @@ class Asset extends React.Component {
         );
 
         var whiteLists = permissionBooleans["white_list"] ? (
-            <span>
+            <div>
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_authorities" />
-                : &nbsp;
-                {this.renderAuthorityList(options.blacklist_authorities)}
-                <br />
-                <Translate content="explorer.asset.permissions.blacklist_markets" />
-                : &nbsp;
-                {this.renderMarketList(asset, options.blacklist_markets)}
-                <br />
-                <Translate content="explorer.asset.permissions.whitelist_authorities" />
-                : &nbsp;
-                {this.renderAuthorityList(options.whitelist_authorities)}
-                <br />
-                <Translate content="explorer.asset.permissions.whitelist_markets" />
-                : &nbsp;
-                {this.renderMarketList(asset, options.whitelist_markets)}
-            </span>
+                {!!options.blacklist_authorities &&
+                    !!options.blacklist_authorities.length && (
+                        <React.Fragment>
+                            <Translate content="explorer.asset.permissions.blacklist_authorities" />
+                            : &nbsp;
+                            {this.renderAuthorityList(
+                                options.blacklist_authorities
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.blacklist_markets &&
+                    !!options.blacklist_markets.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.blacklist_markets" />
+                            : &nbsp;
+                            {this.renderMarketList(
+                                asset,
+                                options.blacklist_markets
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.whitelist_authorities &&
+                    !!options.whitelist_authorities.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.whitelist_authorities" />
+                            : &nbsp;
+                            {this.renderAuthorityList(
+                                options.whitelist_authorities
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.whitelist_markets &&
+                    !!options.whitelist_markets.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.whitelist_markets" />
+                            : &nbsp;
+                            {this.renderMarketList(
+                                asset,
+                                options.whitelist_markets
+                            )}
+                        </React.Fragment>
+                    )}
+            </div>
         ) : null;
 
         return (
@@ -1204,7 +1235,7 @@ class Asset extends React.Component {
                 {this.renderPermissionIndicators(permissionBooleans, bitNames)}
                 <br />
 
-                {/*whiteLists*/}
+                {whiteLists}
             </div>
         );
     }
@@ -1450,241 +1481,234 @@ class Asset extends React.Component {
             );
         }
 
-        // now we compute the margin position tab
-        let header2 = (
-            <thead>
-                <tr>
-                    <th
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "name")}
-                        style={{textAlign: "left"}}
-                    >
-                        <Translate content="transaction.borrower" />
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "collateral")}
-                    >
-                        <Translate content="transaction.collateral" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
-                                <FormattedAsset
-                                    amount={this.state.callOrders[0]
-                                        .getCollateral()
-                                        .getAmount()}
-                                    asset={
-                                        this.state.callOrders[0].getCollateral()
-                                            .asset_id
-                                    }
-                                    hide_amount
-                                />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "debt")}
-                    >
-                        <Translate content="transaction.borrow_amount" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
-                                <FormattedAsset
-                                    amount={this.state.callOrders[0]
-                                        .amountToReceive()
-                                        .getAmount()}
-                                    asset={
-                                        this.state.callOrders[0].amountToReceive()
-                                            .asset_id
-                                    }
-                                    hide_amount
-                                />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                    >
-                        <span
-                            onClick={this._toggleSortOrder.bind(this, "price")}
-                        >
-                            <Translate content="exchange.call" />
-                        </span>
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
-                                <FormattedPrice
-                                    base_amount={
-                                        this.state.callOrders[0].call_price.base
-                                            .amount
-                                    }
-                                    base_asset={
-                                        this.state.callOrders[0].call_price.base
-                                            .asset_id
-                                    }
-                                    quote_amount={
-                                        this.state.callOrders[0].call_price
-                                            .quote.amount
-                                    }
-                                    quote_asset={
-                                        this.state.callOrders[0].call_price
-                                            .quote.asset_id
-                                    }
-                                    hide_value
-                                    noPopOver
-                                />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th style={{textAlign: "right"}}>
-                        <Translate content="borrow.coll_ratio_target" />
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "ratio")}
-                    >
-                        <Translate content="borrow.coll_ratio" />
-                    </th>
-                </tr>
-            </thead>
-        );
+        let isGlobalSettlement = bitAsset.settlement_fund > 0 ? true : false;
 
-        let rows2 = sortedCallOrders.map(c => {
-            return (
-                <tr className="margin-row" key={c.id}>
-                    <td>
-                        <LinkToAccountById account={c.borrower} />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.collateral}
-                            asset={c.getCollateral().asset_id}
-                            hide_asset
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.debt}
-                            asset={c.amountToReceive().asset_id}
-                            hide_asset
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right", paddingRight: 10}}
-                        className="column-hide-small"
-                    >
-                        <FormattedPrice
-                            base_amount={c.call_price.base.amount}
-                            base_asset={c.call_price.base.asset_id}
-                            quote_amount={c.call_price.quote.amount}
-                            quote_asset={c.call_price.quote.asset_id}
-                            hide_symbols
-                        />
-                    </td>
-                    <td style={{textAlign: "right", paddingRight: 10}}>
-                        {!!c.order.target_collateral_ratio
-                            ? (c.order.target_collateral_ratio / 1000).toFixed(
-                                  3
-                              )
-                            : "-"}
-                    </td>
-                    <td className={c.getStatus()} style={{textAlign: "right"}}>
-                        {c.getRatio().toFixed(3)}
-                    </td>
-                </tr>
+        let secondRows = null;
+        let secondHeader = null;
+        if (isGlobalSettlement) {
+            // collateral bids
+            let dynamic = this.props.getDynamicObject(
+                asset.dynamic_asset_data_id
             );
-        });
-
-        let dynamic = this.props.getDynamicObject(asset.dynamic_asset_data_id);
-        if (dynamic) {
-            dynamic = dynamic.toJS();
-            var currentSupply = dynamic ? dynamic.current_supply : 0;
-            this._analyzeBids(currentSupply);
-        }
-
-        // now we compute the collateral bid objects
-        var header3 = (
-            <thead>
-                <tr>
-                    <th
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "name")}
-                        style={{textAlign: "left"}}
-                    >
-                        <Translate content="transaction.bidder" />
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "collateral")}
-                    >
-                        <Translate content="transaction.collateral" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+            if (dynamic) {
+                dynamic = dynamic.toJS();
+                var currentSupply = dynamic ? dynamic.current_supply : 0;
+                this._analyzeBids(currentSupply);
+            }
+            secondHeader = (
+                <thead>
+                    <tr>
+                        <th
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "name")}
+                            style={{textAlign: "left"}}
+                        >
+                            <Translate content="transaction.bidder" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(
+                                this,
+                                "collateral"
+                            )}
+                        >
+                            <Translate content="transaction.collateral" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
                                 <FormattedAsset
-                                    amount={this.state.callOrders[0]
-                                        .getCollateral()
-                                        .getAmount()}
+                                    amount={1}
                                     asset={
-                                        this.state.callOrders[0].getCollateral()
+                                        sortedCollateralBids[0].bid.base
                                             .asset_id
                                     }
                                     hide_amount
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "debt")}
-                    >
-                        <Translate content="transaction.borrow_amount" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "debt")}
+                        >
+                            <Translate content="transaction.borrow_amount" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
                                 <FormattedAsset
-                                    amount={this.state.callOrders[0]
-                                        .amountToReceive()
-                                        .getAmount()}
+                                    amount={1}
                                     asset={
-                                        this.state.callOrders[0].amountToReceive()
+                                        sortedCollateralBids[0].bid.quote
                                             .asset_id
                                     }
                                     hide_amount
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                    >
-                        <span
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
                             onClick={this._toggleSortOrder.bind(this, "price")}
                         >
                             <Translate content="explorer.asset.collateral_bid.bid" />
-                        </span>
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedPrice
+                                    base_amount={1}
+                                    base_asset={
+                                        sortedCollateralBids[0].bid.base
+                                            .asset_id
+                                    }
+                                    quote_amount={1}
+                                    quote_asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_value
+                                    noPopOver
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(this, "ratio")}
+                        >
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+
+                        <th style={{textAlign: "right"}}>
+                            <Translate content="borrow.considered_on_revival" />
+                        </th>
+                    </tr>
+                </thead>
+            );
+
+            secondRows = sortedCollateralBids.map(c => {
+                let included = "no";
+                if (!!c.consideredIfRevived) {
+                    if (c.consideredIfRevived == 1) {
+                        included = "yes";
+                    } else if (c.consideredIfRevived == 2) {
+                        included = "partially";
+                    } else {
+                        included = "no";
+                    }
+                }
+                return (
+                    <tr className="margin-row" key={c.id}>
+                        <td>
+                            <LinkToAccountById account={c.bidder} />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={c.bid.base.amount}
+                                asset={c.bid.base.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td style={{textAlign: "right"}} className="">
+                            <FormattedAsset
+                                amount={c.bid.quote.amount}
+                                asset={c.bid.quote.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            <FormattedPrice
+                                base_amount={c.bid.base.amount}
+                                base_asset={c.bid.base.asset_id}
+                                quote_amount={c.bid.quote.amount}
+                                quote_asset={c.bid.quote.asset_id}
+                                hide_symbols
+                            />
+                        </td>
+
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            {c.getRatio().toFixed(3)}
+                        </td>
+
+                        <td style={{textAlign: "right"}}>{included}</td>
+                    </tr>
+                );
+            });
+        } else {
+            // margin positions
+            secondHeader = (
+                <thead>
+                    <tr>
+                        <th
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "name")}
+                            style={{textAlign: "left"}}
+                        >
+                            <Translate content="transaction.borrower" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(
+                                this,
+                                "collateral"
+                            )}
+                        >
+                            <Translate content="transaction.collateral" />
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
+                                <FormattedAsset
+                                    amount={this.state.callOrders[0]
+                                        .getCollateral()
+                                        .getAmount()}
+                                    asset={
+                                        this.state.callOrders[0].getCollateral()
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "debt")}
+                        >
+                            <Translate content="transaction.borrow_amount" />
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
+                                <FormattedAsset
+                                    amount={this.state.callOrders[0]
+                                        .amountToReceive()
+                                        .getAmount()}
+                                    asset={
+                                        this.state.callOrders[0].amountToReceive()
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable  column-hide-small"
+                            onClick={this._toggleSortOrder.bind(this, "price")}
+                        >
+                            <Translate content="exchange.call" />
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
                                 <FormattedPrice
                                     base_amount={
                                         this.state.callOrders[0].call_price.base
@@ -1705,80 +1729,81 @@ class Asset extends React.Component {
                                     hide_value
                                     noPopOver
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "ratio")}
-                    >
-                        <Translate content="borrow.coll_ratio" />
-                    </th>
-
-                    <th style={{textAlign: "right"}}>
-                        <Translate content="borrow.considered_on_revival" />
-                    </th>
-                </tr>
-            </thead>
-        );
-
-        var rows3 = sortedCollateralBids.map(c => {
-            let included = "no";
-            if (!!c.consideredIfRevived) {
-                if (c.consideredIfRevived == 1) {
-                    included = "yes";
-                } else if (c.consideredIfRevived == 2) {
-                    included = "partially";
-                } else {
-                    included = "no";
-                }
-            }
-            return (
-                <tr className="margin-row" key={c.id}>
-                    <td>
-                        <LinkToAccountById account={c.bidder} />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.bid.base.amount}
-                            asset={c.bid.base.asset_id}
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.bid.quote.amount}
-                            asset={c.bid.quote.asset_id}
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right", paddingRight: 10}}
-                        className="column-hide-small"
-                    >
-                        <FormattedPrice
-                            base_amount={c.bid.base.amount}
-                            base_asset={c.bid.base.asset_id}
-                            quote_amount={c.bid.quote.amount}
-                            quote_asset={c.bid.quote.asset_id}
-                        />
-                    </td>
-
-                    <td style={{textAlign: "right"}}>
-                        {c.getRatio().toFixed(3)}
-                    </td>
-
-                    <td style={{textAlign: "right"}}>{included}</td>
-                </tr>
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <Translate content="borrow.coll_ratio_target" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "ratio")}
+                        >
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+                    </tr>
+                </thead>
             );
-        });
+
+            secondRows = sortedCallOrders.map(c => {
+                return (
+                    <tr className="margin-row" key={c.id}>
+                        <td>
+                            <LinkToAccountById account={c.borrower} />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={c.collateral}
+                                asset={c.getCollateral().asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td style={{textAlign: "right"}}>
+                            <FormattedAsset
+                                amount={c.debt}
+                                asset={c.amountToReceive().asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            <FormattedPrice
+                                base_amount={c.call_price.base.amount}
+                                base_asset={c.call_price.base.asset_id}
+                                quote_amount={c.call_price.quote.amount}
+                                quote_asset={c.call_price.quote.asset_id}
+                                hide_symbols
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            {!!c.order.target_collateral_ratio
+                                ? (
+                                      c.order.target_collateral_ratio / 1000
+                                  ).toFixed(3)
+                                : "-"}
+                        </td>
+                        <td
+                            className={c.getStatus()}
+                            style={{textAlign: "right"}}
+                        >
+                            {c.getRatio().toFixed(3)}
+                        </td>
+                    </tr>
+                );
+            });
+        }
 
         return (
             <div className="grid-block" style={{paddingBottom: "1rem"}}>
@@ -1799,29 +1824,21 @@ class Asset extends React.Component {
                                 </table>
                             </Tab>
 
-                            {sortedCallOrders.length > 0 ? (
-                                <Tab title="explorer.asset.margin_positions.title">
-                                    <table
-                                        className=" table order-table table-hover"
-                                        style={{padding: "1.2rem"}}
-                                    >
-                                        {header2}
-                                        <tbody>{rows2}</tbody>
-                                    </table>
-                                </Tab>
-                            ) : null}
-
-                            {sortedCollateralBids.length > 0 ? (
-                                <Tab title="explorer.asset.collateral_bid.title">
-                                    <table
-                                        className=" table order-table table-hover"
-                                        style={{padding: "1.2rem"}}
-                                    >
-                                        {header3}
-                                        <tbody>{rows3}</tbody>
-                                    </table>
-                                </Tab>
-                            ) : null}
+                            <Tab
+                                title={
+                                    isGlobalSettlement
+                                        ? "explorer.asset.collateral_bid.title"
+                                        : "explorer.asset.margin_positions.title"
+                                }
+                            >
+                                <table
+                                    className=" table order-table table-hover"
+                                    style={{padding: "1.2rem"}}
+                                >
+                                    {secondHeader}
+                                    <tbody>{secondRows}</tbody>
+                                </table>
+                            </Tab>
                         </Tabs>
                     </div>
                 </div>

@@ -700,7 +700,8 @@
             "collateral": {
                 "bid": "Bid Collateral",
                 "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
-                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+                "remove_bid": "A bid can be removed by placing a zero collateral bid.",
+                "bid_price": "Bid price"
             },
             "collateral_bid": {
                 "title": "Collateral Bids",
