@@ -33,12 +33,6 @@ class ShowcaseGrid extends Component {
                 icon: "wallet" // see Icons app/compoentns/Icon/Icon
             },
             {
-                title: "showcases.barter_transaction.title",
-                target: () => {},
-                description: "showcases.barter_transaction.description",
-                icon: "barter"
-            },
-            {
                 title: "showcases.voting.title",
                 target: event => {
                     if (hasAccount) {
@@ -53,10 +47,32 @@ class ShowcaseGrid extends Component {
                 icon: "voting"
             },
             {
+                title: "showcases.barter_transaction.title",
+                target: () => {},
+                description: "showcases.barter_transaction.description",
+                icon: "barter",
+                disabled: true
+            },
+            {
                 title: "showcases.borrow.title",
                 target: () => {},
                 description: "showcases.borrow.description",
-                icon: "borrow"
+                icon: "borrow",
+                disabled: true
+            },
+            {
+                title: "showcases.direct_debit.title",
+                target: () => {},
+                description: "showcases.direct_debit.description",
+                icon: "direct_debit",
+                disabled: true
+            },
+            {
+                title: "showcases.timed_transfer.title",
+                target: () => {},
+                description: "showcases.timed_transfer.description",
+                icon: "alarm",
+                disabled: true
             }
             // .... even more tiles in this list
         ];
@@ -74,12 +90,22 @@ class ShowcaseGrid extends Component {
                                 key={tile.title}
                                 className="showcases-grid--wrapper--item"
                             >
-                                <Showcase
-                                    target={tile.target}
-                                    title={tile.title}
-                                    description={tile.description}
-                                    icon={tile.icon}
-                                />
+                                {!!tile.disabled ? (
+                                    <Showcase
+                                        target={tile.target}
+                                        title={tile.title}
+                                        description={tile.description}
+                                        icon={tile.icon}
+                                        disabled={tile.disabled}
+                                    />
+                                ) : (
+                                    <Showcase
+                                        target={tile.target}
+                                        title={tile.title}
+                                        description={tile.description}
+                                        icon={tile.icon}
+                                    />
+                                )}
                             </div>
                         );
                     })}
