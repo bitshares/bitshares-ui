@@ -19,7 +19,6 @@ import {backupName} from "common/backupUtils";
 import {getWalletName} from "branding";
 import {Button, Input, Notification} from "bitshares-ui-style-guide";
 import counterpart from "counterpart";
-import {Button, Input} from "bitshares-ui-style-guide";
 
 const connectObject = {
     listenTo() {
