@@ -34,7 +34,10 @@ class Barter extends Component {
                     index: 0,
                     from_amount: "",
                     from_asset_id: null,
-                    from_asset: null
+                    from_asset: null,
+                    from_feeAmount: new Asset({amount: 0}),
+                    from_feeAsset: null,
+                    from_fee_asset_id: null
                 }
             ],
             to_barter: [
@@ -42,18 +45,18 @@ class Barter extends Component {
                     index: 0,
                     to_amount: "",
                     to_asset_id: null,
-                    to_asset: null
+                    to_asset: null,
+                    to_feeAmount: new Asset({amount: 0}),
+                    to_feeAsset: null,
+                    to_fee_asset_id: null
                 }
             ],
-            from_feeAmount: new Asset({amount: 0}),
-            from_feeStatus: {},
-            from_feeAsset: null,
-            to_feeAmount: new Asset({amount: 0}),
-            to_feeStatus: {},
-            to_feeAsset: null,
+            from_hasPoolBalance: null,
+            to_hasPoolBalance: null,
             amount_counter: [],
             amount_index: 0,
-            error: null,
+            from_error: null,
+            to_error: null,
             memo: "Barter"
         };
         this._checkBalance = this._checkBalance.bind(this);
@@ -93,15 +96,26 @@ class Barter extends Component {
             from_amount: amount,
             from_asset: asset,
             from_asset_id: asset.get("id"),
-            error: null,
-            maxAmount: false
+            maxAmount: false,
+            from_feeAmount: new Asset({amount: 0}),
+            from_feeAsset: asset,
+            from_fee_asset_id: null
         };
 
         this.setState(
             {
-                from_barter
+                from_barter,
+                from_error: null
             },
-            this._checkBalance
+            this._checkBalance(
+                from_barter[index].from_feeAmount,
+                amount,
+                this.state.from_account,
+                asset,
+                index,
+                true,
+                from_barter[index].from_fee_asset_id
+            )
         );
     }
     onToAmountChanged(e, index) {
@@ -117,38 +131,85 @@ class Barter extends Component {
             to_amount: amount,
             to_asset: asset,
             to_asset_id: asset.get("id"),
-            error: null,
-            maxAmount: false
+            maxAmount: false,
+            to_feeAmount: new Asset({amount: 0}),
+            to_feeAsset: asset,
+            to_fee_asset_id: null
         };
 
         this.setState(
             {
-                to_barter
+                to_barter,
+                to_error: null
             },
-            this._checkBalance
+            this._checkBalance(
+                to_barter[index].to_feeAmount,
+                amount,
+                this.state.to_account,
+                asset,
+                index,
+                false,
+                to_barter[index].to_fee_asset_id
+            )
         );
     }
 
-    _checkBalance() {
-        const {feeAmount, amount, from_account, asset} = this.state;
-        if (!asset || !from_account) return;
-        this._updateFee();
-        const balanceID = from_account.getIn(["balances", asset.get("id")]);
-        const feeBalanceID = from_account.getIn([
-            "balances",
-            feeAmount.asset_id
-        ]);
-        if (!asset || !from_account) return;
-        if (!balanceID) return this.setState({balanceError: true});
+    _checkBalance(
+        feeAmount,
+        amount,
+        account,
+        asset,
+        index,
+        from,
+        fee_asset_id
+    ) {
+        if (!asset || !account) return;
+        let _from_barter = [...this.state.from_barter],
+            _to_barter = [this.state.to_barter];
+        this._updateFee(fee_asset_id, account, asset.get("id"), index, from);
+        const balanceID = account.getIn(["balances", asset.get("id")]);
+        const feeBalanceID = account.getIn(["balances", feeAmount.asset_id]);
+        if (!asset || !account) return;
+        if (!balanceID)
+            return from
+                ? this.setState({from_balanceError: true})
+                : this.setState({to_balanceError: true});
         let balanceObject = ChainStore.getObject(balanceID);
         let feeBalanceObject = feeBalanceID
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
-            this.setState({fee_asset_id: "1.3.0"}, this._updateFee);
+            if (from) {
+                _from_barter[index].to_fee_asset_id = "1.3.0";
+                this.setState(
+                    {from_barter: _from_barter},
+                    this._updateFee(
+                        fee_asset_id,
+                        account,
+                        asset.get("id"),
+                        index,
+                        from
+                    )
+                );
+            } else {
+                _to_barter[index].to_fee_asset_id = "1.3.0";
+                this.setState(
+                    {to_barter: _to_barter},
+                    this._updateFee(
+                        fee_asset_id,
+                        account,
+                        asset.get("id"),
+                        index,
+                        from
+                    )
+                );
+            }
         }
         if (!balanceObject || !feeAmount) return;
-        if (!amount) return this.setState({balanceError: false});
+        if (!amount)
+            return from
+                ? this.setState({from_balanceError: false})
+                : this.setState({to_balanceError: false});
         const hasBalance = checkBalance(
             amount,
             asset,
@@ -156,23 +217,77 @@ class Barter extends Component {
             balanceObject
         );
         if (hasBalance === null) return;
-        this.setState({balanceError: !hasBalance});
+        from
+            ? this.setState({from_balanceError: !hasBalance})
+            : this.setState({to_balanceError: !hasBalance});
     }
+
+    _updateFee(fee_asset_id, account, asset_id, from) {
+        let _from_barter = [...this.state.from_barter],
+            _to_barter = [this.state.to_barter];
+        const {
+            from_fee_asset_types,
+            to_fee_asset_types
+        } = this._getAvailableAssets(this.state);
+        const fee_asset_types = from
+            ? from_fee_asset_types
+            : to_fee_asset_types;
+        if (
+            fee_asset_types.length === 1 &&
+            fee_asset_types[0] !== fee_asset_id
+        ) {
+            fee_asset_id = fee_asset_types[0];
+        }
+        if (!account) return null;
+
+        checkFeeStatusAsync({
+            accountID: account.get("id"),
+            feeID: fee_asset_id,
+            options: ["price_per_kbyte"],
+            data: {
+                type: "memo",
+                content: this.state.memo
+            }
+        }).then(({fee, hasBalance, hasPoolBalance}) =>
+            shouldPayFeeWithAssetAsync(account, fee).then(should => {
+                if (from) {
+                    if (should) {
+                        _from_barter[index].from_fee_asset_id = asset_id;
+                        this.setState(
+                            {from_barter: _from_barter},
+                            this._updateFee
+                        );
+                    } else {
+                        _from_barter[index].from_feeAmount = fee;
+                        _from_barter[index].from_fee_asset_id = fee.asset_id;
+                        this.setState({
+                            from_barter: _from_barter,
+                            from_hasPoolBalance: hasPoolBalance,
+                            from_error: !hasBalance || !hasPoolBalance
+                        });
+                    }
+                } else {
+                    if (should) {
+                        _to_barter[index].to_fee_asset_id = asset_id;
+                        this.setState({to_barter: _to_barter}, this._updateFee);
+                    } else {
+                        _to_barter[index].to_feeAmount = fee;
+                        _to_barter[index].to_fee_asset_id = fee.asset_id;
+                        this.setState({
+                            to_barter: _to_barter,
+                            to_hasPoolBalance: hasPoolBalance,
+                            to_error: !hasBalance || !hasPoolBalance
+                        });
+                    }
+                }
+            })
+        );
+    }
+
     _getAvailableAssets(state = this.state) {
-        const {from_feeStatus, to_feeStatus} = this.state;
-        function hasFeePoolBalance(feeStatus) {
-            if (feeStatus === undefined) return true;
-            return feeStatus && feeStatus.hasPoolBalance;
-        }
-
-        function hasBalance(feeStatus) {
-            if (feeStatus === undefined) return true;
-            return feeStatus && feeStatus.hasBalance;
-        }
-
         const {from_account, from_error, to_account, to_error} = state;
 
-        let getAssetTypes = (account, feeStatus, err) => {
+        let getAssetTypes = (account, err) => {
             let asset_types = [],
                 fee_asset_types = [];
             if (!(account && account.get("balances") && !err)) {
@@ -191,18 +306,12 @@ class Barter extends Component {
                     }
                 }
             }
-            fee_asset_types = fee_asset_types.filter(id => {
-                return (
-                    hasFeePoolBalance(feeStatus[id]) &&
-                    hasBalance(feeStatus[id])
-                );
-            });
 
             return {asset_types, fee_asset_types};
         };
 
-        let from = getAssetTypes(from_account, from_feeStatus, from_error);
-        let to = getAssetTypes(to_account, to_feeStatus, to_error);
+        let from = getAssetTypes(from_account, from_error);
+        let to = getAssetTypes(to_account, to_error);
 
         return {
             from_asset_types: from.asset_types || [],
@@ -210,6 +319,28 @@ class Barter extends Component {
             from_fee_asset_types: from.asset_fee_types || [],
             to_fee_asset_types: to.fee_asset_types || []
         };
+    }
+
+    _setTotal(asset_id, balance_id) {
+        const {feeAmount} = this.state;
+        let balanceObject = ChainStore.getObject(balance_id);
+        let transferAsset = ChainStore.getObject(asset_id);
+
+        let balance = new Asset({
+            amount: balanceObject.get("balance"),
+            asset_id: transferAsset.get("id"),
+            precision: transferAsset.get("precision")
+        });
+
+        if (balanceObject) {
+            if (feeAmount.asset_id === balance.asset_id) {
+                balance.minus(feeAmount);
+            }
+            this.setState(
+                {maxAmount: true, to_amount: balance.getAmount({real: true})},
+                this._checkBalance
+            );
+        }
     }
 
     addFromAmount() {
@@ -224,8 +355,9 @@ class Barter extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        this.setState({error: null});
+        this.setState({from_error: null, to_error: null});
         let sendAmount;
+        let transfer_list = [];
 
         this.state.from_barter.forEach(item => {
             const asset = item.from_asset;
@@ -235,18 +367,45 @@ class Barter extends Component {
                 asset_id: asset.get("id"),
                 precision: asset.get("precision")
             });
+            transfer_list.push({
+                from_account: this.state.from_account.get("id"),
+                to_account: this.state.to_account.get("id"),
+                amount: sendAmount.getAmount(),
+                asset_id: asset.get("id"),
+                memo: this.state.memo
+                    ? new Buffer(this.state.memo, "utf-8")
+                    : this.state.memo,
+                propose: this.state.from_account, //  propose
+                feeAsset: item.from_feeAsset
+                    ? item.from_feeAsset.get("id")
+                    : "1.3.0"
+            });
         });
-        AccountActions.transfer(
-            this.state.from_account.get("id"),
-            this.state.to_account.get("id"),
-            sendAmount.getAmount(),
-            asset.get("id"),
-            this.state.memo
-                ? new Buffer(this.state.memo, "utf-8")
-                : this.state.memo,
-            this.state.from_account, //  propose
-            this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
-        )
+
+        this.state.to_barter.forEach(item => {
+            const asset = item.to_asset;
+            let amount = item.to_amount;
+            sendAmount = new Asset({
+                real: amount,
+                asset_id: asset.get("id"),
+                precision: asset.get("precision")
+            });
+            transfer_list.push({
+                from_account: this.state.to_account.get("id"),
+                to_account: this.state.from_account.get("id"),
+                amount: sendAmount.getAmount(),
+                asset_id: asset.get("id"),
+                memo: this.state.memo
+                    ? new Buffer(this.state.memo, "utf-8")
+                    : this.state.memo,
+                propose: this.state.to_account, //  propose
+                feeAsset: item.to_feeAsset
+                    ? item.to_feeAsset.get("id")
+                    : "1.3.0"
+            });
+        });
+
+        AccountActions.transfer_list(transfer_list)
             .then(() => {
                 this.onClose();
                 TransactionConfirmStore.unlisten(this.onTrxIncluded);
@@ -257,7 +416,7 @@ class Barter extends Component {
                     ? e.message.split("\n")[1] || e.message
                     : null;
                 console.log("error: ", e, msg);
-                this.setState({error: msg});
+                this.setState({from_error: msg, to_error: msg});
             });
     }
 
@@ -281,10 +440,6 @@ class Barter extends Component {
             to_name,
             from_account,
             to_account,
-            from_feeAsset,
-            to_feeAsset,
-            from_feeAmount,
-            to_feeAmount,
             from_balanceError,
             to_balanceError,
             from_barter,
@@ -294,24 +449,32 @@ class Barter extends Component {
         let {from_asset_types, to_asset_types} = this._getAvailableAssets();
         let smallScreen = window.innerWidth < 850 ? true : false;
         let asset;
-        //let defaultBases = this.props.preferredBases.map(a => a);
-        let from_balance = null;
-        let to_balance = null;
-        let from_balance_fee = null;
-        let to_balance_fee = null;
 
+        let checkAmountValid = () => {
+            from_barter.forEach(item => {
+                const amountValue = parseFloat(
+                    String.prototype.replace.call(item.from_amount, /,/g, "")
+                );
+                return amountValue && !isNaN(amountValue);
+            });
+            to_barter.forEach(item => {
+                const amountValue = parseFloat(
+                    String.prototype.replace.call(item.to_amount, /,/g, "")
+                );
+                return amountValue && !isNaN(amountValue);
+            });
+        };
         const isSubmitNotValid =
             !from_account ||
             !to_account ||
-            from_account.get("id") == to_account.get("id");
+            from_account.get("id") == to_account.get("id") ||
+            from_balanceError ||
+            to_balanceError ||
+            to_error ||
+            from_error ||
+            checkAmountValid();
 
-        let balance = (
-            feeAmount,
-            feeAsset,
-            account,
-            balanceError,
-            asset_types
-        ) => {
+        let balance = (account, balanceError, asset_types) => {
             if (account && account.get("balances")) {
                 let account_balances = account.get("balances").toJS();
                 let _error = balanceError ? "has-error" : "";
@@ -370,8 +533,6 @@ class Barter extends Component {
                     }
                     assets={from_asset_types}
                     display_balance={balance(
-                        from_feeAmount,
-                        from_feeAsset,
                         from_account,
                         from_balanceError,
                         from_asset_types
@@ -397,8 +558,6 @@ class Barter extends Component {
                     }
                     assets={to_asset_types}
                     display_balance={balance(
-                        to_feeAmount,
-                        to_feeAsset,
                         to_account,
                         to_balanceError,
                         to_asset_types
@@ -435,8 +594,6 @@ class Barter extends Component {
                     }
                     assets={from_asset_types}
                     display_balance={balance(
-                        from_feeAmount,
-                        from_feeAsset,
                         from_account,
                         from_balanceError,
                         from_asset_types
@@ -479,8 +636,6 @@ class Barter extends Component {
                     }
                     assets={to_asset_types}
                     display_balance={balance(
-                        to_feeAmount,
-                        to_feeAsset,
                         to_account,
                         to_balanceError,
                         to_asset_types
