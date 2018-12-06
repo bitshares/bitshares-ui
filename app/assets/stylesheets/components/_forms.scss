@@ -51,35 +51,11 @@ div.account-image {
     }
 }
 
-.asset-select {
-    .ant-select {
-        width: 100%;
-    }
-}
-
-.asset-input.with-action {
-    .ant-input {
-        width: auto;
-    }
-}
-
 .asset-selector {
     .error-area {
         position: absolute;
     }
 }
-
-.asset-input.ant-form-item {
-    .ant-form-item-control {
-        max-width: none;
-    }
-    .ant-form-item-label {
-        label {
-            text-transform: uppercase;
-        }
-    }
-}
-
 .account-selector,
 .pubkey-input {
     clear: right;
