@@ -1746,6 +1746,7 @@
         "copy_tip": "Click here to copy the text to your clipboard",
         "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
         "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
         "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
         "feed_price": "This is the current external feed price",
@@ -1791,6 +1792,7 @@
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
@@ -1805,6 +1807,7 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "This is the price at which settle orders will execute.",
         "show_asset": "Click here to show this asset in the main list.",
