@@ -17,6 +17,14 @@ class ShowcaseGrid extends Component {
         });
     }
 
+    componentWillReceiveProps(np) {
+        if (np.currentAccount !== this.props.currentAccount) {
+            this.setState({
+                currentAccount: ChainStore.getAccount(np.props.currentAccount)
+            });
+        }
+    }
+
     render() {
         let hasAccount = this.state.currentAccount !== null;
 
@@ -30,7 +38,10 @@ class ShowcaseGrid extends Component {
                     }
                 },
                 description: "showcases.paper_wallet.description",
-                icon: "wallet" // see Icons app/compoentns/Icon/Icon
+                icon: "wallet", // see Icons app/compoentns/Icon/Icon
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.voting.title",
@@ -44,14 +55,18 @@ class ShowcaseGrid extends Component {
                     }
                 },
                 description: "showcases.voting.description",
-                icon: "voting"
+                icon: "voting",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.barter_transaction.title",
                 target: () => {},
                 description: "showcases.barter_transaction.description",
                 icon: "barter",
-                disabled: true
+                disabled: true,
+                comingSoon: true
             },
             {
                 title: "showcases.borrow.title",
@@ -59,21 +74,24 @@ class ShowcaseGrid extends Component {
                 description: "showcases.borrow.description",
                 icon: "borrow",
                 disabled:
-                    "Easy wizard coming soon. Already available in Dashboard > Margin Positions"
+                    "Easy wizard coming soon. Already available in Dashboard > Margin Positions",
+                comingSoon: true
             },
             {
                 title: "showcases.direct_debit.title",
                 target: () => {},
                 description: "showcases.direct_debit.description",
                 icon: "direct_debit",
-                disabled: true
+                disabled: true,
+                comingSoon: true
             },
             {
                 title: "showcases.timed_transfer.title",
                 target: () => {},
                 description: "showcases.timed_transfer.description",
                 icon: "alarm",
-                disabled: true
+                disabled: true,
+                comingSoon: true
             }
             // .... even more tiles in this list
         ];
@@ -98,6 +116,7 @@ class ShowcaseGrid extends Component {
                                         description={tile.description}
                                         icon={tile.icon}
                                         disabled={tile.disabled}
+                                        comingSoon={tile.comingSoon || false}
                                     />
                                 ) : (
                                     <Showcase

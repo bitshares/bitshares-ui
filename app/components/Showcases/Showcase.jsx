@@ -10,7 +10,8 @@ export default class Showcase extends Component {
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         icon: PropTypes.string.isRequired,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        comingSoon: PropTypes.bool
     };
 
     static defaultProps = {
@@ -22,7 +23,7 @@ export default class Showcase extends Component {
     }
 
     render() {
-        if (!!this.props.disabled) {
+        if (!!this.props.disabled || !!this.props.comingSoon) {
             return (
                 <Tooltip
                     title={
@@ -37,12 +38,13 @@ export default class Showcase extends Component {
                         tabIndex={"0"}
                     >
                         <h2 className={"no-margin"}>
-                            <Icon
-                                style={{float: "right"}}
-                                name={"coming_soon"}
-                                size={"4x"}
-                            />
-                            &nbsp;&nbsp;
+                            {!!this.props.comingSoon && (
+                                <Icon
+                                    style={{float: "right"}}
+                                    name={"coming_soon"}
+                                    size={"4x"}
+                                />
+                            )}
                             <Translate content={this.props.title} />
                         </h2>
                         <div
