@@ -128,17 +128,10 @@ class DepositModalContent extends DecimalChecker {
         let backingAsset = this.props.backedCoins
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
-                if (c.backingCoinType) {
-                    return (
-                        c.backingCoinType.toUpperCase() ===
-                        selectedAsset.toUpperCase()
-                    );
-                } else if (c.backingCoin) {
-                    return (
-                        c.backingCoin.toUpperCase() ===
-                        selectedAsset.toUpperCase()
-                    );
-                }
+                let backingCoin = c.backingCoinType || c.backingCoin;
+                return (
+                    backingCoin.toUpperCase() === selectedAsset.toUpperCase()
+                );
             });
 
         if (!backingAsset) {

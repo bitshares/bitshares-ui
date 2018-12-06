@@ -61,10 +61,16 @@ class AutoSelectionNode extends React.Component {
                             top: "-15px"
                         }}
                         checked={isActive}
-                        onChange={this.activate.bind(
-                            this,
-                            isActive ? connectedNode.url : autoSelectionUrl
-                        )}
+                        onChange={
+                            connectedNode != null
+                                ? this.activate.bind(
+                                      this,
+                                      isActive
+                                          ? connectedNode.url
+                                          : autoSelectionUrl
+                                  )
+                                : () => {}
+                        }
                     />
 
                     <p style={{fontSize: "80%"}}>
@@ -78,10 +84,16 @@ class AutoSelectionNode extends React.Component {
                     <div>
                         <Switch
                             checked={isActive}
-                            onChange={this.activate.bind(
-                                this,
-                                isActive ? connectedNode.url : autoSelectionUrl
-                            )}
+                            onChange={
+                                connectedNode != null
+                                    ? this.activate.bind(
+                                          this,
+                                          isActive
+                                              ? connectedNode.url
+                                              : autoSelectionUrl
+                                      )
+                                    : () => {}
+                            }
                         />
                         <Translate
                             component="div"
@@ -381,12 +393,18 @@ class AccessSettings extends React.Component {
     }
 
     _getConnectedNode() {
+        if (!this.props.connectedNode) {
+            return null;
+        }
         return this.getNode(
             this.props.nodes.find(node => node.url == this.props.connectedNode)
         );
     }
 
     _connectedNodeIsPersonal() {
+        if (!this.props.connectedNode) {
+            return false;
+        }
         let cn = this.props.nodes.find(
             node => node.url == this.props.connectedNode
         );
@@ -411,12 +429,15 @@ class AccessSettings extends React.Component {
     renderNode(node, connectedNode) {
         const {props} = this;
 
+        if (node == null) return null;
         return (
             <ApiNode
                 node={node}
                 key={node.url}
                 showRemoveNodeModal={props.showRemoveNodeModal}
-                isActive={node.url == connectedNode.url}
+                isActive={
+                    connectedNode !== null && node.url == connectedNode.url
+                }
                 popup={props.popup}
             />
         );
@@ -465,7 +486,7 @@ class AccessSettings extends React.Component {
             })
             .filter(node => {
                 return (
-                    node.url !== connectedNode.url &&
+                    (connectedNode == null || node.url !== connectedNode.url) &&
                     node.url !== autoSelectionUrl
                 );
             })

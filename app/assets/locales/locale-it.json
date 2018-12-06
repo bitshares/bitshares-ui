@@ -20,6 +20,7 @@
         "contacts": "Contatti",
         "create_account": "Crea un account",
         "create_new": "Crea un nuovo account",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Deposita BTS",
         "deposit_address": "Il tuo indirizzo di deposito è il nome del tuo account",
         "deposit_withdraw": "Deposita/Preleva",
@@ -132,6 +133,8 @@
             "brain": "Posizione brainkey",
             "cancel": "Annulla",
             "confirm_add": "Aggiungi",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "Importato dall'account",
             "key": "Chiave/Nome",
             "key_viewer": "Visualizzatore chiave privata",
@@ -422,6 +425,7 @@
         "close": "Chiudi posizione",
         "coll_ratio": "Collateral ratio",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Il tuo collateral ratio è inferiore a %(mr)s, che non è consentito.",
@@ -687,6 +691,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Riscuoti commissioni",
@@ -741,13 +757,22 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -1091,6 +1116,7 @@
         "payments": "Invia",
         "payments_legacy": "Send (legacy)",
         "settings": "Impostazioni",
+        "showcases": "Spotlight",
         "title": "BitShares UI",
         "unlock": "Log in (sblocca il portafoglio)",
         "unlock_password": "Log in usando una password",
@@ -1418,10 +1444,12 @@
         "asset_reserve": "{account} ha riservato (bruciato) {amount}",
         "asset_settle": "{account} ha richiesto il settlement di {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} ha aggiornato l'asset {asset}",
         "asset_update_feed_producers": "{account} ha aggiornato i produttori di feed per l'asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} ha riscosso un saldo di {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} ha messo in blacklist l'account {listee}",
         "call_order_update": "{account} ha cambiato il debito {debtSymbol} di {debt} e la garanzia di {collateral}",
         "committee_member_update_global_parameters": "{account} ha aggiornato i parametri globali del comitato",
@@ -1668,6 +1696,24 @@
         "wallets": "Portafogli",
         "yes": "Sì"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "Per favore controlla che l'ora del tuo computer sia corretta.",
         "sub_text_2": "Dopo aver sincronizzato l'ora, ricarica questa pagina.<br/><br/>Se l'ora è già impostata correttamente, il server API che stai utilizzando potrebbe essere fuori sincrono. In questo caso, prova ad utilizzare un altro server dalla lista seguente.",
@@ -1765,6 +1811,7 @@
         "at": "a",
         "balance_id": "ID saldo",
         "balance_owner": "Chiave di proprietario del saldo",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "H accettato l'offerta di obbligazione di",
         "bond_cancel_offer": "Ha annullato un'offerta di obbligazione",
@@ -1847,6 +1894,7 @@
             "account_whitelist": "Whitelist account",
             "all": "Mostra tutti",
             "assert": "Assert operation",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Riscuoti le commissioni dell'asset",
             "asset_claim_pool": "Claim asset fee pool",

@@ -20,6 +20,7 @@
         "contacts": "連絡先",
         "create_account": "アカウント作成",
         "create_new": "新しいアカウントを作成する",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "BTSをデポジットする",
         "deposit_address": "あなたのデポジットアドレスはあなたのアカウント名です。",
         "deposit_withdraw": "入金 / 出金",
@@ -132,6 +133,8 @@
             "brain": "ブレインキーの位置",
             "cancel": "キャンセル",
             "confirm_add": "追加",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "アカウントからインポート",
             "key": "キー/名前",
             "key_viewer": "秘密キービューア",
@@ -422,6 +425,7 @@
         "close": "ポジションを閉じる",
         "coll_ratio": "担保比率",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "あなたの担保比率は%(mr)s未満であり、許可されません。",
@@ -687,6 +691,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -741,13 +757,22 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -1091,6 +1116,7 @@
         "payments": "送金",
         "payments_legacy": "送金 (レガシー)",
         "settings": "設定",
+        "showcases": "Spotlight",
         "title": "BitShares UI",
         "unlock": "ログイン (ウォレットをアンロック)",
         "unlock_password": "パスワードでログイン",
@@ -1418,10 +1444,12 @@
         "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
         "asset_settle": "{account}は{amount}の決済を依頼しました",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers": "{account}はアセット{asset}のフィード作成者を更新しました",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account}は{amount}を請求しました",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
         "call_order_update": "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
         "committee_member_update_global_parameters": "{account}はグローバル委員会のパラメータを更新しました",
@@ -1668,6 +1696,24 @@
         "wallets": "ウォレット",
         "yes": "はい"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "コンピュータの時計が正しいか確認してください。",
         "sub_text_2": "時計を同期させたらこのページを更新してください。<br/><br/>既に時計が正しい場合は、使用しているAPIサーバーが同期していません。その場合は下のリストから他のサーバーを選んで再試行してください。",
@@ -1765,6 +1811,7 @@
         "at": "at",
         "balance_id": "残高ID",
         "balance_owner": "残高オーナーキー",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "承認された債権提案",
         "bond_cancel_offer": "キャンセルされた債権提案",
@@ -1847,6 +1894,7 @@
             "account_whitelist": "アカウントホワイトリスト",
             "all": "すべて表示",
             "assert": "アサート操作",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "アセット手数料を請求",
             "asset_claim_pool": "Claim asset fee pool",
