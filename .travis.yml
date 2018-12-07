@@ -29,7 +29,6 @@ install:
     - npm ci
 script:
     - "./build.sh"
-    - "./set_snap_token.sh"
 after_success: "./deploy.sh"
 deploy:
     - provider: releases
@@ -58,3 +57,5 @@ deploy:
 before_install:
     - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
       -in set_snap_token.sh.enc -out set_snap_token.sh -d
+    - chmod +x set_snap_token.sh
+    - source ./set_snap_token.sh
