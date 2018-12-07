@@ -708,7 +708,7 @@ export default class Barter extends Component {
                         />
                         <div className="inline-label input-wrapper">
                             <input
-                                disabled={true}
+                                disabled={false}
                                 type="text"
                                 value={explictPrice()}
                             />
@@ -732,7 +732,7 @@ export default class Barter extends Component {
             <Card style={{borderRadius: "10px"}}>
                 <AmountSelector
                     label="transfer.fee"
-                    disabled={true}
+                    disabled={false}
                     amount={fee()}
                     asset={
                         from_asset_types.length > 0 && from_barter[0].from_asset
