@@ -689,15 +689,20 @@ class AccountPortfolioList extends React.Component {
                     <td>
                         {isBitAsset && borrowLink ? (
                             <Tooltip 
-                                title={counterpart.translate(
-                                    "tooltip.borrow",
-                                    {asset: symbol}
+                                title={counterpart.translate("tooltip.borrow", {
+                                    asset: isAssetBitAsset
+                                        ? "bit" + symbol
+                                        : symbol}
                                 )}
                             >
                                 {borrowLink}
                             </Tooltip>
                         ) : isBitAsset && !borrowLink ? ( 
-                            <Tooltip title={counterpart.translate("tooltip.borrow_disabled",  {asset: symbol})}>
+                            <Tooltip title={counterpart.translate("tooltip.borrow_disabled",  {
+                                asset: isAssetBitAsset ? 
+                                    "bit" + symbol : 
+                                    symbol
+                            })}>
                                 <AntIcon type={"question-circle"} />
                             </Tooltip>
                         ) : (
