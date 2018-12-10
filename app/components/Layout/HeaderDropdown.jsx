@@ -297,6 +297,27 @@ export default class DropDownMenu extends React.Component {
                 <li
                     className={cnames(
                         {
+                            active: active.indexOf("/spotlight") !== -1
+                        },
+                        "divider"
+                    )}
+                    onClick={this.props.onNavigate.bind(this, "/spotlight")}
+                >
+                    <div className="table-cell">
+                        <Icon
+                            size="2x"
+                            name="showcases"
+                            title="icons.showcases"
+                        />
+                    </div>
+                    <div className="table-cell">
+                        <Translate content="header.showcases" />
+                    </div>
+                </li>
+
+                <li
+                    className={cnames(
+                        {
                             active: active.indexOf("/settings") !== -1
                         },
                         "divider",

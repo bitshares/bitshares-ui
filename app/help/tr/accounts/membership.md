@@ -15,12 +15,6 @@ edilir ve kaydını yaptıkları ya da getirdikleri üyelerden komisyon geliri k
 hak kazanırlar. Ömür-boyu-üyelikle alakalı kurul tarafından belirlenmiş belli miktarda 
 tek-seferlik bir ücret vardır.
 
-## Yıllık Üyeler
-
-Ömür-boyu-üyelik eğer çok fazla gelirse , bir yıl süreli tek-seferlik düşük bir bedel 
-karşılığında yıllık abone olarak bir sonraki seneye de aynı iadeyi 
-alabilirsiniz.
-
 ### Ücret Paylaşımı
 
 Getirdiğiniz hesap her işlem ücreti ödediğinde o ücret birçok farklı hesap arasında 

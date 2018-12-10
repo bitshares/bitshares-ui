@@ -121,6 +121,8 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
+import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
     constructor() {
@@ -431,6 +433,11 @@ class App extends React.Component {
                                     component={Block}
                                 />
 
+                                <Route
+                                    path="/spotlight"
+                                    component={ShowcaseGrid}
+                                />
+
                                 {/* Wallet backup/restore routes */}
                                 <Route
                                     path="/wallet"
@@ -513,6 +520,7 @@ class App extends React.Component {
                         />
                         <TransactionConfirm />
                         <BrowserNotifications />
+                        <PriceAlertNotifications />
                         <WalletUnlockModal />
                         <BrowserSupportModal
                             visible={this.state.isBrowserSupportModalVisible}

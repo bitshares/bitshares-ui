@@ -15,14 +15,23 @@ var htmlPath = "build/";
 
 var files = [];
 var binaries = fs.readdirSync(binaryPath).filter(function(a) {
-    return a.indexOf(packageJSON.version) !== -1;
+    // if the filename contains the version in package json
+    var contains = a.indexOf(packageJSON.version) !== -1;
+
+    // hotfix releases might contain a "b", which will be "-b" if not written as ".b" in package
+    var containsHotFix =
+        a.indexOf(packageJSON.version.replace("b", "-b")) !== -1;
+
+    return contains || containsHotFix;
 });
 binaries.forEach(function(file) {
     files.push({fullPath: path.resolve(binaryPath, file), fileName: file});
 });
+
 var htmlZipFiles = fs.readdirSync(htmlPath).filter(function(a) {
     return a.indexOf(packageJSON.version) !== -1 && a.indexOf("zip") !== -1;
 });
+
 htmlZipFiles.forEach(function(file) {
     files.push({fullPath: path.resolve(htmlPath, file), fileName: file});
 });
