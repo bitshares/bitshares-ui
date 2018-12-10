@@ -45,10 +45,12 @@ export function getGatewayStatusByAsset(
         gatewayStatus[g].options.enabled = false;
         this.props.backedCoins.get(g.toUpperCase(), []).find(coin => {
             let backingCoin = coin.backingCoinType || coin.backingCoin;
-            let isAvailable = typeof coin.isAvailable == "undefined" || (typeof coin.isAvailable == "boolean" && coin.isAvailable);
-            
+            let isAvailable =
+                typeof coin.isAvailable == "undefined" ||
+                (typeof coin.isAvailable == "boolean" && coin.isAvailable);
+
             // Gateway has EOS.* asset names
-            if(boolCheck == "withdrawalAllowed" && backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+            if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
                 let [_network, _coin] = backingCoin.split(".");
                 backingCoin = _coin;
             }
