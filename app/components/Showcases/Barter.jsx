@@ -32,7 +32,9 @@ export default class Barter extends Component {
                     from_asset: null,
                     from_feeAmount: new Asset({amount: 0}),
                     from_feeAsset: null,
-                    from_fee_asset_id: null
+                    from_fee_asset_id: null,
+                    from_hasPoolBalance: null,
+                    from_balanceError: false
                 }
             ],
             to_barter: [
@@ -43,11 +45,12 @@ export default class Barter extends Component {
                     to_asset: null,
                     to_feeAmount: new Asset({amount: 0}),
                     to_feeAsset: null,
-                    to_fee_asset_id: null
+                    to_fee_asset_id: null,
+                    to_hasPoolBalance: null,
+                    to_balanceError: false
                 }
             ],
-            from_hasPoolBalance: null,
-            to_hasPoolBalance: null,
+
             amount_counter: [],
             amount_index: 0,
             from_error: null,
@@ -68,7 +71,21 @@ export default class Barter extends Component {
     }
 
     onFromAccountChanged(from_account) {
-        this.setState({from_account});
+        this.setState({
+            from_account,
+            from_barter: [
+                {
+                    from_amount: "",
+                    from_asset_id: null,
+                    from_asset: null,
+                    from_feeAmount: new Asset({amount: 0}),
+                    from_feeAsset: null,
+                    from_fee_asset_id: null,
+                    from_hasPoolBalance: null,
+                    from_balanceError: false
+                }
+            ]
+        });
     }
 
     toChanged(to_name) {
@@ -76,7 +93,21 @@ export default class Barter extends Component {
     }
 
     onToAccountChanged(to_account) {
-        this.setState({to_account});
+        this.setState({
+            to_account,
+            to_barter: [
+                {
+                    to_amount: "",
+                    to_asset_id: null,
+                    to_asset: null,
+                    to_feeAmount: new Asset({amount: 0}),
+                    to_feeAsset: null,
+                    to_fee_asset_id: null,
+                    to_hasPoolBalance: null,
+                    to_balanceError: false
+                }
+            ]
+        });
     }
     onFromAmountChanged(index, e) {
         const asset = e.asset;
@@ -93,7 +124,8 @@ export default class Barter extends Component {
             from_asset_id: asset.get("id"),
             from_feeAmount: new Asset({amount: 0}),
             from_feeAsset: asset,
-            from_fee_asset_id: null
+            from_fee_asset_id: "1.3.0",
+            from_balanceError: false
         };
 
         this.setState(
@@ -128,7 +160,8 @@ export default class Barter extends Component {
             to_asset_id: asset.get("id"),
             to_feeAmount: new Asset({amount: 0}),
             to_feeAsset: asset,
-            to_fee_asset_id: null
+            to_fee_asset_id: "1.3.0",
+            to_balanceError: false
         };
 
         this.setState(
@@ -173,20 +206,24 @@ export default class Barter extends Component {
         const feeBalanceID = account.getIn(["balances", feeAmount.asset_id]);
         if (!asset || !account) return;
         if (!balanceID)
-            return from
-                ? this.setState({from_balanceError: true})
-                : this.setState({to_balanceError: true});
+            if (from) {
+                barter[index].from_balanceError = true;
+                return this.setState({from_barter: barter});
+            } else {
+                barter[index].to_balanceError = true;
+                return this.setState({to_barter: barter});
+            }
         let balanceObject = ChainStore.getObject(balanceID);
         let feeBalanceObject = feeBalanceID
             ? ChainStore.getObject(feeBalanceID)
             : null;
         if (!feeBalanceObject || feeBalanceObject.get("balance") === 0) {
             if (from) {
-                _from_barter[index].from_fee_asset_id = "1.3.0";
+                barter[index].from_fee_asset_id = "1.3.0";
                 this.setState(
-                    {from_barter: _from_barter},
+                    {from_barter: barter},
                     this._updateFee(
-                        fee_asset_id,
+                        barter[index].from_fee_asset_id,
                         account,
                         asset.get("id"),
                         index,
@@ -195,11 +232,11 @@ export default class Barter extends Component {
                     )
                 );
             } else {
-                _to_barter[index].to_fee_asset_id = "1.3.0";
+                barter[index].to_fee_asset_id = "1.3.0";
                 this.setState(
-                    {to_barter: _to_barter},
+                    {to_barter: barter},
                     this._updateFee(
-                        fee_asset_id,
+                        barter[index].to_fee_asset_id,
                         account,
                         asset.get("id"),
                         index,
@@ -211,9 +248,13 @@ export default class Barter extends Component {
         }
         if (!balanceObject || !feeAmount) return;
         if (!amount)
-            return from
-                ? this.setState({from_balanceError: false})
-                : this.setState({to_balanceError: false});
+            if (from) {
+                barter[index].from_balanceError = false;
+                return this.setState({from_barter: barter});
+            } else {
+                barter[index].to_balanceError = false;
+                return this.setState({to_barter: barter});
+            }
         const hasBalance = checkBalance(
             amount,
             asset,
@@ -221,9 +262,13 @@ export default class Barter extends Component {
             balanceObject
         );
         if (hasBalance === null) return;
-        from
-            ? this.setState({from_balanceError: !hasBalance})
-            : this.setState({to_balanceError: !hasBalance});
+        if (from) {
+            barter[index].from_balanceError = !hasBalance;
+            return this.setState({from_barter: barter});
+        } else {
+            barter[index].to_balanceError = !hasBalance;
+            return this.setState({to_barter: barter});
+        }
     }
 
     _updateFee(fee_asset_id, account, asset_id, index, from, barter) {
@@ -260,9 +305,9 @@ export default class Barter extends Component {
                         } else {
                             barter[index].from_feeAmount = fee;
                             barter[index].from_fee_asset_id = fee.asset_id;
+                            barter[index].from_hasPoolBalance = hasPoolBalance;
                             this.setState({
                                 from_barter: barter,
-                                from_hasPoolBalance: hasPoolBalance,
                                 from_error: !hasBalance || !hasPoolBalance
                             });
                         }
@@ -273,9 +318,9 @@ export default class Barter extends Component {
                         } else {
                             barter[index].to_feeAmount = fee;
                             barter[index].to_fee_asset_id = fee.asset_id;
+                            barter[index].to_hasPoolBalance = hasPoolBalance;
                             this.setState({
                                 to_barter: barter,
-                                to_hasPoolBalance: hasPoolBalance,
                                 to_error: !hasBalance || !hasPoolBalance
                             });
                         }
@@ -436,8 +481,6 @@ export default class Barter extends Component {
             to_name,
             from_account,
             to_account,
-            from_balanceError,
-            to_balanceError,
             from_barter,
             to_barter,
             amount_index,
@@ -446,7 +489,6 @@ export default class Barter extends Component {
         } = this.state;
         let {from_asset_types, to_asset_types} = this._getAvailableAssets();
         let smallScreen = window.innerWidth < 850 ? true : false;
-        let asset = "";
         let assetFromList = [];
         let assetToList = [];
         let assetFromSymbol = "";
@@ -486,17 +528,30 @@ export default class Barter extends Component {
 
             return fee;
         };
+        const balanceError = () => {
+            for (let item of from_barter) {
+                if (item.from_balanceError) {
+                    return true;
+                }
+            }
+            for (let item of to_barter) {
+                if (item.from_balanceError) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         const isSubmitNotValid =
             !from_account ||
             !to_account ||
             from_account.get("id") == to_account.get("id") ||
-            from_balanceError ||
-            to_balanceError ||
+            balanceError() ||
             to_error ||
             from_error ||
             !checkAmountValid();
 
-        const balance = (account, balanceError, asset_types) => {
+        const balance = (account, balanceError, asset_types, asset) => {
             if (account && account.get("balances")) {
                 let account_balances = account.get("balances").toJS();
                 let _error = balanceError ? "has-error" : "";
@@ -564,8 +619,9 @@ export default class Barter extends Component {
                         assets={from_asset_types}
                         display_balance={balance(
                             from_account,
-                            from_balanceError,
-                            from_asset_types
+                            item.from_balanceError,
+                            from_asset_types,
+                            item.from_asset
                         )}
                         allowNaN={true}
                     />
@@ -599,8 +655,9 @@ export default class Barter extends Component {
                         assets={to_asset_types}
                         display_balance={balance(
                             to_account,
-                            to_balanceError,
-                            to_asset_types
+                            item.to_balanceError,
+                            to_asset_types,
+                            item.to_asset
                         )}
                         allowNaN={true}
                     />
@@ -622,31 +679,49 @@ export default class Barter extends Component {
                     onAccountChanged={this.onFromAccountChanged.bind(this)}
                     hideImage
                 />
-                <AmountSelector
-                    label="showcases.barter.title"
-                    key={amount_index}
-                    amount={this.state.from_barter[0].from_amount}
-                    onChange={this.onFromAmountChanged.bind(this, 0)}
-                    asset={
-                        from_asset_types.length > 0 && from_barter[0].from_asset
-                            ? from_barter[0].from_asset.get("id")
-                            : from_barter[0].from_asset_id
-                                ? from_barter[0].rom_asset_id
-                                : from_asset_types[0]
-                    }
-                    assets={from_asset_types}
-                    display_balance={balance(
-                        from_account,
-                        from_balanceError,
-                        from_asset_types
-                    )}
-                    allowNaN={true}
-                />
-                <div style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                    <Button onClick={this.addFromAmount.bind(this)}>
-                        + Add asset
-                    </Button>
-                </div>
+                {from_account ? (
+                    <div>
+                        <AmountSelector
+                            label="showcases.barter.title"
+                            key={amount_index}
+                            amount={
+                                from_account
+                                    ? this.state.from_barter[0].from_amount
+                                    : ""
+                            }
+                            onChange={this.onFromAmountChanged.bind(this, 0)}
+                            asset={
+                                from_asset_types.length > 0 &&
+                                from_barter[0].from_asset
+                                    ? from_barter[0].from_asset.get("id")
+                                    : from_barter[0].from_asset_id
+                                        ? from_barter[0].rom_asset_id
+                                        : from_asset_types[0]
+                            }
+                            assets={from_asset_types}
+                            display_balance={balance(
+                                from_account,
+                                from_barter[0].from_balanceError,
+                                from_asset_types,
+                                from_barter[0].from_asset
+                            )}
+                            allowNaN={true}
+                        />
+                        <div
+                            style={{paddingTop: "10px", paddingBottom: "10px"}}
+                        >
+                            <Button
+                                onClick={this.addFromAmount.bind(this)}
+                                disabled={!from_account}
+                            >
+                                + Add asset
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    "Please select account"
+                )}
+
                 {fromAmountSelector}
             </Card>
         );
@@ -665,30 +740,47 @@ export default class Barter extends Component {
                     hideImage
                     typeahead={true}
                 />
-                <AmountSelector
-                    label="showcases.barter.title"
-                    amount={this.state.to_barter[0].to_amount}
-                    onChange={this.onToAmountChanged.bind(this, 0)}
-                    asset={
-                        to_asset_types.length > 0 && to_barter[0].to_asset
-                            ? to_barter[0].to_asset.get("id")
-                            : to_barter[0].to_asset_id
-                                ? to_barter[0].to_asset_id
-                                : to_asset_types[0]
-                    }
-                    assets={to_asset_types}
-                    display_balance={balance(
-                        to_account,
-                        to_balanceError,
-                        to_asset_types
-                    )}
-                    allowNaN={true}
-                />
-                <div style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                    <Button onClick={this.addToAmount.bind(this)}>
-                        + Add asset
-                    </Button>
-                </div>
+                {to_account ? (
+                    <div>
+                        <AmountSelector
+                            label="showcases.barter.title"
+                            amount={
+                                to_account
+                                    ? this.state.to_barter[0].to_amount
+                                    : ""
+                            }
+                            onChange={this.onToAmountChanged.bind(this, 0)}
+                            asset={
+                                to_asset_types.length > 0 &&
+                                to_barter[0].to_asset
+                                    ? to_barter[0].to_asset.get("id")
+                                    : to_barter[0].to_asset_id
+                                        ? to_barter[0].to_asset_id
+                                        : to_asset_types[0]
+                            }
+                            assets={to_asset_types}
+                            display_balance={balance(
+                                to_account,
+                                to_barter[0].to_balanceError,
+                                to_asset_types,
+                                to_barter[0].to_asset
+                            )}
+                            allowNaN={true}
+                        />
+                        <div
+                            style={{paddingTop: "10px", paddingBottom: "10px"}}
+                        >
+                            <Button
+                                onClick={this.addToAmount.bind(this)}
+                                disabled={!to_account}
+                            >
+                                + Add asset
+                            </Button>
+                        </div>
+                    </div>
+                ) : (
+                    "Please select account"
+                )}
                 {toAmountSelector}
             </Card>
         );
@@ -734,13 +826,7 @@ export default class Barter extends Component {
                     label="transfer.fee"
                     disabled={false}
                     amount={fee()}
-                    asset={
-                        from_asset_types.length > 0 && from_barter[0].from_asset
-                            ? from_barter[0].from_asset.get("id")
-                            : from_barter[0].from_asset_id
-                                ? from_barter[0].rom_asset_id
-                                : from_asset_types[0]
-                    }
+                    asset={"1.3.0"}
                     assets={from_asset_types}
                     error={
                         this.state.hasPoolBalance === false
