@@ -153,10 +153,17 @@ export function getMyMarketsQuotes() {
             "XBTSX.LTC",
             "XBTSX.DASH",
             "XBTSX.KEC",
-            "XBTSX.BCH",
             "XBTSX.BTG",
             "XBTSX.XSPEC",
-            "XBTSX.NVC"
+            "XBTSX.NVC",
+            "XBTSX.42",
+            "XBTSX.UNI",
+            "XBTSX.NMC",
+            "XBTSX.WAVES",
+            "XBTSX.COF",
+            "XBTSX.XRUP",
+            "XBTSX.P2P",
+            "XBTSX.STEEP"
         ],
         otherTokens: [
             "BKT",
@@ -266,6 +273,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.ETH"],
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.WAVES"],
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
         ["BTS", "SPARKDEX.BTC"],
