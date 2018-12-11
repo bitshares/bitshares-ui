@@ -1495,7 +1495,7 @@
         "action": "操作",
         "approve": "批准",
         "approvers": "Approver(s)",
-        "asset_create": "使用账户 {account} 创建资产 %{asset}s",
+        "asset_create": "使用账户 {account} 创建资产 %(asset)s",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 {amount}",
         "asset_settle": "请求清算资产 {asset}",
