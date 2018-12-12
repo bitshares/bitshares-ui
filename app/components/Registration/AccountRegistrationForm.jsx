@@ -161,6 +161,7 @@ class AccountRegistrationForm extends React.Component {
                     >
                         <Input.TextArea
                             disabled={true}
+                            style={{paddingRight: "50px"}}
                             rows={2}
                             id="password"
                             value={this.state.generatedPassword}
