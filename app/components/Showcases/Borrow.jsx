@@ -1,24 +1,24 @@
 import React, {Component} from "react";
 import counterpart from "counterpart";
-import BindToChainState from "components/Utility/BindToChainState";
 import Translate from "react-translate-component";
-import {Input, Button, Card, Steps, Tooltip} from "bitshares-ui-style-guide";
+import {Button, Card, Steps} from "bitshares-ui-style-guide";
 import debounceRender from "react-debounce-render";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {connect} from "alt-react";
 import {ChainStore} from "bitsharesjs";
-import ChainTypes from "components/Utility/ChainTypes";
-import AssetSelector from "../Utility/AssetSelector";
+import WalletUnlockActions from "actions/WalletUnlockActions";
 
 import BorrowModal from "../Modal/BorrowModal";
 import AccountStore from "../../stores/AccountStore";
 import Icon from "../Icon/Icon";
+import AssetSelect from "../Utility/AssetSelect";
 
 class Borrow extends Component {
     constructor() {
         super();
         this.state = {
             isBorrowBaseModalVisible: false,
+            selectedAsset: null,
             step: 0
         };
         this.showBorrowModal = this.showBorrowModal.bind(this);
@@ -29,10 +29,22 @@ class Borrow extends Component {
     getAccount() {}
 
     showBorrowModal(asset) {
-        this.setState({
-            assetToBorrow: this.props.bitAssets[0],
-            isBorrowBaseModalVisible: true
-        });
+        // needs a known account
+        if (!this.props.currentAccount) {
+            WalletUnlockActions.unlock()
+                .then(() => {
+                    this.setState({
+                        assetToBorrow: this.props.bitAssets[0],
+                        isBorrowBaseModalVisible: true
+                    });
+                })
+                .catch(() => {});
+        } else {
+            this.setState({
+                assetToBorrow: this.props.bitAssets[0],
+                isBorrowBaseModalVisible: true
+            });
+        }
     }
 
     hideBorrowModal() {
@@ -50,6 +62,12 @@ class Borrow extends Component {
     prev() {
         const step = this.state.step - 1;
         this.setState({step});
+    }
+
+    onAssetChange(selected_asset) {
+        this.setState({
+            selectedAsset: selected_asset
+        });
     }
 
     render() {
@@ -81,8 +99,11 @@ class Borrow extends Component {
         ];
         const current = this.state.step;
         const tinyScreen = window.innerWidth <= 800;
-
         const started = this.state.step > 0;
+
+        const selectedAssetObject = ChainStore.getAsset(
+            this.state.selectedAsset
+        );
 
         let legend = null;
         try {
@@ -107,8 +128,7 @@ class Borrow extends Component {
                 style={{
                     align: "center",
                     display: "flex",
-                    justifyContent: "center",
-                    marginTop: "2rem"
+                    justifyContent: "center"
                 }}
             >
                 <Card
@@ -116,7 +136,8 @@ class Borrow extends Component {
                         borderRadius: "50px",
                         width: "70%",
                         maxWidth: "70rem",
-                        paddingTop: "2rem"
+                        paddingTop: "2rem",
+                        paddingBottom: "2rem"
                     }}
                 >
                     <div
@@ -216,32 +237,20 @@ class Borrow extends Component {
                                     Next
                                 </Button>
                             )}
-                        {current > 0 &&
-                            current === steps.length - 1 && (
-                                <React.Fragment>
-                                    <Tooltip
-                                        title={
-                                            accountLoaded
-                                                ? ""
-                                                : "Login required"
-                                        }
-                                    >
-                                        <Button
-                                            type="primary"
-                                            disabled={
-                                                accountLoaded
-                                                    ? currentAccount.get(
-                                                          "id"
-                                                      ) === "1.2.3"
-                                                    : true
-                                            }
-                                            onClick={this.showBorrowModal}
-                                        >
-                                            <Translate content="exchange.borrow" />
-                                        </Button>
-                                    </Tooltip>
-                                </React.Fragment>
-                            )}
+                        {current === steps.length - 1 && (
+                            <Button
+                                type="primary"
+                                disabled={
+                                    this.state.selectedAsset !== null &&
+                                    accountLoaded
+                                        ? currentAccount.get("id") === "1.2.3"
+                                        : true
+                                }
+                                onClick={this.showBorrowModal}
+                            >
+                                <Translate content="exchange.borrow" />
+                            </Button>
+                        )}
                         {current > 0 && (
                             <Button
                                 style={{marginLeft: 8}}
@@ -250,6 +259,26 @@ class Borrow extends Component {
                                 Previous
                             </Button>
                         )}
+                        {current === steps.length - 1 && (
+                            <AssetSelect
+                                style={{
+                                    width: "10rem",
+                                    marginTop: "1rem"
+                                }}
+                                assets={[
+                                    "1.3.103",
+                                    "1.3.113",
+                                    "1.3.120",
+                                    "1.3.121",
+                                    "1.3.958",
+                                    "1.3.1325",
+                                    "1.3.1362",
+                                    "1.3.105",
+                                    "1.3.106"
+                                ]}
+                                onChange={this.onAssetChange.bind(this)}
+                            />
+                        )}
                     </div>
                 </Card>
                 {accountLoaded &&
@@ -257,8 +286,8 @@ class Borrow extends Component {
                         <BorrowModal
                             visible={this.state.isBorrowBaseModalVisible}
                             hideModal={this.hideBorrowModal}
-                            quote_asset={this.state.assetToBorrow.get("id")}
-                            backing_asset={this.state.assetToBorrow.getIn([
+                            quote_asset={selectedAssetObject.get("id")}
+                            backing_asset={selectedAssetObject.getIn([
                                 "bitasset",
                                 "options",
                                 "short_backing_asset"
