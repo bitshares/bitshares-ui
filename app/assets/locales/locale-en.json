@@ -36,7 +36,7 @@
         "estimate_value": "Estimated Account value",
         "existing_accounts": "Existing Accounts",
         "existing_user": "Existing user",
-        "filter_orders": "Filter",
+        "filter_orders": "Filter...",
         "follow": "Add contact",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Active",
@@ -133,6 +133,8 @@
             "brain": "Brainkey position",
             "cancel": "Cancel",
             "confirm_add": "Add",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "Imported from account",
             "key": "Key/Name",
             "key_viewer": "Private key viewer",
@@ -143,8 +145,6 @@
             "new_memo": "New memo key",
             "new_owner": "New owner key",
             "owner": "Owner Permissions",
-            "create_paperwallet": "Create Paper Wallet",
-            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "password_model": "Cloud Wallet",
             "password_model_1": "If you want to be able to login from anywhere using only your password and account name, you can use this page to add new keys to your permissions. If you also want to remove the original keys, you can do so in the active/owner permissions tabs.",
             "password_model_2": "Add password generated keys",
@@ -425,6 +425,7 @@
         "close": "Close position",
         "coll_ratio": "Ratio",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Your collateral ratio is below %(mr)s which is not allowed.",
@@ -472,19 +473,6 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
-        "price_alert": {
-            "use_button": "Use \"add rule\" button to create price alert for ",
-            "alert_when": "Alert me when",
-            "title": "Price Alert",
-            "lower_than": "Lower Than",
-            "higher_than": "Higher Than",
-            "add_rule": "add rule",
-            "price": "Price",
-            "notification": {
-                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s",
-                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s"
-            }
-        },
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -570,6 +558,19 @@
         "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "Price Chart",
         "price_market": "Market Price",
         "quantity": "Quantity",
@@ -588,8 +589,6 @@
         "search": "Search for more markets here",
         "sell": "Sell",
         "sell_description": "Sell %(baseAsset)s %(baseName)s for %(quoteAsset)s %(quoteName)s",
-        "settle_globally_settled": "Settle instantly",
-        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settings": {
             "header": {
                 "chart_options": "Chart options",
@@ -659,7 +658,10 @@
             }
         },
         "settle": "Settlement",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Settle orders",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Short",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -680,7 +682,6 @@
         "volume": "Volume",
         "volume_24": "24hr Volume",
         "worth_less_settlement_warning": "Warning! You can get a better price by selling to {market_link}.",
-        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "your_price": "Your Call Price",
         "zoom": "Zoom",
         "zoom_all": "All"
@@ -696,6 +697,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -727,14 +740,14 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
+                "external_feed_price": "Feed price (median of witness feeds)",
                 "feed_lifetime": "Feed lifetime (hours)",
-                "min_feeds": "Minimum feeds",
                 "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
-                "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-                "settlement_price": "Force Settlement price",
-                "external_feed_price": "Feed price (median of witness feeds)",
                 "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
+                "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
+                "min_feeds": "Minimum feeds",
+                "settlement_price": "Force Settlement price",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -747,17 +760,26 @@
                 "title": "Price Feed Data"
             },
             "settlement": {
-                "title": "Settlement",
-                "price": "Price",
-                "delay": "Delay",
-                "offset": "offset included",
-                "settlement_price": "Settlement price",
-                "settlement_funds": "Settlement funds",
-                "force_settlement": "Force Settlement",
-                "max_settle_volume": "Max. settlement volume each maintenance period",
                 "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price"
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -777,6 +799,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "Issuer",
             "market": "SmartCoins",
@@ -785,8 +808,7 @@
             "symbol": "Symbol",
             "title": "Assets",
             "units": "Units",
-            "user": "User Issued Assets",
-            "backing_asset": "Backing asset"
+            "user": "User Issued Assets"
         },
         "block": {
             "account_upgrade": "Account to upgrade",
@@ -867,7 +889,7 @@
             "budget": "Remaining budget",
             "card": "Card view",
             "current": "Current witness",
-            "filter_by_name": "Filter By Name",
+            "filter_by_name": "Filter...",
             "last_confirmed": "Last confirmed",
             "missed": "Blocks missed",
             "next_vote": "Next vote update",
@@ -1006,7 +1028,7 @@
             "open_website": "Open Website"
         },
         "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Limit Reached",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "Please, get new address ",
@@ -1266,7 +1288,6 @@
         "title": "Notice"
     },
     "modal": {
-        "save": "save",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
@@ -1324,12 +1345,30 @@
             "label": "qrcode",
             "title": "Private key QR code"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
             "title": "Burn (reserve) asset"
         },
+        "save": "save",
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
@@ -1357,23 +1396,6 @@
             "quantity": "Quantity",
             "submit": "Withdraw",
             "withdraw": "Withdraw"
-        },
-        "report": {
-            "title": "Error report",
-            "button": "Report",
-            "takeScreenshot": "Show screenshot",
-            "hideScreenshot": "Hide screenshot",
-            "copyLog": "Copy Log",
-            "copySuccess": "Copy ended",
-            "showLog": "Show Log",
-            "hideLog": "Hide Log",
-            "lastLogEntries": "Last 20 log entries",
-            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
-            "explanatory_text_2": "Please report the issue you have found to GitHub:",
-            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
-            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
-            "copyScreenshot": "Right click in Image Preview -> Copy",
-            "screenshot": "Screenshot"
         }
     },
     "news": {
@@ -1428,10 +1450,12 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
         "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
@@ -1678,6 +1702,65 @@
         "wallets": "Wallets",
         "yes": "Yes"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "title": "Collaterized Debt Position",
+            "title_long": "Create a Collaterized Debt Position",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "steps_introduction": {
+                "title_within": "This is the place to generate SmartCoins",
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins."
+            },
+            "steps_concept": {
+                "title": "Concept",
+                "title_within": "What is a Collaterized Debt Position?",
+                "text": "A Collaterized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain."
+            },
+            "steps_benefits": {
+                "title": "Benefits",
+                "title_within": "What are the benefits?",
+                "text": "Creating a Collaterized Debt Position allows you to provide liquidity for your desired SmartCoin, without giving up ownership of your collateral (provided that you lock up enough collateral to guarantee the value of the SmartCoin). Selling the newly generated SmartCoins on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). Holders of the SmartCoin on the other hand benefit from the less significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Force settlement: Holders of a SmartCoin can request a force settlement. The SmartCoin is used to forcefully pay back the debt of the least collaterized positions while the former SmartCoin holder receives collateral as if he sold it for the force settlement price. Any leftover collateral is returned to the position holder. This mechanism has an enforced delay after being triggered to avoid abuse.\nForce Settlement Price: The price at which a force settlement will happens. It is calculated from the feed price by adding a force settlement offset to disincentivize force settlements."
+            },
+            "steps_setup": {
+                "title": "Setup",
+                "title_within": "How does it work?",
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be, only lower bound is the maintenance (minimum) collateral ratio (MCR). You spend the SmartCoin as you which, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
+            },
+            "steps_risks": {
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?",
+                "text": "As long as you monitor your position and make sure that the collateral ratio (CR) stays above the maintenance collateral ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in force liquidation of your position (margin call). This means that your collateral is being sold automatically on the respective market to reduce your debt, with a penalty to ensure the order is filled (see MSSR). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the target collateral ratio (TCR). If your position can not be force liquidated due to extreme market conditions and the CR drops below the maximum short squeeze ratio (MSSR), the SmartCoin automatically enters global settlement state and you lose your position instantly.",
+                "text_legend": "Target collateral ratio (TCR): If your position is liquidated the system automatically puts an order on the market buying back the full debt. If TCR is set, the order will only sell as much debt as needed such that the CR of your position is the TCR. \n Maximum short squeeze ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collaterized Debt Position while instead holders of it can settle it instantly for a fixed Global Settlement Price."
+            },
+            "steps_costs": {
+                "title": "Settlement",
+                "title_within": "",
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text "
+            }
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "Please verify that your computer clock is correct.",
         "sub_text_2": "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below.",
@@ -1685,6 +1768,7 @@
     },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
         "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
@@ -1696,6 +1780,7 @@
         "copy_tip": "Click here to copy the text to your clipboard",
         "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
         "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
         "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
         "feed_price": "This is the current external feed price",
@@ -1704,6 +1789,8 @@
         "follow_user_add": "Click to Follow this user",
         "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Click here to hide this asset from this list.",
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
@@ -1739,6 +1826,7 @@
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
@@ -1753,10 +1841,9 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
-        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "settle_price": "This is the price at which settle orders will execute.",
-        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "show_asset": "Click here to show this asset in the main list.",
         "show_block": "Click here to show block #%(block)s where this transaction occurred.",
         "sign_owner": "If you are the owner of this account, please check this to make sure the transaction gets signed properly. This is only necessary if you are using the owner account and that account is not included in the active permissions.",
@@ -1775,6 +1862,7 @@
         "at": "at",
         "balance_id": "Balance ID",
         "balance_owner": "Balance owner key",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "Accepted bond offer of",
         "bond_cancel_offer": "Cancelled bond offer",
@@ -1857,6 +1945,7 @@
             "account_whitelist": "Account whitelist",
             "all": "Show all",
             "assert": "Assert operation",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Claim asset fees",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1964,6 +2053,8 @@
         "expire": "Your transaction has expired without being confirmed, please try again later."
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
@@ -2119,6 +2210,8 @@
         "pwd4brainkey": "Enter your password to show your brainkey",
         "ready_to_restore": "Ready to Restore",
         "reenter_brainkey": "Re-Enter Brainkey",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Reset",
         "restore": "Restore Local Wallet from Backup",
         "restore_backup": "Restore Backup",
@@ -2169,9 +2262,7 @@
         "wallet_model_2": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password",
-        "remember_me": "Remember me",
-        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings."
+        "wallet_password": "Login anywhere using your password"
     },
     "winex": {
         "gateway": {
@@ -2189,57 +2280,6 @@
         "withdraw": {
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
-    },
-    "showcases": {
-        "paper_wallet": {
-            "title": "Paper Wallet",
-            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well."
-        },
-        "barter_transaction": {
-            "title": "Barter",
-            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow."
-        },
-        "voting": {
-            "title": "Voting",
-            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain."
-        },
-        "borrow": {
-            "title": "Collaterized Debt Position",
-            "title_long": "Create a Collaterized Debt Position",
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "steps_introduction": {
-                "title_within": "This is the place to generate SmartCoins",
-                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins."
-            },
-            "steps_concept": {
-                "title": "Concept",
-                "title_within": "What is a Collaterized Debt Position?",
-                "text": "A Collaterized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain."
-            },
-            "steps_benefits": {
-                "title": "Benefits",
-                "title_within": "What are the benefits?",
-                "text": "Creating a Collaterized Debt Position allows you to provide liquidity for your desired SmartCoin, without giving up ownership of your collateral (provided that you lock up enough collateral to guarantee the value of the SmartCoin). Selling the newly generated SmartCoins on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). Holders of the SmartCoin on the other hand benefit from the less significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
-                "text_legend": "Force settlement: Holders of a SmartCoin can request a force settlement. The SmartCoin is used to forcefully pay back the debt of the least collaterized positions while the former SmartCoin holder receives collateral as if he sold it for the force settlement price. Any leftover collateral is returned to the position holder. This mechanism has an enforced delay after being triggered to avoid abuse.\nForce Settlement Price: The price at which a force settlement will happens. It is calculated from the feed price by adding a force settlement offset to disincentivize force settlements."
-            },
-            "steps_setup": {
-                "title": "Setup",
-                "title_within": "How does it work?",
-                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be, only lower bound is the maintenance (minimum) collateral ratio (MCR). You spend the SmartCoin as you which, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
-                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
-            },
-            "steps_risks": {
-                "title": "Risks",
-                "title_within": "What are the risks involved in borrowing?",
-                "text": "As long as you monitor your position and make sure that the collateral ratio (CR) stays above the maintenance collateral ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in force liquidation of your position (margin call). This means that your collateral is being sold automatically on the respective market to reduce your debt, with a penalty to ensure the order is filled (see MSSR). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the target collateral ratio (TCR). If your position can not be force liquidated due to extreme market conditions and the CR drops below the maximum short squeeze ratio (MSSR), the SmartCoin automatically enters global settlement state and you lose your position instantly.",
-                "text_legend": "Target collateral ratio (TCR): If your position is liquidated the system automatically puts an order on the market buying back the full debt. If TCR is set, the order will only sell as much debt as needed such that the CR of your position is the TCR. \n Maximum short squeeze ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collaterized Debt Position while instead holders of it can settle it instantly for a fixed Global Settlement Price."
-            },
-            "steps_costs": {
-                "title": "Settlement",
-                "title_within": "",
-                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text "
-            }
         }
     }
 }

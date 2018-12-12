@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
+import {createPaperWalletAsPDF} from "common/paperWallet";
 import ApplicationApi from "api/ApplicationApi";
 import {PublicKey} from "bitsharesjs";
 import AccountPermissionsList from "./AccountPermissionsList";
@@ -13,12 +14,6 @@ import {Tabs, Tab} from "../Utility/Tabs";
 import HelpContent from "../Utility/HelpContent";
 import {RecentTransactions} from "./RecentTransactions";
 import {Notification} from "bitshares-ui-style-guide";
-
-import jsPDF from "jspdf";
-import QRCode from "qrcode";
-import WalletDb from "stores/WalletDb";
-import WalletUnlockActions from "actions/WalletUnlockActions";
-import image from "../../assets/icons/paper-wallet-header.png";
 
 class AccountPermissions extends React.Component {
     constructor(props) {
@@ -275,124 +270,8 @@ class AccountPermissions extends React.Component {
         this.setState(newState);
     }
 
-    onPdfCreate(ownerkeys, activeKeys, memoKey, accountName) {
-        const width = 300,
-            height = 450,
-            lineMargin = 5,
-            qrSize = 50,
-            textMarginLeft = qrSize + 7,
-            qrMargin = 5,
-            qrRightPos = width - qrSize - qrMargin,
-            textWidth = width - qrSize * 2 - qrMargin * 2 - 3,
-            textHeight = 8,
-            logoWidth = (width * 3) / 4,
-            logoHeight = logoWidth / 2.8, //  logo original width/height=2.8
-            logoPositionX = (width - logoWidth) / 2;
-        let rowHeight = logoHeight + 50;
-
-        const keys = [ownerkeys, activeKeys, memoKey];
-        const keysName = ["Active Key", "Owner Key", "Memo Key"];
-
-        let locked = WalletDb.isLocked();
-
-        const pdf = new jsPDF({
-            orientation: "portrait",
-            format: [width, height],
-            compressPdf: true
-        });
-
-        const keyRow = publicKey => {
-            let privateKey = null;
-            if (!locked) {
-                privateKey = WalletDb.getPrivateKey(publicKey);
-                if (!!privateKey) {
-                    privateKey = privateKey.toWif();
-                }
-            }
-            gQrcode(publicKey, qrMargin, rowHeight + 10);
-            if (!locked && !!privateKey) {
-                gQrcode(privateKey, qrRightPos, rowHeight + 10);
-            }
-            pdf.text("PublicKey", textMarginLeft, rowHeight + 20);
-            pdf.text(publicKey, textMarginLeft, rowHeight + 30);
-            pdf.rect(textMarginLeft - 1, rowHeight + 24, textWidth, textHeight);
-            if (!locked) {
-                pdf.text("PrivateKey", textMarginLeft, rowHeight + 40);
-                if (!!privateKey) {
-                    pdf.text(privateKey, textMarginLeft, rowHeight + 50);
-                } else {
-                    pdf.text("Not found.", textMarginLeft, rowHeight + 50);
-                }
-                pdf.rect(
-                    textMarginLeft - 1,
-                    rowHeight + 44,
-                    textWidth,
-                    textHeight
-                );
-            }
-            rowHeight += 70;
-        };
-        const gQrcode = (qrcode, rowWidth, rowHeight) => {
-            QRCode.toDataURL(qrcode)
-                .then(url => {
-                    pdf.addImage(
-                        url,
-                        "JPEG",
-                        rowWidth,
-                        rowHeight,
-                        qrSize,
-                        qrSize
-                    );
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        };
-
-        let img = new Image();
-        img.src = image;
-        pdf.addImage(
-            img,
-            "PNG",
-            logoPositionX,
-            30,
-            logoWidth,
-            logoHeight,
-            "",
-            "MEDIUM"
-        );
-        pdf.text("Account:", 18, rowHeight - 10);
-        pdf.text(accountName, 42, rowHeight - 10);
-
-        let content = keys.map((publicKeys, index) => {
-            pdf.text("Public", 22, rowHeight + 7);
-            pdf.text(keysName[index], 120, rowHeight + 7);
-            if (!locked) {
-                pdf.text("Private", 260, rowHeight + 7);
-            }
-            pdf.line(
-                lineMargin,
-                rowHeight + 1,
-                width - lineMargin,
-                rowHeight + 1
-            );
-            pdf.line(
-                lineMargin,
-                rowHeight + 9,
-                width - lineMargin,
-                rowHeight + 9
-            );
-            if (typeof publicKeys === "string") {
-                keyRow(publicKeys);
-            } else {
-                publicKeys.map(publicKey => {
-                    keyRow(publicKey);
-                });
-            }
-        });
-        Promise.all(content).then(() => {
-            pdf.save("bitshares-paper-wallet_" + accountName + ".pdf");
-        });
+    onPdfCreate() {
+        createPaperWalletAsPDF(this.props.account);
     }
 
     render() {
@@ -487,12 +366,7 @@ class AccountPermissions extends React.Component {
                                             "account.perm.create_paperwallet_private_hint"
                                         )}
                                         onClick={() => {
-                                            this.onPdfCreate(
-                                                this.state.owner_keys,
-                                                this.state.active_keys,
-                                                this.state.memo_key,
-                                                this.props.account.get("name")
-                                            );
+                                            this.onPdfCreate();
                                         }}
                                         tabIndex={10}
                                     >

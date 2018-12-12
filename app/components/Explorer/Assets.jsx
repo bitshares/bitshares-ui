@@ -174,11 +174,13 @@ class Assets extends React.Component {
                     title: "issuer",
                     dataIndex: "issuer",
                     sorter: (a, b) => {
-                        return a.issuer > b.issuer
-                            ? 1
-                            : a.issuer < b.issuer
-                                ? -1
-                                : 0;
+                        let issuerA = ChainStore.getAccount(a.issuer, false);
+                        let issuerB = ChainStore.getAccount(b.issuer, false);
+                        if (issuerA) issuerA = issuerA.get("name");
+                        if (issuerB) issuerB = issuerB.get("name");
+                        if (issuerA > issuerB) return 1;
+                        if (issuerA < issuerB) return -1;
+                        return 0;
                     },
                     render: item => {
                         return this.linkToAccount(item);
@@ -280,11 +282,13 @@ class Assets extends React.Component {
                     title: "issuer",
                     dataIndex: "issuer",
                     sorter: (a, b) => {
-                        return a.issuer > b.issuer
-                            ? 1
-                            : a.issuer < b.issuer
-                                ? -1
-                                : 0;
+                        let issuerA = ChainStore.getAccount(a.issuer, false);
+                        let issuerB = ChainStore.getAccount(b.issuer, false);
+                        if (issuerA) issuerA = issuerA.get("name");
+                        if (issuerB) issuerB = issuerB.get("name");
+                        if (issuerA > issuerB) return 1;
+                        if (issuerA < issuerB) return -1;
+                        return 0;
                     },
                     render: item => {
                         return this.linkToAccount(item);
@@ -487,9 +491,9 @@ class Assets extends React.Component {
                                     ) : null}
                                 </span>
                                 <Input
-                                    placeholder={"Quick Search"}
+                                    placeholder={"Filter..."}
                                     value={this.state.filterSearch}
-                                    style={{width: "200px", marginLeft: "0px"}}
+                                    style={{width: "200px"}}
                                     onChange={this.handleFilterChange}
                                     addonAfter={<Icon type="search" />}
                                 />
