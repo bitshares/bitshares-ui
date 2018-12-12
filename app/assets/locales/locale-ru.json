@@ -1028,7 +1028,7 @@
             "open_website": "Открыть веб-сайт"
         },
         "min_deposit_warning_amount": "Минимальное значение депозита %(minDeposit)s %(coin)s.",
-        "min_deposit_warning_asset": "ВАЖНО: Отправляйте только %(coin)s на этот адрес депозита. Отправка меньше %(minDeposit)s %(coin)s или любой другой валюты может привезти к потере Вашего депозита.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Лимит исчерпан",
         "phase_out_warning": "Мы рекомендуем использовать новые {deposit_modal_link} и {withdraw_modal_link} модальные окна, поскольку эта страница будет упразднена",
         "please_generate_address": "Пожалуйста, получите новый адрес ",

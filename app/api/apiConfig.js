@@ -135,6 +135,14 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
+            url: "wss://dex.iobanker.com:9090",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "Witness: iobanker-core",
+            contact: "email:admin@iobanker.com"
+        },
+        {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
             region: "Western Europe",
@@ -164,14 +172,6 @@ export const settingsAPIs = {
             location: "Hong Kong",
             operator: "Witness: abc123",
             contact: "QQ:58291;email:58291@qq.com"
-        },
-        {
-            url: "wss://node.btscharts.com/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Beijing",
-            operator: "leo2017",
-            contact: "wechat:wx8855221;email:8855221@qq.com"
         },
         {
             url: "wss://japan.bitshares.apasia.tech/ws",

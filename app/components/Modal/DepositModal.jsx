@@ -92,21 +92,16 @@ class DepositModalContent extends DecimalChecker {
         }
     }
 
-    _getDepositObject(selectedAsset, selectedGateway, url) {
+    _getDepositObject(assetName, fullAssetName, selectedGateway, url) {
         let {props, state} = this;
         let {account} = props;
         let {gatewayStatus} = state;
 
         return {
             inputCoinType: gatewayStatus[selectedGateway].useFullAssetName
-                ? selectedGateway.toLowerCase() +
-                  "." +
-                  selectedAsset.toLowerCase()
-                : selectedAsset.toLowerCase(),
-            outputCoinType:
-                selectedGateway.toLowerCase() +
-                "." +
-                selectedAsset.toLowerCase(),
+                ? fullAssetName.toLowerCase()
+                : assetName.toLowerCase(),
+            outputCoinType: fullAssetName.toLowerCase(),
             outputAddress: account,
             url: url,
             stateCallback: this.addDepositAddress,
@@ -129,7 +124,14 @@ class DepositModalContent extends DecimalChecker {
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
                 let backingCoin = c.backingCoinType || c.backingCoin;
-                return (backingCoin.toUpperCase() === selectedAsset.toUpperCase());
+
+                if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                    backingCoin = backingCoin.split(".")[1];
+                }
+
+                return (
+                    backingCoin.toUpperCase() === selectedAsset.toUpperCase()
+                );
             });
 
         if (!backingAsset) {
@@ -169,9 +171,14 @@ class DepositModalContent extends DecimalChecker {
             });
         } else {
             if (!depositAddress) {
+                const assetName =
+                    backingAsset.backingCoinType || backingAsset.backingCoin;
+                const fullAssetName = backingAsset.symbol;
+
                 requestDepositAddress(
                     this._getDepositObject(
-                        selectedAsset,
+                        assetName,
+                        fullAssetName,
                         selectedGateway,
                         gatewayStatus[selectedGateway].baseAPI.BASE
                     )
