@@ -4,7 +4,7 @@ import Translate from "react-translate-component";
 import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
 import {hash} from "bitsharesjs";
-import {Card} from "bitshares-ui-style-guide";
+import {Card, Input, Button} from "bitshares-ui-style-guide";
 
 export default class BackupBrainkey extends Component {
     constructor() {
@@ -83,18 +83,15 @@ export default class BackupBrainkey extends Component {
                         <Translate content="wallet.brainkey_w3" />
                     </div>
 
-                    <button
-                        className="button success"
+                    <Button
+                        type={"primary"}
                         onClick={this.onComplete.bind(this)}
                     >
                         <Translate content="wallet.verify" />
-                    </button>
-                    <button
-                        className="button cancel"
-                        onClick={this.reset.bind(this)}
-                    >
+                    </Button>
+                    <Button type={"default"} onClick={this.reset.bind(this)}>
                         <Translate content="wallet.cancel" />
-                    </button>
+                    </Button>
                 </span>
             );
         }
@@ -111,7 +108,7 @@ export default class BackupBrainkey extends Component {
                         className="name-form"
                         noValidate
                     >
-                        <input
+                        <Input
                             type="password"
                             id="password"
                             onChange={this.onPassword.bind(this)}
@@ -129,9 +126,9 @@ export default class BackupBrainkey extends Component {
                             {brainkey_backup_time}
                             <br />
                         </div>
-                        <button className="button success">
+                        <Button type={"primary"}>
                             <Translate content="wallet.show_brainkey" />
-                        </button>
+                        </Button>
                     </form>
                 </span>
             );
