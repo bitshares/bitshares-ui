@@ -2206,7 +2206,40 @@
         },
         "borrow": {
             "title": "Collaterized Debt Position",
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)"
+            "title_long": "Create a Collaterized Debt Position",
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "steps_introduction": {
+                "title_within": "This is the place to generate SmartCoins",
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins."
+            },
+            "steps_concept": {
+                "title": "Concept",
+                "title_within": "What is a Collaterized Debt Position?",
+                "text": "A Collaterized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain."
+            },
+            "steps_benefits": {
+                "title": "Benefits",
+                "title_within": "What are the benefits?",
+                "text": "Creating a Collaterized Debt Position allows you to provide liquidity for your desired SmartCoin, without giving up ownership of your collateral (provided that you lock up enough collateral to guarantee the value of the SmartCoin). Selling the newly generated SmartCoins on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). Holders of the SmartCoin on the other hand benefit from the less significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Force settlement: Holders of a SmartCoin can request a force settlement. The SmartCoin is used to forcefully pay back the debt of the least collaterized positions while the former SmartCoin holder receives collateral as if he sold it for the force settlement price. Any leftover collateral is returned to the position holder. This mechanism has an enforced delay after being triggered to avoid abuse.\nForce Settlement Price: The price at which a force settlement will happens. It is calculated from the feed price by adding a force settlement offset to disincentivize force settlements."
+            },
+            "steps_setup": {
+                "title": "Setup",
+                "title_within": "How does it work?",
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be, only lower bound is the maintenance (minimum) collateral ratio (MCR). You spend the SmartCoin as you which, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
+            },
+            "steps_risks": {
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?",
+                "text": "As long as you monitor your position and make sure that the collateral ratio (CR) stays above the maintenance collateral ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in force liquidation of your position (margin call). This means that your collateral is being sold automatically on the respective market to reduce your debt, with a penalty to ensure the order is filled (see MSSR). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the target collateral ratio (TCR). If your position can not be force liquidated due to extreme market conditions and the CR drops below the maximum short squeeze ratio (MSSR), the SmartCoin automatically enters global settlement state and you lose your position instantly.",
+                "text_legend": "Target collateral ratio (TCR): If your position is liquidated the system automatically puts an order on the market buying back the full debt. If TCR is set, the order will only sell as much debt as needed such that the CR of your position is the TCR. \n Maximum short squeeze ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collaterized Debt Position while instead holders of it can settle it instantly for a fixed Global Settlement Price."
+            },
+            "steps_costs": {
+                "title": "Settlement",
+                "title_within": "",
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text "
+            }
         }
     }
 }
