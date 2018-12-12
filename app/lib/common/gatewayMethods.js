@@ -402,6 +402,8 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                 /* CryptoBridge */
 
                 requiredConfirmations: outputCoin.requiredConfirmations,
+                withdrawalPaymentIdEnabled:
+                    outputCoin.withdrawalPaymentIdEnabled,
 
                 depositAccount: outputCoin.depositAccount,
                 depositFeeEnabled: outputCoin.depositFeeEnabled,

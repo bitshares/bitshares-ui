@@ -2033,6 +2033,8 @@
             "news": "News"
         },
         "gateway": {
+            "payment_id": "Payment ID (optional)",
+            "payment_id_invalid": "Payment ID is not valid",
             "required_confirmations": "Required confirmations",
             "support_block": "For support, please contact CryptoBridge at:",
             "deposit_or_withdrawal": "Depositing or withdrawing coins",

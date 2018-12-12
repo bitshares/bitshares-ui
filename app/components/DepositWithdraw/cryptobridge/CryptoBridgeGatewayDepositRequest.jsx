@@ -47,6 +47,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         deposit_fee_percentage: PropTypes.number,
         deposit_fee_minimum: PropTypes.number,
         deposit_fee_percentage_low_amounts: PropTypes.number,
+        withdrawal_payment_id_enabled: PropTypes.bool,
         coin_info: PropTypes.arrayOf(PropTypes.object)
     };
 
@@ -60,6 +61,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         deposit_fee_percentage_low_amounts: 0,
         gate_fee: 0,
         min_deposit: 0,
+        withdrawal_payment_id_enabled: false,
         coin_info: []
     };
 
@@ -469,7 +471,13 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                         {emptyAddressDeposit ? (
                                             <Translate content="gateway.please_generate_address" />
                                         ) : (
-                                            deposit_address_fragment
+                                            <span
+                                                style={{
+                                                    "word-wrap": "break-word"
+                                                }}
+                                            >
+                                                {deposit_address_fragment}
+                                            </span>
                                         )}
                                         <div>
                                             {deposit_memo && (
@@ -655,6 +663,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 }
                                 output_supports_memos={
                                     this.props.supports_output_memos
+                                }
+                                withdrawal_payment_id_enabled={
+                                    this.props.withdrawal_payment_id_enabled
                                 }
                                 memo_prefix={withdraw_memo_prefix}
                                 modal_id={withdraw_modal_id}
