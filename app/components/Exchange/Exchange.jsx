@@ -35,6 +35,7 @@ import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
+import ScaledOrder from "./ScaledOrder";
 import counterpart from "counterpart";
 import {updateGatewayBackers} from "common/gatewayUtils";
 
@@ -109,7 +110,11 @@ class Exchange extends React.Component {
         this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
         this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
 
+        this.showScaledOrderModal = this.showScaledOrderModal.bind(this);
+        this.hideScaledOrderModal = this.hideScaledOrderModal.bind(this);
+
         this.handlePriceAlertSave = this.handlePriceAlertSave.bind(this);
+        this._createScaledOrder = this._createScaledOrder.bind(this);
 
         this.psInit = true;
     }
@@ -306,6 +311,7 @@ class Exchange extends React.Component {
             isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
             isPriceAlertModalVisible: false,
+            isScaledOrderModalVisible: false,
             isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -389,6 +395,18 @@ class Exchange extends React.Component {
     hidePriceAlertModal() {
         this.setState({
             isPriceAlertModalVisible: false
+        });
+    }
+
+    showScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: true
+        });
+    }
+
+    hideScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: false
         });
     }
 
@@ -931,6 +949,38 @@ class Exchange extends React.Component {
         }
 
         this._createLimitOrder(type, feeID);
+    }
+
+    _createScaledOrder(orders, feeID) {
+        const limitOrders = orders.map(
+            order =>
+                new LimitOrderCreate({
+                    for_sale: order.for_sale,
+                    expiration: new Date(order.expirationTime || false),
+                    to_receive: order.to_receive,
+                    seller: this.props.currentAccount.get("id"),
+                    fee: {
+                        asset_id: feeID,
+                        amount: 0
+                    }
+                })
+        );
+
+        return MarketsActions.createLimitOrder2(limitOrders)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_scaled_order"
+                            )
+                        });
+                }
+                console.log("order success");
+            })
+            .catch(e => {
+                console.log("order failed:", e);
+            });
     }
 
     _createLimitOrder(type, feeID) {
@@ -1973,6 +2023,7 @@ class Exchange extends React.Component {
         let buyForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "bid")}
@@ -2080,6 +2131,7 @@ class Exchange extends React.Component {
         let sellForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "ask")}
@@ -2264,10 +2316,10 @@ class Exchange extends React.Component {
                         }`
                     )}
                     innerClass={cnames(
-                        centerContainerWidth > 1200 
+                        centerContainerWidth > 1200
                             ? "medium-6"
-                            : centerContainerWidth > 800 
-                                ? "medium-6 large-6" 
+                            : centerContainerWidth > 800
+                                ? "medium-6 large-6"
                                 : "",
                         "small-12 middle-content",
                         !tinyScreen ? "exchange-padded" : ""
@@ -2351,7 +2403,9 @@ class Exchange extends React.Component {
                                     : ""
                             : "medium-12",
                         "no-padding no-overflow middle-content small-12",
-                        verticalOrderBook || verticalOrderForm ? "order-4" : "order-3"
+                        verticalOrderBook || verticalOrderForm
+                            ? "order-4"
+                            : "order-3"
                     )}
                     innerClass={!tinyScreen ? "exchange-padded" : ""}
                     innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
@@ -2689,7 +2743,9 @@ class Exchange extends React.Component {
                                 : "",
                         "small-12 order-5",
                         verticalOrderBook ? "xlarge-order-5" : "",
-                        !verticalOrderBook && !verticalOrderForm ? "xlarge-order-2" : ""
+                        !verticalOrderBook && !verticalOrderForm
+                            ? "xlarge-order-2"
+                            : ""
                     )}
                     style={{paddingRight: 5}}
                 >
@@ -2729,16 +2785,20 @@ class Exchange extends React.Component {
                 </div>
             ) : null;
 
-        let emptyDiv = groupTabsCount > 2 ? null : (
-            <div
-                className={cnames(
-                    centerContainerWidth > 1200 && (verticalOrderBook || verticalOrderBook) ? "xlarge-order-6 xlarge-8 order-9" : "",
-                    "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
-                )}
-            >
-                &nbsp;
-            </div>
-        );
+        let emptyDiv =
+            groupTabsCount > 2 ? null : (
+                <div
+                    className={cnames(
+                        centerContainerWidth > 1200 &&
+                        (verticalOrderBook || verticalOrderBook)
+                            ? "xlarge-order-6 xlarge-8 order-9"
+                            : "",
+                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap"
+                    )}
+                >
+                    &nbsp;
+                </div>
+            );
 
         /**
          * Generate layout grid based on Screen Size
@@ -2748,11 +2808,11 @@ class Exchange extends React.Component {
             if (!verticalOrderForm) {
                 actionCards.push(buyForm);
                 actionCards.push(sellForm);
-            } 
+            }
 
             if (!verticalOrderBook) {
                 actionCards.push(orderBook);
-            } 
+            }
 
             if (verticalOrderBook || verticalOrderForm) {
                 actionCards.push(emptyDiv);
@@ -3318,6 +3378,14 @@ class Exchange extends React.Component {
                     visible={this.state.isPriceAlertModalVisible}
                     showModal={this.showPriceAlertModal}
                     hideModal={this.hidePriceAlertModal}
+                />
+
+                <ScaledOrder
+                    createScaledOrder={this._createScaledOrder}
+                    visible={this.state.isScaledOrderModalVisible}
+                    hideModal={this.hideScaledOrderModal}
+                    quoteAsset={this.props.quoteAsset.get("id")}
+                    baseAsset={this.props.baseAsset.get("id")}
                 />
             </div>
         );
