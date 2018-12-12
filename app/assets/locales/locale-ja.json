@@ -1022,7 +1022,7 @@
             "open_website": "ウェブサイトを開く"
         },
         "min_deposit_warning_amount": "最低入金額は%(minDeposit)s %(coin)sです。",
-        "min_deposit_warning_asset": "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "制限に達しました",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "新しいアドレスを取得",
