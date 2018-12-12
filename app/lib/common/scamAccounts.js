@@ -689,6 +689,8 @@ export const scamAccountsOther = [
     "1.2.1020138",
     "kucoin",
     "1.2.463330",
+    "kucoindoteos",
+    "1.2.1084351",
     "lakebtc",
     "1.2.463326",
     "lakebtc.com",
