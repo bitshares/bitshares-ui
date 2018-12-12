@@ -965,20 +965,6 @@
     textarea#{$ant-fix},
     input[role="combobox"]#{$ant-fix},
     select[role="combobox"]#{$ant-fix},
-    .buy-sell-container .ant-input {
-        background-color: $input-background;
-        border: 0;
-        color: $primary-text-color;
-        &:hover,
-        &:focus,
-        &:active,
-        &:disabled {
-            background-color: $input-background;
-        }
-        &:focus {
-            border-color: #aaa;
-        }
-    }
     input[type="range"] {
         /* These need to be independent selectors */
         &::-moz-range-thumb {
