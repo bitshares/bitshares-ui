@@ -72,13 +72,13 @@ class Personalize extends React.Component {
                 onChange={this.props.onSetPanelTabs.bind(this, selectKey)}
                 value={this.props.panelTabs[selectKey]}
             >
-                <Select.Option value={"0"}>
+                <Select.Option value={0}>
                     <Translate content="exchange.settings.options.grouping_standalone" />
                 </Select.Option>
-                <Select.Option value={"1"}>
+                <Select.Option value={1}>
                     <Translate content="exchange.settings.options.grouping_1" />
                 </Select.Option>
-                <Select.Option value={"2"}>
+                <Select.Option value={2}>
                     <Translate content="exchange.settings.options.grouping_2" />
                 </Select.Option>
             </Select>
@@ -320,7 +320,7 @@ class Personalize extends React.Component {
                                             "settings.placeholder_select"
                                         )}
                                         style={{width: "100%"}}
-                                        value={this.props.verticalOrderBook}
+                                        value={this.props.verticalOrderBook.toString()}
                                         onSelect={this.props.onMoveOrderBook.bind(
                                             this
                                         )}
@@ -363,7 +363,7 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.flipBuySell}
+                                    value={this.props.flipBuySell.toString()}
                                     onSelect={this.props.onFlipBuySell.bind(
                                         this
                                     )}
@@ -406,7 +406,7 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.flipOrderBook}
+                                    value={this.props.flipOrderBook.toString()}
                                     onSelect={this.props.onFlipOrderBook.bind(
                                         this
                                     )}
@@ -449,7 +449,7 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.buySellTop}
+                                    value={this.props.buySellTop.toString()}
                                     onSelect={this.props.onToggleBuySellPosition.bind(
                                         this
                                     )}
@@ -655,7 +655,7 @@ class Personalize extends React.Component {
                                             "settings.placeholder_select"
                                         )}
                                         style={{width: "100%"}}
-                                        value={this.props.mirrorPanels}
+                                        value={this.props.mirrorPanels.toString()}
                                         onSelect={this.props.onMirrorPanels.bind(
                                             this
                                         )}

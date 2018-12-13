@@ -345,11 +345,11 @@ class GroupOrderLimitSelector extends React.Component {
                     onChange={this.props.handleGroupOrderLimitChange.bind(this)}
                 >
                     {noGroupsAvailable ? (
-                        <Select.Option value={"0"}>
+                        <Select.Option value={0}>
                             <Translate content="tooltip.no_groups_available" />
                         </Select.Option>
                     ) : (
-                        <Select.Option value={"0"}>
+                        <Select.Option value={0}>
                             <Translate content="settings.disabled" />
                         </Select.Option>
                     )}
