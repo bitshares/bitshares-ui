@@ -25,7 +25,10 @@ class BitsharesBeosModal extends React.Component {
         from: PropTypes.string.isRequired,
         balance: ChainTypes.ChainObject,
         beosApiUrl: PropTypes.string.isRequired,
-        beosFee: PropTypes.string.isRequired
+        beosFee: PropTypes.string.isRequired,
+        onAccountCreation: PropTypes.func.isRequired,
+        onAccountValidated: PropTypes.func.isRequired,
+        pendingAccounts: PropTypes.arrayOf(PropTypes.string)
     };
 
     constructor(props) {
@@ -221,9 +224,9 @@ class BitsharesBeosModal extends React.Component {
                             no_account_error: false
                         });
                     }
-                }, 300);
+                }, 200);
             })
-            .catch(error => {
+            .catch(() => {
                 setTimeout(() => {
                     this.setState({
                         is_account_validation: false,
@@ -232,7 +235,7 @@ class BitsharesBeosModal extends React.Component {
                         account_validation_error: false,
                         no_account_error: false
                     });
-                }, 300);
+                }, 200);
             });
     }
 
@@ -300,9 +303,9 @@ class BitsharesBeosModal extends React.Component {
                             no_account_error: false
                         });
                     }
-                }, 300);
+                }, 200);
             })
-            .catch(error => {
+            .catch(() => {
                 this.onAlternativeAccountValidation(
                     this.props.beosApiUrl, // need to be set
                     account
@@ -351,6 +354,16 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAccountChanged(e) {
+        if (this.props.pendingAccounts.includes(e.target.value)) {
+            this.setState({
+                no_account_error: false,
+                is_account_creation_checkbox: false,
+                account_validation_error: false,
+                account: e.target.value
+            });
+            return;
+        }
+
         if (e.target.value !== "") {
             if (this.state.maintenance_error === false) {
                 this.setState({
@@ -408,13 +421,11 @@ class BitsharesBeosModal extends React.Component {
                 this._checkBalance
             );
         } else {
-            // 5x0
             const fee = parseFloat(this.props.beosFee) * 100000;
             if (this.state.account.length === 12) {
                 this.setState(
                     {
-                        // x
-                        fee_amount_creation: fee, // need to be set
+                        fee_amount_creation: fee,
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -422,8 +433,7 @@ class BitsharesBeosModal extends React.Component {
             } else if (this.state.account.length < 12) {
                 this.setState(
                     {
-                        // x
-                        fee_amount_creation: fee, // need to be set
+                        fee_amount_creation: fee,
                         is_account_creation: !this.state.is_account_creation
                     },
                     this._checkBalance
@@ -439,7 +449,29 @@ class BitsharesBeosModal extends React.Component {
         );
     }
 
-    onSubmit() {
+    validationInterval = accountName => {
+        const validation_url = `${
+            this.props.beosApiUrl
+        }/wallets/beos/address-validator?address=${accountName}`;
+        const interval = setInterval(async () => {
+            try {
+                const response = await fetch(validation_url, {
+                    method: "get",
+                    headers: new Headers({Accept: "application/json"})
+                });
+                const {isValid} = await response.json();
+
+                if (isValid) {
+                    this.props.onAccountValidated(accountName);
+                    clearInterval(interval);
+                }
+            } catch (e) {
+                throw e;
+            }
+        }, 10000);
+    };
+
+    async onSubmit() {
         let newMemo = "";
         let newAmountToSend = parseInt(
             this.state.amount_to_send *
@@ -464,17 +496,28 @@ class BitsharesBeosModal extends React.Component {
             newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
         }
 
-        AccountActions.transfer(
-            this.props.account.get("id"),
-            this.props.issuer.get("id"),
-            newAmountToSend,
-            this.props.asset.get("id"),
-            newMemo,
-            null,
-            this.state.fee_asset_id
-        ).catch(() => {
+        try {
+            await AccountActions.transfer(
+                this.props.account.get("id"),
+                this.props.issuer.get("id"),
+                newAmountToSend,
+                this.props.asset.get("id"),
+                newMemo,
+                null,
+                this.state.fee_asset_id
+            );
+
+            this.props.onAccountCreation(this.state.account);
+
+            this.setState({
+                is_account_creation_checkbox: false,
+                account_creation_transfer_success_info: true
+            });
+
+            this.validationInterval(this.state.account);
+        } catch (e) {
             this.onMaintenance();
-        });
+        }
     }
 
     render() {
@@ -688,6 +731,7 @@ class BitsharesBeosModal extends React.Component {
                                 />
                             </p>
                         ) : null}
+                        {this.renderInfo()}
                         {/* Send/Cancel buttons */}
                         <div>
                             <Button
@@ -713,6 +757,23 @@ class BitsharesBeosModal extends React.Component {
             </div>
         );
     }
+
+    renderInfo = () => {
+        const {pendingAccounts} = this.props;
+
+        if (pendingAccounts.includes(this.state.account)) {
+            return (
+                <p
+                    className="has-success no-margin"
+                    style={{paddingBottom: 15, color: "green"}}
+                >
+                    <Translate content="gateway.bitshares_beos.account_creation_pending" />
+                </p>
+            );
+        }
+
+        return null;
+    };
 }
 
 export default BindToChainState(BitsharesBeosModal);
