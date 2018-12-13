@@ -146,8 +146,6 @@ export function getFeaturedMarkets(quotes = []) {
 	["TATCHCOIN","TATCH.EUR"],
 	["TCLGULDEN","TATCH.EUR"],
 	["TCLSILVER","TATCH.EUR"],
-	];
-
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
