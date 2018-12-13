@@ -70,7 +70,10 @@ class WalletUnlockModal extends React.Component {
         } = np;
 
         const newState = {};
-        if (newPasswordAccount && !accountName)
+        if (
+            (newPasswordAccount && !accountName) ||
+            newPasswordAccount !== accountName
+        )
             newState.accountName = newPasswordAccount;
         if (walletSelected && !restoringBackup && !newCurrentWallet)
             newState.walletSelected = false;
@@ -449,6 +452,7 @@ class WalletUnlockModal extends React.Component {
                 onCancel={this.handleModalClose}
                 leftHeader
                 footer={footer}
+                zIndex={1001} // always on top
             >
                 <Form className="full-width" layout="vertical">
                     <LoginTypeSelector />

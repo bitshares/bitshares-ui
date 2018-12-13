@@ -458,50 +458,53 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        serList.push({
-            name: "Citadel",
-            template: (
-                <div>
-                    <div className="content-block">
-                        {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
-                        <div
-                            className="service-selector"
-                            style={{marginBottom: "2rem"}}
-                        >
-                            <ul className="button-group segmented no-margin">
-                                <li
-                                    onClick={this.toggleCitadelService.bind(
-                                        this,
-                                        "bridge"
-                                    )}
-                                    className={
-                                        citadelService === "bridge"
-                                            ? "is-active"
-                                            : ""
-                                    }
-                                >
-                                    <a>
-                                        <Translate content="gateway.bridge" />
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <CitadelBridgeDepositRequest
-                            gateway="citadel"
-                            issuer_account="citadel-wallet"
-                            account={account}
-                            initial_deposit_input_coin_type="xmr"
-                            initial_deposit_output_coin_type="citadel.monero"
-                            initial_deposit_estimated_input_amount="1.0"
-                            initial_withdraw_input_coin_type="citadel.monero"
-                            initial_withdraw_output_coin_type="xmr"
-                            initial_withdraw_estimated_input_amount="1.0"
-                        />
-                    </div>
-                    <div className="content-block" />
-                </div>
-            )
-        });
+        /***
+         * Citadel Disabled due to CORS Errors
+         */
+        // serList.push({
+        //     name: "Citadel",
+        //     template: (
+        //         <div>
+        //             <div className="content-block">
+        //                 {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
+        //                 <div
+        //                     className="service-selector"
+        //                     style={{marginBottom: "2rem"}}
+        //                 >
+        //                     <ul className="button-group segmented no-margin">
+        //                         <li
+        //                             onClick={this.toggleCitadelService.bind(
+        //                                 this,
+        //                                 "bridge"
+        //                             )}
+        //                             className={
+        //                                 citadelService === "bridge"
+        //                                     ? "is-active"
+        //                                     : ""
+        //                             }
+        //                         >
+        //                             <a>
+        //                                 <Translate content="gateway.bridge" />
+        //                             </a>
+        //                         </li>
+        //                     </ul>
+        //                 </div>
+        //                 <CitadelBridgeDepositRequest
+        //                     gateway="citadel"
+        //                     issuer_account="citadel-wallet"
+        //                     account={account}
+        //                     initial_deposit_input_coin_type="xmr"
+        //                     initial_deposit_output_coin_type="citadel.monero"
+        //                     initial_deposit_estimated_input_amount="1.0"
+        //                     initial_withdraw_input_coin_type="citadel.monero"
+        //                     initial_withdraw_output_coin_type="xmr"
+        //                     initial_withdraw_estimated_input_amount="1.0"
+        //                 />
+        //             </div>
+        //             <div className="content-block" />
+        //         </div>
+        //     )
+        // });
 
         serList.push({
             name: "BitKapital",
@@ -522,14 +525,17 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        serList.push({
-            name: "Winex",
-            template: (
-                <div>
-                    <WinexGateway account={account} provider="Winex" />
-                </div>
-            )
-        });
+        /***
+         * Winex Dsiabled due to WebFetch issues on failure
+         */
+        // serList.push({
+        //     name: "Winex",
+        //     template: (
+        //         <div>
+        //             <WinexGateway account={account} provider="Winex" />
+        //         </div>
+        //     )
+        // });
 
         return serList;
     }

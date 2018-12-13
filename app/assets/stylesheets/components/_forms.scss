@@ -1,45 +1,47 @@
 label.horizontal {
-  > input {
-    display: inline;
-    width: auto;
-  }
+    > input {
+        display: inline;
+        width: auto;
+    }
 }
 
 .form-label.select {
-  padding: 0;
-  border: none;
-
-  select {
-    margin: 0;
+    padding: 0;
     border: none;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    font-size: 0.875rem;
-  }
 
+    select {
+        margin: 0;
+        border: none;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+        font-size: 0.875rem;
+    }
 }
 
-.has-error input, .has-error select, .has-error textarea {
-  border-color: #a94442;
+.has-error input,
+.has-error select,
+.has-error textarea {
+    border-color: #a94442;
 }
 
 .autocomplete > .action-sheet-container {
-  display: flex;
-  > .action-sheet {
-    left: 6em;
-  }
+    display: flex;
+    > .action-sheet {
+        left: 6em;
+    }
 }
 
-td > input, td > .autocomplete input {
-  margin: 0 !important;
+td > input,
+td > .autocomplete input {
+    margin: 0 !important;
 }
 
 .form-group {
-  margin-bottom: 2rem;
+    margin-bottom: 2rem;
 }
 
 .account-select {
-  width: auto;
+    width: auto;
 }
 
 div.account-image {
@@ -49,49 +51,75 @@ div.account-image {
     }
 }
 
+.asset-select {
+    .ant-select {
+        width: 100%;
+    }
+}
+
+.asset-input.with-action {
+    .ant-input {
+        width: auto;
+    }
+}
+
 .asset-selector {
     .error-area {
         position: absolute;
     }
 }
-.account-selector, .pubkey-input {
-  clear: right;
-  input {
-    display: block;
-    flex: auto;
-  }
 
-  .tooltip{
-    &:hover {
-      cursor:pointer;
+.asset-input.ant-form-item {
+    .ant-form-item-control {
+        max-width: none;
     }
-  }
-
-  .header-area {
-      margin-left: 3.5rem;
-  }
-  .error-area {
-      position: absolute;
-      padding-left: 3.5rem;
-  }
-  .account-image {
-    float: left;
-    width: 3.5rem;
-    > canvas, .icon.key > svg {
-        height: 2.4rem !important;
-        width: 2.4rem !important;
+    .ant-form-item-label {
+        label {
+            text-transform: uppercase;
+        }
     }
-  }
-  > .content-area {
-    //width: 100%;
-    position: relative;
-    width: 100%;
-    display: inline-block;
+}
 
-    @include breakpoint(small only) {
+.account-selector,
+.pubkey-input {
+    clear: right;
+    input {
+        display: block;
+        flex: auto;
+    }
+
+    .tooltip {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .header-area {
+        margin-left: 3.5rem;
+    }
+    .error-area {
+        position: absolute;
+        padding-left: 3.5rem;
+    }
+    .account-image {
+        float: left;
+        width: 3.5rem;
+        > canvas,
+        .icon.key > svg {
+            height: 2.4rem !important;
+            width: 2.4rem !important;
+        }
+    }
+    > .content-area {
+        //width: 100%;
+        position: relative;
         width: 100%;
+        display: inline-block;
+
+        @include breakpoint(small only) {
+            width: 100%;
+        }
     }
-  }
 }
 
 .error-area {
@@ -100,11 +128,12 @@ div.account-image {
     line-height: normal;
 }
 
-.right-label, .left-label {
-  font-size: 90%;
-  text-transform: uppercase;
-  font-variant: small-caps;
-  padding-bottom: 5px;
+.right-label,
+.left-label {
+    font-size: 90%;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    padding-bottom: 5px;
 }
 
 .right-label {
@@ -112,49 +141,46 @@ div.account-image {
 }
 
 div.transfer-input {
-  //width: 100%;
-  width: 100%;
-  display: inline-block;
+    //width: 100%;
+    width: 100%;
+    display: inline-block;
 
-  &.fee-row {
-      border-top: 1px solid $border-color;
-      padding-top: 2rem;
-      position: relative;
-  }
+    &.fee-row {
+        border-top: 1px solid $border-color;
+        padding-top: 2rem;
+        position: relative;
+    }
 
-  &.fee-row {
-      > .amount-selector {
-          width: calc(100% - 6.6rem);
-      }
-      &.proposal > .amount-selector {
-          width: calc(100% - 9rem);
-      }
-      > button {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          font-size: 1.3rem;
-          border-radius: 5px;
-      }
-  }
-
-  @include breakpoint(small only) {
-      width: 100%;
-
-      &.fee-row {
+    &.fee-row {
         > .amount-selector {
-            width: 100%;
-            padding-bottom: 20px;
+            width: calc(100% - 6.6rem);
         }
-
+        &.proposal > .amount-selector {
+            width: calc(100% - 9rem);
+        }
         > button {
-            position: inherit;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            font-size: 1.3rem;
+            border-radius: 5px;
         }
-      }
+    }
 
+    @include breakpoint(small only) {
+        width: 100%;
 
+        &.fee-row {
+            > .amount-selector {
+                width: 100%;
+                padding-bottom: 20px;
+            }
 
-  }
+            > button {
+                position: inherit;
+            }
+        }
+    }
 }
 
 .dropdown-wrapper {
@@ -189,7 +215,7 @@ div.transfer-input {
     }
 
     &.active .dropdown {
-        border-bottom: 1px solid rgba(0,0,0,0.2);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
         max-height: 400px;
     }
 
@@ -205,7 +231,7 @@ div.transfer-input {
         /* Styles */
         background: #fff;
         border-radius: 0 0 5px 5px;
-        border: 1px solid rgba(0,0,0,0.2);
+        border: 1px solid rgba(0, 0, 0, 0.2);
         border-top: none;
         border-bottom: none;
         list-style: none;
@@ -239,7 +265,8 @@ div.transfer-input {
         }
     }
 }
-.dropdown-wrapper:after { /* Little arrow */
+.dropdown-wrapper:after {
+    /* Little arrow */
     content: "";
     width: 0;
     height: 0;
@@ -276,7 +303,8 @@ div.ok-indicator {
 }
 
 div.dropdown-wrapper.upper-case {
-    > div, > ul > li {
+    > div,
+    > ul > li {
         text-transform: uppercase;
     }
 }
@@ -287,10 +315,12 @@ form.full-width {
     }
 }
 
-#send_modal_header, #send_modal_portfolio {
+#send_modal_header,
+#send_modal_portfolio {
     padding-left: 20px;
     padding-right: 20px;
-    .right-label, .left-label {
+    .right-label,
+    .left-label {
         padding-bottom: 0px;
     }
     .dropdown-wrapper.active .dropdown {
@@ -299,14 +329,20 @@ form.full-width {
     #txFeeSelector .dropdown-wrapper.active .dropdown {
         max-height: 100px;
     }
-    .account-selector .error-area { display: none; }
-    .account-select { width: 100%; }
+    .account-selector .error-area {
+        display: none;
+    }
+    .account-select {
+        width: 100%;
+    }
 }
 
-#send_modal_header, #send_modal_portfolio {
+#send_modal_header,
+#send_modal_portfolio {
     padding-left: 20px;
     padding-right: 20px;
-    .right-label, .left-label {
+    .right-label,
+    .left-label {
         padding-bottom: 0px;
     }
     .dropdown-wrapper.active .dropdown {
@@ -315,49 +351,61 @@ form.full-width {
     #txFeeSelector .dropdown-wrapper.active .dropdown {
         max-height: 100px;
     }
-    .account-selector .error-area { display: none; }
+    .account-selector .error-area {
+        display: none;
+    }
 }
 
-button.red, button.green, button.blue {
+button.red,
+button.green,
+button.blue {
     padding: 10px 0px 10px 0px;
     width: 8rem;
     color: rgb(242, 242, 242);
     font-size: 0.875rem;
     font-weight: normal;
 }
-button.red { background-color: rgb(245, 27, 27); }
-button.green { background-color: rgb(48, 185, 14); }
-button.blue { background-color: rgb(65, 116, 184); }
-button.disabled { background-color: rgb(77, 94, 116); }
+button.red {
+    background-color: rgb(245, 27, 27);
+}
+button.green {
+    background-color: rgb(48, 185, 14);
+}
+button.blue {
+    background-color: rgb(65, 116, 184);
+}
+button.disabled {
+    background-color: rgb(77, 94, 116);
+}
 
 .button.hollow {
-  background-color: transparent;
-  @include RobotoCondensed;
+    background-color: transparent;
+    @include RobotoCondensed;
 
-  &:hover {
-    color: #fff;
-  }
+    &:hover {
+        color: #fff;
+    }
 }
 
 a.button span {
-  color: #fff;
+    color: #fff;
 }
 
 .button.hollow.primary {
-  border-color: $bs-blue;
-  color: $bs-blue!important;
-  background: transparent;
+    border-color: $bs-blue;
+    color: $bs-blue !important;
+    background: transparent;
 
     &:hover {
-        color: #fff!important;
-    }  
+        color: #fff !important;
+    }
 }
 
 .market-button {
-  margin: 1rem 0;
+    margin: 1rem 0;
 }
 
-input[type=text].input-button {
-  border-top-right-radius: 0!important;
-  border-bottom-right-radius: 0!important;
+input[type="text"].input-button {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
