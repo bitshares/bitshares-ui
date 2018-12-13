@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["TATCH.EUR", "EUR", "TATCH.BTC", "TATCH.NLG","BTS"];
+        return ["TATCH.EUR", "TATCH.BTC", "TATCH.NLG","BTS"];
     else if (chainId === "39f5e2ed") return ["TEST"];
     // unknown chain id: (need to return at least one unit)
     else return ["BTS"];
@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["EUR", "TATCH.NLG", "TATCH.BTC", "BTS"];
+    return ["EUR", "NLG", "TATCH.BTC", "BTS"];
 }
 
 /**
