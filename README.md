@@ -113,6 +113,9 @@ If you would like to get involved, we have a [Telegram chatroom](https://t.me/Bi
 
 **Please keep comments constructive and clean**
 
+The BitShares UI is integrated with BrowserStack (https://www.browserstack.com) to allow manual compatibility testing across devices and browser versions. In the future we will switch to a automated Selenium testing framework.
+![image](https://user-images.githubusercontent.com/33128181/48697885-05f8d880-ebe6-11e8-95a2-d87516cbb3d9.png)
+
 ## Release Branches
 Development is processed through milestones, by 2 week intervals.
 There are three branches that forms the current release process.

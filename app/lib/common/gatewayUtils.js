@@ -43,13 +43,22 @@ export function getGatewayStatusByAsset(
     let {gatewayStatus} = this.state;
     for (let g in gatewayStatus) {
         gatewayStatus[g].options.enabled = false;
-        this.props.backedCoins.get(g.toUpperCase(), []).find(c => {
+        this.props.backedCoins.get(g.toUpperCase(), []).find(coin => {
+            let backingCoin = coin.backingCoinType || coin.backingCoin;
+            let isAvailable =
+                typeof coin.isAvailable == "undefined" ||
+                (typeof coin.isAvailable == "boolean" && coin.isAvailable);
+
+            // Gateway has EOS.* asset names
+            if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                let [_network, _coin] = backingCoin.split(".");
+                backingCoin = _coin;
+            }
+
             if (
-                c[boolCheck] &&
-                (typeof c.isAvailable == "undefined" ||
-                    (typeof c.isAvailable == "boolean" && c.isAvailable)) &&
-                (selectedAsset == c.backingCoinType ||
-                    selectedAsset == c.backingCoin)
+                coin[boolCheck] &&
+                isAvailable &&
+                selectedAsset == backingCoin
             ) {
                 gatewayStatus[g].options.enabled = true;
             }

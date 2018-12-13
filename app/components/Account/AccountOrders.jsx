@@ -10,6 +10,7 @@ import SettingsActions from "actions/SettingsActions";
 import marketUtils from "common/market_utils";
 import Translate from "react-translate-component";
 import PaginatedList from "../Utility/PaginatedList";
+import {Input, Icon} from "bitshares-ui-style-guide";
 
 class AccountOrders extends React.Component {
     constructor(props) {
@@ -262,23 +263,20 @@ class AccountOrders extends React.Component {
         return (
             <div
                 className="grid-content no-overflow no-padding"
-                style={{paddingBottom: 15}}
+                style={{ paddingBottom: 15 }}
             >
                 <div className="header-selector">
                     {orders && ordersCount ? (
-                        <input
-                            type="text"
-                            placeholder={counterpart.translate(
-                                "account.filter_orders"
-                            )}
-                            style={{
-                                display: "inline-block",
-                                maxWidth: "50%",
-                                marginRight: "1em",
-                                marginBottom: "0"
-                            }}
-                            onChange={this.setFilterValue.bind(this)}
-                        />
+                        <div className="filter inline-block">
+                            <Input
+                                type="text"
+                                placeholder={counterpart.translate(
+                                    "account.filter_orders"
+                                )}
+                                onChange={this.setFilterValue.bind(this)}
+                                addonAfter={<Icon type="search" />}
+                            />
+                        </div>
                     ) : null}
                     {selectedOrders.length ? (
                         <button

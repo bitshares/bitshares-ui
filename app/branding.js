@@ -68,6 +68,8 @@ export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
         return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN", "BTS"];
     else if (chainId === "39f5e2ed") return ["TEST"];
+    // unknown chain id: (need to return at least one unit)
+    else return ["BTS"];
 }
 
 /**
@@ -145,6 +147,11 @@ export function getFeaturedMarkets(quotes = []) {
 	["TCLGULDEN","TATCH.EUR"],
 	["TCLSILVER","TATCH.EUR"],
 	];
+
+    ].filter(a => {
+        if (!quotes.length) return true;
+        return quotes.indexOf(a[0]) !== -1;
+    });
 }
 
 /**

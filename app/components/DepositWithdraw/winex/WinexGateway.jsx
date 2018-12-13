@@ -109,6 +109,8 @@ class WinexGateway extends React.Component {
                 a.isAvailable = wallets.indexOf(a.walletType) !== -1;
             });
             this.setState({coins: backedCoins});
+        }).catch(error => {
+            console.log(error);
         });
     }
 
