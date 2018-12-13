@@ -66,7 +66,7 @@ export function getDefaultLogin() {
  */
 export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
-        return ["TATCH.EUR", "TATCH.NLG", "BRIDGE.NLG", "TATCH.BTC", "TATCHCOIN", "BTS"];
+        return ["TATCH.EUR", "EUR", "TATCH.BTC", "TATCH.NLG","BTS"];
     else if (chainId === "39f5e2ed") return ["TEST"];
     // unknown chain id: (need to return at least one unit)
     else return ["BTS"];
@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["TATCH.EUR", "TATCH.NLG", "TATCH.BTC", "BTS"];
+    return ["EUR", "TATCH.NLG", "TATCH.BTC", "BTS"];
 }
 
 /**
@@ -91,7 +91,6 @@ export function getMyMarketsQuotes() {
     let tokens = {
         nativeTokens: [
             "BTS",
-	    "BITEUR"
         ],
         bridgeTokens: [
             "BRIDGE.LTC",
