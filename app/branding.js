@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["EUR", "NLG", "TATCH.BTC", "BTS"];
+    return ["EUR", "NLG", "BTC"];
 }
 
 /**
@@ -138,13 +138,22 @@ export function getFeaturedMarkets(quotes = []) {
 	["BRIDGE.WSP","TATCH.EUR"],
 	["BRIDGE.PIVX","TATCH.EUR"],
 	["BTS","TATCH.EUR"],
-	["BRIDGE.BCO","TATCH.EUR"],
 	["BITEUR","TATCH.EUR"],
 	["BRIDGE.LTC","TATCH.EUR"],
 	["TATCH.NLG","TATCH.EUR"],
 	["TATCHCOIN","TATCH.EUR"],
 	["TCLGULDEN","TATCH.EUR"],
 	["TCLSILVER","TATCH.EUR"],
+	["TATCH.BTC","TATCH.BTC"],
+	["BRIDGE.WSP","TATCH.BTC"],
+	["BRIDGE.PIVX","TATCH.BTC"],
+	["BTS","TATCH.BTC"],
+	["BITEUR","TATCH.EUR"],
+	["BRIDGE.LTC","TATCH.BTC"],
+	["TATCH.NLG","TATCH.BTC"],
+	["TATCHCOIN","TATCH.BTC"],
+	["TCLGULDEN","TATCH.BTC"],
+	["TCLSILVER","TATCH.BTC"],
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -158,7 +167,7 @@ export function getFeaturedMarkets(quotes = []) {
  */
 export function getAssetNamespaces() {
     return [
-  "TATCH."
+  "TATCH.", "BRIDGE.", "Bit", "OPEN."
     ];
 }
 
