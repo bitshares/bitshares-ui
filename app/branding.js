@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["EUR", "NLG", "BTC"];
+    return ["TATCH.EUR", "NLG", "BTC"];
 }
 
 /**
