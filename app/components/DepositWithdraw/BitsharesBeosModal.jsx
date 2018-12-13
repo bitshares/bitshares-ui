@@ -379,6 +379,24 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAmountToSendChange({amount}) {
+        if (amount) {
+            const i = amount.indexOf(".");
+            if (i > -1) {
+                const newAmount = amount.substr(0, i + 5);
+                if (!newAmount.endsWith(".")) {
+                    this.setState(
+                        {
+                            amount_to_send: newAmount,
+                            empty_amount_to_send_error:
+                                amount !== undefined && !parseFloat(newAmount)
+                        },
+                        this._checkBalance
+                    );
+                    return;
+                }
+            }
+        }
+
         this.setState(
             {
                 amount_to_send: amount,
@@ -468,7 +486,7 @@ class BitsharesBeosModal extends React.Component {
             } catch (e) {
                 throw e;
             }
-        }, 10000);
+        }, 5000);
     };
 
     async onSubmit() {
