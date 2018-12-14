@@ -471,7 +471,7 @@ class WithdrawModalNew extends React.Component {
                 }
             })
             .catch(err => {
-                console.error(err);
+                console.error("_checkFeeStatus error: ", err);
             });
     }
 
@@ -924,16 +924,18 @@ class WithdrawModalNew extends React.Component {
             maxWithdraw = backingAsset.maxAmount;
         }
 
-        balances.forEach(item => {
-            let id = item.get("asset_type");
-            let asset = assets.get(id);
-
-            if (asset && item.get("balance") > 0) {
-                let [_gateway, _asset] = asset.symbol.split(".");
-                let find = !!_asset ? _asset : _gateway;
-                symbolsToInclude.push(find);
-            }
-        });
+        if(balances.length > 0) {
+            balances.forEach(item => {
+                let id = item.get("asset_type");
+                let asset = assets.get(id);
+    
+                if (asset && item.get("balance") > 0) {
+                    let [_gateway, _asset] = asset.symbol.split(".");
+                    let find = !!_asset ? _asset : _gateway;
+                    symbolsToInclude.push(find);
+                }
+            });
+        }
 
         let {onFocus, onBlur} = this._getBindingHelpers();
 

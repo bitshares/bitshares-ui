@@ -98,7 +98,7 @@ class TotalValue extends MarketStatsCheck {
             inHeader
         } = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");
-
+        
         if (!coreAsset || !toAsset) {
             return null;
         }
@@ -318,7 +318,10 @@ TotalValue = AssetWrapper(TotalValue, {
 
 class ValueStoreWrapper extends React.Component {
     render() {
-        let preferredUnit = this.props.settings.get("unit") || "1.3.0";
+        const preferredUnit = 
+            ChainStore.getAsset(this.props.settings.get("unit")) ? 
+                this.props.settings.get("unit") : 
+                "1.3.0";
 
         return <TotalValue {...this.props} toAsset={preferredUnit} />;
     }

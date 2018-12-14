@@ -126,6 +126,6 @@ AssetName = AssetWrapper(AssetName);
 
 export default class AssetNameWrapper extends React.Component {
     render() {
-        return <AssetName {...this.props} asset={this.props.name} />;
+        return !this.props.name ? null : <AssetName {...this.props} asset={this.props.name} />;
     }
 }

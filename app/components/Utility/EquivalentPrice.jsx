@@ -26,7 +26,8 @@ class EquivalentPrice extends MarketStatsCheck {
 
     getFinalPrice(real = false) {
         const {coreAsset, fromAsset, toAsset, allMarketStats} = this.props;
-        return MarketUtils.getFinalPrice(
+        
+        return !toAsset ? null : MarketUtils.getFinalPrice(
             coreAsset,
             fromAsset,
             toAsset,
