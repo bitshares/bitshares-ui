@@ -2023,6 +2023,9 @@
     }
     .footer {
         div.footer-status {
+            > span.testnet {
+                font-size: 0.85rem;
+            }
             > span.success {
                 color: $success-color;
             }

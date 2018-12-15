@@ -183,12 +183,16 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node = {url: "", operator: ""}) {
+    getNode(node = {url: "", operator: "", region: ""}) {
         if (!node || !node.url) {
             throw "Node is undefined of has no url";
         }
 
         const {props} = this;
+
+        let testNet;
+        if (node.region) testNet = node.region.startsWith("TESTNET");
+        else testNet = false;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
@@ -201,7 +205,8 @@ class Footer extends React.Component {
             ping:
                 node.url in props.apiLatencies
                     ? props.apiLatencies[node.url]
-                    : -1
+                    : -1,
+            testNet
         };
     }
 
@@ -586,6 +591,11 @@ class Footer extends React.Component {
                                     }}
                                 >
                                     <div className="footer-status">
+                                        {connected && activeNode.testNet && (
+                                            <span className="testnet">
+                                                <Translate content="settings.testnet_nodes" />{" "}
+                                            </span>
+                                        )}
                                         {!connected ? (
                                             <span className="warning">
                                                 <Translate content="footer.disconnected" />
@@ -605,8 +615,8 @@ class Footer extends React.Component {
                                             {!connected
                                                 ? "-"
                                                 : !activeNode.ping
-                                                    ? "-"
-                                                    : activeNode.ping + "ms"}
+                                                ? "-"
+                                                : activeNode.ping + "ms"}
                                             &nbsp;/&nbsp;
                                             <span className="footer-block-title">
                                                 <Translate content="footer.block" />
