@@ -16,6 +16,7 @@ import FloatingDropdown from "../Utility/FloatingDropdown";
 import TypeAhead from "../Utility/TypeAhead";
 import cnames from "classnames";
 import PropTypes from "prop-types";
+import {Modal, Tooltip, Button, Input, Select, Form} from "bitshares-ui-style-guide";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -51,7 +52,8 @@ class AccountSelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputChanged: false
+            inputChanged: false,
+            selectedAccount: null
         };
     }
 
@@ -61,11 +63,11 @@ class AccountSelector extends React.Component {
         if (typeof account === "undefined")
             account = ChainStore.getAccount(accountName);
 
-        if (this.props.onAccountChanged && account)
-            this.props.onAccountChanged(account);
+        // if (this.props.onAccountChanged && account)
+        //     this.props.onAccountChanged(account);
 
-        if (!this.props.typeahead && accountName)
-            this.onInputChanged(accountName);
+        // if (!this.props.typeahead && accountName)
+        //     this.onInputChanged(accountName);
     }
 
     componentDidUpdate() {
@@ -74,12 +76,25 @@ class AccountSelector extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
-        if (newProps.account && newProps.account !== this.props.account) {
-            if (this.props.onAccountChanged)
-                this.props.onAccountChanged(newProps.account);
-        }
+    // componentWillReceiveProps(newProps) {
+    //     if (newProps.account && newProps.account !== this.props.account) {
+    //         if (this.props.onAccountChanged)
+    //             this.props.onAccountChanged(newProps.account);
+    //     }
+    // }
+
+    /***
+     * STYLE GUIDE COMPONENTS
+     */
+
+    onSelect(value) {
+        console.log("onSelect", value);
+        this.setState({
+            selectedAccount: value
+        });
     }
+
+    // --- END OF STYLE GUIDE COMPONENTS
 
     // can be used in parent component: this.refs.account_selector.getAccount()
     getAccount() {
@@ -106,10 +121,10 @@ class AccountSelector extends React.Component {
         return null;
     }
 
-    onSelected(e) {
-        this.setState({inputChanged: false});
-        this._notifyOnChange(e);
-    }
+    // onSelected(e) {
+    //     this.setState({inputChanged: false});
+    //     this._notifyOnChange(e);
+    // }
 
     _notifyOnChange(e) {
         let {onChange, onAccountChanged, accountName} = this.props;
@@ -122,8 +137,10 @@ class AccountSelector extends React.Component {
         }
 
         // Synchronous onChange for input change
-        if (!!onChange && (!!_accountName || _accountName === ""))
+        if (!!onChange && (!!_accountName || _accountName === "")) {
+            console.log("onChange", _accountName);
             onChange(_accountName);
+        }
 
         // asynchronous onAccountChanged for checking on chain
         if (!!onAccountChanged) {
@@ -132,6 +149,7 @@ class AccountSelector extends React.Component {
             })
                 .then(_account => {
                     if (!!_account) {
+                        console.log("onAccountChanged", _account);
                         onAccountChanged(_account);
                     }
                 })
@@ -183,6 +201,7 @@ class AccountSelector extends React.Component {
     onAction(e) {
         let {onAction, disableActionButton, account, accountName} = this.props;
         e.preventDefault();
+        console.log("onAction");
         if (!this.getError() && onAction && !disableActionButton) {
             if (account) onAction(account);
             else if (this.getInputType(accountName) === "pubkey")
@@ -204,6 +223,8 @@ class AccountSelector extends React.Component {
             labelClass,
             reserveErrorSpace
         } = this.props;
+
+        console.log(this.state.selectedAccount);
 
         const inputType = this.getInputType(accountName);
 
@@ -353,12 +374,9 @@ class AccountSelector extends React.Component {
             </span>
         );
 
-        let action_class = classnames("button", {
-            disabled:
-                !(account || inputType === "pubkey") ||
-                error ||
-                disableActionButton
-        });
+        let disabledAction = !(account || inputType === "pubkey") || error || disableActionButton;
+
+
 
         return (
             <div className="account-selector" style={this.props.style}>
@@ -420,87 +438,93 @@ class AccountSelector extends React.Component {
                                 />
                             )}
                             {typeof this.props.typeahead !== "undefined" ? (
-                                <TypeAhead
-                                    items={typeAheadAccounts}
-                                    style={{
-                                        textTransform:
-                                            this.getInputType(accountName) ===
-                                            "pubkey"
-                                                ? null
-                                                : "lowercase",
-                                        fontVariant: "initial"
-                                    }}
-                                    name="username"
-                                    id="username"
-                                    defaultValue={this.props.accountName || ""}
-                                    placeholder={
-                                        this.props.placeholder ||
-                                        counterpart.translate("account.name")
-                                    }
-                                    ref="user_input"
-                                    onSelect={this.onSelected.bind(this)}
-                                    onChange={this.onInputChanged.bind(this)}
-                                    onKeyDown={this.onKeyDown.bind(this)}
-                                    tabIndex={this.props.tabIndex}
-                                    inputProps={{
-                                        placeholder: "Search for an account"
-                                    }}
-                                    {...this.props.typeaheadOptions || {}}
-                                />
+                                <Select 
+                                    showSearch
+                                >
+                                    {typeAheadAccounts.map(account => (
+                                        <Select.Option
+                                            key={account.id}
+                                            value={account.label}
+                                            title={account.label}
+                                        >
+                                            {account.label}
+                                            <span style={{float: "right"}}>
+                                                {account.status}
+                                            </span>
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                                
+                                // <TypeAhead
+                                //     items={typeAheadAccounts}
+                                //     style={{
+                                //         textTransform:
+                                //             this.getInputType(accountName) ===
+                                //             "pubkey"
+                                //                 ? null
+                                //                 : "lowercase",
+                                //         fontVariant: "initial"
+                                //     }}
+                                //     name="username"
+                                //     id="username"
+                                //     defaultValue={this.props.accountName || ""}
+                                //     placeholder={
+                                //         this.props.placeholder ||
+                                //         counterpart.translate("account.name")
+                                //     }
+                                //     ref="user_input"
+                                //     onSelect={this.onSelected.bind(this)}
+                                //     onChange={this.onInputChanged.bind(this)}
+                                //     onKeyDown={this.onKeyDown.bind(this)}
+                                //     tabIndex={this.props.tabIndex}
+                                //     inputProps={{
+                                //         placeholder: "Search for an account"
+                                //     }}
+                                //     {...this.props.typeaheadOptions || {}}
+                                // />
                             ) : (
-                                <input
-                                    style={{
-                                        textTransform:
-                                            this.getInputType(accountName) ===
-                                            "pubkey"
-                                                ? null
-                                                : "lowercase",
-                                        fontVariant: "initial"
-                                    }}
-                                    name="username"
-                                    id="username"
-                                    autoComplete="username"
-                                    type="text"
-                                    value={this.props.accountName || ""}
-                                    placeholder={
-                                        this.props.placeholder ||
-                                        counterpart.translate("account.name")
-                                    }
-                                    ref="user_input"
-                                    onChange={this.onInputChanged.bind(this)}
-                                    onKeyDown={this.onKeyDown.bind(this)}
-                                    tabIndex={this.props.tabIndex}
-                                />
-                            )}
-                            {this.props.dropDownContent ? (
-                                <div className="form-label select floating-dropdown">
-                                    <FloatingDropdown
-                                        entries={this.props.dropDownContent}
-                                        values={this.props.dropDownContent.reduce(
-                                            (map, a) => {
-                                                if (a) map[a] = a;
-                                                return map;
-                                            },
-                                            {}
-                                        )}
-                                        singleEntry={
-                                            this.props.dropDownContent[0]
+                                <Form.Item validateStatus={error ? "error" : null} help={error ? error : null} style={{width: "100%"}}>
+                                    <Input 
+                                        style={{
+                                            textTransform:
+                                                this.getInputType(accountName) ===
+                                                "pubkey"
+                                                    ? null
+                                                    : "lowercase",
+                                            fontVariant: "initial"
+                                        }}
+                                        name="username"
+                                        id="username"
+                                        autoComplete="username"
+                                        type="text"
+                                        value={this.props.accountName || ""}
+                                        placeholder={
+                                            this.props.placeholder ||
+                                            counterpart.translate("account.name")
                                         }
-                                        value={this.props.dropDownValue || ""}
-                                        onChange={this.props.onDropdownSelect}
+                                        ref="user_input"
+                                        onChange={this.onInputChanged.bind(this)}
+                                        onKeyDown={this.onKeyDown.bind(this)}
+                                        tabIndex={this.props.tabIndex}
                                     />
-                                </div>
-                            ) : null}
+                                </Form.Item>
+                            )}
                             {this.props.children}
                             {this.props.onAction ? (
-                                <button
-                                    className={action_class}
-                                    onClick={this.onAction.bind(this)}
-                                >
-                                    <Translate
-                                        content={this.props.action_label}
-                                    />
-                                </button>
+                                <Tooltip title={counterpart.translate(
+                                    "tooltip.required_input", { type: counterpart.translate("global.field_type.account") }
+                                )}>
+                                    <Button
+                                        type="primary"
+                                        disabled={disabledAction}
+                                        onClick={this.onAction.bind(this)}
+                                    >
+                                        <Translate
+                                            content={this.props.action_label}
+                                        />
+                                    </Button>
+                                </Tooltip>
+                                
                             ) : null}
                         </div>
                     </div>

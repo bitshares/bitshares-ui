@@ -19,9 +19,8 @@ import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import classnames from "classnames";
 import {getWalletName} from "branding";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Input, Select} from "bitshares-ui-style-guide";
 
 const EqualWidthContainer = ({children}) => (
     <div
@@ -435,6 +434,7 @@ class SendModal extends React.Component {
     }
 
     toChanged(to_name) {
+        console.log("toChanged", to_name);
         this.setState({to_name, error: null});
     }
 
@@ -447,6 +447,7 @@ class SendModal extends React.Component {
     }
 
     onToAccountChanged(to_account) {
+        console.log("onToAccountChanged", to_account);
         this.setState({to_account, error: null});
     }
 
@@ -653,6 +654,25 @@ class SendModal extends React.Component {
             from_account.get("id") == to_account.get("id");
 
         let tabIndex = this.props.tabIndex; // Continue tabIndex on props count
+
+        // const toAccount = (
+        //     <Select
+        //         showSearch
+        //         filterOption={this.languagesFilter}
+        //         value={this.state.currentLocale}
+        //         onChange={this.handleLanguageSelect}
+        //         style={{width: "123px", marginBottom: "16px"}}
+        //     >
+        //         {this.state.locales.map(locale => (
+        //             <Select.Option
+        //                 key={locale}
+        //                 language={counterpart.translate("languages." + locale)}
+        //             >
+        //                 {counterpart.translate("languages." + locale)}
+        //             </Select.Option>
+        //         ))}
+        //     </Select>
+        // );
 
         return !this.state.open ? null : (
             <div

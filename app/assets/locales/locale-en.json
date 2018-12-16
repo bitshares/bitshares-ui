@@ -1098,7 +1098,10 @@
         "help": "Help",
         "return_to_top": "Return to top",
         "scan_qr_code": "Scan QR code",
-        "set": "Set"
+        "set": "Set",
+        "field_type": {
+            "account": "account"
+        }
     },
     "header": {
         "account": "Account",
@@ -1808,6 +1811,7 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "required_input": "Field requires a valid %(type)s",
         "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "This is the price at which settle orders will execute.",
