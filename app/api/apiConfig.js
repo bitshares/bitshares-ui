@@ -1,5 +1,12 @@
 import {getFaucet} from "../branding";
 
+export const tatchAPIs = {
+    BASE: " http://54.38.80.148:3010/api/v1",
+    COINS_LIST: "/coins",
+    ACTIVE_WALLETS: "/active-wallets",
+    TRADING_PAIRS: "/trading-pairs"
+};
+
 export const blockTradesAPIs = {
     BASE: "https://api.blocktrades.us/v2",
     COINS_LIST: "/coins",
