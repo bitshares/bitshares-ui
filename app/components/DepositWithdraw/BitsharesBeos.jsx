@@ -16,8 +16,7 @@ class BitsharesBeos extends React.Component {
         super(props);
 
         this.state = {
-            isModalVisible: false,
-            pendingAccounts: []
+            isModalVisible: false
         };
 
         this.showModal = this.showModal.bind(this);
@@ -53,18 +52,6 @@ class BitsharesBeos extends React.Component {
             ...QueryString.parse(params.search)
         };
     }
-
-    setPendingAccount = account => {
-        this.setState(({pendingAccounts}) => ({
-            pendingAccounts: [...pendingAccounts, account]
-        }));
-    };
-
-    removePendingAccount = account => {
-        this.setState(({pendingAccounts}) => ({
-            pendingAccounts: pendingAccounts.filter(a => a !== account)
-        }));
-    };
 
     render() {
         let transferBtsId = this.getTransferBtsId();
@@ -179,9 +166,6 @@ class BitsharesBeos extends React.Component {
                         account_contract={"beos.token"}
                         action={"lock"}
                         from={"beos.token"}
-                        onAccountCreation={this.setPendingAccount}
-                        onAccountValidated={this.removePendingAccount}
-                        pendingAccounts={this.state.pendingAccounts}
                     />
                 </Modal>
             </div>
