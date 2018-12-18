@@ -117,7 +117,7 @@ class TatchGateway extends React.Component {
         let issuers = {
             tatch: {
                 name: coin.intermediateAccount,
-                id: "1.2.1070206",
+                id: "1.2.160875",
                 support: "info@tatchcapital.com"
             }
         };
