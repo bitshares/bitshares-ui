@@ -3,7 +3,7 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import ChainTypes from "components/Utility/ChainTypes";
 import BindToChainState from "components/Utility/BindToChainState";
-import BitsparkWithdrawModal from "./TatchWithdrawModal";
+import TatchWithdrawModal from "./TatchWithdrawModal";
 import AccountBalance from "../../Account/AccountBalance";
 import AssetName from "components/Utility/AssetName";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
@@ -43,7 +43,7 @@ class TatchGatewayDepositRequest extends React.Component {
         this.state = {
             isModalVisible: false,
             receive_address: null,
-            url: props.url || bitsparkAPIs.BASE,
+            url: props.url || tatchAPIs.BASE,
             loading: false,
             emptyAddressDeposit: false
         };
