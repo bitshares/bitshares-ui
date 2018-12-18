@@ -842,6 +842,9 @@ export default connect(
                     "RUDEX",
                     []
                 ),
+                tatchBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "TATCH",
+                    []
                 bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
                     "SPARKDEX",
                     []
