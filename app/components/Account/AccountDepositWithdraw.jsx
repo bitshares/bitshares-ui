@@ -21,6 +21,7 @@ import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
 import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
+import TatchGateway from "../DepositWithdraw/tatch/TatchGateway";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
 import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
@@ -118,6 +119,15 @@ class AccountDepositWithdraw extends React.Component {
         });
     }
 
+     toggleTatchService(service) {
+        this.setState({
+            bitsparkService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            tatchService: service
+        });
+    }
     toggleBitSparkService(service) {
         this.setState({
             bitsparkService: service
@@ -171,6 +181,7 @@ class AccountDepositWithdraw extends React.Component {
     renderServices(
         openLedgerGatewayCoins,
         rudexGatewayCoins,
+        tatchGatewayCoins,
         bitsparkGatewayCoins,
         xbtsxGatewayCoins
     ) {
@@ -310,6 +321,45 @@ class AccountDepositWithdraw extends React.Component {
                         <div>
                             <Translate content="gateway.rudex.coming_soon" />
                         </div>
+                    ) : null}
+                </div>
+            )
+        });
+
+        serList.push({
+            name: "Tatch Capital (TATCH.X)",
+            template: (
+                <div className="content-block">
+                    <div
+                        className="service-selector"
+                        style={{marginBottom: "2rem"}}
+                    >
+                        <ul className="button-group segmented no-margin">
+                            <li
+                                onClick={this.toggleTatchService.bind(
+                                    this,
+                                    "gateway"
+                                )}
+                                className={
+                                    tatchService === "gateway"
+                                        ? "is-active"
+                                        : ""
+                                }
+                            >
+                                <a>
+                                    <Translate content="gateway.gateway" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {tatchService === "gateway" &&
+                    tatchGatewayCoins.length ? (
+                        <BitsparkGateway
+                            account={account}
+                            coins={tatchGatewayCoins}
+                            provider="bitspark"
+                        />
                     ) : null}
                 </div>
             )
