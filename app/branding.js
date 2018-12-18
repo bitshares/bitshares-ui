@@ -189,7 +189,7 @@ export function getAssetHideNamespaces() {
  */
 export function allowedGateway(gateway) {
     return (
-        ["TATCH", "BRIDGE", "OPEN"]
+        ["TATCH", "BRIDGE", "OPEN", "tatch"]
 
     );
 }
