@@ -77,6 +77,7 @@ class AccountDepositWithdraw extends React.Component {
             ) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
+            nextState.tatchService !== this.state.bitsparkService ||
             nextState.bitsparkService !== this.state.bitsparkService ||
             nextState.xbtsxService !== this.state.xbtsxService ||
             nextState.btService !== this.state.btService ||
@@ -193,6 +194,7 @@ class AccountDepositWithdraw extends React.Component {
             olService,
             btService,
             rudexService,
+            tatchService,
             bitsparkService,
             xbtsxService,
             citadelService
@@ -356,10 +358,10 @@ class AccountDepositWithdraw extends React.Component {
 
                     {tatchService === "gateway" &&
                     tatchGatewayCoins.length ? (
-                        <BitsparkGateway
+                        <TatchGateway
                             account={account}
                             coins={tatchGatewayCoins}
-                            provider="bitspark"
+                            provider="tatch"
                         />
                     ) : null}
                 </div>
@@ -615,6 +617,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+        let tatchGatewayCoins = this.props.tatchBackedCoins
+            .map(coin => {
+                return coin;
+            })
+            .sort((a, b) => {
+                if (a.symbol < b.symbol) return -1;
+                if (a.symbol > b.symbol) return 1;
+                return 0;
+            });
+        
         let bitsparkGatewayCoins = this.props.bitsparkBackedCoins
             .map(coin => {
                 return coin;
@@ -638,6 +650,7 @@ class AccountDepositWithdraw extends React.Component {
         let services = this.renderServices(
             openLedgerGatewayCoins,
             rudexGatewayCoins,
+            tatchGatewayCoins,
             bitsparkGatewayCoins,
             xbtsxGatewayCoins
         );
@@ -655,6 +668,7 @@ class AccountDepositWithdraw extends React.Component {
             "GDEX",
             "OPEN",
             "RUDEX",
+            "TATCH",
             "SPARKDEX",
             "TRADE",
             "BITKAPITAL",
@@ -840,6 +854,10 @@ export default connect(
                 ),
                 rudexBackedCoins: GatewayStore.getState().backedCoins.get(
                     "RUDEX",
+                    []
+                ),
+                tatchBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "TATCH",
                     []
                 ),
                 bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
