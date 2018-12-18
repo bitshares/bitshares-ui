@@ -252,6 +252,9 @@ class CryptoBridgeGateway extends React.Component {
                                     deposit_fee_percentage_low_amounts={
                                         coin.depositFeePercentageLowAmounts
                                     }
+                                    withdrawal_payment_id_enabled={
+                                        coin.withdrawalPaymentIdEnabled === true
+                                    }
                                     coin_info={coin.info}
                                 />
                             )}
