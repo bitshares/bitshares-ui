@@ -10,6 +10,7 @@ import BindToChainState from "../Utility/BindToChainState";
 import AssetWrapper from "../Utility/AssetWrapper";
 import TransactionChart from "./TransactionChart";
 import BlocktimeChart from "./BlocktimeChart";
+import OperationDisplay from "./OperationDisplay";
 import classNames from "classnames";
 import utils from "common/utils";
 import Immutable from "immutable";
@@ -191,7 +192,7 @@ class Blocks extends React.Component {
             coreAsset.get("dynamic_asset_data_id")
         );
         let blocks = null,
-            transactions = null;
+            blockTransactions = [];
         let headBlock = null;
         let trxCount = 0,
             blockCount = latestBlocks.size,
@@ -264,36 +265,15 @@ class Blocks extends React.Component {
                 })
                 .toArray();
 
-            let trxIndex = 0;
-
-            transactions = latestTransactions
+            blockTransactions = latestTransactions
                 .sort((a, b) => {
                     return b.block_num - a.block_num;
                 })
-                .take(20)
-                .map(trx => {
-                    let opIndex = 0;
-                    return trx.operations
-                        .map(op => {
-                            if (trxIndex > 15) return null;
-                            return (
-                                <Operation
-                                    key={trxIndex++}
-                                    op={op}
-                                    result={trx.operation_results[opIndex++]}
-                                    block={trx.block_num}
-                                    hideFee={true}
-                                    hideOpLabel={false}
-                                    current={"1.2.0"}
-                                    hideDate
-                                    hidePending
-                                />
-                            );
-                        })
-                        .filter(a => !!a);
-                })
-                .toArray();
-
+                .filter(a => {
+                    return (
+                        dynGlobalObject.get("head_block_number") == a.block_num
+                    );
+                });
             headBlock = latestBlocks.first().timestamp;
             avgTime = blockTimes.reduce((previous, current, idx, array) => {
                 return previous + current[1] / array.length;
@@ -315,7 +295,8 @@ class Blocks extends React.Component {
                                 />
                             </span>
                             <h2>
-                                #{utils.format_number(
+                                #
+                                {utils.format_number(
                                     dynGlobalObject.get("head_block_number"),
                                     0
                                 )}
@@ -531,9 +512,12 @@ class Blocks extends React.Component {
                                 }}
                                 ref="operations"
                             >
-                                <table className="table fixed-height-2rem">
-                                    <tbody>{transactions}</tbody>
-                                </table>
+                                <OperationDisplay
+                                    latestTransactions={latestTransactions}
+                                    maxBlock={dynGlobalObject.get(
+                                        "head_block_number"
+                                    )}
+                                />
                             </div>
                         </div>
                     </div>
