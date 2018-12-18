@@ -16,6 +16,7 @@ const {operations} = grapheneChainTypes;
 const alignLeft = {textAlign: "left"};
 import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
+import {Tooltip} from "bitshares-ui-style-guide";
 const ops = Object.keys(operations);
 
 function compareOps(b, a) {
@@ -328,20 +329,23 @@ class RecentTransactions extends React.Component {
                 <td style={{textAlign: "center"}}>
                     {historyCount > 0 ? (
                         <span>
-                            <a
-                                className="inline-block"
-                                onClick={this._generateCSV.bind(this)}
-                                data-tip={counterpart.translate(
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate(
                                     "transaction.csv_tip"
                                 )}
-                                data-place="bottom"
                             >
-                                <Icon
-                                    name="excel"
-                                    title="icons.excel"
-                                    className="icon-14px"
-                                />
-                            </a>
+                                <a
+                                    className="inline-block"
+                                    onClick={this._generateCSV.bind(this)}
+                                >
+                                    <Icon
+                                        name="excel"
+                                        title="icons.excel"
+                                        className="icon-14px"
+                                    />
+                                </a>
+                            </Tooltip>
                         </span>
                     ) : null}
                 </td>
@@ -383,20 +387,26 @@ class RecentTransactions extends React.Component {
                         <div className="selector">
                             <div className={cnames("inline-block")}>
                                 {this.props.showFilters ? (
-                                    <select
-                                        data-place="left"
-                                        data-tip={counterpart.translate(
+                                    <Tooltip
+                                        placement="left"
+                                        title={counterpart.translate(
                                             "tooltip.filter_ops"
                                         )}
-                                        style={{paddingTop: 5, width: "auto"}}
-                                        className="bts-select no-margin"
-                                        value={this.state.filter}
-                                        onChange={this._onChangeFilter.bind(
-                                            this
-                                        )}
                                     >
-                                        {options}
-                                    </select>
+                                        <select
+                                            style={{
+                                                paddingTop: 5,
+                                                width: "auto"
+                                            }}
+                                            className="bts-select no-margin"
+                                            value={this.state.filter}
+                                            onChange={this._onChangeFilter.bind(
+                                                this
+                                            )}
+                                        >
+                                            {options}
+                                        </select>
+                                    </Tooltip>
                                 ) : null}
                             </div>
                         </div>

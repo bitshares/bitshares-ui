@@ -4,6 +4,7 @@ import AssetName from "../Utility/AssetName";
 import utils from "common/utils";
 import cnames from "classnames";
 import ReactTooltip from "react-tooltip";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 export default class PriceStatWithLabel extends React.Component {
     constructor() {
@@ -63,7 +64,8 @@ export default class PriceStatWithLabel extends React.Component {
 
         let changeComp = !change ? null : change !== null ? (
             <span className={changeClass}>
-                &nbsp;{changeClass === "change-up" ? (
+                &nbsp;
+                {changeClass === "change-up" ? (
                     <span>&#8593;</span>
                 ) : (
                     <span>&#8595;</span>
@@ -72,43 +74,43 @@ export default class PriceStatWithLabel extends React.Component {
         ) : null;
 
         return (
-            <li
-                className={cnames("stat", this.props.className)}
-                data-place="bottom"
-                data-tip={toolTip}
-            >
-                <span>
-                    {content ? (
-                        <span>
-                            <Translate content={content} />:
-                        </span>
-                    ) : null}
-                    <br />
-                    <b className="value stat-primary">
-                        {!ready ? 0 : value}&nbsp;
-                        {changeComp}
-                    </b>
-                    <span className="symbol-text">
-                        <AssetName name={base.get("symbol")} />
-                        {quote && !volume ? (
+            <li className={cnames("stat", this.props.className)}>
+                <Tooltip placement="bottom" title={toolTip}>
+                    <span>
+                        {content ? (
                             <span>
-                                /<AssetName name={quote.get("symbol")} />
+                                <Translate content={content} />:
                             </span>
                         ) : null}
-                    </span>
-                </span>
-                {typeof volume2 === "number" ? (
-                    <span>
-                        <span />
+                        <br />
                         <b className="value stat-primary">
-                            {!ready ? 0 : <span> / {value2}</span>}&nbsp;
+                            {!ready ? 0 : value}
+                            &nbsp;
                             {changeComp}
                         </b>
                         <span className="symbol-text">
-                            <AssetName name={quote.get("symbol")} />
+                            <AssetName name={base.get("symbol")} />
+                            {quote && !volume ? (
+                                <span>
+                                    /<AssetName name={quote.get("symbol")} />
+                                </span>
+                            ) : null}
                         </span>
                     </span>
-                ) : null}
+                    {typeof volume2 === "number" ? (
+                        <span>
+                            <span />
+                            <b className="value stat-primary">
+                                {!ready ? 0 : <span> / {value2}</span>}
+                                &nbsp;
+                                {changeComp}
+                            </b>
+                            <span className="symbol-text">
+                                <AssetName name={quote.get("symbol")} />
+                            </span>
+                        </span>
+                    ) : null}
+                </Tooltip>
             </li>
         );
     }

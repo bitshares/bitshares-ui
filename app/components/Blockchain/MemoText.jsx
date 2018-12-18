@@ -7,6 +7,7 @@ import {connect} from "alt-react";
 import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
 import ReactTooltip from "react-tooltip";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class MemoText extends React.Component {
     static defaultProps = {
@@ -62,15 +63,18 @@ class MemoText extends React.Component {
         if (text) {
             return (
                 <div className="memo" style={{paddingTop: 5, cursor: "help"}}>
-                    <span
-                        className="inline-block"
-                        data-class="memo-tip"
-                        data-tip={full_memo !== text ? full_memo : null}
-                        data-place="bottom"
-                        data-offset="{'bottom': 10}"
+                    <Tooltip
+                        placement="bottom"
+                        title={full_memo !== text ? full_memo : null}
                     >
-                        {text}
-                    </span>
+                        <span
+                            className="inline-block"
+                            data-class="memo-tip"
+                            data-offset="{'bottom': 10}"
+                        >
+                            {text}
+                        </span>
+                    </Tooltip>
                 </div>
             );
         } else {
@@ -85,13 +89,16 @@ class MemoTextStoreWrapper extends React.Component {
     }
 }
 
-export default connect(MemoTextStoreWrapper, {
-    listenTo() {
-        return [WalletUnlockStore];
-    },
-    getProps() {
-        return {
-            wallet_locked: WalletUnlockStore.getState().locked
-        };
+export default connect(
+    MemoTextStoreWrapper,
+    {
+        listenTo() {
+            return [WalletUnlockStore];
+        },
+        getProps() {
+            return {
+                wallet_locked: WalletUnlockStore.getState().locked
+            };
+        }
     }
-});
+);

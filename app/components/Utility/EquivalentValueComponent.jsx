@@ -11,6 +11,7 @@ import counterpart from "counterpart";
 import ReactTooltip from "react-tooltip";
 import MarketStatsCheck from "./MarketStatsCheck";
 import MarketUtils from "common/market_utils";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -81,14 +82,17 @@ class ValueComponent extends MarketStatsCheck {
 
         if (!eqValue && eqValue !== 0) {
             return (
-                <div
-                    className="tooltip inline-block"
-                    data-place="bottom"
-                    data-tip={counterpart.translate("tooltip.no_price")}
-                    style={{fontSize: "0.9rem"}}
+                <Tooltip
+                    placement="bottom"
+                    title={counterpart.translate("tooltip.no_price")}
                 >
-                    <Translate content="account.no_price" />
-                </div>
+                    <div
+                        className="tooltip inline-block"
+                        style={{fontSize: "0.9rem"}}
+                    >
+                        <Translate content="account.no_price" />
+                    </div>
+                </Tooltip>
             );
         }
 
@@ -127,16 +131,19 @@ class EquivalentValueComponent extends React.Component {
     }
 }
 
-EquivalentValueComponent = connect(EquivalentValueComponent, {
-    listenTo() {
-        return [MarketsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats
-        };
+EquivalentValueComponent = connect(
+    EquivalentValueComponent,
+    {
+        listenTo() {
+            return [MarketsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats
+            };
+        }
     }
-});
+);
 
 class BalanceValueComponent extends React.Component {
     static propTypes = {

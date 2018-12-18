@@ -31,6 +31,7 @@ import ReserveAssetModal from "../Modal/ReserveAssetModal";
 import BaseModal from "../Modal/BaseModal";
 import PaginatedList from "../Utility/PaginatedList";
 import MarketUtils from "common/market_utils";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class AccountPortfolioList extends React.Component {
     constructor() {
@@ -692,42 +693,36 @@ class AccountPortfolioList extends React.Component {
                     <td>{directMarketLink}</td>
                     <td>
                         {isBitAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    "tooltip.borrow",
-                                    {asset: symbol}
-                                )}
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate("tooltip.borrow", {
+                                    asset: symbol
+                                })}
                             >
-                                {borrowLink}
-                            </div>
+                                <div className="inline-block">{borrowLink}</div>
+                            </Tooltip>
                         ) : (
                             emptyCell
                         )}
                     </td>
                     <td>
                         {isBitAsset && backingAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    "tooltip.settle",
-                                    {
-                                        asset: isAssetBitAsset
-                                            ? "bit" + symbol
-                                            : symbol,
-                                        backingAsset: isBackingBitAsset
-                                            ? "bit" + backingAsset.get("symbol")
-                                            : backingAsset.get("symbol"),
-                                        settleDelay:
-                                            options.force_settlement_delay_sec /
-                                            3600
-                                    }
-                                )}
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate("tooltip.settle", {
+                                    asset: isAssetBitAsset
+                                        ? "bit" + symbol
+                                        : symbol,
+                                    backingAsset: isBackingBitAsset
+                                        ? "bit" + backingAsset.get("symbol")
+                                        : backingAsset.get("symbol"),
+                                    settleDelay:
+                                        options.force_settlement_delay_sec /
+                                        3600
+                                })}
                             >
-                                {settleLink}
-                            </div>
+                                <div className="inline-block">{settleLink}</div>
+                            </Tooltip>
                         ) : (
                             emptyCell
                         )}
@@ -752,37 +747,42 @@ class AccountPortfolioList extends React.Component {
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
-                        data-place="bottom"
-                        data-tip={counterpart.translate(
-                            "tooltip." +
-                                (includeAsset ? "hide_asset" : "show_asset")
-                        )}
                     >
-                        <a
-                            style={{marginRight: 0}}
-                            className={
-                                includeAsset ? "order-cancel" : "action-plus"
-                            }
-                            onClick={this._hideAsset.bind(
-                                this,
-                                asset_type,
-                                includeAsset
+                        <Tooltip
+                            placement="bottom"
+                            title={counterpart.translate(
+                                "tooltip." +
+                                    (includeAsset ? "hide_asset" : "show_asset")
                             )}
                         >
-                            <Icon
-                                name={
+                            <a
+                                style={{marginRight: 0}}
+                                className={
                                     includeAsset
-                                        ? "cross-circle"
-                                        : "plus-circle"
+                                        ? "order-cancel"
+                                        : "action-plus"
                                 }
-                                title={
+                                onClick={this._hideAsset.bind(
+                                    this,
+                                    asset_type,
                                     includeAsset
-                                        ? "icons.cross_circle.hide_asset"
-                                        : "icons.plus_circle.show_asset"
-                                }
-                                className="icon-14px"
-                            />
-                        </a>
+                                )}
+                            >
+                                <Icon
+                                    name={
+                                        includeAsset
+                                            ? "cross-circle"
+                                            : "plus-circle"
+                                    }
+                                    title={
+                                        includeAsset
+                                            ? "icons.cross_circle.hide_asset"
+                                            : "icons.plus_circle.show_asset"
+                                    }
+                                    className="icon-14px"
+                                />
+                            </a>
+                        </Tooltip>
                     </td>
                 </tr>
             );
@@ -933,16 +933,17 @@ class AccountPortfolioList extends React.Component {
                                     </td>
                                     <td>
                                         {isBitAsset ? (
-                                            <div
-                                                className="inline-block"
-                                                data-place="bottom"
-                                                data-tip={counterpart.translate(
+                                            <Tooltip
+                                                placement="bottom"
+                                                title={counterpart.translate(
                                                     "tooltip.borrow",
                                                     {asset: asset.get("symbol")}
                                                 )}
                                             >
-                                                {borrowLink}
-                                            </div>
+                                                <div className="inline-block">
+                                                    {borrowLink}
+                                                </div>
+                                            </Tooltip>
                                         ) : (
                                             emptyCell
                                         )}
@@ -951,41 +952,44 @@ class AccountPortfolioList extends React.Component {
                                     <td
                                         style={{textAlign: "center"}}
                                         className="column-hide-small"
-                                        data-place="bottom"
-                                        data-tip={counterpart.translate(
-                                            "tooltip." +
-                                                (includeAsset
-                                                    ? "hide_asset"
-                                                    : "show_asset")
-                                        )}
                                     >
-                                        <a
-                                            style={{marginRight: 0}}
-                                            className={
-                                                includeAsset
-                                                    ? "order-cancel"
-                                                    : "action-plus"
-                                            }
-                                            onClick={this._hideAsset.bind(
-                                                this,
-                                                asset.get("id"),
-                                                includeAsset
+                                        <Tooltip
+                                            placement="bottom"
+                                            title={counterpart.translate(
+                                                "tooltip." +
+                                                    (includeAsset
+                                                        ? "hide_asset"
+                                                        : "show_asset")
                                             )}
                                         >
-                                            <Icon
-                                                name={
+                                            <a
+                                                style={{marginRight: 0}}
+                                                className={
                                                     includeAsset
-                                                        ? "cross-circle"
-                                                        : "plus-circle"
+                                                        ? "order-cancel"
+                                                        : "action-plus"
                                                 }
-                                                title={
+                                                onClick={this._hideAsset.bind(
+                                                    this,
+                                                    asset.get("id"),
                                                     includeAsset
-                                                        ? "icons.cross_circle.hide_asset"
-                                                        : "icons.plus_circle.show_asset"
-                                                }
-                                                className="icon-14px"
-                                            />
-                                        </a>
+                                                )}
+                                            >
+                                                <Icon
+                                                    name={
+                                                        includeAsset
+                                                            ? "cross-circle"
+                                                            : "plus-circle"
+                                                    }
+                                                    title={
+                                                        includeAsset
+                                                            ? "icons.cross_circle.hide_asset"
+                                                            : "icons.plus_circle.show_asset"
+                                                    }
+                                                    className="icon-14px"
+                                                />
+                                            </a>
+                                        </Tooltip>
                                     </td>
                                 </tr>
                             );

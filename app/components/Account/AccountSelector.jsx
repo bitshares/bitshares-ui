@@ -16,6 +16,7 @@ import FloatingDropdown from "../Utility/FloatingDropdown";
 import TypeAhead from "../Utility/TypeAhead";
 import cnames from "classnames";
 import PropTypes from "prop-types";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -318,39 +319,41 @@ class AccountSelector extends React.Component {
         let linked_status = !this.props.account ? null : myActiveAccounts.has(
             account.get("name")
         ) || contacts.has(account.get("name")) ? (
-            <span
-                className="tooltip green"
-                data-place="top"
-                data-tip={counterpart.translate("tooltip.follow_user")}
+            <Tooltip
+                placement="top"
+                title={counterpart.translate("tooltip.follow_user")}
                 onClick={this._onRemoveContact.bind(this)}
             >
-                <Icon
-                    style={{
-                        position: "absolute",
-                        top: "-0.15em",
-                        right: ".2em"
-                    }}
-                    name="user"
-                    title="icons.user.following"
-                />
-            </span>
+                <span className="tooltip green">
+                    <Icon
+                        style={{
+                            position: "absolute",
+                            top: "-0.15em",
+                            right: ".2em"
+                        }}
+                        name="user"
+                        title="icons.user.following"
+                    />
+                </span>
+            </Tooltip>
         ) : (
-            <span
-                className="tooltip"
-                data-place="top"
-                data-tip={counterpart.translate("tooltip.follow_user_add")}
+            <Tooltip
+                placement="top"
+                title={counterpart.translate("tooltip.follow_user_add")}
                 onClick={this._onAddContact.bind(this)}
             >
-                <Icon
-                    style={{
-                        position: "absolute",
-                        top: "-0.05em",
-                        right: ".2em"
-                    }}
-                    name="plus-circle"
-                    title="icons.plus_circle.add_contact"
-                />
-            </span>
+                <span className="tooltip">
+                    <Icon
+                        style={{
+                            position: "absolute",
+                            top: "-0.05em",
+                            right: ".2em"
+                        }}
+                        name="plus-circle"
+                        title="icons.plus_circle.add_contact"
+                    />
+                </span>
+            </Tooltip>
         );
 
         let action_class = classnames("button", {
@@ -397,7 +400,7 @@ class AccountSelector extends React.Component {
                             {useHR && <hr />}
                         </div>
                     ) : null}
-                    <div className="input-area" data-tip={this.props.tooltip}>
+                    <Tooltip className="input-area" title={this.props.tooltip}>
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
                                 <div className="account-image">
@@ -503,7 +506,7 @@ class AccountSelector extends React.Component {
                                 </button>
                             ) : null}
                         </div>
-                    </div>
+                    </Tooltip>
 
                     {error || reserveErrorSpace ? (
                         <div

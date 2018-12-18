@@ -18,6 +18,7 @@ import {List} from "immutable";
 import {Link} from "react-router-dom";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -249,12 +250,10 @@ class MarginPosition extends React.Component {
                         asset={co.call_price.base.asset_id}
                     />
                 </td>
-                <td
-                    data-place="bottom"
-                    data-tip={this._getCRTip()}
-                    className={"center-content " + statusClass}
-                >
-                    {utils.format_number(cr, 2)}
+                <td className={"center-content " + statusClass}>
+                    <Tooltip placement="bottom" title={this._getCRTip()}>
+                        {utils.format_number(cr, 2)}
+                    </Tooltip>
                 </td>
                 <td style={alignRight}>
                     <TotalBalanceValue
@@ -328,39 +327,39 @@ class MarginPosition extends React.Component {
                     </Link>
                 </td>
                 <td>
-                    <div
-                        data-place="left"
-                        data-tip={counterpart.translate(
-                            "tooltip.update_position"
-                        )}
-                        style={{paddingBottom: 5}}
+                    <Tooltip
+                        placement="left"
+                        title={counterpart.translate("tooltip.update_position")}
                     >
-                        <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Icon
-                                name="adjust"
-                                title="icons.adjust"
-                                className="icon-14px rotate90"
-                            />
-                        </a>
-                    </div>
+                        <div style={{paddingBottom: 5}}>
+                            <a onClick={this._onUpdatePosition.bind(this)}>
+                                <Icon
+                                    name="adjust"
+                                    title="icons.adjust"
+                                    className="icon-14px rotate90"
+                                />
+                            </a>
+                        </div>
+                    </Tooltip>
                 </td>
                 <td>
-                    <div
-                        data-place="left"
-                        data-tip={counterpart.translate(
-                            "tooltip.close_position",
-                            {amount: d, asset: debtAsset.get("symbol")}
-                        )}
-                        style={{paddingBottom: 5}}
+                    <Tooltip
+                        placement="left"
+                        title={counterpart.translate("tooltip.close_position", {
+                            amount: d,
+                            asset: debtAsset.get("symbol")
+                        })}
                     >
-                        <a onClick={this._onClosePosition.bind(this)}>
-                            <Icon
-                                name="cross-circle"
-                                title="icons.cross_circle.close_position"
-                                className="icon-14px"
-                            />
-                        </a>
-                    </div>
+                        <div style={{paddingBottom: 5}}>
+                            <a onClick={this._onClosePosition.bind(this)}>
+                                <Icon
+                                    name="cross-circle"
+                                    title="icons.cross_circle.close_position"
+                                    className="icon-14px"
+                                />
+                            </a>
+                        </div>
+                    </Tooltip>
                     {debtAsset ? (
                         <BorrowModal
                             visible={this.state.isBorrowModalVisible}
@@ -551,21 +550,20 @@ class MarginPositionPlaceHolder extends React.Component {
                     </Link>
                 </td>
                 <td>
-                    <div
-                        data-place="left"
-                        data-tip={counterpart.translate(
-                            "tooltip.update_position"
-                        )}
-                        style={{paddingBottom: 5}}
+                    <Tooltip
+                        placement="left"
+                        title={counterpart.translate("tooltip.update_position")}
                     >
-                        <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Icon
-                                name="adjust"
-                                title="icons.adjust"
-                                className="icon-14px rotate90"
-                            />
-                        </a>
-                    </div>
+                        <div style={{paddingBottom: 5}}>
+                            <a onClick={this._onUpdatePosition.bind(this)}>
+                                <Icon
+                                    name="adjust"
+                                    title="icons.adjust"
+                                    className="icon-14px rotate90"
+                                />
+                            </a>
+                        </div>
+                    </Tooltip>
                 </td>
                 <td>
                     {debtAsset ? (
@@ -686,15 +684,14 @@ const CollateralTable = ({
                         <Translate content="transaction.collateral" />
                     </th>
                     <th>
-                        <div
-                            className="tooltip inline-block"
-                            data-place="top"
-                            data-tip={counterpart.translate(
-                                "tooltip.coll_ratio"
-                            )}
+                        <Tooltip
+                            placement="top"
+                            title={counterpart.translate("tooltip.coll_ratio")}
                         >
-                            <Translate content="borrow.coll_ratio" />
-                        </div>
+                            <div className="tooltip inline-block">
+                                <Translate content="borrow.coll_ratio" />
+                            </div>
+                        </Tooltip>
                     </th>
                     <th>
                         <TranslateWithLinks
@@ -710,15 +707,14 @@ const CollateralTable = ({
                         />
                     </th>
                     <th style={alignRight} className="column-hide-small">
-                        <div
-                            className="tooltip inline-block"
-                            data-place="top"
-                            data-tip={counterpart.translate(
-                                "tooltip.call_price"
-                            )}
+                        <Tooltip
+                            placement="top"
+                            title={counterpart.translate("tooltip.call_price")}
                         >
-                            <Translate content="exchange.call" />
-                        </div>
+                            <div className="tooltip inline-block">
+                                <Translate content="exchange.call" />
+                            </div>
+                        </Tooltip>
                     </th>
                     <th style={alignRight} className="column-hide-small">
                         <Translate content="exchange.price" />

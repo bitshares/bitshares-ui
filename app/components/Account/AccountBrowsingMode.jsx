@@ -4,7 +4,7 @@ import AccountStore from "stores/AccountStore";
 import AccountActions from "actions/AccountActions";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
-import {Button, Modal, Icon, Popover} from "bitshares-ui-style-guide";
+import {Button, Modal, Icon, Popover, Tooltip} from "bitshares-ui-style-guide";
 
 class AccountBrowsingMode extends React.Component {
     constructor(props) {
@@ -89,21 +89,22 @@ class AccountBrowsingMode extends React.Component {
             </Button>
         ];
 
-        if(this.props.usernameViewIcon) {
-            return (
-                window.innerWidth < 640 && !this.isMyAccount() ? 
-                    <Popover 
-                        content={<Translate content="account_browsing_mode.you_are_in_browsing_mode" />}
-                        placement="bottom"
-                    >
-                        <Icon 
-                            style={{marginLeft: 10}}
-                            className="blue" 
-                            type="eye" 
-                            onClick={this.handleSwitchBack}
-                        />
-                    </Popover> : null
-            );
+        if (this.props.usernameViewIcon) {
+            return window.innerWidth < 640 && !this.isMyAccount() ? (
+                <Popover
+                    content={
+                        <Translate content="account_browsing_mode.you_are_in_browsing_mode" />
+                    }
+                    placement="bottom"
+                >
+                    <Icon
+                        style={{marginLeft: 10}}
+                        className="blue"
+                        type="eye"
+                        onClick={this.handleSwitchBack}
+                    />
+                </Popover>
+            ) : null;
         } else {
             return (
                 <div className="account-browsing-mode">
@@ -120,18 +121,21 @@ class AccountBrowsingMode extends React.Component {
                         )}
                     </Modal>
                     {!this.isMyAccount() ? (
-                        <Button
-                            data-place="bottom"
-                            data-tip={counterpart.translate(
+                        <Tooltip
+                            placement="bottom"
+                            title={counterpart.translate(
                                 "account_browsing_mode.you_are_in_browsing_mode"
                             )}
-                            onClick={this.handleSwitchBack}
-                            className="hide-for-small-only account-browsing-mode--button"
                         >
-                            {counterpart.translate(
-                                "account_browsing_mode.view_mode"
-                            )}
-                        </Button>
+                            <Button
+                                onClick={this.handleSwitchBack}
+                                className="hide-for-small-only account-browsing-mode--button"
+                            >
+                                {counterpart.translate(
+                                    "account_browsing_mode.view_mode"
+                                )}
+                            </Button>
+                        </Tooltip>
                     ) : null}
                 </div>
             );

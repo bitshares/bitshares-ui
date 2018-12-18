@@ -15,6 +15,7 @@ import MarketStatsCheck from "./MarketStatsCheck";
 import AssetWrapper from "./AssetWrapper";
 import ReactTooltip from "react-tooltip";
 import PropTypes from "prop-types";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 /**
  *  Given an asset amount, displays the equivalent value in baseAsset if possible
@@ -282,30 +283,27 @@ class TotalValue extends MarketStatsCheck {
             );
         } else {
             return (
-                <div
-                    className="tooltip inline-block"
-                    data-tip={totalsTip}
-                    data-place="bottom"
-                    data-html={true}
-                >
-                    {!!this.props.label ? (
-                        <span className="font-secondary">
-                            <Translate content={this.props.label} />:{" "}
-                        </span>
-                    ) : null}
-                    <FormattedAsset
-                        noTip
-                        noPrefix
-                        hide_asset={this.props.hide_asset}
-                        amount={totalValue}
-                        asset={toAsset.get("id")}
-                        decimalOffset={
-                            toAsset.get("symbol").indexOf("BTC") === -1
-                                ? toAsset.get("precision") - 2
-                                : 4
-                        }
-                    />
-                </div>
+                <Tooltip placement="bottom" title={totalsTip}>
+                    <div className="tooltip inline-block">
+                        {!!this.props.label ? (
+                            <span className="font-secondary">
+                                <Translate content={this.props.label} />:{" "}
+                            </span>
+                        ) : null}
+                        <FormattedAsset
+                            noTip
+                            noPrefix
+                            hide_asset={this.props.hide_asset}
+                            amount={totalValue}
+                            asset={toAsset.get("id")}
+                            decimalOffset={
+                                toAsset.get("symbol").indexOf("BTC") === -1
+                                    ? toAsset.get("precision") - 2
+                                    : 4
+                            }
+                        />
+                    </div>
+                </Tooltip>
             );
         }
     }
@@ -324,17 +322,20 @@ class ValueStoreWrapper extends React.Component {
     }
 }
 
-ValueStoreWrapper = connect(ValueStoreWrapper, {
-    listenTo() {
-        return [MarketsStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats,
-            settings: SettingsStore.getState().settings
-        };
+ValueStoreWrapper = connect(
+    ValueStoreWrapper,
+    {
+        listenTo() {
+            return [MarketsStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats,
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);
 
 class TotalBalanceValue extends React.Component {
     static propTypes = {
