@@ -83,6 +83,8 @@ require("file-loader?name=asset-symbols/[name].png!./btg.png");
 require("file-loader?name=asset-symbols/[name].png!./tatchcoin.png");
 require("file-loader?name=asset-symbols/[name].png!./tclgulden.png");
 require("file-loader?name=asset-symbols/[name].png!./tclsilver.png");
+require("file-loader?name=asset-symbols/[name].png!./tatch.nlg.png");
+
 
 //Addons
 require("file-loader?name=asset-symbols/[name].png!./bco.png");
