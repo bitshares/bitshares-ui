@@ -4,6 +4,7 @@
  */
 
 import {
+    tatchAPIs,
     rudexAPIs,
     bitsparkAPIs,
     widechainAPIs,
