@@ -1,5 +1,5 @@
 import ls from "./localStorage";
-import {tatchbitsparkAPIs} from "api/apiConfig";
+import {tatchAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
 const tatchStorage = new ls("");
 
