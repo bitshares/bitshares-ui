@@ -35,7 +35,7 @@ class TatchGateway extends React.Component {
             firstTimeCoin = "BTC";
         }
         if (state.action == "withdraw") {
-            firstTimeCoin = "SPARKDEX.BTC";
+            firstTimeCoin = "TATCH.BTC";
         }
         let activeCoin = cachedCoin ? cachedCoin : firstTimeCoin;
         return activeCoin;
