@@ -43,6 +43,17 @@ export const availableGateways = {
             selected: false
         }
     },
+    TATCH: {
+        id: "TATCH",
+        name: "TATCH",
+        baseAPI: tatchAPIs,
+        isEnabled: allowedGateway("TATCH"),
+        selected: false,
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },
     SPARKDEX: {
         id: "SPARKDEX",
         name: "SPARKDEX",
@@ -54,6 +65,7 @@ export const availableGateways = {
             selected: false
         }
     },
+    
     WIN: {
         id: "WIN",
         name: "Winex",
