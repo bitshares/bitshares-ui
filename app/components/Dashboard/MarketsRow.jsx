@@ -104,6 +104,7 @@ class MarketsRow extends React.Component {
             if (
                 symbol === "OPEN.BTC" ||
                 symbol === "GDEX.BTC" ||
+                symbol === "SUDO.BTC" ||
                 symbol === "RUDEX.BTC"
             )
                 return symbol;
