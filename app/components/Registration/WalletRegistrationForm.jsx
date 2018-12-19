@@ -16,7 +16,7 @@ import LoadingIndicator from "../LoadingIndicator";
 import AccountNameInput from "./../Forms/AccountNameInput";
 import PasswordInput from "./../Forms/PasswordInput";
 import Icon from "../Icon/Icon";
-import {Notification} from "bitshares-ui-style-guide";
+import {Notification, Tooltip} from "bitshares-ui-style-guide";
 
 class WalletRegistrationForm extends React.Component {
     static propTypes = {
@@ -221,16 +221,18 @@ class WalletRegistrationForm extends React.Component {
                         <span className="vertical-middle">
                             {counterpart.translate("settings.password")}
                         </span>
-                        <span
-                            data-tip={counterpart.translate(
+                        <Tooltip
+                            title={counterpart.translate(
                                 "tooltip.registration.password"
                             )}
                         >
-                            <Icon
-                                name="question-in-circle"
-                                className="icon-14px question-icon vertical-middle"
-                            />
-                        </span>
+                            <span>
+                                <Icon
+                                    name="question-in-circle"
+                                    className="icon-14px question-icon vertical-middle"
+                                />
+                            </span>
+                        </Tooltip>
                     </span>
                 }
             />
@@ -248,16 +250,18 @@ class WalletRegistrationForm extends React.Component {
                         <span className="vertical-middle">
                             {counterpart.translate("account.name")}
                         </span>
-                        <span
-                            data-tip={counterpart.translate(
+                        <Tooltip
+                            title={counterpart.translate(
                                 "tooltip.registration.accountName"
                             )}
                         >
-                            <Icon
-                                name="question-in-circle"
-                                className="icon-14px question-icon vertical-middle"
-                            />
-                        </span>
+                            <span>
+                                <Icon
+                                    name="question-in-circle"
+                                    className="icon-14px question-icon vertical-middle"
+                                />
+                            </span>
+                        </Tooltip>
                     </span>
                 }
                 noLabel

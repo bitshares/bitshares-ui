@@ -14,6 +14,7 @@ import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class AccountRegistrationForm extends React.Component {
     static propTypes = {
@@ -127,16 +128,18 @@ class AccountRegistrationForm extends React.Component {
                                 <span className="vertical-middle">
                                     {counterpart.translate("account.name")}
                                 </span>
-                                <span
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    title={counterpart.translate(
                                         "tooltip.registration.accountName"
                                     )}
                                 >
-                                    <Icon
-                                        name="question-in-circle"
-                                        className="icon-14px question-icon vertical-middle"
-                                    />
-                                </span>
+                                    <span>
+                                        <Icon
+                                            name="question-in-circle"
+                                            className="icon-14px question-icon vertical-middle"
+                                        />
+                                    </span>
+                                </Tooltip>
                             </span>
                         }
                         noLabel

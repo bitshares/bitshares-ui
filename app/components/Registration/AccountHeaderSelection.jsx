@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 export default function AccountHeaderSelection(props) {
     return (
@@ -48,8 +49,8 @@ export default function AccountHeaderSelection(props) {
                     }`}
                 />
                 {!props.forSmall ? (
-                    <span
-                        data-tip={
+                    <Tooltip
+                        title={
                             props.active
                                 ? counterpart.translate(
                                       "tooltip.registration.accountModel"
@@ -57,11 +58,13 @@ export default function AccountHeaderSelection(props) {
                                 : ""
                         }
                     >
-                        <Icon
-                            name="question-in-circle"
-                            className="icon-14px question-icon"
-                        />
-                    </span>
+                        <span>
+                            <Icon
+                                name="question-in-circle"
+                                className="icon-14px question-icon"
+                            />
+                        </span>
+                    </Tooltip>
                 ) : null}
             </div>
         </div>

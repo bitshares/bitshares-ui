@@ -21,7 +21,7 @@ import ChoiceModal from "../Modal/ChoiceModal";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
 import {getWalletName} from "branding";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -536,14 +536,22 @@ class Footer extends React.Component {
                         {this.props.backup_recommended ? (
                             <span>
                                 <div className="grid-block">
-                                    <a
-                                        className="shrink txtlabel facolor-alert"
-                                        data-tip="Please understand that you are responsible for making your own backup&hellip;"
-                                        data-type="warning"
-                                        onClick={this.onBackup.bind(this)}
+                                    <Tooltip
+                                        overlay={
+                                            <div>
+                                                Please understand that you are
+                                                responsible for making your own
+                                                backup&hellip;
+                                            </div>
+                                        }
                                     >
-                                        <Translate content="footer.backup" />
-                                    </a>
+                                        <a
+                                            className="shrink txtlabel facolor-alert"
+                                            onClick={this.onBackup.bind(this)}
+                                        >
+                                            <Translate content="footer.backup" />
+                                        </a>
+                                    </Tooltip>
                                     &nbsp;&nbsp;
                                 </div>
                             </span>
