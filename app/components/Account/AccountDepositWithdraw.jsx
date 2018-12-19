@@ -871,10 +871,6 @@ export default connect(
                     "CITADEL",
                     []
                 ),
-                winexBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "WIN",
-                    []
-                ),
                 xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
                     "XBTSX",
                     []
