@@ -144,6 +144,7 @@ export function getMyMarketsQuotes() {
             "RUDEX.TT"
         ],
         sparkTokens: ["ZEPH", "SPARKDEX.ETH", "SPARKDEX.BTC"],
+        sudoTokens: ["SUDO.SUDO", "SUDO.BTC"],
         winTokens: ["WIN.ETC", "WIN.ETH", "WIN.HSR"],
         xbtsxTokens: [
             "XBTSX.STH",
@@ -277,7 +278,9 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
         ["BTS", "SPARKDEX.BTC"],
-        ["BTS", "SPARKDEX.ETH"]
+        ["BTS", "SPARKDEX.ETH"],
+        ["BTS", "SUDO.SUDO"],
+        ["BTS", "SUDO.BTC"]
     ].filter(a => {
         if (!quotes.length) return true;
         return quotes.indexOf(a[0]) !== -1;
@@ -293,6 +296,7 @@ export function getAssetNamespaces() {
     return [
         "OPEN.",
         "RUDEX.",
+        "SUDO.",
         "WIN.",
         "BRIDGE.",
         "GDEX.",
@@ -321,6 +325,7 @@ export function allowedGateway(gateway) {
         [
             "OPEN",
             "RUDEX",
+            "SUDO",
             "WIN",
             "BRIDGE",
             "GDEX",
