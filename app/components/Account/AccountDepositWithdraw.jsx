@@ -19,6 +19,7 @@ import SettingsActions from "actions/SettingsActions";
 import {openledgerAPIs} from "api/apiConfig";
 import BitKapital from "../DepositWithdraw/BitKapital";
 import RuDexGateway from "../DepositWithdraw/rudex/RuDexGateway";
+import CryptosudoGateway from "../DepositWithdraw/cryptosudo/CryptosudoGateway";
 import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
@@ -45,6 +46,7 @@ class AccountDepositWithdraw extends React.Component {
         this.state = {
             olService: props.viewSettings.get("olService", "gateway"),
             rudexService: props.viewSettings.get("rudexService", "gateway"),
+            cryptosudoService: props.viewSettings.get("cryptosudoService", "gateway"),
             bitsparkService: props.viewSettings.get(
                 "bitsparkService",
                 "gateway"
@@ -75,6 +77,7 @@ class AccountDepositWithdraw extends React.Component {
             ) ||
             nextState.olService !== this.state.olService ||
             nextState.rudexService !== this.state.rudexService ||
+            nextState.cryptosudoService !== this.state.cryptosudoService ||
             nextState.bitsparkService !== this.state.bitsparkService ||
             nextState.xbtsxService !== this.state.xbtsxService ||
             nextState.btService !== this.state.btService ||
@@ -105,6 +108,16 @@ class AccountDepositWithdraw extends React.Component {
 
         SettingsActions.changeViewSetting({
             rudexService: service
+        });
+    }
+
+    toggleCryptoSudoService(service) {
+        this.setState({
+            cryptosudoService: service
+        });
+
+        SettingsActions.changeViewSetting({
+            cryptosudoService: service
         });
     }
 
@@ -171,6 +184,7 @@ class AccountDepositWithdraw extends React.Component {
     renderServices(
         openLedgerGatewayCoins,
         rudexGatewayCoins,
+        cryptosudoGatewayCoins,
         bitsparkGatewayCoins,
         xbtsxGatewayCoins
     ) {
@@ -181,6 +195,7 @@ class AccountDepositWithdraw extends React.Component {
             olService,
             btService,
             rudexService,
+            cryptosudoService,
             bitsparkService,
             xbtsxService,
             citadelService
@@ -310,6 +325,45 @@ class AccountDepositWithdraw extends React.Component {
                         <div>
                             <Translate content="gateway.rudex.coming_soon" />
                         </div>
+                    ) : null}
+                </div>
+            )
+        });
+
+        serList.push({
+            name: "CryptoSudo (SUDO.X)",
+            template: (
+                <div className="content-block">
+                    <div
+                        className="service-selector"
+                        style={{marginBottom: "2rem"}}
+                    >
+                        <ul className="button-group segmented no-margin">
+                            <li
+                                onClick={this.toggleCryptoSudoService.bind(
+                                    this,
+                                    "gateway"
+                                )}
+                                className={
+                                    cryptosudoService === "gateway"
+                                        ? "is-active"
+                                        : ""
+                                }
+                            >
+                                <a>
+                                    <Translate content="gateway.gateway" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {cryptosudoService === "gateway" &&
+                    cryptosudoGatewayCoins.length ? (
+                        <CryptosudoGateway
+                            account={account}
+                            coins={cryptosudoGatewayCoins}
+                            provider="cryptosudo"
+                        />
                     ) : null}
                 </div>
             )
@@ -564,6 +618,16 @@ class AccountDepositWithdraw extends React.Component {
                 return 0;
             });
 
+            let cryptosudoGatewayCoins = this.props.cryptosudoBackedCoins
+            .map(coin => {
+                return coin;
+            })
+            .sort((a, b) => {
+                if (a.symbol < b.symbol) return -1;
+                if (a.symbol > b.symbol) return 1;
+                return 0;
+            });
+
         let bitsparkGatewayCoins = this.props.bitsparkBackedCoins
             .map(coin => {
                 return coin;
@@ -587,6 +651,7 @@ class AccountDepositWithdraw extends React.Component {
         let services = this.renderServices(
             openLedgerGatewayCoins,
             rudexGatewayCoins,
+            cryptosudoGatewayCoins,
             bitsparkGatewayCoins,
             xbtsxGatewayCoins
         );
@@ -604,6 +669,7 @@ class AccountDepositWithdraw extends React.Component {
             "GDEX",
             "OPEN",
             "RUDEX",
+            "SUDO",
             "SPARKDEX",
             "TRADE",
             "BITKAPITAL",
@@ -789,6 +855,10 @@ export default connect(
                 ),
                 rudexBackedCoins: GatewayStore.getState().backedCoins.get(
                     "RUDEX",
+                    []
+                ),
+                cryptosudoBackedCoins: GatewayStore.getState().backedCoins.get(
+                    "SUDO",
                     []
                 ),
                 bitsparkBackedCoins: GatewayStore.getState().backedCoins.get(
