@@ -1,7 +1,7 @@
 import {getFaucet} from "../branding";
 
 export const tatchAPIs = {
-    BASE: "https://gate.tatchcapital.com/api/v1/coins",
+    BASE: "https://gate.tatchcapital.com/api/v1",
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/active-wallets",
     TRADING_PAIRS: "/trading-pairs"
