@@ -17,7 +17,8 @@
 - [Децентрализованная биржа](dex/introduction.md)
 - [Торговля](dex/trading.md)
 - [Короткая продажа BitAssets](dex/shorting.md)
-- Шлюзы 
+- Шлюзы
+    - [CryptoSudo](gateways/cryptosudo.md)
     - [OpenLedger](gateways/openledger.md)
     - [Rudex](gateways/rudex.md)
     - [CryptoBridge](gateways/cryptobridge.md)
