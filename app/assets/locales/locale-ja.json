@@ -757,6 +757,7 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
+<<<<<<< HEAD
                 "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
                 "gs_collateral_valuation": "Collateral Valuation (with bids)",
                 "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
@@ -766,13 +767,21 @@
                 "gs_revert": "Reviving",
                 "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
                 "gs_see_actions": "see Asset actions",
+=======
+                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+>>>>>>> c1361927611d1f63178b0826e74817b0a0654b33
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
+<<<<<<< HEAD
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
                 "settlement_price": "Settlement Price",
+=======
+                "settlement_funds": "Settlement funds",
+                "settlement_price": "Settlement price",
+>>>>>>> c1361927611d1f63178b0826e74817b0a0654b33
                 "title": "Settlement"
             },
             "summary": {
@@ -952,6 +961,7 @@
             "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
             "open": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
             "rudex": "",
+            "sudo": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、CryptoSudoによって提供されるゲートウェイサービスによって入出金が可能です。",
             "trade": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
             "win": "",
             "xbts": ""
@@ -1040,6 +1050,13 @@
             "support_block": "サポートについては、RuDEXまでご連絡ください。:",
             "under_construction": "工事中"
         },
+        "sudo": {
+            "coming_soon": "近日公開",
+            "min_amount": "最低数量: %(minAmount)s %(symbol)s",
+            "min_amount_error": "数字を入力してください >= minimum",
+            "support_block": "サポートについては、CryptoSudoまでご連絡ください。:",
+            "under_construction": "工事中"
+        },
         "scan_qr": "QRをスキャン",
         "service": "転送サービス",
         "status": "ステータス",
@@ -1053,6 +1070,7 @@
         "unavailable_CITADEL": "The Citadel Bridge is down or not responding",
         "unavailable_OPEN": "OpenLedgerゲートウェイがダウンしているか、応答していません",
         "unavailable_RUDEX": "RuDEXゲートウェイがダウンしているか、応答していません",
+        "unavailable_SUDO": "CryptoSudoゲートウェイがダウンしているか、応答していません",
         "unavailable_TRADE": "Blocktradesブリッジがダウンしているか、応答していません",
         "unavailable_bridge": "このアセットのブリッジサービスは現在停止しています。後でやり直してください",
         "use_copy_button": "アドレス、またはメモをコピーするにはコピーボタンを使用してください。",
