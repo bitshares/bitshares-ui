@@ -4,6 +4,7 @@
  */
 
 import {
+    cryptosudoAPIs,    
     rudexAPIs,
     bitsparkAPIs,
     widechainAPIs,
@@ -42,6 +43,17 @@ export const availableGateways = {
             selected: false
         }
     },
+    SUDO: {
+        id: "SUDO",
+        name: "CRYPTOSUDO",
+        baseAPI: cryptosudoAPIs,
+        isEnabled: allowedGateway("SUDO"),
+        selected: false,
+        options: {
+            enabled: false,
+            selected: false
+        }
+    },    
     SPARKDEX: {
         id: "SPARKDEX",
         name: "SPARKDEX",
