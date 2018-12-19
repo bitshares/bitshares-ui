@@ -18,3 +18,6 @@
  * [Merkezsiz/dağıtık Borsa](dex/introduction.md)
  * [Alış-Satış/Trade](dex/trading.md)
  * [BitAktiflerin Kısa Satışları](dex/shorting.md)
+ * Gateways
+    - [CryptoSudo](gateways/cryptosudo.md) 
+    - [Rudex](gateways/rudex.md)
