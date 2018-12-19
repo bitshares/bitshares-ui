@@ -763,7 +763,6 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-<<<<<<< HEAD
                 "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
                 "gs_collateral_valuation": "Collateral Valuation (with bids)",
                 "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
@@ -773,21 +772,13 @@
                 "gs_revert": "Reviving",
                 "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
                 "gs_see_actions": "see Asset actions",
-=======
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
->>>>>>> c1361927611d1f63178b0826e74817b0a0654b33
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-<<<<<<< HEAD
                 "settlement_funds": "Settlement Funds",
                 "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
                 "settlement_price": "Settlement Price",
-=======
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
->>>>>>> c1361927611d1f63178b0826e74817b0a0654b33
                 "title": "Settlement"
             },
             "summary": {
@@ -1068,9 +1059,6 @@
         "status": "Статус",
         "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"OpenLedger TRANSFER SERVICE\", пожалуйста, обращайтесь в Openledger:",
         "support_gdex": "Для получения поддержки, пожалуйста, свяжитесь с GDEX",
-        "bitspark": {
-            "support_block": "По поводу проблем с ВВОДОМ или ВЫВОДОМ при использовании \"BitSpark TRANSFER SERVICE\", пожалуйста, обращайтесь в BitSpark:"
-        },
         "symbol": "Символ",
         "time": "Время",
         "title": "Пополнение и Вывод",
