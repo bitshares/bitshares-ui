@@ -646,11 +646,16 @@ class AccountStore extends BaseStore {
     }
 
     _unsubscribeAccount() {
+        let {currentAccount} = this.state;
         let account_refs = AccountRefsStore.getAccountRefs();
 
         account_refs.forEach(id => {
-            ChainStore.getAccount(id, false);
-            console.log("[AccountStore,_unsubscribeAccount", id);
+            let account = ChainStore.getAccount(id, false);
+            if (account !== undefined && account.get("name") === currentAccount) {
+                // Unsubscribe Previous Account here....
+
+                console.log("[AccountStore,_unsubscribeAccount", id);
+            }
         });
     }
 
