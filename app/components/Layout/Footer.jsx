@@ -183,16 +183,14 @@ class Footer extends React.Component {
         return currentNode;
     }
 
-    getNode(node = {url: "", operator: "", region: ""}) {
+    getNode(node = {url: "", operator: ""}) {
         if (!node || !node.url) {
             throw "Node is undefined of has no url";
         }
 
         const {props} = this;
 
-        let testNet;
-        if (node.region) testNet = node.region.startsWith("TESTNET");
-        else testNet = false;
+        const testNet = node.url.indexOf("testnet") !== -1;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
