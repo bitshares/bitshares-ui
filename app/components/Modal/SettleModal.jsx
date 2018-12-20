@@ -114,8 +114,12 @@ class ModalContent extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    componentWillReceiveProps(np, ns) {
-        if (np.asset !== ns.asset) { 
+    componentWillReceiveProps(np) {
+        if (
+            !!np.asset &&
+            !!this.props.asset &&
+            np.asset.get("id") !== this.props.asset.get("id")
+        ) {
             this.setState({
                 amount: 0
             });
@@ -132,7 +136,9 @@ class ModalContent extends React.Component {
 
         this.props.hideModal();
 
-        amount = parseInt(amount * Math.pow(10, this.props.asset.get("precision")));
+        amount = parseInt(
+            amount * Math.pow(10, this.props.asset.get("precision"))
+        );
 
         var tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_settle", {
@@ -196,7 +202,10 @@ class ModalContent extends React.Component {
                 <Translate content="exchange.balance" />
                 :&nbsp;
                 {currentBalance ? (
-                    <span className="underline" onClick={this._useMaxValue.bind(this, balanceAmount)}>
+                    <span
+                        className="underline"
+                        onClick={this._useMaxValue.bind(this, balanceAmount)}
+                    >
                         <BalanceComponent balance={currentBalance} />
                     </span>
                 ) : (
@@ -206,18 +215,24 @@ class ModalContent extends React.Component {
         );
 
         let isFundsToLow = false;
-        if (amount > balanceAmount / Math.pow(10, this.props.asset.get("precision"))) {
+        if (
+            amount >
+            balanceAmount / Math.pow(10, this.props.asset.get("precision"))
+        ) {
             isFundsToLow = true;
         }
-        
 
         const footer = [
-            <Tooltip title={isFundsToLow ? counterpart.translate(
-                "tooltip.lack_funds" 
-            ) : null}>
-                <Button 
-                    key={"submit"} 
-                    type="primary" 
+            <Tooltip
+                title={
+                    isFundsToLow
+                        ? counterpart.translate("tooltip.lack_funds")
+                        : null
+                }
+            >
+                <Button
+                    key={"submit"}
+                    type="primary"
                     onClick={this.onSubmit}
                     disabled={isFundsToLow}
                 >
