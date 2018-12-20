@@ -251,9 +251,7 @@ class MarketHistory extends React.Component {
             </tr>
         );
 
-        let historyRowsLength = historyRows.length;
-
-        if (!showAll) {
+        if (!showAll && historyRows) {
             historyRows.splice(rowCount, historyRows.length);
         }
 
@@ -335,7 +333,7 @@ class MarketHistory extends React.Component {
                             </TransitionWrapper>
                         </table>
                     </div>
-                    {historyRowsLength > 11 ? (
+                    {historyRows && historyRows.length > 11 ? (
                         <div className="orderbook-showall">
                             <a onClick={this._onSetShowAll.bind(this)}>
                                 <Translate
@@ -344,7 +342,7 @@ class MarketHistory extends React.Component {
                                             ? "exchange.hide"
                                             : "exchange.show_all_trades"
                                     }
-                                    rowcount={historyRowsLength}
+                                    rowcount={historyRows.length}
                                 />
                             </a>
                         </div>
