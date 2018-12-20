@@ -614,8 +614,6 @@ class AccountStore extends BaseStore {
     }
 
     setCurrentAccount(name) {
-        this._unsubscribeAccount();
-
         if (this.state.passwordAccount) name = this.state.passwordAccount;
         const key = this._getStorageKey();
         if (!name) {
@@ -628,33 +626,24 @@ class AccountStore extends BaseStore {
 
         ss.set(key, name || null);
 
-        this._subscribeAccount();
+        this._updateAccountSubscription();
         this.loadDbData();
     }
 
-    _subscribeAccount() {
+    _updateAccountSubscription() {
         let {currentAccount} = this.state;
         let account_refs = AccountRefsStore.getAccountRefs();
 
         account_refs.forEach(id => {
+            // Unsubscribe Previous Account here....
+            // console.log("[AccountStore,_updateAccountSubscription,un-subscribe", id);
+
             let account = ChainStore.getAccount(id, false);
-            if (account !== undefined && account.get("name") === currentAccount) {
-                ChainStore.getAccount(id);
-                console.log("[AccountStore,_subscribeAccount", id);
-            }
-        });
-    }
-
-    _unsubscribeAccount() {
-        let {currentAccount} = this.state;
-        let account_refs = AccountRefsStore.getAccountRefs();
-
-        account_refs.forEach(id => {
-            let account = ChainStore.getAccount(id, false);
-            if (account !== undefined && account.get("name") === currentAccount) {
-                // Unsubscribe Previous Account here....
-
-                console.log("[AccountStore,_unsubscribeAccount", id);
+            if (account !== undefined) {
+                if(account.get("name") === currentAccount) {
+                    ChainStore.getAccount(id);
+                    console.log("[AccountStore,_updateAccountSubscription,subscribe", id);
+                }
             }
         });
     }
