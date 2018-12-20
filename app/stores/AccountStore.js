@@ -255,7 +255,6 @@ class AccountStore extends BaseStore {
     loadDbData() {
         let myActiveAccounts = Immutable.Set().asMutable();
         let chainId = Apis.instance().chain_id;
-
         return new Promise((resolve, reject) => {
             iDB.load_data("linked_accounts")
                 .then(data => {
@@ -263,8 +262,6 @@ class AccountStore extends BaseStore {
                         data || []
                     ).toSet();
 
-                    console.log("loadDbData()", this.state.linkedAccounts, this.state.currentAccount);
-                    
                     /*
                     * If we're in cloud wallet mode, only fetch the currently
                     * used cloud mode account, if in wallet mode fetch all the
@@ -307,11 +304,11 @@ class AccountStore extends BaseStore {
                                         a.get("name")
                                     )
                                 ) {
-                                    console.log("Adding Active Account ", a.get("name"));
+                                    // console.log("Adding Active Account ", a.get("name"));
                                     myActiveAccounts.add(a.get("name"));
                                 } else if (!!a && !this.isMyAccount(a)) {
                                     // Remove accounts not owned by the user from the linked_accounts db
-                                    console.log("Un-Linking Account ", a.get("name"));
+                                    // console.log("Un-Linking Account ", a.get("name"));
                                     this._unlinkAccount(a.get("name"));
                                 }
                             });
@@ -356,7 +353,6 @@ class AccountStore extends BaseStore {
     }
 
     addAccountRefs() {
-        console.log("addACcoutRefs");
         //  Simply add them to the myActiveAccounts list (no need to persist them)
         let account_refs = AccountRefsStore.getAccountRefs();
         if (
@@ -766,7 +762,6 @@ class AccountStore extends BaseStore {
     }
 
     onChangeSetting(payload) {
-        console.log("Settings Changed");
         if (payload.setting === "passwordLogin") {
             if (payload.value === false) {
                 this.onSetPasswordAccount(null);
