@@ -190,6 +190,8 @@ class Footer extends React.Component {
 
         const {props} = this;
 
+        const testNet = node.url.indexOf("testnet") !== -1;
+
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
@@ -201,7 +203,8 @@ class Footer extends React.Component {
             ping:
                 node.url in props.apiLatencies
                     ? props.apiLatencies[node.url]
-                    : -1
+                    : -1,
+            testNet
         };
     }
 
@@ -592,6 +595,11 @@ class Footer extends React.Component {
                                         }}
                                     >
                                         <div className="footer-status">
+                                            {connected && activeNode.testNet && (
+                                                <span className="testnet">
+                                                    <Translate content="settings.testnet_nodes" />{" "}
+                                                </span>
+                                            )}
                                             {!connected ? (
                                                 <span className="warning">
                                                     <Translate content="footer.disconnected" />
@@ -611,9 +619,8 @@ class Footer extends React.Component {
                                                 {!connected
                                                     ? "-"
                                                     : !activeNode.ping
-                                                        ? "-"
-                                                        : activeNode.ping +
-                                                          "ms"}
+                                                    ? "-"
+                                                    : activeNode.ping + "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />
