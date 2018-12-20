@@ -50,10 +50,7 @@ export function getGatewayStatusByAsset(
                 (typeof coin.isAvailable == "boolean" && coin.isAvailable);
 
             // Gateway has EOS.* asset names
-            if (
-                boolCheck == "withdrawalAllowed" &&
-                backingCoin.toUpperCase().indexOf("EOS.") !== -1
-            ) {
+            if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
                 let [_network, _coin] = backingCoin.split(".");
                 backingCoin = _coin;
             }
