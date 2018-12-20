@@ -9,7 +9,8 @@ import {Modal} from "bitshares-ui-style-guide";
 
 class BitsharesBeos extends React.Component {
     static propTypes = {
-        asset: ChainTypes.ChainAsset.isRequired
+        asset: ChainTypes.ChainAsset.isRequired,
+        assets: ChainTypes.ChainAssetsList
     };
 
     constructor(props) {
@@ -52,6 +53,13 @@ class BitsharesBeos extends React.Component {
             ...QueryString.parse(params.search)
         };
     }
+
+    getBalances = () => {
+        const {assets, account} = this.props;
+        return assets.filter(a => !!a).map(a => {
+            return account.get("balances").toJS()[a.get("id")];
+        });
+    };
 
     render() {
         let transferBtsId = this.getTransferBtsId();
@@ -150,11 +158,13 @@ class BitsharesBeos extends React.Component {
                         showModal={this.showModal}
                         account={this.props.account.get("name")}
                         asset={this.props.asset.get("symbol")}
+                        assets={this.props.assets.map(a => a.get("symbol"))}
                         balance={
                             this.props.account.get("balances").toJS()[
                                 this.props.asset.get("id")
                             ]
                         }
+                        balances={this.getBalances()}
                         creator={"eosio"}
                         issuer={beosIssuer}
                         beosApiUrl={beosApiUrl}

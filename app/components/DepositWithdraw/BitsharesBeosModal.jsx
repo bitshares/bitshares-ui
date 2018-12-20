@@ -20,6 +20,7 @@ class BitsharesBeosModal extends React.Component {
     static propTypes = {
         account: ChainTypes.ChainAccount.isRequired,
         asset: ChainTypes.ChainAsset.isRequired,
+        assets: ChainTypes.ChainAssetsList,
         creator: PropTypes.string.isRequired,
         issuer: ChainTypes.ChainAccount.isRequired,
         owner_key: PropTypes.string.isRequired,
@@ -28,6 +29,7 @@ class BitsharesBeosModal extends React.Component {
         action: PropTypes.string.isRequired,
         from: PropTypes.string.isRequired,
         balance: ChainTypes.ChainObject,
+        balances: ChainTypes.ChainObjectsList,
         beosApiUrl: PropTypes.string.isRequired,
         beosFee: PropTypes.string.isRequired
     };
@@ -57,7 +59,9 @@ class BitsharesBeosModal extends React.Component {
             balance_error: false,
             maintenance_error: false,
             memo: "",
-            no_account_error: false
+            no_account_error: false,
+            selectedAssetId: "1.3.0",
+            no_account_error_without_creation: false
         };
 
         this.showConfirmationModal = this.showConfirmationModal.bind(this);
@@ -80,7 +84,9 @@ class BitsharesBeosModal extends React.Component {
             this.setState(
                 {
                     from_account: np.account,
-                    fee_asset_id: "1.3.0",
+                    fee_asset_id: this.getAssetById(
+                        this.state.selectedAssetId
+                    ).get("id"),
                     fee_amount: new Asset({amount: 0})
                 },
                 () => {
@@ -103,30 +109,26 @@ class BitsharesBeosModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        let {fee_asset_id, from_account} = state;
-        let newMemo = "";
+        let {from_account} = state;
 
-        if (this.state.is_account_creation) {
-            newMemo =
-                "pxbts:" +
-                this.state.account +
-                ":" +
-                this.state.memo +
-                ":create";
-        } else if (this.state.memo === "" && !this.state.is_account_creation) {
-            newMemo = "pxbts:" + this.state.account;
-        } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo = "pxbts:" + this.state.account + ":" + this.state.memo;
+        const asset = this.getAssetById(this.state.selectedAssetId);
+        const pxasset = this.getProxyAsset(asset.get("symbol"));
+        let memo;
+
+        if (pxasset === "pxbts" && this.state.is_account_creation) {
+            memo = this.createMemoForAsset(pxasset, true);
+        } else {
+            memo = this.createMemoForAsset(pxasset);
         }
 
         if (!from_account) return null;
         checkFeeStatusAsync({
             accountID: from_account.get("id"),
-            feeID: fee_asset_id,
+            feeID: asset.get("id"),
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: newMemo
+                content: memo
             }
         }).then(({fee}) => {
             if (this.unMounted) return;
@@ -140,9 +142,21 @@ class BitsharesBeosModal extends React.Component {
         });
     }
 
+    getBalanceForAsset(assetId) {
+        return this.props.balances.filter(
+            b => b.get("asset_type") === assetId
+        )[0];
+    }
+
+    getAssetById(assetId) {
+        return this.props.assets.filter(a => a.get("id") === assetId)[0];
+    }
+
     _checkBalance() {
+        const {selectedAssetId} = this.state;
         const {amount_to_send, fee_amount, fee_amount_creation} = this.state;
-        const {asset, balance} = this.props;
+        const asset = this.getAssetById(selectedAssetId);
+        const balance = this.getBalanceForAsset(selectedAssetId);
         let fee_amount_amount = 0;
         if (fee_amount) {
             fee_amount_amount = fee_amount.amount;
@@ -165,6 +179,8 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAlternativeAccountValidation(url, account) {
+        const asset = this.getAssetById(this.state.selectedAssetId);
+
         let validation_url =
             url + "/wallets/beos/address-validator?address=" + account;
         let validation_promise = fetch(validation_url, {
@@ -200,21 +216,32 @@ class BitsharesBeosModal extends React.Component {
                             !result.isValid &&
                             !this.state.is_account_creation
                         ) {
-                            this.setState({
-                                no_account_error: true
-                            });
+                            if (asset.get("symbol") === "BTS") {
+                                this.setState({
+                                    no_account_error: true
+                                });
+                            } else {
+                                this.setState({
+                                    no_account_error_without_creation: true,
+                                    is_account_creation_checkbox: false,
+                                    is_account_creation: false
+                                });
+                            }
                         } else {
                             this.setState(
                                 {
                                     fee_amount_creation: 0,
                                     is_account_creation: false,
-                                    no_account_error: false
+                                    no_account_error: false,
+                                    no_account_error_without_creation: false
                                 },
                                 this._checkBalance
                             );
                         }
                         this.setState({
-                            is_account_creation_checkbox: !result.isValid,
+                            is_account_creation_checkbox:
+                                !result.isValid &&
+                                asset.get("symbol") === "BTS",
                             is_account_validation: false
                         });
                     } else {
@@ -241,6 +268,8 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAccountValidation(url, account) {
+        const asset = this.getAssetById(this.state.selectedAssetId);
+
         this.setState({
             is_account_creation_checkbox: false,
             is_account_validation: true
@@ -289,21 +318,32 @@ class BitsharesBeosModal extends React.Component {
                             !result.isValid &&
                             !this.state.is_account_creation
                         ) {
-                            this.setState({
-                                no_account_error: true
-                            });
+                            if (asset.get("symbol") === "BTS") {
+                                this.setState({
+                                    no_account_error: true
+                                });
+                            } else {
+                                this.setState({
+                                    no_account_error_without_creation: true,
+                                    is_account_creation_checkbox: false,
+                                    is_account_creation: false
+                                });
+                            }
                         } else {
                             this.setState(
                                 {
                                     fee_amount_creation: 0,
                                     is_account_creation: false,
-                                    no_account_error: false
+                                    no_account_error: false,
+                                    no_account_error_without_creation: false
                                 },
                                 this._checkBalance
                             );
                         }
                         this.setState({
-                            is_account_creation_checkbox: !result.isValid,
+                            is_account_creation_checkbox:
+                                !result.isValid &&
+                                asset.get("symbol") === "BTS",
                             is_account_validation: false
                         });
                     } else {
@@ -341,15 +381,14 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAccountBalance() {
-        if (
-            Object.keys(this.props.account.get("balances").toJS()).includes(
-                this.props.asset.get("id")
-            )
-        ) {
+        const {selectedAssetId} = this.state;
+        const asset = this.getAssetById(selectedAssetId);
+        const balance = this.getBalanceForAsset(selectedAssetId);
+        if (balance) {
             let total = new Asset({
-                amount: this.props.balance.get("balance"),
-                asset_id: this.props.asset.get("id"),
-                precision: this.props.asset.get("precision")
+                amount: balance.get("balance"),
+                asset_id: asset.get("id"),
+                precision: asset.get("precision")
             });
 
             let fee_amount_amount = 0;
@@ -360,8 +399,8 @@ class BitsharesBeosModal extends React.Component {
 
             let totalFeeAmount = new Asset({
                 amount: this.state.fee_amount_creation + fee_amount_amount,
-                asset_id: this.props.asset.get("id"),
-                precision: this.props.asset.get("precision")
+                asset_id: asset.get("id"),
+                precision: asset.get("precision")
             });
 
             total.minus(totalFeeAmount);
@@ -391,11 +430,38 @@ class BitsharesBeosModal extends React.Component {
         this.setState({account: e.target.value}, this._updateFee);
     }
 
-    onAmountToSendChange({amount}) {
+    onAmountToSendChange({amount, asset}) {
+        if (asset.get("id") !== this.state.selectedAssetId) {
+            this.setState(
+                {
+                    is_account_creation_checkbox: false,
+                    is_account_creation: false,
+                    no_account_error: false,
+                    no_account_error_without_creation: false,
+                    account_validation_error: false,
+                    selectedAssetId: asset.get("id")
+                },
+                () => {
+                    this.onAccountValidation(
+                        this.props.beosApiUrl,
+                        this.state.account
+                    );
+                }
+            );
+        }
+
+        if (asset.get("symbol") !== "BTS") {
+            this.setState({
+                is_account_creation: false,
+                is_account_creation_checkbox: false,
+                no_account_error: false
+            });
+        }
+
         if (amount) {
-            const i = amount.indexOf(".");
+            const i = amount.toString().indexOf(".");
             if (i > -1) {
-                const newAmount = amount.substr(0, i + 5);
+                const newAmount = amount.toString().substr(0, i + 5);
                 if (!newAmount.endsWith(".")) {
                     this.setState(
                         {
@@ -525,29 +591,62 @@ class BitsharesBeosModal extends React.Component {
         }, 35000);
     };
 
+    createMemoForAsset(pxasset, isAccountCreation = false) {
+        const memo = [];
+        switch (pxasset) {
+            case "pxbts":
+                memo.push("pxbts");
+                break;
+            case "pxbrnp":
+                memo.push("pxbrnp");
+                break;
+            default:
+                break;
+        }
+        const {memo: userMemo} = this.state;
+        memo.push(
+            this.state.account,
+            userMemo.trim() ? userMemo : "",
+            isAccountCreation ? "create" : ""
+        );
+
+        return memo.join(":");
+    }
+
+    getProxyAsset(assetSymbol) {
+        let pxasset = "";
+
+        switch (assetSymbol) {
+            case "BTS":
+                pxasset = "pxbts";
+                break;
+            case "BROWNIE.PTS":
+                pxasset = "pxbrnp";
+                break;
+            default:
+                break;
+        }
+
+        return pxasset;
+    }
+
     async onSubmit() {
-        let newMemo = "";
+        const asset = this.getAssetById(this.state.selectedAssetId);
+
         let newAmountToSend = parseInt(
             this.state.amount_to_send *
-                utils.get_asset_precision(this.props.asset.get("precision")),
+                utils.get_asset_precision(asset.get("precision")),
             10
         );
 
-        if (this.state.is_account_creation) {
-            newMemo =
-                "pxbts:" +
-                this.state.account +
-                ":" +
-                this.state.memo +
-                ":create";
-        } else if (this.state.memo === "" && !this.state.is_account_creation) {
-            newMemo = "pxbts:" + this.state.account;
-        } else if (this.state.memo !== "" && !this.state.is_account_creation) {
-            newMemo = "pxbts:" + this.state.account + ":" + this.state.memo;
-        }
+        const pxasset = this.getProxyAsset(asset.get("symbol"));
+        let memo;
 
-        if (this.state.is_account_creation) {
+        if (pxasset === "pxbts" && this.state.is_account_creation) {
+            memo = this.createMemoForAsset(pxasset, true);
             newAmountToSend = newAmountToSend + this.state.fee_amount_creation;
+        } else {
+            memo = this.createMemoForAsset(pxasset);
         }
 
         try {
@@ -555,20 +654,20 @@ class BitsharesBeosModal extends React.Component {
                 this.props.account.get("id"),
                 this.props.issuer.get("id"),
                 newAmountToSend,
-                this.props.asset.get("id"),
-                newMemo,
+                asset.get("id"),
+                memo,
                 null,
-                this.state.fee_asset_id
+                "1.3.0"
             );
 
-            this.setPendingAccount(this.state.account);
-
-            this.setState({
-                is_account_creation_checkbox: false,
-                account_creation_transfer_success_info: true
-            });
-
-            this.validationInterval(this.state.account);
+            if (this.state.is_account_creation) {
+                this.setPendingAccount(this.state.account);
+                this.setState({
+                    is_account_creation_checkbox: false,
+                    account_creation_transfer_success_info: true
+                });
+                this.validationInterval(this.state.account);
+            }
         } catch (e) {
             this.onMaintenance();
             throw e;
@@ -583,9 +682,11 @@ class BitsharesBeosModal extends React.Component {
         let maintenanceDialog = null;
 
         if (asset_types.length > 0) {
-            let current_asset_id = this.props.asset.get("id");
+            let current_asset_id = this.state.selectedAssetId;
             if (current_asset_id) {
-                let current = account_balances[current_asset_id];
+                let current = this.getBalanceForAsset(current_asset_id).get(
+                    "id"
+                );
                 balance = (
                     <span
                         style={{
@@ -603,9 +704,7 @@ class BitsharesBeosModal extends React.Component {
                             onClick={this.onAccountBalance.bind(this)}
                         >
                             {current ? (
-                                <BalanceComponent
-                                    balance={account_balances[current_asset_id]}
-                                />
+                                <BalanceComponent balance={current} />
                             ) : (
                                 0
                             )}
@@ -618,9 +717,11 @@ class BitsharesBeosModal extends React.Component {
         }
 
         if (
-            (this.state.is_account_creation_checkbox &&
-                this.state.account !== "") ||
-            this.state.maintenance_error === true
+            this.getAssetById(this.state.selectedAssetId).get("symbol") ===
+                "BTS" &&
+            this.state.is_account_creation_checkbox &&
+            this.state.account !== "" &&
+            !this.state.maintenance_error
         ) {
             account_creation_checkbox = (
                 <table className="table" style={{width: "inherit"}}>
@@ -681,7 +782,9 @@ class BitsharesBeosModal extends React.Component {
             this.state.account === "" ||
             this.state.account_validation_error ||
             this.state.no_account_error ||
-            this.state.is_account_validation;
+            this.state.is_account_validation ||
+            this.state.no_account_error_without_creation;
+        // this.state.maintenance_error;
 
         return (
             <div>
@@ -692,8 +795,8 @@ class BitsharesBeosModal extends React.Component {
                             <AmountSelector
                                 label="gateway.bitshares_beos.amount_to_send_label"
                                 amount={this.state.amount_to_send}
-                                asset={this.props.asset.get("id")}
-                                assets={[this.props.asset.get("id")]}
+                                asset={this.state.selectedAssetId}
+                                assets={this.props.assets.map(a => a.get("id"))}
                                 placeholder="0.0"
                                 onChange={this.onAmountToSendChange.bind(this)}
                                 display_balance={balance}
@@ -786,6 +889,16 @@ class BitsharesBeosModal extends React.Component {
                                 />
                             </p>
                         ) : null}
+                        {this.state.no_account_error_without_creation &&
+                            !this.state.maintenance_error &&
+                            this.state.account !== "" && (
+                                <p
+                                    className="has-error no-margin"
+                                    style={{paddingBottom: 15}}
+                                >
+                                    <Translate content="gateway.bitshares_beos.no_account_error_without_creation" />
+                                </p>
+                            )}
                         {this.renderInfo()}
                         {/* Send/Cancel buttons */}
                         <div>

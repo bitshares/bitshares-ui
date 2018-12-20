@@ -510,6 +510,7 @@ class AccountDepositWithdraw extends React.Component {
                 <BitsharesBeos
                     account={account}
                     asset={"BTS"}
+                    assets={["BTS", "BROWNIE.PTS"]}
                     params={this.props.location}
                 />
             )
