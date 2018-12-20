@@ -304,11 +304,9 @@ class AccountStore extends BaseStore {
                                         a.get("name")
                                     )
                                 ) {
-                                    // console.log("Adding Active Account ", a.get("name"));
                                     myActiveAccounts.add(a.get("name"));
                                 } else if (!!a && !this.isMyAccount(a)) {
                                     // Remove accounts not owned by the user from the linked_accounts db
-                                    // console.log("Un-Linking Account ", a.get("name"));
                                     this._unlinkAccount(a.get("name"));
                                 }
                             });
@@ -372,7 +370,7 @@ class AccountStore extends BaseStore {
         let myActiveAccounts = this.state.myActiveAccounts.withMutations(
             accounts => {
                 account_refs.forEach(id => {
-                    let account = ChainStore.getAccount(id);
+                    let account = ChainStore.getAccount(id, false);
                     if (account === undefined) {
                         pending = true;
                         return;
@@ -616,6 +614,8 @@ class AccountStore extends BaseStore {
     }
 
     setCurrentAccount(name) {
+        this._unsubscribeAccount();
+
         if (this.state.passwordAccount) name = this.state.passwordAccount;
         const key = this._getStorageKey();
         if (!name) {
@@ -628,7 +628,30 @@ class AccountStore extends BaseStore {
 
         ss.set(key, name || null);
 
+        this._subscribeAccount();
         this.loadDbData();
+    }
+
+    _subscribeAccount() {
+        let {currentAccount} = this.state;
+        let account_refs = AccountRefsStore.getAccountRefs();
+
+        account_refs.forEach(id => {
+            let account = ChainStore.getAccount(id, false);
+            if (account !== undefined && account.get("name") === currentAccount) {
+                ChainStore.getAccount(id);
+                console.log("[AccountStore,_subscribeAccount", id);
+            }
+        });
+    }
+
+    _unsubscribeAccount() {
+        let account_refs = AccountRefsStore.getAccountRefs();
+
+        account_refs.forEach(id => {
+            ChainStore.getAccount(id, false);
+            console.log("[AccountStore,_unsubscribeAccount", id);
+        });
     }
 
     onSetCurrentAccount(name) {
@@ -724,16 +747,11 @@ class AccountStore extends BaseStore {
                 Immutable.fromJS(linkedEntry)
             ); 
             // Keep the local linkedAccounts in sync with the db
-            // if (!this.state.myHiddenAccounts.has(name))
-            //     this.state.myActiveAccounts = this.state.myActiveAccounts.add(
-            //         name
-            //     );
-            // Keep the local linkedAccounts in hidden Accounts
-            if (!this.state.myHiddenAccounts.has(name) && !this.state.myActiveAccounts.has("name"))
-                this.state.myHiddenAccounts = this.state.myHiddenAccounts.add(
+            if (!this.state.myHiddenAccounts.has(name))
+                this.state.myActiveAccounts = this.state.myActiveAccounts.add(
                     name
                 );
-
+            
             // Update current account if only one account is linked
             if (this.state.myActiveAccounts.size === 1) {
                 this.setCurrentAccount(name);
