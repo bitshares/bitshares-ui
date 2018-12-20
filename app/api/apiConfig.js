@@ -182,6 +182,14 @@ export const settingsAPIs = {
             contact: "telegram:murda_ra"
         },
         {
+            url: "wss://singapore.bitshares.apasia.tech/ws",
+            location: "Singapore",
+            country: "Singapore",
+            region: "Southeastern Asia",
+            operator: "Flash Infrastructure Worker",
+            contact: "telegram:murda_ra"
+        },
+        {
             url: "wss://status200.bitshares.apasia.tech/ws",
             location: "New Jersey",
             country: "U.S.A.",
@@ -247,7 +255,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://valley.bitshares.apasia.tech/ws",
-            location: "Silicone Valley",
+            location: "Silicon Valley",
             country: "U.S.A.",
             region: "Northern America",
             operator: "Flash Infrastructure Worker",
