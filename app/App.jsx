@@ -11,7 +11,6 @@ import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
-import ReportModal from "./components/Modal/ReportModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
@@ -22,10 +21,8 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
-import AccountVoting from "./components/Account/AccountVoting";
-import SettingsStore from "stores/SettingsStore";
 
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, Redirect} from "react-router-dom";
 
 // Nested route components
 import Page404 from "./components/Page404/Page404";
@@ -339,7 +336,6 @@ class App extends React.Component {
         let {incognito, incognitoWarningDismissed} = this.state;
         let {walletMode, theme, location, match, ...others} = this.props;
         let content = null;
-        let proxy = null;
 
         if (this.state.syncFail) {
             content = <SyncError />;
@@ -354,15 +350,13 @@ class App extends React.Component {
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
-            let accountName = AccountStore.getState().currentAccount;
+            let accountName =
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount;
             accountName =
                 accountName && accountName !== "null"
                     ? accountName
                     : "committee-account";
-            const account = ChainStore.getAccount(accountName);
-            if (account) proxy = account.getIn(["options", "voting_account"]);
-            const viewSettings = SettingsStore.getState().viewSettings;
-            const settings = SettingsStore.getState().settings;
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height} {...others} />
@@ -423,19 +417,12 @@ class App extends React.Component {
                                     component={AccountRegistration}
                                 />
                                 <Route path="/news" exact component={News} />
-                                <Route
+                                <Redirect
                                     path={"/voting"}
-                                    exact
-                                    render={() => (
-                                        <AccountVoting
-                                            proxy={proxy}
-                                            viewSettings={viewSettings}
-                                            settings={settings}
-                                            account={account}
-                                        />
-                                    )}
+                                    to={{
+                                        pathname: `/account/${accountName}/voting`
+                                    }}
                                 />
-
                                 {/* Explorer routes */}
                                 <Route
                                     path="/explorer/:tab"
