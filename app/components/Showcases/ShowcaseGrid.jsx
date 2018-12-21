@@ -20,7 +20,7 @@ class ShowcaseGrid extends Component {
     componentWillReceiveProps(np) {
         if (np.currentAccount !== this.props.currentAccount) {
             this.setState({
-                currentAccount: ChainStore.getAccount(np.props.currentAccount)
+                currentAccount: ChainStore.getAccount(np.currentAccount)
             });
         }
     }

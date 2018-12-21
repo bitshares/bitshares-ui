@@ -227,6 +227,8 @@ export const scamAccountsOther = [
     "1.2.1030028",
     "blox",
     "1.2.940022",
+    "bonus-event-in-end-of-years-2018",
+    "1.2.1208797",
     "bsend001",
     "1.2.815731",
     "btc-alpha.com",

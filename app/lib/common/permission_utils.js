@@ -160,6 +160,7 @@ let permissionUtils = {
         let map = [];
         accounts.forEach(id => {
             let fullAccount = ChainStore.getAccount(id);
+            if (!fullAccount) return;
             let currentPermission = this.unravel(
                 new this.AccountPermission(fullAccount, null, type),
                 type
