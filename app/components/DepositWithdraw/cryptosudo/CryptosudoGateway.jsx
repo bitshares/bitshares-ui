@@ -117,7 +117,7 @@ class CryptosudoGateway extends React.Component {
         let issuers = {
             cryptosudo: {
                 name: coin.intermediateAccount,
-                id: "1.2.1209495",
+                id: "1.2.1209962",
                 support: "support@cryptosudo.eu"
             }
         };
