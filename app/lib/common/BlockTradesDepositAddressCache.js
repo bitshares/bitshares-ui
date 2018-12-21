@@ -75,7 +75,8 @@ class BlockTradesDepositAddressCache {
         input_coin_type,
         output_coin_type,
         address,
-        memo
+        memo,
+        tag
     ) {
         if (!address) return;
         let wallet = WalletDb.getWallet();
@@ -92,7 +93,8 @@ class BlockTradesDepositAddressCache {
                 deposit_keys[exchange_name][index] || [];
             deposit_keys[exchange_name][index].push({
                 address: address,
-                memo: memo
+                memo: memo,
+                tag: tag
             });
             ss.set("deposit_keys", deposit_keys);
         } else {
@@ -127,7 +129,8 @@ class BlockTradesDepositAddressCache {
                 wallet.deposit_keys[exchange_name][index] || [];
             wallet.deposit_keys[exchange_name][index].push({
                 address: address,
-                memo: memo
+                memo: memo,
+                tag: tag
             });
             WalletDb._updateWallet();
         }

@@ -2033,8 +2033,18 @@
             "news": "News"
         },
         "gateway": {
-            "payment_id": "Payment ID (optional)",
-            "payment_id_invalid": "Payment ID is not valid",
+            "deposit_payment_id_tag_required":
+                "You MUST use this destination tag",
+            "deposit_payment_id_tag": "Destination Tag (optional)",
+            "deposit_payment_id_tag_invalid": "Destination Tag is not valid",
+            "deposit_payment_id_hash": "Payment ID (optional)",
+            "deposit_payment_id_hash_invalid": "Payment ID is not valid",
+            "deposit_tag_acknowledgement_alert":
+                "WARNING: Failure to follow correct %(asset)s deposit procedure will result in lost deposits.",
+            "deposit_tag_acknowledgement_info":
+                "<p>Depositing %(asset)s to CryptoBridge requires <strong>BOTH</strong> a deposit address and a deposit tag. To make a %(asset)s deposit, you need to use both:</p><ul><li>Address</li><li>Tag</li></ul><p>Do NOT send %(asset)s to CryptoBridge unless you know how to indicate a tag. If you fail to include the tag with your deposit the funds will be lost forever.</p>",
+            "deposit_tag_acknowledgement_confirm": "I understand. Continue.",
+            "copy_address_tag": "Copy Tag",
             "required_confirmations": "Required confirmations",
             "support_block": "For support, please contact CryptoBridge at:",
             "deposit_or_withdrawal": "Depositing or withdrawing coins",
