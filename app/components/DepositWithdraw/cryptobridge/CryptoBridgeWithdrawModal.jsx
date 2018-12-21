@@ -264,7 +264,12 @@ class CryptoBridgeWithdrawModal extends React.Component {
         this.setState({
             payment_id_is_valid:
                 !new_payment_id ||
-                /^([0-9a-fA-F]{16}|[0-9a-fA-F]{64})$/.test(new_payment_id)
+                (this.getPaymentIdType() === "hash" &&
+                    /^([0-9a-fA-F]{16}|[0-9a-fA-F]{64})$/.test(
+                        new_payment_id
+                    )) ||
+                (this.getPaymentIdType() === "tag" &&
+                    /^([0-9]+)$/.test(new_payment_id))
         });
     }
 
@@ -618,6 +623,16 @@ class CryptoBridgeWithdrawModal extends React.Component {
         return this.props.withdrawal_payment_id_enabled === true;
     }
 
+    getPaymentIdType() {
+        switch (this.props.output_coin_symbol) {
+            case "XRP":
+                return "tag";
+
+            default:
+                return "hash";
+        }
+    }
+
     render() {
         let {withdraw_address_selected, payment_id, memo} = this.state;
         let storedAddress = WithdrawAddresses.get(
@@ -660,7 +675,9 @@ class CryptoBridgeWithdrawModal extends React.Component {
         if (!this.state.payment_id_is_valid) {
             invalid_payment_id_message = (
                 <div className="has-error" style={{paddingTop: 10}}>
-                    <Translate content="cryptobridge.gateway.payment_id_invalid" />
+                    <Translate
+                        content={`cryptobridge.gateway.deposit_payment_id_${this.getPaymentIdType()}_invalid`}
+                    />
                 </div>
             );
         }
@@ -909,7 +926,9 @@ class CryptoBridgeWithdrawModal extends React.Component {
                     {this.getHasPaymentId() ? (
                         <div className="content-block">
                             <label className="left-label">
-                                <Translate content="cryptobridge.gateway.payment_id" />
+                                <Translate
+                                    content={`cryptobridge.gateway.deposit_payment_id_${this.getPaymentIdType()}`}
+                                />
                             </label>
                             <div className="inline-label input-wrapper">
                                 <input
