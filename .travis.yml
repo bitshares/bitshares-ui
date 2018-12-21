@@ -25,9 +25,9 @@ stages:
     if: branch = master
 
   - name: build-prod
-    if: tag =~ ^v\d+\.\d+(\.\d+)?$
+    if: tag =~ /^v\d+\.\d+(\.\d+)?$/
   - name: deploy-prod
-    if: tag =~ ^v\d+\.\d+(\.\d+)?$
+    if: tag =~ /^v\d+\.\d+(\.\d+)?$/
 
 jobs:
   include:
