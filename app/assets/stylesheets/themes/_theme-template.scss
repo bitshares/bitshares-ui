@@ -63,6 +63,97 @@
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
+    .showcases-grid {
+        margin: 32px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .showcases-grid--wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        max-width: calc((450px + 32px) * 3); // 450px + 32px padding * 3 cells
+    }
+
+    .showcases-grid--wrapper--item {
+        color: $secondary-text-color;
+        padding: 1rem;
+        min-width: 350px;
+        width: 33.3%;
+        height: 320px;
+
+        h2.no-margin {
+            margin: 0;
+        }
+
+        span.icon {
+            margin: 0;
+            svg {
+                margin: 0;
+            }
+        }
+    }
+
+    .showcases-grid--wrapper--item--wrapper {
+        padding: 1rem;
+        height: calc(320px - 2rem);
+        transition: 0.3s;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: $header-color;
+        border: 1px solid $header-color;
+
+        &:hover {
+            background-color: $header-color;
+            border-color: $link-text-color;
+        }
+
+        &:focus {
+            border-color: transparentize($link-text-color, 0.95);
+            outline: none !important;
+            box-shadow: 0 0 0 2px transparentize($link-text-color, 0.85);
+        }
+    }
+
+    .showcases-grid--wrapper--item--wrapper--disabled {
+        padding: 1rem;
+        height: calc(320px - 2rem);
+        transition: 0.3s;
+        border-radius: 10px;
+        background-color: $header-color;
+        border: 1px solid $header-color;
+    }
+
+    .showcases-grid--wrapper--item--wrapper--content {
+        padding: 1rem;
+        display: flex;
+        height: calc(100% - 32px);
+        align-items: center;
+    }
+    .showcases-grid--wrapper--item--wrapper--content--description {
+        line-height: 1.5rem;
+    }
+
+    @media (max-width: 1150px) {
+        .showcases-grid--wrapper {
+            width: 900px;
+        }
+        .showcases-grid--wrapper--item {
+            width: 50%;
+        }
+    }
+
+    @media (max-width: 750px) {
+        .showcases-grid--wrapper {
+            width: 450px;
+        }
+        .showcases-grid--wrapper--item {
+            width: 100%;
+        }
+    }
+
     .exchange--price-alert--show-modal--active {
         color: $link-text-color;
     }
@@ -642,7 +733,7 @@
     }
 
     .blue {
-        color: $button-bg-color;        
+        color: $button-bg-color;
     }
 
     .grp-menu-item button {

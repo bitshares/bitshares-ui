@@ -20,6 +20,7 @@
         "contacts": "Contacts",
         "create_account": "Create account",
         "create_new": "Create A New Account",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Deposit BTS",
         "deposit_address": "Your deposit address is your account name",
         "deposit_withdraw": "Deposit/Withdraw",
@@ -35,7 +36,7 @@
         "estimate_value": "Estimated Account value",
         "existing_accounts": "Existing Accounts",
         "existing_user": "Existing user",
-        "filter_orders": "Filter",
+        "filter_orders": "Filter...",
         "follow": "Add contact",
         "hidden_accounts_row": "Hidden Accounts",
         "hide_hidden": "Active",
@@ -132,6 +133,8 @@
             "brain": "Brainkey position",
             "cancel": "Cancel",
             "confirm_add": "Add",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "Imported from account",
             "key": "Key/Name",
             "key_viewer": "Private key viewer",
@@ -422,6 +425,7 @@
         "close": "Close position",
         "coll_ratio": "Ratio",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Your collateral ratio is below %(mr)s which is not allowed.",
@@ -469,19 +473,6 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
-        "price_alert": {
-            "use_button": "Use \"add rule\" button to create price alert for ",
-            "alert_when": "Alert me when",
-            "title": "Price Alert",
-            "lower_than": "Lower Than",
-            "higher_than": "Higher Than",
-            "add_rule": "add rule",
-            "price": "Price",
-            "notification": {
-                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s",
-                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s"
-            }
-        },
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
@@ -515,6 +506,7 @@
         "feed_price": "Feed Price",
         "filter": "Filter...",
         "flip": "Flip",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Group",
         "hide": "Hide",
         "highest_bid": "Highest bid",
@@ -566,6 +558,19 @@
         "panels_mirror": "Mirror Panels",
         "period": "Time period (days)",
         "price": "Price",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "Price Chart",
         "price_market": "Market Price",
         "quantity": "Quantity",
@@ -653,7 +658,10 @@
             }
         },
         "settle": "Settlement",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Settle orders",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Short",
         "show_all_orders": "Show all %(rowcount)s orders",
         "show_all_trades": "Show all %(rowcount)s trades",
@@ -689,6 +697,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Claim fees",
@@ -720,12 +740,14 @@
                 "whitelist_markets": "Whitelist markets"
             },
             "price_feed": {
-                "force_settlement_offset": "Force settlement offset",
-                "global_settlement_price": "Global settlement price",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Maintenance collateral ratio (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Maximum short squeeze ratio (MSSR)",
-                "settlement_delay": "Settlement delay",
-                "settlement_price": "Settlement price",
+                "min_feeds": "Minimum feeds",
+                "settlement_price": "Force Settlement price",
                 "title": "Price Feed"
             },
             "price_feed_data": {
@@ -736,6 +758,28 @@
                 "publisher": "Publisher",
                 "settlement_price": "Settlement price",
                 "title": "Price Feed Data"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "Asset type",
@@ -755,6 +799,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "ID",
             "issuer": "Issuer",
             "market": "SmartCoins",
@@ -844,7 +889,7 @@
             "budget": "Remaining budget",
             "card": "Card view",
             "current": "Current witness",
-            "filter_by_name": "Filter By Name",
+            "filter_by_name": "Filter...",
             "last_confirmed": "Last confirmed",
             "missed": "Blocks missed",
             "next_vote": "Next vote update",
@@ -983,7 +1028,7 @@
             "open_website": "Open Website"
         },
         "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Limit Reached",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "Please, get new address ",
@@ -1077,6 +1122,7 @@
         "payments": "Send",
         "payments_legacy": "or Legacy Send",
         "settings": "Settings",
+        "showcases": "Spotlight",
         "title": "%(wallet_name)s UI",
         "unlock": "Local Wallet Login",
         "unlock_password": "Cloud Wallet Login",
@@ -1242,7 +1288,6 @@
         "title": "Notice"
     },
     "modal": {
-        "save": "save",
         "buy": {
             "asset": "Asset",
             "bridge": "Brdige",
@@ -1300,12 +1345,30 @@
             "label": "qrcode",
             "title": "Private key QR code"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Amount to burn",
             "from": "Account to burn from",
             "submit": "Burn",
             "title": "Burn (reserve) asset"
         },
+        "save": "save",
         "send": {
             "header": "Send from <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Propose Send from <span class=\"send-name\">%(fromName)s</span>"
@@ -1333,23 +1396,6 @@
             "quantity": "Quantity",
             "submit": "Withdraw",
             "withdraw": "Withdraw"
-        },
-        "report": {
-            "title": "Error report",
-            "button": "Report",
-            "takeScreenshot": "Show screenshot",
-            "hideScreenshot": "Hide screenshot",
-            "copyLog": "Copy Log",
-            "copySuccess": "Copy ended",
-            "showLog": "Show Log",
-            "hideLog": "Hide Log",
-            "lastLogEntries": "Last 20 log entries",
-            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
-            "explanatory_text_2": "Please report the issue you have found to GitHub:",
-            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
-            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
-            "copyScreenshot": "Right click in Image Preview -> Copy",
-            "screenshot": "Screenshot"
         }
     },
     "news": {
@@ -1404,10 +1450,12 @@
         "asset_reserve": "{account} burned (reserved) {amount}",
         "asset_settle": "{account} requested settlement of {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} updated the asset {asset}",
         "asset_update_feed_producers": "{account} updated the feed producers for the asset {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} claimed a balance of {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} blacklisted the account {listee}",
         "call_order_update": "{account} changed {debtSymbol} debt by {debt} and collateral by {collateral}",
         "committee_member_update_global_parameters": "{account} updated the global committee parameters",
@@ -1654,6 +1702,32 @@
         "wallets": "Wallets",
         "yes": "Yes"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "Please verify that your computer clock is correct.",
         "sub_text_2": "Once you've synchronized your clock, please refresh this page.<br/><br/>If your clock is already correct, the API server you're using could be out of sync. In that case, please try a different server from the list below.",
@@ -1661,6 +1735,7 @@
     },
     "tooltip": {
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades is a bridge which supports instant trade of assets. Details and terms can be found on https://blocktrades.us",
         "buy_min": "You will receive at minimum this amount. If there are matching orders with a cheaper price than you specified, you will receive more than this amount.",
@@ -1672,6 +1747,7 @@
         "copy_tip": "Click here to copy the text to your clipboard",
         "cr_danger": "This position is currently being margin called. Consider adding collateral to bring the collateral ratio above %(mr)s or closing the position.",
         "cr_warning": "This position has a low level of collateral, and will get margin called if the collateral ratio drops below %(mr)s. Consider adding collateral or closing the position.",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "To complete the deposit, go to your external %(asset)s wallet and make a transfer to the address listed on this page. You will receive the deposit as soon as it has been confirmed. If a memo is shown , it is essential that you include this memo in your transfer.",
         "disconnected": "You are not connected to an API node, try reloading or setting a new access point in the Settings",
         "feed_price": "This is the current external feed price",
@@ -1680,6 +1756,8 @@
         "follow_user_add": "Click to Follow this user",
         "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Click here to hide this asset from this list.",
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
@@ -1715,10 +1793,11 @@
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
-        "propose_scam": "This proposal was created by a known scammer, do not approve it!",
+        "propose_scam": "This proposal was created by a known scammer or from someone that you blacklisted!",
         "propose_tip": "Propose another user to initiate a transaction",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
@@ -1729,6 +1808,7 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "This is the price at which settle orders will execute.",
         "show_asset": "Click here to show this asset in the main list.",
@@ -1749,6 +1829,7 @@
         "at": "at",
         "balance_id": "Balance ID",
         "balance_owner": "Balance owner key",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "Accepted bond offer of",
         "bond_cancel_offer": "Cancelled bond offer",
@@ -1831,6 +1912,7 @@
             "account_whitelist": "Account whitelist",
             "all": "Show all",
             "assert": "Assert operation",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Claim asset fees",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1938,6 +2020,8 @@
         "expire": "Your transaction has expired without being confirmed, please try again later."
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",
@@ -2093,6 +2177,8 @@
         "pwd4brainkey": "Enter your password to show your brainkey",
         "ready_to_restore": "Ready to Restore",
         "reenter_brainkey": "Re-Enter Brainkey",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Reset",
         "restore": "Restore Local Wallet from Backup",
         "restore_backup": "Restore Backup",
@@ -2143,9 +2229,7 @@
         "wallet_model_2": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
-        "wallet_password": "Login anywhere using your password",
-        "remember_me": "Remember me",
-        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings."
+        "wallet_password": "Login anywhere using your password"
     },
     "winex": {
         "gateway": {

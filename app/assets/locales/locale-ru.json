@@ -20,6 +20,7 @@
         "contacts": "Контакты",
         "create_account": "Создать аккаунт",
         "create_new": "Создать новый аккаунт",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Внести депозит в BTS",
         "deposit_address": "Ваш адрес депозита – это имя Вашего аккаунта",
         "deposit_withdraw": "Ввод/Вывод",
@@ -132,6 +133,8 @@
             "brain": "Расположение brainkey",
             "cancel": "Отменить",
             "confirm_add": "Добавить",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "Импортирован из аккаунта",
             "key": "Ключ/Имя",
             "key_viewer": "Просмотр приватного ключа",
@@ -203,6 +206,7 @@
             "verifymessage": "Проверить сообщение",
             "verifyonchange": "Проверить во время ввода"
         },
+        "start_typing_to_search": "Start typing to search for accounts",
         "submit_orders": "Подтвердить",
         "total": "Всего ({asset})",
         "total_estimate": "Это оценочная стоимость всех Ваших активов, включая скрытые активы, открытые ордера, долг и залоговое обеспечение. Оценка произведена на основе данных блокчейна в текущий момент и может иметь некоторую погрешность.",
@@ -318,6 +322,7 @@
             "expired": "Истекшие",
             "funding": "Финансирование",
             "go_proxy": "Перейти к",
+            "hide_legacy_proposals": "Hide Legacy Proposals",
             "inactive": "Резервные",
             "info": "Информация",
             "line": "Линия",
@@ -420,6 +425,7 @@
         "close": "Закрыть позицию",
         "coll_ratio": "Коэффициент перекрытия",
         "coll_ratio_target": "Планируемый коэффициент",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Использовать планируемый коэффициент обеспечения",
         "errors": {
             "below": "Ваш уровень гарантийного обеспечения ниже %(mr)s, что не допускается.",
@@ -500,6 +506,7 @@
         "feed_price": "Котировка",
         "filter": "Фильтр...",
         "flip": "Инвертировать",
+        "global_settle": "Global Settlement",
         "group_order_limit": "Групповой",
         "hide": "Скрыть",
         "highest_bid": "Наивысшая ставка",
@@ -513,6 +520,7 @@
         "lowest_ask": "Самый низкий запрос",
         "maintenance": "Цена требования дополнительного обеспечения",
         "market": "Рынок",
+        "market_depth": "Market Depth",
         "market_frozen": "Владелец %(asset)s запретил торговлю на этом рынке.",
         "market_name": "Мои Рынки",
         "market_picker": {
@@ -550,10 +558,27 @@
         "panels_mirror": "Отобразить панели зеркально",
         "period": "Временной период (дни)",
         "price": "Цена",
+        "price_alert": {
+            "add_rule": "add rule",
+            "alert_when": "Alert me when",
+            "higher_than": "Higher Than",
+            "lower_than": "Lower Than",
+            "notification": {
+                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
+                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+            },
+            "price": "Price",
+            "title": "Price Alert",
+            "use_button": "Use \"add rule\" button to create price alert for "
+        },
         "price_history": "График цен",
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quick_deposit": "Быстрый депозит",
+        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
+        "quick_deposit_bridge_button": "Use a Bridge",
+        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
+        "quick_deposit_gateway_button": "Use a Gateway",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
@@ -633,7 +658,10 @@
             }
         },
         "settle": "Погашение",
+        "settle_globally_settled": "Settle instantly",
+        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
         "settle_orders": "Ордера на погашение",
+        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
         "short": "Сократить",
         "show_all_orders": "Отобразить все %(rowcount)s ордера",
         "show_all_trades": "Отобразить все %(rowcount)s сделки",
@@ -669,6 +697,18 @@
         },
         "asset": {
             "actions": "Действия с активами",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Востребовать остаток пула комиссий",
                 "claim_fees": "Потребовать комиссию",
@@ -700,11 +740,13 @@
                 "whitelist_markets": "Рынки белого списка"
             },
             "price_feed": {
-                "force_settlement_offset": "Смещение принудительного погашения",
-                "global_settlement_price": "Цена глобального погашения",
+                "external_feed_price": "Feed price (median of witness feeds)",
+                "feed_lifetime": "Feed lifetime (hours)",
+                "global_settlement_price": "Global settlement happens at price",
                 "maintenance_collateral_ratio": "Коэффициент обеспечения поддержки (MCR)",
+                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
                 "maximum_short_squeeze_ratio": "Максимальный коэффициент краткого сжатия (MSSR)",
-                "settlement_delay": "Задержка погашения",
+                "min_feeds": "Minimum feeds",
                 "settlement_price": "Расчетная цена",
                 "title": "Поточная цена"
             },
@@ -716,6 +758,28 @@
                 "publisher": "Издатель",
                 "settlement_price": "Расчетная цена",
                 "title": "Данные котировок"
+            },
+            "settlement": {
+                "current_settled": "Already settled supply",
+                "delay": "Delay",
+                "force_settlement": "Force Settlement",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
+                "max_settle_volume": "Max. settlement volume each maintenance period",
+                "offset": "offset included",
+                "price": "Price",
+                "settle_remaining_volume": "Remaining settleable volume",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
+                "title": "Settlement"
             },
             "summary": {
                 "asset_type": "Тип актива",
@@ -735,6 +799,7 @@
             }
         },
         "assets": {
+            "backing_asset": "Backing asset",
             "id": "Идентификатор",
             "issuer": "Эмитент",
             "market": "Смарткойны",
@@ -963,7 +1028,7 @@
             "open_website": "Открыть веб-сайт"
         },
         "min_deposit_warning_amount": "Минимальное значение депозита %(minDeposit)s %(coin)s.",
-        "min_deposit_warning_asset": "ВАЖНО: Отправляйте только %(coin)s на этот адрес депозита. Отправка меньше %(minDeposit)s %(coin)s или любой другой валюты может привезти к потере Вашего депозита.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Лимит исчерпан",
         "phase_out_warning": "Мы рекомендуем использовать новые {deposit_modal_link} и {withdraw_modal_link} модальные окна, поскольку эта страница будет упразднена",
         "please_generate_address": "Пожалуйста, получите новый адрес ",
@@ -979,13 +1044,6 @@
             "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
             "min_amount_error": "Пожалуйста введите число >= минимума",
             "support_block": "Для получения поддержки, пожалуйста, свяжитесь с RuDEX по адресу:",
-            "under_construction": "Технические работы"
-        },
-        "xbtsx": {
-            "coming_soon": "Скоро",
-            "min_amount": "Минимальная сумма: %(minAmount)s %(symbol)s",
-            "min_amount_error": "Пожалуйста введите число >= минимума",
-            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с XBTS по адресу:",
             "under_construction": "Технические работы"
         },
         "scan_qr": "Сканировать QR-код",
@@ -1064,6 +1122,7 @@
         "payments": "Отправить",
         "payments_legacy": "Отправить (стар.)",
         "settings": "Настройки",
+        "showcases": "Spotlight",
         "title": "Пользовательский интерфейс %(wallet_name)s",
         "unlock": "Вход в локальный кошелек",
         "unlock_password": "Войти используя пароль",
@@ -1103,6 +1162,7 @@
             "remove": "Удалить"
         },
         "dashboard": "Инфопанель",
+        "debug-report": "Report your error log console, or create a screenshot",
         "deposit": {
             "deposit": "Пополнить счет",
             "deposit_withdraw": "Пополнить/Вывести"
@@ -1285,12 +1345,30 @@
             "label": "QR-код",
             "title": "QR-код закрытого ключа"
         },
+        "report": {
+            "button": "Report",
+            "copyLog": "Copy Log",
+            "copyScreenshot": "Right click in Image Preview -> Copy",
+            "copySuccess": "Copy ended",
+            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
+            "explanatory_text_2": "Please report the issue you have found to GitHub:",
+            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
+            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
+            "hideLog": "Hide Log",
+            "hideScreenshot": "Hide screenshot",
+            "lastLogEntries": "Last 20 log entries",
+            "screenshot": "Screenshot",
+            "showLog": "Show Log",
+            "takeScreenshot": "Show screenshot",
+            "title": "Error report"
+        },
         "reserve": {
             "amount": "Сумма к сожжению",
             "from": "Сжечь с аккаунта",
             "submit": "Сжечь",
             "title": "Сжечь (зарезервировать) актив"
         },
+        "save": "save",
         "send": {
             "header": "Отправить с <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Предложить отправить с <span class=\"send-name\">%(fromName)s</span>"
@@ -1372,10 +1450,12 @@
         "asset_reserve": "{account} сжег (зарезервировал) {amount}",
         "asset_settle": "{account} запросил погашение {amount}",
         "asset_settle_cancel": "{account} отменил погашение {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} обновил актив {asset}",
         "asset_update_feed_producers": "{account} обновил определяющих котировки актива {asset}",
         "asset_update_issuer": "{from_account} переслал {asset} {to_account}",
         "balance_claim": "{account} запросил баланс в размере {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} добавил аккаунт {listee} в черный список",
         "call_order_update": "{account} изменил {debtSymbol} долг на {debt} и залог на {collateral}",
         "committee_member_update_global_parameters": "{account} обновил общие параметры комитета",
@@ -1622,6 +1702,32 @@
         "wallets": "Кошельки",
         "yes": "Да"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "Пожалуйста убедитесь, что часы вашего компьютера точны.",
         "sub_text_2": "После того, как вы синхронизировали ваши часы, пожалуйста перезагрузите эту страницу.<br/><br/>Если ваши часы уже идут правильно, возможно выбранный вами API сервер не синхронизирован. В таком случае, пожалуйста, выберите другой сервер из списка ниже.",
@@ -1629,6 +1735,7 @@
     },
     "tooltip": {
         "borrow": "Одолжить %(asset)s у сети. Это создаст смарт-контракт, который заблокирует Ваш залог до того момента, когда Вы измените позицию или потребуется марджин колл.",
+        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades – это сервис моста, поддерживающий мгновенную торговлю активами. Все детали и условия можно найти на https://blocktrades.us",
         "buy_min": "Вы получите, как минимум, это количество. Если обнаружатся подходящие сделки по цене меньшей, чем Вы указали, то Вы получите больше этого количества.",
         "call_limit": "Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -1647,8 +1754,11 @@
         "follow_user_add": "Нажмите, чтобы подписаться на этого пользователя",
         "gateway": "Шлюзы подкрепляют депозиты реальными активами на 100% ",
         "generate": "Сгенерированный пароль был создан локально в Вашем браузере. <br /><br /><strong>Никто, кроме Вас не имеет к нему доступа</strong>.<br /><br /> Вставьте его ниже и сохраните копию в надежном месте",
+        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
+        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Нажмите здесь, чтобы скрыть актив из этого списка.",
         "latest_price": "Это самая актуальная цена для этого рынка.",
+        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Кошелек %(wallet_name)s не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается, и Вы выходите из аккаунта.",
         "login-tooltip": {
             "incorrectPassword": {
@@ -1715,6 +1825,7 @@
         "at": "в",
         "balance_id": "Идентификатор баланса",
         "balance_owner": "Ключ владельца баланса",
+        "bidder": "Bidder",
         "blinding_factor": "Втёмную",
         "bond_accept_offer": "Принял предложение по облигациям от",
         "bond_cancel_offer": "Отменил предложение по облигациям",
@@ -1797,6 +1908,7 @@
             "account_whitelist": "Добавление в белый список",
             "all": "Показать все",
             "assert": "Операция подтверждения",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Востребовать остаток пула комиссий",
             "asset_claim_fees": "Взыскание комиссий с активов",
             "asset_claim_pool": "Востребовать пул комиссий актива",
@@ -1904,6 +2016,8 @@
         "expire": "Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Всего %(count)s активов",
         "total_x_items": "Всего из %(count)s позиций",
         "total_x_markets": "Всего %(count)s рынков",
@@ -2059,6 +2173,8 @@
         "pwd4brainkey": "Введите Ваш пароль, чтобы увидеть Ваш Brainkey",
         "ready_to_restore": "Готов к восстановлению",
         "reenter_brainkey": "Введите Brainkey повторно",
+        "remember_me": "Remember me",
+        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
         "reset": "Сбросить",
         "restore": "Восстановить локальный кошелек из резервной копии",
         "restore_backup": "Восстановить из резервной копии",
