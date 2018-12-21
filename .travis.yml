@@ -48,12 +48,6 @@ deploy:
       on:
           repo: bitshares/bitshares-ui
           tags: true
-    - provider: snap
-      snap: bitshares2-light
-      channel: candidate
-      skip_cleanup: true
-      on:
-          tags: true
 before_install:
     - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
       -in set_snap_token.sh.enc -out set_snap_token.sh -d
