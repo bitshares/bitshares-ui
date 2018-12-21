@@ -2032,6 +2032,18 @@
             "news": "News"
         },
         "gateway": {
+            "deposit_payment_id_tag_required":
+                "この宛先タグを必ず使用してください",
+            "deposit_payment_id_tag": "宛先タグ (任意)",
+            "deposit_payment_id_tag_invalid": "宛先タグが不正です",
+            "deposit_payment_id_hash": "支払いID (任意)",
+            "deposit_payment_id_hash_invalid": "支払いIDが不正です",
+            "deposit_tag_acknowledgement_alert":
+                "CryptoBridgeへ%(asset)s を入金する場合は、入金アドレスとタグの\"両方\"が必要です",
+            "deposit_tag_acknowledgement_info":
+                "<p>%(asset)s を入金するには、以下の両方を使用する必要があります:</p><ul><li>アドレス</li><li>タグ</li></ul><p>タグの付け方がわからない場合はCryptoBridgeへXRP (Ripple) を\"送金しないでください\"。入金時にタグをつけ忘れた場合、資金は永久に失われます</p>",
+            "deposit_tag_acknowledgement_confirm": "理解しました",
+            "copy_address_tag": "Copy Tag",
             "required_confirmations": "入金残高反映に必要な確認回数",
             "support_block":
                 "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",

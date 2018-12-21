@@ -12,6 +12,8 @@ import LoadingIndicator from "../LoadingIndicator";
 import {DecimalChecker} from "../Exchange/ExchangeInput";
 import QRCode from "qrcode.react";
 import DepositWithdrawAssetSelector from "../DepositWithdraw/DepositWithdrawAssetSelector.js";
+import CryptoBridgeDepositAccept from "../DepositWithdraw/cryptobridge/CryptoBridgeDepositAccept";
+
 import {
     gatewaySelector,
     _getNumberAvailableGateways,
@@ -207,13 +209,20 @@ class DepositModalContent extends DecimalChecker {
         let {selectedGateway, selectedAsset} = this.state;
         let {account} = this.props;
 
+        if (depositAddress && typeof depositAddress.address === "string") {
+            const address = depositAddress.address.split(":");
+            depositAddress.address = address[0];
+            depositAddress.tag = address[1] || null;
+        }
+
         this.deposit_address_cache.cacheInputAddress(
             selectedGateway.toLowerCase(),
             account,
             selectedAsset.toLowerCase(),
             selectedGateway.toLowerCase() + "." + selectedAsset.toLowerCase(),
             depositAddress.address,
-            depositAddress.memo
+            depositAddress.memo,
+            depositAddress.tag
         );
         this.setState({
             depositAddress,
@@ -319,7 +328,10 @@ class DepositModalContent extends DecimalChecker {
                             deposit={true}
                         />
                     ) : (
-                        <div>
+                        <CryptoBridgeDepositAccept
+                            asset={selectedAsset}
+                            name={backingAsset.name}
+                        >
                             <AssetDepositInfo asset={backingAsset} />
                             <AssetDepositFeeWarning asset={backingAsset} />
 
@@ -397,12 +409,43 @@ class DepositModalContent extends DecimalChecker {
                                             />
                                             <div
                                                 className="modal__highlight"
-                                                style={{fontSize: "0.9rem"}}
+                                                style={{
+                                                    fontSize: "0.9rem",
+                                                    wordBreak: "break-word"
+                                                }}
                                             >
                                                 {depositAddress.address}
                                             </div>
                                         </div>
                                     </div>
+                                    {depositAddress.tag ? (
+                                        <div className="grid-block container-row">
+                                            <div style={{paddingRight: "1rem"}}>
+                                                <CopyButton
+                                                    text={depositAddress.tag}
+                                                    className={"copyIcon"}
+                                                />
+                                            </div>
+                                            <div>
+                                                <Translate
+                                                    component="div"
+                                                    style={{
+                                                        fontSize: "0.8rem",
+                                                        fontWeight: "bold",
+                                                        paddingBottom: "0.3rem"
+                                                    }}
+                                                    content="cryptobridge.gateway.deposit_payment_id_tag_required"
+                                                    asset={selectedAsset}
+                                                />
+                                                <div
+                                                    className="modal__highlight"
+                                                    style={{fontSize: "0.9rem"}}
+                                                >
+                                                    {depositAddress.tag}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : null}
                                     {depositAddress.memo ? (
                                         <div className="grid-block container-row">
                                             <div style={{paddingRight: "1rem"}}>
@@ -451,7 +494,7 @@ class DepositModalContent extends DecimalChecker {
                                     />
                                 </div>
                             ) : null}
-                        </div>
+                        </CryptoBridgeDepositAccept>
                     )}
                 </div>
 

@@ -21,6 +21,7 @@ import WalletDb from "../../../stores/WalletDb";
 import AccountActions from "../../../actions/AccountActions";
 import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
+import CryptoBridgeDepositAccept from "./CryptoBridgeDepositAccept";
 
 class CryptoBridgeGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -76,7 +77,6 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         this.addDepositAddress = this.addDepositAddress.bind(this);
         this._copy = this._copy.bind(this);
-        document.addEventListener("copy", this._copy);
     }
 
     _copy(e) {
@@ -109,6 +109,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     componentWillMount() {
+        document.addEventListener("copy", this._copy);
+
         if (WalletDb.isLocked()) {
             this._unlockWallet();
         }
@@ -139,6 +141,12 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             receive_address.error.message === "no_address"
                 ? this.setState({emptyAddressDeposit: true})
                 : this.setState({emptyAddressDeposit: false});
+        }
+
+        if (receive_address && typeof receive_address.address === "string") {
+            const address = receive_address.address.split(":");
+            receive_address.address = address[0];
+            receive_address.tag = address[1] || null;
         }
 
         this.setState({receive_address});
@@ -398,150 +406,193 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                             component="h4"
                             content="gateway.deposit_inst"
                         />
-
-                        <div className="grid-block no-padding no-margin">
-                            <div
-                                className="small-12 medium-7 large-9"
-                                style={{paddingRight: "1rem"}}
-                            >
-                                <label className="left-label">
-                                    <Translate
-                                        content="gateway.deposit_to"
-                                        asset={assetUtils.replaceAssetSymbol(
-                                            this.props.deposit_asset
-                                        )}
-                                    />:
-                                </label>
-                                <label className="fz_12 left-label">
-                                    <Translate content="gateway.deposit_notice_delay" />
-                                </label>
-                                <AssetDepositFeeWarning
-                                    asset={{
-                                        name: assetUtils.replaceAssetSymbol(
-                                            this.props.deposit_asset
-                                        ),
-                                        depositFeeEnabled: this.props
-                                            .deposit_fee_enabled,
-                                        depositFeeTimeframe: this.props
-                                            .deposit_fee_time_frame,
-                                        depositFeePercentage: this.props
-                                            .deposit_fee_percentage,
-                                        depositFeePercentageLowAmounts: this
-                                            .props
-                                            .deposit_fee_percentage_low_amounts,
-                                        depositFeeMinimum: this.props
-                                            .deposit_fee_minimum
-                                    }}
-                                />
-                                <AssetDepositInfo
-                                    asset={{info: this.props.coin_info}}
-                                />
-                                {WalletDb.isLocked() ? (
-                                    <div className="content-block">
+                        <CryptoBridgeDepositAccept
+                            asset={this.props.deposit_asset}
+                            name={this.props.deposit_asset_name}
+                        >
+                            <div className="grid-block no-padding no-margin">
+                                <div
+                                    className="small-12 medium-7 large-9"
+                                    style={{paddingRight: "1rem"}}
+                                >
+                                    <label className="left-label">
                                         <Translate
-                                            className="label alert"
-                                            component="label"
-                                            content="cryptobridge.gateway.deposit_login"
-                                            style={labelStyle}
-                                        />
-                                        <div>
-                                            <button
-                                                className="button primary"
-                                                onClick={this._unlockWallet}
-                                            >
-                                                <Translate content="header.unlock_short" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : null}
-
-                                <Translate
-                                    className="label warning"
-                                    component="label"
-                                    content="gateway.min_deposit_warning_asset"
-                                    minDeposit={min_deposit || gate_fee * 2}
-                                    coin={assetUtils.replaceAssetSymbol(
-                                        this.props.deposit_asset
-                                    )}
-                                    style={labelStyle}
-                                />
-
-                                {!WalletDb.isLocked() ? (
-                                    <div>
-                                        {emptyAddressDeposit ? (
-                                            <Translate content="gateway.please_generate_address" />
-                                        ) : (
-                                            <span
-                                                style={{
-                                                    "word-wrap": "break-word"
-                                                }}
-                                            >
-                                                {deposit_address_fragment}
-                                            </span>
-                                        )}
-                                        <div>
-                                            {deposit_memo && (
-                                                <span>
-                                                    memo: {deposit_memo}
-                                                </span>
+                                            content="gateway.deposit_to"
+                                            asset={assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
                                             )}
+                                        />:
+                                    </label>
+                                    <label className="fz_12 left-label">
+                                        <Translate content="gateway.deposit_notice_delay" />
+                                    </label>
+                                    <AssetDepositFeeWarning
+                                        asset={{
+                                            name: assetUtils.replaceAssetSymbol(
+                                                this.props.deposit_asset
+                                            ),
+                                            depositFeeEnabled: this.props
+                                                .deposit_fee_enabled,
+                                            depositFeeTimeframe: this.props
+                                                .deposit_fee_time_frame,
+                                            depositFeePercentage: this.props
+                                                .deposit_fee_percentage,
+                                            depositFeePercentageLowAmounts: this
+                                                .props
+                                                .deposit_fee_percentage_low_amounts,
+                                            depositFeeMinimum: this.props
+                                                .deposit_fee_minimum
+                                        }}
+                                    />
+                                    <AssetDepositInfo
+                                        asset={{info: this.props.coin_info}}
+                                    />
+                                    {WalletDb.isLocked() ? (
+                                        <div className="content-block">
+                                            <Translate
+                                                className="label alert"
+                                                component="label"
+                                                content="cryptobridge.gateway.deposit_login"
+                                                style={labelStyle}
+                                            />
+                                            <div>
+                                                <button
+                                                    className="button primary"
+                                                    onClick={this._unlockWallet}
+                                                >
+                                                    <Translate content="header.unlock_short" />
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div
-                                            className="button-group"
-                                            style={{paddingTop: 10}}
-                                        >
-                                            {deposit_address_fragment ? (
-                                                <div
-                                                    className="button"
-                                                    onClick={this.toClipboard.bind(
-                                                        this,
-                                                        clipboardText
-                                                    )}
-                                                >
-                                                    <Translate content="gateway.copy_address" />
+                                    ) : null}
+
+                                    <Translate
+                                        className="label warning"
+                                        component="label"
+                                        content="gateway.min_deposit_warning_asset"
+                                        minDeposit={min_deposit || gate_fee * 2}
+                                        coin={assetUtils.replaceAssetSymbol(
+                                            this.props.deposit_asset
+                                        )}
+                                        style={labelStyle}
+                                    />
+
+                                    {!WalletDb.isLocked() ? (
+                                        <div>
+                                            {emptyAddressDeposit ? (
+                                                <Translate content="gateway.please_generate_address" />
+                                            ) : (
+                                                <div>
+                                                    <span
+                                                        style={{
+                                                            wordBreak:
+                                                                "break-word"
+                                                        }}
+                                                    >
+                                                        {receive_address &&
+                                                        receive_address.tag ? (
+                                                            <span>
+                                                                Address:{" "}
+                                                            </span>
+                                                        ) : null}
+                                                        {
+                                                            deposit_address_fragment
+                                                        }
+                                                        <br />
+                                                    </span>
+                                                    {receive_address &&
+                                                    receive_address.tag ? (
+                                                        <span
+                                                            style={{
+                                                                display:
+                                                                    "inline-block",
+                                                                marginTop: 5
+                                                            }}
+                                                        >
+                                                            Tag:{" "}
+                                                            {
+                                                                receive_address.tag
+                                                            }
+                                                        </span>
+                                                    ) : null}
                                                 </div>
-                                            ) : null}
-                                            {memoText ? (
-                                                <div
-                                                    className="button"
-                                                    onClick={this.toClipboard.bind(
-                                                        this,
-                                                        memoText
-                                                    )}
-                                                >
-                                                    <Translate content="gateway.copy_memo" />
-                                                </div>
-                                            ) : null}
-                                            <button
-                                                className={
-                                                    "button spinner-button-circle"
-                                                }
-                                                onClick={this.requestDepositAddressLoad.bind(
-                                                    this
+                                            )}
+                                            <div>
+                                                {deposit_memo && (
+                                                    <span>
+                                                        memo: {deposit_memo}
+                                                    </span>
                                                 )}
+                                            </div>
+                                            <div
+                                                className="button-group"
+                                                style={{paddingTop: 10}}
                                             >
-                                                {indicatorButtonAddr ? (
-                                                    <LoadingIndicator type="circle" />
+                                                {deposit_address_fragment ? (
+                                                    <div
+                                                        className="button"
+                                                        onClick={this.toClipboard.bind(
+                                                            this,
+                                                            clipboardText
+                                                        )}
+                                                    >
+                                                        <Translate content="gateway.copy_address" />
+                                                    </div>
                                                 ) : null}
-                                                <Translate content="gateway.generate_new" />
-                                            </button>
+                                                {receive_address &&
+                                                receive_address.tag ? (
+                                                    <div
+                                                        className="button"
+                                                        onClick={this.toClipboard.bind(
+                                                            this,
+                                                            receive_address.tag
+                                                        )}
+                                                    >
+                                                        <Translate content="cryptobridge.gateway.copy_address_tag" />
+                                                    </div>
+                                                ) : null}
+                                                {memoText ? (
+                                                    <div
+                                                        className="button"
+                                                        onClick={this.toClipboard.bind(
+                                                            this,
+                                                            memoText
+                                                        )}
+                                                    >
+                                                        <Translate content="gateway.copy_memo" />
+                                                    </div>
+                                                ) : null}
+                                                <button
+                                                    className={
+                                                        "button spinner-button-circle"
+                                                    }
+                                                    onClick={this.requestDepositAddressLoad.bind(
+                                                        this
+                                                    )}
+                                                >
+                                                    {indicatorButtonAddr ? (
+                                                        <LoadingIndicator type="circle" />
+                                                    ) : null}
+                                                    <Translate content="gateway.generate_new" />
+                                                </button>
+                                            </div>
                                         </div>
+                                    ) : null}
+                                </div>
+                                {!WalletDb.isLocked() ? (
+                                    <div className="small-12 medium-5 large-3">
+                                        {deposit_address_fragment &&
+                                            !memoText &&
+                                            clipboardText && (
+                                                <QRCode
+                                                    size={140}
+                                                    value={clipboardText}
+                                                />
+                                            )}
                                     </div>
                                 ) : null}
                             </div>
-                            {!WalletDb.isLocked() ? (
-                                <div className="small-12 medium-5 large-3">
-                                    {deposit_address_fragment &&
-                                        !memoText &&
-                                        clipboardText && (
-                                            <QRCode
-                                                size={140}
-                                                value={clipboardText}
-                                            />
-                                        )}
-                                </div>
-                            ) : null}
-                        </div>
+                        </CryptoBridgeDepositAccept>
                     </div>
                 </div>
             );
