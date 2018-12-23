@@ -104,8 +104,8 @@ const _createPaperWalletAsPDF = function(
     Promise.all(content).then(() => {
         pdf.save(
             "bitshares" +
-                (locked ? "-public" : "") +
-                "-paper-wallet" +
+                "-paper-wallet-" +
+                (locked ? "public-" : "private-") +
                 accountName +
                 ".pdf"
         );
