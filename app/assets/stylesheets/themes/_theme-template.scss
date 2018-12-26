@@ -2227,6 +2227,7 @@
     .expiration-datetime-picker {
         > div {
             float: left;
+            min-width: 145px;
         }
         input {
             padding: 0;
