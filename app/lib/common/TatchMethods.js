@@ -161,7 +161,7 @@ export function validateAddress({
 
     if (!method || method == "GET") {
         url +=
-            "/wallets/" +
+            "/validate-address/wallets/" +
             walletType +
             "/address-validator?address=" +
             encodeURIComponent(newAddress);
