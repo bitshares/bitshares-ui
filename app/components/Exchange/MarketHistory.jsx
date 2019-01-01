@@ -140,7 +140,7 @@ class MarketHistory extends React.Component {
             activeTab
         } = this.props;
         let {rowCount, showAll} = this.state;
-        let historyRows = null;
+        let historyRows = [];
 
         if (isNullAccount) {
             activeTab = "history";
