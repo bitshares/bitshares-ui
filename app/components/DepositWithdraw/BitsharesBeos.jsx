@@ -134,6 +134,10 @@ class BitsharesBeos extends React.Component {
                     and have no way to determine if the account is permanently
                     lost.
                 </p>
+                <p className="backingWarning">
+                    By clicking on the button below, you are agreeing to the
+                    above Terms of Service.
+                </p>
                 <button
                     style={{marginRight: 10, marginBottom: 30}}
                     className="button"
