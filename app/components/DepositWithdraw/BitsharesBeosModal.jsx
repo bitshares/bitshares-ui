@@ -630,6 +630,12 @@ class BitsharesBeosModal extends React.Component {
         return pxasset;
     }
 
+    getAvailableAssets = () => {
+        return this.props.assets
+            .filter(a => !!this.getBalanceForAsset(a.get("id")))
+            .map(a => a.get("id"));
+    };
+
     async onSubmit() {
         const asset = this.getAssetById(this.state.selectedAssetId);
 
@@ -796,7 +802,7 @@ class BitsharesBeosModal extends React.Component {
                                 label="gateway.bitshares_beos.amount_to_send_label"
                                 amount={this.state.amount_to_send}
                                 asset={this.state.selectedAssetId}
-                                assets={this.props.assets.map(a => a.get("id"))}
+                                assets={this.getAvailableAssets()}
                                 placeholder="0.0"
                                 onChange={this.onAmountToSendChange.bind(this)}
                                 display_balance={balance}
