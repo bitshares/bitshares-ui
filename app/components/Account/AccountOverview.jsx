@@ -3,7 +3,7 @@ import Immutable from "immutable";
 import Translate from "react-translate-component";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
 import AssetName from "../Utility/AssetName";
-import MarginPositions from "./MarginPositions";
+import MarginPositionsTable from "./MarginPositionsTable";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
 import {ChainStore} from "bitsharesjs";
@@ -18,6 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
+import {Input, Icon, Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -39,7 +40,8 @@ class AccountOverview extends React.Component {
                 // "OPEN.MAID",
                 // "OPEN.STEEM",
                 // "OPEN.DASH"
-            ]
+            ],
+            hideFishingProposals: true
         };
 
         this._handleFilterInput = this._handleFilterInput.bind(this);
@@ -110,6 +112,11 @@ class AccountOverview extends React.Component {
                 sortKey: key
             });
         }
+    }
+    _toggleHideProposal() {
+        this.setState({
+            hideFishingProposals: !this.state.hideFishingProposals
+        });
     }
 
     getHeader() {
@@ -470,13 +477,20 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="header-selector">
                                     <div className="filter inline-block">
-                                        <input
+                                        <Input
                                             type="text"
-                                            placeholder="Filter"
+                                            placeholder="Filter..."
                                             onChange={this._handleFilterInput}
+                                            addonAfter={<Icon type="search" />}
                                         />
                                     </div>
-                                    <div className="selector inline-block">
+                                    <div
+                                        className="selector inline-block"
+                                        style={{
+                                            position: "relative",
+                                            top: "6px"
+                                        }}
+                                    >
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
@@ -585,7 +599,7 @@ class AccountOverview extends React.Component {
                             >
                                 <div className="content-block">
                                     <div className="generic-bordered-box">
-                                        <MarginPositions
+                                        <MarginPositionsTable
                                             preferredUnit={preferredUnit}
                                             className="dashboard-table"
                                             callOrders={call_orders}
@@ -604,7 +618,7 @@ class AccountOverview extends React.Component {
                                                 <td className="column-hide-small" />
                                                 <td colSpan="4" />
                                             </tr>
-                                        </MarginPositions>
+                                        </MarginPositionsTable>
                                     </div>
                                 </div>
                             </Tab>
@@ -636,9 +650,24 @@ class AccountOverview extends React.Component {
                                             : 0
                                     )}
                                 >
+                                    <div>
+                                        <Switch
+                                            style={{margin: 16}}
+                                            checked={
+                                                this.state.hideFishingProposals
+                                            }
+                                            onChange={this._toggleHideProposal.bind(
+                                                this
+                                            )}
+                                        />
+                                        <Translate content="account.deactivate_suspicious_proposals" />
+                                    </div>
                                     <Proposals
                                         className="dashboard-table"
                                         account={account.get("id")}
+                                        hideFishingProposals={
+                                            this.state.hideFishingProposals
+                                        }
                                     />
                                 </Tab>
                             ) : null}

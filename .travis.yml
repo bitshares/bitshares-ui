@@ -14,7 +14,7 @@ env:
         - DEVELOP_REPO: bitshares/develop.bitshares.org
         - CXX=g++-4.8
         - secure:
-              "deD+B8xDM7cguX+PbeOSLh30mi6gHAdlqQphP63ZSCuFbL6hQU7MMb8nmBdBpIuaG2rX5GejSqPWTKt+/MSgQNHMTvRnzG1l1JtDTEAky8ssMyxI+HWiRe7Ic+1pFR0qUBAcPVN3MgPtW3Za47v1IyDyaR/0GdSREdy2KvmwBOWMoT23ubA1QlEhFO7uOlium4gJ6trxNPwfXkNHiMzanpVFyRQljY1PNGEPRzRzyWPNvZ4Pq5yNKnFFcW+afhvsTtK8AoeMFDeKhDF2yva8U0IMCZzrSKWwCIhkhJPii7pPT2LNlpjwVKXn16dRRVKO2tImmWtMpgbJjiNTRzVC4Y30+F7XPc97SpTKfGvoaH/iSZpTT1la0gHgoeBB32y6buPKnF7M2UNwTt2eGXpg/JHyperyQ25ey9EQBk/vHNxS9M3jcfkoXneBOnwICHgrzfamHxmMsiXnNDDriyPqIY9kFGQubqEF74cvBxhPLmfxJCPyHx7BY9ioiAlcgzWqJDOp/ADLjpoh44rUCpQH26Zg0N9efOuLUhuTAa54/9rboWZLxjxEvJ5qfTe+eHMW1r2RzoMJqWOhkbMs4f/qqGY42nqWhiibdSAZzIBuPYt/m9kdQ33930dKWoIkJwqZ2Il+T3FWJtzaguuoxKKYzsok9c/6FY7MbSSPaPw+fjg="
+              up459CkvN8cdhCHu4E2jAse5CM3JUJlVMbBu2x1HctFjanu4rv2JknIn5U4Rc6rX89GgLLJeUN05UsZEz+M+s5P7b8wlwkTKu1cdNFmcS1oDAJh3Gk22F3zGiv/HIQazjGCajMxX0kIsjNsHngAd/wJCvGrnLBU5vetu6zqCK/jR/YMGRl9bNTygH07eC4r5I7EKFRJLA8pM3GfBlG04aPS4feIrCiT+TAVENx3hLC2eKs451e3ktMYM5nh89E5HKjg2rfmwmIJRzuC/Rv5Dpk/3A77mOUe3iwZZWrmwUinlEfLBPn6zUD/XX83DI+7nINyUY13vDGZiMkwygvM6QZrReQZfZSVOaAfIZ7WoWIQd5SYFDj0fTGbdTxgwISr13LSHFQN+YsWkdbvnuKKXpaTwW+rRXU4pWXjaOQtNyr2nvp1AiW6TYzmq5ECbQ0IE2versZczasOLSk2E1h9vHw0SXrfqDR/X7WMIdKOuv1Umre30gcRZi5/0ZdcvfeY8jtdTwfsYoywtAQ3vfMelfDafIAtYPjFEhaeBZDDFGfMX5XAI0Rx34jQX7W1+76gR17l2V9kOwzKp/p5LNQh8kGzxyMY8Hl2xapwt/RG3tTnPXZeazFenYvybVCXPb46+Vqa/pxQyxB0HFu+izPTCiFfvd5rELyFkQT3kSNKFuio=
 addons:
     apt:
         sources:
@@ -27,22 +27,29 @@ addons:
             - xz-utils
 install:
     - npm ci
-script: "./build.sh"
+script:
+    - "./build.sh"
 after_success: "./deploy.sh"
 deploy:
-    provider: releases
-    tag_name: $TRAVIS_TAG
-    name: $TRAVIS_TAG
-    body: Automated release from Travis CI with added files from AppVeyor build
-    api_key:
-        secure:
-            "deD+B8xDM7cguX+PbeOSLh30mi6gHAdlqQphP63ZSCuFbL6hQU7MMb8nmBdBpIuaG2rX5GejSqPWTKt+/MSgQNHMTvRnzG1l1JtDTEAky8ssMyxI+HWiRe7Ic+1pFR0qUBAcPVN3MgPtW3Za47v1IyDyaR/0GdSREdy2KvmwBOWMoT23ubA1QlEhFO7uOlium4gJ6trxNPwfXkNHiMzanpVFyRQljY1PNGEPRzRzyWPNvZ4Pq5yNKnFFcW+afhvsTtK8AoeMFDeKhDF2yva8U0IMCZzrSKWwCIhkhJPii7pPT2LNlpjwVKXn16dRRVKO2tImmWtMpgbJjiNTRzVC4Y30+F7XPc97SpTKfGvoaH/iSZpTT1la0gHgoeBB32y6buPKnF7M2UNwTt2eGXpg/JHyperyQ25ey9EQBk/vHNxS9M3jcfkoXneBOnwICHgrzfamHxmMsiXnNDDriyPqIY9kFGQubqEF74cvBxhPLmfxJCPyHx7BY9ioiAlcgzWqJDOp/ADLjpoh44rUCpQH26Zg0N9efOuLUhuTAa54/9rboWZLxjxEvJ5qfTe+eHMW1r2RzoMJqWOhkbMs4f/qqGY42nqWhiibdSAZzIBuPYt/m9kdQ33930dKWoIkJwqZ2Il+T3FWJtzaguuoxKKYzsok9c/6FY7MbSSPaPw+fjg="
-    file_glob: true
-    file:
-        - build/binaries/BitShares*
-        - build/release-checksums-*
-    skip_cleanup: true
-    draft: true
-    on:
-        repo: bitshares/bitshares-ui
-        tags: true
+    - provider: releases
+      tag_name: "$TRAVIS_TAG"
+      name: "$TRAVIS_TAG"
+      body:
+          "Automated release from Travis CI with added files from AppVeyor build"
+      api_key:
+          secure:
+              HV4BRj0Nn4+3AGC5U2LxFQ3qr6bbwcs2SR7BIEKXdHcIAshvL52Qn9R2pXFjeJhj/FqGMRc6o1E54q4+QpzzlnoZquZkJoSv4x4EW306KVXNxaBQmwjNLs6gO09/s8j3IlZ0pudANmH2WQvT264ldGCqq0mC1vCMpHfxetdGsskfqdboFgyaUSDtRBER9FH23cM22Ro3oPJmRxn/dzZSctiB05e1i8CD6VZm8HeGuWKXyKOuhzBFzEgaSkSQWa6u5YsvAKkQ4c6rAAxUWJOH9+8WoqUVN/Pem56mnA0HYtqAoX/cShLuZfsHRJUVdE5Wt9YfEOBRQy954QmZgPhQbp7OKcIBAQyAkMSR1AEKCYd2QjPBBM5ek44Pbz0AsDSd1qsSgKUJs4urpOTLbFi2KfDmaXiO+ciaIDvyh0QiUPykVdRtDKacdrHCWUUuJajc465KRE8LGheOGThj+s9vPmy9Eubn7Zzsdzy1q0Xjwjd57bz8G5aTbBWpJJ4sk096trJqGX1iQMKEpnEU/KwmRS9XX65s6gBjuO8/2ZhoE8HQCDBS0whiJi+eHggu6wch6SfTvATkQ9ivex6T/T/eYHGF+sbShkXrzmUs0sbsq1TrjgFyIA/x23y+0k59mZ8xfkRLHT3L1EjgW6MahwPCPESumomq3PDJrKPVpd7n/04=
+      file_glob: true
+      file:
+          - build/binaries/BitShares*
+          - build/release-checksums-*
+      skip_cleanup: true
+      draft: true
+      on:
+          repo: bitshares/bitshares-ui
+          tags: true
+before_install:
+    - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
+      -in set_snap_token.sh.enc -out set_snap_token.sh -d
+    - chmod +x set_snap_token.sh
+    - source ./set_snap_token.sh

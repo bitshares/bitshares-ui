@@ -20,6 +20,7 @@
         "contacts": "联系人",
         "create_account": "创建账户",
         "create_new": "创建新账户",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "充值BTS",
         "deposit_address": "您的充值地址就是您的账户名",
         "deposit_withdraw": "充值/提现",
@@ -132,6 +133,8 @@
             "brain": "脑钱包位置",
             "cancel": "取消",
             "confirm_add": "增加",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "从此账户导入",
             "key": "公钥/账户名",
             "key_viewer": "私钥查看器",
@@ -422,6 +425,7 @@
         "close": "平仓",
         "coll_ratio": "抵押率",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "抵押率低于要求的 %(mr)s，不允许操作",
@@ -687,6 +691,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "领取手续费",
@@ -741,13 +757,22 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -997,7 +1022,7 @@
             "open_website": "访问官网"
         },
         "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "到达上限",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "Please, get new address ",
@@ -1091,6 +1116,7 @@
         "payments": "转账",
         "payments_legacy": "Send (legacy)",
         "settings": "设置",
+        "showcases": "Spotlight",
         "title": "BitShares 钱包",
         "unlock": "解锁钱包",
         "unlock_password": "使用密码登录",
@@ -1258,7 +1284,7 @@
     "modal": {
         "buy": {
             "asset": "Asset",
-            "bridge": "Brdige",
+            "bridge": "Bridge",
             "title": "Buy"
         },
         "cancel": "cancel",
@@ -1375,24 +1401,24 @@
         "subject": "标题"
     },
     "notifications": {
-        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
         "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
         "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
         "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)",
+        "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
-        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
-        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
+        "import_keys_error_unknown": "Key import error: %(error_msg)s",
         "invalid_password": "Invalid Password",
-        "password_change_failure": "Unable to change password: %(error_msg)",
+        "password_change_failure": "Unable to change password: %(error_msg)s",
         "password_change_success": "Password changed",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)"
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
+        "worker_create_failure": "Failed to create worker: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "Deposit Amount",
@@ -1418,10 +1444,12 @@
         "asset_reserve": "{account} 销毁了 {amount}",
         "asset_settle": "{account} 请求清算 {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} 更新了资产 {asset}",
         "asset_update_feed_producers": "{account} 更新了资产 {asset} 的喂价者",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} 领取了余额 {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} 将 {listee} 加入黑名单",
         "call_order_update": "{account} 将 {debtSymbol} 的债务调整了 {debt}，抵押额调整了 {collateral}",
         "committee_member_update_global_parameters": "{account} 更新了全局理事会参数",
@@ -1467,7 +1495,7 @@
         "action": "操作",
         "approve": "批准",
         "approvers": "Approver(s)",
-        "asset_create": "使用账户 {account} 创建资产 %{asset}s",
+        "asset_create": "使用账户 {account} 创建资产 %(asset)s",
         "asset_issue": "使用账户 {account} 将 {amount} 发行给 {to}",
         "asset_reserve": "使用账户 {account} 销毁 {amount}",
         "asset_settle": "请求清算资产 {asset}",
@@ -1668,6 +1696,32 @@
         "wallets": "钱包管理",
         "yes": "是"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "请确认你的计算机系统时钟正确。",
         "sub_text_2": "同步你的计算机时钟后，请刷新本页面。如果你的时钟正确，那你连接的API服务器可能与区块链数据不同步，这种情况下，可尝试使用其他API服务器进行连接。",
@@ -1675,6 +1729,7 @@
     },
     "tooltip": {
         "borrow": "从系统借出 %(asset)s 。系统将创建一个智能合约并冻结你的抵押物。你可以随时调整仓位或进行平仓。",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades 是提供即时资产交易的桥接服务。详情和使用条款请参阅 https://blocktrades.us",
         "buy_min": "你将至少收到这些金额。如果有定价低于你的设定的订单被撮合，你实际收到的金额会更多。",
@@ -1686,6 +1741,7 @@
         "copy_tip": "点击这里将内容复制到剪贴板上",
         "cr_danger": "该债仓的抵押率已低于要求水平。请考虑补仓以至少将抵押率提高到 %(mr)s 或进行平仓。",
         "cr_warning": "该债仓已接近强制平仓触发价。如果抵押率低于 %(mr)s，该债仓将被强制平仓，请考虑补仓或平仓。",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "请到 %(asset)s 的外盘钱包进行转账操作以进行充值，转账地址即列在当前页的地址。一旦转账得到确认，您将完成充值。如果此页转账信息中包含备注，您需要在转账时也将备注包括进去。",
         "disconnected": "您没有连接到任何 API 节点，请尝试刷新页面或在设置从选择一个新的接入点。",
         "feed_price": "This is the current external feed price",
@@ -1697,6 +1753,7 @@
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "从列表中隐藏资产",
+        "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "市场最新成交价",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
@@ -1733,6 +1790,7 @@
         "memo_tip": "您可以在备注里留下任意信息。备注不是必须的，但通常将资产转账到交易所时需要填写。",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "未找到该资产最近的成交价来评估价值",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议另一个用户发起交易",
@@ -1745,6 +1803,7 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "Settling will let you convert your holdings of %(asset)s to %(backingAsset)s after a delay of %(settleDelay)s hours, at a price equal to the feed price at that time.",
         "settle_price": "清算单执行时将使用的价格",
         "show_asset": "在主列表中显示资产",
@@ -1765,6 +1824,7 @@
         "at": "@",
         "balance_id": "余额 ID",
         "balance_owner": "余额所有者公钥",
+        "bidder": "Bidder",
         "blinding_factor": "隐私因子",
         "bond_accept_offer": "接受债券要约",
         "bond_cancel_offer": "取消债券要约",
@@ -1847,6 +1907,7 @@
             "account_whitelist": "账户白名单",
             "all": "显示全部",
             "assert": "断言操作",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "领取资产手续费",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1954,6 +2015,8 @@
         "expire": "你的交易确认超时，请稍后尝试。"
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",

@@ -91,6 +91,43 @@ class AssetActions {
         };
     }
 
+    bidCollateral(account_id, core, asset, coll, debt) {
+        let core_precision = utils.get_asset_precision(core.get("precision"));
+        let asset_precision = utils.get_asset_precision(asset.get("precision"));
+
+        var tr = WalletApi.new_transaction();
+        tr.add_type_operation("bid_collateral", {
+            fee: {
+                amount: 0,
+                asset_id: "1.3.0"
+            },
+            bidder: account_id,
+            additional_collateral: {
+                amount: coll * core_precision,
+                asset_id: core.get("id")
+            },
+            debt_covered: {
+                amount: debt * asset_precision,
+                asset_id: asset.get("id")
+            },
+            extensions: []
+        });
+
+        return dispatch => {
+            return WalletDb.process_transaction(tr, null, true)
+                .then(() => {
+                    dispatch(true);
+                })
+                .catch(error => {
+                    console.log(
+                        "[AssetActions.js:122] ----- collateralBid error ----->",
+                        error
+                    );
+                    dispatch(false);
+                });
+        };
+    }
+
     updateOwner(asset, new_issuer_id) {
         let tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_update_issuer", {

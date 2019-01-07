@@ -14,13 +14,14 @@ import utils from "common/utils";
 import FormattedTime from "../Utility/FormattedTime";
 import {ChainStore} from "bitsharesjs";
 import {Apis} from "bitsharesjs-ws";
-import {CallOrder, FeedPrice} from "common/MarketClasses";
+import {CallOrder, CollateralBid, FeedPrice} from "common/MarketClasses";
 import Page404 from "../Page404/Page404";
 import FeePoolOperation from "../Account/FeePoolOperation";
 import AccountStore from "stores/AccountStore";
 import {connect} from "alt-react";
 import AssetOwnerUpdate from "./AssetOwnerUpdate";
 import AssetPublishFeed from "./AssetPublishFeed";
+import BidCollateralOperation from "./BidCollateralOperation";
 import {Tab, Tabs} from "../Utility/Tabs";
 
 class AssetFlag extends React.Component {
@@ -64,12 +65,23 @@ class Asset extends React.Component {
         super(props);
         this.state = {
             callOrders: [],
-            marginTableSort: "price",
-            sortDirection: true
+            collateralBids: [],
+            marginTableSort: "ratio",
+            collateralTableSort: "price",
+            sortDirection: true,
+            showCollateralBidInInfo: false
         };
     }
 
     componentWillMount() {
+        this._getMarginCollateral();
+    }
+
+    updateOnCollateralBid() {
+        this._getMarginCollateral();
+    }
+
+    _getMarginCollateral() {
         if (this.props.asset.has("bitasset")) {
             const assets = {
                 [this.props.asset.get("id")]: this.props.asset.toJS(),
@@ -82,67 +94,119 @@ class Asset extends React.Component {
                 ["bitasset", "is_prediction_market"],
                 false
             );
-            let sqr = this.props.asset.getIn([
-                "bitasset",
-                "current_feed",
-                "maximum_short_squeeze_ratio"
-            ]);
-            let settlePrice = this.props.asset.getIn([
-                "bitasset",
-                "current_feed",
-                "settlement_price"
-            ]);
 
-            /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
-            if (
-                isPredictionMarket &&
-                settlePrice.getIn(["base", "asset_id"]) ===
-                    settlePrice.getIn(["quote", "asset_id"])
-            ) {
-                if (!assets[this.props.backingAsset.get("id")])
-                    assets[this.props.backingAsset.get("id")] = {
-                        precision: this.props.asset.get("precision")
-                    };
-                settlePrice = settlePrice.setIn(["base", "amount"], 1);
-                settlePrice = settlePrice.setIn(
-                    ["base", "asset_id"],
-                    this.props.backingAsset.get("id")
-                );
-                settlePrice = settlePrice.setIn(["quote", "amount"], 1);
-                settlePrice = settlePrice.setIn(
-                    ["quote", "asset_id"],
-                    this.props.asset.get("id")
-                );
-                sqr = 1000;
-            }
+            let feedPrice = this._getFeedPrice();
 
-            try {
-                const feedPrice = new FeedPrice({
-                    priceObject: settlePrice,
-                    market_base: this.props.asset.get("id"),
-                    sqr,
-                    assets
-                });
-
-                Apis.instance()
-                    .db_api()
-                    .exec("get_call_orders", [this.props.asset.get("id"), 300])
-                    .then(call_orders => {
-                        let callOrders = call_orders.map(c => {
-                            return new CallOrder(
-                                c,
-                                assets,
-                                this.props.asset.get("id"),
-                                feedPrice,
-                                isPredictionMarket
-                            );
+            if (feedPrice) {
+                try {
+                    Apis.instance()
+                        .db_api()
+                        .exec("get_call_orders", [
+                            this.props.asset.get("id"),
+                            300
+                        ])
+                        .then(call_orders => {
+                            let callOrders = call_orders.map(c => {
+                                return new CallOrder(
+                                    c,
+                                    assets,
+                                    this.props.asset.get("id"),
+                                    feedPrice,
+                                    isPredictionMarket
+                                );
+                            });
+                            this.setState({callOrders});
                         });
-                        this.setState({callOrders});
-                    });
-            } catch (e) {
-                // console.log(err);
+                } catch (e) {
+                    // console.log(err);
+                }
+
+                try {
+                    Apis.instance()
+                        .db_api()
+                        .exec("get_collateral_bids", [
+                            this.props.asset.get("id"),
+                            100,
+                            0
+                        ])
+                        .then(coll_orders => {
+                            let collateralBids = coll_orders.map(c => {
+                                return new CollateralBid(
+                                    c,
+                                    assets,
+                                    this.props.asset.get("id"),
+                                    feedPrice
+                                );
+                            });
+                            this.setState({collateralBids});
+                        });
+                } catch (e) {
+                    console.log("get_collateral_bids Error: ", e);
+                }
             }
         }
+    }
+
+    _getFeedPrice() {
+        const assets = {
+            [this.props.asset.get("id")]: this.props.asset.toJS(),
+            [this.props.backingAsset.get("id")]: this.props.backingAsset.toJS()
+        };
+
+        const isPredictionMarket = this.props.asset.getIn(
+            ["bitasset", "is_prediction_market"],
+            false
+        );
+        let sqr = this.props.asset.getIn([
+            "bitasset",
+            "current_feed",
+            "maximum_short_squeeze_ratio"
+        ]);
+        let settlePrice = this.props.asset.getIn([
+            "bitasset",
+            "current_feed",
+            "settlement_price"
+        ]);
+
+        let feedPrice;
+
+        /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
+        if (
+            isPredictionMarket &&
+            settlePrice.getIn(["base", "asset_id"]) ===
+                settlePrice.getIn(["quote", "asset_id"])
+        ) {
+            if (!assets[this.props.backingAsset.get("id")])
+                assets[this.props.backingAsset.get("id")] = {
+                    precision: this.props.asset.get("precision")
+                };
+            settlePrice = settlePrice.setIn(["base", "amount"], 1);
+            settlePrice = settlePrice.setIn(
+                ["base", "asset_id"],
+                this.props.backingAsset.get("id")
+            );
+            settlePrice = settlePrice.setIn(["quote", "amount"], 1);
+            settlePrice = settlePrice.setIn(
+                ["quote", "asset_id"],
+                this.props.asset.get("id")
+            );
+            sqr = 1000;
+        }
+
+        // Catch Invalid SettlePrice object
+        if (settlePrice.toJS) {
+            let settleObject = settlePrice.toJS();
+            if (!assets[settleObject.base.asset_id]) return;
+        }
+
+        feedPrice = new FeedPrice({
+            priceObject: settlePrice,
+            market_base: this.props.asset.get("id"),
+            sqr,
+            assets
+        });
+
+        return feedPrice;
     }
 
     _toggleSortOrder(type) {
@@ -151,7 +215,19 @@ class Asset extends React.Component {
                 marginTableSort: type
             });
         } else {
-            this.setState({sortDirection: !this.state.sortDirection});
+            this.setState({
+                sortDirection: !this.state.sortDirection
+            });
+        }
+
+        if (type !== this.state.collateralTableSort) {
+            this.setState({
+                collateralTableSort: type
+            });
+        } else {
+            this.setState({
+                sortDirection: !this.state.sortDirection
+            });
         }
     }
 
@@ -199,7 +275,8 @@ class Asset extends React.Component {
         price,
         hide_symbols = false,
         hide_value = false,
-        factor = 0
+        factor = 0,
+        negative_invert = false
     ) {
         var base = price.base;
         var quote = price.quote;
@@ -212,6 +289,7 @@ class Asset extends React.Component {
                 hide_value={hide_value}
                 hide_symbols={hide_symbols}
                 factor={factor}
+                negative_invert={negative_invert}
             />
         );
     }
@@ -219,8 +297,9 @@ class Asset extends React.Component {
     renderAuthorityList(authorities) {
         return authorities.map(function(authority) {
             return (
-                <span>
+                <span key={authority}>
                     <LinkToAccountById account={authority} />
+                    &nbsp;
                 </span>
             );
         });
@@ -432,7 +511,6 @@ class Asset extends React.Component {
         var bitAsset = asset.bitasset;
         if (!("current_feed" in bitAsset)) return <div header={title} />;
         var currentFeed = bitAsset.current_feed;
-
         var feedPrice = this.formattedPrice(currentFeed.settlement_price);
 
         return (
@@ -488,6 +566,41 @@ class Asset extends React.Component {
         );
     }
 
+    _analyzeBids(settlement_fund_debt) {
+        // Convert supply to calculable values
+        let current_supply_value = settlement_fund_debt;
+
+        let bids_collateral_value = 0;
+        let bids_debt_value = 0;
+
+        let sorted_bids = this.state.collateralBids.sort((a, b) => {
+            return b.bid.toReal() - a.bid.toReal();
+        });
+
+        sorted_bids.forEach(bid => {
+            let collateral = bid.collateral;
+            let debt = bid.debt;
+            if (bids_debt_value < current_supply_value) {
+                if (bids_debt_value + debt >= current_supply_value) {
+                    debt = current_supply_value - bids_debt_value;
+                    collateral = (debt / bid.debt) * collateral;
+                    bid.consideredIfRevived = 2;
+                } else {
+                    bid.consideredIfRevived = 1;
+                }
+                bids_collateral_value = bids_collateral_value + collateral;
+                bids_debt_value = bids_debt_value + debt;
+            } else {
+                bid.consideredIfRevived = 0;
+            }
+        });
+
+        return {
+            collateral: bids_collateral_value,
+            debt: bids_debt_value
+        };
+    }
+
     renderSettlement(asset) {
         var title = <Translate content="explorer.asset.settlement.title" />;
         var bitAsset = asset.bitasset;
@@ -497,43 +610,135 @@ class Asset extends React.Component {
         if (dynamic) dynamic = dynamic.toJS();
         var currentSupply = dynamic ? dynamic.current_supply : 0;
 
-        var currentSettled = bitAsset.force_settled_volume;
-
         var currentFeed = bitAsset.current_feed;
-
-        let maxSettlementVolume =
-            bitAsset.options.maximum_force_settlement_volume;
-        let settlementDelay = bitAsset.options.force_settlement_delay_sec;
-        let settlementOffset = bitAsset.options.force_settlement_offset_percent;
-
-        var globalSettlementPrice = this.getGlobalSettlementPrice();
-        var msspPrice = this.formattedPrice(
-            currentFeed.settlement_price,
-            false,
-            false,
-            currentFeed.maximum_short_squeeze_ratio / 1000
-        );
-
-        var settlementFund = bitAsset.settlement_fund;
-        var settlementPrice = this.formattedPrice(bitAsset.settlement_price);
         var isGlobalSettle = asset.bitasset.settlement_fund > 0 ? true : false;
 
-        var settlePrice = this.formattedPrice(
-            currentFeed.settlement_price,
-            false,
-            false,
-            1 - settlementOffset / 10000
-        );
+        let settlement_fund_collateral_ratio = null;
+        let total_collateral_ratio = null;
+        let revive_price_with_bids = null;
+
+        if (isGlobalSettle) {
+            /***
+             * Global Settled Assets
+             */
+            var settlementFund = bitAsset.settlement_fund;
+            var settlementPrice = this.formattedPrice(
+                bitAsset.settlement_price
+            );
+            var revivePrice = this.formattedPrice(
+                bitAsset.settlement_price,
+                false,
+                false,
+                currentFeed.maintenance_collateral_ratio / 1000,
+                true
+            );
+
+            const assets = {
+                [this.props.asset.get("id")]: this.props.asset.toJS(),
+                [this.props.backingAsset.get(
+                    "id"
+                )]: this.props.backingAsset.toJS()
+            };
+            let feedPrice = this._getFeedPrice();
+
+            // Convert supply to calculable values
+            let current_supply_value = currentSupply;
+            let current_collateral_value = bitAsset.settlement_fund;
+
+            let bids = this._analyzeBids(current_supply_value);
+
+            revive_price_with_bids = (
+                <FormattedPrice
+                    base_amount={bitAsset.settlement_fund / 1 + bids.collateral} // /1 is implicit type conversion
+                    base_asset={assets[bitAsset.options.short_backing_asset].id}
+                    quote_amount={bids.debt}
+                    quote_asset={asset.id}
+                    hide_value={false}
+                    hide_symbols={false}
+                    factor={currentFeed.maintenance_collateral_ratio / 1000}
+                    negative_invert={true}
+                />
+            );
+
+            current_supply_value =
+                current_supply_value / Math.pow(10, asset.precision);
+            current_collateral_value =
+                current_collateral_value /
+                Math.pow(
+                    10,
+                    assets[bitAsset.options.short_backing_asset].precision
+                );
+            settlement_fund_collateral_ratio =
+                current_collateral_value /
+                feedPrice.toReal() /
+                current_supply_value;
+
+            let bids_collateral =
+                bids.collateral /
+                Math.pow(
+                    10,
+                    assets[bitAsset.options.short_backing_asset].precision
+                );
+            total_collateral_ratio =
+                (current_collateral_value + bids_collateral) /
+                feedPrice.toReal() /
+                current_supply_value;
+        } else {
+            /***
+             * Non Global Settlement Assets
+             */
+            var globalSettlementPrice = this.getGlobalSettlementPrice();
+            var currentSettled = bitAsset.force_settled_volume;
+            var settlementOffset =
+                bitAsset.options.force_settlement_offset_percent;
+            var settlementDelay = bitAsset.options.force_settlement_delay_sec;
+            var maxSettlementVolume =
+                bitAsset.options.maximum_force_settlement_volume;
+
+            var msspPrice = this.formattedPrice(
+                currentFeed.settlement_price,
+                false,
+                false,
+                currentFeed.maximum_short_squeeze_ratio / 1000
+            );
+            var settlePrice = this.formattedPrice(
+                currentFeed.settlement_price,
+                false,
+                false,
+                1 - settlementOffset / 10000
+            );
+        }
 
         return (
             <div className="asset-card no-padding">
                 <div className="card-divider">{title}</div>
-                {isGlobalSettle ? (
+                {isGlobalSettle && (
                     <Translate
                         component="p"
-                        content="explorer.asset.settlement.global_settlement_description"
+                        content="explorer.asset.settlement.gs_description"
                     />
-                ) : null}
+                )}
+                {isGlobalSettle && (
+                    <p>
+                        <Translate content="explorer.asset.settlement.gs_revive" />
+                        &nbsp;(
+                        <Translate content="explorer.asset.settlement.gs_see_actions" />
+                        , &nbsp;
+                        <Translate content="explorer.asset.settlement.gs_or" />
+                        &nbsp;
+                        <a
+                            onClick={() => {
+                                this.setState({
+                                    showCollateralBidInInfo: !this.state
+                                        .showCollateralBidInInfo
+                                });
+                            }}
+                        >
+                            <Translate content="explorer.asset.settlement.gs_place_bid" />
+                        </a>
+                        ).
+                    </p>
+                )}
 
                 <table
                     className="table key-value-table table-hover"
@@ -560,6 +765,51 @@ class Asset extends React.Component {
                                     />
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.settlement_funds_collateral_ratio" />
+                                </td>
+                                <td>
+                                    {settlement_fund_collateral_ratio.toFixed(
+                                        6
+                                    )}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate
+                                        style={{
+                                            fontWeight: "bold"
+                                        }}
+                                        content="explorer.asset.settlement.gs_revert"
+                                    />
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate content="explorer.asset.settlement.gs_auto_revive_price" />
+                                </td>
+                                <td>
+                                    {revivePrice} / {revive_price_with_bids}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Translate
+                                        content="explorer.asset.settlement.gs_collateral_valuation"
+                                        mcr={
+                                            currentFeed.maintenance_collateral_ratio /
+                                            1000
+                                        }
+                                    />
+                                </td>
+                                <td>{total_collateral_ratio.toFixed(6)}</td>
+                            </tr>
                         </tbody>
                     ) : (
                         <tbody>
@@ -583,7 +833,6 @@ class Asset extends React.Component {
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
-
                             <tr>
                                 <td>
                                     <Translate
@@ -780,6 +1029,40 @@ class Asset extends React.Component {
         );
     }
 
+    renderCollateralBid(asset) {
+        return (
+            <div className="grid-content small-no-padding">
+                <div className="asset-card no-padding">
+                    <div className="card-divider">
+                        <Translate content="explorer.asset.collateral.bid" />
+                    </div>
+                    <Translate
+                        component="p"
+                        content="explorer.asset.collateral.bid_text"
+                        asset={asset.symbol}
+                    />
+
+                    <Translate
+                        component="p"
+                        content="explorer.asset.settlement.gs_included_on_revival"
+                    />
+
+                    <Translate
+                        component="p"
+                        content="explorer.asset.collateral.remove_bid"
+                    />
+
+                    <BidCollateralOperation
+                        asset={asset.symbol}
+                        funderAccountName={this.props.currentAccount}
+                        onUpdate={this.updateOnCollateralBid.bind(this)}
+                        hideBalance
+                    />
+                </div>
+            </div>
+        );
+    }
+
     renderFeePoolFunding(asset) {
         return (
             <div className="grid-content small-no-padding">
@@ -894,24 +1177,54 @@ class Asset extends React.Component {
         );
 
         var whiteLists = permissionBooleans["white_list"] ? (
-            <span>
+            <div>
                 <br />
-                <Translate content="explorer.asset.permissions.blacklist_authorities" />
-                : &nbsp;
-                {this.renderAuthorityList(options.blacklist_authorities)}
-                <br />
-                <Translate content="explorer.asset.permissions.blacklist_markets" />
-                : &nbsp;
-                {this.renderMarketList(asset, options.blacklist_markets)}
-                <br />
-                <Translate content="explorer.asset.permissions.whitelist_authorities" />
-                : &nbsp;
-                {this.renderAuthorityList(options.whitelist_authorities)}
-                <br />
-                <Translate content="explorer.asset.permissions.whitelist_markets" />
-                : &nbsp;
-                {this.renderMarketList(asset, options.whitelist_markets)}
-            </span>
+                {!!options.blacklist_authorities &&
+                    !!options.blacklist_authorities.length && (
+                        <React.Fragment>
+                            <Translate content="explorer.asset.permissions.blacklist_authorities" />
+                            : &nbsp;
+                            {this.renderAuthorityList(
+                                options.blacklist_authorities
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.blacklist_markets &&
+                    !!options.blacklist_markets.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.blacklist_markets" />
+                            : &nbsp;
+                            {this.renderMarketList(
+                                asset,
+                                options.blacklist_markets
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.whitelist_authorities &&
+                    !!options.whitelist_authorities.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.whitelist_authorities" />
+                            : &nbsp;
+                            {this.renderAuthorityList(
+                                options.whitelist_authorities
+                            )}
+                        </React.Fragment>
+                    )}
+                {!!options.whitelist_markets &&
+                    !!options.whitelist_markets.length && (
+                        <React.Fragment>
+                            <br />
+                            <Translate content="explorer.asset.permissions.whitelist_markets" />
+                            : &nbsp;
+                            {this.renderMarketList(
+                                asset,
+                                options.whitelist_markets
+                            )}
+                        </React.Fragment>
+                    )}
+            </div>
         ) : null;
 
         return (
@@ -933,7 +1246,7 @@ class Asset extends React.Component {
                 {this.renderPermissionIndicators(permissionBooleans, bitNames)}
                 <br />
 
-                {/*whiteLists*/}
+                {whiteLists}
             </div>
         );
     }
@@ -971,6 +1284,42 @@ class Asset extends React.Component {
 
         return this.state.callOrders.sort(
             sortFunctions[this.state.marginTableSort]
+        );
+    }
+
+    getCollateralBids(totalSupply) {
+        const {sortDirection} = this.state;
+
+        let sortFunctions = {
+            name: function(a, b) {
+                let nameA = ChainStore.getAccount(a.bidder, false);
+                if (nameA) nameA = nameA.get("name");
+                let nameB = ChainStore.getAccount(b.bidder, false);
+                if (nameB) nameB = nameB.get("name");
+                if (nameA > nameB) return sortDirection ? 1 : -1;
+                if (nameA < nameB) return sortDirection ? -1 : 1;
+                return 0;
+            },
+            price: function(a, b) {
+                return (
+                    (sortDirection ? 1 : -1) * (a.bid.toReal() - b.bid.toReal())
+                );
+            },
+            collateral: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.collateral - a.collateral);
+            },
+            debt: function(a, b) {
+                return (sortDirection ? 1 : -1) * (b.debt - a.debt);
+            },
+            ratio: function(a, b) {
+                return (
+                    (!sortDirection ? 1 : -1) * (a.getRatio() - b.getRatio())
+                );
+            }
+        };
+
+        return this.state.collateralBids.sort(
+            sortFunctions[this.state.collateralTableSort]
         );
     }
 
@@ -1026,7 +1375,7 @@ class Asset extends React.Component {
     // witness for the given asset
     // the other tab is a list of the margin positions
     // for this asset (if it's a bitasset)
-    renderMarginPositions(asset, sortedCallOrders) {
+    renderMarginPositions(asset, sortedCallOrders, sortedCollateralBids) {
         // first we compute the price feed tab
         var bitAsset = asset.bitasset;
         if (
@@ -1143,26 +1492,192 @@ class Asset extends React.Component {
             );
         }
 
-        // now we compute the margin position tab
-        let header2 = (
-            <thead>
-                <tr>
-                    <th
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "name")}
-                        style={{textAlign: "left"}}
-                    >
-                        <Translate content="transaction.borrower" />
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "collateral")}
-                    >
-                        <Translate content="transaction.collateral" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+        let isGlobalSettlement = bitAsset.settlement_fund > 0 ? true : false;
+
+        let secondRows = null;
+        let secondHeader = null;
+        if (isGlobalSettlement) {
+            // collateral bids
+            let dynamic = this.props.getDynamicObject(
+                asset.dynamic_asset_data_id
+            );
+            if (dynamic) {
+                dynamic = dynamic.toJS();
+                var currentSupply = dynamic ? dynamic.current_supply : 0;
+                this._analyzeBids(currentSupply);
+            }
+            secondHeader = (
+                <thead>
+                    <tr>
+                        <th
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "name")}
+                            style={{textAlign: "left"}}
+                        >
+                            <Translate content="transaction.bidder" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(
+                                this,
+                                "collateral"
+                            )}
+                        >
+                            <Translate content="transaction.collateral" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedAsset
+                                    amount={1}
+                                    asset={
+                                        sortedCollateralBids[0].bid.base
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "debt")}
+                        >
+                            <Translate content="transaction.borrow_amount" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedAsset
+                                    amount={1}
+                                    asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_amount
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(this, "price")}
+                        >
+                            <Translate content="explorer.asset.collateral_bid.bid" />
+                            {sortedCollateralBids.length && " ("}
+                            {sortedCollateralBids.length && (
+                                <FormattedPrice
+                                    base_amount={1}
+                                    base_asset={
+                                        sortedCollateralBids[0].bid.base
+                                            .asset_id
+                                    }
+                                    quote_amount={1}
+                                    quote_asset={
+                                        sortedCollateralBids[0].bid.quote
+                                            .asset_id
+                                    }
+                                    hide_value
+                                    noPopOver
+                                />
+                            )}
+                            {sortedCollateralBids.length && ")"}
+                        </th>
+
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(this, "ratio")}
+                        >
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+
+                        <th style={{textAlign: "right"}}>
+                            <Translate content="borrow.considered_on_revival" />
+                        </th>
+                    </tr>
+                </thead>
+            );
+
+            secondRows = sortedCollateralBids.map(c => {
+                let included = "no";
+                if (!!c.consideredIfRevived) {
+                    if (c.consideredIfRevived == 1) {
+                        included = "yes";
+                    } else if (c.consideredIfRevived == 2) {
+                        included = "partially";
+                    } else {
+                        included = "no";
+                    }
+                }
+                return (
+                    <tr className="margin-row" key={c.id}>
+                        <td>
+                            <LinkToAccountById account={c.bidder} />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={c.bid.base.amount}
+                                asset={c.bid.base.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td style={{textAlign: "right"}} className="">
+                            <FormattedAsset
+                                amount={c.bid.quote.amount}
+                                asset={c.bid.quote.asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            <FormattedPrice
+                                base_amount={c.bid.base.amount}
+                                base_asset={c.bid.base.asset_id}
+                                quote_amount={c.bid.quote.amount}
+                                quote_asset={c.bid.quote.asset_id}
+                                hide_symbols
+                            />
+                        </td>
+
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            {c.getRatio().toFixed(3)}
+                        </td>
+
+                        <td style={{textAlign: "right"}}>{included}</td>
+                    </tr>
+                );
+            });
+        } else {
+            // margin positions
+            secondHeader = (
+                <thead>
+                    <tr>
+                        <th
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "name")}
+                            style={{textAlign: "left"}}
+                        >
+                            <Translate content="transaction.borrower" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable column-hide-small"
+                            onClick={this._toggleSortOrder.bind(
+                                this,
+                                "collateral"
+                            )}
+                        >
+                            <Translate content="transaction.collateral" />
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
                                 <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .getCollateral()
@@ -1173,19 +1688,17 @@ class Asset extends React.Component {
                                     }
                                     hide_amount
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                        onClick={this._toggleSortOrder.bind(this, "debt")}
-                    >
-                        <Translate content="transaction.borrow_amount" />
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "debt")}
+                        >
+                            <Translate content="transaction.borrow_amount" />
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
                                 <FormattedAsset
                                     amount={this.state.callOrders[0]
                                         .amountToReceive()
@@ -1196,22 +1709,17 @@ class Asset extends React.Component {
                                     }
                                     hide_amount
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable column-hide-small"
-                    >
-                        <span
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable  column-hide-small"
                             onClick={this._toggleSortOrder.bind(this, "price")}
                         >
                             <Translate content="exchange.call" />
-                        </span>
-                        {this.state.callOrders.length ? (
-                            <span>
-                                &nbsp;(
+                            {this.state.callOrders.length && " ("}
+                            {this.state.callOrders.length && (
                                 <FormattedPrice
                                     base_amount={
                                         this.state.callOrders[0].call_price.base
@@ -1232,75 +1740,81 @@ class Asset extends React.Component {
                                     hide_value
                                     noPopOver
                                 />
-                                )
-                            </span>
-                        ) : null}
-                    </th>
-                    <th style={{textAlign: "right"}}>
-                        <Translate content="borrow.coll_ratio_target" />
-                    </th>
-                    <th
-                        style={{textAlign: "right"}}
-                        className="clickable"
-                        onClick={this._toggleSortOrder.bind(this, "ratio")}
-                    >
-                        <Translate content="borrow.coll_ratio" />
-                    </th>
-                </tr>
-            </thead>
-        );
-
-        let rows2 = sortedCallOrders.map(c => {
-            return (
-                <tr className="margin-row" key={c.id}>
-                    <td>
-                        <LinkToAccountById account={c.borrower} />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.collateral}
-                            asset={c.getCollateral().asset_id}
-                            hide_asset
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right"}}
-                        className="column-hide-small"
-                    >
-                        <FormattedAsset
-                            amount={c.debt}
-                            asset={c.amountToReceive().asset_id}
-                            hide_asset
-                        />
-                    </td>
-                    <td
-                        style={{textAlign: "right", paddingRight: 10}}
-                        className="column-hide-small"
-                    >
-                        <FormattedPrice
-                            base_amount={c.call_price.base.amount}
-                            base_asset={c.call_price.base.asset_id}
-                            quote_amount={c.call_price.quote.amount}
-                            quote_asset={c.call_price.quote.asset_id}
-                            hide_symbols
-                        />
-                    </td>
-                    <td style={{textAlign: "right", paddingRight: 10}}>
-                        {!!c.order.target_collateral_ratio
-                            ? (c.order.target_collateral_ratio / 1000).toFixed(
-                                  3
-                              )
-                            : "-"}
-                    </td>
-                    <td className={c.getStatus()} style={{textAlign: "right"}}>
-                        {c.getRatio().toFixed(3)}
-                    </td>
-                </tr>
+                            )}
+                            {this.state.callOrders.length && ")"}
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <Translate content="borrow.coll_ratio_target" />
+                        </th>
+                        <th
+                            style={{textAlign: "right"}}
+                            className="clickable"
+                            onClick={this._toggleSortOrder.bind(this, "ratio")}
+                        >
+                            <Translate content="borrow.coll_ratio" />
+                        </th>
+                    </tr>
+                </thead>
             );
-        });
+
+            secondRows = sortedCallOrders.map(c => {
+                return (
+                    <tr className="margin-row" key={c.id}>
+                        <td>
+                            <LinkToAccountById account={c.borrower} />
+                        </td>
+                        <td
+                            style={{textAlign: "right"}}
+                            className="column-hide-small"
+                        >
+                            <FormattedAsset
+                                amount={c.collateral}
+                                asset={c.getCollateral().asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td style={{textAlign: "right"}}>
+                            <FormattedAsset
+                                amount={c.debt}
+                                asset={c.amountToReceive().asset_id}
+                                hide_asset
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            <FormattedPrice
+                                base_amount={c.call_price.base.amount}
+                                base_asset={c.call_price.base.asset_id}
+                                quote_amount={c.call_price.quote.amount}
+                                quote_asset={c.call_price.quote.asset_id}
+                                hide_symbols
+                            />
+                        </td>
+                        <td
+                            style={{textAlign: "right", paddingRight: 10}}
+                            className="column-hide-small"
+                        >
+                            {!!c.order.target_collateral_ratio
+                                ? (
+                                      c.order.target_collateral_ratio / 1000
+                                  ).toFixed(3)
+                                : "-"}
+                        </td>
+                        <td
+                            className={c.getStatus()}
+                            style={{textAlign: "right"}}
+                        >
+                            {c.getRatio().toFixed(3)}
+                        </td>
+                    </tr>
+                );
+            });
+        }
 
         return (
             <div className="grid-block" style={{paddingBottom: "1rem"}}>
@@ -1321,13 +1835,19 @@ class Asset extends React.Component {
                                 </table>
                             </Tab>
 
-                            <Tab title="explorer.asset.margin_positions.title">
+                            <Tab
+                                title={
+                                    isGlobalSettlement
+                                        ? "explorer.asset.collateral_bid.title"
+                                        : "explorer.asset.margin_positions.title"
+                                }
+                            >
                                 <table
                                     className=" table order-table table-hover"
                                     style={{padding: "1.2rem"}}
                                 >
-                                    {header2}
-                                    <tbody>{rows2}</tbody>
+                                    {secondHeader}
+                                    <tbody>{secondRows}</tbody>
                                 </table>
                             </Tab>
                         </Tabs>
@@ -1340,11 +1860,16 @@ class Asset extends React.Component {
     render() {
         var asset = this.props.asset.toJS();
         var sortedCallOrders = this.getMarginPositions();
+        var sortedCollateralBids = this.getCollateralBids();
         var priceFeed =
             "bitasset" in asset ? this.renderPriceFeed(asset) : null;
         var priceFeedData =
             "bitasset" in asset
-                ? this.renderMarginPositions(asset, sortedCallOrders)
+                ? this.renderMarginPositions(
+                      asset,
+                      sortedCallOrders,
+                      sortedCollateralBids
+                  )
                 : null;
 
         return (
@@ -1393,6 +1918,12 @@ class Asset extends React.Component {
                                             {this.renderSettlement(asset)}
                                         </div>
                                     ) : null}
+
+                                    {this.state.showCollateralBidInInfo ? (
+                                        <div className="grid-content small-no-padding">
+                                            {this.renderCollateralBid(asset)}
+                                        </div>
+                                    ) : null}
                                 </div>
                                 {priceFeedData ? priceFeedData : null}
                             </Tab>
@@ -1409,6 +1940,8 @@ class Asset extends React.Component {
                                     !asset.bitasset.is_prediction_market
                                         ? this.renderFeedPublish(asset)
                                         : null}
+                                    {sortedCollateralBids.length > 0 &&
+                                        this.renderCollateralBid(asset)}
                                 </div>
                             </Tab>
                         </Tabs>

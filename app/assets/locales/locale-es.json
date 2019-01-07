@@ -20,6 +20,7 @@
         "contacts": "Contactos",
         "create_account": "Crear cuenta",
         "create_new": "Crear una nueva cuenta",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "Depositar BTS",
         "deposit_address": "Su dirección de depósito es su nombre de cuenta",
         "deposit_withdraw": "Depositar/Retirar",
@@ -132,6 +133,8 @@
             "brain": "Posición de Brainkey",
             "cancel": "Cancelar",
             "confirm_add": "Agregar",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "Importado desde la cuenta",
             "key": "Llave/Nombre",
             "key_viewer": "Visionador de clave privada",
@@ -422,6 +425,7 @@
         "close": "Cerrar la posición",
         "coll_ratio": "Proporción",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "Su colateral está por debajo %(mr)s y no está permitido.",
@@ -570,12 +574,12 @@
         "price_history": "Gráfico de Precios",
         "price_market": "Market Price",
         "quantity": "Monto",
-        "quick_deposit": "Depósito rápido.",
+        "quick_deposit": "Deposit %(asset)s",
         "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
         "quick_deposit_bridge_button": "Use a Bridge",
         "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
         "quick_deposit_gateway_button": "Use a Gateway",
-        "quick_deposit_tooltip": "Deposit %(asset)s, click to open options",
+        "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Quote currency:",
         "quote_selection": "Modify quote selection",
         "quote_supply": "Fuente de cotización",
@@ -636,9 +640,6 @@
                 "chart_zoom": "Permite zoom de gráfica. El zoom está siempre deshabilitado in pantalla pequeña.",
                 "hide_function_buttons": "Oculta todos los botones que pueden ser gestionados en el formulario personalizado",
                 "market_location": "En qué lado colocar el libro de órdenes vertical. Esto cambiará de lugar con el panel de mercado.",
-                "market_trades": "",
-                "my_trades": "",
-                "open_orders": "",
                 "order_book_grouping": "Agrupar órdenes cercanas por un porcentaje definido.",
                 "order_style": "Use el libro de órdenes vertical para fijarlo al panel lateral",
                 "orderbook_auto_scroll": "Auto scroll del libro de órdenes para mantenerlo centrado mientras entran las nuevas ordenes. Deshabilitar para permitir scrolling.",
@@ -649,7 +650,6 @@
                 "reduce_scrollbars": "Deshabilite las barras de scroll por defecto",
                 "reload": "Cambiar esta opción solo afectará después de la recarga manual",
                 "reverse_order_book": "Invierta el libro de ordenes para tener las ordenes de compra en la parte superior",
-                "settlements": "",
                 "single_colum_order_form": "Forzar que Precio, Cantidad, Total, etc. estén en una columna (no dispersos)"
             }
         },
@@ -693,6 +693,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "Reclamar tarifas",
@@ -747,13 +759,22 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -932,10 +953,7 @@
             "bridge": "  El %(asset)sde los activos está guardado 1:1 realmente %(backed)s y puede ser depositado o retirado usando el servicio de pasarela provisto por CryptoBridge",
             "gdex": "  El %(asset)s de los activos está guardado 1:1 realmente %(backed)s y puede ser depositado o retirado usando el servicio de pasarela provisto por Gdex.",
             "open": "<br/><br/>The %(asset)s el activo está respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>The %(asset)s el activo està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
-            "win": "",
-            "xbts": ""
+            "trade": "<br/><br/>The %(asset)s el activo està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades."
         },
         "balance": "Saldo actual",
         "balance_asset": "Balance corriente %(asset)s ",
@@ -1003,7 +1021,7 @@
             "open_website": "Website abierto"
         },
         "min_deposit_warning_amount": "Minimum Deposit: %(minDeposit)s %(coin)s",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "Límite alcanzado",
         "phase_out_warning": "Recomendamos utilizar los nuevos modos {deposit_modal_link} y {retir_modal_link} ya que esta página será eliminada",
         "please_generate_address": "Please, get new address ",
@@ -1097,6 +1115,7 @@
         "payments": "Transferir",
         "payments_legacy": "Send (legacy)",
         "settings": "Configuraciónes",
+        "showcases": "Spotlight",
         "title": "BitShares - Interfaz de Usiario",
         "unlock": "Desbloquear",
         "unlock_password": "Inicio de sesión en el Cloud Wallet",
@@ -1264,7 +1283,7 @@
     "modal": {
         "buy": {
             "asset": "Asset",
-            "bridge": "Brdige",
+            "bridge": "Bridge",
             "title": "Buy"
         },
         "cancel": "cancelar",
@@ -1381,24 +1400,24 @@
         "subject": "Subject"
     },
     "notifications": {
-        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
         "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
         "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
         "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)",
+        "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
-        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
-        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
+        "import_keys_error_unknown": "Key import error: %(error_msg)s",
         "invalid_password": "Invalid Password",
-        "password_change_failure": "Unable to change password: %(error_msg)",
+        "password_change_failure": "Unable to change password: %(error_msg)s",
         "password_change_success": "Password changed",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)"
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
+        "worker_create_failure": "Failed to create worker: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "Deposit Amount",
@@ -1424,10 +1443,12 @@
         "asset_reserve": "{account} reservado {amount}",
         "asset_settle": "{account} solicitó la liquidación de {amount}",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account} actualizado el activo {asset}",
         "asset_update_feed_producers": "{account} actualizado los productores para el activo {asset}",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account} reclamó un saldo de {amount}",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister} puso en la lista negra la cuenta {listee}",
         "call_order_update": "{account} cambiado {debtSymbol} deuda por {debt} y colateral por {collateral}",
         "committee_member_update_global_parameters": "{account} actualizado los parámetros del comité global",
@@ -1565,7 +1586,6 @@
     },
     "settings": {
         "access": "Acceso",
-        "access_text": "",
         "accounts": "Cuentas",
         "accounts_text": "Su lista de cuentas.",
         "activate": "Activar",
@@ -1674,6 +1694,32 @@
         "wallets": "Billeteras",
         "yes": "Si"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "Verifique que el reloj de su computadora sea correcto.",
         "sub_text_2": "Una vez que haya sincronizado su reloj, por favor actualiza esta página.<br/><br/>Si su reloj ya es correcto, el API del servidor que está utilizando podría no estar sincronizado. En ese caso, intente con un servidor diferente de la lista a continuación.",
@@ -1681,6 +1727,7 @@
     },
     "tooltip": {
         "borrow": "pedir prestado %(asset)s desde la red. Esto crea un contrato inteligente que bloquea su colateral hasta que modifique la posición o se requiera una llamada a mergen.",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTrades es un puente que soporta el comercio instantáneo de activos. Los detalles y los términos se pueden encontrar en https://blocktrades.us",
         "buy_min": "Recibirá como minimo esta cantidad. Si hay pedidos que coinciden con un precio más barato del cual usted especificó, recibirá mas de esta cantidad.",
@@ -1692,6 +1739,7 @@
         "copy_tip": "Haga clic aquí para copiar el texto a su portapapeles",
         "cr_danger": "Esta posición está siendo llamada a margen. Considere de agregar colateral para llevar la proporción de colateral arriba de %(mr)s o cerrar la posición.",
         "cr_warning": "Esta posición tiene un bajo nivel de colateral, y será una llamada a margen si el índice de colateral cae por debajo de %(mr)s. Considera de añadir colateral o cerrar la posición.",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "para completar el depósito, vaya a su billetera externa %(asset)s y haz una transferencia a la dirección listada en esta página. Recibirá el depósito tan pronto como haya sido confirmado. Si se muestra una nota , es esencial que usted tiene que incluir esta nota en su transferencia.",
         "disconnected": "No estás conectado a la API de un nodo , intenta volver a cargar o establecer un nuevo punto de acceso en la Configuración",
         "feed_price": "This is the current external feed price",
@@ -1703,6 +1751,7 @@
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Haga clic aquí para ocultar este activo de esta lista.",
+        "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "Este es el utlimo precio en el mercado.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Esta billetera de BitShares no ofrece un inicio de sesión tradicional sino que simplemente bloquea o desbloquea una billetera que es <b>solo</b> almacenada localmente en su navegador.<br/><br/> Cada vez que cierre la billetera, esta se bloqueará y se cerrerá efectivamente la sesión.",
@@ -1739,6 +1788,7 @@
         "memo_tip": "En el campo notas (memo) puede incluir cualquier mensaje. Las notas son opcionales pero generalmente se requieren para transferencias a intercambios.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "No hay un precio reciente disponible para este activo que pueda usarse para estimar su valor.",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "El puente no tiene suficiente del activo deseado para esta orden de compra",
         "propose_scam": "¡Esta propuesta fue creada por un estafador conocido, no la aprueba!",
         "propose_tip": "Proponer otro usuario para iniciar una transacción",
@@ -1751,6 +1801,7 @@
             "walletModel": "La billetera local tiene la mejor seguridad, pero está restringida a su navegador y computadora actuales. Para migrar la billetera a otro navegador o computadora, puede usar el archivo de respaldo o brainkey.",
             "whyBinFile": "Archivo .bin - es un archivo de copia de seguridad. El Archivo está codificado con su contraseña, y contiene todas las claves privadas para sus cuentas. Este archivo debe ser cargado durante el proceso de inicio de sesión."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "El settling te permitirá de convertir tus propriedades de %(asset)s en %(backingAsset)s después de un retraso de %(settleDelay)s horas, a un precio igual al precio dado en ese momento.",
         "settle_price": "Este es el precio al que se ejecutarán los pedidos colocados.",
         "show_asset": "Haga clic aquí para mostrar este activo en la lista principal.",
@@ -1771,6 +1822,7 @@
         "at": "a",
         "balance_id": "ID del Balance",
         "balance_owner": "Llave de propietario de saldo (owner key)",
+        "bidder": "Bidder",
         "blinding_factor": "Factor cegador",
         "bond_accept_offer": "Ha aceptado la oferta de bonos de",
         "bond_cancel_offer": "Ha cancelado la oferta de bonos",
@@ -1853,6 +1905,7 @@
             "account_whitelist": "Lista blanca",
             "all": "Mostrar todo",
             "assert": "Afirmar operación",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "Reclamar comisiones de activos",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1960,6 +2013,8 @@
         "expire": "Su transacción ha expirado sin confirmación, intente de nuevo más tarde."
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total de %(count)smercados",

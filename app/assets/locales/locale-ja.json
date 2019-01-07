@@ -20,6 +20,7 @@
         "contacts": "連絡先",
         "create_account": "アカウント作成",
         "create_new": "新しいアカウントを作成する",
+        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
         "deposit": "BTSをデポジットする",
         "deposit_address": "あなたのデポジットアドレスはあなたのアカウント名です。",
         "deposit_withdraw": "入金 / 出金",
@@ -132,6 +133,8 @@
             "brain": "ブレインキーの位置",
             "cancel": "キャンセル",
             "confirm_add": "追加",
+            "create_paperwallet": "Create Paper Wallet",
+            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
             "from": "アカウントからインポート",
             "key": "キー/名前",
             "key_viewer": "秘密キービューア",
@@ -422,6 +425,7 @@
         "close": "ポジションを閉じる",
         "coll_ratio": "担保比率",
         "coll_ratio_target": "Target Ratio",
+        "considered_on_revival": "Included",
         "enable_target_collateral_ratio": "Use Target Collateral Ratio",
         "errors": {
             "below": "あなたの担保比率は%(mr)s未満であり、許可されません。",
@@ -687,6 +691,18 @@
         },
         "asset": {
             "actions": "Asset actions",
+            "collateral": {
+                "bid": "Bid Collateral",
+                "bid_price": "Bid price",
+                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
+                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+            },
+            "collateral_bid": {
+                "bid": "Bid Price",
+                "collateral": "Additional Collateral",
+                "debt": "Debt Covered",
+                "title": "Collateral Bids"
+            },
             "fee_pool": {
                 "claim_balance": "Claim fee pool balance",
                 "claim_fees": "手数料を請求",
@@ -741,13 +757,22 @@
                 "current_settled": "Already settled supply",
                 "delay": "Delay",
                 "force_settlement": "Force Settlement",
-                "global_settlement_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset settlements, which will be covered by the settlement funds at the fixed settlement price",
+                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
+                "gs_collateral_valuation": "Collateral Valuation (with bids)",
+                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
+                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
+                "gs_or": "or",
+                "gs_place_bid": "click here to place a bid",
+                "gs_revert": "Reviving",
+                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
+                "gs_see_actions": "see Asset actions",
                 "max_settle_volume": "Max. settlement volume each maintenance period",
                 "offset": "offset included",
                 "price": "Price",
                 "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement funds",
-                "settlement_price": "Settlement price",
+                "settlement_funds": "Settlement Funds",
+                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
+                "settlement_price": "Settlement Price",
                 "title": "Settlement"
             },
             "summary": {
@@ -997,7 +1022,7 @@
             "open_website": "ウェブサイトを開く"
         },
         "min_deposit_warning_amount": "最低入金額は%(minDeposit)s %(coin)sです。",
-        "min_deposit_warning_asset": "重要: このアドレスには%(coin)sのみ送金してください。このアドレスに%(minDeposit)s %(coin)s未満、または他の仮想通貨を送金すると、デポジットが失われる可能性があります。",
+        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
         "over_limit": "制限に達しました",
         "phase_out_warning": "We recommend using the new {deposit_modal_link} and {withdraw_modal_link} modals as this page will be phased out",
         "please_generate_address": "新しいアドレスを取得",
@@ -1091,6 +1116,7 @@
         "payments": "送金",
         "payments_legacy": "送金 (レガシー)",
         "settings": "設定",
+        "showcases": "Spotlight",
         "title": "BitShares UI",
         "unlock": "ログイン (ウォレットをアンロック)",
         "unlock_password": "パスワードでログイン",
@@ -1258,7 +1284,7 @@
     "modal": {
         "buy": {
             "asset": "Asset",
-            "bridge": "Brdige",
+            "bridge": "Bridge",
             "title": "Buy"
         },
         "cancel": "cancel",
@@ -1375,24 +1401,24 @@
         "subject": "タイトル"
     },
     "notifications": {
-        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
         "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
         "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
         "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)",
+        "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
-        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
-        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
+        "import_keys_error_unknown": "Key import error: %(error_msg)s",
         "invalid_password": "Invalid Password",
-        "password_change_failure": "Unable to change password: %(error_msg)",
+        "password_change_failure": "Unable to change password: %(error_msg)s",
         "password_change_success": "Password changed",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)"
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
+        "worker_create_failure": "Failed to create worker: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "入金額",
@@ -1418,10 +1444,12 @@
         "asset_reserve": "{account}は{amount}を消却 (バーン) しました",
         "asset_settle": "{account}は{amount}の決済を依頼しました",
         "asset_settle_cancel": "{account} cancelled settlement of {amount}",
+        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
         "asset_update": "{account}はアセット{asset}を更新しました",
         "asset_update_feed_producers": "{account}はアセット{asset}のフィード作成者を更新しました",
         "asset_update_issuer": "{from_account} transferred {asset} to {to_account}",
         "balance_claim": "{account}は{amount}を請求しました",
+        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
         "blacklisted_by": "{lister}は{listee}をブラックリストに登録しました",
         "call_order_update": "{account}は{debtSymbol}の賃借を{debt}に、担保を{collateral}に変更しました。",
         "committee_member_update_global_parameters": "{account}はグローバル委員会のパラメータを更新しました",
@@ -1668,6 +1696,32 @@
         "wallets": "ウォレット",
         "yes": "はい"
     },
+    "showcases": {
+        "barter_transaction": {
+            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
+            "title": "Barter"
+        },
+        "borrow": {
+            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "title": "Collaterized Debt Position"
+        },
+        "direct_debit": {
+            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
+            "title": "Direct debit"
+        },
+        "paper_wallet": {
+            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
+            "title": "Paper Wallet"
+        },
+        "timed_transfer": {
+            "description": "Initiate a transfer that will execute at a specified time.",
+            "title": "Timed transfer"
+        },
+        "voting": {
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "title": "Voting"
+        }
+    },
     "sync_fail": {
         "sub_text_1": "コンピュータの時計が正しいか確認してください。",
         "sub_text_2": "時計を同期させたらこのページを更新してください。<br/><br/>既に時計が正しい場合は、使用しているAPIサーバーが同期していません。その場合は下のリストから他のサーバーを選んで再試行してください。",
@@ -1675,6 +1729,7 @@
     },
     "tooltip": {
         "borrow": "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
+        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
         "bridge_TRADE": "BlockTradesはアセットの即時取引をサポートするブリッジです。詳細と利用規約はhttps://blocktrades.usから。",
         "buy_min": "最低でもこの金額を受け取れます。あなたが指定した価格よりも低い価格でマッチする注文があった場合、あなたはこれ以上の金額を受け取れます。",
@@ -1686,6 +1741,7 @@
         "copy_tip": "テキストをコピーするにはここをクリックしてください。",
         "cr_danger": "現在、このポジションにはマージンコールがかかっています。担保を追加して担保比率を%(mr)s以上にするか、ポジションをクローズすることを検討してください。",
         "cr_warning": "このポジションは担保レベルが低く、担保比率が%(mr)sを下回った場合はマージンコールがかかります。担保を追加するかポジションをクローズすることを検討してください。",
+        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
         "deposit_tip": "入金を完了するには、%(asset)sウォレットに行き、このページに記載されているアドレスに転送してください。確認後、すぐに入金されます。メモが表示されている場合は、転送にこのメモを含めなければなりません。",
         "disconnected": "APIノードに接続していません。リロードするか、設定ページで新しいアクセスポイントを設定してください。",
         "feed_price": "This is the current external feed price",
@@ -1697,6 +1753,7 @@
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "このリストからこのアセットを非表示にするにはここをクリックしてください。",
+        "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "これはこの市場における最新の価格です。",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
@@ -1733,6 +1790,7 @@
         "memo_tip": "任意のメッセージをメモ欄に含めることができます。メモは任意ですが、一般に取引所への転送には必要です。",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "このアセットには推定価格を算出するために使用可能な最新の価格がありません。",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "ブリッジにはこの買い注文に必要なアセットが不足しています。",
         "propose_scam": "この提案は有名な詐欺師によるものです。応じないでください！",
         "propose_tip": "別のユーザーからトランザクションを提案する",
@@ -1745,6 +1803,7 @@
             "walletModel": "The local wallet has the best security, but is restricted to your current browser and computer. To migrate the wallet to another browser or computer, you may use the backup file or brainkey.",
             "whyBinFile": ".bin file - is a backup file. File is encrypted with your password, and contains all the private keys for your accounts. This file must be uploaded during the login process."
         },
+        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
         "settle": "精算により、保有する%(asset)sを%(settleDelay)s時間の遅延後に%(backingAsset)sにその時点のフィード価格で変換できます。",
         "settle_price": "これは決済注文を実行する価格です。",
         "show_asset": "メインリストにこのアセットを表示するにはここをクリックしてください。",
@@ -1765,6 +1824,7 @@
         "at": "at",
         "balance_id": "残高ID",
         "balance_owner": "残高オーナーキー",
+        "bidder": "Bidder",
         "blinding_factor": "Blinding factor",
         "bond_accept_offer": "承認された債権提案",
         "bond_cancel_offer": "キャンセルされた債権提案",
@@ -1847,6 +1907,7 @@
             "account_whitelist": "アカウントホワイトリスト",
             "all": "すべて表示",
             "assert": "アサート操作",
+            "asset_bid_collateral": "Bid collateral",
             "asset_claim_fee_pool": "Claim fee pool balance",
             "asset_claim_fees": "アセット手数料を請求",
             "asset_claim_pool": "Claim asset fee pool",
@@ -1954,6 +2015,8 @@
         "expire": "あなたのトランザクションは確認されずに期限切れになりました。後でやり直してください。"
     },
     "utility": {
+        "asset_input_placeholder": "Enter asset symbol",
+        "asset_select_placeholder": "Select asset",
         "total_x_assets": "Total of %(count)s assets",
         "total_x_items": "Total of %(count)s items",
         "total_x_markets": "Total of %(count)s markets",

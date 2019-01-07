@@ -253,6 +253,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="baseMarketFee"
                             defaultValue={baseFee}
+                            value={baseFee}
                             addonAfter={
                                 <span>
                                     <AssetName
@@ -281,6 +282,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="baseMarketFee"
                             defaultValue={baseFee}
+                            value={baseFee}
                             addonAfter={
                                 <span>
                                     <AssetName
@@ -309,6 +311,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="baseMarketFee"
                             defaultValue={baseFee}
+                            value={baseFee}
                             addonAfter={
                                 <span>
                                     <AssetName
@@ -344,6 +347,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
+                            value={quoteFee}
                             addonAfter={
                                 <span>
                                     <AssetName
@@ -373,6 +377,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
+                            value={quoteFee}
                             addonAfter={
                                 <span>
                                     <AssetName
@@ -402,6 +407,7 @@ class BuySell extends React.Component {
                             placeholder="0.0"
                             id="quoteMarketFee"
                             defaultValue={quoteFee}
+                            value={quoteFee}
                             addonAfter={
                                 <span>
                                     <AssetName
