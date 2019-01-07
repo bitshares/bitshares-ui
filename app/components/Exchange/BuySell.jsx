@@ -449,7 +449,7 @@ class BuySell extends React.Component {
                 </div>
             </div>
         ) : null;
-        
+
         const isBid = type === "bid";
         let marketFee =
             isBid && quoteMarketFee
