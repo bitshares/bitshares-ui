@@ -263,7 +263,7 @@ class AccountOrders extends React.Component {
         return (
             <div
                 className="grid-content no-overflow no-padding"
-                style={{ paddingBottom: 15 }}
+                style={{paddingBottom: 15}}
             >
                 <div className="header-selector">
                     {orders && ordersCount ? (
@@ -314,15 +314,18 @@ class AccountOrders extends React.Component {
     }
 }
 
-AccountOrders = connect(AccountOrders, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            marketDirections: SettingsStore.getState().marketDirections
-        };
+AccountOrders = connect(
+    AccountOrders,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
     }
-});
+);
 
 export default AccountOrders;

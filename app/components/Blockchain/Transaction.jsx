@@ -2110,15 +2110,13 @@ class Transaction extends React.Component {
                     rows.push(
                         <tr key={key++}>
                             <td>
-                                <Translate 
+                                <Translate
                                     component="span"
                                     content="explorer.account.title"
                                 />
                             </td>
                             <td>
-                                <LinkToAccountById
-                                    account={op[1].bidder}
-                                />
+                                <LinkToAccountById account={op[1].bidder} />
                             </td>
                         </tr>
                     );

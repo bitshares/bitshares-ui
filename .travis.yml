@@ -14,7 +14,7 @@ env:
         - DEVELOP_REPO: bitshares/develop.bitshares.org
         - CXX=g++-4.8
         - secure:
-              CCFEuKsekI/PvoVeSvrBYHgAz/daHJukqktOoviPn1tJnIFCJzNeyhNyepSQSb48QJLeWepkjDTGEbyBBMqbCE+D+M4bDNdSynlBhX/fN8vK2uKYw9MFjdhTo50/ZR1oNY0rhEVmU4zznxsNecYSFAOkq8/XHviBspko14aTcfataZO5vOpJvKoM1pA8nk45C7zjXaK1W3T4Zhx1rQO83yI28mjhbKEWnnSj/g5CrkVBZmuyzhq2ocB2lk1HX5HJFtqLHIRUpX+ERQHSK2VhnAllb5OrIpnZYuMOe3pLWMbnOXcUiy+/+DCWInk/i+JLoGktx2kIpUZ6y4uoxOgdVLZns7A1AcuROYa/5jLbJGhxFPl15jzJS64REOkyuCvjG1zjnITy2Z2UZGh2nIgCJSHPyfy/LbUiBdYqWsFewUiVBvp9nm9kTkoMQihiMOwBsBN9L5JuQ7W87epPNCMSKdymvTzjlS2yshRdAho+j23g6bGahgEwweGUdBHzG3B7aICkjP/nnblnV/k2Ku3lDQmViBYQSAqL1ujGRoxhLC+qckGnjop3yYZjbG92T43Qptp/k5n58GhO510xl2C9iTEP8iLU0hWTAU45dGaVjB/vx2ACB2psJ584bwRsqQM8ZF3DfbTnR1M/Sp8iblFjV9ICuPfv2kMVFohuo44CRzQ=
+              up459CkvN8cdhCHu4E2jAse5CM3JUJlVMbBu2x1HctFjanu4rv2JknIn5U4Rc6rX89GgLLJeUN05UsZEz+M+s5P7b8wlwkTKu1cdNFmcS1oDAJh3Gk22F3zGiv/HIQazjGCajMxX0kIsjNsHngAd/wJCvGrnLBU5vetu6zqCK/jR/YMGRl9bNTygH07eC4r5I7EKFRJLA8pM3GfBlG04aPS4feIrCiT+TAVENx3hLC2eKs451e3ktMYM5nh89E5HKjg2rfmwmIJRzuC/Rv5Dpk/3A77mOUe3iwZZWrmwUinlEfLBPn6zUD/XX83DI+7nINyUY13vDGZiMkwygvM6QZrReQZfZSVOaAfIZ7WoWIQd5SYFDj0fTGbdTxgwISr13LSHFQN+YsWkdbvnuKKXpaTwW+rRXU4pWXjaOQtNyr2nvp1AiW6TYzmq5ECbQ0IE2versZczasOLSk2E1h9vHw0SXrfqDR/X7WMIdKOuv1Umre30gcRZi5/0ZdcvfeY8jtdTwfsYoywtAQ3vfMelfDafIAtYPjFEhaeBZDDFGfMX5XAI0Rx34jQX7W1+76gR17l2V9kOwzKp/p5LNQh8kGzxyMY8Hl2xapwt/RG3tTnPXZeazFenYvybVCXPb46+Vqa/pxQyxB0HFu+izPTCiFfvd5rELyFkQT3kSNKFuio=
 addons:
     apt:
         sources:
@@ -35,10 +35,10 @@ deploy:
       tag_name: "$TRAVIS_TAG"
       name: "$TRAVIS_TAG"
       body:
-          Automated release from Travis CI with added files from AppVeyor build
+          "Automated release from Travis CI with added files from AppVeyor build"
       api_key:
           secure:
-              CCFEuKsekI/PvoVeSvrBYHgAz/daHJukqktOoviPn1tJnIFCJzNeyhNyepSQSb48QJLeWepkjDTGEbyBBMqbCE+D+M4bDNdSynlBhX/fN8vK2uKYw9MFjdhTo50/ZR1oNY0rhEVmU4zznxsNecYSFAOkq8/XHviBspko14aTcfataZO5vOpJvKoM1pA8nk45C7zjXaK1W3T4Zhx1rQO83yI28mjhbKEWnnSj/g5CrkVBZmuyzhq2ocB2lk1HX5HJFtqLHIRUpX+ERQHSK2VhnAllb5OrIpnZYuMOe3pLWMbnOXcUiy+/+DCWInk/i+JLoGktx2kIpUZ6y4uoxOgdVLZns7A1AcuROYa/5jLbJGhxFPl15jzJS64REOkyuCvjG1zjnITy2Z2UZGh2nIgCJSHPyfy/LbUiBdYqWsFewUiVBvp9nm9kTkoMQihiMOwBsBN9L5JuQ7W87epPNCMSKdymvTzjlS2yshRdAho+j23g6bGahgEwweGUdBHzG3B7aICkjP/nnblnV/k2Ku3lDQmViBYQSAqL1ujGRoxhLC+qckGnjop3yYZjbG92T43Qptp/k5n58GhO510xl2C9iTEP8iLU0hWTAU45dGaVjB/vx2ACB2psJ584bwRsqQM8ZF3DfbTnR1M/Sp8iblFjV9ICuPfv2kMVFohuo44CRzQ=
+              HV4BRj0Nn4+3AGC5U2LxFQ3qr6bbwcs2SR7BIEKXdHcIAshvL52Qn9R2pXFjeJhj/FqGMRc6o1E54q4+QpzzlnoZquZkJoSv4x4EW306KVXNxaBQmwjNLs6gO09/s8j3IlZ0pudANmH2WQvT264ldGCqq0mC1vCMpHfxetdGsskfqdboFgyaUSDtRBER9FH23cM22Ro3oPJmRxn/dzZSctiB05e1i8CD6VZm8HeGuWKXyKOuhzBFzEgaSkSQWa6u5YsvAKkQ4c6rAAxUWJOH9+8WoqUVN/Pem56mnA0HYtqAoX/cShLuZfsHRJUVdE5Wt9YfEOBRQy954QmZgPhQbp7OKcIBAQyAkMSR1AEKCYd2QjPBBM5ek44Pbz0AsDSd1qsSgKUJs4urpOTLbFi2KfDmaXiO+ciaIDvyh0QiUPykVdRtDKacdrHCWUUuJajc465KRE8LGheOGThj+s9vPmy9Eubn7Zzsdzy1q0Xjwjd57bz8G5aTbBWpJJ4sk096trJqGX1iQMKEpnEU/KwmRS9XX65s6gBjuO8/2ZhoE8HQCDBS0whiJi+eHggu6wch6SfTvATkQ9ivex6T/T/eYHGF+sbShkXrzmUs0sbsq1TrjgFyIA/x23y+0k59mZ8xfkRLHT3L1EjgW6MahwPCPESumomq3PDJrKPVpd7n/04=
       file_glob: true
       file:
           - build/binaries/BitShares*
@@ -47,12 +47,6 @@ deploy:
       draft: true
       on:
           repo: bitshares/bitshares-ui
-          tags: true
-    - provider: snap
-      snap: bitshares2-light
-      channel: candidate
-      skip_cleanup: true
-      on:
           tags: true
 before_install:
     - openssl aes-256-cbc -K $encrypted_844f3e8bd137_key -iv $encrypted_844f3e8bd137_iv
