@@ -22,7 +22,7 @@ import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
 
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, Redirect} from "react-router-dom";
 
 // Nested route components
 import Page404 from "./components/Page404/Page404";
@@ -351,6 +351,13 @@ class App extends React.Component {
         } else if (__DEPRECATED__) {
             content = <Deprecate {...this.props} />;
         } else {
+            let accountName =
+                AccountStore.getState().currentAccount ||
+                AccountStore.getState().passwordAccount;
+            accountName =
+                accountName && accountName !== "null"
+                    ? accountName
+                    : "committee-account";
             content = (
                 <div className="grid-frame vertical">
                     <Header height={this.state.height} {...others} />
@@ -411,7 +418,12 @@ class App extends React.Component {
                                     component={AccountRegistration}
                                 />
                                 <Route path="/news" exact component={News} />
-
+                                <Redirect
+                                    path={"/voting"}
+                                    to={{
+                                        pathname: `/account/${accountName}/voting`
+                                    }}
+                                />
                                 {/* Explorer routes */}
                                 <Route
                                     path="/explorer/:tab"
