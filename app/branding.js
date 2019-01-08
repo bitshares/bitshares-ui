@@ -79,7 +79,7 @@ export function getUnits(chainId = "4018d784") {
  */
 
 export function getMyMarketsBases() {
-    return ["TATCH.USD", "TATCH.EUR", "NLG", "TATCH.BTC"];
+    return ["TATCH.USD", "TATCH.EUR", "TATCH.NLG", "TATCH.BTC"];
 }
 
 /**
@@ -92,16 +92,29 @@ export function getMyMarketsQuotes() {
         nativeTokens: [
             "BTS",
         ],
+	    
         tatchTokens: [
             "TATCHCOIN",
             "TCLGULDEN",
             "TCLSILVER"
 	],
+	    
 	tatchgateways: [
 	   "TATCH.EUR",
 	   "TATCH.USD",
 	   "TATCH.BTC",
 	   "TATCH.NLG",
+	],
+	    
+	cryptobridge: [
+            "BRIDGE.LTC",
+            "BRIDGE.PIVX",
+            "BRIDGE.WSP",
+            "BRIDGE.RPI",
+	],
+	openledger: [
+            "OPEN.ETH",
+            "OPEN.EOS",	
         ]
     };
 	
