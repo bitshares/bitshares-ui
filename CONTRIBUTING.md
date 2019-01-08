@@ -1,13 +1,13 @@
-Please work off the staging branch and make pull requests to that branch. The master branch will only be updated for new releases.
+Please work off the develop branch and make pull requests to that branch. The master branch will only be updated for new releases.
 
-The Bitshares UI team is supported by this [worker proposal](http://www.bitshares.foundation/workers/2017-08-bill-butler). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
+The Bitshares UI team is supported by this [worker proposal](https://www.bitshares.foundation/workers/2018-08-bitshares-ui). It provides the funds needed to pay the coordinator and the bounties and the Bitshares Foundation.
 
 If you would like to get involved, we have a [Telegram chatroom](https://t.me/BitSharesDEX) where you can ask questions and get help. You may also join [BitShares on Discord](https://discord.gg/GsjQfAJ)
 
-- Coordinator: Bill Butler, @billbutler
+- Project Manager: Magnus Anderson, @startail
+- Issue and Funds Coordinator: Bill Butler, @billbutler
 - Lead Developer: Sigve Kvalsvik, @sigvek
-- Developer: Calvin Froedge, @calvin
-- Code Review: Fabian Schuh, @xeroc
+
 
 ## 贡献
 
@@ -15,20 +15,19 @@ Bitshares UI团队被这一[工作提案](https://steemit.com/bitshares/@billbut
 
 如果你想参与贡献，我们有一个[Telegram 聊天室](https://t.me/BitSharesDEX)，在这里你可以问问题并得到帮助。
 
-- 协调者: Bill Butler, @billbutler
-- 主程序员: Sigve Kvalsvik, @sigvek
-- 程序员: Calvin Froedge, @calvin
-- 代码审核: Fabian Schuh, @xeroc
 
 ## Development process
 
-- Milestones are numbered YYMMDD and refer to the **anticipated release date**.
+- New issues will, after enough discussion and clarification, be assigned an estimate time to complete, as well as assigned to the next unstarted milestone, by a project coordinator.
+- Milestones are numbered YYMMDD and refer to the **anticipated release date of the next Release Candidate**.
+- Release Candidates sits 1-2 weeks for evaluation by the public before release
 - Bugs are always worked before enhancements
 - Developers should work each issue according to a numbered branch corresponding to the issue `git checkout -b 123`
 - We pay **bounties** for issues that have been estimated. An estimated issue is prefixed with a number in brackets like this: `[2] An nasty bug`. In this example, the bug is valued at two hours ($125 per hour). If you fix this issue according to these guidelines and your PR is accepted, this will earn you $250 bitUSD. You must have a Bitshares wallet and a Bitshares account to receive payment.
-- If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will indicate an assignment to wmbutler, but will mention the developer's github account in this the comments.
-- To claim an issue, simply leave a comment with your request to claim.
+- To claim an issue, simply leave a comment with your request to work on it.
+- If an issue is already claimed (assigned), do not attempt to claim it. Issues claimed by outside developers will have no assigned dev, but have the developers name in brackets.
 - Do not claim an issue if you will be unable to complete it by the date indicated on the Milestone name. Milestone 170901 will be pushed on September 1, 2017.
+- If an issue missed the intended milestone completion, be sure to make a comment on your progress including the reason for the delay. The issue is pushed to the next milestone. Failing to comment or complete the issue once more will result in release of the assigned issue.
 
 ## 开发流程
 

@@ -1290,7 +1290,7 @@
     "modal": {
         "buy": {
             "asset": "Asset",
-            "bridge": "Brdige",
+            "bridge": "Bridge",
             "title": "Buy"
         },
         "cancel": "cancel",
@@ -1407,24 +1407,24 @@
         "subject": "Subject"
     },
     "notifications": {
-        "account_create_failure": "Failed to create account: %(account_name) - %(error_msg)",
+        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
         "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)",
+        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
         "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
         "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)",
+        "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount) $(symbol)",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount) %(symbol)",
+        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
-        "import_keys_error": "Account %(account_name) had a private key import error: %(error_msg)",
-        "import_keys_error_unknown": "Key import error: %(error_msg)",
+        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
+        "import_keys_error_unknown": "Key import error: %(error_msg)s",
         "invalid_password": "Invalid Password",
-        "password_change_failure": "Unable to change password: %(error_msg)",
+        "password_change_failure": "Unable to change password: %(error_msg)s",
         "password_change_success": "Password changed",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId), but got %(actualWalletId)",
-        "worker_create_failure": "Failed to create worker: %(error_msg)"
+        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
+        "worker_create_failure": "Failed to create worker: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "Deposit Amount",
@@ -1759,6 +1759,7 @@
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
         "hide_asset": "Click here to hide this asset from this list.",
+        "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "This %(wallet_name)s wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
@@ -1793,9 +1794,9 @@
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It is also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
         "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
-        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
+        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
         "over_limit": "The bridge does not have enough of the desired asset for this buy order",
         "propose_scam": "This proposal was created by a known scammer or from someone that you blacklisted!",
         "propose_tip": "Propose another user to initiate a transaction",

@@ -18,6 +18,7 @@ import {List} from "immutable";
 import {Link} from "react-router-dom";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import Immutable from "immutable";
+import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 
 const alignRight = {textAlign: "right"};
 const alignLeft = {textAlign: "left"};
@@ -234,6 +235,15 @@ class MarginPosition extends React.Component {
         const balance = this._getBalance();
         let co = has_order ? object.toJS() : null;
 
+        let {isBitAsset} = utils.replaceName(this.props.debtAsset);
+
+        let settlement_fund = this.props.debtAsset.getIn([
+            "bitasset",
+            "settlement_fund"
+        ]);
+
+        let hasGlobalSettlement = settlement_fund > 0 ? true : false;
+
         const balance_asset = has_order
             ? co.call_price.quote.asset_id
             : debtAsset.get("id");
@@ -361,21 +371,40 @@ class MarginPosition extends React.Component {
                     </Link>
                 </td>
                 <td>
-                    <div
-                        data-place="left"
-                        data-tip={counterpart.translate(
-                            "tooltip.update_position"
-                        )}
-                        style={{paddingBottom: 5}}
-                    >
-                        <a onClick={this._onUpdatePosition.bind(this)}>
-                            <Icon
-                                name="adjust"
-                                title="icons.adjust"
-                                className="icon-14px rotate90"
-                            />
-                        </a>
-                    </div>
+                    {hasGlobalSettlement ? (
+                        <Tooltip
+                            placement={"left"}
+                            title={counterpart.translate(
+                                "tooltip.borrow_disabled",
+                                {
+                                    asset: isBitAsset
+                                        ? "bit" + `${debtAsset.get("symbol")}`
+                                        : `${debtAsset.get("symbol")}`
+                                }
+                            )}
+                        >
+                            <div style={{paddingBottom: 5}}>
+                                <AntIcon type={"question-circle"} />
+                            </div>
+                        </Tooltip>
+                    ) : (
+                        <Tooltip
+                            placement={"left"}
+                            title={counterpart.translate(
+                                "tooltip.update_position"
+                            )}
+                        >
+                            <div style={{paddingBottom: 5}}>
+                                <a onClick={this._onUpdatePosition.bind(this)}>
+                                    <Icon
+                                        name="adjust"
+                                        title="icons.adjust"
+                                        className="icon-14px rotate90"
+                                    />
+                                </a>
+                            </div>
+                        </Tooltip>
+                    )}
                 </td>
                 <td>
                     {has_order ? (

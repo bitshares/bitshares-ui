@@ -485,6 +485,7 @@ class WalletUnlockModal extends React.Component {
                                     type="password"
                                     value={this.state.password}
                                     onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
                                 />
                             </Form.Item>
                         </div>
@@ -561,6 +562,7 @@ class WalletUnlockModal extends React.Component {
                                         "wallet.enter_password"
                                     )}
                                     onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
                                 />
                             </Form.Item>
                         </div>

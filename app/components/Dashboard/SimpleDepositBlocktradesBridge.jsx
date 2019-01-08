@@ -330,11 +330,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                         <Translate content="modal.buy.asset" />
                     </label>
                     <div className="inline-label input-wrapper">
-                        <input
-                            disabled
-                            type="text"
-                            value={receiveName}
-                        />
+                        <input disabled type="text" value={receiveName} />
                     </div>
                 </div>
                 <div className="container-row">

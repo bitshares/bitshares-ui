@@ -90,12 +90,12 @@ class ControlledAssetInput extends PureComponent {
         return typeof validateStatus === "string"
             ? validateStatus
             : resolved
-            ? Map.isMap(asset)
-                ? "success"
-                : value
-                ? "error"
-                : undefined
-            : "validating";
+                ? Map.isMap(asset)
+                    ? "success"
+                    : value
+                        ? "error"
+                        : undefined
+                : "validating";
     };
 
     handleAction = () => {

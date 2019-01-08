@@ -964,8 +964,7 @@
     input[type="search"]#{$ant-fix},
     textarea#{$ant-fix},
     input[role="combobox"]#{$ant-fix},
-    select[role="combobox"]#{$ant-fix},
-    .buy-sell-container .ant-input {
+    select[role="combobox"]#{$ant-fix} {
         background-color: $input-background;
         border: 0;
         color: $primary-text-color;
@@ -2023,6 +2022,9 @@
     }
     .footer {
         div.footer-status {
+            > span.testnet {
+                font-size: 0.85rem;
+            }
             > span.success {
                 color: $success-color;
             }

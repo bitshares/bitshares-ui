@@ -395,32 +395,36 @@ class AccountPortfolioList extends React.Component {
 
         const renderBorrow = (asset, account) => {
             let isBitAsset = asset && asset.has("bitasset_data_id");
-            let isGlobalSettled = isBitAsset && asset.getIn(["bitasset","settlement_fund"]) > 0 ? true : false;
+            let isGlobalSettled =
+                isBitAsset && asset.getIn(["bitasset", "settlement_fund"]) > 0
+                    ? true
+                    : false;
 
             return {
                 isBitAsset,
-                borrowLink: !isBitAsset || isGlobalSettled ? null : (
-                    <a
-                        onClick={() => {
-                            ReactTooltip.hide();
-                            this.showBorrowModal(
-                                asset.get("id"),
-                                asset.getIn([
-                                    "bitasset",
-                                    "options",
-                                    "short_backing_asset"
-                                ]),
-                                account
-                            );
-                        }}
-                    >
-                        <Icon
-                            name="dollar"
-                            title="icons.dollar.borrow"
-                            className="icon-14px"
-                        />
-                    </a>
-                )
+                borrowLink:
+                    !isBitAsset || isGlobalSettled ? null : (
+                        <a
+                            onClick={() => {
+                                ReactTooltip.hide();
+                                this.showBorrowModal(
+                                    asset.get("id"),
+                                    asset.getIn([
+                                        "bitasset",
+                                        "options",
+                                        "short_backing_asset"
+                                    ]),
+                                    account
+                                );
+                            }}
+                        >
+                            <Icon
+                                name="dollar"
+                                title="icons.dollar.borrow"
+                                className="icon-14px"
+                            />
+                        </a>
+                    )
             };
         };
 
@@ -688,21 +692,26 @@ class AccountPortfolioList extends React.Component {
                     <td>{directMarketLink}</td>
                     <td>
                         {isBitAsset && borrowLink ? (
-                            <Tooltip 
+                            <Tooltip
                                 title={counterpart.translate("tooltip.borrow", {
                                     asset: isAssetBitAsset
                                         ? "bit" + symbol
-                                        : symbol}
-                                )}
+                                        : symbol
+                                })}
                             >
                                 {borrowLink}
                             </Tooltip>
-                        ) : isBitAsset && !borrowLink ? ( 
-                            <Tooltip title={counterpart.translate("tooltip.borrow_disabled",  {
-                                asset: isAssetBitAsset ? 
-                                    "bit" + symbol : 
-                                    symbol
-                            })}>
+                        ) : isBitAsset && !borrowLink ? (
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "tooltip.borrow_disabled",
+                                    {
+                                        asset: isAssetBitAsset
+                                            ? "bit" + symbol
+                                            : symbol
+                                    }
+                                )}
+                            >
                                 <AntIcon type={"question-circle"} />
                             </Tooltip>
                         ) : (
