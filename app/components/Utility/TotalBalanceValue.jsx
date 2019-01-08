@@ -98,7 +98,7 @@ class TotalValue extends MarketStatsCheck {
             inHeader
         } = this.props;
         let coreAsset = ChainStore.getAsset("1.3.0");
-        
+
         if (!coreAsset || !toAsset) {
             return null;
         }
@@ -318,26 +318,28 @@ TotalValue = AssetWrapper(TotalValue, {
 
 class ValueStoreWrapper extends React.Component {
     render() {
-        const preferredUnit = 
-            ChainStore.getAsset(this.props.settings.get("unit")) ? 
-                this.props.settings.get("unit") : 
-                "1.3.0";
+        const preferredUnit = !this.props.settings.get("unit")
+            ? "1.3.0"
+            : this.props.settings.get("unit");
 
         return <TotalValue {...this.props} toAsset={preferredUnit} />;
     }
 }
 
-ValueStoreWrapper = connect(ValueStoreWrapper, {
-    listenTo() {
-        return [MarketsStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats,
-            settings: SettingsStore.getState().settings
-        };
+ValueStoreWrapper = connect(
+    ValueStoreWrapper,
+    {
+        listenTo() {
+            return [MarketsStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats,
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);
 
 class TotalBalanceValue extends React.Component {
     static propTypes = {

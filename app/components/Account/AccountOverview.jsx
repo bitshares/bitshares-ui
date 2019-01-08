@@ -18,7 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon,Switch} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -119,12 +119,17 @@ class AccountOverview extends React.Component {
         });
     }
 
+    _getPreferredUnit() {
+        return !this.props.settings.get("unit")
+            ? this.props.core_asset.get("symbol")
+            : this.props.settings.get("unit");
+    }
+
     getHeader() {
         let {settings} = this.props;
         let {shownAssets} = this.state;
 
-        const preferredUnit =
-            settings.get("unit") || this.props.core_asset.get("symbol");
+        const preferredUnit = this._getPreferredUnit();
         const showAssetPercent = settings.get("showAssetPercent", false);
 
         return (
@@ -243,10 +248,7 @@ class AccountOverview extends React.Component {
             return null;
         }
 
-        const preferredUnit = 
-            ChainStore.getAsset(settings.get("unit")) ? 
-                settings.get("unit") : 
-                this.props.core_asset.get("symbol");
+        const preferredUnit = this._getPreferredUnit();
 
         let call_orders = [],
             collateral = {},
@@ -486,7 +488,13 @@ class AccountOverview extends React.Component {
                                             addonAfter={<Icon type="search" />}
                                         />
                                     </div>
-                                    <div className="selector inline-block" style={{position: "relative",top: "6px"}}>
+                                    <div
+                                        className="selector inline-block"
+                                        style={{
+                                            position: "relative",
+                                            top: "6px"
+                                        }}
+                                    >
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:

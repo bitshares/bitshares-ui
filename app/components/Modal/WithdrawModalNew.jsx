@@ -631,14 +631,14 @@ class WithdrawModalNew extends React.Component {
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
                 let backingCoin = c.backingCoinType || c.backingCoin;
-                
+
                 // Gateway has EOS.* asset names
-                if(backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
                     let [_network, _coin] = backingCoin.split(".");
                     backingCoin = _coin;
                 }
 
-                return (backingCoin === selectedAsset);
+                return backingCoin === selectedAsset;
             });
     }
 
@@ -924,11 +924,11 @@ class WithdrawModalNew extends React.Component {
             maxWithdraw = backingAsset.maxAmount;
         }
 
-        if(balances.length > 0) {
+        if (!!balances && balances.length > 0) {
             balances.forEach(item => {
                 let id = item.get("asset_type");
                 let asset = assets.get(id);
-    
+
                 if (asset && item.get("balance") > 0) {
                     let [_gateway, _asset] = asset.symbol.split(".");
                     let find = !!_asset ? _asset : _gateway;
