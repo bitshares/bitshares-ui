@@ -1,7 +1,7 @@
 {
 
     "name": "BitShares2-light",
-    "version": "2.0.181121-rc1",
+    "version": "2.0.181212",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/TatchCapital/Tatch-Cloud-Wallet.0.Beta.6.ParaBellum.2",
     "author": "Tatch Capital Limited",
@@ -114,12 +114,6 @@
                     ]
                 }
             ]
-        },
-        "nsis": {
-            "allowElevation": true,
-            "allowToChangeInstallationDirectory": true,
-            "oneClick": false,
-            "perMachine": false
         },
         "linux": {
             "category": "Finance",

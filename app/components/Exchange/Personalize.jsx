@@ -179,11 +179,13 @@ class Personalize extends React.Component {
                             </h6>
                         </div>
                         <div className="small-6">
-                            <InputNumber 
+                            <InputNumber
                                 value={
-                                    typeof chartHeight === "number" && chartHeight > 1000
-                                        ? 1000 : chartHeight
-                                } 
+                                    typeof chartHeight === "number" &&
+                                    chartHeight > 1000
+                                        ? 1000
+                                        : chartHeight
+                                }
                                 onChange={this.setChartHeight.bind(this)}
                             />
                         </div>

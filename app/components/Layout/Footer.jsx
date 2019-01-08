@@ -484,7 +484,7 @@ class Footer extends React.Component {
                                         }}
                                     />
                                 )}
-                               <span style={updateStyles}>
+                                <span style={updateStyles}>
                                     <Translate
                                         content="footer.title"
                                         wallet_name={getWalletName()}
@@ -607,11 +607,12 @@ class Footer extends React.Component {
                                         }}
                                     >
                                         <div className="footer-status">
-                                            {connected && activeNode.testNet && (
-                                                <span className="testnet">
-                                                    <Translate content="settings.testnet_nodes" />{" "}
-                                                </span>
-                                            )}
+                                            {connected &&
+                                                activeNode.testNet && (
+                                                    <span className="testnet">
+                                                        <Translate content="settings.testnet_nodes" />{" "}
+                                                    </span>
+                                                )}
                                             {!connected ? (
                                                 <span className="warning">
                                                     <Translate content="footer.disconnected" />
@@ -631,8 +632,9 @@ class Footer extends React.Component {
                                                 {!connected
                                                     ? "-"
                                                     : !activeNode.ping
-                                                    ? "-"
-                                                    : activeNode.ping + "ms"}
+                                                        ? "-"
+                                                        : activeNode.ping +
+                                                          "ms"}
                                                 &nbsp;/&nbsp;
                                                 <span className="footer-block-title">
                                                     <Translate content="footer.block" />
