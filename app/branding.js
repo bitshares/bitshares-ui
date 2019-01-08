@@ -92,13 +92,6 @@ export function getMyMarketsQuotes() {
         nativeTokens: [
             "BTS",
         ],
-        bridgeTokens: [
-            "BRIDGE.LTC",
-	    "BRIDGE.WSP",
-	    "BRIDGE.RPI",
-	    "BRIDGE.PIVX"
-
-        ],
         tatchTokens: [
             "TATCHCOIN",
             "TCLGULDEN",
@@ -138,7 +131,6 @@ export function getFeaturedMarkets(quotes = []) {
 	["BRIDGE.WSP","TATCH.EUR"],
 	["BRIDGE.PIVX","TATCH.EUR"],
 	["BTS","TATCH.EUR"],
-	["BITEUR","TATCH.EUR"],
 	["BRIDGE.LTC","TATCH.EUR"],
 	["TATCH.NLG","TATCH.EUR"],
 	["TATCHCOIN","TATCH.EUR"],
