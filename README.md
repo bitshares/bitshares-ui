@@ -4,7 +4,6 @@ BitShares-UI
 
 This is a light wallet that connects to a BitShares API provided by the *witness_node* executable.
 
-
 It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
 
 ## Getting started
