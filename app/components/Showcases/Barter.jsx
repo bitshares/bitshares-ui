@@ -445,20 +445,6 @@ export default class Barter extends Component {
             });
         });
         console.log(transfer_list);
-
-        AccountActions.transfer_list(transfer_list)
-            .then(() => {
-                this.onClose();
-                TransactionConfirmStore.unlisten(this.onTrxIncluded);
-                TransactionConfirmStore.listen(this.onTrxIncluded);
-            })
-            .catch(e => {
-                let msg = e.message
-                    ? e.message.split("\n")[1] || e.message
-                    : null;
-                console.log("error: ", e, msg);
-                this.setState({from_error: msg, to_error: msg});
-            });
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -520,11 +506,17 @@ export default class Barter extends Component {
             return result;
         };
 
-        const fee = () => {
+        const fee = from => {
             let fee = 0;
-            from_barter.forEach(item => {
-                fee += item.from_feeAmount.getAmount({real: true});
-            });
+            if (from) {
+                from_barter.forEach(item => {
+                    fee += item.from_feeAmount.getAmount({real: true});
+                });
+            } else {
+                to_barter.forEach(item => {
+                    fee += item.to_feeAmount.getAmount({real: true});
+                });
+            }
 
             return fee;
         };
@@ -678,6 +670,7 @@ export default class Barter extends Component {
                     onChange={this.fromChanged.bind(this)}
                     onAccountChanged={this.onFromAccountChanged.bind(this)}
                     hideImage
+                    typeahead={true}
                 />
                 {from_account ? (
                     <div>
@@ -820,14 +813,32 @@ export default class Barter extends Component {
                 )}
             </Card>
         );
-        let totalFee = (
+        let totalFeeFrom = (
             <Card style={{borderRadius: "10px"}}>
                 <AmountSelector
                     label="transfer.fee"
                     disabled={false}
-                    amount={fee()}
+                    amount={fee(true)}
                     asset={"1.3.0"}
                     assets={from_asset_types}
+                    error={
+                        this.state.hasPoolBalance === false
+                            ? "transfer.errors.insufficient"
+                            : null
+                    }
+                    scroll_length={2}
+                />
+            </Card>
+        );
+
+        let totalFeeTo = (
+            <Card style={{borderRadius: "10px"}}>
+                <AmountSelector
+                    label="transfer.fee"
+                    disabled={false}
+                    amount={fee(false)}
+                    asset={"1.3.0"}
+                    assets={to_asset_types}
                     error={
                         this.state.hasPoolBalance === false
                             ? "transfer.errors.insufficient"
@@ -856,7 +867,14 @@ export default class Barter extends Component {
                                 <Col style={{padding: "10px"}}>{offers}</Col>
                             </Row>
                             <Row>
-                                <Col style={{padding: "10px"}}>{totalFee}</Col>
+                                <Col style={{padding: "10px"}}>
+                                    {totalFeeFrom}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col style={{padding: "10px"}}>
+                                    {totalFeeTo}
+                                </Col>
                             </Row>
                         </div>
                     ) : (
@@ -873,7 +891,12 @@ export default class Barter extends Component {
                                 <Col style={{padding: "10px"}}>{offers}</Col>
                             </Row>
                             <Row>
-                                <Col style={{padding: "10px"}}>{totalFee}</Col>
+                                <Col span={12} style={{padding: "10px"}}>
+                                    {totalFeeFrom}
+                                </Col>
+                                <Col span={12} style={{padding: "10px"}}>
+                                    {totalFeeTo}
+                                </Col>
                             </Row>
                         </div>
                     )}

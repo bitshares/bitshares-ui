@@ -2002,6 +2002,7 @@
             "req": "Required field",
             "valid": "Please enter a valid, positive number"
         },
+        "explict_price": "Explict price:",
         "fee": "Fee",
         "final": "Final balance",
         "from": "From",
