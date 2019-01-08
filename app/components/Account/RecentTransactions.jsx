@@ -391,40 +391,10 @@ class RecentTransactions extends React.Component {
               ];
         let action = (
             <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>
-                    {historyCount > 0 ? (
-                        <span>
-                            <a
-                                className="inline-block"
-                                onClick={this._generateCSV.bind(this)}
-                                data-tip={counterpart.translate(
-                                    "transaction.csv_tip"
-                                )}
-                                data-place="bottom"
-                            >
-                                <Icon
-                                    name="excel"
-                                    title="icons.excel"
-                                    className="icon-14px"
-                                />
-                            </a>
-                        </span>
-                    ) : null}
-                </td>
-                <td className="column-hide-tiny" />
-                <td style={{textAlign: "center"}}>
-                    &nbsp;
-                    {(this.props.showMore && historyCount > this.props.limit) ||
-                    (20 && limit < historyCount) ? (
-                        <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon
-                                name="chevron-down"
-                                title="icons.chevron_down.transactions"
-                                className="icon-14px"
-                            />
-                        </a>
-                    ) : null}
-                </td>
+                <td style={{textAlign: "center"}}>&nbsp;</td>
+                <td />
+                <td />
+                <td />
                 <td />
             </tr>
         );
@@ -465,6 +435,19 @@ class RecentTransactions extends React.Component {
                                     </select>
                                 ) : null}
                             </div>
+                            {historyCount > 0 ? (
+                                <a
+                                    className="inline-block"
+                                    onClick={this._generateCSV.bind(this)}
+                                    data-tip={counterpart.translate(
+                                        "transaction.csv_tip"
+                                    )}
+                                    data-place="bottom"
+                                    style={{marginLeft: "1rem"}}
+                                >
+                                    <Icon name="excel" size="1.5x" />
+                                </a>
+                            ) : null}
                         </div>
                         {this.state.accountHistoryError && (
                             <div
