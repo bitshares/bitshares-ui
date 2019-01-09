@@ -452,7 +452,7 @@ class WalletUnlockModal extends React.Component {
                 onCancel={this.handleModalClose}
                 leftHeader
                 footer={footer}
-                zIndex={100000} // always on top
+                zIndex={1001} // always on top
             >
                 <Form className="full-width" layout="vertical">
                     <LoginTypeSelector />
@@ -485,6 +485,7 @@ class WalletUnlockModal extends React.Component {
                                     type="password"
                                     value={this.state.password}
                                     onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
                                 />
                             </Form.Item>
                         </div>
@@ -561,6 +562,7 @@ class WalletUnlockModal extends React.Component {
                                         "wallet.enter_password"
                                     )}
                                     onChange={this.handlePasswordChange}
+                                    onPressEnter={this.handleLogin}
                                 />
                             </Form.Item>
                         </div>

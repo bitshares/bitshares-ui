@@ -68,6 +68,8 @@ export function getUnits(chainId = "4018d784") {
     if (chainId === "4018d784")
         return ["BTS", "USD", "CNY", "BTC", "EUR", "GBP"];
     else if (chainId === "39f5e2ed") return ["TEST"];
+    // unknown chain id: (need to return at least one unit)
+    else return ["BTS"];
 }
 
 /**
@@ -151,10 +153,17 @@ export function getMyMarketsQuotes() {
             "XBTSX.LTC",
             "XBTSX.DASH",
             "XBTSX.KEC",
-            "XBTSX.BCH",
             "XBTSX.BTG",
             "XBTSX.XSPEC",
-            "XBTSX.NVC"
+            "XBTSX.NVC",
+            "XBTSX.42",
+            "XBTSX.UNI",
+            "XBTSX.NMC",
+            "XBTSX.WAVES",
+            "XBTSX.COF",
+            "XBTSX.XRUP",
+            "XBTSX.P2P",
+            "XBTSX.STEEP"
         ],
         otherTokens: [
             "BKT",
@@ -264,6 +273,7 @@ export function getFeaturedMarkets(quotes = []) {
         ["BTS", "RUDEX.ETH"],
         ["BTS", "RUDEX.DGB"],
         ["BTS", "XBTSX.STH"],
+        ["BTS", "XBTSX.WAVES"],
         ["BTS", "ZEPH"],
         ["BTS", "HERTZ"],
         ["BTS", "SPARKDEX.BTC"],

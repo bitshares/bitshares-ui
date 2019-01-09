@@ -4,6 +4,7 @@ import Translate from "react-translate-component";
 import counterpart from "counterpart";
 import utils from "common/utils";
 import accountUtils from "common/account_utils";
+import {createPaperWalletAsPDF} from "common/paperWallet";
 import ApplicationApi from "api/ApplicationApi";
 import {PublicKey} from "bitsharesjs";
 import AccountPermissionsList from "./AccountPermissionsList";
@@ -269,6 +270,10 @@ class AccountPermissions extends React.Component {
         this.setState(newState);
     }
 
+    onPdfCreate() {
+        createPaperWalletAsPDF(this.props.account);
+    }
+
     render() {
         let error1, error2;
 
@@ -353,6 +358,19 @@ class AccountPermissions extends React.Component {
                                         tabIndex={9}
                                     >
                                         <Translate content="account.perm.publish" />
+                                    </button>
+                                    <button
+                                        className={"button"}
+                                        style={{marginLeft: 10}}
+                                        data-tip={counterpart.translate(
+                                            "account.perm.create_paperwallet_private_hint"
+                                        )}
+                                        onClick={() => {
+                                            this.onPdfCreate();
+                                        }}
+                                        tabIndex={10}
+                                    >
+                                        <Translate content="account.perm.create_paperwallet" />
                                     </button>
                                 </div>
                             }

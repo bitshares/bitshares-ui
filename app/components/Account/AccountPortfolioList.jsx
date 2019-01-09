@@ -23,14 +23,13 @@ import SendModal from "../Modal/SendModal";
 import SettingsActions from "actions/SettingsActions";
 import SettleModal from "../Modal/SettleModal";
 import DepositModal from "../Modal/DepositModal";
-import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import WithdrawModal from "../Modal/WithdrawModalNew";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import ReserveAssetModal from "../Modal/ReserveAssetModal";
-import BaseModal from "../Modal/BaseModal";
 import PaginatedList from "../Utility/PaginatedList";
 import MarketUtils from "common/market_utils";
+import {Tooltip, Icon as AntIcon} from "bitshares-ui-style-guide";
 
 class AccountPortfolioList extends React.Component {
     constructor() {
@@ -89,9 +88,9 @@ class AccountPortfolioList extends React.Component {
 
     _checkRefAssignments() {
         /*
-        * In order for sorting to work all refs must be assigned, so we check
-        * this here and update the state to trigger a rerender
-        */
+         * In order for sorting to work all refs must be assigned, so we check
+         * this here and update the state to trigger a rerender
+         */
         if (!this.state.allRefsAssigned) {
             let refKeys = ["qtyRefs", "priceRefs", "valueRefs", "changeRefs"];
             const allRefsAssigned = refKeys.reduce((a, b) => {
@@ -313,8 +312,8 @@ class AccountPortfolioList extends React.Component {
                 [action === "bridge_modal"
                     ? "bridgeAsset"
                     : action === "deposit_modal"
-                        ? "depositAsset"
-                        : "withdrawAsset"]: asset,
+                    ? "depositAsset"
+                    : "withdrawAsset"]: asset,
                 fiatModal
             },
             () => {
@@ -396,44 +395,36 @@ class AccountPortfolioList extends React.Component {
 
         const renderBorrow = (asset, account) => {
             let isBitAsset = asset && asset.has("bitasset_data_id");
-            let modalRef = "cp_modal_" + asset.get("id");
+            let isGlobalSettled =
+                isBitAsset && asset.getIn(["bitasset", "settlement_fund"]) > 0
+                    ? true
+                    : false;
+
             return {
                 isBitAsset,
-                borrowModal: !isBitAsset ? null : (
-                    <BorrowModal
-                        ref={modalRef}
-                        modalId={"borrow_modal_" + asset.get("id")}
-                        quote_asset={asset.get("id")}
-                        backing_asset={asset.getIn([
-                            "bitasset",
-                            "options",
-                            "short_backing_asset"
-                        ])}
-                        account={account}
-                    />
-                ),
-                borrowLink: !isBitAsset ? null : (
-                    <a
-                        onClick={() => {
-                            ReactTooltip.hide();
-                            this.showBorrowModal(
-                                asset.get("id"),
-                                asset.getIn([
-                                    "bitasset",
-                                    "options",
-                                    "short_backing_asset"
-                                ]),
-                                account
-                            );
-                        }}
-                    >
-                        <Icon
-                            name="dollar"
-                            title="icons.dollar.borrow"
-                            className="icon-14px"
-                        />
-                    </a>
-                )
+                borrowLink:
+                    !isBitAsset || isGlobalSettled ? null : (
+                        <a
+                            onClick={() => {
+                                ReactTooltip.hide();
+                                this.showBorrowModal(
+                                    asset.get("id"),
+                                    asset.getIn([
+                                        "bitasset",
+                                        "options",
+                                        "short_backing_asset"
+                                    ]),
+                                    account
+                                );
+                            }}
+                        >
+                            <Icon
+                                name="dollar"
+                                title="icons.dollar.borrow"
+                                className="icon-14px"
+                            />
+                        </a>
+                    )
             };
         };
 
@@ -493,7 +484,7 @@ class AccountPortfolioList extends React.Component {
                 </a>
             );
 
-            let {isBitAsset, borrowModal, borrowLink} = renderBorrow(
+            let {isBitAsset, borrowLink} = renderBorrow(
                 asset,
                 this.props.account
             );
@@ -550,6 +541,15 @@ class AccountPortfolioList extends React.Component {
             let {isBitAsset: isBackingBitAsset} = utils.replaceName(
                 backingAsset
             );
+            let settlePriceTitle;
+            if (
+                isBitAsset &&
+                asset.get("bitasset").get("settlement_fund") > 0
+            ) {
+                settlePriceTitle = "tooltip.global_settle";
+            } else {
+                settlePriceTitle = "tooltip.settle";
+            }
 
             let preferredAsset = ChainStore.getAsset(preferredUnit);
             this.valueRefs[asset.get("symbol")] =
@@ -691,17 +691,29 @@ class AccountPortfolioList extends React.Component {
                     </td>
                     <td>{directMarketLink}</td>
                     <td>
-                        {isBitAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    "tooltip.borrow",
-                                    {asset: symbol}
-                                )}
+                        {isBitAsset && borrowLink ? (
+                            <Tooltip
+                                title={counterpart.translate("tooltip.borrow", {
+                                    asset: isAssetBitAsset
+                                        ? "bit" + symbol
+                                        : symbol
+                                })}
                             >
                                 {borrowLink}
-                            </div>
+                            </Tooltip>
+                        ) : isBitAsset && !borrowLink ? (
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "tooltip.borrow_disabled",
+                                    {
+                                        asset: isAssetBitAsset
+                                            ? "bit" + symbol
+                                            : symbol
+                                    }
+                                )}
+                            >
+                                <AntIcon type={"question-circle"} />
+                            </Tooltip>
                         ) : (
                             emptyCell
                         )}
@@ -712,7 +724,7 @@ class AccountPortfolioList extends React.Component {
                                 className="inline-block"
                                 data-place="bottom"
                                 data-tip={counterpart.translate(
-                                    "tooltip.settle",
+                                    settlePriceTitle,
                                     {
                                         asset: isAssetBitAsset
                                             ? "bit" + symbol
@@ -1020,8 +1032,6 @@ class AccountPortfolioList extends React.Component {
             return null;
         }
 
-        console.log("render borrow modal");
-
         return (
             <BorrowModal
                 visible={this.state.isBorrowModalVisible}
@@ -1049,10 +1059,6 @@ class AccountPortfolioList extends React.Component {
     }
 
     render() {
-        const currentWithdrawAsset =
-            this.props.backedCoins.get("OPEN", []).find(c => {
-                return c.symbol === this.state.withdrawAsset;
-            }) || {};
         const currentBridges =
             this.props.bridgeCoins.get(this.state.bridgeAsset) || null;
 

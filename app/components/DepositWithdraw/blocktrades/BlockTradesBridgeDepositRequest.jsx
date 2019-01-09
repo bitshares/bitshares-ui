@@ -49,8 +49,8 @@ class ButtonConversion extends React.Component {
         let feeID = balances.has("1.3.0")
             ? "1.3.0"
             : balance
-                ? balance.get("asset_type")
-                : "1.3.0";
+            ? balance.get("asset_type")
+            : "1.3.0";
         return feeID;
     }
 
@@ -636,8 +636,10 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (
                         input_coin_info.backingCoinType !=
                             pair.outputCoinType &&
+                        output_coin_info &&
                         output_coin_info.backingCoinType !=
                             pair.inputCoinType &&
+                        input_coin_info &&
                         input_coin_info.restricted == false &&
                         output_coin_info.restricted == false
                     ) {
@@ -1035,9 +1037,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     let input_coin_info = coins_by_type[pair.inputCoinType];
                     let output_coin_info = coins_by_type[pair.outputCoinType];
                     if (
-                        input_coin_info.backingCoinType !=
-                            pair.outputCoinType &&
-                        output_coin_info.backingCoinType != pair.inputCoinType
+                        output_coin_info &&
+                        output_coin_info.backingCoinType !=
+                            pair.inputCoinType &&
+                        input_coin_info &&
+                        input_coin_info.backingCoinType != pair.outputCoinType
                     ) {
                         if (
                             active_wallets.indexOf(

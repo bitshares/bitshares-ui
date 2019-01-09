@@ -464,7 +464,6 @@ class AccountDepositWithdraw extends React.Component {
             template: (
                 <div>
                     <div className="content-block">
-                        {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
                         <div
                             className="service-selector"
                             style={{marginBottom: "2rem"}}
@@ -535,14 +534,17 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        serList.push({
-            name: "Winex",
-            template: (
-                <div>
-                    <WinexGateway account={account} provider="Winex" />
-                </div>
-            )
-        });
+        /***
+         * Winex Dsiabled due to WebFetch issues on failure
+         */
+        // serList.push({
+        //     name: "Winex",
+        //     template: (
+        //         <div>
+        //             <WinexGateway account={account} provider="Winex" />
+        //         </div>
+        //     )
+        // });
 
         return serList;
     }
@@ -757,8 +759,8 @@ class AccountDepositWithdraw extends React.Component {
                         {currentServiceDown
                             ? null
                             : activeService && services[activeService]
-                                ? services[activeService].template
-                                : services[0].template}
+                            ? services[activeService].template
+                            : services[0].template}
                     </div>
                 </div>
             </div>

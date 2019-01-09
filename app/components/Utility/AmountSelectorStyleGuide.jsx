@@ -6,47 +6,7 @@ import AssetWrapper from "./AssetWrapper";
 import PropTypes from "prop-types";
 import {DecimalChecker} from "./DecimalChecker";
 import {Form, Input, Select} from "bitshares-ui-style-guide";
-
-class AssetSelector extends React.Component {
-    static propTypes = {
-        value: PropTypes.string, // asset id
-        onChange: PropTypes.func,
-        scroll_length: PropTypes.number
-    };
-
-    shouldComponentUpdate(np) {
-        return (
-            !utils.are_equal_shallow(np.assets, this.props.assets) ||
-            np.value !== this.props.value ||
-            np.scroll_length !== this.props.scroll_length
-        );
-    }
-
-    render() {
-        if (!this.props.assets.length) return null;
-
-        return (
-            <Select
-                showSearch
-                style={this.props.style || {}}
-                value={this.props.value}
-                onChange={this.props.onChange}
-            >
-                {this.props.assets
-                    .filter(asset => asset && asset.get)
-                    .map(asset => {
-                        return (
-                            <Select.Option key={asset.get("symbol")}>
-                                {asset.get("symbol")}
-                            </Select.Option>
-                        );
-                    })}
-            </Select>
-        );
-    }
-}
-
-AssetSelector = AssetWrapper(AssetSelector, {asList: true});
+import AssetSelect from "./AssetSelect";
 
 class AmountSelector extends DecimalChecker {
     static propTypes = {
@@ -142,8 +102,9 @@ class AmountSelector extends DecimalChecker {
                     />
 
                     {!this.props.isPrice ? (
-                        <AssetSelector
+                        <AssetSelect
                             style={{width: "130px"}}
+                            selectStyle={{width: "100%"}}
                             value={this.props.asset.get("symbol")}
                             assets={Immutable.List(this.props.assets)}
                             onChange={this.onAssetChange.bind(this)}

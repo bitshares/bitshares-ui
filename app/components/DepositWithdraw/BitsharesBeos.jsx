@@ -56,9 +56,11 @@ class BitsharesBeos extends React.Component {
 
     getBalances = () => {
         const {assets, account} = this.props;
-        return assets.filter(a => !!a).map(a => {
-            return account.get("balances").toJS()[a.get("id")];
-        });
+        return assets
+            .filter(a => !!a)
+            .map(a => {
+                return account.get("balances").toJS()[a.get("id")];
+            });
     };
 
     render() {
@@ -162,7 +164,7 @@ class BitsharesBeos extends React.Component {
                         showModal={this.showModal}
                         account={this.props.account.get("name")}
                         asset={this.props.asset.get("symbol")}
-                        assets={this.props.assets.map(a => a.get("symbol"))}
+                        assets={["BTS", "BROWNIE.PTS"]}
                         balance={
                             this.props.account.get("balances").toJS()[
                                 this.props.asset.get("id")
