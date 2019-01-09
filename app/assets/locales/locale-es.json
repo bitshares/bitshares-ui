@@ -104,11 +104,11 @@
         "new_user": "Nuevo usuario?",
         "no_orders": "No hay pedidos abiertos",
         "no_price": "--",
-        "open_orders": "Open Orders",
+        "open_orders": "Ordenes abiertas",
         "optional": {
-            "formatter": "Optionally, {restore_link} or create an account using the {restore_form}.",
-            "restore_form": "advanced form",
-            "restore_link": "restore your account"
+            "formatter": "Opcionalmente, {restore_link} o crea una cuenta usando el {restore_form}.",
+            "restore_form": "forma avanzada",
+            "restore_link": "restaurar su cuenta"
         },
         "options": {
             "memo_key": "Llave Memo",
@@ -133,8 +133,8 @@
             "brain": "Posición de Brainkey",
             "cancel": "Cancelar",
             "confirm_add": "Agregar",
-            "create_paperwallet": "Create Paper Wallet",
-            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
+            "create_paperwallet": "Crear billetera de papel",
+            "create_paperwallet_private_hint": "Desbloquee / inicie sesión antes de crear la billetera de papel para incluir claves privadas",
             "from": "Importado desde la cuenta",
             "key": "Llave/Nombre",
             "key_viewer": "Visionador de clave privada",
@@ -182,7 +182,7 @@
         "see_open": "Ver pedidos abiertos",
         "select_placeholder": "Seleccionar Cuenta...",
         "settle": "Resolver",
-        "show_hidden": "Hidden",
+        "show_hidden": "Oculto",
         "show_ignored": "Mostrar cuentas ocultas",
         "show_visual": "Visual",
         "signedmessages": {
@@ -958,7 +958,7 @@
             "gdex": "<br/><br/>El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
             "open": "<br/><br/>The %(asset)s el activo está respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Openledger.",
             "rudex": "",
-            "trade": "<br/><br/>The %(asset)s el activo està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
+            "trade": "<br/><br/>El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
             "win": "",
             "xbts": ""
         },
@@ -1529,12 +1529,12 @@
         },
         "update_account": "Actualizar los datos de la cuenta para {account}",
         "updated": {
-            "active_approvals_to_add": "Active approval(s) added",
-            "active_approvals_to_remove": "Active approval(s) removed",
-            "key_approvals_to_add": "Key approval(s) added",
-            "key_approvals_to_remove": "Key approval(s) removed",
-            "owner_approvals_to_add": "Owner approval(s) added",
-            "owner_approvals_to_remove": "Owner approval(s) removed"
+            "active_approvals_to_add": "Aprobación activa(s) añadido",
+            "active_approvals_to_remove": "Aprobación activa(s) eliminado",
+            "key_approvals_to_add": "Aprobación(es) de llave añadido",
+            "key_approvals_to_remove": "Aprobación(es) de llave eliminado",
+            "owner_approvals_to_add": "Aprobación(es) de dueño añadido",
+            "owner_approvals_to_remove": "Aprobación(es) de dueño eliminado"
         },
         "vesting_balance_withdraw": "retirar {amount} desde la consolidación del saldo de {account}"
     },
