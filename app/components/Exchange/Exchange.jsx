@@ -2264,10 +2264,10 @@ class Exchange extends React.Component {
                         }`
                     )}
                     innerClass={cnames(
-                        centerContainerWidth > 1200 
+                        centerContainerWidth > 1200
                             ? "medium-6"
-                            : centerContainerWidth > 800 
-                                ? "medium-6 large-6" 
+                            : centerContainerWidth > 800
+                                ? "medium-6 large-6"
                                 : "",
                         "small-12 middle-content",
                         !tinyScreen ? "exchange-padded" : ""
@@ -2351,7 +2351,9 @@ class Exchange extends React.Component {
                                     : ""
                             : "medium-12",
                         "no-padding no-overflow middle-content small-12",
-                        verticalOrderBook || verticalOrderForm ? "order-4" : "order-3"
+                        verticalOrderBook || verticalOrderForm
+                            ? "order-4"
+                            : "order-3"
                     )}
                     innerClass={!tinyScreen ? "exchange-padded" : ""}
                     innerStyle={{paddingBottom: !tinyScreen ? "1.2rem" : "0"}}
@@ -2689,7 +2691,9 @@ class Exchange extends React.Component {
                                 : "",
                         "small-12 order-5",
                         verticalOrderBook ? "xlarge-order-5" : "",
-                        !verticalOrderBook && !verticalOrderForm ? "xlarge-order-2" : ""
+                        !verticalOrderBook && !verticalOrderForm
+                            ? "xlarge-order-2"
+                            : ""
                     )}
                     style={{paddingRight: 5}}
                 >
@@ -2729,16 +2733,21 @@ class Exchange extends React.Component {
                 </div>
             ) : null;
 
-        let emptyDiv = groupTabsCount > 2 ? null : (
-            <div
-                className={cnames(
-                    centerContainerWidth > 1200 && (verticalOrderBook || verticalOrderBook) ? "xlarge-order-6 xlarge-8 order-9" : "",
-                    "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap",
-                )}
-            >
-                &nbsp;
-            </div>
-        );
+        let emptyDiv =
+            groupTabsCount > 2 ? null : (
+                <div
+                    className={cnames(
+                        centerContainerWidth > 1200 &&
+                        (verticalOrderBook || verticalOrderBook)
+                            ? "xlarge-order-6 xlarge-8 order-9"
+                            : "",
+                        "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap"
+                    )}
+                    key={`actionCard_${actionCardIndex++}`}
+                >
+                    &nbsp;
+                </div>
+            );
 
         /**
          * Generate layout grid based on Screen Size
@@ -2748,11 +2757,11 @@ class Exchange extends React.Component {
             if (!verticalOrderForm) {
                 actionCards.push(buyForm);
                 actionCards.push(sellForm);
-            } 
+            }
 
             if (!verticalOrderBook) {
                 actionCards.push(orderBook);
-            } 
+            }
 
             if (verticalOrderBook || verticalOrderForm) {
                 actionCards.push(emptyDiv);
@@ -2769,7 +2778,10 @@ class Exchange extends React.Component {
             actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
-                <div className="order-10 small-12">
+                <div
+                    className="order-10 small-12"
+                    key={`actionCard_${actionCardIndex++}`}
+                >
                     <Tabs
                         defaultActiveKey="my-market"
                         activeKey={tabVerticalPanel}

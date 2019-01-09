@@ -99,19 +99,21 @@ class WinexGateway extends React.Component {
             fetchCoins(widechainAPIs.BASE + widechainAPIs.COINS_LIST),
             fetchTradingPairs(widechainAPIs.BASE + widechainAPIs.TRADING_PAIRS),
             getActiveWallets(widechainAPIs.BASE + widechainAPIs.ACTIVE_WALLETS)
-        ]).then(result => {
-            let [coins, tradingPairs, wallets] = result;
-            let backedCoins = this._getBackedCoins({
-                allCoins: coins,
-                tradingPairs: tradingPairs
-            }).filter(a => !!a.walletType);
-            backedCoins.forEach(a => {
-                a.isAvailable = wallets.indexOf(a.walletType) !== -1;
+        ])
+            .then(result => {
+                let [coins, tradingPairs, wallets] = result;
+                let backedCoins = this._getBackedCoins({
+                    allCoins: coins,
+                    tradingPairs: tradingPairs
+                }).filter(a => !!a.walletType);
+                backedCoins.forEach(a => {
+                    a.isAvailable = wallets.indexOf(a.walletType) !== -1;
+                });
+                this.setState({coins: backedCoins});
+            })
+            .catch(error => {
+                console.log(error);
             });
-            this.setState({coins: backedCoins});
-        }).catch(error => {
-            console.log(error);
-        });
     }
 
     _getBackedCoins({allCoins, tradingPairs}) {
@@ -223,7 +225,8 @@ class WinexGateway extends React.Component {
                             >
                                 <Translate
                                     content={"gateway.choose_" + action}
-                                />:{" "}
+                                />
+                                :{" "}
                             </label>
                             <select
                                 className="external-coin-types bts-select"
@@ -317,13 +320,16 @@ class WinexGateway extends React.Component {
     }
 }
 
-export default connect(WinexGateway, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {
-            viewSettings: SettingsStore.getState().viewSettings
-        };
+export default connect(
+    WinexGateway,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                viewSettings: SettingsStore.getState().viewSettings
+            };
+        }
     }
-});
+);
