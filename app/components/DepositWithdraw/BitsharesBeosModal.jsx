@@ -381,7 +381,7 @@ class BitsharesBeosModal extends React.Component {
     }
 
     onAccountBalance() {
-        const {selectedAssetId} = this.state;
+        const {selectedAssetId, fee_amount, fee_amount_creation} = this.state;
         const asset = this.getAssetById(selectedAssetId);
         const balance = this.getBalanceForAsset(selectedAssetId);
         if (balance) {
@@ -393,12 +393,12 @@ class BitsharesBeosModal extends React.Component {
 
             let fee_amount_amount = 0;
 
-            if (this.state.fee_amount) {
-                fee_amount_amount = this.state.fee_amount.amount;
+            if (fee_amount && Number.isInteger(fee_amount.amount)) {
+                fee_amount_amount = fee_amount.amount;
             }
 
             let totalFeeAmount = new Asset({
-                amount: this.state.fee_amount_creation + fee_amount_amount,
+                amount: fee_amount_creation + fee_amount_amount,
                 asset_id: asset.get("id"),
                 precision: asset.get("precision")
             });
