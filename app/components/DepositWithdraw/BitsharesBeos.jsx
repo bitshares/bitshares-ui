@@ -63,6 +63,10 @@ class BitsharesBeos extends React.Component {
             });
     };
 
+    getBalanceById = id => {
+        return this.getBalances()[id] || null;
+    };
+
     render() {
         let transferBtsId = this.getTransferBtsId();
         const {beosFee, beosIssuer, beosApiUrl} = this.getParams();
@@ -164,12 +168,12 @@ class BitsharesBeos extends React.Component {
                         showModal={this.showModal}
                         account={this.props.account.get("name")}
                         asset={this.props.asset.get("symbol")}
-                        assets={["BTS", "BROWNIE.PTS"]}
-                        balance={
-                            this.props.account.get("balances").toJS()[
-                                this.props.asset.get("id")
-                            ]
-                        }
+                        assets={this.props.assets
+                            .filter(a => !!a)
+                            .map(a => a.get("symbol"))}
+                        balance={this.getBalanceById(
+                            this.props.asset.get("id")
+                        )}
                         balances={this.getBalances()}
                         creator={"eosio"}
                         issuer={beosIssuer}
