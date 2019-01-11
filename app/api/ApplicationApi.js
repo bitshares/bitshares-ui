@@ -93,7 +93,8 @@ const ApplicationApi = {
         encrypt_memo = true,
         optional_nonce = null,
         propose_account = null,
-        fee_asset_id = "1.3.0"
+        fee_asset_id = "1.3.0",
+        transactionBuilder = null
     }) {
         let memo_sender = propose_account || from_account;
 
@@ -195,7 +196,12 @@ const ApplicationApi = {
                     fee_asset_id = "1.3.0";
                 }
 
-                let tr = new TransactionBuilder();
+                let tr = null;
+                if (transactionBuilder == null) {
+                    tr = new TransactionBuilder();
+                } else {
+                    tr = transactionBuilder;
+                }
                 let transfer_op = tr.get_type_operation("transfer", {
                     fee: {
                         amount: 0,
@@ -207,6 +213,13 @@ const ApplicationApi = {
                     memo: memo_object
                 });
 
+                if (__DEV__) {
+                    console.log("built transfer", transfer_op);
+                }
+                if (transactionBuilder !== null) {
+                    return {op: transfer_op};
+                }
+
                 return tr.update_head_block().then(() => {
                     if (propose_account) {
                         tr.add_type_operation("proposal_create", {
@@ -216,7 +229,6 @@ const ApplicationApi = {
                     } else {
                         tr.add_operation(transfer_op);
                     }
-
                     return WalletDb.process_transaction(
                         tr,
                         null, //signer_private_keys,
@@ -224,7 +236,40 @@ const ApplicationApi = {
                     );
                 });
             })
-            .catch(() => {});
+            .catch(err => {
+                console.log(err);
+            });
+    },
+
+    transfer_list(list_of_transfers) {
+        return WalletUnlockActions.unlock().then(() => {
+            let proposer = list_of_transfers[0].from_account;
+            let transfers = [];
+            let tr = new TransactionBuilder();
+            list_of_transfers.forEach(transferData => {
+                transferData.transactionBuilder = tr;
+                transfers.push(this.transfer(transferData));
+            });
+            console.log(transfers);
+
+            return Promise.all(transfers)
+                .then(result => {
+                    return tr.update_head_block().then(() => {
+                        tr.add_type_operation("proposal_create", {
+                            proposed_ops: result,
+                            fee_paying_account: proposer
+                        });
+                        return WalletDb.process_transaction(
+                            tr,
+                            null, //signer_private_keys,
+                            true
+                        );
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        });
     },
 
     issue_asset(

@@ -1707,7 +1707,8 @@
             "title": "Barter",
             "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
             "account": "account",
-            "bartering_asset": "Bartering asset"
+            "bartering_asset": "Bartering asset",
+            "proposal_fee": "Proposal fee"
         },
         "borrow": {
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",

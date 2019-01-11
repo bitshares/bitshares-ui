@@ -11,10 +11,12 @@ import utils from "common/utils";
 import {
     checkFeeStatusAsync,
     checkBalance,
-    shouldPayFeeWithAssetAsync
+    shouldPayFeeWithAssetAsync,
+    estimateFeeAsync
 } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
+import ApplicationApi from "../../api/ApplicationApi";
 
 export default class Barter extends Component {
     constructor() {
@@ -55,7 +57,8 @@ export default class Barter extends Component {
             amount_index: 0,
             from_error: null,
             to_error: null,
-            memo: "Barter"
+            memo: null,
+            proposal_fee: 0
         };
         this._checkBalance = this._checkBalance.bind(this);
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
@@ -64,6 +67,11 @@ export default class Barter extends Component {
     componentWillMount() {
         let currentAccount = AccountStore.getState().currentAccount;
         if (!this.state.from_name) this.setState({from_name: currentAccount});
+        estimateFeeAsync("proposal_create").then(fee => {
+            this.setState({
+                proposal_fee: new Asset({amount: fee}).getAmount({real: true})
+            });
+        });
     }
 
     fromChanged(from_name) {
@@ -411,7 +419,7 @@ export default class Barter extends Component {
                 from_account: this.state.from_account.get("id"),
                 to_account: this.state.to_account.get("id"),
                 amount: sendAmount.getAmount(),
-                asset_id: asset.get("id"),
+                asset: asset.get("id"),
                 memo: this.state.memo
                     ? new Buffer(this.state.memo, "utf-8")
                     : this.state.memo,
@@ -434,7 +442,7 @@ export default class Barter extends Component {
                 from_account: this.state.to_account.get("id"),
                 to_account: this.state.from_account.get("id"),
                 amount: sendAmount.getAmount(),
-                asset_id: asset.get("id"),
+                asset: asset.get("id"),
                 memo: this.state.memo
                     ? new Buffer(this.state.memo, "utf-8")
                     : this.state.memo,
@@ -445,6 +453,7 @@ export default class Barter extends Component {
             });
         });
         console.log(transfer_list);
+        ApplicationApi.transfer_list(transfer_list);
     }
 
     onTrxIncluded(confirm_store_state) {
@@ -509,6 +518,7 @@ export default class Barter extends Component {
         const fee = from => {
             let fee = 0;
             if (from) {
+                fee = fee;
                 from_barter.forEach(item => {
                     fee += item.from_feeAmount.getAmount({real: true});
                 });
@@ -853,7 +863,23 @@ export default class Barter extends Component {
                 <AmountSelector
                     label="transfer.fee"
                     disabled={false}
+                    style={{
+                        marginBottom: "1rem"
+                    }}
                     amount={fee(true)}
+                    asset={"1.3.0"}
+                    assets={["1.3.0"]}
+                    error={
+                        this.state.hasPoolBalance === false
+                            ? "transfer.errors.insufficient"
+                            : null
+                    }
+                    scroll_length={2}
+                />
+                <AmountSelector
+                    label="showcases.barter.proposal_fee"
+                    disabled={false}
+                    amount={this.state.proposal_fee}
                     asset={"1.3.0"}
                     assets={["1.3.0"]}
                     error={
