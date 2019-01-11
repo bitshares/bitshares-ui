@@ -2,6 +2,7 @@ import React from "react";
 import {Pagination} from "antd";
 import counterpart from "counterpart";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import {Table} from "bitshares-ui-style-guide";
 
 export default class PaginatedList extends React.Component {
     constructor(props) {
@@ -49,10 +50,28 @@ export default class PaginatedList extends React.Component {
         if (!currentRows.length && total) {
             currentRows = getRows(1, pageSize);
         }
+        const dataSource = [
+            {
+                key: "1",
+                asset: "Mike",
+                qty: 32,
+                price: "10 Downing Street"
+            },
+            {
+                key: "2",
+                asset: "John",
+                qty: 42,
+                price: "10 Downing Street"
+            }
+        ];
 
         return (
             <div className="grid-content" style={this.props.style}>
-                <table className={this.props.className}>
+                <Table
+                    dataSource={dataSource}
+                    columns={Array.isArray(header) ? header : []}
+                />
+                {/* <table className={this.props.className}>
                     {header ? <thead>{header}</thead> : null}
                     {this.props.withTransition && page === 1 ? (
                         <TransitionWrapper
@@ -68,7 +87,7 @@ export default class PaginatedList extends React.Component {
                             {extraRow}
                         </tbody>
                     )}
-                </table>
+                </table> */}
 
                 {total > pageSize ? (
                     <Pagination

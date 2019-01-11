@@ -18,7 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon,Switch} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -127,8 +127,121 @@ class AccountOverview extends React.Component {
             settings.get("unit") || this.props.core_asset.get("symbol");
         const showAssetPercent = settings.get("showAssetPercent", false);
 
-        return (
-            <tr>
+        return [
+            {
+                title: <Translate component="span" content="account.asset" />,
+                dataIndex: "asset",
+                align: "left",
+                sorter: (a, b) => {
+                    if (a.asset < b.asset) {
+                        return -1;
+                    }
+                    if (a.asset > b.asset) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            },
+            {
+                title: <Translate content="account.qty" />,
+                dataIndex: "qty",
+                align: "right",
+                sorter: true
+            },
+            {
+                title: (
+                    <span>
+                        <Translate content="exchange.price" /> (
+                        <AssetName name={preferredUnit} noTip />)
+                    </span>
+                ),
+                dataIndex: "price",
+                align: "right"
+            },
+            {
+                title: <Translate content="account.hour_24_short" />,
+                dataIndex: "24hour",
+                align: "right"
+            },
+            {
+                title: (
+                    <TranslateWithLinks
+                        noLink
+                        string="account.eq_value_header"
+                        keys={[
+                            {
+                                type: "asset",
+                                value: preferredUnit,
+                                arg: "asset"
+                            }
+                        ]}
+                        noTip
+                    />
+                ),
+                dataIndex: "value",
+                align: "right"
+            },
+            showAssetPercent
+                ? {
+                      title: (
+                          <Translate
+                              component="span"
+                              content="account.percent"
+                          />
+                      ),
+                      dataIndex: "percent",
+                      align: "right"
+                  }
+                : {},
+            {
+                title: <Translate content="header.payments" />,
+                dataIndex: "payments"
+            },
+            {
+                title: <Translate content="exchange.buy" />,
+                dataIndex: "payments"
+            },
+            {
+                title: <Translate content="modal.deposit.submit" />,
+                dataIndex: "deposit"
+            },
+            {
+                title: <Translate content="modal.withdraw.submit" />,
+                dataIndex: "withdraw"
+            },
+            {
+                title: <Translate content="account.trade" />,
+                dataIndex: "trade"
+            },
+            {
+                title: <Translate content="exchange.borrow_short" />,
+                dataIndex: "borrow"
+            },
+            {
+                title: <Translate content="account.settle" />,
+                dataIndex: "settle"
+            },
+            {
+                className: "column-hide-small",
+                title: <Translate content="modal.reserve.submit" />,
+                dataIndex: "burn"
+            },
+            {
+                className: "column-hide-small",
+                title: (
+                    <Translate
+                        content={
+                            shownAssets == "active"
+                                ? "exchange.hide"
+                                : "account.perm.show"
+                        }
+                    />
+                ),
+                dataIndex: "hide"
+            }
+        ];
+        /* (
+            
                 <th
                     style={{textAlign: "left"}}
                     className={cnames("clickable is-sortable", {
@@ -231,8 +344,8 @@ class AccountOverview extends React.Component {
                         }
                     />
                 </th>
-            </tr>
-        );
+            
+        ); */
     }
 
     render() {
@@ -484,7 +597,13 @@ class AccountOverview extends React.Component {
                                             addonAfter={<Icon type="search" />}
                                         />
                                     </div>
-                                    <div className="selector inline-block" style={{position: "relative",top: "6px"}}>
+                                    <div
+                                        className="selector inline-block"
+                                        style={{
+                                            position: "relative",
+                                            top: "6px"
+                                        }}
+                                    >
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
