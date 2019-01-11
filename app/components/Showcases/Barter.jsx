@@ -599,6 +599,9 @@ export default class Barter extends Component {
                     <AmountSelector
                         label="showcases.barter.title"
                         key={amount_index++}
+                        style={{
+                            marginBottom: "1rem"
+                        }}
                         amount={item.from_amount}
                         onChange={this.onFromAmountChanged.bind(this, index++)}
                         asset={
@@ -629,11 +632,13 @@ export default class Barter extends Component {
                     [item.to_asset.get("symbol"), item.to_amount || 0].join(" ")
                 );
             }
-
             if (index !== 0) {
                 return (
                     <AmountSelector
                         label="showcases.barter.title"
+                        style={{
+                            marginBottom: "1rem"
+                        }}
                         key={amount_index++}
                         amount={item.to_amount}
                         onChange={this.onToAmountChanged.bind(this, index++)}
@@ -663,6 +668,9 @@ export default class Barter extends Component {
                 <AccountSelector
                     label="showcases.barter.account"
                     placeholder="placeholder"
+                    style={{
+                        marginBottom: "1rem"
+                    }}
                     allowPubKey={true}
                     allowUppercase={true}
                     account={from_account}
@@ -677,6 +685,9 @@ export default class Barter extends Component {
                         <AmountSelector
                             label="showcases.barter.title"
                             key={amount_index}
+                            style={{
+                                marginBottom: "1rem"
+                            }}
                             amount={
                                 from_account
                                     ? this.state.from_barter[0].from_amount
@@ -700,12 +711,18 @@ export default class Barter extends Component {
                             )}
                             allowNaN={true}
                         />
+                        {fromAmountSelector}
                         <div
                             style={{paddingTop: "10px", paddingBottom: "10px"}}
                         >
                             <Button
                                 onClick={this.addFromAmount.bind(this)}
-                                disabled={!from_account}
+                                disabled={
+                                    !from_account ||
+                                    !this.state.from_barter[
+                                        this.state.from_barter.length - 1
+                                    ].from_amount
+                                }
                             >
                                 + Add asset
                             </Button>
@@ -714,8 +731,6 @@ export default class Barter extends Component {
                 ) : (
                     "Please select account"
                 )}
-
-                {fromAmountSelector}
             </Card>
         );
 
@@ -724,6 +739,9 @@ export default class Barter extends Component {
                 <AccountSelector
                     label="showcases.barter.account"
                     placeholder="placeholder"
+                    style={{
+                        marginBottom: "1rem"
+                    }}
                     allowPubKey={true}
                     allowUppercase={true}
                     account={to_account}
@@ -737,6 +755,9 @@ export default class Barter extends Component {
                     <div>
                         <AmountSelector
                             label="showcases.barter.title"
+                            style={{
+                                marginBottom: "1rem"
+                            }}
                             amount={
                                 to_account
                                     ? this.state.to_barter[0].to_amount
@@ -760,12 +781,18 @@ export default class Barter extends Component {
                             )}
                             allowNaN={true}
                         />
+                        {toAmountSelector}
                         <div
                             style={{paddingTop: "10px", paddingBottom: "10px"}}
                         >
                             <Button
                                 onClick={this.addToAmount.bind(this)}
-                                disabled={!to_account}
+                                disabled={
+                                    !to_account ||
+                                    !this.state.to_barter[
+                                        this.state.to_barter.length - 1
+                                    ].to_amount
+                                }
                             >
                                 + Add asset
                             </Button>
@@ -774,17 +801,26 @@ export default class Barter extends Component {
                 ) : (
                     "Please select account"
                 )}
-                {toAmountSelector}
             </Card>
         );
 
         let offers = (
             <Card style={{borderRadius: "10px"}}>
-                <div className="left-label">
-                    {from_name} offers {assetFromList.join(", ")} to {to_name}{" "}
-                    and receives {assetToList.join(", ")} in return
-                </div>
-                {from_barter.length === 1 && to_barter.length === 1 ? (
+                {!isSubmitNotValid && (
+                    <div className="left-label">
+                        <strong>{from_name}</strong> offers to send{" "}
+                        <strong>{assetFromList.join(", ")}</strong> to
+                        <strong>{to_name} </strong>
+                        and receives <strong>
+                            {assetToList.join(", ")}
+                        </strong>{" "}
+                        in return
+                    </div>
+                )}
+                {isSubmitNotValid && (
+                    <div className="left-label">No valid barter yet.</div>
+                )}
+                {from_barter.length === 500 && to_barter.length === 500 ? ( // deactivate for now
                     <div className="amount-selector" style={this.props.style}>
                         <Translate
                             className="left-label"
@@ -804,7 +840,6 @@ export default class Barter extends Component {
                                         {`${assetFromSymbol}/${assetToSymbol}`}
                                     </div>
                                 </div>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -820,7 +855,7 @@ export default class Barter extends Component {
                     disabled={false}
                     amount={fee(true)}
                     asset={"1.3.0"}
-                    assets={from_asset_types}
+                    assets={["1.3.0"]}
                     error={
                         this.state.hasPoolBalance === false
                             ? "transfer.errors.insufficient"
@@ -838,7 +873,7 @@ export default class Barter extends Component {
                     disabled={false}
                     amount={fee(false)}
                     asset={"1.3.0"}
-                    assets={to_asset_types}
+                    assets={["1.3.0"]}
                     error={
                         this.state.hasPoolBalance === false
                             ? "transfer.errors.insufficient"
