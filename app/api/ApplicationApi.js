@@ -255,8 +255,17 @@ const ApplicationApi = {
             return Promise.all(transfers)
                 .then(result => {
                     return tr.update_head_block().then(() => {
+                        let propose = [];
+                        let direct = [];
+                        result.forEach((item, idx) => {
+                            if (list_of_transfers[idx].propose) {
+                                propose.push(item);
+                            } else {
+                                tr.add_operation(item.op);
+                            }
+                        });
                         tr.add_type_operation("proposal_create", {
-                            proposed_ops: result,
+                            proposed_ops: propose,
                             fee_paying_account: proposer
                         });
                         return WalletDb.process_transaction(
