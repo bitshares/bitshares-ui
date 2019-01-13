@@ -1,6 +1,15 @@
 import React, {Component} from "react";
 import Translate from "react-translate-component";
-import {Input, Card, Col, Row, Button, Switch} from "bitshares-ui-style-guide";
+import {
+    Input,
+    Card,
+    Col,
+    Row,
+    Button,
+    Switch,
+    Tooltip,
+    Icon
+} from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
 import AccountStore from "stores/AccountStore";
@@ -420,6 +429,8 @@ export default class Barter extends Component {
         let sendAmount;
         let transfer_list = [];
 
+        let proposer = AccountStore.getState().currentAccount;
+
         let left_account = this.state.from_account;
 
         if (this.state.showEscrow && this.state.send_to_escrow) {
@@ -445,8 +456,7 @@ export default class Barter extends Component {
                         : this.state.memo,
                     feeAsset: item.from_feeAsset
                         ? item.from_feeAsset.get("id")
-                        : "1.3.0",
-                    propose: false
+                        : "1.3.0"
                 });
             }
             transfer_list.push({
@@ -460,7 +470,7 @@ export default class Barter extends Component {
                 feeAsset: item.from_feeAsset
                     ? item.from_feeAsset.get("id")
                     : "1.3.0",
-                propose: true
+                propose_account: proposer
             });
         });
 
@@ -472,7 +482,7 @@ export default class Barter extends Component {
                 asset: "1.3.0",
                 memo: null,
                 feeAsset: "1.3.0",
-                propose: true
+                propose_account: proposer
             });
         }
 
@@ -495,7 +505,7 @@ export default class Barter extends Component {
                 feeAsset: item.to_feeAsset
                     ? item.to_feeAsset.get("id")
                     : "1.3.0",
-                propose: true
+                propose_account: proposer
             });
         });
 
@@ -594,14 +604,15 @@ export default class Barter extends Component {
         let isEscrowNotValid =
             this.state.showEscrow && !this.state.escrow_account;
 
+        // should the user be only allowed to request for existing funds?
+        // balanceError() ||
         const isSubmitNotValid =
             !from_account ||
             !to_account ||
             from_account.get("id") == to_account.get("id") ||
-            balanceError() ||
             to_error ||
-            from_error ||
             !checkAmountValid() ||
+            from_error ||
             isEscrowNotValid;
 
         const balance = (account, balanceError, asset_types, asset) => {
@@ -651,7 +662,7 @@ export default class Barter extends Component {
             if (item.from_asset) {
                 assetSymbol = item.from_asset.get("symbol");
                 assetFromList.push(
-                    [assetSymbol, item.from_amount || 0].join(" ")
+                    [item.from_amount || 0, assetSymbol].join(" ")
                 );
             }
 
@@ -690,7 +701,7 @@ export default class Barter extends Component {
             if (item.to_asset) {
                 assetSymbol = item.to_asset.get("symbol");
                 assetToList.push(
-                    [item.to_asset.get("symbol"), item.to_amount || 0].join(" ")
+                    [item.to_amount || 0, item.to_asset.get("symbol")].join(" ")
                 );
             }
             if (index !== 0) {
@@ -726,10 +737,12 @@ export default class Barter extends Component {
 
         let account_from = (
             <Card style={{borderRadius: "10px"}}>
+                <Translate content={"showcases.barter.peer_left"} />
                 <AccountSelector
                     label="showcases.barter.account"
                     placeholder="placeholder"
                     style={{
+                        marginTop: "0.5rem",
                         marginBottom: "1rem"
                     }}
                     allowPubKey={true}
@@ -741,7 +754,7 @@ export default class Barter extends Component {
                     hideImage
                     typeahead={true}
                 />
-                {from_account ? (
+                {from_account && (
                     <div>
                         <AmountSelector
                             label="showcases.barter.title"
@@ -789,18 +802,18 @@ export default class Barter extends Component {
                             </Button>
                         </div>
                     </div>
-                ) : (
-                    "Please select account"
                 )}
             </Card>
         );
 
         let account_to = (
             <Card style={{borderRadius: "10px"}}>
+                <Translate content={"showcases.barter.peer_right"} />
                 <AccountSelector
                     label="showcases.barter.account"
                     placeholder="placeholder"
                     style={{
+                        marginTop: "0.5rem",
                         marginBottom: "1rem"
                     }}
                     allowPubKey={true}
@@ -812,7 +825,7 @@ export default class Barter extends Component {
                     hideImage
                     typeahead={true}
                 />
-                {to_account ? (
+                {to_account && (
                     <div>
                         <AmountSelector
                             label="showcases.barter.title"
@@ -859,37 +872,89 @@ export default class Barter extends Component {
                             </Button>
                         </div>
                     </div>
-                ) : (
-                    "Please select account"
                 )}
             </Card>
         );
 
+        let action_error_key = "showcases.barter.not_complete";
+        if (isSubmitNotValid) {
+            if (!from_account) {
+                action_error_key =
+                    "showcases.barter.error_fill_in_peer_left_name";
+            } else if (!to_account) {
+                action_error_key =
+                    "showcases.barter.error_fill_in_peer_right_name";
+            } else if (from_account.get("id") == to_account.get("id")) {
+                action_error_key = "showcases.barter.error_same_name";
+            } else if (!checkAmountValid()) {
+                action_error_key =
+                    "showcases.barter.error_fill_in_valid_asset_amount";
+            } else if (isEscrowNotValid) {
+                action_error_key = "showcases.barter.error_fill_in_escrow_name";
+            }
+        }
+
         let offers = (
             <Card style={{borderRadius: "10px"}}>
                 {!isSubmitNotValid && (
-                    <div className="left-label">
-                        <strong>{from_name}</strong> offers to send{" "}
-                        <strong>{assetFromList.join(", ")}</strong> to{" "}
-                        <strong>{to_name} </strong>
-                        and receives <strong>
-                            {assetToList.join(", ")}
-                        </strong>{" "}
-                        in return
+                    <div className="left-label" style={{fontSize: "1.1rem"}}>
+                        {counterpart.translate("showcases.barter.action", {
+                            peer_left: from_name,
+                            assets_left: assetFromList.join(", "),
+                            peer_right: to_name,
+                            assets_right: assetToList.join(", ")
+                        })}
+                        {this.state.showEscrow &&
+                            !this.state.send_to_escrow &&
+                            counterpart.translate(
+                                "showcases.barter.escrow_as_witness",
+                                {
+                                    escrow: this.state.escrow_account.get(
+                                        "name"
+                                    )
+                                }
+                            )}
+                        {this.state.showEscrow &&
+                            this.state.send_to_escrow &&
+                            counterpart.translate(
+                                "showcases.barter.escrow_as_custodian",
+                                {
+                                    escrow: this.state.escrow_account.get(
+                                        "name"
+                                    )
+                                }
+                            )}
                     </div>
                 )}
                 {isSubmitNotValid && (
-                    <div className="left-label">No valid barter yet.</div>
+                    <div className="left-label" style={{fontSize: "1.1rem"}}>
+                        {counterpart.translate(action_error_key)}
+                    </div>
                 )}
-                <Button
-                    key={"add_escrow"}
-                    onClick={this.toggleEscrow.bind(this)}
-                    style={{
-                        float: "right"
-                    }}
+                <Tooltip
+                    title={counterpart.translate(
+                        "showcases.barter.add_escrow_tooltip"
+                    )}
+                    placement="topRight"
                 >
-                    {counterpart.translate("showcases.barter.add_escrow")}
-                </Button>
+                    <Button
+                        key={
+                            this.state.showEscrow
+                                ? "remove_escrow"
+                                : "add_escrow"
+                        }
+                        onClick={this.toggleEscrow.bind(this)}
+                        style={{
+                            float: "right"
+                        }}
+                    >
+                        {counterpart.translate(
+                            this.state.showEscrow
+                                ? "showcases.barter.remove_escrow"
+                                : "showcases.barter.add_escrow"
+                        )}
+                    </Button>
+                </Tooltip>
                 {from_barter.length === 500 && to_barter.length === 500 ? ( // deactivate for now
                     <div className="amount-selector" style={this.props.style}>
                         <Translate
@@ -920,6 +985,7 @@ export default class Barter extends Component {
         );
         let totalFeeFrom = (
             <Card style={{borderRadius: "10px"}}>
+                <Translate content={"showcases.barter.peer_left"} />
                 <AmountSelector
                     label={
                         this.state.send_to_escrow
@@ -928,6 +994,7 @@ export default class Barter extends Component {
                     }
                     disabled={false}
                     style={{
+                        marginTop: "0.5rem",
                         marginBottom: "1rem"
                     }}
                     amount={fee(true)}
@@ -944,6 +1011,40 @@ export default class Barter extends Component {
                     label="showcases.barter.proposal_fee"
                     disabled={false}
                     amount={this.state.proposal_fee}
+                    style={{
+                        marginBottom: "1rem"
+                    }}
+                    asset={"1.3.0"}
+                    assets={["1.3.0"]}
+                    error={
+                        this.state.hasPoolBalance === false
+                            ? "transfer.errors.insufficient"
+                            : null
+                    }
+                    scroll_length={2}
+                />
+                <span style={{marginTop: "1rem"}}>
+                    <Translate
+                        content={"showcases.barter.total_fees"}
+                        className="left-label"
+                        component="label"
+                        fee={fee(true) + this.state.proposal_fee}
+                        asset={"BTS"}
+                    />
+                </span>
+            </Card>
+        );
+
+        let totalFeeTo = (
+            <Card style={{borderRadius: "10px"}}>
+                <Translate content={"showcases.barter.peer_right"} />
+                <AmountSelector
+                    label="showcases.barter.fee_when_proposal_executes"
+                    disabled={false}
+                    amount={fee(false)}
+                    style={{
+                        marginTop: "0.5rem"
+                    }}
                     asset={"1.3.0"}
                     assets={["1.3.0"]}
                     error={
@@ -956,21 +1057,23 @@ export default class Barter extends Component {
             </Card>
         );
 
-        let totalFeeTo = (
-            <Card style={{borderRadius: "10px"}}>
-                <AmountSelector
-                    label="showcases.barter.fee_when_proposal_executes"
-                    disabled={false}
-                    amount={fee(false)}
-                    asset={"1.3.0"}
-                    assets={["1.3.0"]}
-                    error={
-                        this.state.hasPoolBalance === false
-                            ? "transfer.errors.insufficient"
-                            : null
-                    }
-                    scroll_length={2}
-                />
+        let intro = (
+            <Card
+                style={{
+                    borderRadius: "10px"
+                }}
+            >
+                <Tooltip
+                    title={counterpart.translate(
+                        "showcases.barter.new_barter_tooltip"
+                    )}
+                    placement="bottom"
+                >
+                    <h2 style={{textAlign: "center"}}>
+                        <Translate content={"showcases.barter.new_barter"} />{" "}
+                        <Icon type="question-circle" theme="filled" />
+                    </h2>
+                </Tooltip>
             </Card>
         );
 
@@ -1009,10 +1112,21 @@ export default class Barter extends Component {
         }
 
         return (
-            <div className="container wrap shrink" style={{padding: "10px"}}>
+            <div
+                className="center"
+                style={{
+                    padding: "10px",
+                    maxWidth: "80rem",
+                    width: "100%",
+                    margin: "0 auto"
+                }}
+            >
                 <Card>
                     {smallScreen ? (
                         <div>
+                            <Row>
+                                <Col style={{padding: "10px"}}>{intro}</Col>
+                            </Row>
                             <Row>
                                 <Col style={{padding: "10px"}}>
                                     {account_from}
@@ -1026,9 +1140,13 @@ export default class Barter extends Component {
                             <Row>
                                 <Col style={{padding: "10px"}}>{offers}</Col>
                             </Row>
-                            <Row>
-                                <Col style={{padding: "10px"}}>{escrow}</Col>
-                            </Row>
+                            {escrow && (
+                                <Row>
+                                    <Col style={{padding: "10px"}}>
+                                        {escrow}
+                                    </Col>
+                                </Row>
+                            )}
                             <Row>
                                 <Col style={{padding: "10px"}}>
                                     {totalFeeFrom}
@@ -1043,6 +1161,9 @@ export default class Barter extends Component {
                     ) : (
                         <div>
                             <Row>
+                                <Col style={{padding: "10px"}}>{intro}</Col>
+                            </Row>
+                            <Row>
                                 <Col span={12} style={{padding: "10px"}}>
                                     {account_from}
                                 </Col>
@@ -1053,9 +1174,13 @@ export default class Barter extends Component {
                             <Row>
                                 <Col style={{padding: "10px"}}>{offers}</Col>
                             </Row>
-                            <Row>
-                                <Col style={{padding: "10px"}}>{escrow}</Col>
-                            </Row>
+                            {escrow && (
+                                <Row>
+                                    <Col style={{padding: "10px"}}>
+                                        {escrow}
+                                    </Col>
+                                </Row>
+                            )}
                             <Row>
                                 <Col span={12} style={{padding: "10px"}}>
                                     {totalFeeFrom}
