@@ -112,7 +112,7 @@ const ApplicationApi = {
         amount,
         asset,
         memo,
-        memo_sender = null,
+        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer
         encrypt_memo = true,
         optional_nonce = null,
         fee_asset_id = "1.3.0",
@@ -123,7 +123,7 @@ const ApplicationApi = {
         return Promise.all([
             FetchChain("getAccount", from_account),
             FetchChain("getAccount", to_account),
-            FetchChain("getAccount", memo_sender),
+            FetchChain("getAccount", propose_account),
             FetchChain("getAsset", asset),
             FetchChain("getAsset", fee_asset_id),
             unlock_promise
@@ -132,7 +132,7 @@ const ApplicationApi = {
                 let [
                     chain_from,
                     chain_to,
-                    chain_memo_sender,
+                    chain_propose_account,
                     chain_asset,
                     chain_fee_asset
                 ] = res;
@@ -203,7 +203,7 @@ const ApplicationApi = {
                     transfer_op,
                     chain_from,
                     chain_to,
-                    chain_memo_sender,
+                    chain_propose_account,
                     chain_asset,
                     chain_fee_asset
                 };
@@ -254,7 +254,7 @@ const ApplicationApi = {
                             "proposal_create",
                             {
                                 proposed_ops: [{op: transfer_obj.transfer_op}],
-                                fee_paying_account: transfer_obj.chain_memo_sender.get(
+                                fee_paying_account: transfer_obj.chain_propose_account.get(
                                     "id"
                                 )
                             }
@@ -292,9 +292,9 @@ const ApplicationApi = {
                         result.forEach((item, idx) => {
                             if (list_of_transfers[idx].propose_account) {
                                 if (proposer == null) {
-                                    proposer = item.chain_memo_sender;
+                                    proposer = item.chain_propose_account;
                                 }
-                                propose.push(item);
+                                propose.push({op: item.transfer_op});
                             } else {
                                 tr.add_operation(item.transfer_op);
                             }
