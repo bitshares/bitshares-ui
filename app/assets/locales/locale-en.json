@@ -1727,7 +1727,7 @@
             "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
             "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
             "escrow_payment": "Payment for escrow services",
-            "escrow_payment_tooltip": "Being an escrow requires trust from both parties and should be considered a paid service. The escrow will be paid from Paar 1's account with an additional transfer in the proposal, which increases the overal fee for Peer 1. Set this to zero to remove it.",
+            "escrow_payment_tooltip": "Being an escrow requires trust from both peers and should be considered a paid service. The escrow will be paid from Peer 1's account via an additional transfer in the proposal, which increases the overall fee for Peer 1. Set this value to zero to remove it, default value is equal to the transactions fee induced for the escrow.",
             "error_fill_in_peer_left_name": "Please fill in the account name of Peer 1",
             "error_fill_in_peer_right_name": "Please fill in the account name of Peer 2",
             "error_same_name": "Peer 1 and Peer 2 must be different accounts",
