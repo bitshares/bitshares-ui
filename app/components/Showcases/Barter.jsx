@@ -1351,15 +1351,24 @@ export default class Barter extends Component {
                             </Row>
                         </div>
                     )}
-                    <Button
-                        key={"send"}
-                        disabled={isSubmitNotValid}
-                        onClick={
-                            !isSubmitNotValid ? this.onSubmit.bind(this) : null
-                        }
+                    <Tooltip
+                        title={counterpart.translate(
+                            "showcases.barter.propose_tooltip"
+                        )}
+                        placement="topLeft"
                     >
-                        {counterpart.translate("propose")}
-                    </Button>
+                        <Button
+                            key={"propose"}
+                            disabled={isSubmitNotValid}
+                            onClick={
+                                !isSubmitNotValid
+                                    ? this.onSubmit.bind(this)
+                                    : null
+                            }
+                        >
+                            {counterpart.translate("propose")}
+                        </Button>
+                    </Tooltip>
                 </Card>
             </div>
         );
