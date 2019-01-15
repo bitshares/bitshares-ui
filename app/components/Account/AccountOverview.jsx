@@ -2,7 +2,6 @@ import React from "react";
 import Immutable from "immutable";
 import Translate from "react-translate-component";
 import TotalBalanceValue from "../Utility/TotalBalanceValue";
-import AssetName from "../Utility/AssetName";
 import MarginPositionsTable from "./MarginPositionsTable";
 import {RecentTransactions} from "./RecentTransactions";
 import Proposals from "components/Account/Proposals";
@@ -24,11 +23,6 @@ class AccountOverview extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            sortKey: props.viewSettings.get("portfolioSort", "totalValue"),
-            sortDirection: props.viewSettings.get(
-                "portfolioSortDirection",
-                true
-            ), // alphabetical A -> B, numbers high to low
             shownAssets: props.viewSettings.get("shownAssets", "active"),
             alwaysShowAssets: [
                 "BTS"
@@ -95,257 +89,10 @@ class AccountOverview extends React.Component {
         });
     }
 
-    _toggleSortOrder(key) {
-        if (this.state.sortKey === key) {
-            SettingsActions.changeViewSetting({
-                portfolioSortDirection: !this.state.sortDirection
-            });
-            this.setState({
-                sortDirection: !this.state.sortDirection
-            });
-        } else {
-            SettingsActions.changeViewSetting({
-                portfolioSort: key
-            });
-            this.setState({
-                sortDirection: false,
-                sortKey: key
-            });
-        }
-    }
     _toggleHideProposal() {
         this.setState({
             hideFishingProposals: !this.state.hideFishingProposals
         });
-    }
-
-    getHeader() {
-        let {settings} = this.props;
-        let {shownAssets} = this.state;
-
-        const preferredUnit =
-            settings.get("unit") || this.props.core_asset.get("symbol");
-        const showAssetPercent = settings.get("showAssetPercent", false);
-
-        return [
-            {
-                title: <Translate component="span" content="account.asset" />,
-                dataIndex: "asset",
-                align: "left",
-                sorter: (a, b) => {
-                    if (a.asset < b.asset) {
-                        return -1;
-                    }
-                    if (a.asset > b.asset) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            },
-            {
-                title: <Translate content="account.qty" />,
-                dataIndex: "qty",
-                align: "right",
-                sorter: true
-            },
-            {
-                title: (
-                    <span>
-                        <Translate content="exchange.price" /> (
-                        <AssetName name={preferredUnit} noTip />)
-                    </span>
-                ),
-                dataIndex: "price",
-                align: "right"
-            },
-            {
-                title: <Translate content="account.hour_24_short" />,
-                dataIndex: "24hour",
-                align: "right"
-            },
-            {
-                title: (
-                    <TranslateWithLinks
-                        noLink
-                        string="account.eq_value_header"
-                        keys={[
-                            {
-                                type: "asset",
-                                value: preferredUnit,
-                                arg: "asset"
-                            }
-                        ]}
-                        noTip
-                    />
-                ),
-                dataIndex: "value",
-                align: "right"
-            },
-            showAssetPercent
-                ? {
-                      title: (
-                          <Translate
-                              component="span"
-                              content="account.percent"
-                          />
-                      ),
-                      dataIndex: "percent",
-                      align: "right"
-                  }
-                : {},
-            {
-                title: <Translate content="header.payments" />,
-                dataIndex: "payments"
-            },
-            {
-                title: <Translate content="exchange.buy" />,
-                dataIndex: "payments"
-            },
-            {
-                title: <Translate content="modal.deposit.submit" />,
-                dataIndex: "deposit"
-            },
-            {
-                title: <Translate content="modal.withdraw.submit" />,
-                dataIndex: "withdraw"
-            },
-            {
-                title: <Translate content="account.trade" />,
-                dataIndex: "trade"
-            },
-            {
-                title: <Translate content="exchange.borrow_short" />,
-                dataIndex: "borrow"
-            },
-            {
-                title: <Translate content="account.settle" />,
-                dataIndex: "settle"
-            },
-            {
-                className: "column-hide-small",
-                title: <Translate content="modal.reserve.submit" />,
-                dataIndex: "burn"
-            },
-            {
-                className: "column-hide-small",
-                title: (
-                    <Translate
-                        content={
-                            shownAssets == "active"
-                                ? "exchange.hide"
-                                : "account.perm.show"
-                        }
-                    />
-                ),
-                dataIndex: "hide"
-            }
-        ];
-        /* (
-            
-                <th
-                    style={{textAlign: "left"}}
-                    className={cnames("clickable is-sortable", {
-                        "is-active": this.state.sortKey === "alphabetic"
-                    })}
-                    onClick={this._toggleSortOrder.bind(this, "alphabetic")}
-                >
-                    <Translate component="span" content="account.asset" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "qty")}
-                    className={cnames("clickable is-sortable", {
-                        "is-active": this.state.sortKey === "qty"
-                    })}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="account.qty" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "priceValue")}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "priceValue"}
-                    )}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="exchange.price" /> (
-                    <AssetName name={preferredUnit} noTip />)
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "changeValue")}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "changeValue"}
-                    )}
-                    style={{textAlign: "right"}}
-                >
-                    <Translate content="account.hour_24_short" />
-                </th>
-                <th
-                    onClick={this._toggleSortOrder.bind(this, "totalValue")}
-                    style={{textAlign: "right"}}
-                    className={cnames(
-                        "column-hide-small clickable is-sortable",
-                        {"is-active": this.state.sortKey === "totalValue"}
-                    )}
-                >
-                    <TranslateWithLinks
-                        noLink
-                        string="account.eq_value_header"
-                        keys={[
-                            {
-                                type: "asset",
-                                value: preferredUnit,
-                                arg: "asset"
-                            }
-                        ]}
-                        noTip
-                    />
-                </th>
-                {showAssetPercent ? (
-                    <th
-                        style={{
-                            textAlign: "right"
-                        }}
-                    >
-                        <Translate component="span" content="account.percent" />
-                    </th>
-                ) : null}
-                <th>
-                    <Translate content="header.payments" />
-                </th>
-                <th>
-                    <Translate content="exchange.buy" />
-                </th>
-                <th>
-                    <Translate content="modal.deposit.submit" />
-                </th>
-                <th>
-                    <Translate content="modal.withdraw.submit" />
-                </th>
-                <th>
-                    <Translate content="account.trade" />
-                </th>
-                <th>
-                    <Translate content="exchange.borrow_short" />
-                </th>
-                <th>
-                    <Translate content="account.settle" />
-                </th>
-                <th className="column-hide-small">
-                    <Translate content="modal.reserve.submit" />
-                </th>
-                <th className="column-hide-small">
-                    <Translate
-                        content={
-                            shownAssets == "active"
-                                ? "exchange.hide"
-                                : "account.perm.show"
-                        }
-                    />
-                </th>
-            
-        ); */
     }
 
     render() {
@@ -498,31 +245,15 @@ class AccountOverview extends React.Component {
         );
 
         const includedPortfolioBalance = (
-            <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>
-                    {totalValueText}
-                </td>
-                <td className="column-hide-small" />
-                <td className="column-hide-small" />
-                <td style={{textAlign: "right"}}>
-                    {portfolioActiveAssetsBalance}
-                </td>
-                <td colSpan="9" />
-            </tr>
+            <span key="portfolio" className="total-value">
+                {totalValueText}: {portfolioActiveAssetsBalance}
+            </span>
         );
 
         const hiddenPortfolioBalance = (
-            <tr key="portfolio" className="total-value">
-                <td colSpan="2" style={{textAlign: "left"}}>
-                    {totalValueText}
-                </td>
-                <td className="column-hide-small" />
-                <td className="column-hide-small" />
-                <td style={{textAlign: "right"}}>
-                    {portfolioHiddenAssetsBalance}
-                </td>
-                <td colSpan="9" />
-            </tr>
+            <span key="portfolio" className="total-value">
+                {totalValueText}: {portfolioHiddenAssetsBalance}
+            </span>
         );
 
         includedPortfolioList = (
@@ -538,12 +269,10 @@ class AccountOverview extends React.Component {
                 hiddenAssets={hiddenAssets}
                 orders={orders}
                 account={this.props.account}
-                sortKey={this.state.sortKey}
-                sortDirection={this.state.sortDirection}
                 isMyAccount={this.props.isMyAccount}
                 balances={this.props.balances}
-                header={this.getHeader()}
                 extraRow={includedPortfolioBalance}
+                viewSettings={this.props.viewSettings}
             />
         );
 
@@ -560,12 +289,10 @@ class AccountOverview extends React.Component {
                 hiddenAssets={hiddenAssets}
                 orders={orders}
                 account={this.props.account}
-                sortKey={this.state.sortKey}
-                sortDirection={this.state.sortDirection}
                 isMyAccount={this.props.isMyAccount}
                 balances={this.props.balances}
-                header={this.getHeader()}
                 extraRow={hiddenPortfolioBalance}
+                viewSettings={this.props.viewSettings}
             />
         );
 

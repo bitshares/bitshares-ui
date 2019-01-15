@@ -1,7 +1,6 @@
 import React from "react";
 import {Pagination} from "antd";
 import counterpart from "counterpart";
-import TransitionWrapper from "../Utility/TransitionWrapper";
 import {Table} from "bitshares-ui-style-guide";
 
 export default class PaginatedList extends React.Component {
@@ -50,45 +49,16 @@ export default class PaginatedList extends React.Component {
         if (!currentRows.length && total) {
             currentRows = getRows(1, pageSize);
         }
-        const dataSource = [
-            {
-                key: "1",
-                asset: "Mike",
-                qty: 32,
-                price: "10 Downing Street"
-            },
-            {
-                key: "2",
-                asset: "John",
-                qty: 42,
-                price: "10 Downing Street"
-            }
-        ];
 
         return (
             <div className="grid-content" style={this.props.style}>
                 <Table
-                    dataSource={dataSource}
+                    dataSource={currentRows}
                     columns={Array.isArray(header) ? header : []}
+                    footer={() => extraRow}
+                    onChange={this.props.toggleSortOrder}
+                    pagination={false}
                 />
-                {/* <table className={this.props.className}>
-                    {header ? <thead>{header}</thead> : null}
-                    {this.props.withTransition && page === 1 ? (
-                        <TransitionWrapper
-                            component="tbody"
-                            transitionName="newrow"
-                        >
-                            {currentRows}
-                            {extraRow}
-                        </TransitionWrapper>
-                    ) : (
-                        <tbody>
-                            {currentRows}
-                            {extraRow}
-                        </tbody>
-                    )}
-                </table> */}
-
                 {total > pageSize ? (
                     <Pagination
                         style={{
