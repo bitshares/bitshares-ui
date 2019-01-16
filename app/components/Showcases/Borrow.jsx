@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import counterpart from "counterpart";
 import Translate from "react-translate-component";
-import {Button, Card, Steps} from "bitshares-ui-style-guide";
+import {Button, Card, Steps, Tooltip} from "bitshares-ui-style-guide";
 import debounceRender from "react-debounce-render";
 import AssetWrapper from "../Utility/AssetWrapper";
 import {connect} from "alt-react";
@@ -12,6 +12,7 @@ import BorrowModal from "../Modal/BorrowModal";
 import AccountStore from "../../stores/AccountStore";
 import Icon from "../Icon/Icon";
 import AssetSelect from "../Utility/AssetSelect";
+import * as ReactDOM from "react-dom";
 
 class Borrow extends Component {
     constructor() {
@@ -21,6 +22,27 @@ class Borrow extends Component {
             selectedAsset: null,
             step: 0
         };
+        this.steps = [
+            {
+                key: "introduction",
+                icon: "borrow"
+            },
+            {
+                key: "concept"
+            },
+            {
+                key: "setup",
+                has_legend: true
+            },
+            {
+                key: "benefits",
+                has_legend: true
+            },
+            {
+                key: "risks",
+                has_legend: true
+            }
+        ];
         this.showBorrowModal = this.showBorrowModal.bind(this);
         this.hideBorrowModal = this.hideBorrowModal.bind(this);
     }
@@ -55,12 +77,14 @@ class Borrow extends Component {
     }
 
     next() {
-        const step = this.state.step + 1;
+        let step = this.state.step + 1;
+        if (step >= this.steps.length) step = this.steps.length;
         this.setState({step});
     }
 
     prev() {
-        const step = this.state.step - 1;
+        let step = this.state.step - 1;
+        if (step < 0) step = 0;
         this.setState({step});
     }
 
@@ -75,28 +99,6 @@ class Borrow extends Component {
         let accountLoaded = !(
             !currentAccount || typeof currentAccount === "string"
         );
-
-        let steps = [
-            {
-                key: "introduction",
-                icon: "borrow"
-            },
-            {
-                key: "concept"
-            },
-            {
-                key: "setup",
-                has_legend: true
-            },
-            {
-                key: "benefits",
-                has_legend: true
-            },
-            {
-                key: "risks",
-                has_legend: true
-            }
-        ];
         const current = this.state.step;
         const tinyScreen = window.innerWidth <= 800;
         const started = this.state.step > 0;
@@ -106,20 +108,83 @@ class Borrow extends Component {
         );
 
         let legend = null;
-        try {
-            if (steps[current].has_legend) {
+        if (current < steps.length) {
+            try {
+                if (steps[current].has_legend) {
+                    legend = counterpart.translate(
+                        "showcases.borrow.steps_" +
+                            steps[current].key +
+                            ".text_legend"
+                    );
+                    legend = legend.split("\n").map(item => {
+                        return item.split(":");
+                    });
+                }
+            } catch (err) {
                 legend = counterpart.translate(
                     "showcases.borrow.steps_" +
                         steps[current].key +
                         ".text_legend"
                 );
-                legend = legend.split("\n").map(item => {
-                    return item.split(":");
-                });
             }
-        } catch (err) {
-            legend = counterpart.translate(
-                "showcases.borrow.steps_" + steps[current].key + ".text_legend"
+        }
+
+        let finishedCard = null;
+        if (current >= steps.length) {
+            finishedCard = (
+                <Card>
+                    <div className={"center-content"}>
+                        <Translate
+                            content={"showcases.borrow.choose"}
+                            component={"h4"}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center"
+                        }}
+                    >
+                        <div>
+                            <AssetSelect
+                                style={{
+                                    width: "12rem",
+                                    marginBottom: "1rem"
+                                }}
+                                assets={[
+                                    "1.3.103",
+                                    "1.3.113",
+                                    "1.3.120",
+                                    "1.3.121",
+                                    "1.3.958",
+                                    "1.3.1325",
+                                    "1.3.1362",
+                                    "1.3.105",
+                                    "1.3.106"
+                                ]}
+                                onChange={this.onAssetChange.bind(this)}
+                            />
+                            <Tooltip title="showcases.borrow.borrow_tooltip">
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        width: "12rem"
+                                    }}
+                                    disabled={
+                                        this.state.selectedAsset !== null &&
+                                        accountLoaded
+                                            ? currentAccount.get("id") ===
+                                              "1.2.3"
+                                            : true
+                                    }
+                                    onClick={this.showBorrowModal}
+                                >
+                                    <Translate content="exchange.borrow" />
+                                </Button>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </Card>
             );
         }
 
@@ -148,7 +213,11 @@ class Borrow extends Component {
                     >
                         <Translate
                             component="h1"
-                            content={"showcases.borrow.title_long"}
+                            content={
+                                finishedCard != null
+                                    ? "showcases.borrow.now_ready"
+                                    : "showcases.borrow.title_long"
+                            }
                         />
                     </div>
                     {started &&
@@ -186,98 +255,79 @@ class Borrow extends Component {
                             paddingBottom: "1rem"
                         }}
                     >
-                        <Card>
-                            {!!steps[current].icon && (
-                                <Icon name="steps[current].icon" />
-                            )}
-                            <Translate
-                                component="h2"
-                                content={
-                                    "showcases.borrow.steps_" +
-                                    steps[current].key +
-                                    ".title_within"
-                                }
-                            />
+                        {finishedCard != null && finishedCard}
+                        {finishedCard == null && (
+                            <Card>
+                                {!!steps[current].icon && (
+                                    <Icon name="steps[current].icon" />
+                                )}
+                                <Translate
+                                    component="h2"
+                                    content={
+                                        "showcases.borrow.steps_" +
+                                        steps[current].key +
+                                        ".title_within"
+                                    }
+                                />
 
-                            <Translate
-                                component="p"
-                                content={
-                                    "showcases.borrow.steps_" +
-                                    steps[current].key +
-                                    ".text"
-                                }
-                            />
+                                <Translate
+                                    component="p"
+                                    content={
+                                        "showcases.borrow.steps_" +
+                                        steps[current].key +
+                                        ".text"
+                                    }
+                                />
 
-                            {!!steps[current].has_legend && (
-                                <React.Fragment>
-                                    {legend.map((content, index) => {
-                                        return (
-                                            <p key={"borrow_subp_" + index}>
-                                                <strong>{content[0]}</strong>:{" "}
-                                                {content[1]}
-                                            </p>
-                                        );
-                                    })}
-                                </React.Fragment>
-                            )}
-                        </Card>
+                                {!!steps[current].has_legend && (
+                                    <React.Fragment>
+                                        {legend.map((content, index) => {
+                                            return (
+                                                <p key={"borrow_subp_" + index}>
+                                                    <strong>
+                                                        {content[0]}
+                                                    </strong>
+                                                    : {content[1]}
+                                                </p>
+                                            );
+                                        })}
+                                    </React.Fragment>
+                                )}
+                            </Card>
+                        )}
                     </div>
                     <div className="steps-action">
-                        {current == 0 && (
-                            <Button type="primary" onClick={() => this.next()}>
-                                Get started
-                            </Button>
-                        )}
-                        {current > 0 &&
-                            current < steps.length - 1 && (
-                                <Button
-                                    type="primary"
-                                    onClick={() => this.next()}
-                                >
-                                    Next
-                                </Button>
+                        <Button
+                            type="primary"
+                            onClick={() => this.next()}
+                            tabIndex="0"
+                            ref="borrowdiv"
+                            onKeyDown={this.onKeyDown.bind(this)}
+                        >
+                            {current == 0 && (
+                                <Translate
+                                    content={"showcases.borrow.get_started"}
+                                />
                             )}
-                        {current === steps.length - 1 && (
-                            <Button
-                                type="primary"
-                                disabled={
-                                    this.state.selectedAsset !== null &&
-                                    accountLoaded
-                                        ? currentAccount.get("id") === "1.2.3"
-                                        : true
-                                }
-                                onClick={this.showBorrowModal}
-                            >
-                                <Translate content="exchange.borrow" />
-                            </Button>
-                        )}
+                            {current > 0 &&
+                                current < steps.length - 1 && (
+                                    <Translate
+                                        content={"showcases.borrow.next"}
+                                    />
+                                )}
+                            {current === steps.length - 1 && (
+                                <Translate content={"showcases.borrow.do_it"} />
+                            )}
+                        </Button>
                         {current > 0 && (
                             <Button
                                 style={{marginLeft: 8}}
                                 onClick={() => this.prev()}
                             >
-                                Previous
+                                <Translate
+                                    content={"showcases.borrow.previous"}
+                                />
                             </Button>
-                        )}
-                        {current === steps.length - 1 && (
-                            <AssetSelect
-                                style={{
-                                    width: "10rem",
-                                    marginTop: "1rem"
-                                }}
-                                assets={[
-                                    "1.3.103",
-                                    "1.3.113",
-                                    "1.3.120",
-                                    "1.3.121",
-                                    "1.3.958",
-                                    "1.3.1325",
-                                    "1.3.1362",
-                                    "1.3.105",
-                                    "1.3.106"
-                                ]}
-                                onChange={this.onAssetChange.bind(this)}
-                            />
                         )}
                     </div>
                 </Card>
@@ -297,6 +347,27 @@ class Borrow extends Component {
                     )}
             </div>
         );
+    }
+
+    componentDidMount() {
+        this.focusDiv();
+    }
+
+    componentDidUpdate() {
+        this.focusDiv();
+    }
+
+    focusDiv() {
+        ReactDOM.findDOMNode(this.refs.borrowdiv).focus();
+    }
+
+    onKeyDown(e) {
+        // arrow up/down button should select next/previous list element
+        if (e.keyCode === 38 || e.keyCode === 39 || e.key == "ArrowRight") {
+            this.next();
+        } else if (e.keyCode === 40 || e.key == "ArrowLeft") {
+            this.prev();
+        }
     }
 }
 
