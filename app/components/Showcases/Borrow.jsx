@@ -261,7 +261,7 @@ class Borrow extends Component {
                     >
                         {finishedCard != null && finishedCard}
                         {finishedCard == null && (
-                            <Card>
+                            <Card onKeyDown={this.onKeyDown.bind(this)}>
                                 {!!steps[current].icon && (
                                     <Icon name="steps[current].icon" />
                                 )}
