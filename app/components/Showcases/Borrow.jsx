@@ -241,7 +241,7 @@ class Borrow extends Component {
                                     );
                                 })}
                             </Steps>
-                        ) : (
+                        ) : current < this.steps.length ? (
                             <React.Fragment>
                                 {current + ". "}
                                 <Translate
@@ -252,7 +252,7 @@ class Borrow extends Component {
                                     }
                                 />
                             </React.Fragment>
-                        ))}
+                        ) : null)}
                     <div
                         style={{
                             paddingTop: "1rem",
