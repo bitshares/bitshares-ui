@@ -106,7 +106,7 @@ class Borrow extends Component {
         const selectedAssetObject = ChainStore.getAsset(
             this.state.selectedAsset
         );
-
+        let steps = this.steps;
         let legend = null;
         if (current < steps.length) {
             try {
@@ -152,19 +152,22 @@ class Borrow extends Component {
                                     marginBottom: "1rem"
                                 }}
                                 assets={[
-                                    "1.3.103",
                                     "1.3.113",
                                     "1.3.120",
                                     "1.3.121",
-                                    "1.3.958",
                                     "1.3.1325",
-                                    "1.3.1362",
                                     "1.3.105",
-                                    "1.3.106"
+                                    "1.3.106",
+                                    "1.3.103"
                                 ]}
                                 onChange={this.onAssetChange.bind(this)}
                             />
-                            <Tooltip title="showcases.borrow.borrow_tooltip">
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "showcases.borrow.borrow_tooltip"
+                                )}
+                                placement="bottom"
+                            >
                                 <Button
                                     type="primary"
                                     style={{
@@ -195,6 +198,7 @@ class Borrow extends Component {
                     display: "flex",
                     justifyContent: "center"
                 }}
+                onKeyDown={this.onKeyDown.bind(this)}
             >
                 <Card
                     style={{
@@ -297,28 +301,32 @@ class Borrow extends Component {
                         )}
                     </div>
                     <div className="steps-action">
-                        <Button
-                            type="primary"
-                            onClick={() => this.next()}
-                            tabIndex="0"
-                            ref="borrowdiv"
-                            onKeyDown={this.onKeyDown.bind(this)}
-                        >
-                            {current == 0 && (
-                                <Translate
-                                    content={"showcases.borrow.get_started"}
-                                />
-                            )}
-                            {current > 0 &&
-                                current < steps.length - 1 && (
+                        {current < steps.length && (
+                            <Button
+                                type="primary"
+                                onClick={() => this.next()}
+                                tabIndex="0"
+                                ref="borrowdiv"
+                                onKeyDown={this.onKeyDown.bind(this)}
+                            >
+                                {current == 0 && (
                                     <Translate
-                                        content={"showcases.borrow.next"}
+                                        content={"showcases.borrow.get_started"}
                                     />
                                 )}
-                            {current === steps.length - 1 && (
-                                <Translate content={"showcases.borrow.do_it"} />
-                            )}
-                        </Button>
+                                {current > 0 &&
+                                    current < steps.length - 1 && (
+                                        <Translate
+                                            content={"showcases.borrow.next"}
+                                        />
+                                    )}
+                                {current === steps.length - 1 && (
+                                    <Translate
+                                        content={"showcases.borrow.do_it"}
+                                    />
+                                )}
+                            </Button>
+                        )}
                         {current > 0 && (
                             <Button
                                 style={{marginLeft: 8}}
@@ -358,7 +366,9 @@ class Borrow extends Component {
     }
 
     focusDiv() {
-        ReactDOM.findDOMNode(this.refs.borrowdiv).focus();
+        if (!!this.refs.borrowdiv) {
+            ReactDOM.findDOMNode(this.refs.borrowdiv).focus();
+        }
     }
 
     onKeyDown(e) {
