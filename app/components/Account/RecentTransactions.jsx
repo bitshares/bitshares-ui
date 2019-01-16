@@ -1,11 +1,14 @@
 import React from "react";
 import Translate from "react-translate-component";
 import {saveAs} from "file-saver";
-import Operation from "../Blockchain/Operation";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
-import {ChainTypes as grapheneChainTypes, FetchChain} from "bitsharesjs";
+import {
+    ChainTypes as grapheneChainTypes,
+    FetchChain,
+    ChainStore
+} from "bitsharesjs";
 import ps from "perfect-scrollbar";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
@@ -13,10 +16,14 @@ import cnames from "classnames";
 import PropTypes from "prop-types";
 import PaginatedList from "../Utility/PaginatedList";
 const {operations} = grapheneChainTypes;
-const alignLeft = {textAlign: "left"};
 import report from "bitshares-report";
 import LoadingIndicator from "../LoadingIndicator";
 const ops = Object.keys(operations);
+import {Link} from "react-router-dom";
+import FormattedAsset from "../Utility/FormattedAsset";
+import BlockTime from "../Blockchain/BlockTime";
+import OperationAnt from "../Blockchain/OperationAnt";
+const operation = new OperationAnt();
 
 function compareOps(b, a) {
     if (a.block_num === b.block_num) {
@@ -54,8 +61,10 @@ class RecentTransactions extends React.Component {
             fetchingAccountHistory: false,
             headerHeight: 85,
             filter: "all",
-            accountHistoryError: false
+            accountHistoryError: false,
+            rows: []
         };
+        this.getDataSource = this.getDataSource.bind(this);
     }
 
     componentDidMount() {
@@ -252,6 +261,65 @@ class RecentTransactions extends React.Component {
         });
     }
 
+    getDataSource(o, current_account_id) {
+        let fee = o.op[1].fee;
+        let trxTypes = counterpart.translate("transaction.trxTypes");
+        const info = operation.getColumn(
+            o.op,
+            current_account_id,
+            o.block_num,
+            o.result
+        );
+        fee.amount = parseInt(fee.amount, 10);
+        const dynGlobalObject = ChainStore.getObject("2.1.0");
+        let last_irreversible_block_num = dynGlobalObject.get(
+            "last_irreversible_block_num"
+        );
+        let pending = null;
+        if (o.block_num > last_irreversible_block_num) {
+            pending = (
+                <span>
+                    (
+                    <Translate
+                        content="operation.pending"
+                        blocks={o.block_num - last_irreversible_block_num}
+                    />
+                    )
+                </span>
+            );
+        }
+        return {
+            key: o.id,
+            id: o.id,
+            type: (
+                <Link
+                    className="inline-block"
+                    data-place="bottom"
+                    data-tip={counterpart.translate("tooltip.show_block", {
+                        block: utils.format_number(o.block_num, 0)
+                    })}
+                    to={`/block/${o.block_num}/${o.trx_in_block}`}
+                >
+                    <span className={cnames("label", info.color || "info")}>
+                        {trxTypes[ops[o.op[0]]]}
+                    </span>
+                </Link>
+            ),
+            info: (
+                <div>
+                    <div>
+                        <span>{info.column}</span>
+                    </div>
+                    <div style={{fontSize: 14, paddingTop: 5}}>
+                        {pending ? <span> - {pending}</span> : null}
+                    </div>
+                </div>
+            ),
+            fee: <FormattedAsset amount={fee.amount} asset={fee.asset_id} />,
+            time: <BlockTime block_number={o.block_num} fullDate={true} />
+        };
+    }
+
     render() {
         let {
             accountsList,
@@ -303,31 +371,9 @@ class RecentTransactions extends React.Component {
 
         let display_history = history.length
             ? history.slice(0, limit).map(o => {
-                  return (
-                      <Operation
-                          includeOperationId={true}
-                          operationId={o.id}
-                          style={alignLeft}
-                          key={o.id}
-                          op={o.op}
-                          result={o.result}
-                          txIndex={o.trx_in_block}
-                          block={o.block_num}
-                          current={current_account_id}
-                          hideFee={hideFee}
-                          inverted={false}
-                          hideOpLabel={compactView}
-                          fullDate={true}
-                      />
-                  );
+                  return this.getDataSource(o, current_account_id);
               })
-            : [
-                  <tr key="no_recent">
-                      <td colSpan={compactView ? "2" : "3"}>
-                          <Translate content="operation.no_recent" />
-                      </td>
-                  </tr>
-              ];
+            : [];
         let action = (
             <tr className="total-value" key="total_value">
                 <td style={{textAlign: "center"}}>
@@ -434,33 +480,89 @@ class RecentTransactions extends React.Component {
                                     ? " dashboard-table table-hover"
                                     : "")
                             }
-                            header={
-                                <tr>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
+                            header={[
+                                {
+                                    title: (
                                         <Translate content="account.transactions.id" />
-                                    </th>
-                                    <th
-                                        className="column-hide-tiny"
-                                        style={alignLeft}
-                                    >
-                                        <Translate content="account.transactions.type" />
-                                    </th>
-                                    <th style={alignLeft}>
+                                    ),
+                                    dataIndex: "id",
+                                    align: "left",
+                                    render: item => {
+                                        return (
+                                            <span
+                                                style={{whiteSpace: "nowrap"}}
+                                            >
+                                                {item}
+                                            </span>
+                                        );
+                                    }
+                                },
+                                !compactView
+                                    ? {
+                                          title: (
+                                              <Translate content="account.transactions.type" />
+                                          ),
+                                          dataIndex: "type",
+                                          align: "left"
+                                      }
+                                    : {},
+                                {
+                                    title: (
                                         <Translate content="account.transactions.info" />
-                                    </th>
-                                    {!hideFee && (
-                                        <th style={alignLeft}>
-                                            <Translate content="account.transactions.fee" />
-                                        </th>
-                                    )}
-                                    <th>
-                                        <Translate content="account.transactions.time" />
-                                    </th>
-                                </tr>
-                            }
+                                    ),
+                                    dataIndex: "info",
+                                    align: "left",
+                                    render: item => {
+                                        return (
+                                            <span
+                                                style={{
+                                                    whiteSpace: "nowrap"
+                                                }}
+                                            >
+                                                {item}
+                                            </span>
+                                        );
+                                    }
+                                },
+                                !hideFee
+                                    ? {
+                                          title: (
+                                              <Translate content="account.transactions.fee" />
+                                          ),
+                                          dataIndex: "fee",
+                                          align: "left",
+                                          render: item => {
+                                              return (
+                                                  <span
+                                                      style={{
+                                                          whiteSpace: "nowrap"
+                                                      }}
+                                                  >
+                                                      {item}
+                                                  </span>
+                                              );
+                                          }
+                                      }
+                                    : {},
+                                {
+                                    title: (
+                                        <Translate
+                                            style={{whiteSpace: "nowrap"}}
+                                            content="account.transactions.time"
+                                        />
+                                    ),
+                                    dataIndex: "time",
+                                    render: item => {
+                                        return (
+                                            <span
+                                                style={{whiteSpace: "nowrap"}}
+                                            >
+                                                {item}
+                                            </span>
+                                        );
+                                    }
+                                }
+                            ]}
                             rows={display_history}
                             label="utility.total_x_operations"
                             extraRow={action}

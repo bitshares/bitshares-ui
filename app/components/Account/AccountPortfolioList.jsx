@@ -414,27 +414,47 @@ class AccountPortfolioList extends React.Component {
 
         return [
             {
-                title: <Translate component="span" content="account.asset" />,
+                title: (
+                    <Translate
+                        component="span"
+                        content="account.asset"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "asset",
                 align: "left",
                 sorter: this.sortFunctions.alphabetic,
-                sortOrder: portfolioSort === "asset" && portfolioSortDirection
+                sortOrder: portfolioSort === "asset" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 title: (
                     <Translate
                         content="account.qty"
-                        style={{marginRight: "5px"}}
+                        style={{
+                            marginRight: "5px",
+                            whiteSpace: "nowrap"
+                        }}
                     />
                 ),
                 dataIndex: "qty",
                 align: "right",
                 sorter: this.sortFunctions.qty,
-                sortOrder: portfolioSort === "qty" && portfolioSortDirection
+                sortOrder: portfolioSort === "qty" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 title: (
-                    <span style={{marginRight: "5px"}}>
+                    <span
+                        style={{
+                            marginRight: "5px",
+                            whiteSpace: "nowrap"
+                        }}
+                    >
                         <Translate content="exchange.price" /> (
                         <AssetName name={preferredUnit} noTip />)
                     </span>
@@ -442,23 +462,37 @@ class AccountPortfolioList extends React.Component {
                 dataIndex: "price",
                 align: "right",
                 sorter: this.sortFunctions.priceValue,
-                sortOrder: portfolioSort === "price" && portfolioSortDirection
+                sortOrder: portfolioSort === "price" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 title: (
                     <Translate
                         content="account.hour_24_short"
-                        style={{marginRight: "5px"}}
+                        style={{
+                            marginRight: "5px",
+                            whiteSpace: "nowrap"
+                        }}
                     />
                 ),
                 dataIndex: "hour24",
                 align: "right",
                 sorter: this.sortFunctions.changeValue,
-                sortOrder: portfolioSort === "hour24" && portfolioSortDirection
+                sortOrder: portfolioSort === "hour24" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 title: (
-                    <span style={{marginRight: "5px"}}>
+                    <span
+                        style={{
+                            marginRight: "5px",
+                            whiteSpace: "nowrap"
+                        }}
+                    >
                         <TranslateWithLinks
                             noLink
                             string="account.eq_value_header"
@@ -476,7 +510,10 @@ class AccountPortfolioList extends React.Component {
                 dataIndex: "value",
                 align: "right",
                 sorter: this.sortFunctions.totalValue,
-                sortOrder: portfolioSort === "value" && portfolioSortDirection
+                sortOrder: portfolioSort === "value" && portfolioSortDirection,
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             showAssetPercent
                 ? {
@@ -484,52 +521,122 @@ class AccountPortfolioList extends React.Component {
                           <Translate
                               component="span"
                               content="account.percent"
+                              style={{whiteSpace: "nowrap"}}
                           />
                       ),
                       dataIndex: "percent",
-                      align: "right"
+                      align: "right",
+                      render: item => {
+                          return (
+                              <span style={{whiteSpace: "nowrap"}}>{item}</span>
+                          );
+                      }
                   }
                 : {},
             {
-                title: <Translate content="header.payments" />,
+                title: (
+                    <Translate
+                        content="header.payments"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "payments",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="exchange.buy" />,
+                title: (
+                    <Translate
+                        content="exchange.buy"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "buy",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="modal.deposit.submit" />,
+                title: (
+                    <Translate
+                        content="modal.deposit.submit"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "deposit",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="modal.withdraw.submit" />,
+                title: (
+                    <Translate
+                        content="modal.withdraw.submit"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "withdraw",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="account.trade" />,
+                title: (
+                    <Translate
+                        content="account.trade"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "trade",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="exchange.borrow_short" />,
+                title: (
+                    <Translate
+                        content="exchange.borrow_short"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "borrow",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
-                title: <Translate content="account.settle" />,
+                title: (
+                    <Translate
+                        content="account.settle"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "settle",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 className: "column-hide-small",
-                title: <Translate content="modal.reserve.submit" />,
+                title: (
+                    <Translate
+                        content="modal.reserve.submit"
+                        style={{whiteSpace: "nowrap"}}
+                    />
+                ),
                 dataIndex: "burn",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             },
             {
                 className: "column-hide-small",
@@ -540,10 +647,14 @@ class AccountPortfolioList extends React.Component {
                                 ? "exchange.hide"
                                 : "account.perm.show"
                         }
+                        style={{whiteSpace: "nowrap"}}
                     />
                 ),
                 dataIndex: "hide",
-                align: "center"
+                align: "center",
+                render: item => {
+                    return <span style={{whiteSpace: "nowrap"}}>{item}</span>;
+                }
             }
         ];
     }
@@ -556,7 +667,6 @@ class AccountPortfolioList extends React.Component {
             hiddenAssets,
             orders
         } = this.props;
-        let showAssetPercent = settings.get("showAssetPercent", false);
 
         const renderBorrow = (asset, account) => {
             let isBitAsset = asset && asset.has("bitasset_data_id");
