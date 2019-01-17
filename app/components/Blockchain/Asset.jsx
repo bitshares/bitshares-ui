@@ -167,14 +167,15 @@ class Asset extends React.Component {
 
         /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
         if (
-            isPredictionMarket &&
+            // isPredictionMarket &&
             settlePrice.getIn(["base", "asset_id"]) ===
-                settlePrice.getIn(["quote", "asset_id"])
+            settlePrice.getIn(["quote", "asset_id"])
         ) {
-            if (!assets[this.props.backingAsset.get("id")])
+            if (!assets[this.props.backingAsset.get("id")]) {
                 assets[this.props.backingAsset.get("id")] = {
                     precision: this.props.asset.get("precision")
                 };
+            }
             settlePrice = settlePrice.setIn(["base", "amount"], 1);
             settlePrice = settlePrice.setIn(
                 ["base", "asset_id"],
