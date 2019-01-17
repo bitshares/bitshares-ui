@@ -1708,7 +1708,7 @@
             "title": "Barter"
         },
         "borrow": {
-            "title": "Collaterized Debt Position",
+            "title": "Collateralized Debt Position",
             "title_long": "Create a Collaterized Debt Position",
             "get_started": "Get started",
             "next": "Next",
