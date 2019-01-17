@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Translate from "react-translate-component";
 import {ChainStore, FetchChain} from "bitsharesjs/es";
 import counterpart from "counterpart";
-import classNames from "classnames";
 import AccountActions from "actions/AccountActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import WalletActions from "actions/WalletActions";
@@ -12,11 +11,17 @@ import WalletDb from "stores/WalletDb";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
 import utils from "common/utils";
 import AccountSelect from "../Forms/AccountSelect";
-import LoadingIndicator from "../LoadingIndicator";
-import AccountNameInput from "./../Forms/AccountNameInput";
-import PasswordInput from "./../Forms/PasswordInput";
+import AccountNameInput from "./../Forms/AccountNameInputStyleGuide";
+import PasswordInput from "./../Forms/PasswordInputStyleGuide";
 import Icon from "../Icon/Icon";
-import {Notification} from "bitshares-ui-style-guide";
+import {
+    Notification,
+    Form,
+    Input,
+    Button,
+    Select,
+    Alert
+} from "bitshares-ui-style-guide";
 
 class WalletRegistrationForm extends React.Component {
     static propTypes = {
@@ -30,15 +35,22 @@ class WalletRegistrationForm extends React.Component {
             validAccountName: false,
             accountName: "",
             validPassword: false,
-            registrarAccount: null,
+            registrarAccount: undefined,
             loading: false,
-            showIdenticon: false
+            showIdenticon: false,
+            password: ""
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
         this.onRegistrarAccountChange = this.onRegistrarAccountChange.bind(
             this
         );
         this.unmounted = false;
+
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onPasswordValidationChange = this.onPasswordValidationChange.bind(
+            this
+        );
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -63,8 +75,12 @@ class WalletRegistrationForm extends React.Component {
         this.setState(state);
     }
 
-    onPasswordChange(e) {
-        this.setState({validPassword: e.valid});
+    onPasswordChange(value) {
+        this.setState({password: value});
+    }
+
+    onPasswordValidationChange(validation) {
+        this.setState({validPassword: validation.valid});
     }
 
     onFinishConfirm(confirmStoreState) {
@@ -99,7 +115,7 @@ class WalletRegistrationForm extends React.Component {
         if (WalletDb.getWallet()) {
             this.createAccount(accountName);
         } else {
-            const password = this.refs.password.value();
+            const password = this.state.password;
             this.createWallet(password).then(() =>
                 this.createAccount(accountName)
             );
@@ -135,6 +151,7 @@ class WalletRegistrationForm extends React.Component {
                     }
                 })
                 .catch(error => {
+                    this.setState({loading: false});
                     console.log("ERROR AccountActions.createAccount", error);
                     let errorMsg =
                         error.base && error.base.length && error.base.length > 0
@@ -150,12 +167,14 @@ class WalletRegistrationForm extends React.Component {
                             }
                         )
                     });
-                    this.setState({loading: false});
                 });
         });
     }
 
     createWallet(password) {
+        this.setState({
+            loading: true
+        });
         return WalletActions.setWallet("default", password)
             .then(() => {
                 console.log(
@@ -163,6 +182,9 @@ class WalletRegistrationForm extends React.Component {
                 );
             })
             .catch(err => {
+                this.setState({
+                    loading: false
+                });
                 console.log("CreateWallet failed:", err);
                 Notification.error({
                     message: counterpart.translate(
@@ -191,20 +213,22 @@ class WalletRegistrationForm extends React.Component {
         const {registrarAccount} = this.state;
 
         return (
-            <div className="full-width-content form-group no-overflow">
-                <label className="left-label">
-                    <Translate content="account.pay_from" />
-                </label>
-                <AccountSelect
-                    account_names={myAccounts}
+            <Form.Item label={counterpart.translate("account.pay_from")}>
+                <Select
+                    placeholder={counterpart.translate(
+                        "account.select_placeholder"
+                    )}
+                    style={{width: "100%"}}
+                    value={this.state.registrarAccount}
                     onChange={this.onRegistrarAccountChange}
-                />
-                {registrarAccount && !isLTM ? (
-                    <div style={{textAlign: "left"}} className="facolor-error">
-                        <Translate content="wallet.must_be_ltm" />
-                    </div>
-                ) : null}
-            </div>
+                >
+                    {myAccounts.map(accountName => (
+                        <Select.Option key={accountName} value={accountName}>
+                            {accountName}
+                        </Select.Option>
+                    ))}
+                </Select>
+            </Form.Item>
         );
     }
 
@@ -212,15 +236,14 @@ class WalletRegistrationForm extends React.Component {
         return (
             <PasswordInput
                 ref="password"
-                confirmation
-                onChange={e => this.onPasswordChange(e)}
-                noLabel
-                checkStrength
-                placeholder={
+                onChange={this.onPasswordChange}
+                onValidationChange={this.onPasswordValidationChange}
+                label={
                     <span>
                         <span className="vertical-middle">
                             {counterpart.translate("settings.password")}
                         </span>
+                        &nbsp;
                         <span
                             data-tip={counterpart.translate(
                                 "tooltip.registration.password"
@@ -233,34 +256,6 @@ class WalletRegistrationForm extends React.Component {
                         </span>
                     </span>
                 }
-            />
-        );
-    }
-
-    renderAccountNameInput(firstAccount) {
-        return (
-            <AccountNameInput
-                cheapNameOnly={!!firstAccount}
-                onChange={e => this.onAccountNameChange(e)}
-                accountShouldNotExist
-                placeholder={
-                    <span>
-                        <span className="vertical-middle">
-                            {counterpart.translate("account.name")}
-                        </span>
-                        <span
-                            data-tip={counterpart.translate(
-                                "tooltip.registration.accountName"
-                            )}
-                        >
-                            <Icon
-                                name="question-in-circle"
-                                className="icon-14px question-icon vertical-middle"
-                            />
-                        </span>
-                    </span>
-                }
-                noLabel
             />
         );
     }
@@ -282,33 +277,64 @@ class WalletRegistrationForm extends React.Component {
             }
         }
 
-        const buttonClass = classNames("button-primary", {
-            disabled: !valid || (registrarAccount && !isLTM)
-        });
+        const isButtonDisabled = () => {
+            return !valid || (registrarAccount && !isLTM);
+        };
 
         return (
-            <form
-                onSubmit={e => this.onSubmit(e)}
-                noValidate
-                className="text-left"
-            >
-                {this.renderAccountNameInput(firstAccount)}
+            <Form layout={"vertical"} onSubmit={this.onSubmit}>
+                <AccountNameInput
+                    cheapNameOnly={!!firstAccount}
+                    onChange={e => this.onAccountNameChange(e)}
+                    accountShouldNotExist
+                    placeholder={counterpart.translate("account.name")}
+                    label={
+                        <span>
+                            <span className="vertical-middle">
+                                {counterpart.translate("account.name")}
+                            </span>
+                            &nbsp;
+                            <span
+                                data-tip={counterpart.translate(
+                                    "tooltip.registration.accountName"
+                                )}
+                            >
+                                <Icon
+                                    name="question-in-circle"
+                                    className="icon-14px question-icon vertical-middle"
+                                />
+                            </span>
+                        </span>
+                    }
+                    noLabel
+                />
 
-                {/* Only ask for password if a wallet already exists */}
                 {hasWallet ? null : this.renderPasswordInput()}
 
-                {/* If this is not the first account, show dropdown for fee payment account */}
                 {firstAccount ? null : this.renderDropdown(myAccounts, isLTM)}
 
-                {/* Submit button */}
-                {this.state.loading ? (
-                    <LoadingIndicator type="three-bounce" />
-                ) : (
-                    <button className={buttonClass}>
-                        <Translate content="registration.continue" />
-                    </button>
-                )}
-            </form>
+                {registrar && !isLTM ? (
+                    <Form.Item>
+                        <Alert
+                            type="error"
+                            description={
+                                <Translate content="wallet.must_be_ltm" />
+                            }
+                        />
+                    </Form.Item>
+                ) : null}
+
+                <Form.Item>
+                    <Button
+                        type="primary"
+                        disabled={this.state.loading || isButtonDisabled()}
+                        htmlType="submit"
+                        loading={this.state.loading}
+                    >
+                        {counterpart.translate("registration.continue")}
+                    </Button>
+                </Form.Item>
+            </Form>
         );
     }
 

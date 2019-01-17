@@ -62,7 +62,11 @@ class ListGenerator extends React.Component {
                 nextProps.callOrders.forEach(o => {
                     // sometimes we get undefined resonses on very first api requests
                     if (!!o) {
-                        let assetId = o.getIn(["call_price", "quote", "asset_id"]);
+                        let assetId = o.getIn([
+                            "call_price",
+                            "quote",
+                            "asset_id"
+                        ]);
 
                         if (assetsMap[assetId] == null) {
                             let newAssetInfo = ChainStore.getObject(assetId);
@@ -103,22 +107,23 @@ class ListGenerator extends React.Component {
 
                 // if both have an order, sort by debt
                 if (a.has_margin_order && b.has_margin_order) {
-                  return b.order.get("debt") - a.order.get("debt");
+                    return b.order.get("debt") - a.order.get("debt");
+                } else if (a.has_margin_order || b.has_margin_order) {
+                    // having an order goes above having no order
 
-                } else if (a.has_margin_order || b.has_margin_order){
-                  // having an order goes above having no order
-
-                  return a.has_margin_order?-1:1;
+                    return a.has_margin_order ? -1 : 1;
                 } else {
-                  // if both have no order, sort by symbol
+                    // if both have no order, sort by symbol
 
-                  let aName = utils.replaceName(a.asset);
-                  let bName = utils.replaceName(b.asset);
+                    let aName = utils.replaceName(a.asset);
+                    let bName = utils.replaceName(b.asset);
 
-                  let aSymbol = (aName.prefix != null?aName.prefix:"")+aName.name;
-                  let bSymbol = (bName.prefix != null?bName.prefix:"")+bName.name;
+                    let aSymbol =
+                        (aName.prefix != null ? aName.prefix : "") + aName.name;
+                    let bSymbol =
+                        (bName.prefix != null ? bName.prefix : "") + bName.name;
 
-                  return aSymbol.localeCompare(bSymbol);
+                    return aSymbol.localeCompare(bSymbol);
                 }
             })
             .map(a => {

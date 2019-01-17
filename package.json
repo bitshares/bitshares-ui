@@ -1,10 +1,11 @@
 {
     "name": "BitShares2-light",
-    "version": "2.0.181121-rc1",
+    "version": "2.0.190123-rc1",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
     "contributors": [
+        "BitShares UI Worker",
         "James Calfee",
         "Dan Larimer",
         "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
@@ -32,6 +33,7 @@
         "prestart-electron": "cross-env NODE_ENV=production webpack --env.hash --env.noUgly --env.electron --env.prod && npm run prepare-electron",
         "start-electron": "electron build/electron/index.js",
         "fix-locale-files": "node ./app/assets/locales-fixup.js",
+        "remove-english-locale-duplicates": "node ./app/assets/locales-remove-english-duplicates.js",
         "postfix-locale-files": "./node_modules/prettier/bin-prettier.js app/assets/locales/locale-*.json --write",
         "build": "cross-env NODE_ENV=production webpack --env.prod",
         "build-nougly": "cross-env NODE_ENV=production webpack --env.prod --env.noUgly",
@@ -118,12 +120,6 @@
                 }
             ]
         },
-        "nsis": {
-            "allowElevation": true,
-            "allowToChangeInstallationDirectory": true,
-            "oneClick": false,
-            "perMachine": false
-        },
         "linux": {
             "category": "Finance",
             "target": [
@@ -144,7 +140,7 @@
         "alt-react": "git+https://github.com/bitshares/alt-react.git#d91addef51f58e41e9857ebb0dd9177cfbd3b583",
         "bignumber.js": "^4.0.0",
         "bitshares-report": "^0.2.0",
-        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#7431607d3642a65318d69fe982a0b7fb33e2ad18",
+        "bitshares-ui-style-guide": "git+https://github.com/bitshares/bitshares-ui-style-guide.git#3a5716f46473da9dd94399a1e782a7007d541fa8",
         "bitsharesjs": "^1.8.3",
         "browser-locale": "^1.0.3",
         "classnames": "^2.2.1",

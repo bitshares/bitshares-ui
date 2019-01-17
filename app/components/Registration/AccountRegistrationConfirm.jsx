@@ -10,7 +10,14 @@ import Translate from "react-translate-component";
 import {FetchChain} from "bitsharesjs/es";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "components/Icon/Icon";
-import {Notification} from "bitshares-ui-style-guide";
+import {
+    Notification,
+    Button,
+    Input,
+    Checkbox,
+    Form,
+    Alert
+} from "bitshares-ui-style-guide";
 import CopyButton from "../Utility/CopyButton";
 
 class AccountRegistrationConfirm extends React.Component {
@@ -104,89 +111,64 @@ class AccountRegistrationConfirm extends React.Component {
     }
 
     toggleConfirmed(e) {
-        e.preventDefault();
-        const {confirmed} = this.state;
         this.setState({
-            confirmed: !confirmed
+            confirmed: e.target.checked
         });
-        this.props.toggleConfirmed(!confirmed);
-    }
-
-    renderWarning() {
-        return (
-            <div className="attention-note">
-                <Icon name="attention" size="1x" />
-                <Translate
-                    content="registration.attention"
-                    className="attention-text"
-                />
-                <Translate component="p" content="registration.accountNote" />
-            </div>
-        );
     }
 
     render() {
         return (
-            <div>
-                <section>
-                    <div className="form-group">
-                        <label className="left-label" htmlFor="password">
-                            <Translate
-                                component="span"
-                                content="registration.copyPassword"
-                            />
-                        </label>
-                        <span className="inline-label">
-                            <textarea
-                                id="password"
-                                className="create-account-input"
-                                rows="2"
-                                readOnly
-                                disabled
-                                defaultValue={this.props.password}
-                            />
-                            <CopyButton
-                                text={this.state.generatedPassword}
-                                tip="tooltip.copy_password"
-                                dataPlace="top"
-                            />
-                        </span>
-                    </div>
+            <Form layout={"vertical"}>
+                <Form.Item
+                    label={counterpart.translate("registration.copyPassword")}
+                >
+                    <Input.TextArea
+                        disabled={true}
+                        rows={2}
+                        id="password"
+                        value={this.props.password}
+                    />
+                    <CopyButton
+                        text={this.state.generatedPassword}
+                        tip="tooltip.copy_password"
+                        dataPlace="top"
+                        className="button registration-layout--copy-password-btn"
+                    />
+                </Form.Item>
 
-                    <div>{this.renderWarning()}</div>
+                <Form.Item>
+                    <Alert
+                        showIcon
+                        type={"warning"}
+                        message={""}
+                        description={counterpart.translate(
+                            "registration.accountNote"
+                        )}
+                    />
+                </Form.Item>
 
-                    <div className="form-group">
-                        <div className="input-block">
-                            <div
-                                className="checkbox-block"
-                                onClick={this.toggleConfirmed}
-                            >
-                                <span>
-                                    <Icon
-                                        className={`${
-                                            this.state.confirmed
-                                                ? "checkbox-active"
-                                                : ""
-                                        } checkbox`}
-                                        name="checkmark"
-                                    />
-                                </span>
-                                <Translate
-                                    content="registration.accountConfirmation"
-                                    className="checkbox-text"
-                                />
-                            </div>
-                        </div>
-                        <button
-                            className="button-primary"
-                            disabled={!this.state.confirmed}
-                            onClick={this.onCreateAccount}
-                        >
-                            <Translate content="account.create_account" />
-                        </button>
-                    </div>
-                </section>
-            </div>
+                <Form.Item>
+                    <Checkbox
+                        checked={this.state.confirmed}
+                        onChange={this.toggleConfirmed}
+                    >
+                        <Translate
+                            content="registration.accountConfirmation"
+                            className="checkbox-text"
+                        />
+                    </Checkbox>
+                </Form.Item>
+
+                <Form.Item>
+                    <Button
+                        type="primary"
+                        disabled={!this.state.confirmed}
+                        onClick={this.onCreateAccount}
+                    >
+                        <Translate content="account.create_account" />
+                    </Button>
+                </Form.Item>
+            </Form>
         );
     }
 }

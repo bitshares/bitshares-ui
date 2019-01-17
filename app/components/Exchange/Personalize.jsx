@@ -179,11 +179,13 @@ class Personalize extends React.Component {
                             </h6>
                         </div>
                         <div className="small-6">
-                            <InputNumber 
+                            <InputNumber
                                 value={
-                                    typeof chartHeight === "number" && chartHeight > 1000
-                                        ? 1000 : chartHeight
-                                } 
+                                    typeof chartHeight === "number" &&
+                                    chartHeight > 1000
+                                        ? 1000
+                                        : chartHeight
+                                }
                                 onChange={this.setChartHeight.bind(this)}
                             />
                         </div>
@@ -318,15 +320,15 @@ class Personalize extends React.Component {
                                             "settings.placeholder_select"
                                         )}
                                         style={{width: "100%"}}
-                                        value={this.props.verticalOrderBook}
+                                        value={this.props.verticalOrderBook.toString()}
                                         onSelect={this.props.onMoveOrderBook.bind(
                                             this
                                         )}
                                     >
-                                        <Select.Option value={true}>
+                                        <Select.Option value={"true"}>
                                             <Translate content="exchange.settings.options.vertical" />
                                         </Select.Option>
-                                        <Select.Option value={false}>
+                                        <Select.Option value={"false"}>
                                             <Translate content="exchange.settings.options.horizontal" />
                                         </Select.Option>
                                     </Select>
@@ -361,15 +363,15 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.flipBuySell}
+                                    value={this.props.flipBuySell.toString()}
                                     onSelect={this.props.onFlipBuySell.bind(
                                         this
                                     )}
                                 >
-                                    <Select.Option value={false}>
+                                    <Select.Option value={"false"}>
                                         <Translate content="exchange.settings.options.position_order_form_opt1" />
                                     </Select.Option>
-                                    <Select.Option value={true}>
+                                    <Select.Option value={"true"}>
                                         <Translate content="exchange.settings.options.position_order_form_opt2" />
                                     </Select.Option>
                                 </Select>
@@ -404,15 +406,15 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.flipOrderBook}
+                                    value={this.props.flipOrderBook.toString()}
                                     onSelect={this.props.onFlipOrderBook.bind(
                                         this
                                     )}
                                 >
-                                    <Select.Option value={false}>
+                                    <Select.Option value={"false"}>
                                         <Translate content="exchange.settings.options.position_order_orders_opt1" />
                                     </Select.Option>
-                                    <Select.Option value={true}>
+                                    <Select.Option value={"true"}>
                                         <Translate content="exchange.settings.options.position_order_orders_opt2" />
                                     </Select.Option>
                                 </Select>
@@ -447,15 +449,15 @@ class Personalize extends React.Component {
                                         "settings.placeholder_select"
                                     )}
                                     style={{width: "100%"}}
-                                    value={this.props.buySellTop}
+                                    value={this.props.buySellTop.toString()}
                                     onSelect={this.props.onToggleBuySellPosition.bind(
                                         this
                                     )}
                                 >
-                                    <Select.Option value={false}>
+                                    <Select.Option value={"false"}>
                                         <Translate content="exchange.settings.options.position_order_asset_opt1" />
                                     </Select.Option>
-                                    <Select.Option value={true}>
+                                    <Select.Option value={"true"}>
                                         <Translate content="exchange.settings.options.position_order_asset_opt2" />
                                     </Select.Option>
                                 </Select>
@@ -653,15 +655,15 @@ class Personalize extends React.Component {
                                             "settings.placeholder_select"
                                         )}
                                         style={{width: "100%"}}
-                                        value={this.props.mirrorPanels}
+                                        value={this.props.mirrorPanels.toString()}
                                         onSelect={this.props.onMirrorPanels.bind(
                                             this
                                         )}
                                     >
-                                        <Select.Option value={false}>
+                                        <Select.Option value={"false"}>
                                             <Translate content="settings.left" />
                                         </Select.Option>
-                                        <Select.Option value={true}>
+                                        <Select.Option value={"true"}>
                                             <Translate content="settings.right" />
                                         </Select.Option>
                                     </Select>

@@ -137,6 +137,7 @@ class BidCollateralOperation extends React.Component {
                                 quote_amount={this.state.debtAmount / 1}
                                 quote_asset={asset.get("id")}
                                 noPopOver
+                                ignorePriceFeed
                             />
                         </div>
                     )}
