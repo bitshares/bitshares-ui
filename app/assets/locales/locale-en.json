@@ -1709,7 +1709,7 @@
         },
         "borrow": {
             "title": "Collateralized Debt Position",
-            "title_long": "Create a Collaterized Debt Position",
+            "title_long": "Create a Collateralized Debt Position",
             "get_started": "Get started",
             "next": "Next",
             "previous": "Previous",
