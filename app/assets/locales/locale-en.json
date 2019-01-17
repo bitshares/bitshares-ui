@@ -1717,7 +1717,7 @@
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "now_ready": "You are now ready to create your own Collateralized Debt Position",
             "choose": "Choose the SmartCoin you want to create a position for",
-            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions",
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "steps_introduction": {
                 "title_within": "This is the place to generate SmartCoins",
                 "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins."
