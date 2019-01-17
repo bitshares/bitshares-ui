@@ -1022,15 +1022,15 @@ export default class Barter extends Component {
                 )}
             </Card>
         );
-        let addToExecutionFee =
-            this.state.showEscrow &&
-            (this.state.escrow_payment_changed
-                ? new Asset({real: this.state.escrow_payment}).getAmount()
-                : fee(true)) > 0
-                ? this.state.from_barter[0].from_feeAmount.getAmount({
-                      real: true
-                  })
-                : 0;
+        let addToExecutionFee = 0;
+        // this.state.showEscrow &&
+        // (this.state.escrow_payment_changed
+        //     ? new Asset({real: this.state.escrow_payment}).getAmount()
+        //     : fee(true)) > 0
+        //     ? this.state.from_barter[0].from_feeAmount.getAmount({
+        //           real: true
+        //       })
+        //     : 0;
 
         let totalFeeFrom = (
             <Card style={{borderRadius: "10px"}}>
@@ -1145,7 +1145,7 @@ export default class Barter extends Component {
         if (this.state.showEscrow) {
             feeForEscrow = (
                 <Card style={{borderRadius: "10px"}}>
-                    <Translate content={"showcases.barter.escrow_account"} />#
+                    <Translate content={"showcases.barter.escrow_account"} />
                     <Tooltip
                         title={counterpart.translate(
                             "showcases.barter.fee_when_proposal_executes_tooltip"
