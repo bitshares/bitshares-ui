@@ -1715,7 +1715,7 @@
             "previous": "Previous",
             "do_it": "Let's do it",
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "now_ready": "You are now ready to create your own Collateralized Debt Position",
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
             "choose": "Choose the SmartCoin you want to create a position for",
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "steps_introduction": {
@@ -1730,14 +1730,14 @@
             "steps_benefits": {
                 "title": "Benefits",
                 "title_within": "What are the benefits?",
-                "text": "Creating a Collaterized Debt Position allows you to provide liquidity for your desired SmartCoin, without giving up ownership of your collateral (provided that you lock up enough collateral to guarantee the value of the SmartCoin). Selling the newly generated SmartCoins on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). Holders of the SmartCoin on the other hand benefit from the less significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
-                "text_legend": "Force settlement: Holders of a SmartCoin can request a force settlement. The SmartCoin is used to forcefully pay back the debt of the least collaterized positions while the former SmartCoin holder receives collateral as if he sold it for the force settlement price. Any leftover collateral is returned to the position holder. This mechanism has an enforced delay after being triggered to avoid abuse.\nForce Settlement Price: The price at which a force settlement will happens. It is calculated from the feed price by adding a force settlement offset to disincentivize force settlements."
+                "text": "Creating a Collateralized Debt Position allows you to provide liquidity for your desired Market Pegged Asset (MPA) without giving up ownership of your collateral provided that you lock up enough collateral to guarantee the value of the SmartCoin (MPA) (i.e. To borrow BitUSD you have to lock up BTS as collateral) . Selling the newly generated SmartCoin (MPA) on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). The maximum Short Squeeze Ratio (MSSR) is designed to protect the market by discouraging selling short and encourages you to providing sufficient collateral. Holders of the SmartCoin (MPA) on the other hand benefit from the less significantly, less volatile SmartCoin (MPA) and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets (i.e. The MSSR provides an incentive for the holder to sell BitCNY because the margin call pays more than the settlement price). BTS is the only acceptable collateral asset.",
+                "text_legend": "Forced settlement: Holders of a SmartCoin (MPA) can request a forced settlement. The SmartCoin (MPA) is used to forcefully pay back the debt of the least collateralized positions while the former SmartCoin (MPA) holder receives collateral as if he sold it for the forced settlement price. Any leftover collateral is returned to the position holder. This mechanism enforces a mandated delay after being triggered to avoid abuse (24 hours).\\nForced Settlement Price(SP): The price at which a forced settlement price (SP) will occur. It is calculated from the feed price by adding a forced settlement offset to disincentivize forced settlements. All settlements are converted to underlying backing asset (e.g. BTS in the case of bitUSD)."
             },
             "steps_setup": {
                 "title": "Setup",
                 "title_within": "How does it work?",
                 "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be, only lower bound is the maintenance (minimum) collateral ratio (MCR). You spend the SmartCoin as you which, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
-                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin (MPA) value is covered by collateral (BTS).\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin (MPA) has enough collateral (BTS) backing it and to anticipate volatility, the MCR (175%) is enforced when creating the position."
             },
             "steps_risks": {
                 "title": "Risks",
