@@ -1724,7 +1724,7 @@
             },
             "steps_concept": {
                 "title": "Concept",
-                "title_within": "What is a Collaterized Debt Position?",
+                "title_within": "What is a Collateralized Debt Position?",
                 "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain."
             },
             "steps_benefits": {
