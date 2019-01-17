@@ -1736,7 +1736,7 @@
             "steps_setup": {
                 "title": "Setup",
                 "title_within": "How does it work?",
-                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be, only lower bound is the maintenance (minimum) collateral ratio (MCR). You spend the SmartCoin as you which, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be. The Maintenance (Minimum) Collateral Ratio (MCR) is reflected on the lowermost end of the scale. You spend the SmartCoin (MPA) as you wish, and when you no longer need the liquidity you buy it back and close the position by paying your debt provided the MPA has not reached Global Settlement (GS) or your margin has not been called.",
                 "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
             },
             "steps_risks": {
