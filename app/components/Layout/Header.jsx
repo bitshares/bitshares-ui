@@ -760,6 +760,28 @@ class Header extends React.Component {
                 </a>
             );
         }
+        if (active.indexOf("/barter") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/barter") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="barter"
+                        title="icons.barter"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.barter.title"
+                    />
+                </a>
+            );
+        }
 
         const submenus = {
             [SUBMENUS.SETTINGS]: (

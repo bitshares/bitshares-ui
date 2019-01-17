@@ -61,12 +61,12 @@ class ShowcaseGrid extends Component {
                     : "Please login to use this functionality"
             },
             {
-                title: "showcases.barter_transaction.title",
-                target: () => {},
-                description: "showcases.barter_transaction.description",
-                icon: "barter",
-                disabled: true,
-                comingSoon: true
+                title: "showcases.barter.title",
+                target: event => {
+                    thiz.props.history.push("/barter");
+                },
+                description: "showcases.barter.description",
+                icon: "barter"
             },
             {
                 title: "showcases.borrow.title",

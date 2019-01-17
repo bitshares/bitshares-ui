@@ -21,6 +21,7 @@ import titleUtils from "common/titleUtils";
 import {BodyClassName, Notification} from "bitshares-ui-style-guide";
 import {DEFAULT_NOTIFICATION_DURATION} from "services/Notification";
 import Loadable from "react-loadable";
+import Barter from "./components/Showcases/Barter";
 
 import {Route, Switch, Redirect} from "react-router-dom";
 
@@ -444,6 +445,7 @@ class App extends React.Component {
                                     path="/block/:height/:txIndex"
                                     component={Block}
                                 />
+                                <Route path="/barter" component={Barter} />
 
                                 <Route
                                     path="/spotlight"
