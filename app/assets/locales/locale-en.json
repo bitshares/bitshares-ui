@@ -1741,8 +1741,49 @@
             "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
         },
         "borrow": {
+            "title": "Collateralized Debt Position",
+            "title_long": "Create a Collateralized Debt Position",
+            "get_started": "Get started",
+            "next": "Next",
+            "previous": "Previous",
+            "do_it": "Let's do it",
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "title": "Collaterized Debt Position"
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
+            "choose": "Choose the SmartCoin you want to create a position for",
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
+            "steps_introduction": {
+                "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)",
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins."
+            },
+            "steps_concept": {
+                "title": "Concept",
+                "title_within": "What is a Collateralized Debt Position?",
+                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD"
+            },
+            "steps_benefits": {
+                "title": "Benefits",
+                "title_within": "What are the benefits?",
+                "text": "Creating a Collateralized Debt Position allows you to provide liquidity for your desired SmartCoin (MPA), without giving up ownership of your collateral provided that you lock up enough collateral to guarantee the value of the SmartCoin. On the one hand, selling the newly generated SmartCoin on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). On the other hand, holders of the SmartCoin benefit from the significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Forced settlement: Holders of a SmartCoin can request a forced settlement. The SmartCoin is used to forcefully pay back the debt of the least collateralized positions while the former SmartCoin holder receives collateral as if he sold it for the forced settlement price. Any leftover collateral is returned to the position holder. This mechanism enforces a mandated delay after being triggered to avoid abuse (24 hours). \nForced Settlement Price: The price at which a forced settlement price will occur. It is calculated from the feed price by adding a forced settlement offset to disincentivize forced settlements. All settlements are converted to underlying backing asset (e.g. BTS in the case of bitUSD)."
+            },
+            "steps_setup": {
+                "title": "Setup",
+                "title_within": "How does it work?",
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be. The Maintenance (Minimum) Collateral Ratio (MCR) reflects the lowermost possible value on the scale. You spend the SmartCoin (MPA) as you wish, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position."
+            },
+            "steps_risks": {
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?",
+                "text": "As long as you monitor your position and make sure that the Collateral Ratio (CR) stays above the Maintenance Collateral Ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in a forced liquidation of your position (Margin Call). This means that your collateral is automatically sold on the respective market to reduce your debt, with a 10% penalty to ensure the order is filled (penalty is given by the Maximum Short Squeeze Ratio (MSSR)). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the Target Collateral Ratio (TCR). If your position can not be forced to liquidate due to extreme market conditions and the CR drops below the MSSR, the SmartCoin (MPA) automatically enters a state of Global Settlement (GS) and you lose your entire position instantly.",
+                "text_legend": "Target Collateral Ratio (TCR): If your position is liquidated, the system automatically puts an order on the market buying back the full debt. If Target Collateral Ratio (TCR) is set, the order will only sell as much debt as needed such that the Collateral Ratio (CR) of your position is the Target Collateral Ratio (TCR). \n Maximum Short Squeeze Ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collateralized Debt Position CDP). Instead, SmartCoin holders can settle it instantly for a fixed Global Settlement Price."
+            },
+            "steps_costs": {
+                "title": "Settlement",
+                "title_within": "",
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text "
+            }
         },
         "direct_debit": {
             "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
