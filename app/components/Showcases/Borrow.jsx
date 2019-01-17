@@ -28,7 +28,8 @@ class Borrow extends Component {
                 icon: "borrow"
             },
             {
-                key: "concept"
+                key: "concept",
+                has_legend: true
             },
             {
                 key: "setup",
