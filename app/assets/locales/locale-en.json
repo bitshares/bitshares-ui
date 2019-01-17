@@ -1715,7 +1715,7 @@
             "previous": "Previous",
             "do_it": "Let's do it",
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "now_ready": "You are now ready to create your own Collaterized Debt Position",
+            "now_ready": "You are now ready to create your own Collateralized Debt Position",
             "choose": "Choose the SmartCoin you want to create a position for",
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions",
             "steps_introduction": {
