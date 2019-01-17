@@ -66,7 +66,10 @@ class ShowcaseGrid extends Component {
                     thiz.props.history.push("/barter");
                 },
                 description: "showcases.barter.description",
-                icon: "barter"
+                icon: "barter",
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.borrow.title",
