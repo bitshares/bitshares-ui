@@ -12,7 +12,11 @@ export class DecimalChecker extends React.Component {
 
     getNumericEventValue(e) {
         var input = null;
-        if (parseFloat(e.target.value) == e.target.value) {
+        if(e.target.value=='' || e.target.value==null){
+            input='';
+            return input;
+        }
+        else if (parseFloat(e.target.value) == e.target.value) {
             input = e.target.value.trim();
         } else {
             input =
