@@ -50,7 +50,9 @@ class Header extends React.Component {
             dropdownActive: false,
             dropdownSubmenuActive: false,
             isDepositModalVisible: false,
-            isWithdrawModalVisible: false
+            hasDepositModalBeenShown: false,
+            isWithdrawModalVisible: false,
+            hasWithdrawalModalBeenShown: false
         };
 
         this.unlisten = null;
@@ -77,7 +79,8 @@ class Header extends React.Component {
 
     showDepositModal() {
         this.setState({
-            isDepositModalVisible: true
+            isDepositModalVisible: true,
+            hasDepositModalBeenShown: true
         });
     }
 
@@ -89,7 +92,8 @@ class Header extends React.Component {
 
     showWithdrawModal() {
         this.setState({
-            isWithdrawModalVisible: true
+            isWithdrawModalVisible: true,
+            hasWithdrawalModalBeenShown: true
         });
     }
 
@@ -783,7 +787,7 @@ class Header extends React.Component {
                 </a>
             );
         }
-      
+
         if (active.indexOf("/barter") !== -1) {
             dynamicMenuItem = (
                 <a
@@ -1284,24 +1288,29 @@ class Header extends React.Component {
                     }}
                     from_name={currentAccount}
                 />
-
-                <DepositModal
-                    visible={this.state.isDepositModalVisible}
-                    hideModal={this.hideDepositModal}
-                    showModal={this.showDepositModal}
-                    ref="deposit_modal_new"
-                    modalId="deposit_modal_new"
-                    account={currentAccount}
-                    backedCoins={this.props.backedCoins}
-                />
-                <WithdrawModal
-                    visible={this.state.isWithdrawModalVisible}
-                    hideModal={this.hideWithdrawModal}
-                    showModal={this.showWithdrawModal}
-                    ref="withdraw_modal_new"
-                    modalId="withdraw_modal_new"
-                    backedCoins={this.props.backedCoins}
-                />
+                {this.state.hasDepositModalBeenShown ||
+                    (this.state.isDepositModalVisible && (
+                        <DepositModal
+                            visible={this.state.isDepositModalVisible}
+                            hideModal={this.hideDepositModal}
+                            showModal={this.showDepositModal}
+                            ref="deposit_modal_new"
+                            modalId="deposit_modal_new"
+                            account={currentAccount}
+                            backedCoins={this.props.backedCoins}
+                        />
+                    ))}
+                {this.state.hasWithdrawalModalBeenShown ||
+                    (this.state.isWithdrawModalVisible && (
+                        <WithdrawModal
+                            visible={this.state.isWithdrawModalVisible}
+                            hideModal={this.hideWithdrawModal}
+                            showModal={this.showWithdrawModal}
+                            ref="withdraw_modal_new"
+                            modalId="withdraw_modal_new"
+                            backedCoins={this.props.backedCoins}
+                        />
+                    ))}
             </div>
         );
     }
