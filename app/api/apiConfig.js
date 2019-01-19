@@ -384,15 +384,6 @@ export const settingsAPIs = {
                 "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
-            url: "wss://node.market.rudex.org",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
-        },
-        {
             url: "wss://api.bitsharesdex.com",
             region: "Northern America",
             country: "U.S.A.",
