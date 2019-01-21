@@ -22,7 +22,7 @@ const _createPaperWalletAsPDF = function(
         logoHeight = logoWidth / 2.8, //  logo original width/height=2.8
         logoPositionX = (width - logoWidth) / 2;
     let rowHeight = logoHeight + 50;
-    const keys = [ownerkeys, activeKeys, memoKey];
+    const keys = [activeKeys, ownerkeys, memoKey];
     const keysName = ["Active Key", "Owner Key", "Memo Key"];
 
     let locked = WalletDb.isLocked();
@@ -36,7 +36,7 @@ const _createPaperWalletAsPDF = function(
     const checkPageH = (pdfInstance, currentPageH, maxPageH) => {
         if (currentPageH >= maxPageH) {
             pdfInstance.addPage();
-            rowHeight = 0;
+            rowHeight = 10;
         }
         return pdf.internal.getNumberOfPages();
     };
@@ -66,7 +66,7 @@ const _createPaperWalletAsPDF = function(
             }
             pdf.rect(textMarginLeft - 1, rowHeight + 44, textWidth, textHeight);
         }
-        rowHeight += 70;
+        rowHeight += 50;
     };
 
     const gQrcode = (qrcode, rowWidth, rowHeight, currentPage) => {
@@ -96,6 +96,10 @@ const _createPaperWalletAsPDF = function(
     pdf.text(accountName, 42, rowHeight - 10);
 
     let content = keys.map((publicKeys, index) => {
+        if (index >= 1) {
+            rowHeight += 25; // add margin-top for block
+        }
+        checkPageH(pdf, rowHeight, 400);
         pdf.text("Public", 22, rowHeight + 7);
         pdf.text(keysName[index], 120, rowHeight + 7);
         if (!locked) {
