@@ -640,6 +640,9 @@
                 "chart_zoom": "Permite zoom de gráfica. El zoom está siempre deshabilitado in pantalla pequeña.",
                 "hide_function_buttons": "Oculta todos los botones que pueden ser gestionados en el formulario personalizado",
                 "market_location": "En qué lado colocar el libro de órdenes vertical. Esto cambiará de lugar con el panel de mercado.",
+                "market_trades": "",
+                "my_trades": "",
+                "open_orders": "",
                 "order_book_grouping": "Agrupar órdenes cercanas por un porcentaje definido.",
                 "order_style": "Use el libro de órdenes vertical para fijarlo al panel lateral",
                 "orderbook_auto_scroll": "Auto scroll del libro de órdenes para mantenerlo centrado mientras entran las nuevas ordenes. Deshabilitar para permitir scrolling.",
@@ -650,6 +653,7 @@
                 "reduce_scrollbars": "Deshabilite las barras de scroll por defecto",
                 "reload": "Cambiar esta opción solo afectará después de la recarga manual",
                 "reverse_order_book": "Invierta el libro de ordenes para tener las ordenes de compra en la parte superior",
+                "settlements": "",
                 "single_colum_order_form": "Forzar que Precio, Cantidad, Total, etc. estén en una columna (no dispersos)"
             }
         },
@@ -953,7 +957,10 @@
             "bridge": "  El %(asset)sde los activos está guardado 1:1 realmente %(backed)s y puede ser depositado o retirado usando el servicio de pasarela provisto por CryptoBridge",
             "gdex": "  El %(asset)s de los activos está guardado 1:1 realmente %(backed)s y puede ser depositado o retirado usando el servicio de pasarela provisto por Gdex.",
             "open": "<br/><br/>The %(asset)s el activo está respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Openledger.",
-            "trade": "<br/><br/>The %(asset)s el activo està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades."
+            "rudex": "",
+            "trade": "<br/><br/>The %(asset)s el activo està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
+            "win": "",
+            "xbts": ""
         },
         "balance": "Saldo actual",
         "balance_asset": "Balance corriente %(asset)s ",
@@ -1586,6 +1593,7 @@
     },
     "settings": {
         "access": "Acceso",
+        "access_text": "",
         "accounts": "Cuentas",
         "accounts_text": "Su lista de cuentas.",
         "activate": "Activar",
