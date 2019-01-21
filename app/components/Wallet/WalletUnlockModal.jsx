@@ -70,11 +70,7 @@ class WalletUnlockModal extends React.Component {
         } = np;
 
         const newState = {};
-        if (
-            (newPasswordAccount && !accountName) ||
-            newPasswordAccount !== accountName
-        )
-            newState.accountName = newPasswordAccount;
+        // Updating the accountname through the listener breaks UX (#2335)
         if (walletSelected && !restoringBackup && !newCurrentWallet)
             newState.walletSelected = false;
         if (this.props.passwordLogin != np.passwordLogin) {

@@ -97,11 +97,14 @@ class Asset extends React.Component {
 
             let feedPrice = this._getFeedPrice();
 
-            if(feedPrice) {
+            if (feedPrice) {
                 try {
                     Apis.instance()
                         .db_api()
-                        .exec("get_call_orders", [this.props.asset.get("id"), 300])
+                        .exec("get_call_orders", [
+                            this.props.asset.get("id"),
+                            300
+                        ])
                         .then(call_orders => {
                             let callOrders = call_orders.map(c => {
                                 return new CallOrder(
@@ -117,7 +120,7 @@ class Asset extends React.Component {
                 } catch (e) {
                     // console.log(err);
                 }
-    
+
                 try {
                     Apis.instance()
                         .db_api()
@@ -164,9 +167,9 @@ class Asset extends React.Component {
             "current_feed",
             "settlement_price"
         ]);
-        
+
         let feedPrice;
-        
+
         /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
         if (
             isPredictionMarket &&
@@ -191,11 +194,11 @@ class Asset extends React.Component {
         }
 
         // Catch Invalid SettlePrice object
-        if(settlePrice.toJS) {
+        if (settlePrice.toJS) {
             let settleObject = settlePrice.toJS();
             if (!assets[settleObject.base.asset_id]) return;
-        } 
-        
+        }
+
         feedPrice = new FeedPrice({
             priceObject: settlePrice,
             market_base: this.props.asset.get("id"),

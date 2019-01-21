@@ -243,7 +243,7 @@ class MarginPosition extends React.Component {
         ]);
 
         let hasGlobalSettlement = settlement_fund > 0 ? true : false;
-        
+
         const balance_asset = has_order
             ? co.call_price.quote.asset_id
             : debtAsset.get("id");
@@ -371,21 +371,24 @@ class MarginPosition extends React.Component {
                     </Link>
                 </td>
                 <td>
-                    {hasGlobalSettlement ? ( 
-                        <Tooltip 
+                    {hasGlobalSettlement ? (
+                        <Tooltip
                             placement={"left"}
-                            title={counterpart.translate("tooltip.borrow_disabled",  {
-                                asset: isBitAsset ? 
-                                    "bit" + `${debtAsset.get("symbol")}` :
-                                    `${debtAsset.get("symbol")}`
-                            })}
+                            title={counterpart.translate(
+                                "tooltip.borrow_disabled",
+                                {
+                                    asset: isBitAsset
+                                        ? "bit" + `${debtAsset.get("symbol")}`
+                                        : `${debtAsset.get("symbol")}`
+                                }
+                            )}
                         >
                             <div style={{paddingBottom: 5}}>
                                 <AntIcon type={"question-circle"} />
                             </div>
                         </Tooltip>
                     ) : (
-                        <Tooltip 
+                        <Tooltip
                             placement={"left"}
                             title={counterpart.translate(
                                 "tooltip.update_position"

@@ -89,21 +89,22 @@ class AccountBrowsingMode extends React.Component {
             </Button>
         ];
 
-        if(this.props.usernameViewIcon) {
-            return (
-                window.innerWidth < 640 && !this.isMyAccount() ? 
-                    <Popover 
-                        content={<Translate content="account_browsing_mode.you_are_in_browsing_mode" />}
-                        placement="bottom"
-                    >
-                        <Icon 
-                            style={{marginLeft: 10}}
-                            className="blue" 
-                            type="eye" 
-                            onClick={this.handleSwitchBack}
-                        />
-                    </Popover> : null
-            );
+        if (this.props.usernameViewIcon) {
+            return window.innerWidth < 640 && !this.isMyAccount() ? (
+                <Popover
+                    content={
+                        <Translate content="account_browsing_mode.you_are_in_browsing_mode" />
+                    }
+                    placement="bottom"
+                >
+                    <Icon
+                        style={{marginLeft: 10}}
+                        className="blue"
+                        type="eye"
+                        onClick={this.handleSwitchBack}
+                    />
+                </Popover>
+            ) : null;
         } else {
             return (
                 <div className="account-browsing-mode">

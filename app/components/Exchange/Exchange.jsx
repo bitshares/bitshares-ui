@@ -2795,6 +2795,7 @@ class Exchange extends React.Component {
                             : "",
                         "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap"
                     )}
+                    key={`actionCard_${actionCardIndex++}`}
                 >
                     &nbsp;
                 </div>
@@ -2829,7 +2830,10 @@ class Exchange extends React.Component {
             actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
-                <div className="order-10 small-12">
+                <div
+                    className="order-10 small-12"
+                    key={`actionCard_${actionCardIndex++}`}
+                >
                     <Tabs
                         defaultActiveKey="my-market"
                         activeKey={tabVerticalPanel}
