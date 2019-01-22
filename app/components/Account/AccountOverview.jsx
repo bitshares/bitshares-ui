@@ -664,7 +664,7 @@ class AccountOverview extends React.Component {
                                     </div>
                                     <Proposals
                                         className="dashboard-table"
-                                        account={account.get("id")}
+                                        account={account}
                                         hideFishingProposals={
                                             this.state.hideFishingProposals
                                         }
