@@ -1893,7 +1893,7 @@
     },
     "transaction": {
         "amount_sell": "出售数量",
-        "asset_claim_fees": "从 %(asset)s 手续费池中领取 %(balance_amount)s",
+        "asset_claim_fees": "从 {asset} 手续费池中领取 {balance_amount}",
         "asset_reserve": "销毁资产数量",
         "at": "@",
         "balance_id": "余额 ID",
