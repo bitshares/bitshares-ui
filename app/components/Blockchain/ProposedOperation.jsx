@@ -129,7 +129,7 @@ class ProposedOperation extends React.Component {
     }
 
     render() {
-        let {op, proposer, current, block, hideExpiration} = this.props;
+        let {op, proposer, current, block, hideExpiration, index} = this.props;
         let line = null,
             column = null,
             color = "info";
@@ -150,8 +150,8 @@ class ProposedOperation extends React.Component {
                 column = (
                     <span className="right-td">
                         <div className="inline-block">
-                            {!!proposer ? (
-                                <div style={{paddingBottom: 5}}>
+                            {!!proposer && index == 0 ? (
+                                <div style={{paddingBottom: "0.5rem"}}>
                                     <TranslateWithLinks
                                         string="operation.proposal_create"
                                         keys={[
@@ -162,6 +162,7 @@ class ProposedOperation extends React.Component {
                                             }
                                         ]}
                                     />
+                                    :
                                 </div>
                             ) : null}
                             <div>
