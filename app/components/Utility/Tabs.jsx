@@ -68,14 +68,18 @@ class Tab extends React.Component {
                 subText = subText.trim();
             }
             return (
-                <option value={index} data-is-link-to={this.props.isLinkTo}>
-                    <span className="tab-title">
+                <option
+                    value={index}
+                    data-is-link-to={this.props.isLinkTo}
+                    className="tab-title"
+                >
+                    <React.Fragment>
                         {title}
                         {updatedTab ? "*" : ""}
                         {subText && " ("}
                         {subText && subText}
                         {subText && ")"}
-                    </span>
+                    </React.Fragment>
                 </option>
             );
         }
@@ -260,14 +264,17 @@ class Tabs extends React.Component {
     }
 }
 
-Tabs = connect(Tabs, {
-    listenTo() {
-        return [SettingsStore];
-    },
-    getProps() {
-        return {viewSettings: SettingsStore.getState().viewSettings};
+Tabs = connect(
+    Tabs,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {viewSettings: SettingsStore.getState().viewSettings};
+        }
     }
-});
+);
 
 Tabs = withRouter(Tabs);
 

@@ -630,10 +630,15 @@ class WithdrawModalNew extends React.Component {
         return this.props.backedCoins
             .get(selectedGateway.toUpperCase(), [])
             .find(c => {
-                return (
-                    c.backingCoinType === selectedAsset ||
-                    c.backingCoin === selectedAsset
-                );
+                let backingCoin = c.backingCoinType || c.backingCoin;
+
+                // Gateway has EOS.* asset names
+                if (backingCoin.toUpperCase().indexOf("EOS.") !== -1) {
+                    let [_network, _coin] = backingCoin.split(".");
+                    backingCoin = _coin;
+                }
+
+                return backingCoin === selectedAsset;
             });
     }
 

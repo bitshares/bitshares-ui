@@ -10,7 +10,7 @@ class LogsActions {
     }
     getLogs() {
         return new Promise(resolve => {
-            resolve(JSON.parse(ss.get("logs")));
+            resolve(JSON.parse(ss.get("logs", [])));
         });
     }
 }

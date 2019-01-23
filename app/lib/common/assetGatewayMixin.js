@@ -62,7 +62,7 @@ function _onAssetSelected(
 
     if (balances && assets) {
         balances.forEach(balance => {
-            if (balance && balance.toJS) {
+            if (!!balance && !!balance.toJS) {
                 let asset = assets.get(balance.get("asset_type"));
 
                 if (asset) {

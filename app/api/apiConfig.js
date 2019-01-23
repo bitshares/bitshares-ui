@@ -166,14 +166,6 @@ export const settingsAPIs = {
             contact: "QQ:58291;email:58291@qq.com"
         },
         {
-            url: "wss://node.btscharts.com/ws",
-            region: "Eastern Asia",
-            country: "China",
-            location: "Beijing",
-            operator: "leo2017",
-            contact: "wechat:wx8855221;email:8855221@qq.com"
-        },
-        {
             url: "wss://japan.bitshares.apasia.tech/ws",
             location: "Tokyo",
             country: "Japan",

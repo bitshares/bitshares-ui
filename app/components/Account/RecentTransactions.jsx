@@ -183,7 +183,12 @@ class RecentTransactions extends React.Component {
         let recordData = {};
 
         while (true) {
-            let res = await report.getAccountHistoryES(account, limit, start);
+            let res = await report.getAccountHistoryES(
+                account,
+                limit,
+                start,
+                "https://wrapper.elasticsearch.bitshares.ws"
+            );
             if (!res.length) break;
 
             await report.resolveBlockTimes(res);

@@ -35,7 +35,9 @@ class PriceAlert extends React.Component {
         if (!prevProps.visible && this.props.visible) {
             let example = {
                 type: PRICE_ALERT_TYPES.HIGHER_THAN,
-                price: null
+                price: this.props.latestPrice
+                    ? Number(this.props.latestPrice)
+                    : null
             };
 
             let rules = [];

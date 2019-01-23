@@ -10,6 +10,7 @@ import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
 import ExchangeHeaderCollateral from "./ExchangeHeaderCollateral";
 import {Icon as AntIcon} from "bitshares-ui-style-guide";
+import {Asset, Price} from "common/MarketClasses";
 
 export default class ExchangeHeader extends React.Component {
     constructor(props) {
@@ -119,6 +120,8 @@ export default class ExchangeHeader extends React.Component {
             : false;
         let collOrderObject = "";
         let settlePrice = null;
+        let settlePriceTitle = "exchange.settle";
+        let settlePriceTooltip = "tooltip.settle_price";
 
         if (isBitAsset) {
             if (account.toJS && account.has("call_orders")) {
@@ -150,7 +153,36 @@ export default class ExchangeHeader extends React.Component {
                         ? baseAsset
                         : quoteAsset;
 
-            if (settleAsset && feedPrice) {
+            // globally settled
+            if (possibleBitAsset.get("bitasset").get("settlement_fund") > 0) {
+                settlePriceTitle = "exchange.global_settle";
+                settlePriceTooltip = "tooltip.global_settle_price";
+                settlePrice = possibleBitAsset
+                    .get("bitasset")
+                    .get("settlement_price")
+                    .toJS();
+                // add precision
+                if (settlePrice.base.asset_id == baseAsset.get("id")) {
+                    settlePrice.base.precision = baseAsset.get("precision");
+                    settlePrice.quote.precision = quoteAsset.get("precision");
+                } else {
+                    settlePrice.quote.precision = baseAsset.get("precision");
+                    settlePrice.base.precision = quoteAsset.get("precision");
+                }
+                settlePrice = new Price({
+                    quote: new Asset({
+                        asset_id: settlePrice.quote.asset_id,
+                        precision: settlePrice.quote.precision,
+                        amount: settlePrice.quote.amount
+                    }),
+                    base: new Asset({
+                        asset_id: settlePrice.base.asset_id,
+                        precision: settlePrice.base.precision,
+                        amount: settlePrice.base.amount
+                    })
+                }).toReal();
+                settlePrice = baseId == "1.3.0" ? 1 / settlePrice : settlePrice;
+            } else if (settleAsset && feedPrice) {
                 let offset_percent = settleAsset
                     .getIn(["bitasset", "options"])
                     .toJS().force_settlement_offset_percent;
@@ -339,7 +371,7 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.volume_24"
                                     />
                                 ) : null}
-                                {!hasPrediction && settlePrice ? (
+                                {!hasPrediction && feedPrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
@@ -354,11 +386,11 @@ export default class ExchangeHeader extends React.Component {
                                         content="exchange.feed_price"
                                     />
                                 ) : null}
-                                {!hasPrediction && feedPrice ? (
+                                {!hasPrediction && settlePrice ? (
                                     <PriceStatWithLabel
                                         ignoreColorChange={true}
                                         toolTip={counterpart.translate(
-                                            "tooltip.settle_price"
+                                            settlePriceTooltip
                                         )}
                                         ready={marketReady}
                                         className="hide-order-4"
@@ -366,7 +398,7 @@ export default class ExchangeHeader extends React.Component {
                                         quote={quoteAsset}
                                         base={baseAsset}
                                         market={marketID}
-                                        content="exchange.settle"
+                                        content={settlePriceTitle}
                                     />
                                 ) : null}
                                 {showCollateralRatio ? (

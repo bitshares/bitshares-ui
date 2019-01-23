@@ -2107,8 +2107,59 @@ class Transaction extends React.Component {
 
                     break;
 
+                case "bid_collateral":
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.account.title"
+                                />
+                            </td>
+                            <td>
+                                <LinkToAccountById account={op[1].bidder} />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.collateral_bid.collateral"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    asset={op[1].additional_collateral.asset_id}
+                                    amount={op[1].additional_collateral.amount}
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    rows.push(
+                        <tr key={key++}>
+                            <td>
+                                <Translate
+                                    component="span"
+                                    content="explorer.asset.collateral_bid.debt"
+                                />
+                            </td>
+                            <td>
+                                <FormattedAsset
+                                    asset={op[1].debt_covered.asset_id}
+                                    amount={op[1].debt_covered.amount}
+                                />
+                            </td>
+                        </tr>
+                    );
+
+                    break;
+
                 default:
-                    console.log("unimplemented op:", op);
+                    console.log("unimplemented tx op:", op);
 
                     rows.push(
                         <tr key={key++}>

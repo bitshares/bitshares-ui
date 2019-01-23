@@ -34,7 +34,7 @@ class ReportModal extends React.Component {
             this.state.showScreen !== nextState.showScreen;
         if (nextProps.visible && this.props.visible !== nextProps.visible) {
             this.getLogs();
-            html2canvas(content)
+            html2canvas(document.getElementById("content"))
                 .then(canvas => {
                     return canvas.toDataURL("image/png");
                 })

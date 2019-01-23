@@ -174,11 +174,13 @@ class Assets extends React.Component {
                     title: "issuer",
                     dataIndex: "issuer",
                     sorter: (a, b) => {
-                        return a.issuer > b.issuer
-                            ? 1
-                            : a.issuer < b.issuer
-                                ? -1
-                                : 0;
+                        let issuerA = ChainStore.getAccount(a.issuer, false);
+                        let issuerB = ChainStore.getAccount(b.issuer, false);
+                        if (issuerA) issuerA = issuerA.get("name");
+                        if (issuerB) issuerB = issuerB.get("name");
+                        if (issuerA > issuerB) return 1;
+                        if (issuerA < issuerB) return -1;
+                        return 0;
                     },
                     render: item => {
                         return this.linkToAccount(item);
@@ -280,11 +282,13 @@ class Assets extends React.Component {
                     title: "issuer",
                     dataIndex: "issuer",
                     sorter: (a, b) => {
-                        return a.issuer > b.issuer
-                            ? 1
-                            : a.issuer < b.issuer
-                                ? -1
-                                : 0;
+                        let issuerA = ChainStore.getAccount(a.issuer, false);
+                        let issuerB = ChainStore.getAccount(b.issuer, false);
+                        if (issuerA) issuerA = issuerA.get("name");
+                        if (issuerB) issuerB = issuerB.get("name");
+                        if (issuerA > issuerB) return 1;
+                        if (issuerA < issuerB) return -1;
+                        return 0;
                     },
                     render: item => {
                         return this.linkToAccount(item);
@@ -469,14 +473,14 @@ class Assets extends React.Component {
                         <div className="generic-bordered-box">
                             <div
                                 style={{
-                                    textAlign: "right",
+                                    textAlign: "left",
                                     marginBottom: "24px"
                                 }}
                             >
                                 <span
                                     style={{
                                         display: "inline-block",
-                                        width: "24px",
+                                        width: "0px",
                                         marginTop: "2px",
                                         float: "left",
                                         fontSize: "18px"
@@ -486,10 +490,20 @@ class Assets extends React.Component {
                                         <Icon type="loading" />
                                     ) : null}
                                 </span>
-
+                                <Input
+                                    placeholder={"Filter..."}
+                                    value={this.state.filterSearch}
+                                    style={{width: "200px"}}
+                                    onChange={this.handleFilterChange}
+                                    addonAfter={<Icon type="search" />}
+                                />
                                 <Radio.Group
                                     value={this.state.activeFilter}
                                     onChange={this._toggleFilter}
+                                    style={{
+                                        marginBottom: "7px",
+                                        marginLeft: "24px"
+                                    }}
                                 >
                                     <Radio value={"market"}>
                                         <Translate content="explorer.assets.market" />
@@ -523,14 +537,6 @@ class Assets extends React.Component {
                                         200 rows
                                     </Select.Option>
                                 </Select>
-
-                                <Input
-                                    placeholder={"Quick Search"}
-                                    value={this.state.filterSearch}
-                                    style={{width: "200px", marginLeft: "24px"}}
-                                    onChange={this.handleFilterChange}
-                                    addonAfter={<Icon type="search" />}
-                                />
                             </div>
 
                             {activeFilter == "prediction" ? (

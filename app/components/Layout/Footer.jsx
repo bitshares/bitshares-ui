@@ -21,7 +21,7 @@ import ChoiceModal from "../Modal/ChoiceModal";
 import {ChainStore} from "bitsharesjs";
 import ifvisible from "ifvisible";
 import {getWalletName} from "branding";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class Footer extends React.Component {
     static propTypes = {
@@ -167,8 +167,9 @@ class Footer extends React.Component {
 
     getNodeIndexByURL(url) {
         let nodes = this.props.defaults.apiServer;
-
-        let index = nodes.findIndex(node => node.url === url);
+        let index = nodes.findIndex(
+            node => !!node && !!node.url && node.url === url
+        );
         if (index === -1) {
             return null;
         }
@@ -183,6 +184,10 @@ class Footer extends React.Component {
     }
 
     getNode(node = {url: "", operator: ""}) {
+        if (!node || !node.url) {
+            throw "Node is undefined of has no url";
+        }
+
         const {props} = this;
 
         let title = node.operator + " " + !!node.location ? node.location : "";
@@ -193,7 +198,10 @@ class Footer extends React.Component {
         return {
             name: title,
             url: node.url,
-            ping: props.apiLatencies[node.url]
+            ping:
+                node.url in props.apiLatencies
+                    ? props.apiLatencies[node.url]
+                    : -1
         };
     }
 
@@ -573,67 +581,91 @@ class Footer extends React.Component {
                         ) : null}
                         {block_height ? (
                             <div className="grid-block shrink">
-                                <div
-                                    onClick={() => {
-                                        this.setState({
-                                            showNodesPopup: !this.state
-                                                .showNodesPopup
-                                        });
-                                    }}
-                                    style={{
-                                        position: "relative",
-                                        cursor: "pointer"
-                                    }}
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "tooltip.nodes_popup"
+                                    )}
+                                    mouseEnterDelay={0.5}
                                 >
-                                    <div className="footer-status">
-                                        {!connected ? (
-                                            <span className="warning">
-                                                <Translate content="footer.disconnected" />
-                                            </span>
-                                        ) : (
-                                            <span className="success">
-                                                {activeNode.name}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="footer-block">
-                                        <span>
-                                            <span className="footer-block-title">
-                                                <Translate content="footer.latency" />
-                                            </span>
-                                            &nbsp;
-                                            {!connected
-                                                ? "-"
-                                                : !activeNode.ping
+                                    <div
+                                        onClick={() => {
+                                            this.setState({
+                                                showNodesPopup: !this.state
+                                                    .showNodesPopup
+                                            });
+                                        }}
+                                        style={{
+                                            position: "relative",
+                                            cursor: "pointer"
+                                        }}
+                                    >
+                                        <div className="footer-status">
+                                            {!connected ? (
+                                                <span className="warning">
+                                                    <Translate content="footer.disconnected" />
+                                                </span>
+                                            ) : (
+                                                <span className="success">
+                                                    {activeNode.name}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="footer-block">
+                                            <span>
+                                                <span className="footer-block-title">
+                                                    <Translate content="footer.latency" />
+                                                </span>
+                                                &nbsp;
+                                                {!connected
                                                     ? "-"
-                                                    : activeNode.ping + "ms"}
-                                            &nbsp;/&nbsp;
-                                            <span className="footer-block-title">
-                                                <Translate content="footer.block" />
+                                                    : !activeNode.ping
+                                                        ? "-"
+                                                        : activeNode.ping +
+                                                          "ms"}
+                                                &nbsp;/&nbsp;
+                                                <span className="footer-block-title">
+                                                    <Translate content="footer.block" />
+                                                </span>
+                                                &nbsp;#
+                                                {block_height}
                                             </span>
-                                            &nbsp;#
-                                            {block_height}
-                                        </span>
+                                        </div>
                                     </div>
-                                </div>
+                                </Tooltip>
 
                                 <div className="grid-block">
-                                    <div
-                                        className="introjs-launcher"
-                                        onClick={e => {
-                                            this.showReportModal(e);
-                                        }}
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "tooltip.debug_report"
+                                        )}
+                                        placement="topRight"
+                                        mouseEnterDelay={0.5}
                                     >
-                                        <Translate content="modal.report.button" />
-                                    </div>
-                                    <div
-                                        className="introjs-launcher"
-                                        onClick={() => {
-                                            this.launchIntroJS();
-                                        }}
+                                        <div
+                                            className="introjs-launcher"
+                                            onClick={e => {
+                                                this.showReportModal(e);
+                                            }}
+                                        >
+                                            <Translate content="modal.report.button" />
+                                        </div>
+                                    </Tooltip>
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "tooltip.self_help"
+                                        )}
+                                        placement="topRight"
+                                        mouseEnterDelay={0.5}
                                     >
-                                        <Translate content="global.help" />
-                                    </div>
+                                        <div
+                                            className="introjs-launcher"
+                                            onClick={() => {
+                                                this.launchIntroJS();
+                                            }}
+                                        >
+                                            <Translate content="global.help" />
+                                        </div>
+                                    </Tooltip>
                                 </div>
                             </div>
                         ) : (

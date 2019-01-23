@@ -9,11 +9,12 @@ import ChainTypes from "components/Utility/ChainTypes";
 import utils from "common/utils";
 import ProposalModal, {finalRequiredPerms} from "../Modal/ProposalModal";
 import NestedApprovalState from "../Account/NestedApprovalState";
-import {ChainStore} from "bitsharesjs";
+import {ChainStore, FetchChainObjects} from "bitsharesjs";
 import counterpart from "counterpart";
 import pu from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AccountStore from "stores/AccountStore";
+import accountUtils from "common/account_utils";
 import {Tooltip} from "bitshares-ui-style-guide";
 
 class Proposals extends Component {
@@ -34,6 +35,7 @@ class Proposals extends Component {
         };
 
         this.forceUpdate = this.forceUpdate.bind(this);
+        this._isSucpicious = this._isSucpicious.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
     }
@@ -85,6 +87,35 @@ class Proposals extends Component {
         );
     }
 
+    _isSucpicious(proposal) {
+        let isSuspicious = false;
+
+        let touchedAccounts = [];
+        proposal.operations.forEach(o => {
+            touchedAccounts.push(o.getIn([1, "to"]));
+        });
+
+        let proposer = proposal.proposal.get("proposer");
+
+        touchedAccounts.push(proposer);
+
+        console.log(touchedAccounts);
+
+        touchedAccounts.forEach(_account => {
+            if (accountUtils.isKnownScammer(_account)) {
+                isSuspicious = true;
+            }
+            if (
+                this.props.account.get("blacklisted_accounts").some(item => {
+                    return item === _account;
+                })
+            ) {
+                isSuspicious = true;
+            }
+        });
+        return isSuspicious;
+    }
+
     render() {
         let {account} = this.props;
         if (!account) return null;
@@ -113,13 +144,11 @@ class Proposals extends Component {
                 );
             })
             .reduce((result, proposal, index) => {
-                let isScam = false;
                 const id = proposal.proposal.get("id");
                 const proposer = proposal.proposal.get("proposer");
                 const expiration = proposal.proposal.get("expiration_time");
                 let text = proposal.operations
                     .map((o, index) => {
-                        if (o.getIn([1, "to"]) === "1.2.153124") isScam = true;
                         return (
                             <ProposedOperation
                                 key={
@@ -242,14 +271,15 @@ class Proposals extends Component {
                             />
                         </td>
                         <td className="approval-buttons">
-                            {isScam ? (
+                            {this.props.hideFishingProposals &&
+                            this._isSucpicious(proposal) ? (
                                 <Tooltip
                                     title={counterpart.translate(
                                         "tooltip.propose_scam"
                                     )}
                                 >
                                     <div className="tooltip has-error scam-error">
-                                        SCAM
+                                        POSSIBLE SCAM
                                     </div>
                                 </Tooltip>
                             ) : (

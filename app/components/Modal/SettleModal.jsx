@@ -1,8 +1,7 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
-import BaseModal from "./BaseModal";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
+import AssetName from "../Utility/AssetName";
 import MarketLink from "../Utility/MarketLink";
 import BindToChainState from "../Utility/BindToChainState";
 import utils from "common/utils";
@@ -17,31 +16,86 @@ import TranslateWithLinks from "../Utility/TranslateWithLinks";
 import {Modal, Button} from "bitshares-ui-style-guide";
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
-    ({worthLessSettlement, asset, shortBackingAsset}) => {
+    ({
+        worthLessSettlement,
+        asset,
+        shortBackingAsset,
+        marketPrice,
+        settlementPrice
+    }) => {
         switch (worthLessSettlement) {
             case true:
                 return (
-                    <TranslateWithLinks
-                        string="exchange.worth_less_settlement_warning"
-                        keys={[
-                            {
-                                value: (
-                                    <MarketLink
-                                        base={asset.get("id")}
-                                        quote={shortBackingAsset.get("id")}
-                                    />
-                                ),
-                                arg: "market_link"
-                            }
-                        ]}
-                    />
+                    <div>
+                        <TranslateWithLinks
+                            string="exchange.worth_less_settlement_warning"
+                            keys={[
+                                {
+                                    value: (
+                                        <MarketLink
+                                            base={asset.get("id")}
+                                            quote={shortBackingAsset.get("id")}
+                                        />
+                                    ),
+                                    arg: "market_link"
+                                }
+                            ]}
+                        />
+                        <br />
+                        &nbsp;&nbsp;
+                        <Translate content="exchange.price_market" />
+                        :&nbsp;&nbsp;
+                        {marketPrice}
+                        <br />
+                        &nbsp;&nbsp;
+                        <Translate content="exchange.settle" />
+                        :&nbsp;&nbsp;
+                        {settlementPrice}
+                        <br />
+                        <br />
+                    </div>
                 );
             case undefined:
                 return (
                     <Translate content="exchange.checking_for_worth_less_settlement" />
                 );
             default:
-                return null;
+                return (
+                    <div>
+                        <TranslateWithLinks
+                            string="exchange.settlement_hint"
+                            keys={[
+                                {
+                                    value: (
+                                        <MarketLink
+                                            base={asset.get("id")}
+                                            quote={shortBackingAsset.get("id")}
+                                        />
+                                    ),
+                                    arg: "market_link"
+                                },
+                                {
+                                    value: (
+                                        <AssetName name={asset.get("symbol")} />
+                                    ),
+                                    arg: "long"
+                                }
+                            ]}
+                        />
+                        <br />
+                        &nbsp;&nbsp;
+                        <Translate content="exchange.price_market" />
+                        :&nbsp;&nbsp;
+                        {marketPrice}
+                        <br />
+                        &nbsp;&nbsp;
+                        <Translate content="exchange.settle" />
+                        :&nbsp;&nbsp;
+                        {settlementPrice}
+                        <br />
+                        <br />
+                    </div>
+                );
         }
     }
 );

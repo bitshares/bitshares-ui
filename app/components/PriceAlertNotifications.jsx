@@ -73,6 +73,7 @@ class PriceAlertNotifications extends React.Component {
         rules.forEach(rule => {
             if (Number(rule.type) === Number(PRICE_ALERT_TYPES.LOWER_THAN)) {
                 Notification.info({
+                    duration: 30,
                     message: counterpart.translate(
                         "exchange.price_alert.title"
                     ),
@@ -109,6 +110,7 @@ class PriceAlertNotifications extends React.Component {
 
             if (Number(rule.type) === Number(PRICE_ALERT_TYPES.HIGHER_THAN)) {
                 Notification.info({
+                    duration: 30,
                     message: counterpart.translate(
                         "exchange.price_alert.title"
                     ),
@@ -189,7 +191,7 @@ export default connect(
         getProps() {
             return {
                 allMarketStats: MarketsStore.getState().allMarketStats,
-                priceAlert: SettingsStore.getState().priceAlert
+                priceAlert: SettingsStore.getState().priceAlert.toJS()
             };
         }
     }

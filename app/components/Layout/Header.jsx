@@ -188,7 +188,7 @@ class Header extends React.Component {
                 if (!isPersistantType()) {
                     setLocalStorageType("persistant");
                 }
-                AccountStore.reset();
+                AccountStore.tryToSetCurrentAccount();
             }
         }
         this._closeDropdown();
@@ -498,6 +498,23 @@ class Header extends React.Component {
                         className="column-hide-small"
                         component="span"
                         content="header.payments"
+                    />
+                </a>
+            );
+        }
+        if (active.indexOf("spotlight") !== -1) {
+            dynamicMenuItem = (
+                <a style={{flexFlow: "row"}} className={cnames({active: true})}>
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="showcases"
+                        title="icons.showcases"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="header.showcases"
                     />
                 </a>
             );
@@ -1056,6 +1073,41 @@ class Header extends React.Component {
                                     />
                                 </a>
                             </li>
+                            {/*                            <li>
+                                <a
+                                    style={{flexFlow: "row"}}
+                                    className={cnames(
+                                        active.indexOf("showcases") !== -1
+                                            ? null
+                                            : "column-hide-xs",
+                                        {
+                                            active:
+                                                active.indexOf("showcases") !==
+                                                -1
+                                        }
+                                    )}
+                                    onClick={this._onNavigate.bind(
+                                        this,
+                                        "/showcases"
+                                    )}
+                                >
+                                    <Icon
+                                        size="2x"
+                                        style={{
+                                            position: "relative",
+                                            top: 0,
+                                            left: -8
+                                        }}
+                                        name="showcases"
+                                        title="icons.showcases"
+                                    />
+                                    <Translate
+                                        className="column-hide-small"
+                                        component="span"
+                                        content="header.showcases"
+                                    />
+                                </a>
+                            </li>*/}
                             {/* Dynamic Menu Item */}
                             <li>{dynamicMenuItem}</li>
                         </ul>
@@ -1068,13 +1120,14 @@ class Header extends React.Component {
                 >
                     <AccountBrowsingMode location={this.props.location} />
                     <div>
-                        <div
-                            className="text account-name"
-                        >
+                        <div className="text account-name">
                             <span onClick={this._toggleAccountDropdownMenu}>
                                 {currentAccount}
                             </span>
-                            <AccountBrowsingMode location={this.props.location} usernameViewIcon={true} />
+                            <AccountBrowsingMode
+                                location={this.props.location}
+                                usernameViewIcon={true}
+                            />
                         </div>
                         {walletBalance}
                     </div>

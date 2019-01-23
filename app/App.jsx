@@ -11,7 +11,6 @@ import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
 import WalletUnlockModal from "./components/Wallet/WalletUnlockModal";
-import ReportModal from "./components/Modal/ReportModal";
 import BrowserSupportModal from "./components/Modal/BrowserSupportModal";
 import Footer from "./components/Layout/Footer";
 import Deprecate from "./Deprecate";
@@ -122,6 +121,7 @@ import RegistrationSelector from "./components/Registration/RegistrationSelector
 import WalletRegistration from "./components/Registration/WalletRegistration";
 import AccountRegistration from "./components/Registration/AccountRegistration";
 import {CreateWalletFromBrainkey} from "./components/Wallet/WalletCreate";
+import ShowcaseGrid from "./components/Showcases/ShowcaseGrid";
 import PriceAlertNotifications from "./components/PriceAlertNotifications";
 
 class App extends React.Component {
@@ -433,6 +433,11 @@ class App extends React.Component {
                                     component={Block}
                                 />
 
+                                <Route
+                                    path="/spotlight"
+                                    component={ShowcaseGrid}
+                                />
+
                                 {/* Wallet backup/restore routes */}
                                 <Route
                                     path="/wallet"
@@ -522,9 +527,7 @@ class App extends React.Component {
                             hideModal={this.hideBrowserSupportModal}
                             showModal={this.showBrowserSupportModal}
                         />
-                        {/* <ReportModal /> */}
                     </div>
-                    <div id="screenshot" />
                 </BodyClassName>
             </div>
         );

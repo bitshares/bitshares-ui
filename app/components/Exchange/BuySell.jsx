@@ -17,6 +17,7 @@ import assetUtils from "common/asset_utils";
 import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
+import SettleModal from "../Modal/SettleModal";
 import {Button, Select, Popover, Tooltip} from "bitshares-ui-style-guide";
 import ReactTooltip from "react-tooltip";
 
@@ -38,8 +39,12 @@ class BuySell extends React.Component {
     constructor() {
         super();
         this.state = {
-            forceReRender: false
+            forceReRender: false,
+            isSettleModalVisible: false
         };
+
+        this.showSettleModal = this.showSettleModal.bind(this);
+        this.hideSettleModal = this.hideSettleModal.bind(this);
     }
 
     /*
@@ -68,6 +73,8 @@ class BuySell extends React.Component {
         this._forceRender(nextProps, nextState);
 
         return (
+            nextState.isSettleModalVisible !==
+                this.state.isSettleModalVisible ||
             nextProps.amount !== this.props.amount ||
             nextProps.onBorrow !== this.props.onBorrow ||
             nextProps.total !== this.props.total ||
@@ -93,6 +100,18 @@ class BuySell extends React.Component {
             nextProps.hideFunctionButtons !== this.props.hideFunctionButtons ||
             nextState.isQuickDepositVisible !== this.state.isQuickDepositVisible
         );
+    }
+
+    showSettleModal() {
+        this.setState({
+            isSettleModalVisible: true
+        });
+    }
+
+    hideSettleModal() {
+        this.setState({
+            isSettleModalVisible: false
+        });
     }
 
     _addBalance(balance) {
@@ -929,6 +948,12 @@ class BuySell extends React.Component {
             );
         }
 
+        const otherAsset = isBid ? base : quote;
+        const isBitAsset = !!otherAsset.get("bitasset");
+        // check if globally settled
+        const isGloballySettled =
+            isBitAsset && otherAsset.get("bitasset").get("settlement_fund") > 0;
+
         return (
             <div
                 className={cnames(this.props.className)}
@@ -1351,7 +1376,8 @@ class BuySell extends React.Component {
                                                 </Tooltip>
                                             </Popover>
                                         ) : null}
-                                        {this.props.onBorrow ? (
+                                        {this.props.onBorrow &&
+                                        !isGloballySettled ? (
                                             <Button
                                                 style={{margin: 5}}
                                                 disabled={
@@ -1364,6 +1390,24 @@ class BuySell extends React.Component {
                                                 onClick={this.props.onBorrow}
                                             >
                                                 <Translate content="exchange.borrow" />
+                                            </Button>
+                                        ) : null}
+                                        {isGloballySettled ? (
+                                            <Button
+                                                style={{margin: 5}}
+                                                disabled={
+                                                    !this.props
+                                                        .currentAccount ||
+                                                    this.props.currentAccount.get(
+                                                        "id"
+                                                    ) === "1.2.3"
+                                                }
+                                                onClick={this.showSettleModal}
+                                                data-tip={counterpart.translate(
+                                                    "exchange.settle_globally_settled_tooltip"
+                                                )}
+                                            >
+                                                <Translate content="exchange.settle_globally_settled" />
                                             </Button>
                                         ) : null}
                                     </div>
@@ -1417,6 +1461,17 @@ class BuySell extends React.Component {
                         </div>
                     </form>
                 </div>
+
+                {isGloballySettled &&
+                    !!this.props.currentAccount && (
+                        <SettleModal
+                            visible={this.state.isSettleModalVisible}
+                            hideModal={this.hideSettleModal}
+                            showModal={this.showSettleModal}
+                            asset={otherAsset.get("id")}
+                            account={this.props.currentAccount.get("name")}
+                        />
+                    )}
             </div>
         );
     }
