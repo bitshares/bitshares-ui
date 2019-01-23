@@ -19,6 +19,7 @@ import SettingsActions from "actions/SettingsActions";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
+import ReCAPTCHA from "../Utility/ReCAPTCHA";
 import {withRouter} from "react-router-dom";
 
 class CreateAccountPassword extends React.Component {
@@ -41,7 +42,8 @@ class CreateAccountPassword extends React.Component {
             confirm_password: "",
             understand_1: false,
             understand_2: false,
-            understand_3: false
+            understand_3: false,
+            recaptchaToken: null
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
@@ -74,7 +76,12 @@ class CreateAccountPassword extends React.Component {
         if (!firstAccount) {
             valid = valid && this.state.registrar_account;
         }
-        return valid && this.state.understand_1 && this.state.understand_2;
+        return (
+            valid &&
+            this.state.understand_1 &&
+            this.state.understand_2 &&
+            this.state.recaptchaToken
+        );
     }
 
     onAccountNameChange(e) {
@@ -113,7 +120,7 @@ class CreateAccountPassword extends React.Component {
         WalletUnlockActions.checkLock.defer();
     }
 
-    createAccount(name, password) {
+    createAccount(name, password, reCaptchaToken) {
         let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         let referralAccount = AccountStore.getState().referralAccount;
         this.setState({loading: true});
@@ -124,7 +131,8 @@ class CreateAccountPassword extends React.Component {
             this.state.registrar_account,
             referralAccount || this.state.registrar_account,
             0,
-            refcode
+            refcode,
+            reCaptchaToken
         )
             .then(() => {
                 AccountActions.setPasswordAccount(name);
@@ -179,7 +187,14 @@ class CreateAccountPassword extends React.Component {
         //     this.createAccount(account_name);
         // } else {
         let password = this.state.generatedPassword;
-        this.createAccount(account_name, password);
+
+        if (this.state.recaptchaToken) {
+            this.createAccount(
+                account_name,
+                password,
+                this.state.recaptchaToken
+            );
+        }
     }
 
     onRegistrarAccountChange(registrar_account) {
@@ -409,6 +424,11 @@ class CreateAccountPassword extends React.Component {
                             ) : null}
                         </div>
                     )}
+
+                    <ReCAPTCHA
+                        onChange={this.onRecaptchaChange}
+                        payload={{user: this.state.accountName}}
+                    />
 
                     {/* Submit button */}
                     {this.state.loading ? (
@@ -640,6 +660,10 @@ class CreateAccountPassword extends React.Component {
             </div>
         );
     }
+
+    onRecaptchaChange = token => {
+        this.setState({recaptchaToken: token});
+    };
 
     render() {
         let {step} = this.state;

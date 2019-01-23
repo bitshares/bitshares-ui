@@ -1,6 +1,7 @@
 const CB_API_BASE =
     __DEVNET_API__ ||
     "https://api." + (__TESTNET__ ? "testnet." : "") + "crypto-bridge.org";
+const CB_API_VERSION = "/v1";
 const CB_FAUCET = CB_API_BASE;
 
 export const blockTradesAPIs = {
@@ -63,11 +64,14 @@ export const gdexAPIs = {
 };
 
 export const cryptoBridgeAPIs = {
-    BASE: CB_API_BASE + "/api/v1",
+    BASE: CB_API_BASE + CB_API_VERSION,
+    API_VERSION: CB_API_VERSION,
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/wallets",
     MARKETS: "/markets",
-    TRADING_PAIRS: "/trading-pairs"
+    TRADING_PAIRS: "/trading-pairs",
+    ACCOUNTS: "/accounts",
+    LOGIN: "/login"
 };
 
 const WSS_DEV_NODES = [
