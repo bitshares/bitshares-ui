@@ -72,6 +72,11 @@ module.exports = function(env) {
     const isTestNet = !!process.env.__TESTNET__ || !!env.testnet;
     const isDevNet = !!process.env.__DEVNET__;
 
+    const recaptchaSiteKey =
+        process.env.RECAPTCHA_SITE_KEY ||
+        env.RECAPTCHA_SITE_KEY ||
+        "6LdlhIsUAAAAAHzlruhPZ4yJKPd5Zo18eLRFP7hj";
+
     const walletUrl = isDevNet
         ? "http://localhost:8080"
         : isTestNet
@@ -83,7 +88,7 @@ module.exports = function(env) {
             template: "!!handlebars-loader!app/assets/index.hbs",
             templateParameters: {
                 title: "CryptoBridge decentralized exchange",
-                walletUrl: walletUrl,
+                walletUrl,
                 INCLUDE_BASE: !!env.prod && !env.hash,
                 PRODUCTION: !!env.prod,
                 ELECTRON: !!env.electron
@@ -102,6 +107,7 @@ module.exports = function(env) {
             __DEVNET__: isDevNet,
             __TESTNET__: isTestNet,
             __DEPRECATED__: !!env.deprecated,
+            __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
             DEFAULT_SYMBOL: "BTS"
         }),
         new webpack.ContextReplacementPlugin(

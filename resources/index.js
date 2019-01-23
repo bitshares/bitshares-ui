@@ -31,7 +31,10 @@
             x: mainWindowState.x,
             y: mainWindowState.y,
             width: mainWindowState.width,
-            height: mainWindowState.height
+            height: mainWindowState.height,
+            webPreferences: {
+                devTools: false
+            }
         });
 
         if (mainWindowState.isMaximized) {
@@ -134,13 +137,6 @@
                         accelerator: "CmdOrCtrl+R",
                         click: function() {
                             BrowserWindow.getFocusedWindow().reload();
-                        }
-                    },
-                    {
-                        label: "Toggle DevTools",
-                        accelerator: "Alt+CmdOrCtrl+I",
-                        click: function() {
-                            BrowserWindow.getFocusedWindow().toggleDevTools();
                         }
                     }
                 ]

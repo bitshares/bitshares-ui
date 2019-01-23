@@ -21,6 +21,7 @@ import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import {withRouter} from "react-router-dom";
+import ReCAPTCHA from "../Utility/ReCAPTCHA";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -33,7 +34,8 @@ class CreateAccount extends React.Component {
             loading: false,
             hide_refcode: true,
             show_identicon: false,
-            step: 1
+            step: 1,
+            recaptchaToken: null
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
 
@@ -64,7 +66,7 @@ class CreateAccount extends React.Component {
         if (!firstAccount) {
             valid = valid && this.state.registrar_account;
         }
-        return valid;
+        return valid && this.state.recaptchaToken;
     }
 
     onAccountNameChange(e) {
@@ -98,7 +100,7 @@ class CreateAccount extends React.Component {
         }
     }
 
-    createAccount(name) {
+    createAccount(name, reCaptchaToken) {
         let refcode = this.refs.refcode ? this.refs.refcode.value() : null;
         let referralAccount = AccountStore.getState().referralAccount;
         WalletUnlockActions.unlock()
@@ -110,7 +112,8 @@ class CreateAccount extends React.Component {
                     this.state.registrar_account,
                     referralAccount || this.state.registrar_account,
                     0,
-                    refcode
+                    refcode,
+                    reCaptchaToken
                 )
                     .then(() => {
                         // User registering his own account
@@ -185,13 +188,17 @@ class CreateAccount extends React.Component {
         e.preventDefault();
         if (!this.isValid()) return;
         let account_name = this.accountNameInput.getValue();
-        if (WalletDb.getWallet()) {
-            this.createAccount(account_name);
-        } else {
-            let password = this.refs.password.value();
-            this.createWallet(password).then(() =>
-                this.createAccount(account_name)
-            );
+        const {recaptchaToken} = this.state;
+
+        if (recaptchaToken) {
+            if (WalletDb.getWallet()) {
+                this.createAccount(account_name, recaptchaToken);
+            } else {
+                let password = this.refs.password.value();
+                this.createWallet(password).then(() =>
+                    this.createAccount(account_name, recaptchaToken)
+                );
+            }
         }
     }
 
@@ -288,6 +295,11 @@ class CreateAccount extends React.Component {
                         ) : null}
                     </div>
                 )}
+
+                <ReCAPTCHA
+                    onChange={this.onRecaptchaChange}
+                    payload={{user: this.state.accountName}}
+                />
 
                 <div className="divider" />
 
@@ -524,6 +536,10 @@ class CreateAccount extends React.Component {
             </div>
         );
     }
+
+    onRecaptchaChange = token => {
+        this.setState({recaptchaToken: token});
+    };
 
     render() {
         let {step} = this.state;

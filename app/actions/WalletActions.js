@@ -6,6 +6,7 @@ import {TransactionBuilder, FetchChain} from "bitsharesjs/es";
 import {Apis} from "bitsharesjs-ws";
 import alt from "alt-instance";
 import SettingsStore from "stores/SettingsStore";
+import {cryptoBridgeAPIs} from "api/apiConfig";
 
 class WalletActions {
     /** Restore and make active a new wallet_object. */
@@ -45,13 +46,25 @@ class WalletActions {
         return name;
     }
 
+    _getRecaptchaHeaders(reCaptchaToken) {
+        return {
+            Accept: "application/json",
+            "Content-type": "application/json",
+            Recaptcha: reCaptchaToken,
+            "App-Version":
+                APP_VERSION + (APP_REVISION ? "-" + APP_REVISION : ""),
+            "App-Platform": __ELECTRON__ || true ? "electron" : "web"
+        };
+    }
+
     createAccountWithPassword(
         account_name,
         password,
         registrar,
         referrer,
         referrer_percent,
-        refcode
+        refcode,
+        reCaptchaToken
     ) {
         let {privKey: owner_private} = WalletDb.generateKeyFromPassword(
             account_name,
@@ -117,14 +130,13 @@ class WalletActions {
                 }
 
                 let create_account_promise = fetch(
-                    faucetAddress + "/api/v1/accounts",
+                    faucetAddress +
+                        cryptoBridgeAPIs.API_VERSION +
+                        cryptoBridgeAPIs.ACCOUNTS,
                     {
                         method: "post",
                         mode: "cors",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-type": "application/json"
-                        },
+                        headers: this._getRecaptchaHeaders(reCaptchaToken),
                         body: JSON.stringify({
                             account: {
                                 name: account_name,
@@ -174,7 +186,8 @@ class WalletActions {
         registrar,
         referrer,
         referrer_percent,
-        refcode
+        refcode,
+        reCaptchaToken
     ) {
         if (WalletDb.isLocked()) {
             let error = "wallet locked";
@@ -223,14 +236,13 @@ class WalletActions {
             }
 
             let create_account_promise = fetch(
-                faucetAddress + "/api/v1/accounts",
+                faucetAddress +
+                    cryptoBridgeAPIs.API_VERSION +
+                    cryptoBridgeAPIs.ACCOUNTS,
                 {
                     method: "post",
                     mode: "cors",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-type": "application/json"
-                    },
+                    headers: this._getRecaptchaHeaders(reCaptchaToken),
                     body: JSON.stringify({
                         account: {
                             name: account_name,
