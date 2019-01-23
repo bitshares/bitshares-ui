@@ -324,17 +324,20 @@ class ValueStoreWrapper extends React.Component {
     }
 }
 
-ValueStoreWrapper = connect(ValueStoreWrapper, {
-    listenTo() {
-        return [MarketsStore, SettingsStore];
-    },
-    getProps() {
-        return {
-            allMarketStats: MarketsStore.getState().allMarketStats,
-            settings: SettingsStore.getState().settings
-        };
+ValueStoreWrapper = connect(
+    ValueStoreWrapper,
+    {
+        listenTo() {
+            return [MarketsStore, SettingsStore];
+        },
+        getProps() {
+            return {
+                allMarketStats: MarketsStore.getState().allMarketStats,
+                settings: SettingsStore.getState().settings
+            };
+        }
     }
-});
+);
 
 class TotalBalanceValue extends React.Component {
     static propTypes = {

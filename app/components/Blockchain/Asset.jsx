@@ -97,7 +97,7 @@ class Asset extends React.Component {
 
             let feedPrice = this._getFeedPrice();
 
-            if (feedPrice != null) {
+            if (!!feedPrice) {
                 try {
                     Apis.instance()
                         .db_api()
@@ -199,6 +199,12 @@ class Asset extends React.Component {
                 this.props.asset.get("id")
             );
             sqr = 1000;
+        }
+
+        // Catch Invalid SettlePrice object
+        if (settlePrice.toJS) {
+            let settleObject = settlePrice.toJS();
+            if (!assets[settleObject.base.asset_id]) return;
         }
 
         feedPrice = new FeedPrice({

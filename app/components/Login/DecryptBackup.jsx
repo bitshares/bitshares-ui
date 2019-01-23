@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import {connect} from "alt-react";
-import Translate from "react-translate-component";
 import {PrivateKey} from "bitsharesjs/es";
 import WalletManagerStore from "stores/WalletManagerStore";
 import BackupStore from "stores/BackupStore";
@@ -10,9 +9,10 @@ import WalletActions from "actions/WalletActions";
 import WalletDb from "stores/WalletDb";
 import WalletUnlockActions from "actions/WalletUnlockActions";
 import BackupActions, {restore} from "actions/BackupActions";
-import notify from "actions/NotificationActions";
 import SettingsActions from "actions/SettingsActions";
 import Icon from "../Icon/Icon";
+import {Button, Form, Input, Notification} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class DecryptBackup extends Component {
     static propTypes = {
@@ -33,7 +33,8 @@ class DecryptBackup extends Component {
     constructor() {
         super();
         this.state = {
-            backupPassword: ""
+            backupPassword: "",
+            formError: ""
         };
 
         this.onPassword = this.onPassword.bind(this);
@@ -42,7 +43,9 @@ class DecryptBackup extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.active) {
-            this.refs.passwordInput.focus();
+            if (this.refs.passwordInput && this.refs.passwordInput.focus) {
+                this.refs.passwordInput.focus();
+            }
         }
         if (!prevProps.currentAccount && this.props.currentAccount) {
             this.props.history.push("/");
@@ -78,9 +81,15 @@ class DecryptBackup extends Component {
                     error.stack
                 );
                 if (error === "invalid_decryption_key") {
-                    notify.error("Invalid Password");
+                    this.setState({
+                        formError: counterpart.translate(
+                            "notifications.invalid_password"
+                        )
+                    });
                 } else {
-                    notify.error(`${error}`);
+                    this.setState({
+                        formError: error
+                    });
                 }
                 this.setState({passwordError: true});
             });
@@ -89,59 +98,78 @@ class DecryptBackup extends Component {
     formChange(event) {
         const state = {};
         state[event.target.id] = event.target.value;
-        this.setState(state);
+        this.setState({
+            ...state,
+            formError: ""
+        });
     }
 
     renderButtons() {
         return (
             <div className="button-group">
                 {this.props.active ? (
-                    <Translate
-                        component="button"
-                        type="submit"
-                        onClick={this.onPassword}
-                        className="button-primary"
-                        content="login.loginButton"
-                    />
+                    <Button onClick={this.onPassword} type="primary">
+                        {counterpart.translate("login.loginButton")}
+                    </Button>
                 ) : (
-                    <Translate
-                        className="button-secondary"
-                        content="registration.select"
-                    />
+                    <Button>
+                        {counterpart.translate("registration.select")}
+                    </Button>
                 )}
             </div>
         );
     }
 
     render() {
+        const getPasswordInputValidateStatus = () => {
+            return this.state.formError ? "error" : "";
+        };
+
+        const getPasswordInputHelp = () => {
+            return this.state.formError ? this.state.formError : "";
+        };
+
         return (
-            <form onSubmit={this.onPassword}>
+            <div>
                 <div
                     className={`${
                         !this.props.active ? "display-none" : ""
                     } password-block`}
                 >
-                    <label
-                        className="text-left left-label"
-                        htmlFor="backupPassword"
+                    <Form
+                        layout="vertical"
+                        style={{textAlign: "left"}}
+                        onSubmit={this.onPassword}
                     >
-                        <Translate content="settings.password" />
-                    </label>
-                    <input
-                        className={`${
-                            this.state.passwordError
-                                ? "input-warning"
-                                : this.state.backupPassword
-                                    ? "input-success"
-                                    : ""
-                        } input create-account-input`}
-                        type={!this.state.passwordVisible ? "password" : "text"}
-                        id="backupPassword"
-                        onChange={this.formChange}
-                        value={this.state.backupPassword}
-                        ref="passwordInput"
-                        autoFocus={true}
-                    />
+                        <Form.Item
+                            label={counterpart.translate("settings.password")}
+                            validateStatus={getPasswordInputValidateStatus()}
+                            help={getPasswordInputHelp()}
+                        >
+                            <Input
+                                className={`${
+                                    this.state.passwordError
+                                        ? "input-warning"
+                                        : this.state.backupPassword
+                                            ? "input-success"
+                                            : ""
+                                } input create-account-input`}
+                                type={
+                                    !this.state.passwordVisible
+                                        ? "password"
+                                        : "text"
+                                }
+                                placeholder={counterpart.translate(
+                                    "wallet.enter_password"
+                                )}
+                                id="backupPassword"
+                                onChange={this.formChange}
+                                value={this.state.backupPassword}
+                                ref="passwordInput"
+                                autoFocus={true}
+                            />
+                        </Form.Item>
+                    </Form>
                     {!this.state.passwordVisible ? (
                         <span
                             className="no-width eye-block"
@@ -169,7 +197,7 @@ class DecryptBackup extends Component {
                     )}
                 </div>
                 {this.renderButtons()}
-            </form>
+            </div>
         );
     }
 }

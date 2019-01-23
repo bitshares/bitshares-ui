@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Translate from "react-translate-component";
+import {Button} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 export default function WalletBlockSelection(props) {
     return (
@@ -55,16 +57,11 @@ export default function WalletBlockSelection(props) {
             />
 
             {props.active ? (
-                <Translate
-                    className="button-primary"
-                    onClick={props.onSelect}
-                    content="registration.continue"
-                />
+                <Button onClick={props.onSelect} type="primary">
+                    {counterpart.translate("registration.continue")}
+                </Button>
             ) : (
-                <Translate
-                    className="button-secondary"
-                    content="registration.select"
-                />
+                <Button>{counterpart.translate("registration.select")}</Button>
             )}
         </div>
     );

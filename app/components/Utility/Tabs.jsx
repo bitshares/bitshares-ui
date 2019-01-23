@@ -67,19 +67,16 @@ class Tab extends React.Component {
             if (typeof subText === "string") {
                 subText = subText.trim();
             }
+            if (title.type === "span") {
+                title = title.props.children[2];
+            }
             return (
-                <option
-                    value={index}
-                    data-is-link-to={this.props.isLinkTo}
-                    className="tab-title"
-                >
-                    <React.Fragment>
-                        {title}
-                        {updatedTab ? "*" : ""}
-                        {subText && " ("}
-                        {subText && subText}
-                        {subText && ")"}
-                    </React.Fragment>
+                <option value={index} data-is-link-to={this.props.isLinkTo}>
+                    {title}
+                    {updatedTab ? "*" : ""}
+                    {subText && " ("}
+                    {subText && subText}
+                    {subText && ")"}
                 </option>
             );
         }

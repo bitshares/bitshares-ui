@@ -37,44 +37,43 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {
-            choiceModalShowOnce: false,
-            isChoiceModalVisible: false,
+            hasOutOfSyncModalBeenShownOnce: false,
+            isOutOfSyncModalVisible: false,
             isReportModalVisible: false,
-            showNodesPopup: false,
-            showConnectingPopup: false
-        };
-
-        this.confirmOutOfSync = {
-            modal: null,
-            shownOnce: false
+            isAccessSettingsPopoverVisible: false,
+            showConnectingPopup: false,
+            showAccessSettingsTooltip: false
         };
 
         this.getNode = this.getNode.bind(this);
-        this.showChoiceModal = this.showChoiceModal.bind(this);
-        this.hideChoiceModal = this.hideChoiceModal.bind(this);
-        this.showReportModal = this.showReportModal.bind(this);
-        this.hideReportModal = this.hideReportModal.bind(this);
+        this._showOutOfSyncModal = this._showOutOfSyncModal.bind(this);
+        this._hideOutOfSyncModal = this._hideOutOfSyncModal.bind(this);
+        this._showReportModal = this._showReportModal.bind(this);
+        this._hideReportModal = this._hideReportModal.bind(this);
+        this._showAccessSettingsTooltip = this._showAccessSettingsTooltip.bind(
+            this
+        );
     }
 
-    showChoiceModal() {
+    _showOutOfSyncModal() {
         this.setState({
-            isChoiceModalVisible: true
+            isOutOfSyncModalVisible: true
         });
     }
 
-    hideChoiceModal() {
+    _hideOutOfSyncModal() {
         this.setState({
-            isChoiceModalVisible: false
+            isOutOfSyncModalVisible: false
         });
     }
 
-    showReportModal() {
+    _showReportModal() {
         this.setState({
             isReportModalVisible: true
         });
     }
 
-    hideReportModal() {
+    _hideReportModal() {
         this.setState({
             isReportModalVisible: false
         });
@@ -93,8 +92,8 @@ class Footer extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            nextState.isChoiceModalVisible !==
-                this.state.isChoiceModalVisible ||
+            nextState.isOutOfSyncModalVisible !==
+                this.state.isOutOfSyncModalVisible ||
             nextState.isReportModalVisible !==
                 this.state.isReportModalVisible ||
             nextProps.dynGlobalObject !== this.props.dynGlobalObject ||
@@ -102,7 +101,10 @@ class Footer extends React.Component {
             nextProps.rpc_connection_status !==
                 this.props.rpc_connection_status ||
             nextProps.synced !== this.props.synced ||
-            nextState.showNodesPopup !== this.state.showNodesPopup
+            nextState.isAccessSettingsPopoverVisible !==
+                this.state.isAccessSettingsPopoverVisible ||
+            nextState.showAccessSettingsTooltip !==
+                this.state.showAccessSettingsTooltip
         );
     }
 
@@ -190,6 +192,8 @@ class Footer extends React.Component {
 
         const {props} = this;
 
+        const testNet = node.url.indexOf("testnet") !== -1;
+
         let title = node.operator + " " + !!node.location ? node.location : "";
         if ("country" in node) {
             title = node.country + (!!title ? " - " + title : "");
@@ -201,7 +205,8 @@ class Footer extends React.Component {
             ping:
                 node.url in props.apiLatencies
                     ? props.apiLatencies[node.url]
-                    : -1
+                    : -1,
+            testNet
         };
     }
 
@@ -247,7 +252,7 @@ class Footer extends React.Component {
      * @private
      */
     _closeOutOfSyncModal() {
-        this.hideChoiceModal();
+        this._hideOutOfSyncModal();
     }
 
     /**
@@ -303,12 +308,12 @@ class Footer extends React.Component {
                     // Only ask the user once, and only continue if still out of sync
                     if (
                         this.getBlockTimeDelta() > 3 &&
-                        this.state.choiceModalShowOnce === false
+                        this.state.hasOutOfSyncModalBeenShownOnce === false
                     ) {
                         this.setState({
-                            choiceModalShowOnce: true
+                            hasOutOfSyncModalBeenShownOnce: true
                         });
-                        this.showChoiceModal();
+                        this._showOutOfSyncModal();
                     }
                 }, askToReconnectAfterSeconds * 1000);
             }
@@ -316,7 +321,7 @@ class Footer extends React.Component {
             setTimeout(() => {
                 this._closeOutOfSyncModal();
                 this.setState({
-                    choiceModalShowOnce: false
+                    hasOutOfSyncModalBeenShownOnce: false
                 });
             }, 50);
         }
@@ -343,6 +348,14 @@ class Footer extends React.Component {
             promise.then(() => {
                 console.log("... done trying to reconnect");
             });
+        }
+    }
+
+    _showAccessSettingsTooltip(showAccessNodeTooltip) {
+        if (!this.state.isAccessSettingsPopoverVisible) {
+            this.setState({showAccessSettingsTooltip: showAccessNodeTooltip});
+        } else {
+            this.setState({showAccessSettingsTooltip: false});
         }
     }
 
@@ -388,9 +401,9 @@ class Footer extends React.Component {
                         />
                     )}
                 <ChoiceModal
-                    showModal={this.showChoiceModal}
-                    hideModal={this.hideChoiceModal}
-                    visible={this.state.isChoiceModalVisible}
+                    showModal={this._showOutOfSyncModal}
+                    hideModal={this._hideOutOfSyncModal}
+                    visible={this.state.isOutOfSyncModalVisible}
                     choices={[
                         {
                             translationKey: "connection.manual_reconnect",
@@ -507,10 +520,7 @@ class Footer extends React.Component {
                             routerTransitioner.isBackgroundPingingInProgress() && (
                                 <div
                                     onClick={() => {
-                                        this.setState({
-                                            showNodesPopup: !this.state
-                                                .showNodesPopup
-                                        });
+                                        this._showNodesPopover();
                                     }}
                                     style={{
                                         cursor: "pointer"
@@ -578,13 +588,16 @@ class Footer extends React.Component {
                                         "tooltip.nodes_popup"
                                     )}
                                     mouseEnterDelay={0.5}
+                                    onVisibleChange={
+                                        this._showAccessSettingsTooltip
+                                    }
+                                    visible={
+                                        this.state.showAccessSettingsTooltip
+                                    }
                                 >
                                     <div
                                         onClick={() => {
-                                            this.setState({
-                                                showNodesPopup: !this.state
-                                                    .showNodesPopup
-                                            });
+                                            this._showNodesPopover();
                                         }}
                                         style={{
                                             position: "relative",
@@ -592,6 +605,12 @@ class Footer extends React.Component {
                                         }}
                                     >
                                         <div className="footer-status">
+                                            {connected &&
+                                                activeNode.testNet && (
+                                                    <span className="testnet">
+                                                        <Translate content="settings.testnet_nodes" />{" "}
+                                                    </span>
+                                                )}
                                             {!connected ? (
                                                 <span className="warning">
                                                     <Translate content="footer.disconnected" />
@@ -636,7 +655,7 @@ class Footer extends React.Component {
                                         <div
                                             className="introjs-launcher"
                                             onClick={e => {
-                                                this.showReportModal(e);
+                                                this._showReportModal(e);
                                             }}
                                         >
                                             <Translate content="modal.report.button" />
@@ -669,10 +688,14 @@ class Footer extends React.Component {
                 </div>
                 <div
                     onMouseLeave={() => {
-                        this.setState({showNodesPopup: false});
+                        this.setState({isAccessSettingsPopoverVisible: false});
                     }}
                     className="node-access-popup"
-                    style={{display: this.state.showNodesPopup ? "" : "none"}}
+                    style={{
+                        display: this.state.isAccessSettingsPopoverVisible
+                            ? ""
+                            : "none"
+                    }}
                 >
                     <AccessSettings
                         nodes={this.props.defaults.apiServer}
@@ -693,8 +716,8 @@ class Footer extends React.Component {
                     <Translate content="global.help" />
                 </div>
                 <ReportModal
-                    showModal={this.showReportModal}
-                    hideModal={this.hideReportModal}
+                    showModal={this._showReportModal}
+                    hideModal={this._hideReportModal}
                     visible={this.state.isReportModalVisible}
                     refCallback={e => {
                         if (e) this.reportModal = e;
@@ -702,6 +725,25 @@ class Footer extends React.Component {
                 />
             </div>
         );
+    }
+
+    _showNodesPopover() {
+        if (
+            this.state.showAccessSettingsTooltip &&
+            !this.state.isAccessSettingsPopoverVisible
+        ) {
+            this.setState({
+                isAccessSettingsPopoverVisible: !this.state
+                    .isAccessSettingsPopoverVisible,
+                showAccessSettingsTooltip: false
+            });
+        } else {
+            this.setState({
+                isAccessSettingsPopoverVisible: !this.state
+                    .isAccessSettingsPopoverVisible,
+                showAccessSettingsTooltip: false
+            });
+        }
     }
 
     onBackup() {
@@ -714,7 +756,8 @@ class Footer extends React.Component {
 
     onPopup() {
         this.setState({
-            showNodesPopup: !this.state.showNodesPopup
+            isAccessSettingsPopoverVisible: !this.state
+                .isAccessSettingsPopoverVisible
         });
     }
 
