@@ -174,7 +174,61 @@ class RecentTransactions extends React.Component {
         return history;
     }
 
+    _getAccountHistoryES(account_id, limit, start) {
+        var esNode = "https://wrapper.elasticsearch.bitshares.ws";
+
+        console.log(
+            "query",
+            esNode +
+                "/get_account_history?account_id=" +
+                account_id +
+                "&from_=" +
+                start +
+                "&size=" +
+                limit +
+                "&sort_by=block_data.block_time&type=data&agg_field=operation_type"
+        );
+        return new Promise(function(resolve, reject) {
+            fetch(
+                esNode +
+                    "/get_account_history?account_id=" +
+                    account_id +
+                    "&from_=" +
+                    start +
+                    "&size=" +
+                    limit +
+                    "&sort_by=block_data.block_time&type=data&agg_field=operation_type"
+            )
+                .then(res => res.json())
+                .then(result => {
+                    var ops = result.map(r => {
+                        console.log(r);
+                        return {
+                            id: r.account_history.operation_id,
+                            op: {
+                                type: r.operation_type,
+                                data: r.operation_history.op_object
+                            },
+                            result: JSON.parse(
+                                r.operation_history.operation_result
+                            ),
+                            block_num: r.block_data.block_num,
+                            block_time: r.block_data.block_time + "Z"
+                        };
+                    });
+                    resolve(ops);
+                })
+                .catch(err => {
+                    console.warn("query failed", err);
+                    resolve([]);
+                });
+        });
+    }
+
     async _generateCSV() {
+        if (__DEV__) {
+            console.log("intializing fetching of ES data");
+        }
         this.setState({fetchingAccountHistory: true});
         let start = 0,
             limit = 150;
@@ -183,12 +237,7 @@ class RecentTransactions extends React.Component {
         let recordData = {};
 
         while (true) {
-            let res = await report.getAccountHistoryES(
-                account,
-                limit,
-                start,
-                "https://wrapper.elasticsearch.bitshares.ws"
-            );
+            let res = await this._getAccountHistoryES(account, limit, start);
             if (!res.length) break;
 
             await report.resolveBlockTimes(res);
@@ -199,8 +248,18 @@ class RecentTransactions extends React.Component {
             res.map(function(record) {
                 const trx_id = record.id;
                 // let timestamp = api.getBlock(record.block_num);
-                const type = ops[record.op[0]];
-                const data = record.op[1];
+                const type = ops[record.op.type];
+                const data = record.op.data;
+
+                switch (type) {
+                    case "vesting_balance_withdraw":
+                        data.amount = data.amount_;
+                        break;
+
+                    case "transfer":
+                        data.amount = data.amount_;
+                        break;
+                }
 
                 switch (type) {
                     default:
@@ -230,7 +289,9 @@ class RecentTransactions extends React.Component {
         let today = new Date();
         saveAs(
             blob,
-            "btshist-" +
+            "bitshares-account-history-" +
+                accountName +
+                "-" +
                 today.getFullYear() +
                 "-" +
                 ("0" + (today.getMonth() + 1)).slice(-2) +
@@ -331,43 +392,10 @@ class RecentTransactions extends React.Component {
               ];
         let action = (
             <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>
-                    {historyCount > 0 ? (
-                        <span>
-                            <Tooltip
-                                placement="bottom"
-                                title={counterpart.translate(
-                                    "transaction.csv_tip"
-                                )}
-                            >
-                                <a
-                                    className="inline-block"
-                                    onClick={this._generateCSV.bind(this)}
-                                >
-                                    <Icon
-                                        name="excel"
-                                        title="icons.excel"
-                                        className="icon-14px"
-                                    />
-                                </a>
-                            </Tooltip>
-                        </span>
-                    ) : null}
-                </td>
-                <td className="column-hide-tiny" />
-                <td style={{textAlign: "center"}}>
-                    &nbsp;
-                    {(this.props.showMore && historyCount > this.props.limit) ||
-                    (20 && limit < historyCount) ? (
-                        <a onClick={this._onIncreaseLimit.bind(this)}>
-                            <Icon
-                                name="chevron-down"
-                                title="icons.chevron_down.transactions"
-                                className="icon-14px"
-                            />
-                        </a>
-                    ) : null}
-                </td>
+                <td style={{textAlign: "center"}}>&nbsp;</td>
+                <td />
+                <td />
+                <td />
                 <td />
             </tr>
         );
@@ -414,6 +442,19 @@ class RecentTransactions extends React.Component {
                                     </Tooltip>
                                 ) : null}
                             </div>
+                            {historyCount > 0 ? (
+                                <a
+                                    className="inline-block"
+                                    onClick={this._generateCSV.bind(this)}
+                                    data-tip={counterpart.translate(
+                                        "transaction.csv_tip"
+                                    )}
+                                    data-place="bottom"
+                                    style={{marginLeft: "1rem"}}
+                                >
+                                    <Icon name="excel" size="1.5x" />
+                                </a>
+                            ) : null}
                         </div>
                         {this.state.accountHistoryError && (
                             <div

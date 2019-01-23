@@ -21,6 +21,7 @@ import SettingsStore from "stores/SettingsStore";
 import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
 import {Switch, Tooltip} from "bitshares-ui-style-guide";
+import AccountStore from "stores/AccountStore";
 
 class AccountVoting extends React.Component {
     static propTypes = {
@@ -1207,13 +1208,34 @@ class AccountVoting extends React.Component {
 }
 AccountVoting = BindToChainState(AccountVoting);
 
-const BudgetObjectWrapper = props => {
-    return (
-        <AccountVoting
-            {...props}
-            initialBudget={SettingsStore.getLastBudgetObject()}
-        />
-    );
+const FillMissingProps = props => {
+    let missingProps = {};
+    if (!props.initialBudget) {
+        missingProps.initialBudget = SettingsStore.getLastBudgetObject();
+    }
+    if (!props.account) {
+        // don't use store listener, user might be looking at different account. this is for reasonable default
+        let accountName =
+            AccountStore.getState().currentAccount ||
+            AccountStore.getState().passwordAccount;
+        accountName =
+            accountName && accountName !== "null"
+                ? accountName
+                : "committee-account";
+        missingProps.account = accountName;
+    }
+    if (!props.proxy) {
+        const account = ChainStore.getAccount(props.account);
+        let proxy = null;
+        if (account) {
+            proxy = account.getIn(["options", "voting_account"]);
+        } else {
+            throw "Account must be loaded";
+        }
+        missingProps.proxy = proxy;
+    }
+
+    return <AccountVoting {...props} {...missingProps} />;
 };
 
-export default BudgetObjectWrapper;
+export default FillMissingProps;

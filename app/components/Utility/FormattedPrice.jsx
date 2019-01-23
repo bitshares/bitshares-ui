@@ -158,7 +158,9 @@ class FormattedPrice extends React.Component {
 
         let formatted_value = "";
         if (!this.props.hide_value) {
-            let value = price.toReal();
+            let value = !this.props.ignorePriceFeed
+                ? price.toReal()
+                : quote_amount / base_amount;
             if (this.props.factor) {
                 if (this.props.negative_invert) {
                     value = inverted

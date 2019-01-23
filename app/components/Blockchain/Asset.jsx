@@ -97,47 +97,52 @@ class Asset extends React.Component {
 
             let feedPrice = this._getFeedPrice();
 
-            try {
-                Apis.instance()
-                    .db_api()
-                    .exec("get_call_orders", [this.props.asset.get("id"), 300])
-                    .then(call_orders => {
-                        let callOrders = call_orders.map(c => {
-                            return new CallOrder(
-                                c,
-                                assets,
-                                this.props.asset.get("id"),
-                                feedPrice,
-                                isPredictionMarket
-                            );
+            if (feedPrice) {
+                try {
+                    Apis.instance()
+                        .db_api()
+                        .exec("get_call_orders", [
+                            this.props.asset.get("id"),
+                            300
+                        ])
+                        .then(call_orders => {
+                            let callOrders = call_orders.map(c => {
+                                return new CallOrder(
+                                    c,
+                                    assets,
+                                    this.props.asset.get("id"),
+                                    feedPrice,
+                                    isPredictionMarket
+                                );
+                            });
+                            this.setState({callOrders});
                         });
-                        this.setState({callOrders});
-                    });
-            } catch (e) {
-                // console.log(err);
-            }
+                } catch (e) {
+                    // console.log(err);
+                }
 
-            try {
-                Apis.instance()
-                    .db_api()
-                    .exec("get_collateral_bids", [
-                        this.props.asset.get("id"),
-                        100,
-                        0
-                    ])
-                    .then(coll_orders => {
-                        let collateralBids = coll_orders.map(c => {
-                            return new CollateralBid(
-                                c,
-                                assets,
-                                this.props.asset.get("id"),
-                                feedPrice
-                            );
+                try {
+                    Apis.instance()
+                        .db_api()
+                        .exec("get_collateral_bids", [
+                            this.props.asset.get("id"),
+                            100,
+                            0
+                        ])
+                        .then(coll_orders => {
+                            let collateralBids = coll_orders.map(c => {
+                                return new CollateralBid(
+                                    c,
+                                    assets,
+                                    this.props.asset.get("id"),
+                                    feedPrice
+                                );
+                            });
+                            this.setState({collateralBids});
                         });
-                        this.setState({collateralBids});
-                    });
-            } catch (e) {
-                console.log("get_collateral_bids Error: ", e);
+                } catch (e) {
+                    console.log("get_collateral_bids Error: ", e);
+                }
             }
         }
     }
@@ -186,6 +191,12 @@ class Asset extends React.Component {
                 this.props.asset.get("id")
             );
             sqr = 1000;
+        }
+
+        // Catch Invalid SettlePrice object
+        if (settlePrice.toJS) {
+            let settleObject = settlePrice.toJS();
+            if (!assets[settleObject.base.asset_id]) return;
         }
 
         feedPrice = new FeedPrice({
