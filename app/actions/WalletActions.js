@@ -53,7 +53,7 @@ class WalletActions {
             Recaptcha: reCaptchaToken,
             "App-Version":
                 APP_VERSION + (APP_REVISION ? "-" + APP_REVISION : ""),
-            "App-Platform": __ELECTRON__ || true ? "electron" : "web"
+            "App-Platform": __ELECTRON__ ? "electron" : "web"
         };
     }
 
