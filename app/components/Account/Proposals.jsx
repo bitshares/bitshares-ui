@@ -15,6 +15,7 @@ import permission_utils from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AccountStore from "stores/AccountStore";
 import accountUtils from "common/account_utils";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class Proposals extends Component {
     static propTypes = {
@@ -296,14 +297,15 @@ class Proposals extends Component {
                     <td className="approval-buttons">
                         {this.props.hideFishingProposals &&
                         this._isSucpicious(proposal) ? (
-                            <div
-                                data-tip={counterpart.translate(
+                            <Tooltip
+                                title={counterpart.translate(
                                     "tooltip.propose_scam"
                                 )}
-                                className="tooltip has-error scam-error"
                             >
-                                POSSIBLE SCAM
-                            </div>
+                                <div className="tooltip has-error scam-error">
+                                    POSSIBLE SCAM
+                                </div>
+                            </Tooltip>
                         ) : (
                             <button
                                 onClick={
