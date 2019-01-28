@@ -48,7 +48,7 @@ class BitsharesBeos extends React.Component {
         const {params} = this.props;
         return {
             beosFee: "0.001",
-            beosApiUrl: "https://blocktrades.syncad.com/api/v2",
+            beosApiUrl: "https://gateway.beos.world/api/v2",
             beosIssuer: "delegate-dev1.btsnow",
             ...QueryString.parse(params.search)
         };
@@ -56,11 +56,9 @@ class BitsharesBeos extends React.Component {
 
     getBalances = () => {
         const {assets, account} = this.props;
-        return assets
-            .filter(a => !!a)
-            .map(a => {
-                return account.get("balances").toJS()[a.get("id")];
-            });
+        return assets.filter(a => !!a).map(a => {
+            return account.get("balances").toJS()[a.get("id")];
+        });
     };
 
     getBalanceById = id => {
