@@ -9,6 +9,7 @@ import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import DepositModal from "../Modal/DepositModal";
+import TosModal from "../Modal/TosModal";
 import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -1864,6 +1865,7 @@ class Header extends React.Component {
                     modalId="withdraw_modal_new"
                     backedCoins={this.props.backedCoins}
                 />
+                <TosModal />
             </div>
         );
     }

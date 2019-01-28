@@ -40,6 +40,7 @@ jobs:
         - ls -la ./build/dist/
         - cat ./build/dist/index.html
         - export RECAPTCHA_SITE_KEY=$TEST_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$TEST_CRYPTOBRIDGE_PUB_KEY
         - export AWS_ACCESS_KEY_ID=$TEST_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$TEST_AWS_SECRET_ACCESS_KEY
         - aws s3 rm s3://wallet.testnet.crypto-bridge.org/index.html
@@ -54,6 +55,7 @@ jobs:
         - ls -la ./build/dist/
         - cat ./build/dist/index.html
         - export RECAPTCHA_SITE_KEY=$STAGE_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$STAGE_CRYPTOBRIDGE_PUB_KEY
         - export AWS_ACCESS_KEY_ID=$STAGE_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$STAGE_AWS_SECRET_ACCESS_KEY
         - aws s3 rm s3://wallet.stage.crypto-bridge.org/index.html
@@ -68,6 +70,7 @@ jobs:
         - ls -la ./build/dist/
         - cat ./build/dist/index.html
         - export RECAPTCHA_SITE_KEY=$PROD_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$PROD_CRYPTOBRIDGE_PUB_KEY
         - export AWS_ACCESS_KEY_ID=$PROD_AWS_ACCESS_KEY_ID
         - export AWS_SECRET_ACCESS_KEY=$PROD_AWS_SECRET_ACCESS_KEY
         - aws s3 rm s3://wallet.crypto-bridge.org/index.html
