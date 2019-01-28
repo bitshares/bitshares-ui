@@ -239,7 +239,6 @@ export default class Barter extends Component {
         barter
     ) {
         if (!asset || !account) return;
-
         this._updateFee(
             fee_asset_id,
             account,
@@ -336,6 +335,7 @@ export default class Barter extends Component {
         let memo_state = this.state.memo[from ? "from_barter" : "to_barter"][
             index
         ];
+
         let memo =
             !!memo_state && memo_state.shown && memo_state.message !== ""
                 ? new Buffer(memo_state.message, "utf-8")
@@ -581,9 +581,37 @@ export default class Barter extends Component {
     onMemoChanged = (type, index) => e => {
         const memos = Object.assign({}, this.state.memo);
         memos[type][index] = {message: e.target.value, shown: true};
+        if (type === "from_barter") {
+            let from_barter = this.state.from_barter;
 
-        //TODO: add debounce
-        this.setState({memo: memos});
+            this.setState(
+                {memo: memos},
+                this._updateFee(
+                    from_barter[index].from_fee_asset_id,
+                    this.state.from_account,
+                    from_barter[index].from_asset_id,
+                    index,
+                    true,
+                    from_barter
+                )
+            );
+        } else if (type === "to_barter") {
+            let to_barter = this.state.to_barter;
+
+            this.setState(
+                {memo: memos},
+                this._updateFee(
+                    to_barter[index].to_fee_asset_id,
+                    this.state.to_account,
+                    to_barter[index].to_asset_id,
+                    index,
+                    false,
+                    to_barter
+                )
+            );
+        } else {
+            this.setState({memo: memos});
+        }
     };
 
     renderMemoField(type, index) {
@@ -754,7 +782,6 @@ export default class Barter extends Component {
                 );
             }
 
-            //FIXME:
             let isMemoShown =
                 this.state.memo["from_barter"][index] &&
                 this.state.memo["from_barter"][index].shown;
@@ -1310,30 +1337,33 @@ export default class Barter extends Component {
                                 />
                             </Tooltip>
                         )}
-                        {/*needed to render tooltip properly*/}
+
                         <Tooltip
                             title={counterpart.translate(
                                 "showcases.barter.escrow_payment_tooltip"
                             )}
                             placement="topLeft"
                         >
-                            <AmountSelector
-                                label="showcases.barter.escrow_payment"
-                                disabled={false}
-                                amount={escrow_payment}
-                                onChange={this._updateEscrowFee.bind(this)}
-                                style={{
-                                    margin: "1rem 0"
-                                }}
-                                asset={"1.3.0"}
-                                assets={["1.3.0"]}
-                                error={
-                                    this.state.hasPoolBalance === false
-                                        ? "transfer.errors.insufficient"
-                                        : null
-                                }
-                                scroll_length={2}
-                            />
+                            <div>
+                                {/*needed to render tooltip properly*/}
+                                <AmountSelector
+                                    label="showcases.barter.escrow_payment"
+                                    disabled={false}
+                                    amount={escrow_payment}
+                                    onChange={this._updateEscrowFee.bind(this)}
+                                    style={{
+                                        margin: "1rem 0"
+                                    }}
+                                    asset={"1.3.0"}
+                                    assets={["1.3.0"]}
+                                    error={
+                                        this.state.hasPoolBalance === false
+                                            ? "transfer.errors.insufficient"
+                                            : null
+                                    }
+                                    scroll_length={2}
+                                />
+                            </div>
                         </Tooltip>
                         {isEscrowMemoShown && this.renderMemoField("escrow", 0)}
                     </div>
