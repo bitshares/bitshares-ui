@@ -407,21 +407,13 @@ class AccountOverview extends React.Component {
                                 subText={ordersValue}
                             >
                                 <AccountOrders {...this.props}>
-                                    <tr className="total-value">
-                                        <td
-                                            colSpan="8"
-                                            style={{textAlign: "right"}}
-                                        >
-                                            {totalValueText}
-                                        </td>
-                                        <td
-                                            colSpan="1"
-                                            style={{textAlign: "right"}}
-                                        >
-                                            {ordersValue}
-                                        </td>
-                                        {this.props.isMyAccount ? <td /> : null}
-                                    </tr>
+                                    <span
+                                        className="total-value"
+                                        style={{textAlign: "left"}}
+                                    >
+                                        {totalValueText}
+                                        {ordersValue}
+                                    </span>
                                 </AccountOrders>
                             </Tab>
 

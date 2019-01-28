@@ -23,6 +23,8 @@ import {Link} from "react-router-dom";
 import FormattedAsset from "../Utility/FormattedAsset";
 import BlockTime from "../Blockchain/BlockTime";
 import OperationAnt from "../Blockchain/OperationAnt";
+import SettingsStore from "stores/SettingsStore";
+import {connect} from "alt-react";
 const operation = new OperationAnt();
 
 function compareOps(b, a) {
@@ -268,7 +270,8 @@ class RecentTransactions extends React.Component {
             o.op,
             current_account_id,
             o.block_num,
-            o.result
+            o.result,
+            this.props.marketDirections
         );
         fee.amount = parseInt(fee.amount, 10);
         const dynGlobalObject = ChainStore.getObject("2.1.0");
@@ -375,43 +378,37 @@ class RecentTransactions extends React.Component {
               })
             : [];
         let action = (
-            <tr className="total-value" key="total_value">
-                <td style={{textAlign: "center"}}>
-                    {historyCount > 0 ? (
-                        <span>
-                            <a
-                                className="inline-block"
-                                onClick={this._generateCSV.bind(this)}
-                                data-tip={counterpart.translate(
-                                    "transaction.csv_tip"
-                                )}
-                                data-place="bottom"
-                            >
-                                <Icon
-                                    name="excel"
-                                    title="icons.excel"
-                                    className="icon-14px"
-                                />
-                            </a>
-                        </span>
-                    ) : null}
-                </td>
-                <td className="column-hide-tiny" />
-                <td style={{textAlign: "center"}}>
-                    &nbsp;
-                    {(this.props.showMore && historyCount > this.props.limit) ||
-                    (20 && limit < historyCount) ? (
-                        <a onClick={this._onIncreaseLimit.bind(this)}>
+            <span className="total-value" key="total_value">
+                {historyCount > 0 ? (
+                    <span>
+                        <a
+                            className="inline-block"
+                            onClick={this._generateCSV.bind(this)}
+                            data-tip={counterpart.translate(
+                                "transaction.csv_tip"
+                            )}
+                            data-place="bottom"
+                        >
                             <Icon
-                                name="chevron-down"
-                                title="icons.chevron_down.transactions"
+                                name="excel"
+                                title="icons.excel"
                                 className="icon-14px"
                             />
                         </a>
-                    ) : null}
-                </td>
-                <td />
-            </tr>
+                    </span>
+                ) : null}
+                &nbsp;
+                {(this.props.showMore && historyCount > this.props.limit) ||
+                (20 && limit < historyCount) ? (
+                    <a onClick={this._onIncreaseLimit.bind(this)}>
+                        <Icon
+                            name="chevron-down"
+                            title="icons.chevron_down.transactions"
+                            className="icon-14px"
+                        />
+                    </a>
+                ) : null}
+            </span>
         );
 
         return (
@@ -575,6 +572,20 @@ class RecentTransactions extends React.Component {
     }
 }
 RecentTransactions = BindToChainState(RecentTransactions);
+
+RecentTransactions = connect(
+    RecentTransactions,
+    {
+        listenTo() {
+            return [SettingsStore];
+        },
+        getProps() {
+            return {
+                marketDirections: SettingsStore.getState().marketDirections
+            };
+        }
+    }
+);
 
 class TransactionWrapper extends React.Component {
     static propTypes = {

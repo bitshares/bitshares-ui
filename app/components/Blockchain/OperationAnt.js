@@ -41,13 +41,14 @@ class Operation {
         );
     }
 
-    getColumn(op, current, block, result) {
+    getColumn(op, current, block, result, marketDirections) {
         const {operations} = grapheneChainTypes;
         let ops = Object.keys(operations);
         let listings = account_constants.account_listing;
         let column = null,
             color = "info";
         let memoComponent = null;
+
         switch (
             ops[op[0]] // For a list of trx types, see chain_types.coffee
         ) {
@@ -115,7 +116,7 @@ class Operation {
                                     first,
                                     second
                                 } = marketUtils.getMarketName(base, quote);
-                                const inverted = this.props.marketDirections.get(
+                                const inverted = marketDirections.get(
                                     marketName
                                 );
                                 // const paySymbol = base.get("symbol");
@@ -136,10 +137,9 @@ class Operation {
                                 const amount = isBid
                                     ? op[1].min_to_receive
                                     : op[1].amount_to_sell;
-                                let orderId = this.props.result
-                                    ? typeof this.props.result[1] == "string"
-                                        ? "#" +
-                                          this.props.result[1].substring(4)
+                                let orderId = result
+                                    ? typeof result[1] == "string"
+                                        ? "#" + result[1].substring(4)
                                         : ""
                                     : "";
 
@@ -501,11 +501,8 @@ class Operation {
                 color = "warning";
                 const baseAmount = op[1].amount;
                 const instantSettleCode = 2;
-                if (
-                    this.props.result &&
-                    this.props.result[0] == instantSettleCode
-                ) {
-                    const quoteAmount = this.props.result[1];
+                if (result && result[0] == instantSettleCode) {
+                    const quoteAmount = result[1];
                     column = (
                         <span>
                             <TranslateWithLinks
@@ -928,7 +925,7 @@ class Operation {
                                     first,
                                     second
                                 } = marketUtils.getMarketName(base, quote);
-                                const inverted = this.props.marketDirections.get(
+                                const inverted = marketDirections.get(
                                     marketName
                                 );
                                 const isBid =
