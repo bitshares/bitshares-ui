@@ -333,13 +333,21 @@ export default class Barter extends Component {
         }
         if (!account) return null;
 
+        let memo_state = this.state.memo[from ? "from_barter" : "to_barter"][
+            index
+        ];
+        let memo =
+            !!memo_state && memo_state.shown && memo_state.message !== ""
+                ? new Buffer(memo_state.message, "utf-8")
+                : "";
+
         checkFeeStatusAsync({
             accountID: account.get("id"),
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
                 type: "memo",
-                content: ""
+                content: memo
             }
         })
             .then(({fee, hasBalance, hasPoolBalance}) =>
@@ -360,7 +368,7 @@ export default class Barter extends Component {
                     } else {
                         if (should) {
                             barter[index].to_fee_asset_id = asset_id;
-                            this.setState({to_barter: _to_barter});
+                            this.setState({to_barter: barter});
                         } else {
                             barter[index].to_feeAmount = fee;
                             barter[index].to_fee_asset_id = fee.asset_id;
