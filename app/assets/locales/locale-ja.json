@@ -1740,6 +1740,7 @@
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
             "next": "Next",
             "now_ready": "Finalize the creation of your own Collateralized Debt Position",
             "previous": "Previous",
@@ -1868,6 +1869,7 @@
         "over_limit": "ブリッジにはこの買い注文に必要なアセットが不足しています。",
         "propose_scam": "この提案は有名な詐欺師によるものです。応じないでください！",
         "propose_tip": "別のユーザーからトランザクションを提案する",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
         "registration": {
