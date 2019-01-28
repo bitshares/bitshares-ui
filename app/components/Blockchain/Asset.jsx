@@ -97,7 +97,7 @@ class Asset extends React.Component {
 
             let feedPrice = this._getFeedPrice();
 
-            if (feedPrice) {
+            if (!!feedPrice) {
                 try {
                     Apis.instance()
                         .db_api()
@@ -120,7 +120,6 @@ class Asset extends React.Component {
                 } catch (e) {
                     // console.log(err);
                 }
-
                 try {
                     Apis.instance()
                         .db_api()
@@ -168,6 +167,14 @@ class Asset extends React.Component {
             "settlement_price"
         ]);
 
+        // if there has been no feed price, settlePrice has 0 amount
+        if (
+            settlePrice.getIn(["base", "amount"]) == 0 &&
+            settlePrice.getIn(["quote", "amount"]) == 0
+        ) {
+            return null;
+        }
+
         let feedPrice;
 
         /* Prediction markets don't need feeds for shorting, so the settlement price can be set to 1:1 */
@@ -176,10 +183,11 @@ class Asset extends React.Component {
             settlePrice.getIn(["base", "asset_id"]) ===
                 settlePrice.getIn(["quote", "asset_id"])
         ) {
-            if (!assets[this.props.backingAsset.get("id")])
+            if (!assets[this.props.backingAsset.get("id")]) {
                 assets[this.props.backingAsset.get("id")] = {
                     precision: this.props.asset.get("precision")
                 };
+            }
             settlePrice = settlePrice.setIn(["base", "amount"], 1);
             settlePrice = settlePrice.setIn(
                 ["base", "asset_id"],

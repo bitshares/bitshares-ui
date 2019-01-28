@@ -11,7 +11,7 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {Select, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {Select, Icon as AntIcon, Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @array: orderRows
@@ -358,26 +358,32 @@ class GroupOrderLimitSelector extends React.Component {
             );
         } else {
             return (
-                <select
-                    value={this.state.groupLimit}
-                    onChange={this.props.handleGroupOrderLimitChange}
-                    data-tip={
+                <Tooltip
+                    placement="bottom"
+                    title={
                         noGroupsAvailable
                             ? translator.translate(
                                   "tooltip.no_groups_available"
                               )
                             : null
                     }
-                    className="settings-select"
-                    style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
                 >
-                    <Translate
-                        content="exchange.group_order_limit"
-                        component="option"
-                        value="0"
-                    />
-                    {trackedGroupsOptionsList}
-                </select>
+                    <select
+                        value={this.state.groupLimit}
+                        onChange={this.props.handleGroupOrderLimitChange}
+                        className="settings-select"
+                        style={
+                            noGroupsAvailable ? {cursor: "not-allowed"} : null
+                        }
+                    >
+                        <Translate
+                            content="exchange.group_order_limit"
+                            component="option"
+                            value="0"
+                        />
+                        {trackedGroupsOptionsList}
+                    </select>
+                </Tooltip>
             );
         }
     }

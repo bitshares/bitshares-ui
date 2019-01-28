@@ -112,7 +112,7 @@ const ApplicationApi = {
         amount,
         asset,
         memo,
-        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer
+        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer. Is set to "from_account" for non proposals
         encrypt_memo = true,
         optional_nonce = null,
         fee_asset_id = "1.3.0",
@@ -140,7 +140,7 @@ const ApplicationApi = {
                 let memo_object;
                 if (memo) {
                     let memo_sender = this._get_memo_keys(
-                        chain_memo_sender,
+                        chain_propose_account,
                         encrypt_memo
                     );
                     let memo_to = this._get_memo_keys(chain_to, encrypt_memo);
@@ -214,8 +214,8 @@ const ApplicationApi = {
     },
 
     /**
-        @param propose_account (or null) pays the fee to create the proposal, also used as memo from
-    */
+     @param propose_account (or null) pays the fee to create the proposal, also used as memo from
+     */
     transfer({
         // OBJECT: { ... }
         from_account,
@@ -230,7 +230,7 @@ const ApplicationApi = {
         fee_asset_id = "1.3.0",
         transactionBuilder = null
     }) {
-        let memo_sender = propose_account || from_account;
+        propose_account = propose_account || from_account;
         if (transactionBuilder == null) {
             transactionBuilder = new TransactionBuilder();
         }
@@ -240,7 +240,7 @@ const ApplicationApi = {
             amount,
             asset,
             memo,
-            memo_sender,
+            propose_account,
             encrypt_memo,
             optional_nonce,
             fee_asset_id,
@@ -260,7 +260,9 @@ const ApplicationApi = {
                             }
                         );
                     } else {
-                        transactionBuilder.add_operation(transfer_obj);
+                        transactionBuilder.add_operation(
+                            transfer_obj.transfer_op
+                        );
                     }
                     return WalletDb.process_transaction(
                         transactionBuilder,

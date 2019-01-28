@@ -1746,6 +1746,7 @@
             "description": "Займите BitAsset у блокчейна BitShares путем блокировки в нем залогового обеспечения (например, bitUSD, bitCNY и т.д.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
             "next": "Next",
             "now_ready": "Finalize the creation of your own Collateralized Debt Position",
             "previous": "Previous",
@@ -1874,6 +1875,7 @@
         "over_limit": "Мост не обладает достаточным количеством желаемого актива для данного ордера на покупку",
         "propose_scam": "Это предложение было создано известным мошенником, не подтверждайте его!",
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "Вам предоставлен набор прокси, чтобы его удалить, просто очистите данное поле ввода",
         "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования",
         "registration": {

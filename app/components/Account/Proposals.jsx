@@ -15,6 +15,7 @@ import permission_utils from "common/permission_utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import AccountStore from "stores/AccountStore";
 import accountUtils from "common/account_utils";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class Proposals extends Component {
     static propTypes = {
@@ -37,7 +38,8 @@ class Proposals extends Component {
         this._loading = false;
 
         this.forceUpdate = this.forceUpdate.bind(this);
-        this._isSucpicious = this._isSucpicious.bind(this);
+        this._isScam = this._isScam.bind(this);
+        this._isUnknown = this._isUnknown.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
     }
@@ -130,8 +132,8 @@ class Proposals extends Component {
         );
     }
 
-    _isSucpicious(proposal) {
-        let isSuspicious = false;
+    _isScam(proposal) {
+        let isScam = false;
 
         let touchedAccounts = [];
         proposal.operations.forEach(o => {
@@ -143,22 +145,78 @@ class Proposals extends Component {
         touchedAccounts.push(proposer);
 
         if (__DEV__) {
-            console.log("proposal touched accounts", touchedAccounts);
+            console.log("_isScam proposal touched accounts", touchedAccounts);
         }
 
         touchedAccounts.forEach(_account => {
             if (accountUtils.isKnownScammer(_account)) {
-                isSuspicious = true;
+                isScam = true;
             }
             if (
                 this.props.account.get("blacklisted_accounts").some(item => {
                     return item === _account;
                 })
             ) {
-                isSuspicious = true;
+                isScam = true;
             }
         });
-        return isSuspicious;
+        return isScam;
+    }
+
+    _isUnknown(proposal) {
+        let isUnknown = true;
+
+        let touchedAccounts = [];
+        proposal.operations.forEach(o => {
+            touchedAccounts.push(o.getIn([1, "to"]));
+        });
+
+        let proposer = proposal.proposal.get("proposer");
+
+        touchedAccounts.push(proposer);
+
+        if (__DEV__) {
+            console.log(
+                "_isUnknown proposal touched accounts",
+                touchedAccounts
+            );
+        }
+
+        touchedAccounts.forEach(_account => {
+            if (
+                this.props.account.get("whitelisted_accounts").some(item => {
+                    return item === _account;
+                })
+            ) {
+                isUnknown = false;
+            }
+            let starred = AccountStore.getState().starredAccounts;
+            if (
+                starred.some(item => {
+                    let name = ChainStore.getAccount(item, false);
+                    if (!!name) {
+                        return name.get("id") == _account;
+                    } else {
+                        return false;
+                    }
+                })
+            ) {
+                isUnknown = false;
+            }
+            let contacts = AccountStore.getState().accountContacts;
+            if (
+                contacts.some(item => {
+                    let name = ChainStore.getAccount(item, false);
+                    if (!!name) {
+                        return name.get("id") == _account;
+                    }
+                    return false;
+                })
+            ) {
+                isUnknown = false;
+            }
+        });
+        return isUnknown;
     }
 
     render() {
@@ -271,6 +329,9 @@ class Proposals extends Component {
 
             const canApprove = accountNames.length + keyNames.length > 0;
 
+            let isScam = this._isScam(proposal);
+            let isUnknown = this._isUnknown(proposal);
+
             result.push(
                 <tr className="top-left-align" key={`${proposalId}_content`}>
                     <td>{text}</td>
@@ -295,16 +356,32 @@ class Proposals extends Component {
                     </td>
                     <td className="approval-buttons">
                         {this.props.hideFishingProposals &&
-                        this._isSucpicious(proposal) ? (
-                            <div
-                                data-tip={counterpart.translate(
-                                    "tooltip.propose_scam"
-                                )}
-                                className="tooltip has-error scam-error"
-                            >
-                                POSSIBLE SCAM
-                            </div>
-                        ) : (
+                            isScam && (
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "tooltip.propose_scam"
+                                    )}
+                                >
+                                    <div className="tooltip has-error scam-error">
+                                        SCAM ATTEMPT
+                                    </div>
+                                </Tooltip>
+                            )}
+                        {this.props.hideFishingProposals &&
+                            !isScam &&
+                            isUnknown && (
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "tooltip.propose_unknown"
+                                    )}
+                                >
+                                    <div className="tooltip has-error scam-error">
+                                        UNKNOWN SOURCE
+                                    </div>
+                                </Tooltip>
+                            )}
+                        {((!isScam && !isUnknown) ||
+                            !this.props.hideFishingProposals) && (
                             <button
                                 onClick={
                                     canApprove
