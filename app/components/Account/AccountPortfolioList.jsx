@@ -42,6 +42,12 @@ class AccountPortfolioList extends React.Component {
             isDepositModalVisible: false,
             isWithdrawModalVisible: false,
             isBurnModalVisible: false,
+            isBridgeModalVisibleBefore: false,
+            isSettleModalVisibleBefore: false,
+            isBorrowModalVisibleBefore: false,
+            isDepositModalVisibleBefore: false,
+            isWithdrawModalVisibleBefore: false,
+            isBurnModalVisibleBefore: false,
             borrow: null,
             settleAsset: "1.3.0",
             depositAsset: null,
@@ -133,7 +139,8 @@ class AccountPortfolioList extends React.Component {
 
     showBridgeModal() {
         this.setState({
-            isBridgeModalVisible: true
+            isBridgeModalVisible: true,
+            isBridgeModalVisibleBefore: true
         });
     }
 
@@ -145,7 +152,8 @@ class AccountPortfolioList extends React.Component {
 
     showWithdrawModal() {
         this.setState({
-            isWithdrawModalVisible: true
+            isWithdrawModalVisible: true,
+            isWithdrawModalVisibleBefore: true
         });
     }
 
@@ -157,7 +165,8 @@ class AccountPortfolioList extends React.Component {
 
     showBurnModal() {
         this.setState({
-            isBurnModalVisible: true
+            isBurnModalVisible: true,
+            isBurnModalVisibleBefore: true
         });
     }
 
@@ -169,7 +178,8 @@ class AccountPortfolioList extends React.Component {
 
     showSettleModal() {
         this.setState({
-            isSettleModalVisible: true
+            isSettleModalVisible: true,
+            isSettleModalVisibleBefore: true
         });
     }
 
@@ -181,7 +191,8 @@ class AccountPortfolioList extends React.Component {
 
     showDepositModal() {
         this.setState({
-            isDepositModalVisible: true
+            isDepositModalVisible: true,
+            isDepositModalVisibleBefore: true
         });
     }
 
@@ -194,6 +205,7 @@ class AccountPortfolioList extends React.Component {
     showBorrowModal(quoteAsset, backingAsset, account) {
         this.setState({
             isBorrowModalVisible: true,
+            isBorrowModalVisibleBefore: true,
             borrow: {
                 quoteAsset: quoteAsset,
                 backingAsset: backingAsset,
@@ -720,26 +732,22 @@ class AccountPortfolioList extends React.Component {
                     </td>
                     <td>
                         {isBitAsset && backingAsset ? (
-                            <div
-                                className="inline-block"
-                                data-place="bottom"
-                                data-tip={counterpart.translate(
-                                    settlePriceTitle,
-                                    {
-                                        asset: isAssetBitAsset
-                                            ? "bit" + symbol
-                                            : symbol,
-                                        backingAsset: isBackingBitAsset
-                                            ? "bit" + backingAsset.get("symbol")
-                                            : backingAsset.get("symbol"),
-                                        settleDelay:
-                                            options.force_settlement_delay_sec /
-                                            3600
-                                    }
-                                )}
+                            <Tooltip
+                                placement="bottom"
+                                title={counterpart.translate(settlePriceTitle, {
+                                    asset: isAssetBitAsset
+                                        ? "bit" + symbol
+                                        : symbol,
+                                    backingAsset: isBackingBitAsset
+                                        ? "bit" + backingAsset.get("symbol")
+                                        : backingAsset.get("symbol"),
+                                    settleDelay:
+                                        options.force_settlement_delay_sec /
+                                        3600
+                                })}
                             >
-                                {settleLink}
-                            </div>
+                                <div className="inline-block">{settleLink}</div>
+                            </Tooltip>
                         ) : (
                             emptyCell
                         )}
@@ -764,37 +772,42 @@ class AccountPortfolioList extends React.Component {
                     <td
                         style={{textAlign: "center"}}
                         className="column-hide-small"
-                        data-place="bottom"
-                        data-tip={counterpart.translate(
-                            "tooltip." +
-                                (includeAsset ? "hide_asset" : "show_asset")
-                        )}
                     >
-                        <a
-                            style={{marginRight: 0}}
-                            className={
-                                includeAsset ? "order-cancel" : "action-plus"
-                            }
-                            onClick={this._hideAsset.bind(
-                                this,
-                                asset_type,
-                                includeAsset
+                        <Tooltip
+                            placement="bottom"
+                            title={counterpart.translate(
+                                "tooltip." +
+                                    (includeAsset ? "hide_asset" : "show_asset")
                             )}
                         >
-                            <Icon
-                                name={
+                            <a
+                                style={{marginRight: 0}}
+                                className={
                                     includeAsset
-                                        ? "cross-circle"
-                                        : "plus-circle"
+                                        ? "order-cancel"
+                                        : "action-plus"
                                 }
-                                title={
+                                onClick={this._hideAsset.bind(
+                                    this,
+                                    asset_type,
                                     includeAsset
-                                        ? "icons.cross_circle.hide_asset"
-                                        : "icons.plus_circle.show_asset"
-                                }
-                                className="icon-14px"
-                            />
-                        </a>
+                                )}
+                            >
+                                <Icon
+                                    name={
+                                        includeAsset
+                                            ? "cross-circle"
+                                            : "plus-circle"
+                                    }
+                                    title={
+                                        includeAsset
+                                            ? "icons.cross_circle.hide_asset"
+                                            : "icons.plus_circle.show_asset"
+                                    }
+                                    className="icon-14px"
+                                />
+                            </a>
+                        </Tooltip>
                     </td>
                 </tr>
             );
@@ -945,16 +958,17 @@ class AccountPortfolioList extends React.Component {
                                     </td>
                                     <td>
                                         {isBitAsset ? (
-                                            <div
-                                                className="inline-block"
-                                                data-place="bottom"
-                                                data-tip={counterpart.translate(
+                                            <Tooltip
+                                                placement="bottom"
+                                                title={counterpart.translate(
                                                     "tooltip.borrow",
                                                     {asset: asset.get("symbol")}
                                                 )}
                                             >
-                                                {borrowLink}
-                                            </div>
+                                                <div className="inline-block">
+                                                    {borrowLink}
+                                                </div>
+                                            </Tooltip>
                                         ) : (
                                             emptyCell
                                         )}
@@ -963,41 +977,44 @@ class AccountPortfolioList extends React.Component {
                                     <td
                                         style={{textAlign: "center"}}
                                         className="column-hide-small"
-                                        data-place="bottom"
-                                        data-tip={counterpart.translate(
-                                            "tooltip." +
-                                                (includeAsset
-                                                    ? "hide_asset"
-                                                    : "show_asset")
-                                        )}
                                     >
-                                        <a
-                                            style={{marginRight: 0}}
-                                            className={
-                                                includeAsset
-                                                    ? "order-cancel"
-                                                    : "action-plus"
-                                            }
-                                            onClick={this._hideAsset.bind(
-                                                this,
-                                                asset.get("id"),
-                                                includeAsset
+                                        <Tooltip
+                                            placement="bottom"
+                                            title={counterpart.translate(
+                                                "tooltip." +
+                                                    (includeAsset
+                                                        ? "hide_asset"
+                                                        : "show_asset")
                                             )}
                                         >
-                                            <Icon
-                                                name={
+                                            <a
+                                                style={{marginRight: 0}}
+                                                className={
                                                     includeAsset
-                                                        ? "cross-circle"
-                                                        : "plus-circle"
+                                                        ? "order-cancel"
+                                                        : "action-plus"
                                                 }
-                                                title={
+                                                onClick={this._hideAsset.bind(
+                                                    this,
+                                                    asset.get("id"),
                                                     includeAsset
-                                                        ? "icons.cross_circle.hide_asset"
-                                                        : "icons.plus_circle.show_asset"
-                                                }
-                                                className="icon-14px"
-                                            />
-                                        </a>
+                                                )}
+                                            >
+                                                <Icon
+                                                    name={
+                                                        includeAsset
+                                                            ? "cross-circle"
+                                                            : "plus-circle"
+                                                    }
+                                                    title={
+                                                        includeAsset
+                                                            ? "icons.cross_circle.hide_asset"
+                                                            : "icons.plus_circle.show_asset"
+                                                    }
+                                                    className="icon-14px"
+                                                />
+                                            </a>
+                                        </Tooltip>
                                     </td>
                                 </tr>
                             );
@@ -1027,7 +1044,8 @@ class AccountPortfolioList extends React.Component {
             !this.state.borrow ||
             !this.state.borrow.quoteAsset ||
             !this.state.borrow.backingAsset ||
-            !this.state.borrow.account
+            !this.state.borrow.account ||
+            !this.state.isBorrowModalVisibleBefore
         ) {
             return null;
         }
@@ -1079,50 +1097,64 @@ class AccountPortfolioList extends React.Component {
                     leftPadding="1.5rem"
                 >
                     {this._renderSendModal()}
-                    {this._renderSettleModal()}
+                    {(this.state.isSettleModalVisible ||
+                        this.state.isSettleModalVisibleBefore) &&
+                        this._renderSettleModal()}
                     {this._renderBorrowModal()}
 
-                    <WithdrawModal
-                        hideModal={this.hideWithdrawModal}
-                        visible={this.state.isWithdrawModalVisible}
-                        backedCoins={this.props.backedCoins}
-                        initialSymbol={this.state.withdrawAsset}
-                    />
+                    {(this.state.isWithdrawModalVisible ||
+                        this.state.isWithdrawModalVisibleBefore) && (
+                        <WithdrawModal
+                            hideModal={this.hideWithdrawModal}
+                            visible={this.state.isWithdrawModalVisible}
+                            backedCoins={this.props.backedCoins}
+                            initialSymbol={this.state.withdrawAsset}
+                        />
+                    )}
 
                     {/* Deposit Modal */}
-                    <DepositModal
-                        visible={this.state.isDepositModalVisible}
-                        showModal={this.showDepositModal}
-                        hideModal={this.hideDepositModal}
-                        asset={this.state.depositAsset}
-                        account={this.props.account.get("name")}
-                        backedCoins={this.props.backedCoins}
-                    />
+                    {(this.state.isDepositModalVisible ||
+                        this.state.isDepositModalVisibleBefore) && (
+                        <DepositModal
+                            visible={this.state.isDepositModalVisible}
+                            showModal={this.showDepositModal}
+                            hideModal={this.hideDepositModal}
+                            asset={this.state.depositAsset}
+                            account={this.props.account.get("name")}
+                            backedCoins={this.props.backedCoins}
+                        />
+                    )}
 
                     {/* Bridge modal */}
-                    <SimpleDepositBlocktradesBridge
-                        visible={this.state.isBridgeModalVisible}
-                        showModal={this.showBridgeModal}
-                        hideModal={this.hideBridgeModal}
-                        action="deposit"
-                        account={this.props.account.get("name")}
-                        sender={this.props.account.get("id")}
-                        asset={this.state.bridgeAsset}
-                        balances={this.props.balances}
-                        bridges={currentBridges}
-                        isDown={this.props.gatewayDown.get("TRADE")}
-                    />
+                    {(this.state.isBridgeModalVisible ||
+                        this.state.isBridgeModalVisibleBefore) && (
+                        <SimpleDepositBlocktradesBridge
+                            visible={this.state.isBridgeModalVisible}
+                            showModal={this.showBridgeModal}
+                            hideModal={this.hideBridgeModal}
+                            action="deposit"
+                            account={this.props.account.get("name")}
+                            sender={this.props.account.get("id")}
+                            asset={this.state.bridgeAsset}
+                            balances={this.props.balances}
+                            bridges={currentBridges}
+                            isDown={this.props.gatewayDown.get("TRADE")}
+                        />
+                    )}
 
                     {/* Burn Modal */}
-                    <ReserveAssetModal
-                        visible={this.state.isBurnModalVisible}
-                        hideModal={this.hideBurnModal}
-                        asset={this.state.reserve}
-                        account={this.props.account}
-                        onClose={() => {
-                            ZfApi.publish("reserve_asset", "close");
-                        }}
-                    />
+                    {(this.state.isBurnModalVisible ||
+                        this.state.isBurnModalVisibleBefore) && (
+                        <ReserveAssetModal
+                            visible={this.state.isBurnModalVisible}
+                            hideModal={this.hideBurnModal}
+                            asset={this.state.reserve}
+                            account={this.props.account}
+                            onClose={() => {
+                                ZfApi.publish("reserve_asset", "close");
+                            }}
+                        />
+                    )}
                 </PaginatedList>
             </div>
         );
