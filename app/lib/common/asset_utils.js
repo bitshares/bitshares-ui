@@ -65,16 +65,14 @@ export default class AssetUtils {
             : assetConstants.uia_permission_mask;
         let flags = 0;
         permissions.forEach(permission => {
-            if (
-                flagBooleans[permission] /* && permission !== "global_settle" */
-            ) {
+            if (flagBooleans[permission] && permission !== "global_settle") {
                 flags += assetConstants.permission_flags[permission];
             }
         });
 
-        /* if (isBitAsset) {
+        if (isBitAsset && flagBooleans["global_settle"]) {
             flags += assetConstants.permission_flags["global_settle"];
-        } */
+        }
 
         return flags;
     }
