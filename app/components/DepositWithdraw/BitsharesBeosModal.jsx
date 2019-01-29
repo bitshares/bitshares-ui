@@ -122,6 +122,7 @@ class BitsharesBeosModal extends React.Component {
         }
 
         if (!from_account) return null;
+        if (asset.get("id") !== "1.3.0") return null;
         checkFeeStatusAsync({
             accountID: from_account.get("id"),
             feeID: asset.get("id"),
@@ -167,12 +168,27 @@ class BitsharesBeosModal extends React.Component {
             precision: asset.get("precision")
         });
         if (!balance || !feeAmount) return;
-        const hasBalance = checkBalance(
-            amount_to_send,
-            asset,
-            feeAmount,
-            balance
-        );
+        let hasBalance = null;
+        if (asset.get("id") === "1.3.0") {
+            hasBalance = checkBalance(
+                amount_to_send,
+                asset,
+                feeAmount,
+                balance
+            );
+        } else {
+            if (
+                parseInt(
+                    this.state.amount_to_send *
+                        utils.get_asset_precision(asset.get("precision")),
+                    10
+                ) <= balance.get("balance")
+            ) {
+                hasBalance = true;
+            } else {
+                hasBalance = false;
+            }
+        }
         if (hasBalance === null) return;
         this.setState({balance_error: !hasBalance});
         return hasBalance;
@@ -403,15 +419,22 @@ class BitsharesBeosModal extends React.Component {
                 precision: asset.get("precision")
             });
 
-            total.minus(totalFeeAmount);
-
-            this.setState(
-                {
+            if (asset.get("id") === "1.3.0") {
+                total.minus(totalFeeAmount);
+                this.setState(
+                    {
+                        amount_to_send: total.getAmount({real: true}),
+                        empty_amount_to_send_error: false
+                    },
+                    this._checkBalance
+                );
+            } else {
+                this.setState({
                     amount_to_send: total.getAmount({real: true}),
+                    balance_error: false,
                     empty_amount_to_send_error: false
-                },
-                this._checkBalance
-            );
+                });
+            }
         }
     }
 
