@@ -13,7 +13,14 @@ import WalletActions from "actions/WalletActions";
 import BackupActions, {restore, backup} from "actions/BackupActions";
 import AccountActions from "actions/AccountActions";
 import {Apis} from "bitsharesjs-ws";
-import {Modal, Button, Form, Input, Switch} from "bitshares-ui-style-guide";
+import {
+    Modal,
+    Button,
+    Form,
+    Input,
+    Switch,
+    Tooltip
+} from "bitshares-ui-style-guide";
 import utils from "common/utils";
 import AccountSelector from "../Account/AccountSelectorAnt";
 import {PrivateKey} from "bitsharesjs";
@@ -70,11 +77,7 @@ class WalletUnlockModal extends React.Component {
         } = np;
 
         const newState = {};
-        if (
-            (newPasswordAccount && !accountName) ||
-            newPasswordAccount !== accountName
-        )
-            newState.accountName = newPasswordAccount;
+        // Updating the accountname through the listener breaks UX (#2335)
         if (walletSelected && !restoringBackup && !newCurrentWallet)
             newState.walletSelected = false;
         if (this.props.passwordLogin != np.passwordLogin) {
@@ -412,19 +415,22 @@ class WalletUnlockModal extends React.Component {
         let footer = [];
         if (passwordLogin) {
             footer.push(
-                <div
-                    style={{float: "left", cursor: "pointer"}}
-                    onClick={this.handleRememberMe.bind(this)}
-                    data-tip={counterpart.translate(
+                <Tooltip
+                    title={counterpart.translate(
                         "wallet.remember_me_explanation"
                     )}
                 >
-                    <Translate content="wallet.remember_me" />
-                    <Switch
-                        checked={this.state.rememberMe}
-                        onChange={this.handleRememberMe.bind(this)}
-                    />
-                </div>
+                    <div
+                        style={{float: "left", cursor: "pointer"}}
+                        onClick={this.handleRememberMe.bind(this)}
+                    >
+                        <Translate content="wallet.remember_me" />
+                        <Switch
+                            checked={this.state.rememberMe}
+                            onChange={this.handleRememberMe.bind(this)}
+                        />
+                    </div>
+                </Tooltip>
             );
         }
         footer.push(

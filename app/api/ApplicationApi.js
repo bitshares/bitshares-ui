@@ -79,30 +79,50 @@ const ApplicationApi = {
         });
     },
 
-    /**
-        @param propose_account (or null) pays the fee to create the proposal, also used as memo from
-    */
-    transfer({
+    _get_memo_keys(account, with_private_keys = true) {
+        let memo = {
+            public_key: null,
+            private_key: null
+        };
+        memo.public_key = account.getIn(["options", "memo_key"]);
+        // The 1s are base58 for all zeros (null)
+        if (/111111111111111111111/.test(memo.public_key)) {
+            memo.public_key = null;
+        }
+        if (with_private_keys) {
+            memo.private_key = WalletDb.getPrivateKey(memo.public_key);
+            if (!memo.private_key) {
+                Notification.error({
+                    message: counterpart.translate(
+                        "account.errors.memo_missing"
+                    )
+                });
+                throw new Error(
+                    "Missing private memo key for sender: " +
+                        account.get("name")
+                );
+            }
+        }
+    },
+
+    _create_transfer_op({
         // OBJECT: { ... }
         from_account,
         to_account,
         amount,
         asset,
         memo,
-        broadcast = true,
+        propose_account = null, // should be called memo_sender, but is not for compatibility reasons with transfer. Is set to "from_account" for non proposals
         encrypt_memo = true,
         optional_nonce = null,
-        propose_account = null,
-        fee_asset_id = "1.3.0"
+        fee_asset_id = "1.3.0",
+        transactionBuilder = null
     }) {
-        let memo_sender = propose_account || from_account;
-
         let unlock_promise = WalletUnlockActions.unlock();
 
         return Promise.all([
             FetchChain("getAccount", from_account),
             FetchChain("getAccount", to_account),
-            FetchChain("getAccount", memo_sender),
             FetchChain("getAccount", propose_account),
             FetchChain("getAsset", asset),
             FetchChain("getAsset", fee_asset_id),
@@ -112,76 +132,41 @@ const ApplicationApi = {
                 let [
                     chain_from,
                     chain_to,
-                    chain_memo_sender,
                     chain_propose_account,
                     chain_asset,
                     chain_fee_asset
                 ] = res;
 
-                let memo_from_public, memo_to_public;
-                if (memo && encrypt_memo) {
-                    memo_from_public = chain_memo_sender.getIn([
-                        "options",
-                        "memo_key"
-                    ]);
-
-                    // The 1s are base58 for all zeros (null)
-                    if (/111111111111111111111/.test(memo_from_public)) {
-                        memo_from_public = null;
-                    }
-
-                    memo_to_public = chain_to.getIn(["options", "memo_key"]);
-                    if (/111111111111111111111/.test(memo_to_public)) {
-                        memo_to_public = null;
-                    }
-                }
-
-                let propose_acount_id = propose_account
-                    ? chain_propose_account.get("id")
-                    : null;
-
-                let memo_from_privkey;
-                if (encrypt_memo && memo) {
-                    memo_from_privkey = WalletDb.getPrivateKey(
-                        memo_from_public
-                    );
-
-                    if (!memo_from_privkey) {
-                        Notification.error({
-                            message: counterpart.translate(
-                                "account.errors.memo_missing"
-                            )
-                        });
-                        throw new Error(
-                            "Missing private memo key for sender: " +
-                                memo_sender
-                        );
-                    }
-                }
-
                 let memo_object;
-                if (memo && memo_to_public && memo_from_public) {
-                    let nonce =
-                        optional_nonce == null
-                            ? TransactionHelper.unique_nonce_uint64()
-                            : optional_nonce;
-
-                    memo_object = {
-                        from: memo_from_public,
-                        to: memo_to_public,
-                        nonce,
-                        message: encrypt_memo
-                            ? Aes.encrypt_with_checksum(
-                                  memo_from_privkey,
-                                  memo_to_public,
-                                  nonce,
-                                  memo
-                              )
-                            : Buffer.isBuffer(memo)
-                                ? memo.toString("utf-8")
-                                : memo
-                    };
+                if (memo) {
+                    let memo_sender = this._get_memo_keys(
+                        chain_propose_account,
+                        encrypt_memo
+                    );
+                    let memo_to = this._get_memo_keys(chain_to, encrypt_memo);
+                    if (!!memo_sender.public_key && !!memo_to.public_key) {
+                        let nonce =
+                            optional_nonce == null
+                                ? TransactionHelper.unique_nonce_uint64()
+                                : optional_nonce;
+                        memo_object = {
+                            from: memo_sender.public_key,
+                            to: memo_to.public_key,
+                            nonce,
+                            message: encrypt_memo
+                                ? Aes.encrypt_with_checksum(
+                                      memo_sender.private_key,
+                                      memo_to.public_key,
+                                      nonce,
+                                      memo
+                                  )
+                                : Buffer.isBuffer(memo)
+                                    ? memo.toString("utf-8")
+                                    : memo
+                        };
+                    }
                 }
+
                 // Allow user to choose asset with which to pay fees #356
                 let fee_asset = chain_fee_asset.toJS();
 
@@ -195,7 +180,12 @@ const ApplicationApi = {
                     fee_asset_id = "1.3.0";
                 }
 
-                let tr = new TransactionBuilder();
+                let tr = null;
+                if (transactionBuilder == null) {
+                    tr = new TransactionBuilder();
+                } else {
+                    tr = transactionBuilder;
+                }
                 let transfer_op = tr.get_type_operation("transfer", {
                     fee: {
                         amount: 0,
@@ -206,25 +196,126 @@ const ApplicationApi = {
                     amount: {amount, asset_id: chain_asset.get("id")},
                     memo: memo_object
                 });
+                if (__DEV__) {
+                    console.log("built transfer", transfer_op);
+                }
+                return {
+                    transfer_op,
+                    chain_from,
+                    chain_to,
+                    chain_propose_account,
+                    chain_asset,
+                    chain_fee_asset
+                };
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    },
 
-                return tr.update_head_block().then(() => {
+    /**
+     @param propose_account (or null) pays the fee to create the proposal, also used as memo from
+     */
+    transfer({
+        // OBJECT: { ... }
+        from_account,
+        to_account,
+        amount,
+        asset,
+        memo,
+        broadcast = true,
+        encrypt_memo = true,
+        optional_nonce = null,
+        propose_account = null,
+        fee_asset_id = "1.3.0",
+        transactionBuilder = null
+    }) {
+        propose_account = propose_account || from_account;
+        if (transactionBuilder == null) {
+            transactionBuilder = new TransactionBuilder();
+        }
+        return this._create_transfer_op({
+            from_account,
+            to_account,
+            amount,
+            asset,
+            memo,
+            propose_account,
+            encrypt_memo,
+            optional_nonce,
+            fee_asset_id,
+            transactionBuilder
+        }).then(transfer_obj => {
+            return transactionBuilder
+                .update_head_block()
+                .then(() => {
                     if (propose_account) {
-                        tr.add_type_operation("proposal_create", {
-                            proposed_ops: [{op: transfer_op}],
-                            fee_paying_account: propose_acount_id
-                        });
+                        transactionBuilder.add_type_operation(
+                            "proposal_create",
+                            {
+                                proposed_ops: [{op: transfer_obj.transfer_op}],
+                                fee_paying_account: transfer_obj.chain_propose_account.get(
+                                    "id"
+                                )
+                            }
+                        );
                     } else {
-                        tr.add_operation(transfer_op);
+                        transactionBuilder.add_operation(
+                            transfer_obj.transfer_op
+                        );
                     }
-
                     return WalletDb.process_transaction(
-                        tr,
+                        transactionBuilder,
                         null, //signer_private_keys,
                         broadcast
                     );
+                })
+                .catch(err => {
+                    console.error(err);
                 });
-            })
-            .catch(() => {});
+        });
+    },
+
+    transfer_list(list_of_transfers) {
+        return WalletUnlockActions.unlock().then(() => {
+            let proposer = null;
+            let transfers = [];
+            let tr = new TransactionBuilder();
+            list_of_transfers.forEach(transferData => {
+                transferData.transactionBuilder = tr;
+                transfers.push(this._create_transfer_op(transferData));
+            });
+            console.log(transfers);
+
+            return Promise.all(transfers)
+                .then(result => {
+                    return tr.update_head_block().then(() => {
+                        let propose = [];
+                        result.forEach((item, idx) => {
+                            if (list_of_transfers[idx].propose_account) {
+                                if (proposer == null) {
+                                    proposer = item.chain_propose_account;
+                                }
+                                propose.push({op: item.transfer_op});
+                            } else {
+                                tr.add_operation(item.transfer_op);
+                            }
+                        });
+                        tr.add_type_operation("proposal_create", {
+                            proposed_ops: propose,
+                            fee_paying_account: proposer.get("id")
+                        });
+                        return WalletDb.process_transaction(
+                            tr,
+                            null, //signer_private_keys,
+                            true
+                        );
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        });
     },
 
     issue_asset(

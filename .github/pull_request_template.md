@@ -3,6 +3,14 @@ Closes #[Insert issue number]
 
 [Insert description of what you did, any description how to test or check your changes are welcome]
 
+<h2>General</h2>
+lease make sure the following is done:
+
+- Pull request is onto develop
+- If you haven't already, have a look at 
+  - https://github.com/bitshares/bitshares-ui/blob/develop/CODE_OF_CONDUCT.md
+  - https://github.com/bitshares/bitshares-ui/blob/develop/CONTRIBUTING.md
+
 <h2>Code Preparation</h2>
 
 _Please review all your changes one last time before committing_
@@ -24,7 +32,7 @@ _The branch has been tested on the following browsers (desktop and mobile view)_
 
 <h2>User interface changes</h2>
 
-_Please make sure you tested your changes in all themes_
+_Delete this section if there weren't any UI changes. Please make sure you tested your changes in all themes_
 
 - [ ] Dark
 - [ ] Light

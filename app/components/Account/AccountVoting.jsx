@@ -20,7 +20,7 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import SettingsStore from "stores/SettingsStore";
 import stringSimilarity from "string-similarity";
 import {hiddenProposals} from "../../lib/common/hideProposals";
-import {Switch} from "bitshares-ui-style-guide";
+import {Switch, Tooltip} from "bitshares-ui-style-guide";
 import AccountStore from "stores/AccountStore";
 
 class AccountVoting extends React.Component {
@@ -806,18 +806,21 @@ class AccountVoting extends React.Component {
             <div
                 className="inline-block"
                 style={{marginLeft: "0.5em"}}
-                data-tip={counterpart.translate("tooltip.legacy_explanation")}
                 onClick={() => {
                     this.setState({
                         hideLegacyProposals: !this.state.hideLegacyProposals
                     });
                 }}
             >
-                <Switch
-                    style={{marginRight: 6}}
-                    checked={this.state.hideLegacyProposals}
-                />
-                <Translate content="account.votes.hide_legacy_proposals" />
+                <Tooltip
+                    title={counterpart.translate("tooltip.legacy_explanation")}
+                >
+                    <Switch
+                        style={{marginRight: 6}}
+                        checked={this.state.hideLegacyProposals}
+                    />
+                    <Translate content="account.votes.hide_legacy_proposals" />
+                </Tooltip>
             </div>
         );
 
@@ -1191,8 +1194,8 @@ class AccountVoting extends React.Component {
                                         {workerTableIndex === 0
                                             ? newWorkers
                                             : workerTableIndex === 1
-                                            ? workers
-                                            : expiredWorkers}
+                                                ? workers
+                                                : expiredWorkers}
                                     </tbody>
                                 </table>
                             </Tab>
