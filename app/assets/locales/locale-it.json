@@ -51,7 +51,7 @@
         "ignore": "Nascondi",
         "in_open": "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
         "in_open_value": "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
-        "intro_text_1": "Il tuo Exchange decentralizzato",
+        "intro_text_1": "Il tuo Platform decentralizzato",
         "intro_text_2": "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
         "intro_text_3": "<b>Il DEX</b> permette anche la creazione di asset generati dagli utenti (user-issued assets, UIA), con cui si può fare trading con altri UIA o altri asset trustless sulla piattaforma.  Un distributore molto noto sul DEX è <b>OpenLedger</b>, che offre una gamma di asset che include BTC, ETH, STEEM, DASH, LTC, DOGE e molti altri",
         "intro_text_4": "Ciò garantisce ai trader di criptovalute un unico mix di trading tradizionale e decentralizzato, il tutto con la familiare interfaccia di un exchange. Buon trading!",
