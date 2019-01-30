@@ -421,6 +421,28 @@ class BitsharesBeosModal extends React.Component {
 
             if (asset.get("id") === "1.3.0") {
                 total.minus(totalFeeAmount);
+                if (total.getAmount({real: true})) {
+                    const i = total
+                        .getAmount({real: true})
+                        .toString()
+                        .indexOf(".");
+                    if (i > -1) {
+                        const newAmount = total
+                            .getAmount({real: true})
+                            .toString()
+                            .substr(0, i + 5);
+                        if (!newAmount.endsWith(".")) {
+                            this.setState(
+                                {
+                                    amount_to_send: newAmount,
+                                    empty_amount_to_send_error: false
+                                },
+                                this._checkBalance
+                            );
+                            return;
+                        }
+                    }
+                }
                 this.setState(
                     {
                         amount_to_send: total.getAmount({real: true}),
