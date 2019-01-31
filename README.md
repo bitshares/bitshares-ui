@@ -1,3 +1,10 @@
+# Regarded current Worker Funding
+Due to the current BTS price, current Worker can no longer cover all expenses as proposed in the worker below. Current development process has currently been slowed down significantly until a new worker is supported. 
+
+We continue to work towards a solution for the next worker and will communicate with updates [on bitsharestalk.org](https://bitsharestalk.org/index.php?topic=26858.0) as soon as possible.
+
+----
+
 BitShares-UI
 ============
 [中文版](README_zh.md)
