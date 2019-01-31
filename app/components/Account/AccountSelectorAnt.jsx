@@ -399,7 +399,7 @@ class AccountSelector extends React.Component {
                                 this.props.placeholder ||
                                 counterpart.translate("account.name")
                             }
-                            ref="user_input"
+                            ref={this.props.inputRef || "user_input"}
                             onChange={this.onInputChanged.bind(this)}
                             onKeyDown={this.onKeyDown.bind(this)}
                             tabIndex={this.props.tabIndex}
