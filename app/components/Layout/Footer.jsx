@@ -554,14 +554,22 @@ class Footer extends React.Component {
                         {this.props.backup_recommended ? (
                             <span>
                                 <div className="grid-block">
-                                    <a
-                                        className="shrink txtlabel facolor-alert"
-                                        data-tip="Please understand that you are responsible for making your own backup&hellip;"
-                                        data-type="warning"
-                                        onClick={this.onBackup.bind(this)}
+                                    <Tooltip
+                                        overlay={
+                                            <div>
+                                                Please understand that you are
+                                                responsible for making your own
+                                                backup&hellip;
+                                            </div>
+                                        }
                                     >
-                                        <Translate content="footer.backup" />
-                                    </a>
+                                        <a
+                                            className="shrink txtlabel facolor-alert"
+                                            onClick={this.onBackup.bind(this)}
+                                        >
+                                            <Translate content="footer.backup" />
+                                        </a>
+                                    </Tooltip>
                                     &nbsp;&nbsp;
                                 </div>
                             </span>

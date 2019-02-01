@@ -11,7 +11,7 @@ import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
 import PropTypes from "prop-types";
-import {Form, Input} from "bitshares-ui-style-guide";
+import {Form, Input, Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -336,39 +336,41 @@ class AccountSelector extends React.Component {
         let linked_status = !this.props.account ? null : myActiveAccounts.has(
             account.get("name")
         ) || contacts.has(account.get("name")) ? (
-            <span
-                className="tooltip green"
-                data-place="top"
-                data-tip={counterpart.translate("tooltip.follow_user")}
+            <Tooltip
+                placement="top"
+                title={counterpart.translate("tooltip.follow_user")}
                 onClick={this._onRemoveContact.bind(this)}
             >
-                <Icon
-                    style={{
-                        position: "absolute",
-                        top: "-0.15em",
-                        right: ".2em"
-                    }}
-                    name="user"
-                    title="icons.user.following"
-                />
-            </span>
+                <span className="tooltip green">
+                    <Icon
+                        style={{
+                            position: "absolute",
+                            top: "-0.15em",
+                            right: ".2em"
+                        }}
+                        name="user"
+                        title="icons.user.following"
+                    />
+                </span>
+            </Tooltip>
         ) : (
-            <span
-                className="tooltip"
-                data-place="top"
-                data-tip={counterpart.translate("tooltip.follow_user_add")}
+            <Tooltip
+                placement="top"
+                title={counterpart.translate("tooltip.follow_user_add")}
                 onClick={this._onAddContact.bind(this)}
             >
-                <Icon
-                    style={{
-                        position: "absolute",
-                        top: "-0.05em",
-                        right: ".2em"
-                    }}
-                    name="plus-circle"
-                    title="icons.plus_circle.add_contact"
-                />
-            </span>
+                <span className="tooltip">
+                    <Icon
+                        style={{
+                            position: "absolute",
+                            top: "-0.05em",
+                            right: ".2em"
+                        }}
+                        name="plus-circle"
+                        title="icons.plus_circle.add_contact"
+                    />
+                </span>
+            </Tooltip>
         );
 
         let action_class = classnames("button", {
@@ -399,7 +401,7 @@ class AccountSelector extends React.Component {
                                 this.props.placeholder ||
                                 counterpart.translate("account.name")
                             }
-                            ref="user_input"
+                            ref={this.props.inputRef || "user_input"}
                             onChange={this.onInputChanged.bind(this)}
                             onKeyDown={this.onKeyDown.bind(this)}
                             tabIndex={this.props.tabIndex}
