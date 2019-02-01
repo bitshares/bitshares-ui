@@ -25,7 +25,7 @@ import {debounce} from "lodash-es";
 import {DecimalChecker} from "../Utility/DecimalChecker";
 import {openledgerAPIs} from "api/apiConfig";
 import {getWalletName} from "branding";
-import {Modal} from "bitshares-ui-style-guide";
+import {Modal, Tooltip} from "bitshares-ui-style-guide";
 
 class DepositWithdrawContent extends DecimalChecker {
     static propTypes = {
@@ -578,15 +578,15 @@ class DepositWithdrawContent extends DecimalChecker {
 
                         <div className="form-label select floating-dropdown">
                             <div className="dropdown-wrapper inactive">
-                                <div
-                                    data-place="right"
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    placement="right"
+                                    title={counterpart.translate(
                                         "tooltip.withdraw_address",
                                         {asset: assetName}
                                     )}
                                 >
                                     ?
-                                </div>
+                                </Tooltip>
                             </div>
                         </div>
                     </div>
@@ -677,23 +677,24 @@ class DepositWithdrawContent extends DecimalChecker {
                 {this._renderCurrentBalance()}
 
                 <div className="SimpleTrade__withdraw-row">
-                    <p
-                        style={{marginBottom: 10}}
-                        data-place="right"
-                        data-tip={counterpart.translate("tooltip.deposit_tip", {
+                    <Tooltip
+                        placement="right"
+                        title={counterpart.translate("tooltip.deposit_tip", {
                             asset: assetName
                         })}
                     >
-                        <Translate
-                            className="help-tooltip"
-                            content="gateway.deposit_to"
-                            asset={assetName}
-                        />
-                        :
-                        <label className="fz_12 left-label">
-                            <Translate content="gateway.deposit_notice_delay" />
-                        </label>
-                    </p>
+                        <p style={{marginBottom: 10}}>
+                            <Translate
+                                className="help-tooltip"
+                                content="gateway.deposit_to"
+                                asset={assetName}
+                            />
+                            :
+                            <label className="fz_12 left-label">
+                                <Translate content="gateway.deposit_notice_delay" />
+                            </label>
+                        </p>
+                    </Tooltip>
                     {!addressValue ? (
                         <LoadingIndicator type="three-bounce" />
                     ) : (
@@ -781,20 +782,23 @@ class DepositWithdrawContent extends DecimalChecker {
                 {assetName}
             </span>
         ) : (
-            <button
-                data-place="right"
-                data-tip={counterpart.translate("tooltip.withdraw_full")}
-                className="button"
-                style={{border: "2px solid black", borderLeft: "none"}}
-                onClick={this._updateAmount.bind(
-                    this,
-                    !currentBalance
-                        ? 0
-                        : parseInt(currentBalance.get("balance"), 10)
-                )}
+            <Tooltip
+                placement="right"
+                title={counterpart.translate("tooltip.withdraw_full")}
             >
-                <Icon name="clippy" title="icons.clippy.withdraw_full" />
-            </button>
+                <button
+                    className="button"
+                    style={{border: "2px solid black", borderLeft: "none"}}
+                    onClick={this._updateAmount.bind(
+                        this,
+                        !currentBalance
+                            ? 0
+                            : parseInt(currentBalance.get("balance"), 10)
+                    )}
+                >
+                    <Icon name="clippy" title="icons.clippy.withdraw_full" />
+                </button>
+            </Tooltip>
         );
 
         return (

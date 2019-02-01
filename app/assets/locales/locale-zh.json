@@ -51,7 +51,7 @@
         "ignore": "忽略",
         "in_open": "这是你在所有委单中的 %(asset)s 资产的数量。",
         "in_open_value": "这是你在所有委单中的 %(asset)s 资产的大致价值。",
-        "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所（通称DEX）。 DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
+        "intro_text_1": "Your Decentralized Platform",
         "intro_text_2": "发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
         "intro_text_3": "尽情享受交易的乐趣吧！",
         "intro_text_4": "<br/>网站：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>GitHub：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
@@ -1740,6 +1740,7 @@
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
             "next": "Next",
             "now_ready": "Finalize the creation of your own Collateralized Debt Position",
             "previous": "Previous",
@@ -1868,6 +1869,7 @@
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议另一个用户发起交易",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
         "registration": {
@@ -1893,7 +1895,7 @@
     },
     "transaction": {
         "amount_sell": "出售数量",
-        "asset_claim_fees": "从 %(asset)s 手续费池中领取 %(balance_amount)s",
+        "asset_claim_fees": "从 {asset} 手续费池中领取 {balance_amount}",
         "asset_reserve": "销毁资产数量",
         "at": "@",
         "balance_id": "余额 ID",

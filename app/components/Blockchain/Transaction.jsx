@@ -29,6 +29,7 @@ import {
     scrollSpy,
     scroller
 } from "react-scroll";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 require("./operations.scss");
 require("./json-inspector.scss");
@@ -291,18 +292,18 @@ class Transaction extends React.Component {
 
                     rows.push(
                         <tr key={key++}>
-                            <td
-                                data-place="left"
-                                data-class="tooltip-zindex"
-                                className="tooltip"
-                                data-tip={counterpart.translate(
-                                    "tooltip.buy_min"
-                                )}
-                            >
-                                <Translate
-                                    component="span"
-                                    content="exchange.buy_min"
-                                />
+                            <td>
+                                <Tooltip
+                                    placement="left"
+                                    title={counterpart.translate(
+                                        "tooltip.buy_min"
+                                    )}
+                                >
+                                    <Translate
+                                        component="span"
+                                        content="exchange.buy_min"
+                                    />
+                                </Tooltip>
                             </td>
                             <td>
                                 <FormattedAsset
