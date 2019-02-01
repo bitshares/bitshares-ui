@@ -103,6 +103,7 @@ const ApplicationApi = {
                 );
             }
         }
+        return memo;
     },
 
     _create_transfer_op({
@@ -120,10 +121,11 @@ const ApplicationApi = {
     }) {
         let unlock_promise = WalletUnlockActions.unlock();
 
+        let memo_sender_account = propose_account || from_account;
         return Promise.all([
             FetchChain("getAccount", from_account),
             FetchChain("getAccount", to_account),
-            FetchChain("getAccount", propose_account),
+            FetchChain("getAccount", memo_sender_account),
             FetchChain("getAsset", asset),
             FetchChain("getAsset", fee_asset_id),
             unlock_promise
@@ -132,10 +134,15 @@ const ApplicationApi = {
                 let [
                     chain_from,
                     chain_to,
-                    chain_propose_account,
+                    chain_memo_sender,
                     chain_asset,
                     chain_fee_asset
                 ] = res;
+
+                let chain_propose_account = null;
+                if (propose_account) {
+                    chain_propose_account = chain_memo_sender;
+                }
 
                 let memo_object;
                 if (memo) {
@@ -143,7 +150,7 @@ const ApplicationApi = {
                         chain_propose_account,
                         encrypt_memo
                     );
-                    let memo_to = this._get_memo_keys(chain_to, encrypt_memo);
+                    let memo_to = this._get_memo_keys(chain_to, false);
                     if (!!memo_sender.public_key && !!memo_to.public_key) {
                         let nonce =
                             optional_nonce == null
@@ -204,6 +211,7 @@ const ApplicationApi = {
                     chain_from,
                     chain_to,
                     chain_propose_account,
+                    chain_memo_sender,
                     chain_asset,
                     chain_fee_asset
                 };
@@ -230,7 +238,6 @@ const ApplicationApi = {
         fee_asset_id = "1.3.0",
         transactionBuilder = null
     }) {
-        propose_account = propose_account || from_account;
         if (transactionBuilder == null) {
             transactionBuilder = new TransactionBuilder();
         }

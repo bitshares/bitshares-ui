@@ -1897,7 +1897,8 @@
         "transfer_actions": " Haga clic aquí para hacer una transferencia, o para depositar / retirar aquellos activos que lo soportan.",
         "update_position": "Haga clic aquí para actualizar su posición. En cualquier momento puede cambiar los neveles de deuda y/o el colateral de su posición.",
         "withdraw_address": "Si aún no tienes una %(asset)s dirección, busca un proveedor de billetera y crea uno para completar el retiro del saldo.",
-        "withdraw_full": "Haga clic para retirar el saldo completo"
+        "withdraw_full": "Haga clic para retirar el saldo completo",
+        "add_memo_field": "Añadir campo de texto memo"
     },
     "transaction": {
         "amount_sell": "Monto a vender",

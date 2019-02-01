@@ -1891,7 +1891,8 @@
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "withdraw_full": "Click to withdraw the full balance"
+        "withdraw_full": "Click to withdraw the full balance",
+        "add_memo_field": "Add memo text field"
     },
     "transaction": {
         "amount_sell": "Montant à vendre",

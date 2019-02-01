@@ -1891,7 +1891,8 @@
         "transfer_actions": "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
         "update_position": "Clicca qui per aggiornare la tua posizione. Puoi cambiare il debito e/o i livelli di garanzia della tua posizione in qualunque momento.",
         "withdraw_address": "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
-        "withdraw_full": "Clicca per prelevare l'intero saldo"
+        "withdraw_full": "Clicca per prelevare l'intero saldo",
+        "add_memo_field": "Aggiungi il campo di testo memo"
     },
     "transaction": {
         "amount_sell": "Quantità da vendere",
