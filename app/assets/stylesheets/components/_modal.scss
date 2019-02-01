@@ -144,25 +144,3 @@
     width: 100%;
     margin-bottom: 30px;
 }
-
-.ant-modal {
-    .ant-modal-footer {
-        .auto-lock-wrapper {
-            display: inline-flex;
-            align-items: center;
-        }
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .ant-modal {
-        .ant-modal-footer {
-            .auto-lock-wrapper {
-                display: flex;
-                width: 100%;
-                justify-content: space-between;
-                margin-top: 45px;
-            }
-        }
-    }
-}
