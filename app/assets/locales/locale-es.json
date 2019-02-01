@@ -51,7 +51,7 @@
         "ignore": "Ocultar",
         "in_open": "Esta es la cantidad de %(asset)s que usted tiene en pedidos abiertos.",
         "in_open_value": "Este es el valor estimado de lo %(asset)s que usted tiene en pedidos abiertos.",
-        "intro_text_1": "Su Decentralized Exchange",
+        "intro_text_1": "Su Decentralized Platform",
         "intro_text_2": "<b>El DEX</b> está inherentemente descentralizado, permitiéndote comerciar BitShares core token (BTS) y un rango de activos sin confianza con precio estable, vinculado al mercado como bitUSD, bitCNY, bitBTC, bitGold y mucho mas. estos activos pueden ser comerciados sin <b>zero</b> rischio de contraparte, poniéndote en control total de tus fondos.",
         "intro_text_3": "<b>El DEX</b> también permite la creación de activos emitidos por el usuario (UIAs), que pueden ser comerciados en contra de cualquier otro UIAs o activos sin confianza en la plataforma.  Un emisor muy conocido en The DEX es <b> OpenLedger</b>, que ofrece una serie de activos que incluyen BTC, ETH, STEEM, DASH, LTC, DOGE, y mucho mas",
         "intro_text_4": "Esto le da a los comerciantes de criptomonedas una combinación única de comercio tradicional y descentralizado, todo en una interfaz de intercambio familiar. Feliz comercio!",
@@ -1696,6 +1696,7 @@
         "view_keys": "Ver claves",
         "wallet": "Billetera local",
         "walletLockTimeout": "Tiempo de bloqueo automático de Wallet (seconds, 0 to disable)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Se requiere billetera local",
         "wallet_required_text": "Para restaurar una copia de seguridad, primero deberá cambiar a una billetera local, haga clic en el botón de abajo",
         "wallet_text": "Controle los detalles de su billetera local.",
@@ -1809,6 +1810,7 @@
         "title": "Error al sincronizar con el API del servidor "
     },
     "tooltip": {
+        "add_memo_field": "Añadir campo de texto memo",
         "borrow": "pedir prestado %(asset)s desde la red. Esto crea un contrato inteligente que bloquea su colateral hasta que modifique la posición o se requiera una llamada a mergen.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",

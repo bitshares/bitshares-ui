@@ -51,7 +51,7 @@
         "ignore": "非表示",
         "in_open": "これは注文中の%(asset)sの金額です。",
         "in_open_value": "これは注文中の%(asset)sの相当額です。",
-        "intro_text_1": "あなたのための分散型取引所",
+        "intro_text_1": "Your Decentralized Platform",
         "intro_text_2": "BitSharesは<b>DEX</b>として分散化されており、BitSharesのコアトークンであるBTSと、bitUSD、bitCNY、bitBTC、bitGoldなどのトラストレスで価格安定性のあるアセット間のトレードを可能にします。これらの資産はすべてカウンターパーティリスク<b>ゼロ</b>で取引することができるため、あなた自身が資金を完全にコントロールすることができます。",
         "intro_text_3": "<b>DEX</b>では、ユーザー発行型アセット（UIA）の作成も可能です。ユーザー発行型アセットは、プラットフォーム上の他のユーザー発行型アセット、及びトラストレスアセット間のトレードが可能です。 DEX上でよく知られているアセット発行者である、<b>OpenLedger</b>、はBTC、ETH、STEEM、DASH、LTC、DOGE、その他多数のアセットをホスティングしています。",
         "intro_text_4": "これにより、仮想通貨トレーダーは使い慣れた取引インタフェースを通して、伝統的なトレーディングスタイルと分散型のトレーディングスタイルのユニークな融合を体験することができます。",
@@ -1690,6 +1690,7 @@
         "view_keys": "キーを見る",
         "wallet": "ウォレット",
         "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "ウォレットモデルが必要です",
         "wallet_required_text": "バックアップをリストアするには、まずウォレットモデルに切り替える必要があります。下のボタンをクリックしてください。",
         "wallet_text": "ウォレットの詳細を制御する。",
@@ -1803,6 +1804,7 @@
         "title": "APIサーバとの同期に失敗しました"
     },
     "tooltip": {
+        "add_memo_field": "メモテキストフィールドを追加",
         "borrow": "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
