@@ -801,7 +801,7 @@ export default class Barter extends Component {
                                         index
                                     )}
                                     size="small"
-                                    icon="plus-circle"
+                                    icon="message"
                                     className="add-memo-btn"
                                 />
                             </Tooltip>
@@ -868,7 +868,7 @@ export default class Barter extends Component {
                                         index
                                     )}
                                     size="small"
-                                    icon="plus-circle"
+                                    icon="message"
                                     className="add-memo-btn"
                                 />
                             </Tooltip>
@@ -1332,7 +1332,7 @@ export default class Barter extends Component {
                                 <Button
                                     onClick={this.handleMemoOpen("escrow", 0)}
                                     size="small"
-                                    icon="plus-circle"
+                                    icon="message"
                                     className="add-memo-btn"
                                 />
                             </Tooltip>
