@@ -1690,6 +1690,7 @@
         "view_keys": "Anahtarları göster",
         "wallet": "Cüzdan",
         "walletLockTimeout": "Otomatik cüzdan kilitlenme süresi (saniye)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Wallet model required",
         "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
         "wallet_text": "Cüzdan detayları",
@@ -1803,6 +1804,7 @@
         "title": "API sunucusu bağlantısı yok."
     },
     "tooltip": {
+        "add_memo_field": "Add memo text field",
         "borrow": "Blokzincirinden %(asset)s borç al. Bu işlem ile belirli bir miktar teminat belirleyerek Bitshares'in akıllı kontrat sistemi aracılığıyla dijital ürün borç alabilirsiniz. Borcu ödediğinizde teminat da serbest kalacaktır.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1891,8 +1893,7 @@
         "transfer_actions": "Dijital ürün transferi ya da (eğer destekleniyorsa) yatırma-çekme işlemi yapmak için buraya tıklayın.",
         "update_position": "Pozisyonu güncellemek için tıklayın. İstediğiniz zaman pozisyona ait borç ve/veya teminat değerlerini değiştirebilirsiniz.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "withdraw_full": "Bütün bakiyeyi çekmek için tıklayın",
-        "add_memo_field": "Add memo text field"
+        "withdraw_full": "Bütün bakiyeyi çekmek için tıklayın"
     },
     "transaction": {
         "amount_sell": "Satılacak miktar: ",

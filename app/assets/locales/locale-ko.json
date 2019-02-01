@@ -1690,6 +1690,7 @@
         "view_keys": "View keys",
         "wallet": "Local Wallet",
         "walletLockTimeout": "Wallet auto-lock time (seconds, 0 to disable)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Wallet model required",
         "wallet_required_text": "In order to restore a backup you will need to switch to the wallet model first, do so by clicking the button below",
         "wallet_text": "Control the details of your local wallet.",
@@ -1803,6 +1804,7 @@
         "title": "Failed to sync with the API server"
     },
     "tooltip": {
+        "add_memo_field": "Add memo text field",
         "borrow": "Borrow %(asset)s from the network. This creates a smart contract that locks your collateral until you either modify the position or a margin call is required.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1891,8 +1893,7 @@
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
-        "withdraw_full": "Click to withdraw the full balance",
-        "add_memo_field": "Add memo text field"
+        "withdraw_full": "Click to withdraw the full balance"
     },
     "transaction": {
         "amount_sell": "판매 금액",

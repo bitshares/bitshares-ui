@@ -1690,6 +1690,7 @@
         "view_keys": "Vedi chiavi",
         "wallet": "Portafoglio",
         "walletLockTimeout": "Tempo di autoblocco del portafoglio (in secondi, 0 per disabilitare)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Modalità portafoglio richiesta",
         "wallet_required_text": "Per ripristinare un backup devi prima passaere alla modalità portafoglio, cliccando il pulsante sotto",
         "wallet_text": "Controlla i dettagli del tuo portafoglio.",
@@ -1803,6 +1804,7 @@
         "title": "Sincronizzazione con il server API fallita"
     },
     "tooltip": {
+        "add_memo_field": "Aggiungi il campo di testo memo",
         "borrow": "Prendi in prestito %(asset)s dalla rete. Ciò crea uno smart contract che blocca la tua garanzia finché o modifichi la tua posizione oppure è richiesta una chiamata a margine.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1891,8 +1893,7 @@
         "transfer_actions": "Clicca qui per effettuare un trasferimento, o per depositare/prelevare quegli asset che lo permettono.",
         "update_position": "Clicca qui per aggiornare la tua posizione. Puoi cambiare il debito e/o i livelli di garanzia della tua posizione in qualunque momento.",
         "withdraw_address": "Se non sei già in possesso di un indirizzo %(asset)s, per favore creane uno per completare il prelievo.",
-        "withdraw_full": "Clicca per prelevare l'intero saldo",
-        "add_memo_field": "Aggiungi il campo di testo memo"
+        "withdraw_full": "Clicca per prelevare l'intero saldo"
     },
     "transaction": {
         "amount_sell": "Quantità da vendere",

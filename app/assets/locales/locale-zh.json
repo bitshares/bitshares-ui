@@ -1690,6 +1690,7 @@
         "view_keys": "查看密钥",
         "wallet": "本地钱包",
         "walletLockTimeout": "钱包自动锁定时间（秒，0 为禁用）",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "需要使用钱包模式",
         "wallet_required_text": "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
         "wallet_text": "管理本地钱包。",
@@ -1803,6 +1804,7 @@
         "title": "无法与API服务器同步"
     },
     "tooltip": {
+        "add_memo_field": "Add memo text field",
         "borrow": "从系统借出 %(asset)s 。系统将创建一个智能合约并冻结你的抵押物。你可以随时调整仓位或进行平仓。",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1891,8 +1893,7 @@
         "transfer_actions": "点击这里进行转账，或充值/提取支持充提功能的资产。",
         "update_position": "更新债仓。你可随时更新债务及抵押物数量。",
         "withdraw_address": "如果您还没有 %(asset)s 的钱包地址，请您寻找钱包提供商并创建一个钱包，以完成提款。",
-        "withdraw_full": "点击提款全部余额",
-        "add_memo_field": "Add memo text field"
+        "withdraw_full": "点击提款全部余额"
     },
     "transaction": {
         "amount_sell": "出售数量",

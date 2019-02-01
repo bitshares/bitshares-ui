@@ -1690,6 +1690,7 @@
         "view_keys": "キーを見る",
         "wallet": "ウォレット",
         "walletLockTimeout": "ウォレットの自動ロック時間 (秒。0の場合は無効)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "ウォレットモデルが必要です",
         "wallet_required_text": "バックアップをリストアするには、まずウォレットモデルに切り替える必要があります。下のボタンをクリックしてください。",
         "wallet_text": "ウォレットの詳細を制御する。",
@@ -1803,6 +1804,7 @@
         "title": "APIサーバとの同期に失敗しました"
     },
     "tooltip": {
+        "add_memo_field": "メモテキストフィールドを追加",
         "borrow": "ネットワークから%(asset)sを借り入れます。これはポジションを変更するか、マージンコールが必要になるまで担保をロックするスマートコントラクトを作成します。",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1891,8 +1893,7 @@
         "transfer_actions": "転送または、サポートするアセットを入出金するにはここをクリックしてください。",
         "update_position": "ポジションを更新するにはここをクリックしてください。いつでもポジションの賃借や担保比率を変更できます。",
         "withdraw_address": "まだ%(asset)sのアドレスをお持ちでない場合は、出金する前にウォレットプロバイダーを探して作成する必要があります。",
-        "withdraw_full": "全額を出金するにはここをクリックしてください。",
-        "add_memo_field": "メモテキストフィールドを追加"
+        "withdraw_full": "全額を出金するにはここをクリックしてください。"
     },
     "transaction": {
         "amount_sell": "Amount to sell",
