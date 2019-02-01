@@ -445,7 +445,7 @@ class RecentTransactions extends React.Component {
                                     data-place="bottom"
                                     style={{marginLeft: "1rem"}}
                                 >
-                                    <Icon name="excel" size="1.5x" />
+                                    <Icon name="excel" size="1_5x" />
                                 </a>
                             ) : null}
                         </div>
