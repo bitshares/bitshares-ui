@@ -35,18 +35,16 @@ import {
     WalletSelector,
     CreateLocalWalletLink,
     WalletDisplay,
-    CustomPasswordInput,
-    LoginButtons,
     BackupWarning,
     BackupFileSelector,
     DisableChromeAutocomplete,
-    CustomError,
     KeyFileLabel
 } from "./WalletUnlockModalLib";
 import {backupName} from "common/backupUtils";
 import {withRouter} from "react-router-dom";
 import {setLocalStorageType, isPersistantType} from "lib/common/localStorage";
 import Translate from "react-translate-component";
+import Icon from "../Icon/Icon";
 
 class WalletUnlockModal extends React.Component {
     constructor(props) {
@@ -69,7 +67,8 @@ class WalletUnlockModal extends React.Component {
             restoringBackup: false,
             stopAskingForBackup: false,
             rememberMe: WalletUnlockStore.getState().rememberMe,
-            focusedOnce: false
+            focusedOnce: false,
+            isAutoLockVisible: false
         };
     };
 
@@ -447,37 +446,81 @@ class WalletUnlockModal extends React.Component {
         let footer = [];
         if (passwordLogin) {
             footer.push(
-                <div
-                    style={{float: "left", cursor: "pointer"}}
-                    onClick={this.handleRememberMe.bind(this)}
-                    data-tip={counterpart.translate(
+                <Tooltip
+                    title={counterpart.translate(
                         "wallet.remember_me_explanation"
                     )}
                 >
-                    <Translate content="wallet.remember_me" />
-                    <Switch
-                        checked={this.state.rememberMe}
-                        onChange={this.handleRememberMe.bind(this)}
-                    />
+                    <div
+                        style={{
+                            float: "left",
+                            cursor: "pointer",
+                            marginTop: "6px"
+                        }}
+                        onClick={this.handleRememberMe.bind(this)}
+                    >
+                        <Translate content="wallet.remember_me" />
+                        <Switch
+                            checked={this.state.rememberMe}
+                            onChange={this.handleRememberMe.bind(this)}
+                        />
+                    </div>
+                </Tooltip>
+            );
+            footer.push(
+                <div
+                    style={{
+                        float: "left"
+                    }}
+                >
+                    <span>
+                        <Tooltip
+                            title={counterpart.translate(
+                                "settings.walletLockTimeoutTooltip"
+                            )}
+                        >
+                            <span>
+                                <Icon
+                                    onClick={() => {
+                                        this.setState({
+                                            isAutoLockVisible: !this.state
+                                                .isAutoLockVisible
+                                        });
+                                    }}
+                                    name={"autolock"}
+                                    size={"1_5x"}
+                                    style={{
+                                        cursor: "pointer",
+                                        top: "5px",
+                                        position: "relative",
+                                        marginLeft: "12px"
+                                    }}
+                                />
+                            </span>
+                        </Tooltip>
+                        {this.state.isAutoLockVisible && (
+                            <Tooltip
+                                title={counterpart.translate(
+                                    "settings.walletLockTimeout"
+                                )}
+                            >
+                                <InputNumber
+                                    value={walletLockTimeout}
+                                    onChange={this.handleWalletAutoLock}
+                                    placeholder="Auto-lock after..."
+                                    style={{
+                                        marginLeft: "7px",
+                                        width: "65px"
+                                    }}
+                                />
+                            </Tooltip>
+                        )}
+                    </span>
                 </div>
             );
         }
         footer.push(
             <span className="auto-lock-wrapper">
-                <Tooltip
-                    title={counterpart.translate("settings.walletLockTimeout")}
-                >
-                    <InputNumber
-                        value={walletLockTimeout}
-                        onChange={this.handleWalletAutoLock}
-                        placeholder="Auto-lock after..."
-                        size="70px"
-                        style={{
-                            marginRight: "30px",
-                            height: "32px"
-                        }}
-                    />
-                </Tooltip>
                 <Button onClick={this.handleLogin} key="login-btn">
                     {counterpart.translate(
                         this.shouldUseBackupLogin()
