@@ -61,6 +61,8 @@ export const scamAccountsOther = [
     "1.2.539184",
     "aidosmarket",
     "1.2.787065",
+    "allah-iraq",
+    "1.2.979541",
     "aliant",
     "1.2.878061",
     "alta",
