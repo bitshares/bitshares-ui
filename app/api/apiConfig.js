@@ -65,6 +65,7 @@ export const gdexAPIs = {
 
 export const cryptoBridgeAPIs = {
     BASE: CB_API_BASE + CB_API_VERSION,
+    BASE_V2: CB_API_BASE + "/v2",
     API_VERSION: CB_API_VERSION,
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/wallets",

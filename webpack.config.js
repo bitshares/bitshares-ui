@@ -77,6 +77,11 @@ module.exports = function(env) {
         env.RECAPTCHA_SITE_KEY ||
         "6LdlhIsUAAAAAHzlruhPZ4yJKPd5Zo18eLRFP7hj";
 
+    const cryptoBridgePubKey =
+        process.env.CRYPTOBRIDGE_PUB_KEY ||
+        env.CRYPTOBRIDGE_PUB_KEY ||
+        "BTS74ePvhPVtYw79orHZkHgfpGr5vRJ1ZPyDDZcCBEg275DGpCy8k";
+
     const walletUrl = isDevNet
         ? "http://localhost:8080"
         : isTestNet
@@ -108,6 +113,7 @@ module.exports = function(env) {
             __TESTNET__: isTestNet,
             __DEPRECATED__: !!env.deprecated,
             __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
+            __CRYPTOBRIDGE_PUB_KEY__: JSON.stringify(cryptoBridgePubKey),
             DEFAULT_SYMBOL: "BTS"
         }),
         new webpack.ContextReplacementPlugin(
