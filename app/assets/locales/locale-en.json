@@ -2059,6 +2059,9 @@
             "receive_funds_intro":
                 "In order to receive funds from another person on CryptoBridge, simply give them your account name: "
         },
+        "header": {
+            "imprint": "Imprint"
+        },
         "footer": {
             "title": "CryptoBridge decentralized exchange"
         },
