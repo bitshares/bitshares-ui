@@ -122,7 +122,8 @@ class AccountActions {
                 registrar,
                 referrer,
                 referrer_percent,
-                refcode
+                refcode,
+                reCaptchaToken
             ).then(() => {
                 dispatch(account_name);
                 return account_name;
