@@ -9,11 +9,12 @@ import ReactTooltip from "react-tooltip";
 import utils from "common/utils";
 import SettingsActions from "actions/SettingsActions";
 import WalletDb from "stores/WalletDb";
-import AccountNameInput from "./../Forms/AccountNameInput";
+import AccountNameInput from "./../Forms/AccountNameInputStyleGuide";
 import AccountSelect from "../Forms/AccountSelect";
 import LoadingIndicator from "../LoadingIndicator";
 import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
+import {Form, Input, Button, Tooltip} from "bitshares-ui-style-guide";
 
 class AccountRegistrationForm extends React.Component {
     static propTypes = {
@@ -115,67 +116,113 @@ class AccountRegistrationForm extends React.Component {
             }
         }
 
+        const getConfirmationPasswordHelp = () => {
+            return this.state.confirmPassword && !this.state.passwordConfirmed
+                ? counterpart.translate("wallet.confirm_error")
+                : "";
+        };
+
+        const getConfirmationPasswordValidateStatus = () => {
+            return this.state.confirmPassword && !this.state.passwordConfirmed
+                ? "error"
+                : "";
+        };
+
         return (
             <div>
-                <form onSubmit={this.onSubmit} noValidate>
+                <Form onSubmit={this.onSubmit} layout={"vertical"}>
                     <AccountNameInput
                         cheapNameOnly={firstAccount}
                         onChange={this.onAccountNameChange}
                         accountShouldNotExist
-                        placeholder={
+                        placeholder={counterpart.translate("account.name")}
+                        label={
                             <span>
                                 <span className="vertical-middle">
                                     {counterpart.translate("account.name")}
                                 </span>
-                                <span
-                                    data-tip={counterpart.translate(
+                                &nbsp;
+                                <Tooltip
+                                    title={counterpart.translate(
                                         "tooltip.registration.accountName"
                                     )}
                                 >
-                                    <Icon
-                                        name="question-in-circle"
-                                        className="icon-14px question-icon vertical-middle"
-                                    />
-                                </span>
+                                    <span>
+                                        <Icon
+                                            name="question-in-circle"
+                                            className="icon-14px question-icon vertical-middle"
+                                        />
+                                    </span>
+                                </Tooltip>
                             </span>
                         }
                         noLabel
                     />
-                    <label className="left-label" htmlFor="password">
-                        <Translate content="wallet.generated" />
-                    </label>
-                    <span className="inline-label generated-password-field">
-                        <textarea
+                    <Form.Item
+                        label={counterpart.translate("wallet.generated")}
+                    >
+                        <Input.TextArea
+                            disabled={true}
+                            style={{paddingRight: "50px"}}
+                            rows={2}
                             id="password"
-                            rows="2"
-                            readOnly
-                            disabled
-                            defaultValue={this.state.generatedPassword}
+                            value={this.state.generatedPassword}
                         />
                         <CopyButton
                             text={this.state.generatedPassword}
                             tip="tooltip.copy_password"
                             dataPlace="top"
+                            className="button registration-layout--copy-password-btn"
                         />
-                    </span>
-                    <label className="left-label" htmlFor="confirmPassword">
-                        <Translate content="wallet.confirm_password" />
-                    </label>
-                    <span className="inline-label">
-                        <input
+                    </Form.Item>
+                    {/*<span className="inline-label generated-password-field">*/}
+                    {/*<textarea*/}
+                    {/*id="password"*/}
+                    {/*rows="2"*/}
+                    {/*readOnly*/}
+                    {/*disabled*/}
+                    {/*defaultValue={this.state.generatedPassword}*/}
+                    {/*/>*/}
+                    {/*<CopyButton*/}
+                    {/*text={this.state.generatedPassword}*/}
+                    {/*tip="tooltip.copy_password"*/}
+                    {/*dataPlace="top"*/}
+                    {/*/>*/}
+                    {/*</span>*/}
+                    {/*<label className="left-label" htmlFor="confirmPassword">*/}
+                    {/*<Translate content="wallet.confirm_password" />*/}
+                    {/*</label>*/}
+                    <Form.Item
+                        label={counterpart.translate("wallet.confirm_password")}
+                        help={getConfirmationPasswordHelp()}
+                        validateStatus={getConfirmationPasswordValidateStatus()}
+                    >
+                        <Input
+                            placeholder={counterpart.translate(
+                                "wallet.confirm_password"
+                            )}
                             type="password"
                             name="password"
                             id="confirmPassword"
                             value={this.state.confirmPassword}
                             onChange={this.onConfirmation}
                         />
-                    </span>
-                    {this.state.confirmPassword &&
-                    !this.state.passwordConfirmed ? (
-                        <div className="has-error">
-                            <Translate content="wallet.confirm_error" />
-                        </div>
-                    ) : null}
+                    </Form.Item>
+                    {/*<span className="inline-label">*/}
+                    {/*<input*/}
+                    {/*type="password"*/}
+                    {/*name="password"*/}
+                    {/*id="confirmPassword"*/}
+                    {/*value={this.state.confirmPassword}*/}
+                    {/*onChange={this.onConfirmation}*/}
+                    {/*/>*/}
+                    {/*</span>*/}
+                    {/*{this.state.confirmPassword &&*/}
+                    {/*!this.state.passwordConfirmed ? (*/}
+                    {/*<div className="has-error">*/}
+                    {/*<Translate content="wallet.confirm_error" />*/}
+                    {/*</div>*/}
+                    {/*) : null}*/}
 
                     {firstAccount ? null : (
                         <div className="full-width-content form-group no-overflow">
@@ -200,8 +247,9 @@ class AccountRegistrationForm extends React.Component {
                     {this.state.loading ? (
                         <LoadingIndicator type="three-bounce" />
                     ) : (
-                        <button
-                            className="button-primary"
+                        <Button
+                            htmlType="submit"
+                            type="primary"
                             disabled={
                                 !valid ||
                                 !this.state.passwordConfirmed ||
@@ -209,9 +257,9 @@ class AccountRegistrationForm extends React.Component {
                             }
                         >
                             <Translate content="registration.continue" />
-                        </button>
+                        </Button>
                     )}
-                </form>
+                </Form>
             </div>
         );
     }

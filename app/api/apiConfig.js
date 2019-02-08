@@ -135,6 +135,14 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
+            url: "wss://dex.iobanker.com:9090",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "Witness: iobanker-core",
+            contact: "email:admin@iobanker.com"
+        },
+        {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
             region: "Western Europe",
@@ -169,6 +177,14 @@ export const settingsAPIs = {
             url: "wss://japan.bitshares.apasia.tech/ws",
             location: "Tokyo",
             country: "Japan",
+            region: "Southeastern Asia",
+            operator: "Flash Infrastructure Worker",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://singapore.bitshares.apasia.tech/ws",
+            location: "Singapore",
+            country: "Singapore",
             region: "Southeastern Asia",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
@@ -239,7 +255,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://valley.bitshares.apasia.tech/ws",
-            location: "Silicone Valley",
+            location: "Silicon Valley",
             country: "U.S.A.",
             region: "Northern America",
             operator: "Flash Infrastructure Worker",
@@ -363,15 +379,6 @@ export const settingsAPIs = {
             region: "Eastern Europe",
             country: "Russia",
             location: "Moscow",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
-        },
-        {
-            url: "wss://node.market.rudex.org",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
             operator: "Witness: blckchnd",
             contact:
                 "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"

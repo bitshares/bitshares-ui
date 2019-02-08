@@ -4,7 +4,6 @@ import ChainTypes from "../Utility/ChainTypes";
 import AssetName from "../Utility/AssetName";
 import MarketLink from "../Utility/MarketLink";
 import BindToChainState from "../Utility/BindToChainState";
-import utils from "common/utils";
 import BalanceComponent from "../Utility/BalanceComponent";
 import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
@@ -13,7 +12,7 @@ import {ChainStore} from "bitsharesjs";
 import AmountSelector from "../Utility/AmountSelector";
 import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {Modal, Button} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
     ({
@@ -115,20 +114,31 @@ class ModalContent extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+    componentWillReceiveProps(np) {
+        if (
+            !!np.asset &&
+            !!this.props.asset &&
+            np.asset.get("id") !== this.props.asset.get("id")
+        ) {
+            this.setState({
+                amount: 0
+            });
+        }
+    }
+
     onAmountChanged({amount, asset}) {
         this.setState({amount: amount});
     }
 
     onSubmit(e) {
+        let {amount} = this.state;
         e.preventDefault();
 
         this.props.hideModal();
 
-        let precision = utils.get_asset_precision(
-            this.props.asset.get("precision")
+        amount = parseInt(
+            amount * Math.pow(10, this.props.asset.get("precision"))
         );
-        let amount = this.state.amount.replace(/,/g, "");
-        amount *= precision;
 
         var tr = WalletApi.new_transaction();
         tr.add_type_operation("asset_settle", {
@@ -152,6 +162,12 @@ class ModalContent extends React.Component {
                 console.error("asset settle error: ", error);
                 return false;
             });
+    }
+
+    _useMaxValue(amount) {
+        this.setState({
+            amount: amount / Math.pow(10, this.props.asset.get("precision"))
+        });
     }
 
     render() {
@@ -181,30 +197,48 @@ class ModalContent extends React.Component {
                 }
             });
 
-        let precision = utils.get_asset_precision(asset.get("precision"));
-        let parsedAmount = amount ? amount.replace(/,/g, "") : 0;
-        let submit_btn_class =
-            parseFloat(parsedAmount) > 0 &&
-            parseFloat(parsedAmount) * precision <= parseFloat(balanceAmount)
-                ? "button success"
-                : "button disabled";
-
         let balanceText = (
             <span>
                 <Translate content="exchange.balance" />
                 :&nbsp;
                 {currentBalance ? (
-                    <BalanceComponent balance={currentBalance} />
+                    <span
+                        className="underline"
+                        onClick={this._useMaxValue.bind(this, balanceAmount)}
+                    >
+                        <BalanceComponent balance={currentBalance} />
+                    </span>
                 ) : (
                     "0 " + asset.get("symbol")
                 )}
             </span>
         );
 
+        let isFundsToLow = false;
+        if (
+            amount >
+            balanceAmount / Math.pow(10, this.props.asset.get("precision"))
+        ) {
+            isFundsToLow = true;
+        }
+
         const footer = [
-            <Button key={"submit"} type="primary" onClick={this.onSubmit}>
-                {counterpart.translate("modal.settle.submit")}
-            </Button>,
+            <Tooltip
+                title={
+                    isFundsToLow
+                        ? counterpart.translate("tooltip.lack_funds")
+                        : null
+                }
+            >
+                <Button
+                    key={"submit"}
+                    type="primary"
+                    onClick={this.onSubmit}
+                    disabled={isFundsToLow}
+                >
+                    {counterpart.translate("modal.settle.submit")}
+                </Button>
+            </Tooltip>,
             <Button key={"close"} onClick={this.props.hideModal}>
                 {counterpart.translate("modal.close")}
             </Button>

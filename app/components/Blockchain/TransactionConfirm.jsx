@@ -32,6 +32,8 @@ class TransactionConfirm extends React.Component {
         this.onCloseClick = this.onCloseClick.bind(this);
 
         this.onConfirmClick = this.onConfirmClick.bind(this);
+
+        this.onKeyUp = this.onKeyUp.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -60,6 +62,11 @@ class TransactionConfirm extends React.Component {
         this.setState({
             isModalVisible: false
         });
+    }
+
+    onKeyUp(e) {
+        if (e.keyCode === 13) this.onConfirmClick(e);
+        else e.preventDefault();
     }
 
     onConfirmClick(e) {
@@ -201,7 +208,7 @@ class TransactionConfirm extends React.Component {
         }
 
         return (
-            <div ref="transactionConfirm">
+            <div ref="transactionConfirm" onKeyUp={this.onKeyUp}>
                 <Modal
                     wrapClassName="modal--transaction-confirm"
                     title={header}

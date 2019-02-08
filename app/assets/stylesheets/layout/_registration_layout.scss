@@ -1,4 +1,11 @@
 .registration-layout {
+    .registration-layout--copy-password-btn {
+        position: absolute;
+        right: 0;
+        border-radius: 0 !important;
+        height: 74px;
+    }
+
     .display-none {
         display: none;
     }

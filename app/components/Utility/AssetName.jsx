@@ -4,6 +4,7 @@ import asset_utils from "common/asset_utils";
 import AssetWrapper from "./AssetWrapper";
 import counterpart from "counterpart";
 import PropTypes from "prop-types";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class AssetName extends React.Component {
     static propTypes = {
@@ -95,19 +96,18 @@ class AssetName extends React.Component {
                   }</div>`;
 
             return (
-                <div
-                    className={
-                        "inline-block" +
-                        (this.props.noTip ? "" : " tooltip") +
-                        (customClass ? " " + customClass : "")
-                    }
-                    data-tip={tooltip}
-                    data-place={this.props.dataPlace}
-                    data-html={true}
-                >
-                    <span className="asset-prefix-replaced">{prefix}</span>
-                    <span>{replacedName}</span>
-                </div>
+                <Tooltip placement={this.props.dataPlace} title={tooltip}>
+                    <div
+                        className={
+                            "inline-block" +
+                            (this.props.noTip ? "" : " tooltip") +
+                            (customClass ? " " + customClass : "")
+                        }
+                    >
+                        <span className="asset-prefix-replaced">{prefix}</span>
+                        <span>{replacedName}</span>
+                    </div>
+                </Tooltip>
             );
         } else {
             return (
