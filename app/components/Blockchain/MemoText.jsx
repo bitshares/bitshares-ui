@@ -8,6 +8,7 @@ import WalletUnlockStore from "stores/WalletUnlockStore";
 import utils from "common/utils";
 import ReactTooltip from "react-tooltip";
 import {Tooltip} from "bitshares-ui-style-guide";
+import sanitize from "sanitize";
 
 class MemoText extends React.Component {
     static defaultProps = {
@@ -54,6 +55,11 @@ class MemoText extends React.Component {
                 </div>
             );
         }
+
+        text = sanitize(text, {
+            whiteList: [], // empty, means filter out all tags
+            stripIgnoreTag: true // filter out all HTML not in the whilelist
+        });
 
         let full_memo = text;
         if (text && !fullLength && text.length > 35) {

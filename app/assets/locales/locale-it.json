@@ -51,7 +51,7 @@
         "ignore": "Nascondi",
         "in_open": "Questa è la quantità di %(asset)s che hai in ordini correntemente aperti.",
         "in_open_value": "Questo è il valore stimato di %(asset)s che hai in ordini correntemente aperti.",
-        "intro_text_1": "Il tuo Exchange decentralizzato",
+        "intro_text_1": "Il tuo Platform decentralizzato",
         "intro_text_2": "<b>Il DEX</b> è inerentemente decentralizzato, permettendoti la compravendita del token BitShares (BTS) e una varietà di asset trustless stabili nel prezzo e ancorati al mercato come bitUSD, bitCNY, bitBTC, bitGold e altri. È possibile fare trading di questi asset con <b>zero</b> rischio di controparte, permettendoti di mantenere il pieno controllo sui tuoi fondi.",
         "intro_text_3": "<b>Il DEX</b> permette anche la creazione di asset generati dagli utenti (user-issued assets, UIA), con cui si può fare trading con altri UIA o altri asset trustless sulla piattaforma.  Un distributore molto noto sul DEX è <b>OpenLedger</b>, che offre una gamma di asset che include BTC, ETH, STEEM, DASH, LTC, DOGE e molti altri",
         "intro_text_4": "Ciò garantisce ai trader di criptovalute un unico mix di trading tradizionale e decentralizzato, il tutto con la familiare interfaccia di un exchange. Buon trading!",
@@ -1690,6 +1690,7 @@
         "view_keys": "Vedi chiavi",
         "wallet": "Portafoglio",
         "walletLockTimeout": "Tempo di autoblocco del portafoglio (in secondi, 0 per disabilitare)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Modalità portafoglio richiesta",
         "wallet_required_text": "Per ripristinare un backup devi prima passaere alla modalità portafoglio, cliccando il pulsante sotto",
         "wallet_text": "Controlla i dettagli del tuo portafoglio.",
@@ -1803,6 +1804,7 @@
         "title": "Sincronizzazione con il server API fallita"
     },
     "tooltip": {
+        "add_memo_field": "Aggiungi il campo di testo memo",
         "borrow": "Prendi in prestito %(asset)s dalla rete. Ciò crea uno smart contract che blocca la tua garanzia finché o modifichi la tua posizione oppure è richiesta una chiamata a margine.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
