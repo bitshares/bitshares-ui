@@ -11,22 +11,6 @@
     <title>{{title}}</title>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; worker-src 'self' blob:; script-src https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/ 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' *; font-src 'self' data: https://at.alicdn.com; img-src 'self' data:;">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    {{#if ELECTRON}}
-    <script>
-        var ref = encodeURIComponent(document.referrer);
-        if (window.process && window.process.versions && window.process.versions['electron']) {
-            window.electron = window.process.versions['electron'];
-            window.remote = require('electron').remote;
-            window._$guid$_ = window.remote.getGlobal('guid');
-            window.app_version = window.remote.getGlobal('version');
-            ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
-            window.onload = function (e) {
-                var content = document.getElementById("content");
-                if (content) content.className = "electron " + window.process.platform;
-            }
-        }
-    </script>
-    {{/if}}
     <style>
         body {
             background-color: #2a2a2a;
@@ -44,11 +28,27 @@
             top: 50%;
             left: 50%;
             font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
-                Helvetica, Arial, "Lucida Grande", sans-serif;
+            Helvetica, Arial, "Lucida Grande", sans-serif;
             font-weight: 100;
             font-size: 44px;
         }
     </style>
+    {{#if ELECTRON}}
+    <script>
+        var ref = encodeURIComponent(document.referrer);
+        if (window.process && window.process.versions && window.process.versions['electron']) {
+            window.electron = window.process.versions['electron'];
+            window.remote = require('electron').remote;
+            window._$guid$_ = window.remote.getGlobal('guid');
+            window.app_version = window.remote.getGlobal('version');
+            ref = 'lw-' + window.process.platform + '-' + window.app_version + '-' + window.remote.getGlobal('guid');
+            window.onload = function (e) {
+                var content = document.getElementById("content");
+                if (content) content.className = "electron " + window.process.platform;
+            }
+        }
+    </script>
+    {{/if}}
 </head>
 
 <body>
@@ -80,7 +80,7 @@
             var btn = document.createElement("button");
 
             var headerText = document.createTextNode("Unsupported browser");
-            var bodyText = document.createTextNode("The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser until we have had more time to fully test your browser of choice.Use at your own risk.");
+            var bodyText = document.createTextNode("The Browser you are using has not been fully tested to support the BitShares Wallet. We highly recommend that you backup your local wallet and import it using the Chrome Browser.");
             var linkText = document.createTextNode("Google Chrome");
             var closeLinkText = document.createTextNode("×");
             var btnText = document.createTextNode("I UNDERSTAND");
