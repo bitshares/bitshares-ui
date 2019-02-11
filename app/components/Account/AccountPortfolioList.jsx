@@ -460,6 +460,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-small",
                 title: (
                     <span
                         style={{
@@ -480,6 +481,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-small",
                 title: (
                     <Translate
                         content="account.hour_24_short"
@@ -498,6 +500,7 @@ class AccountPortfolioList extends React.Component {
                 }
             },
             {
+                className: "column-hide-small",
                 title: (
                     <span
                         style={{
