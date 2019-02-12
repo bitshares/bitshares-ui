@@ -145,7 +145,12 @@ class Proposals extends Component {
         touchedAccounts.push(proposer);
 
         if (__DEV__) {
-            console.log("_isScam proposal touched accounts", touchedAccounts);
+            console.log(
+                "Proposed transactions: ",
+                proposal,
+                " touching accounts ",
+                touchedAccounts
+            );
         }
 
         touchedAccounts.forEach(_account => {
@@ -174,14 +179,6 @@ class Proposals extends Component {
         let proposer = proposal.proposal.get("proposer");
 
         touchedAccounts.push(proposer);
-
-        if (__DEV__) {
-            console.log(
-                "_isUnknown proposal touched accounts",
-                touchedAccounts
-            );
-        }
-
         touchedAccounts.forEach(_account => {
             if (
                 this.props.account.get("whitelisted_accounts").some(item => {

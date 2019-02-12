@@ -347,10 +347,10 @@ class Exchange extends React.Component {
                 my_orders: 2,
                 open_settlement: 2
             }),
-            panelTabsActive: {
-                1: "",
-                2: ""
-            }
+            panelTabsActive: ws.get("panelTabsActive", {
+                1: "my_history",
+                2: "my_orders"
+            })
         };
     }
 
@@ -594,7 +594,7 @@ class Exchange extends React.Component {
                 }
             })
             .catch(err => {
-                console.log("checkFeeStatusAsync error", err);
+                console.error("checkFeeStatusAsync error", err);
                 this.setState({feeStatus: {}});
             });
     }
@@ -972,7 +972,8 @@ class Exchange extends React.Component {
             setting[marketName] = !inverted;
             SettingsActions.changeMarketDirection(setting);
         }
-        console.log("order:", JSON.stringify(order.toObject()));
+        if (__DEV__) "order:", JSON.stringify(order.toObject());
+
         return MarketsActions.createLimitOrder2(order)
             .then(result => {
                 if (result.error) {
@@ -989,11 +990,9 @@ class Exchange extends React.Component {
                             )
                         });
                 }
-                console.log("order success");
-                //this._clearForms();
             })
             .catch(e => {
-                console.log("order failed:", e);
+                console.error("order failed:", e);
             });
     }
 
@@ -1547,6 +1546,10 @@ class Exchange extends React.Component {
         this.setState({
             panelTabsActive: panelTabsActive,
             forceReRender: true // Requires to forcefully re-render for tab to stick
+        });
+
+        SettingsActions.changeViewSetting({
+            panelTabsActive: panelTabsActive
         });
     }
 
