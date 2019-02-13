@@ -618,15 +618,7 @@ export const settingsAPIs = {
             contact: "email:citadel.li;support"
         },
         {
-            url: "wss://us-east-1.bts.crypto-bridge.org",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "North Virginia",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://us-west-1.bts.crypto-bridge.org",
+            url: "wss://us-west-2.bts.crypto-bridge.org",
             region: "Northern America",
             country: "U.S.A.",
             location: "North California",
@@ -636,24 +628,8 @@ export const settingsAPIs = {
         {
             url: "wss://eu-central-1.bts.crypto-bridge.org",
             region: "Western Europe",
-            country: "Germany",
-            location: "Frankfurt",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://eu-west-1.bts.crypto-bridge.org",
-            region: "Northern Europe",
-            country: "Ireland",
-            location: "Dublin",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://eu-west-2.bts.crypto-bridge.org",
-            region: "Northern Europe",
-            country: "United Kingdom",
-            location: "London",
+            country: "Netherlands",
+            location: "Amsterdam",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
@@ -678,6 +654,14 @@ export const settingsAPIs = {
             region: "Australia",
             country: "Australia",
             location: "Sydney",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-3.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Singapore",
+            location: "Singapore",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
