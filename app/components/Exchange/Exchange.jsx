@@ -2521,6 +2521,7 @@ class Exchange extends React.Component {
                 style={{
                     height: 33,
                     right: "13rem",
+                    top: "1px",
                     position: "absolute",
                     zIndex: 1,
                     padding: "0.2rem"
