@@ -2528,11 +2528,9 @@ class Exchange extends React.Component {
             >
                 {chartType == "price_chart" && (
                     <Tooltip
-                        title={
-                            this.state.chartTools
-                                ? "Hide TradingView tools"
-                                : "Show TradingView tools"
-                        }
+                        title={counterpart.translate(
+                            "exchange.settings.tooltip.chart_tools"
+                        )}
                     >
                         <AntIcon
                             style={{
@@ -2545,7 +2543,11 @@ class Exchange extends React.Component {
                         />
                     </Tooltip>
                 )}
-                <Tooltip title={"Increase the height of the chart"}>
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.chart_height"
+                    )}
+                >
                     <AntIcon
                         style={{
                             cursor: "pointer",
@@ -2558,7 +2560,11 @@ class Exchange extends React.Component {
                         type={"plus"}
                     />
                 </Tooltip>
-                <Tooltip title={"Decrease the height of the chart"}>
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.chart_height"
+                    )}
+                >
                     <AntIcon
                         style={{
                             cursor: "pointer",
@@ -2574,8 +2580,12 @@ class Exchange extends React.Component {
                 <Tooltip
                     title={
                         chartType == "market_depth"
-                            ? "Show price"
-                            : "Show market depth"
+                            ? counterpart.translate(
+                                  "exchange.settings.tooltip.show_price_chart"
+                              )
+                            : counterpart.translate(
+                                  "exchange.settings.tooltip.show_market_depth"
+                              )
                     }
                 >
                     <AntIcon
