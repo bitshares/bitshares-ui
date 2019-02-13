@@ -654,6 +654,8 @@
                 "reload": "Cambiar esta opción solo afectará después de recargar manualmente",
                 "reverse_order_book": "Libro de pedidos inversas para tener órdenes de compra en la parte superior",
                 "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
                 "single_colum_order_form": "Hacer cumplir que el precio, la cantidad, el total, etc. están en una columna (no flotante)"
             }
         },

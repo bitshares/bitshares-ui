@@ -147,7 +147,7 @@ const ApplicationApi = {
                 let memo_object;
                 if (memo) {
                     let memo_sender = this._get_memo_keys(
-                        chain_propose_account,
+                        chain_memo_sender,
                         encrypt_memo
                     );
                     let memo_to = this._get_memo_keys(chain_to, false);
