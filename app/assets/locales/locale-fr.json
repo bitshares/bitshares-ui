@@ -648,6 +648,8 @@
                 "reload": "Changing this option will only affect after manually reloading",
                 "reverse_order_book": "Reverse order book to have buy orders on top",
                 "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
                 "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
             }
         },
