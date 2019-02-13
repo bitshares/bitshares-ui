@@ -2517,92 +2517,86 @@ class Exchange extends React.Component {
 
         let tradingChartHeader = (
             <div
-                className={
-                    "trading-chart-header container shrink overflow-visible"
-                }
-                style={{height: 33, minWidth: 720}}
+                className={"exchange--chart-control"}
+                style={{
+                    height: 33,
+                    right: "13rem",
+                    position: "absolute",
+                    zIndex: 1,
+                    padding: "0.2rem"
+                }}
             >
-                <div>
-                    <div
-                        style={{
-                            float: "right",
-                            marginTop: "0.2rem",
-                            marginRight: "1rem"
-                        }}
+                {chartType == "price_chart" && (
+                    <Tooltip
+                        title={
+                            this.state.chartTools
+                                ? "Hide TradingView tools"
+                                : "Show TradingView tools"
+                        }
                     >
-                        {chartType == "price_chart" && (
-                            <Tooltip
-                                title={
-                                    this.state.chartTools
-                                        ? "Hide TradingView tools"
-                                        : "Show TradingView tools"
-                                }
-                            >
-                                <AntIcon
-                                    style={{
-                                        cursor: "pointer",
-                                        fontSize: "1.4rem",
-                                        marginRight: "0.6rem"
-                                    }}
-                                    onClick={this._chartTools.bind(this)}
-                                    type="tool"
-                                />
-                            </Tooltip>
-                        )}
-                        <Tooltip title={"Increase the height of the chart"}>
-                            <AntIcon
-                                style={{
-                                    cursor: "pointer",
-                                    fontSize: "1.4rem",
-                                    marginRight: "0.6rem"
-                                }}
-                                onClick={() => {
-                                    this.onChangeChartHeight({increase: true});
-                                }}
-                                type={"plus"}
-                            />
-                        </Tooltip>
-                        <Tooltip title={"Decrease the height of the chart"}>
-                            <AntIcon
-                                style={{
-                                    cursor: "pointer",
-                                    fontSize: "1.4rem",
-                                    marginRight: "0.6rem"
-                                }}
-                                onClick={() => {
-                                    this.onChangeChartHeight({increase: false});
-                                }}
-                                type={"minus"}
-                            />
-                        </Tooltip>
-                        <Tooltip
-                            title={
-                                chartType == "market_depth"
-                                    ? "Show price"
-                                    : "Show market depth"
+                        <AntIcon
+                            style={{
+                                cursor: "pointer",
+                                fontSize: "1.4rem",
+                                marginRight: "0.6rem"
+                            }}
+                            onClick={this._chartTools.bind(this)}
+                            type="tool"
+                        />
+                    </Tooltip>
+                )}
+                <Tooltip title={"Increase the height of the chart"}>
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: true});
+                        }}
+                        type={"plus"}
+                    />
+                </Tooltip>
+                <Tooltip title={"Decrease the height of the chart"}>
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: false});
+                        }}
+                        type={"minus"}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={
+                        chartType == "market_depth"
+                            ? "Show price"
+                            : "Show market depth"
+                    }
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem"
+                        }}
+                        onClick={() => {
+                            if (chartType == "market_depth") {
+                                this._toggleChart("price_chart");
+                            } else {
+                                this._toggleChart("market_depth");
                             }
-                        >
-                            <AntIcon
-                                style={{
-                                    cursor: "pointer",
-                                    fontSize: "1.4rem"
-                                }}
-                                onClick={() => {
-                                    if (chartType == "market_depth") {
-                                        this._toggleChart("price_chart");
-                                    } else {
-                                        this._toggleChart("market_depth");
-                                    }
-                                }}
-                                type={
-                                    chartType == "market_depth"
-                                        ? "bar-chart"
-                                        : "area-chart"
-                                }
-                            />
-                        </Tooltip>
-                    </div>
-                </div>
+                        }}
+                        type={
+                            chartType == "market_depth"
+                                ? "bar-chart"
+                                : "area-chart"
+                        }
+                    />
+                </Tooltip>
             </div>
         );
 
