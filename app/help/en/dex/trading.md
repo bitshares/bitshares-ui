@@ -5,7 +5,7 @@ by the DEX and how trading pairs are presented.
 
 ## Pairs
 
-In BitShares, almost any asset can be traded with all other assets. Once we have
+In Lampgram, almost any asset can be traded with all other assets. Once we have
 picked two assets, we usually refer to a *market pair*. For instance, we can
 trade USD against EUR in the USD:EUR pair.
 

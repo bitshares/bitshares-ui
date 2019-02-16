@@ -368,7 +368,7 @@
             "workers_short": "预算项目"
         },
         "voting": "投票",
-        "welcome": "欢迎使用 BitShares 系统",
+        "welcome": "欢迎使用 Lampgram 系统",
         "whitelist": {
             "add": "加到白名单",
             "add_black": "加到黑名单",
@@ -397,7 +397,7 @@
     },
     "app_init": {
         "browser": "不支持的浏览器",
-        "browser_text": "你使用的浏览器未经过 BitShares 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
+        "browser_text": "你使用的浏览器未经过 Lampgram 钱包软件的充分测试。强烈建议你备份钱包，并将其导入谷歌 Chrome 浏览器。今后经过我们充分测试后，你或许可以继续使用现在的浏览器。请了解相关风险。",
         "check_latency": "Running latency checks...",
         "check_latency_feedback": "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "check_latency_feedback_country": "Latency check in best country (%(pinged)s/%(totalToPing)s nodes)",
@@ -926,7 +926,7 @@
         "loading": "载入中…",
         "nosync": "区块链数据陈旧，请等待数据完成同步",
         "synced": "已同步",
-        "title": "BitShares",
+        "title": "Lampgram",
         "unsynced": "未同步",
         "update_available": "有可用的更新"
     },
@@ -1006,7 +1006,7 @@
         "fiat_text": "法币的充值提现服务由 CCEDK 提供。你必须先行在 CCEDK 上进行账户注册。下面是支持的货币：",
         "frozen": "账户 %(account)s 充提服务被冻结",
         "gateway": "网关",
-        "gateway_text": "网关能让你将 BitShares 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
+        "gateway_text": "网关能让你将 Lampgram 中的资产与外部资产进行互换，比如 OPEN.BTC 到 BTC。",
         "generate": "生成地址",
         "generate_new": "获得新地址",
         "generate_new_memo": "获得新备注内容",
@@ -1119,7 +1119,7 @@
         "payments_legacy": "Send (legacy)",
         "settings": "设置",
         "showcases": "Spotlight",
-        "title": "BitShares 钱包",
+        "title": "Lampgram 钱包",
         "unlock": "解锁钱包",
         "unlock_password": "使用密码登录",
         "unlock_short": "登录",
@@ -1168,7 +1168,7 @@
             "borrow": "Borrow",
             "buy": "Buy"
         },
-        "download": "Download new version of BitShares UI",
+        "download": "Download new version of Lampgram UI",
         "excel": "Download .csv file",
         "eye": "Hide Node",
         "eye-striked": "Show Node",
@@ -1584,7 +1584,7 @@
         "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
         "walletLoginByValue": "Bin-file + Password",
         "walletModelTitle": "By bin-file",
-        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "walletNote": "Please keep in mind, that Lampgram doesn't store users passwords and couldn't recover users accounts after password loss.",
         "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
@@ -1740,7 +1740,7 @@
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "choose": "Choose the SmartCoin you want to create a position for",
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "description": "Borrow a BitAsset from the Lampgram Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
             "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
@@ -1754,7 +1754,7 @@
                 "title_within": "What are the benefits?"
             },
             "steps_concept": {
-                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text": "A Collateralized Debt Position enables every user of the Lampgram Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the Lampgram Blockchain.",
                 "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
                 "title": "Concept",
                 "title_within": "What is a Collateralized Debt Position?"
@@ -1765,7 +1765,7 @@
                 "title_within": ""
             },
             "steps_introduction": {
-                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "text": "Use this native dApp from the Lampgram Blockchain to manage depositing collateral and the generation of SmartCoins.",
                 "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
             },
             "steps_risks": {
@@ -1796,7 +1796,7 @@
             "title": "Timed transfer"
         },
         "voting": {
-            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the Lampgram Blockchain.",
             "title": "Voting"
         }
     },
@@ -2080,7 +2080,7 @@
         "final": "转账后余额",
         "from": "来自",
         "header": "转账详情",
-        "header_subheader": "可以将资产转账给其他 BitShares 帐号持有者",
+        "header_subheader": "可以将资产转账给其他 Lampgram 帐号持有者",
         "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "备注消息",
         "memo_unlock": "解锁钱包以查看交易备注",

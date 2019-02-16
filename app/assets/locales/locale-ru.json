@@ -52,7 +52,7 @@
         "in_open": "Это количество %(asset)s, которые у Вас в открытых ордерах.",
         "in_open_value": "Это эквивалентная ценность %(asset)s, которая у Вас в открытых ордерах.",
         "intro_text_1": "Your Decentralized Platform",
-        "intro_text_2": "<b>DEX</b> децентрализована по самой своей сути, что позволяет Вам торговать основным токеном BitShares (BTS) и разнообразными не требующими доверия активами со стабильной, привязанной к рынку ценой, такими как bitUSD, bitCNY, bitGold и многими другими. Все эти активы могут торговаться <b>без риска</b>, связанного с участием контрагентов, оставляя контроль над Вашими средствами полностью в Ваших руках.",
+        "intro_text_2": "<b>DEX</b> децентрализована по самой своей сути, что позволяет Вам торговать основным токеном Lampgram (BTS) и разнообразными не требующими доверия активами со стабильной, привязанной к рынку ценой, такими как bitUSD, bitCNY, bitGold и многими другими. Все эти активы могут торговаться <b>без риска</b>, связанного с участием контрагентов, оставляя контроль над Вашими средствами полностью в Ваших руках.",
         "intro_text_3": "Также <b>DEX</b> дает возможность создавать выпускаемые пользователем активы (user-issued assets - UIA), которые могут торговаться с помощью регистра ордеров против любого другого актива на платформе, как не требующего доверия, так и выпущенного пользователем. Самым известным эмитентом на платформе является <b>OpenLedger</b>, поддерживающий такие активы, как BTC, ETH, DASH, STEEM и многие другие",
         "intro_text_4": "Это уникальный микс традиционной и децентрализованной торговли, и всё это в таком знакомом для криптовалютных трейдеров интерфейсе биржи. Удачной торговли!",
         "intro_text_title": "Добро пожаловать в %(wallet_name)s",
@@ -1590,7 +1590,7 @@
         "walletDescription": "bin файл будет создан автоматически. Пожалуйста, скачайте и сохраните его в безопасном месте. В будущем вам нужно будет загрузить этот файл, чтобы войти в свой аккаунт. ",
         "walletLoginByValue": "bin файл + пароль",
         "walletModelTitle": "с bin файлом",
-        "walletNote": "Пожалуйста, имейте в виду, что BitShares не хранит пароли пользователей и не может восстановить их аккаунты в случае утери пароля.",
+        "walletNote": "Пожалуйста, имейте в виду, что Lampgram не хранит пароли пользователей и не может восстановить их аккаунты в случае утери пароля.",
         "whyBinFile": "Зачем мне нужен .bin файл?"
     },
     "settings": {
@@ -1746,7 +1746,7 @@
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "choose": "Choose the SmartCoin you want to create a position for",
-            "description": "Займите BitAsset у блокчейна BitShares путем блокировки в нем залогового обеспечения (например, bitUSD, bitCNY и т.д.)",
+            "description": "Займите BitAsset у блокчейна Lampgram путем блокировки в нем залогового обеспечения (например, bitUSD, bitCNY и т.д.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
             "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
@@ -1760,7 +1760,7 @@
                 "title_within": "What are the benefits?"
             },
             "steps_concept": {
-                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text": "A Collateralized Debt Position enables every user of the Lampgram Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the Lampgram Blockchain.",
                 "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
                 "title": "Concept",
                 "title_within": "What is a Collateralized Debt Position?"
@@ -1771,7 +1771,7 @@
                 "title_within": ""
             },
             "steps_introduction": {
-                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "text": "Use this native dApp from the Lampgram Blockchain to manage depositing collateral and the generation of SmartCoins.",
                 "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
             },
             "steps_risks": {
@@ -1802,7 +1802,7 @@
             "title": "Перевод в назначенное время"
         },
         "voting": {
-            "description": "Голосуйте за производителей блоков, членов комитета и рабочие предложения, чтобы лично повлиять на принимаемые стратегические решения и развитие блокчейна BitShares.",
+            "description": "Голосуйте за производителей блоков, членов комитета и рабочие предложения, чтобы лично повлиять на принимаемые стратегические решения и развитие блокчейна Lampgram.",
             "title": "Голосование"
         }
     },
@@ -2147,7 +2147,7 @@
         "backup_brainkey": "Резервный Brainkey",
         "backup_explain": "Нажав на кнопку ниже, Вы создадите резервную копию с расширением .bin. Этот файл зашифрован паролем Вашего кошелька и содержит все приватные ключи Вашего аккаунта. Он может быть использован для восстановления Вашего кошелька или его перемещения на другой компьютер/браузер.",
         "backup_login": "Резервное копирование и вход в систему",
-        "backup_new_account": "Поздравляем, Вы только что создали новый аккаунт в %(wallet_name)s, работающем на базе блокчейна BitShares! Настоятельно рекомендуем Вам сразу же создать резервную копию кошелька. Без резервной копии восстановить Ваш аккаунт в случае повреждения компьютера будет невозможно.",
+        "backup_new_account": "Поздравляем, Вы только что создали новый аккаунт в %(wallet_name)s, работающем на базе блокчейна Lampgram! Настоятельно рекомендуем Вам сразу же создать резервную копию кошелька. Без резервной копии восстановить Ваш аккаунт в случае повреждения компьютера будет невозможно.",
         "backup_warning": "Резервная копия файлов ваших закрытых ключей еще не создавалась. В целях безопасности мы рекомендуем пользователям не входить в систему без предварительно созданной резервной копии своих закрытых ключей.",
         "balance_claim_lookup": "Просмотреть балансы",
         "balance_claims": "Утверждения балансов",
@@ -2214,7 +2214,7 @@
         "import_backup_choose": "Пожалуйста, выберите Вашу резервную копию в окне ниже. Это абсолютно безопасно, так как файл копии никуда не загружается и никогда не покинет Ваш браузер.",
         "import_balance": "Импортировать баланс(ы)",
         "import_bts": "Импортировать ключи, экспортированные с BTS 0.9.3c",
-        "import_bts1": "Импортировать из BitShares 0.9.3c",
+        "import_bts1": "Импортировать из Lampgram 0.9.3c",
         "import_key_success": "Успешно импортированы %(count)s ключей",
         "import_keys": "Импортировать ключи",
         "import_keys_tool": "Инструмент импорта ключей",

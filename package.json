@@ -1,14 +1,11 @@
 {
-    "name": "BitShares2-light",
+    "name": "Lampgram2-light",
     "version": "2.0.190123-rc1",
-    "description": "Advanced wallet interface for the BitShares financial blockchain.",
+    "description": "Advanced wallet interface for the Lampgram financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
+    "author": "Rostislav Gogolauri <go.go.gg.rostislav@gmail.com>",
     "contributors": [
-        "BitShares UI Worker",
-        "James Calfee",
-        "Dan Larimer",
-        "Valentine Zavgorodnev <valentine.zavgorodnev@gmail.com>"
+        "Rostislav Gogolauri <go.go.gg.rostislav@gmail.com>"
     ],
     "license": "MIT",
     "engines": {
@@ -18,7 +15,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/bitshares/bitshares-ui"
+        "url": "git://github.com/mindfulme/lampgram-ui"
     },
     "main": "build/electron/index.js",
     "scripts": {
@@ -86,7 +83,7 @@
     },
     "browsersList": "electron 1.7",
     "build": {
-        "productName": "BitShares",
+        "productName": "Lampgram",
         "appId": "org.bitshares.graphene",
         "files": [
             "build/electron",
@@ -127,7 +124,7 @@
                 "AppImage",
                 "snap"
             ],
-            "synopsis": "BitShares: Cryptocurrency and Decentralized Exchange"
+            "synopsis": "Lampgram: Cryptocurrency and Decentralized Exchange"
         },
         "directories": {
             "buildResources": "resources",

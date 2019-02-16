@@ -5,7 +5,7 @@ ve al-sat eşlerinin nasıl temsil edildiğine dair hızlı bir giriştir.
 
 ## Çiftler/Eşler
 
-BitShares'de , neredeyse her aktif tüm diğer aktiflerle alınıp-satılabilirler. İki varlık 
+Lampgram'de , neredeyse her aktif tüm diğer aktiflerle alınıp-satılabilirler. İki varlık 
 seçmiş olduğumuz vakit , biz genelde *piyasa çifti* diye hitab ediyoruz. Mesela , 
 USD'yi EUR'a karşı  USD:EUR çiftinde takas edebiliriz.
 

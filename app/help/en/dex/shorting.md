@@ -6,7 +6,7 @@ as USD, EUR, GOLD, etc., you can go *borrow* this bitAsset from the network and
 
 ## Borrowing
 
-The BitShares network is capable of issuing any amount of any BitAsset and lend
+The Lampgram network is capable of issuing any amount of any BitAsset and lend
 it out to participants given enough collateral.
 
  * *settlement price*: The price for 1 BTS as it is traded on external exchanges.
@@ -17,7 +17,7 @@ it out to participants given enough collateral.
 
 ### Margin Call
 
-The BitShares network is capable of margin calling those positions that do not
+The Lampgram network is capable of margin calling those positions that do not
 have enough collateral to back their borrowed bitAssets. A margin call will
 occur any time the highest bid is less than the *call price* and greater than
 *SQP*.
@@ -56,6 +56,6 @@ payed back to the network.
 ## Covering
 
 To close a borrow/short position, one must hold the borrowed amount of that
-particular bitAsset to hand it over to the BitShares network. After that, the
+particular bitAsset to hand it over to the Lampgram network. After that, the
 BitAssets are reduced from the corresponding supply and the collateral is
 released and given back to its owner.

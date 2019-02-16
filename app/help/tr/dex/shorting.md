@@ -6,7 +6,7 @@ anlatacağız.
 
 ## Ödünç Alma
 
-BitShares ağının herhangi bir miktarda BitVarlığı piyasaya sürmesi ve yeterli teminat 
+Lampgram ağının herhangi bir miktarda BitVarlığı piyasaya sürmesi ve yeterli teminat 
 karşılığında katılımcılara borç vermesi mümkündür. 
 
  * *uzlaşma fiyatı* : 1 BTS in dış borsalarda alıp-satılırkenki fiyatı.
@@ -17,7 +17,7 @@ karşılığında katılımcılara borç vermesi mümkündür.
 
 ### Marjin Çağrısı ( Teminat Tamamlama Çağrısı)
 
-BitShares ağı , ödünç aldığı bitVarlığın karşılığında yeterince teminatı bulunmayan 
+Lampgram ağı , ödünç aldığı bitVarlığın karşılığında yeterince teminatı bulunmayan 
 pozisyonları teminatı tamamlamaları için çağırabilir. Marjin çağrısı , en yüksek alış fiyat 
 teklifinin *çağrı fiyatından* az , ve *SQP* dan büyük olduğu herhangi bir anda 
 meydana gelebilir.
@@ -53,7 +53,7 @@ gerektirir.
 
 ## Kapamak
 
-Ödünç/kısa pozisyonunu kapamak için , ilk önce kişinin , BitShares ağına teslim 
+Ödünç/kısa pozisyonunu kapamak için , ilk önce kişinin , Lampgram ağına teslim 
 etmek üzere o Bitvarlığın ödünç alınan miktarda elinde bulunması gerekir. Ondan 
 sonra , BitAktifler arz stoğundan düşer ve teminat serbest bırakılıp sahibine geri 
 verilir.

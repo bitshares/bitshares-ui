@@ -52,10 +52,10 @@
         "in_open": "This is the amount of %(asset)s you have in open orders.",
         "in_open_value": "This is the estimated value of the %(asset)s you have in open orders.",
         "intro_text_1": "Your Decentralized Platform",
-        "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the BitShares core token (BTS) and a range of trustless price-stable, market-pegged assets such as bitUSD, bitCNY, bitBTC, bitGold and more. These assets can all be traded with <b>zero</b> counter-party risk, putting you in total control of your funds.",
+        "intro_text_2": "<b>The DEX</b> is inherently decentralized, enabling you to trade the Lampgram core token (BTS) and a range of trustless price-stable, market-pegged assets such as bitUSD, bitCNY, bitBTC, bitGold and more. These assets can all be traded with <b>zero</b> counter-party risk, putting you in total control of your funds.",
         "intro_text_3": "<b>The DEX</b> also enables creation of user-issued assets (UIAs), which can be traded against any other UIAs or trustless assets on the platform.  One well-known issuer on The DEX is <b>OpenLedger</b>, offering a host of assets including BTC, ETH, STEEM, DASH, LTC, DOGE, and many more",
         "intro_text_4": "This gives cryptocurrency traders a unique blend of traditional and decentralized trading, all in a familiar exchange interface. Happy trading!",
-        "intro_text_title": "Welcome to BitShares",
+        "intro_text_title": "Welcome to Lampgram",
         "login_with": "Login with",
         "market_actions": "Market actions",
         "market_value": "Marktwert",
@@ -78,7 +78,7 @@
             "membership_expiration": "Ablauf der Mitgliedschaft",
             "network_percentage": "Netzwerk",
             "referral_link": "Your referral link",
-            "referral_text": "Give this to link to people you want to refer to BitShares",
+            "referral_text": "Give this to link to people you want to refer to Lampgram",
             "referrals": "Empfehlungen",
             "referrer": "Empfohlen von",
             "registrar": "Registriert von",
@@ -397,7 +397,7 @@
     },
     "app_init": {
         "browser": "Nicht unterstützter Browser",
-        "browser_text": "Ihr Browser ist unzureichend mit der BitShares-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
+        "browser_text": "Ihr Browser ist unzureichend mit der Lampgram-Wallet getestet worden. Wir empfehlen Ihnen, eine Sicherung ihrer Geldbörse durchzuführen und diese in den Chrome Browser zu importieren. Nutzen Sie Ihren Browser auf eigene Gefahr!",
         "check_latency": "Running latency checks...",
         "check_latency_feedback": "Running latency checks (%(pinged)s/%(totalToPing)s nodes) ...",
         "check_latency_feedback_country": "Latency check in best country (%(pinged)s/%(totalToPing)s nodes)",
@@ -926,12 +926,12 @@
         "loading": "Lade...",
         "nosync": "Your active node is out of sync",
         "synced": "Synced",
-        "title": "BitShares",
+        "title": "Lampgram",
         "unsynced": "Out of sync",
         "update_available": "UPDATE AVAILABLE"
     },
     "gateway": {
-        "add_funds": "Quickly and easily add funds to your BitShares account <strong>%(account)s</strong>. This service is provided by Openledger.",
+        "add_funds": "Quickly and easily add funds to your Lampgram account <strong>%(account)s</strong>. This service is provided by Openledger.",
         "address": "Address",
         "address_with_memo": "%(address)s <span class=\"blocktrades-with-memo\">with memo</span> %(memo)s",
         "agreement": {
@@ -1063,7 +1063,7 @@
         "website": "Visit the website",
         "withdraw": "Abhebung",
         "withdraw_coin": "Withdraw %(coin)s (%(symbol)s)",
-        "withdraw_funds": "You are going to withdraw funds from your BitShares account to your external %(asset)s account.",
+        "withdraw_funds": "You are going to withdraw funds from your Lampgram account to your external %(asset)s account.",
         "withdraw_history_status": {
             "audited": "auditting completed",
             "auditing": "withdraw auditing",
@@ -1119,7 +1119,7 @@
         "payments_legacy": "Send (legacy)",
         "settings": "Einstellungen",
         "showcases": "Spotlight",
-        "title": "BitShares UI",
+        "title": "Lampgram UI",
         "unlock": "Entsperren",
         "unlock_password": "Log in using a password",
         "unlock_short": "Login",
@@ -1168,7 +1168,7 @@
             "borrow": "Borrow",
             "buy": "Buy"
         },
-        "download": "Download new version of BitShares UI",
+        "download": "Download new version of Lampgram UI",
         "excel": "Download .csv file",
         "eye": "Hide Node",
         "eye-striked": "Show Node",
@@ -1584,7 +1584,7 @@
         "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
         "walletLoginByValue": "Bin-file + Password",
         "walletModelTitle": "By bin-file",
-        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "walletNote": "Please keep in mind, that Lampgram doesn't store users passwords and couldn't recover users accounts after password loss.",
         "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
@@ -1740,7 +1740,7 @@
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "choose": "Choose the SmartCoin you want to create a position for",
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "description": "Borrow a BitAsset from the Lampgram Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
             "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
@@ -1754,7 +1754,7 @@
                 "title_within": "What are the benefits?"
             },
             "steps_concept": {
-                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text": "A Collateralized Debt Position enables every user of the Lampgram Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the Lampgram Blockchain.",
                 "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
                 "title": "Concept",
                 "title_within": "What is a Collateralized Debt Position?"
@@ -1765,7 +1765,7 @@
                 "title_within": ""
             },
             "steps_introduction": {
-                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "text": "Use this native dApp from the Lampgram Blockchain to manage depositing collateral and the generation of SmartCoins.",
                 "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
             },
             "steps_risks": {
@@ -1796,7 +1796,7 @@
             "title": "Timed transfer"
         },
         "voting": {
-            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the Lampgram Blockchain.",
             "title": "Voting"
         }
     },
@@ -1835,7 +1835,7 @@
         "lack_funds": "There is not enough funds to perform the operation",
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
-        "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+        "login": "This Lampgram wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -2080,7 +2080,7 @@
         "final": "Abschließendes Guthaben",
         "from": "Von",
         "header": "Transfer details",
-        "header_subheader": "Transfers are used for sending funds to other BitShares Account Holders",
+        "header_subheader": "Transfers are used for sending funds to other Lampgram Account Holders",
         "header_subheader_propose": "Propose to send funds from one %(wallet_name)s account to another. The BY account is the account proposing the transaction.",
         "memo": "Memo",
         "memo_unlock": "Entsperren um Memo zu lesen",
@@ -2141,7 +2141,7 @@
         "backup_brainkey": "Brainkey sichern",
         "backup_explain": "Clicking on the button below will generate a backup file with a .bin extension. This file is encrypted with your wallet password, and contains all the private keys for your accounts. It can be used to restore your wallet, or move it to a different computer/browser.",
         "backup_login": "Backup & login",
-        "backup_new_account": "Congratulations, you've just created a new account on the BitShares blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
+        "backup_new_account": "Congratulations, you've just created a new account on the Lampgram blockchain! It is strongly recommended that you make a backup of your wallet now. Without a backup there is no way to restore your account if something happens to your computer.",
         "backup_warning": "It appears that your private key files are not backed up. For security reasons we recommend users do not log in without backing up their private keys.",
         "balance_claim_lookup": "Lookup balances",
         "balance_claims": "Balance einfordern",
@@ -2180,7 +2180,7 @@
         "create_importkeys_text": "In order to import keys, you first need to create a local wallet to contain the keys. Complete the dialog below to create a new local wallet.",
         "create_password": "Create a new account using a password",
         "create_success": "Your local wallet has been created",
-        "create_text": "The BitShares local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
+        "create_text": "The Lampgram local wallet is stored in your browser, it is not stored in the cloud. A wallet can contain multiple accounts and can be easily transferred between browsers and computers using a backup file.",
         "create_w_a": "Create a local wallet containing an account",
         "create_wallet": "Geldbörse erstellen",
         "create_wallet_backup": "Create new wallet from backup",
@@ -2201,14 +2201,14 @@
         "first_account_paid": "Since this is your first account, a faucet will pay the registration fee for you.",
         "generated": "Generated password",
         "go_get_started": "Getting Started",
-        "has_wallet": "When you create your first BitShares account, a BitShares local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
+        "has_wallet": "When you create your first Lampgram account, a Lampgram local wallet will be automatically created as well and stored in your browser. This local wallet is encrypted with your password, and will contain any private keys belonging to your accounts. It is important that you take the time to backup this wallet once created!",
         "import_20_notice1": "Importieren Sie Ihr BTS 2.0+ BACKUP zuerst",
         "import_20_notice2": "(falls vorhanden)",
         "import_backup": "Sicherung importieren",
         "import_backup_choose": "Please select your backup file in the dialog below. This is completely safe as the file is not uploaded anywhere and never leaves your browser.",
         "import_balance": "Import balance(s)",
         "import_bts": "Import a BTS 0.9.3c key export",
-        "import_bts1": "Importieren aus BitShares 0.9.3c",
+        "import_bts1": "Importieren aus Lampgram 0.9.3c",
         "import_key_success": "Successfully imported %(count)s keys.",
         "import_keys": "Schlüssel importieren",
         "import_keys_tool": "Schlüsselimport-Werkzeug",

@@ -102,11 +102,11 @@ class ReportModal extends React.Component {
                         <br />
                         &nbsp;&nbsp;
                         <a
-                            href="https://github.com/bitshares/bitshares-ui/issues"
+                            href="https://lampgram.com"
                             target="_blank"
                             style={{textAlign: "center", width: "100%"}}
                         >
-                            https://github.com/bitshares/bitshares-ui/issues
+                            https://lampgram.com
                         </a>
                         <br />
                         <Translate content="modal.report.explanatory_text_3" />

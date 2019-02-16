@@ -926,7 +926,7 @@
         "loading": "ロード中...",
         "nosync": "ブロックチェーンは同期していません。同期が完了するまでお待ち下さい..",
         "synced": "同期しました",
-        "title": "BitShares",
+        "title": "Lampgram",
         "unsynced": "同期していません",
         "update_available": "更新があります"
     },
@@ -1119,7 +1119,7 @@
         "payments_legacy": "送金 (レガシー)",
         "settings": "設定",
         "showcases": "Spotlight",
-        "title": "BitShares UI",
+        "title": "Lampgram UI",
         "unlock": "ログイン (ウォレットをアンロック)",
         "unlock_password": "パスワードでログイン",
         "unlock_short": "ログイン",
@@ -1168,7 +1168,7 @@
             "borrow": "Borrow",
             "buy": "Buy"
         },
-        "download": "Download new version of BitShares UI",
+        "download": "Download new version of Lampgram UI",
         "excel": "Download .csv file",
         "eye": "Hide Node",
         "eye-striked": "Show Node",
@@ -1584,7 +1584,7 @@
         "walletDescription": "A bin-file will be automatically created. Please download it and keep in a safe place. You’ll need to upload this file to login to your account in the future.",
         "walletLoginByValue": "Bin-file + Password",
         "walletModelTitle": "By bin-file",
-        "walletNote": "Please keep in mind, that BitShares doesn't store users passwords and couldn't recover users accounts after password loss.",
+        "walletNote": "Please keep in mind, that Lampgram doesn't store users passwords and couldn't recover users accounts after password loss.",
         "whyBinFile": "Why do I need a .bin file?"
     },
     "settings": {
@@ -1740,7 +1740,7 @@
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
             "choose": "Choose the SmartCoin you want to create a position for",
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
+            "description": "Borrow a BitAsset from the Lampgram Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
             "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
@@ -1754,7 +1754,7 @@
                 "title_within": "What are the benefits?"
             },
             "steps_concept": {
-                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text": "A Collateralized Debt Position enables every user of the Lampgram Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the Lampgram Blockchain.",
                 "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
                 "title": "Concept",
                 "title_within": "What is a Collateralized Debt Position?"
@@ -1765,7 +1765,7 @@
                 "title_within": ""
             },
             "steps_introduction": {
-                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "text": "Use this native dApp from the Lampgram Blockchain to manage depositing collateral and the generation of SmartCoins.",
                 "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
             },
             "steps_risks": {
@@ -1796,7 +1796,7 @@
             "title": "Timed transfer"
         },
         "voting": {
-            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
+            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the Lampgram Blockchain.",
             "title": "Voting"
         }
     },
@@ -2204,11 +2204,11 @@
         "has_wallet": "最初のBitSharesアカウントを作成すると、自動的にBitSharesウォレットも作成され、ブラウザに格納されます。このウォレットはあなたのパスワードで暗号化されており、アカウントに付属する秘密キーを含んでいます。このウォレットのバックアップを作成することが大切です！",
         "import_20_notice1": "BTS 2.0+ バックアップを最初にインポートする",
         "import_20_notice2": "(お持ちの場合)",
-        "import_backup": "BitShares 2.0バックアップ (.bin ファイル) をインポートする",
+        "import_backup": "Lampgram 2.0バックアップ (.bin ファイル) をインポートする",
         "import_backup_choose": "以下のダイアログでバックアップファイルを選択してください。ファイルはどこにもアップロードされず、ブラウザから離れないため、この操作は安全です。",
         "import_balance": "残高をインポートする",
         "import_bts": "BTS 0.9.3c キーエクスポートをインポートする",
-        "import_bts1": "BitShares 0.9.3cからインポートする",
+        "import_bts1": "Lampgram 0.9.3cからインポートする",
         "import_key_success": "%(count)s のキーが正常にインポートされました。",
         "import_keys": "キーのインポート",
         "import_keys_tool": "キーのインポートツール",

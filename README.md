@@ -5,17 +5,17 @@ We continue to work towards a solution for the next worker and will communicate 
 
 ----
 
-BitShares-UI
+Lampgram-UI
 ============
 [中文版](README_zh.md)
 
-This is a light wallet that connects to a BitShares API provided by the *witness_node* executable.
+This is a light wallet that connects to a Lampgram API provided by the *witness_node* executable.
 
 It *stores all keys locally* in the browser, *never exposing your keys to anyone* as it signs transactions locally before transmitting them to the API server which then broadcasts them to the blockchain network. The wallet is encrypted with a password of your choosing and encrypted in a browser database.
 
 ## Getting started
 
-BitShares-UI depends node Node.js, and version 8+ is required.
+Lampgram-UI depends node Node.js, and version 8+ is required.
 
 On Ubuntu and OSX, the easiest way to install Node is to use the [Node Version Manager](https://github.com/creationix/nvm).
 
@@ -54,7 +54,7 @@ Once the compilation is done the GUI will be available in your browser at: `loca
 
 
 ## Testnet
-By default bitshares-ui connects to the live BitShares network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
+By default bitshares-ui connects to the live Lampgram network, but it's very easy to switch it to the testnet run by Xeroc. To do so, open the UI in a browser, go to Settings, then under Access, select the *Public Testnet Server* in the dropdown menu. You should also change the faucet if you need to create an account, the testnet faucet address is https://testnet.bitshares.eu.
 
 The UI will reload and connect to the testnet, where you can use the faucet to create an account and receive an initial sum of test BTS.
 
@@ -104,7 +104,7 @@ Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ## BrowserStack 
 
-The BitShares UI is integrated with BrowserStack (https://www.browserstack.com) to allow manual compatibility testing across devices and browser versions. In the future we will switch to a automated Selenium testing framework.
+The Lampgram UI is integrated with BrowserStack (https://www.browserstack.com) to allow manual compatibility testing across devices and browser versions. In the future we will switch to a automated Selenium testing framework.
 ![image](https://user-images.githubusercontent.com/33128181/48697885-05f8d880-ebe6-11e8-95a2-d87516cbb3d9.png)
 
 ## Release Branches

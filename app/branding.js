@@ -1,7 +1,7 @@
 /** This file centralized customization and branding efforts throughout the whole wallet and is meant to facilitate
  *  the process.
  *
- *  @author Stefan Schiessl <stefan.schiessl@blockchainprojectsbv.com>
+ *  @author Rostislav Gogolauri <go.go.gg.rostislav@gmail.com>
  */
 
 /**
@@ -9,7 +9,7 @@
  * @returns {string}
  */
 export function getWalletName() {
-    return "BitShares";
+    return "Lampgram";
 }
 
 /**
@@ -17,7 +17,7 @@ export function getWalletName() {
  * @returns {string}
  */
 export function getWalletURL() {
-    return "https://wallet.bitshares.org";
+    return "https://dex.lampgram.com";
 }
 
 /**
@@ -46,8 +46,8 @@ export function getLogo() {
  * @returns {string}
  */
 export function getDefaultTheme() {
-    // possible ["darkTheme", "lightTheme", "midnightTheme"]
-    return "darkTheme";
+    // possible ["midnightTheme", "lightTheme"]
+    return "midnightTheme";
 }
 
 /**

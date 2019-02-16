@@ -394,7 +394,7 @@ class Header extends React.Component {
                 })}
                 onClick={this._onNavigate.bind(this, "/")}
             >
-                <img style={{margin: 0, height: 40}} src={logo} />
+                <img style={{marginTop: -11, height: 35}} src={logo} />
             </a>
         );
 
@@ -955,7 +955,7 @@ class Header extends React.Component {
         };
 
         return (
-            <div className="header-container" style={{minHeight: "64px"}}>
+            <div className="header-container" style={{minHeight: "38px"}}>
                 <div>
                     <div
                         className="header menu-group primary"
@@ -1037,16 +1037,6 @@ class Header extends React.Component {
                                                 ) === -1
                                         })}
                                     >
-                                        <Icon
-                                            size="1_5x"
-                                            style={{
-                                                position: "relative",
-                                                top: -2,
-                                                left: -8
-                                            }}
-                                            name="dashboard"
-                                            title="icons.dashboard"
-                                        />
                                         <Translate
                                             className="column-hide-small"
                                             content="header.dashboard"
@@ -1071,16 +1061,6 @@ class Header extends React.Component {
                                         tradeUrl
                                     )}
                                 >
-                                    <Icon
-                                        size="1_5x"
-                                        style={{
-                                            position: "relative",
-                                            top: -2,
-                                            left: -8
-                                        }}
-                                        name="trade"
-                                        title="icons.trade.exchange"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"
@@ -1106,16 +1086,6 @@ class Header extends React.Component {
                                         "/explorer/blocks"
                                     )}
                                 >
-                                    <Icon
-                                        size="2x"
-                                        style={{
-                                            position: "relative",
-                                            top: 0,
-                                            left: -8
-                                        }}
-                                        name="server"
-                                        title="icons.server"
-                                    />
                                     <Translate
                                         className="column-hide-small"
                                         component="span"

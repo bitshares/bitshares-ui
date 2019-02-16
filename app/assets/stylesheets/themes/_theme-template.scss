@@ -2515,8 +2515,9 @@
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    height: 64px;
+    height: 38px !important;
     .menu-bar {
+        height: 38px !important;
         overflow: visible;
     }
     .logo {
@@ -2527,7 +2528,7 @@
         display: none;
     }
     .menu-dropdown-wrapper {
-        height: 65px;
+        height: 90px;
         width: 65px;
         text-align: left;
         border-radius: 0;

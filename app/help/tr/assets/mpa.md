@@ -2,12 +2,12 @@
 
 Bitcoin'e benzeyen özelliklerde ve avantajlarda, amerikan Doları gibi tüm dünya
 tarafından benimsenmiş bir parayla pariteyi koruyabilen bir kripto-paranın
- sansürsüz ve kolay bir ticaret için çok faydası vardır. Bu, BitShares'in 
+ sansürsüz ve kolay bir ticaret için çok faydası vardır. Bu, Lampgram'in 
 piyasaya  sabitli varlıkları (MPA) sayesinde mümkün olur. Bunlar, serbestçe 
 alıp-satılabilen yeni  bir tür dijital varlıklardır. Bunların değerleri, fark-kontratı (CFD) yöntemiyle
 dayandıkları geleneksel varlıkların değerlerini takip etmek üzere dizayn edilmişlerdir. 
 
-*AkıllıPara* (eşanlamı MPA) , değerinin  *daima*  100% yada daha fazlası BitShares'in 
+*AkıllıPara* (eşanlamı MPA) , değerinin  *daima*  100% yada daha fazlası Lampgram'in 
  ana para birimi (BTS) ile desteklenen bir kripto-paradır. Bu *AkıllıParalar* herhangi bir 
 zamanda bir fark-kontratı (CFD) içinde *teminat* olarak BTS'ye dönüştürülebilirler .
 

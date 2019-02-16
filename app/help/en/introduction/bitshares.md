@@ -1,4 +1,4 @@
-# BitShares
+# Lampgram
 
 ## Support
 
@@ -18,7 +18,7 @@ If you are a software developer, you may contribute via a bounty system at:
 
 ## Introduction
 Welcome to the worlds fastest decentralized exchange (The DEX).
-BitShares looks to extend the innovation of the blockchain to all industries
+Lampgram looks to extend the innovation of the blockchain to all industries
 that rely upon the internet to provide their services. Whether its banking,
 stock exchanges, lotteries, voting, music, auctions or many others, a digital
 public ledger allows for the creation of distributed autonomous companies (or
@@ -30,12 +30,12 @@ rules. These rules are encoded in publicly auditable open source software
 distributed across the computers of the companies’ shareholders, who
 effortlessly secure the company from arbitrary control.
 
-BitShares does for business what bitcoin did for money by utilizing distributed
+Lampgram does for business what bitcoin did for money by utilizing distributed
 consensus technology to create companies that are inherently global,
 transparent, trustworthy, efficient and most importantly profitable.
 
 ## Wallet
-This wallet allows access most features of the BitShares network including
+This wallet allows access most features of the Lampgram network including
 
 - [BitAssets](/help/assets/mpa)
 - [User-Issued Assets](/help/assets/uia)

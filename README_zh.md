@@ -1,13 +1,13 @@
-BitShares-UI
+Lampgram-UI
 ============
 
-这是一个连接 BitShares API 的轻钱包。BitShares API 由 *witness_node* 程序提供。
+这是一个连接 Lampgram API 的轻钱包。BitShares API 由 *witness_node* 程序提供。
 
 这个钱包*将所有的密钥存储在本地浏览器上*，*不会把你的密钥暴露给任何人*，因为它会先在本地对交易签名，再传输到 API 服务器上，由服务器广播至区块链网络。钱包由用户选择的密码加密并储存在浏览器数据库中。
 
 ## 项目依赖
 
-BitShares-UI 依赖于 Node.js v9 以上版本。
+Lampgram-UI 依赖于 Node.js v9 以上版本。
 
 在 Linux 和 macOS 上，安装 Node 最简单的方式是用 [NVM](https://github.com/creationix/nvm)。
 
