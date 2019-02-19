@@ -650,7 +650,12 @@ class AccountOverview extends React.Component {
                                             : 0
                                     )}
                                 >
-                                    <div>
+                                    <div
+                                        onClick={this._toggleHideProposal.bind(
+                                            this
+                                        )}
+                                        style={{cursor: "pointer"}}
+                                    >
                                         <Switch
                                             style={{margin: 16}}
                                             checked={

@@ -51,7 +51,7 @@
         "ignore": "Ocultar",
         "in_open": "Esta es la cantidad de %(asset)s que usted tiene en pedidos abiertos.",
         "in_open_value": "Este es el valor estimado de lo %(asset)s que usted tiene en pedidos abiertos.",
-        "intro_text_1": "Su Decentralized Exchange",
+        "intro_text_1": "Su Decentralized Platform",
         "intro_text_2": "<b>El DEX</b> está inherentemente descentralizado, permitiéndote comerciar BitShares core token (BTS) y un rango de activos sin confianza con precio estable, vinculado al mercado como bitUSD, bitCNY, bitBTC, bitGold y mucho mas. estos activos pueden ser comerciados sin <b>zero</b> rischio de contraparte, poniéndote en control total de tus fondos.",
         "intro_text_3": "<b>El DEX</b> también permite la creación de activos emitidos por el usuario (UIAs), que pueden ser comerciados en contra de cualquier otro UIAs o activos sin confianza en la plataforma.  Un emisor muy conocido en The DEX es <b> OpenLedger</b>, que ofrece una serie de activos que incluyen BTC, ETH, STEEM, DASH, LTC, DOGE, y mucho mas",
         "intro_text_4": "Esto le da a los comerciantes de criptomonedas una combinación única de comercio tradicional y descentralizado, todo en una interfaz de intercambio familiar. Feliz comercio!",
@@ -654,6 +654,8 @@
                 "reload": "Cambiar esta opción solo afectará después de recargar manualmente",
                 "reverse_order_book": "Libro de pedidos inversas para tener órdenes de compra en la parte superior",
                 "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
                 "single_colum_order_form": "Hacer cumplir que el precio, la cantidad, el total, etc. están en una columna (no flotante)"
             }
         },
@@ -1696,6 +1698,7 @@
         "view_keys": "Ver claves",
         "wallet": "Billetera local",
         "walletLockTimeout": "Tiempo de bloqueo automático de Wallet (seconds, 0 to disable)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Se requiere billetera local",
         "wallet_required_text": "Para restaurar una copia de seguridad, primero deberá cambiar a una billetera local, haga clic en el botón de abajo",
         "wallet_text": "Controle los detalles de su billetera local.",
@@ -1746,6 +1749,7 @@
             "description": "Pedir prestado un BitAsset de la cadena de bloques de BitShares block por el bloqueo de la garantía (e.g. bitUSD, bitCNY, etc.)",
             "do_it": "Let's do it",
             "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
             "next": "Next",
             "now_ready": "Finalize the creation of your own Collateralized Debt Position",
             "previous": "Previous",
@@ -1808,6 +1812,7 @@
         "title": "Error al sincronizar con el API del servidor "
     },
     "tooltip": {
+        "add_memo_field": "Añadir campo de texto memo",
         "borrow": "pedir prestado %(asset)s desde la red. Esto crea un contrato inteligente que bloquea su colateral hasta que modifique la posición o se requiera una llamada a mergen.",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1874,6 +1879,7 @@
         "over_limit": "El puente no tiene suficiente del activo deseado para esta orden de compra",
         "propose_scam": "¡Esta propuesta fue creada por un estafador conocido, no la aprueba!",
         "propose_tip": "Proponer otro usuario para iniciar una transacción",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "Tiene un conjunto de proxy, para eliminarlo, simplemente borre este campo de entrada",
         "proxy_search": "Busque una cuenta que se utilizará como su proxy para votar",
         "registration": {
