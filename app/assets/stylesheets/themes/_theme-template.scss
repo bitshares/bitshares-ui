@@ -125,7 +125,9 @@
     .showcases-grid--wrapper--item--wrapper--content--description {
         line-height: 1.5rem;
     }
-
+    .exchange--chart-control {
+        background: $panel-bg-color;
+    }
     @media (max-width: 1150px) {
         .showcases-grid--wrapper {
             width: 900px;
