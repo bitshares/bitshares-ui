@@ -414,6 +414,9 @@
         "understand": "I understand",
         "ws_status": "웹소켓 연결 상태"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -2122,6 +2127,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "뒤로",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "가격 차트를 사용하여 자산의 가격 조치를 봅니다.",
         "restore_account": "백업 파일을 사용하여 지갑을 복원하십시오.",
         "sell_form": "이 양식을 사용하여 판매 주문을하십시오.",

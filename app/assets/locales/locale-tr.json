@@ -414,6 +414,9 @@
         "understand": "Anladım ve onaylıyorum.",
         "ws_status": "Websocket Bağlantı Durumu"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -2122,6 +2127,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "geri",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Fiyat grafiğini kullanarak bir varlığın fiyat hareketini görüntüleyin.",
         "restore_account": "Yedekleme dosyanızı kullanarak bir cüzdan geri yükleyin.",
         "sell_form": "Bu formu kullanarak satış siparişleri verin.",
