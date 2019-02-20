@@ -636,6 +636,8 @@
                 "single_colum_order_form": "Single Column Order Form"
             },
             "tooltip": {
+                "increase_chart_height": "Increase the height of the chart",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "chart_height": "Define the height of the charts",
                 "chart_reload": "Changing this setting will reload the chart",
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
