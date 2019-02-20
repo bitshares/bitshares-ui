@@ -1288,7 +1288,7 @@ class Header extends React.Component {
                     }}
                     from_name={currentAccount}
                 />
-                {this.state.hasDepositModalBeenShown ||
+                {this.state.hasDepositModalBeenShown &&
                     (this.state.isDepositModalVisible && (
                         <DepositModal
                             visible={this.state.isDepositModalVisible}
@@ -1300,7 +1300,7 @@ class Header extends React.Component {
                             backedCoins={this.props.backedCoins}
                         />
                     ))}
-                {this.state.hasWithdrawalModalBeenShown ||
+                {this.state.hasWithdrawalModalBeenShown &&
                     (this.state.isWithdrawModalVisible && (
                         <WithdrawModal
                             visible={this.state.isWithdrawModalVisible}
