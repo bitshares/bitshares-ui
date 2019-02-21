@@ -9,8 +9,6 @@ const API_NEWS_URL = "https://crypto-bridge.org/news.json";
 const API_LOGIN_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.LOGIN;
 const API_TERMS_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.TERMS;
 const API_ME_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me";
-const API_ME_TERMS_URL =
-    cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me/terms";
 
 import {
     getRequestLoginOptions,
