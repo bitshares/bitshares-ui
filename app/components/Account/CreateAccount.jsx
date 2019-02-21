@@ -23,6 +23,7 @@ import counterpart from "counterpart";
 import {withRouter} from "react-router-dom";
 import ReCAPTCHA from "../Utility/ReCAPTCHA";
 import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
+import sha256 from "js-sha256";
 
 class CreateAccount extends React.Component {
     constructor() {
@@ -60,7 +61,10 @@ class CreateAccount extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if (np.terms !== this.props.terms && np.terms) {
+        if (
+            np.terms &&
+            JSON.stringify(np.terms) !== JSON.stringify(this.props.terms)
+        ) {
             this.setState({
                 understand_tos_link: np.terms.link,
                 understand_tos_version: np.terms.version,
@@ -82,10 +86,13 @@ class CreateAccount extends React.Component {
         if (!firstAccount) {
             valid = valid && this.state.registrar_account;
         }
+
         return (
             valid &&
             this.state.understand_tos &&
             this.state.understand_tos_disclaimer &&
+            this.state.understand_tos_hash &&
+            this.state.understand_tos_version &&
             this.state.us_citizen !== null &&
             this.state.recaptchaToken
         );

@@ -2,7 +2,6 @@ import {Map, OrderedMap} from "immutable";
 import alt from "alt-instance";
 import CryptoBridgeActions from "actions/CryptoBridgeActions";
 import BaseStore from "./BaseStore";
-import sha256 from "js-sha256";
 
 class CryptoBridgeStore extends BaseStore {
     constructor() {
@@ -73,9 +72,6 @@ class CryptoBridgeStore extends BaseStore {
     }
 
     onGetLatestTerms(terms) {
-        console.log(terms);
-        console.log(sha256(terms.payload));
-
         this.terms = terms;
     }
 
