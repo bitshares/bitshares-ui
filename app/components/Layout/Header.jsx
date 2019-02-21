@@ -1288,29 +1288,27 @@ class Header extends React.Component {
                     }}
                     from_name={currentAccount}
                 />
-                {this.state.hasDepositModalBeenShown ||
-                    (this.state.isDepositModalVisible && (
-                        <DepositModal
-                            visible={this.state.isDepositModalVisible}
-                            hideModal={this.hideDepositModal}
-                            showModal={this.showDepositModal}
-                            ref="deposit_modal_new"
-                            modalId="deposit_modal_new"
-                            account={currentAccount}
-                            backedCoins={this.props.backedCoins}
-                        />
-                    ))}
-                {this.state.hasWithdrawalModalBeenShown ||
-                    (this.state.isWithdrawModalVisible && (
-                        <WithdrawModal
-                            visible={this.state.isWithdrawModalVisible}
-                            hideModal={this.hideWithdrawModal}
-                            showModal={this.showWithdrawModal}
-                            ref="withdraw_modal_new"
-                            modalId="withdraw_modal_new"
-                            backedCoins={this.props.backedCoins}
-                        />
-                    ))}
+                {this.state.hasDepositModalBeenShown && (
+                    <DepositModal
+                        visible={this.state.isDepositModalVisible}
+                        hideModal={this.hideDepositModal}
+                        showModal={this.showDepositModal}
+                        ref="deposit_modal_new"
+                        modalId="deposit_modal_new"
+                        account={currentAccount}
+                        backedCoins={this.props.backedCoins}
+                    />
+                )}
+                {this.state.hasWithdrawalModalBeenShown && (
+                    <WithdrawModal
+                        visible={this.state.isWithdrawModalVisible}
+                        hideModal={this.hideWithdrawModal}
+                        showModal={this.showWithdrawModal}
+                        ref="withdraw_modal_new"
+                        modalId="withdraw_modal_new"
+                        backedCoins={this.props.backedCoins}
+                    />
+                )}
             </div>
         );
     }
