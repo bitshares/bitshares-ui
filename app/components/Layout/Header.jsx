@@ -9,7 +9,6 @@ import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import DepositModal from "../Modal/DepositModal";
-import ImprintModal from "../Modal/ImprintModal";
 import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -136,7 +135,7 @@ class Header extends React.Component {
     _showImprint(e) {
         e.preventDefault();
         this._closeDropdown();
-        this.refs.imprint_modal.show();
+        window.open("https://crypto-bridge.org/imprint", "_blank");
     }
 
     _triggerMenu(e) {
@@ -1883,7 +1882,6 @@ class Header extends React.Component {
                     modalId="withdraw_modal_new"
                     backedCoins={this.props.backedCoins}
                 />
-                <ImprintModal ref="imprint_modal" />
             </div>
         );
     }
