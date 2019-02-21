@@ -22,6 +22,7 @@ import CopyButton from "../Utility/CopyButton";
 import ReCAPTCHA from "../Utility/ReCAPTCHA";
 import {withRouter} from "react-router-dom";
 import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
+import sha256 from "js-sha256";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -71,7 +72,10 @@ class CreateAccountPassword extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if (np.terms !== this.props.terms && np.terms) {
+        if (
+            np.terms &&
+            JSON.stringify(np.terms) !== JSON.stringify(this.props.terms)
+        ) {
             this.setState({
                 understand_tos_link: np.terms.link,
                 understand_tos_version: np.terms.version,
@@ -100,6 +104,8 @@ class CreateAccountPassword extends React.Component {
             this.state.understand_3 &&
             this.state.understand_tos &&
             this.state.understand_tos_disclaimer &&
+            this.state.understand_tos_hash &&
+            this.state.understand_tos_version &&
             this.state.us_citizen !== null &&
             this.state.recaptchaToken
         );
@@ -399,7 +405,7 @@ class CreateAccountPassword extends React.Component {
                     <br />
 
                     {/* If this is not the first account, show dropdown for fee payment account */}
-                    {firstAccount && false ? null : (
+                    {firstAccount ? null : (
                         <div className="full-width-content form-group no-overflow">
                             <label>
                                 <Translate content="account.pay_from" />
@@ -524,7 +530,7 @@ class CreateAccountPassword extends React.Component {
                                                 href={
                                                     this.props.terms
                                                         ? this.props.terms.link
-                                                        : "https://crypto-bridge.org/terms"
+                                                        : "https://crypto-bridge.org/terms-and-conditions"
                                                 }
                                                 target={"_blank"}
                                                 onClick={
