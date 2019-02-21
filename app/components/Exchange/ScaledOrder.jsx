@@ -32,7 +32,8 @@ import {Asset} from "../../lib/common/MarketClasses";
 
 class ScaledOrderForm extends Component {
     static propTypes = {
-        baseAssetBalance: PropTypes.number
+        baseAssetBalance: PropTypes.number,
+        quoteAssetBalance: PropTypes.number
     };
 
     constructor(props) {
@@ -341,7 +342,7 @@ class ScaledOrderForm extends Component {
         );
 
         const quantitySymbol = (
-            <AssetNameWrapper name={this.props.baseAsset.get("symbol")} />
+            <AssetNameWrapper name={this.props.quoteAsset.get("symbol")} />
         );
 
         const {getFieldDecorator} = this.props.form;
@@ -432,9 +433,8 @@ class ScaledOrderForm extends Component {
             rules: [
                 Validation.Rules.required(),
                 Validation.Rules.number(),
-                Validation.Rules.range({
-                    max: this.props.baseAssetBalance,
-                    min: 0
+                Validation.Rules.balance({
+                    balance: this.props.quoteAssetBalance
                 })
             ]
         })(

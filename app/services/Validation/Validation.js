@@ -105,6 +105,12 @@ export const Messages = {
                 list: list
             });
         return counterpart.translate(`validation.messages.oneOf`, {list: list});
+    },
+
+    Balance: balance => {
+        return counterpart.translate(`validation.messages.balance`, {
+            balance: balance
+        });
     }
 };
 
@@ -409,6 +415,23 @@ export const Rules = {
                 (props && props.name) || "",
                 list.toString().replace(/,([a-z])/g, ", $1")
             )
+        };
+    },
+
+    /**
+     * Validate field to be in range from 0 to UserBalance
+     * @param props
+     */
+
+    balance: function(props = {}) {
+        let validation = Rules.range({
+            min: 0,
+            max: props.balance
+        });
+
+        return {
+            validator: validation.validator,
+            message: Messages.Balance(props.balance)
         };
     }
 };
