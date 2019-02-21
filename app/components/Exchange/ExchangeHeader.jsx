@@ -225,6 +225,9 @@ export default class ExchangeHeader extends React.Component {
                                         onClick={this.props.showPriceAlertModal}
                                         type={"bell"}
                                         className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                                        data-intro={translator.translate(
+                                            "walkthrough.price_alerts"
+                                        )}
                                     />
                                     <span
                                         onClick={this.marketPicker.bind(

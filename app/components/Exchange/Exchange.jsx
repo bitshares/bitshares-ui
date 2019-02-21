@@ -2546,7 +2546,7 @@ class Exchange extends React.Component {
                 )}
                 <Tooltip
                     title={counterpart.translate(
-                        "exchange.settings.tooltip.chart_height"
+                        "exchange.settings.tooltip.increase_chart_height"
                     )}
                 >
                     <AntIcon
@@ -2558,12 +2558,12 @@ class Exchange extends React.Component {
                         onClick={() => {
                             this.onChangeChartHeight({increase: true});
                         }}
-                        type={"plus"}
+                        type={"up"}
                     />
                 </Tooltip>
                 <Tooltip
                     title={counterpart.translate(
-                        "exchange.settings.tooltip.chart_height"
+                        "exchange.settings.tooltip.decrease_chart_height"
                     )}
                 >
                     <AntIcon
@@ -2575,7 +2575,7 @@ class Exchange extends React.Component {
                         onClick={() => {
                             this.onChangeChartHeight({increase: false});
                         }}
-                        type={"minus"}
+                        type={"down"}
                     />
                 </Tooltip>
                 <Tooltip

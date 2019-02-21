@@ -414,6 +414,9 @@
         "understand": "我理解",
         "ws_status": "API 节点连接状态"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -948,13 +953,13 @@
         "asset_to_withdraw": "提现资产：",
         "asset_unavailable": "%(asset)s 资产网关暂停服务",
         "assets": {
-            "bit": "<br/>bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
-            "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
-            "rudex": "",
-            "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
+            "bit": "bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
+            "bitcny": "bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
+            "bridge": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 CryptoBridge 提供的网关服务进行充值提现。",
+            "gdex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 GDEX 提供的网关服务进行充值提现。",
+            "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
+            "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
+            "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
             "xbts": ""
         },
@@ -2122,6 +2127,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "背部",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "使用价格图查看资产的价格动作。",
         "restore_account": "使用备份文件还原钱包。",
         "sell_form": "使用此表单发出卖单。",
@@ -2306,23 +2312,5 @@
         "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
         "wallet_password": "从任意地点使用密码登录"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "请先获取充值地址",
-            "deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
-            "fee": "网关手续费",
-            "get_deposit_address": "获取充值地址",
-            "support_block": "获得客户支持，请联络 Winex:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "最低提币数量：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "预计到账：%(final_number)s",
-            "winAmount": "最低提现数量:%(min_amount)s %(asset)s"
-        }
     }
 }

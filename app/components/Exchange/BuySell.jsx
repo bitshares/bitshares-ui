@@ -968,7 +968,7 @@ class BuySell extends React.Component {
                 <div
                     className="buy-sell-container"
                     style={{paddingRight: 5}}
-                    data-intro={dataIntro}
+                    //data-intro={dataIntro}
                 >
                     {!hideHeader ? (
                         <div className={"exchange-content-header " + type}>

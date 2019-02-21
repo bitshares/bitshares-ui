@@ -944,7 +944,7 @@ class Pinger {
                 })
                 .finally(() => {
                     this._current = this._current + this._range;
-                    setTimeout(this._pingNodesInBatches.bind(this), 50);
+                    setTimeout(this._pingNodesInBatches.bind(this), 500);
                 });
         }
     }
