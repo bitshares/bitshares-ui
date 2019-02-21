@@ -18,6 +18,11 @@ import assetUtils from "common/asset_utils";
 import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
+import WalletUnlockActions from "actions/WalletUnlockActions";
+import AccountStore from "../../stores/AccountStore";
+import WalletDb from "../../stores/WalletDb";
+import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
+import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 
 class BuySell extends React.Component {
     static propTypes = {
@@ -82,6 +87,29 @@ class BuySell extends React.Component {
         this.refs.bridge_modal.show();
     }
 
+    _submit(short, e) {
+        e.preventDefault();
+
+        const wasLocked = WalletDb.isLocked();
+        WalletUnlockActions.unlock().then(() => {
+            setTimeout(() => {
+                const currentAccount =
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount;
+
+                if (
+                    !CryptoBridgeStore.getAccountRequiresForcedAction(
+                        currentAccount
+                    )
+                ) {
+                    this.props.onSubmit.call(this, short, e);
+                } else {
+                    ZfApi.publish("tos_modal", "open");
+                }
+            }, wasLocked ? 2000 : 0);
+        });
+    }
+
     render() {
         let {
             type,
@@ -91,7 +119,6 @@ class BuySell extends React.Component {
             fee,
             isPredictionMarket,
             priceChange,
-            onSubmit,
             balance,
             totalChange,
             balancePrecision,
@@ -268,7 +295,9 @@ class BuySell extends React.Component {
         let marketFee =
             isBid && quoteMarketFee
                 ? quoteMarketFee
-                : !isBid && baseMarketFee ? baseMarketFee : null;
+                : !isBid && baseMarketFee
+                    ? baseMarketFee
+                    : null;
         let hasBalance = isBid
             ? realBalanceAmount >= parseFloat(total)
             : realBalanceAmount >= parseFloat(amount);
@@ -799,7 +828,10 @@ class BuySell extends React.Component {
                                             style={{margin: 0}}
                                             className={buttonClass}
                                             type="submit"
-                                            onClick={onSubmit.bind(this, true)}
+                                            onClick={this._submit.bind(
+                                                this,
+                                                true
+                                            )}
                                             value={buttonText}
                                         />
                                     </div>
@@ -809,7 +841,10 @@ class BuySell extends React.Component {
                                             style={{margin: 0}}
                                             className={buttonClass}
                                             type="submit"
-                                            onClick={onSubmit.bind(this, true)}
+                                            onClick={this._submit.bind(
+                                                this,
+                                                true
+                                            )}
                                             value={buttonText}
                                         />
                                     </div>
@@ -827,7 +862,10 @@ class BuySell extends React.Component {
                                             style={{margin: 0}}
                                             className={buttonClass}
                                             type="submit"
-                                            onClick={onSubmit.bind(this, false)}
+                                            onClick={this._submit.bind(
+                                                this,
+                                                false
+                                            )}
                                             value={forceSellText}
                                         />
                                     </div>
@@ -841,7 +879,10 @@ class BuySell extends React.Component {
                                             style={{margin: 0}}
                                             className={buttonClass}
                                             type="submit"
-                                            onClick={onSubmit.bind(this, false)}
+                                            onClick={this._submit.bind(
+                                                this,
+                                                false
+                                            )}
                                             value={forceSellText}
                                         />
                                     </div>

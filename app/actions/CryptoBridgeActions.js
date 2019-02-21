@@ -6,6 +6,17 @@ import {TransactionBuilder} from "bitsharesjs/es";
 
 const API_MARKET_URL = cryptoBridgeAPIs.BASE + cryptoBridgeAPIs.MARKETS;
 const API_NEWS_URL = "https://crypto-bridge.org/news.json";
+const API_LOGIN_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.LOGIN;
+const API_TERMS_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.TERMS;
+const API_ME_URL = cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me";
+const API_ME_TERMS_URL =
+    cryptoBridgeAPIs.BASE_V2 + cryptoBridgeAPIs.ACCOUNTS + "/me/terms";
+
+import {
+    getRequestLoginOptions,
+    getRequestAccessOptions
+} from "lib/common/AccountUtils";
+
 const BCO_ASSET_ID = "1.3.1564";
 
 let news = null;
@@ -25,6 +36,82 @@ let markets = {
 let marketsTTL = 60 * 60 * 1000; // 60 minutes
 
 class CryptoBridgeActions {
+    login(account) {
+        return fetch(API_LOGIN_URL, getRequestLoginOptions(account)).then(
+            response => response.json()
+        );
+    }
+
+    updateAccount(account, data) {
+        return dispatch => {
+            return new Promise((resolve, reject) => {
+                this.login(account)
+                    .then(access => {
+                        fetch(
+                            API_ME_URL,
+                            Object.assign(getRequestAccessOptions(access), {
+                                method: "PUT",
+                                body: JSON.stringify(data)
+                            })
+                        )
+                            .then(() => {
+                                dispatch({
+                                    accountName: account.get("name"),
+                                    data
+                                });
+                                resolve();
+                            })
+                            .catch(err => {
+                                dispatch();
+                                reject(err);
+                            });
+                    })
+                    .catch(err => {
+                        dispatch();
+                        reject(err);
+                    });
+            });
+        };
+    }
+
+    getAccount(account) {
+        return dispatch => {
+            return new Promise((resolve, reject) => {
+                this.login(account)
+                    .then(access => {
+                        fetch(API_ME_URL, getRequestAccessOptions(access))
+                            .then(response => response.json())
+                            .then(account => {
+                                dispatch({access, account});
+                                resolve(account);
+                            })
+                            .catch(err => {
+                                dispatch({});
+                                reject(err);
+                            });
+                    })
+                    .catch(err => {
+                        dispatch({});
+                        reject(err);
+                    });
+            });
+        };
+    }
+
+    removeAccount(accountName) {
+        return dispatch => {
+            dispatch(accountName);
+        };
+    }
+
+    getLatestTerms() {
+        return dispatch => {
+            fetch(API_TERMS_URL)
+                .then(reply => reply.json().then(dispatch))
+                .catch(err => {});
+        };
+    }
+
     getMarkets() {
         return dispatch => {
             const now = new Date();

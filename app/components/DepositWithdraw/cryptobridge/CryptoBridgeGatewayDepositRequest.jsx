@@ -18,10 +18,13 @@ import LoadingIndicator from "components/LoadingIndicator";
 import counterpart from "counterpart";
 import WalletUnlockActions from "../../../actions/WalletUnlockActions";
 import WalletDb from "../../../stores/WalletDb";
+import CryptoBridgeStore from "../../../stores/CryptoBridgeStore";
 import AccountActions from "../../../actions/AccountActions";
 import QRCode from "qrcode.react";
 import PropTypes from "prop-types";
 import CryptoBridgeDepositAccept from "./CryptoBridgeDepositAccept";
+import {connect} from "alt-react";
+import AccountStore from "../../../stores/AccountStore";
 
 class CryptoBridgeGatewayDepositRequest extends React.Component {
     static propTypes = {
@@ -319,6 +322,107 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             lineHeight: 1.4
         };
 
+        const accountIsAuthenticated = !WalletDb.isLocked();
+        const accountIsCleared = !CryptoBridgeStore.getAccountRequiresForcedAction(
+            this.props.account.get("name")
+        );
+
+        const accountRequiresKycAction = CryptoBridgeStore.getAccountRequiresKycAction(
+            this.props.account.get("name")
+        );
+        const accountRequiresTosAction = CryptoBridgeStore.getAccountRequiresKycAction(
+            this.props.account.get("name")
+        );
+
+        const accountRequiresAction =
+            accountRequiresTosAction || accountRequiresKycAction;
+
+        const login = (
+            <div className="content-block">
+                <Translate
+                    className="label alert"
+                    component="label"
+                    content="cryptobridge.gateway.deposit_login"
+                    style={labelStyle}
+                />
+                <div>
+                    <button
+                        className="button primary"
+                        onClick={this._unlockWallet}
+                    >
+                        <Translate content="header.unlock_short" />
+                    </button>
+                </div>
+            </div>
+        );
+
+        const withdraw = (
+            <div className="button-group" style={{paddingTop: 20}}>
+                <button
+                    className="button success"
+                    style={{fontSize: "1.3rem"}}
+                    onClick={this.onWithdraw.bind(this)}
+                >
+                    <Translate content="gateway.withdraw_now" />{" "}
+                </button>
+            </div>
+        );
+
+        const authenticationInfo = accountRequiresAction ? (
+            <div className="content-block">
+                {accountRequiresTosAction ? (
+                    <Translate
+                        className="label alert"
+                        component="label"
+                        content="cryptobridge.gateway.account_kyc_action_required_label"
+                        style={labelStyle}
+                    />
+                ) : null}
+                {accountRequiresKycAction ? (
+                    <Translate
+                        className="label alert"
+                        component="label"
+                        content="cryptobridge.gateway.account_tos_action_required_label"
+                        style={labelStyle}
+                    />
+                ) : null}
+            </div>
+        ) : null;
+
+        const authentication = !accountIsAuthenticated ? (
+            login
+        ) : !accountIsCleared ? (
+            <div className="content-block">
+                <div>
+                    {CryptoBridgeStore.getAccountRequiresTosForcedAction(
+                        this.props.account.get("name")
+                    ) ? (
+                        <button
+                            className="button primary"
+                            onClick={() => {
+                                ZfApi.publish("tos_modal", "open");
+                            }}
+                        >
+                            <Translate content="cryptobridge.gateway.account_tos_action_required" />
+                        </button>
+                    ) : CryptoBridgeStore.getAccountRequiresKycForcedAction(
+                        this.props.account.get("name")
+                    ) ? (
+                        <button
+                            className="button primary"
+                            onClick={() => {
+                                ZfApi.publish("tos_modal", "open");
+                            }}
+                        >
+                            <Translate content="cryptobridge.gateway.account_kyc_action_required" />
+                        </button>
+                    ) : null}
+                </div>
+            </div>
+        ) : !isDeposit ? (
+            withdraw
+        ) : null;
+
         if (isDeposit) {
             return (
                 <div className="Blocktrades__gateway grid-block no-padding no-margin">
@@ -447,24 +551,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                     <AssetDepositInfo
                                         asset={{info: this.props.coin_info}}
                                     />
-                                    {WalletDb.isLocked() ? (
-                                        <div className="content-block">
-                                            <Translate
-                                                className="label alert"
-                                                component="label"
-                                                content="cryptobridge.gateway.deposit_login"
-                                                style={labelStyle}
-                                            />
-                                            <div>
-                                                <button
-                                                    className="button primary"
-                                                    onClick={this._unlockWallet}
-                                                >
-                                                    <Translate content="header.unlock_short" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ) : null}
+
+                                    {authenticationInfo}
+                                    {authentication}
 
                                     <Translate
                                         className="label warning"
@@ -477,7 +566,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                         style={labelStyle}
                                     />
 
-                                    {!WalletDb.isLocked() ? (
+                                    {accountIsAuthenticated &&
+                                    accountIsCleared ? (
                                         <div>
                                             {emptyAddressDeposit ? (
                                                 <Translate content="gateway.please_generate_address" />
@@ -579,7 +669,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                         </div>
                                     ) : null}
                                 </div>
-                                {!WalletDb.isLocked() ? (
+                                {accountIsAuthenticated && accountIsCleared ? (
                                     <div className="small-12 medium-5 large-3">
                                         {deposit_address_fragment &&
                                             !memoText &&
@@ -683,15 +773,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 asset={this.props.deposit_asset}
                             />:
                         </label>
-                        <div className="button-group" style={{paddingTop: 20}}>
-                            <button
-                                className="button success"
-                                style={{fontSize: "1.3rem"}}
-                                onClick={this.onWithdraw.bind(this)}
-                            >
-                                <Translate content="gateway.withdraw_now" />{" "}
-                            </button>
-                        </div>
+
+                        {authenticationInfo}
+                        {authentication}
                     </div>
                     <BaseModal id={withdraw_modal_id} overlay={true}>
                         <br />
@@ -734,6 +818,21 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 }
 
-export default BindToChainState(CryptoBridgeGatewayDepositRequest, {
-    keep_updating: true
+CryptoBridgeGatewayDepositRequest = BindToChainState(
+    CryptoBridgeGatewayDepositRequest,
+    {keep_updating: true}
+);
+
+CryptoBridgeGatewayDepositRequest = connect(CryptoBridgeGatewayDepositRequest, {
+    listenTo() {
+        return [WalletDb, CryptoBridgeStore, AccountStore];
+    },
+    getProps() {
+        return {
+            isLocked: WalletDb.isLocked(),
+            cbAccounts: CryptoBridgeStore.getState().accounts
+        };
+    }
 });
+
+export default CryptoBridgeGatewayDepositRequest;
