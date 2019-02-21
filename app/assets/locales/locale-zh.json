@@ -2312,23 +2312,5 @@
         "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
         "wallet_password": "从任意地点使用密码登录"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "请先获取充值地址",
-            "deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
-            "fee": "网关手续费",
-            "get_deposit_address": "获取充值地址",
-            "support_block": "获得客户支持，请联络 Winex:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "最低提币数量：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "预计到账：%(final_number)s",
-            "winAmount": "最低提现数量:%(min_amount)s %(asset)s"
-        }
     }
 }

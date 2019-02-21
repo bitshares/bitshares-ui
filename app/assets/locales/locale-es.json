@@ -2318,23 +2318,5 @@
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
         "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Por favor, obtenga la dirección de depósito",
-            "deposit_warning": "No deposites no-%(asset)s activos dentro %(asset)s dirección, de lo contrario no serán recuperados.",
-            "fee": "Gateway Cuota",
-            "get_deposit_address": "obtener dirección de depósito",
-            "support_block": "Para soporte, contacte a Winex en"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Monto minimo：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Monto actual：%(final_number)s",
-            "winAmount": "Monto minimo: %(min_amount)s %(asset)s"
-        }
     }
 }
