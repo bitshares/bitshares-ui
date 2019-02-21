@@ -34,6 +34,7 @@ jobs:
     - stage: build-testnet
       script:
         - export RECAPTCHA_SITE_KEY=$TEST_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$TEST_CRYPTOBRIDGE_PUB_KEY
         - npm install
         - npm run build-testnet
     - stage: deploy-testnet
@@ -48,6 +49,7 @@ jobs:
     - stage: build-stage
       script:
         - export RECAPTCHA_SITE_KEY=$STAGE_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$STAGE_CRYPTOBRIDGE_PUB_KEY
         - npm install
         - npm run build
     - stage: deploy-stage
@@ -62,6 +64,7 @@ jobs:
     - stage: build-prod
       script:
         - export RECAPTCHA_SITE_KEY=$PROD_RECAPTCHA_SITE_KEY
+        - export CRYPTOBRIDGE_PUB_KEY=$PROD_CRYPTOBRIDGE_PUB_KEY
         - npm install
         - npm run build
     - stage: deploy-prod

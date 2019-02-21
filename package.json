@@ -54,7 +54,7 @@
         "package-deb": "npm run prepackage && build  -p never --linux deb",
         "package-win": "npm run prepackage && build  -p never --windows",
         "package-mac": "npm run prepackage && build  -p never --mac dmg",
-        "package-all": "npm run package-deb && npm run package-win && npm run package-mac",
+        "package-all": "npm run package-mac && npm run package-deb && npm run package-win",
         "postpackage": "node write_digest.js"
     },
     "jest": {

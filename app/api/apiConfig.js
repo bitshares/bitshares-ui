@@ -65,13 +65,15 @@ export const gdexAPIs = {
 
 export const cryptoBridgeAPIs = {
     BASE: CB_API_BASE + CB_API_VERSION,
+    BASE_V2: CB_API_BASE + "/v2",
     API_VERSION: CB_API_VERSION,
     COINS_LIST: "/coins",
     ACTIVE_WALLETS: "/wallets",
     MARKETS: "/markets",
     TRADING_PAIRS: "/trading-pairs",
     ACCOUNTS: "/accounts",
-    LOGIN: "/login"
+    LOGIN: "/login",
+    TERMS: "/terms/latest"
 };
 
 const WSS_DEV_NODES = [

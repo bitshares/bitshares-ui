@@ -2057,7 +2057,16 @@
                 "Your wallet must be unlocked before you make a deposit",
             "receive_funds": "Receiving funds",
             "receive_funds_intro":
-                "In order to receive funds from another person on CryptoBridge, simply give them your account name: "
+                "In order to receive funds from another person on CryptoBridge, simply give them your account name: ",
+            "account_tos_action_required": "Open Terms of Service",
+            "account_tos_action_required_label":
+                "You need to read and accept the Terms of Service",
+            "account_kyc_action_required": "Start user verification",
+            "account_kyc_action_required_label":
+                "You need to complete user verification to use CryptoBridge"
+        },
+        "header": {
+            "imprint": "Imprint"
         },
         "footer": {
             "title": "CryptoBridge decentralized exchange"
@@ -2093,7 +2102,17 @@
                 "I hereby agree that by staking %(amount)s BCO, I fully understand that they will be locked away for %(month)s and that there is no way of claiming the funds before the staking term is over. I also accept the share in the profits of CryptoBridge platform which is attributed to my staked funds.",
             "no_balances": "You have no open BridgeCoin staking positions.",
             "bco_available": "Available: ",
-            "bco_not_available": "No BCO available "
+            "bco_not_available": "No BCO available ",
+            "terms_and_conditions": "CryptoBridge Terms and Conditions",
+            "terms_and_conditions_accept":
+                "I have read and agree to the %(cryptobridge_terms_and_conditions)s",
+            "terms_and_conditions_accept_disclaimer":
+                "I hereby renounce to my consumer right of revocation and acknowledge I can terminate the use of the service at anytime as described in §5.9 of CryptoBridge's Terms of Service",
+            "are_you_us_citizen": "Are you a U.S. citizen?",
+            "kyc_info":
+                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored.",
+            "kyc_info_grace":
+                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored."
         },
         "dashboard": {
             "all_markets": "All Markets"

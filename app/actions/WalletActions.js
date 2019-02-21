@@ -64,7 +64,11 @@ class WalletActions {
         referrer,
         referrer_percent,
         refcode,
-        reCaptchaToken
+        reCaptchaToken,
+        us_citizen,
+        terms_version,
+        terms_hash,
+        waiver
     ) {
         let {privKey: owner_private} = WalletDb.generateKeyFromPassword(
             account_name,
@@ -149,8 +153,10 @@ class WalletActions {
                                 memo_key: memo_private
                                     .toPublicKey()
                                     .toPublicKeyString(),
-                                refcode: refcode,
-                                referrer: referrer
+                                us_citizen,
+                                terms_version,
+                                terms_hash,
+                                waiver
                             }
                         })
                     }
@@ -187,7 +193,11 @@ class WalletActions {
         referrer,
         referrer_percent,
         refcode,
-        reCaptchaToken
+        reCaptchaToken,
+        us_citizen,
+        terms_version,
+        terms_hash,
+        waiver
     ) {
         if (WalletDb.isLocked()) {
             let error = "wallet locked";
@@ -255,9 +265,10 @@ class WalletActions {
                             memo_key: active_private.private_key
                                 .toPublicKey()
                                 .toPublicKeyString(),
-                            //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
-                            refcode: refcode,
-                            referrer: referrer
+                            us_citizen,
+                            terms_version,
+                            terms_hash,
+                            waiver
                         }
                     })
                 }
