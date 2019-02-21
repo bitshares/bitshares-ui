@@ -26,8 +26,8 @@ import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
 import sha256 from "js-sha256";
 
 class CreateAccount extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             validAccountName: false,
             accountName: "",
@@ -39,8 +39,11 @@ class CreateAccount extends React.Component {
             step: 1,
             us_citizen: null,
             understand_tos: null,
-            understand_tos_version: null,
-            understand_tos_hash: null,
+            understand_tos_link: props.terms ? props.terms.link : null,
+            understand_tos_version: props.terms ? props.terms.version : null,
+            understand_tos_hash: props.terms
+                ? sha256(props.terms.payload)
+                : null,
             understand_tos_disclaimer: null,
             recaptchaToken: null
         };
