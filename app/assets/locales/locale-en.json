@@ -2061,8 +2061,9 @@
             "account_tos_action_required": "Open Terms of Service",
             "account_tos_action_required_label":
                 "You need to read and accept the Terms of Service",
-            "account_kyc_action_required": "Start KYC",
-            "account_kyc_action_required_label": "You need to complete a KYC"
+            "account_kyc_action_required": "Start user verification",
+            "account_kyc_action_required_label":
+                "You need to complete user verification to use CryptoBridge"
         },
         "footer": {
             "title": "CryptoBridge decentralized exchange"
