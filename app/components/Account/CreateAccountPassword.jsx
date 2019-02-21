@@ -20,7 +20,7 @@ import Icon from "../Icon/Icon";
 import CopyButton from "../Utility/CopyButton";
 import {withRouter} from "react-router-dom";
 import {scroller} from "react-scroll";
-import {Notification} from "bitshares-ui-style-guide";
+import {Notification, Tooltip} from "bitshares-ui-style-guide";
 
 class CreateAccountPassword extends React.Component {
     constructor() {
@@ -266,18 +266,18 @@ class CreateAccountPassword extends React.Component {
                         <label className="left-label">
                             <Translate content="wallet.generated" />
                             &nbsp;&nbsp;
-                            <span
-                                className="tooltip"
-                                data-html={true}
-                                data-tip={counterpart.translate(
+                            <Tooltip
+                                title={counterpart.translate(
                                     "tooltip.generate"
                                 )}
                             >
-                                <Icon
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
-                            </span>
+                                <span className="tooltip">
+                                    <Icon
+                                        name="question-circle"
+                                        title="icons.question_circle"
+                                    />
+                                </span>
+                            </Tooltip>
                         </label>
                         <div style={{paddingBottom: "0.5rem"}}>
                             <span className="inline-label">

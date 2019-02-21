@@ -18,7 +18,7 @@ import BalanceWrapper from "./BalanceWrapper";
 import AccountTreemap from "./AccountTreemap";
 import AssetWrapper from "../Utility/AssetWrapper";
 import AccountPortfolioList from "./AccountPortfolioList";
-import {Input, Icon,Switch} from "bitshares-ui-style-guide";
+import {Input, Icon, Switch} from "bitshares-ui-style-guide";
 
 class AccountOverview extends React.Component {
     constructor(props) {
@@ -484,7 +484,13 @@ class AccountOverview extends React.Component {
                                             addonAfter={<Icon type="search" />}
                                         />
                                     </div>
-                                    <div className="selector inline-block" style={{position: "relative",top: "6px"}}>
+                                    <div
+                                        className="selector inline-block"
+                                        style={{
+                                            position: "relative",
+                                            top: "6px"
+                                        }}
+                                    >
                                         <div
                                             className={cnames("inline-block", {
                                                 inactive:
@@ -644,7 +650,12 @@ class AccountOverview extends React.Component {
                                             : 0
                                     )}
                                 >
-                                    <div>
+                                    <div
+                                        onClick={this._toggleHideProposal.bind(
+                                            this
+                                        )}
+                                        style={{cursor: "pointer"}}
+                                    >
                                         <Switch
                                             style={{margin: 16}}
                                             checked={
@@ -658,7 +669,7 @@ class AccountOverview extends React.Component {
                                     </div>
                                     <Proposals
                                         className="dashboard-table"
-                                        account={account.get("id")}
+                                        account={account}
                                         hideFishingProposals={
                                             this.state.hideFishingProposals
                                         }
