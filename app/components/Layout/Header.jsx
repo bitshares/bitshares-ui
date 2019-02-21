@@ -133,6 +133,12 @@ class Header extends React.Component {
         this.refs.withdraw_modal_new.show();
     }
 
+    _showImprint(e) {
+        e.preventDefault();
+        this._closeDropdown();
+        window.open("https://crypto-bridge.org/imprint", "_blank");
+    }
+
     _triggerMenu(e) {
         e.preventDefault();
         ZfApi.publish("mobile-menu", "toggle");
@@ -1611,15 +1617,12 @@ class Header extends React.Component {
                                 </li>
 
                                 <li
-                                    className={cnames(
-                                        {
-                                            active:
-                                                active.indexOf(
-                                                    "/help/introduction/cryptobridge"
-                                                ) !== -1
-                                        },
-                                        "divider"
-                                    )}
+                                    className={cnames({
+                                        active:
+                                            active.indexOf(
+                                                "/help/introduction/cryptobridge"
+                                            ) !== -1
+                                    })}
                                     onClick={this._onNavigate.bind(
                                         this,
                                         "/help/introduction/cryptobridge"
@@ -1634,6 +1637,21 @@ class Header extends React.Component {
                                     </div>
                                     <div className="table-cell">
                                         <Translate content="header.help" />
+                                    </div>
+                                </li>
+                                <li
+                                    className={"divider"}
+                                    onClick={this._showImprint.bind(this)}
+                                >
+                                    <div className="table-cell">
+                                        <Icon
+                                            size="2x"
+                                            name="info-circle-o"
+                                            title="icons.info_circle_o"
+                                        />
+                                    </div>
+                                    <div className="table-cell">
+                                        <Translate content="cryptobridge.header.imprint" />
                                     </div>
                                 </li>
 

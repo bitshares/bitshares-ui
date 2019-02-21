@@ -2064,6 +2064,9 @@
             "account_kyc_action_required": "Start KYC",
             "account_kyc_action_required_label": "You need to complete a KYC"
         },
+        "header": {
+            "imprint": "Imprint"
+        },
         "footer": {
             "title": "CryptoBridge decentralized exchange"
         },
