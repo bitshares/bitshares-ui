@@ -192,6 +192,7 @@ class Header extends React.Component {
                 if (!isPersistantType()) {
                     setLocalStorageType("persistant");
                 }
+                AccountActions.setPasswordAccount(null);
                 AccountStore.tryToSetCurrentAccount();
             }
         }

@@ -447,6 +447,7 @@ class WalletUnlockModal extends React.Component {
         if (passwordLogin) {
             footer.push(
                 <Tooltip
+                    key="wallet.remember_me_explanation"
                     title={counterpart.translate(
                         "wallet.remember_me_explanation"
                     )}
@@ -472,6 +473,7 @@ class WalletUnlockModal extends React.Component {
                     style={{
                         float: "left"
                     }}
+                    key="settings.walletLockTimeoutTooltip"
                 >
                     <span>
                         <Tooltip
@@ -520,7 +522,7 @@ class WalletUnlockModal extends React.Component {
             );
         }
         footer.push(
-            <span className="auto-lock-wrapper">
+            <span className="auto-lock-wrapper" key="wallet.backup_login">
                 <Button onClick={this.handleLogin} key="login-btn">
                     {counterpart.translate(
                         this.shouldUseBackupLogin()
