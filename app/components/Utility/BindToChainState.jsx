@@ -5,6 +5,7 @@ import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
 import {getDisplayName} from "common/reactUtils";
 import LoadingIndicator from "../LoadingIndicator";
+import {Logger} from "builder-util/out/log";
 
 /**
  * @brief provides automatic fetching and updating of chain data
@@ -360,8 +361,12 @@ function BindToChainState(Component, options = {}) {
                     props[key] ||
                     this.dynamic_props[key] ||
                     this.default_props[key];
+                console.log("!", prop);
+
                 if (prop) {
                     let new_obj = ChainStore.getBalanceObjects(prop);
+                    console.log("!", new_obj);
+
                     if (
                         new_obj === undefined &&
                         this.required_props.indexOf(key) === -1 &&

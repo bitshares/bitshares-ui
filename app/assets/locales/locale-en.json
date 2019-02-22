@@ -1741,7 +1741,8 @@
             "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
             "title": "Barter",
             "total_fees": "Total fees: %(fee)s %(asset)s",
-            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter",
+            "balance_warning": "balance of %(asset_symbol)s asset: %(asset_balance)s is smaller than total typed amount: %(asset_amount)s"
         },
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
