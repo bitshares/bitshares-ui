@@ -137,6 +137,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                 stateCallback: this.addDepositAddress
             });
         }
+
+        this.setState({});
     }
 
     addDepositAddress(receive_address) {
@@ -330,12 +332,13 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         const accountRequiresKycAction = CryptoBridgeStore.getAccountRequiresKycAction(
             this.props.account.get("name")
         );
-        const accountRequiresTosAction = CryptoBridgeStore.getAccountRequiresKycAction(
+        const accountRequiresTosAction = CryptoBridgeStore.getAccountRequiresTosAction(
             this.props.account.get("name")
         );
 
         const accountRequiresAction =
-            accountRequiresTosAction || accountRequiresKycAction;
+            accountIsAuthenticated &&
+            (accountRequiresTosAction || accountRequiresKycAction);
 
         const login = (
             <div className="content-block">
@@ -372,17 +375,17 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             <div className="content-block">
                 {accountRequiresTosAction ? (
                     <Translate
-                        className="label alert"
+                        className="label warning"
                         component="label"
-                        content="cryptobridge.gateway.account_kyc_action_required_label"
+                        content="cryptobridge.gateway.account_tos_action_required_label"
                         style={labelStyle}
                     />
                 ) : null}
                 {accountRequiresKycAction ? (
                     <Translate
-                        className="label alert"
+                        className="label warning"
                         component="label"
-                        content="cryptobridge.gateway.account_tos_action_required_label"
+                        content="cryptobridge.gateway.account_kyc_action_required_label"
                         style={labelStyle}
                     />
                 ) : null}
