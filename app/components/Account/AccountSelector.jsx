@@ -8,15 +8,12 @@ import Translate from "react-translate-component";
 import {ChainStore, PublicKey, ChainValidation, FetchChain} from "bitsharesjs";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import classnames from "classnames";
 import counterpart from "counterpart";
 import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
-import FloatingDropdown from "../Utility/FloatingDropdown";
-import TypeAhead from "../Utility/TypeAhead";
 import cnames from "classnames";
 import PropTypes from "prop-types";
-import {Modal, Tooltip, Button, Input, Select, Form} from "bitshares-ui-style-guide";
+import {Tooltip, Button, Input, Icon as AntIcon, Select, Form} from "bitshares-ui-style-guide";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -52,8 +49,7 @@ class AccountSelector extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputChanged: false,
-            selectedAccount: null
+            inputChanged: false
         };
     }
 
@@ -63,11 +59,11 @@ class AccountSelector extends React.Component {
         if (typeof account === "undefined")
             account = ChainStore.getAccount(accountName);
 
-        // if (this.props.onAccountChanged && account)
-        //     this.props.onAccountChanged(account);
+        if (this.props.onAccountChanged && account)
+            this.props.onAccountChanged(account);
 
-        // if (!this.props.typeahead && accountName)
-        //     this.onInputChanged(accountName);
+        if (!this.props.typeahead && accountName)
+            this.onInputChanged(accountName);
     }
 
     componentDidUpdate() {
@@ -76,25 +72,13 @@ class AccountSelector extends React.Component {
         }
     }
 
-    // componentWillReceiveProps(newProps) {
-    //     if (newProps.account && newProps.account !== this.props.account) {
-    //         if (this.props.onAccountChanged)
-    //             this.props.onAccountChanged(newProps.account);
-    //     }
-    // }
-
-    /***
-     * STYLE GUIDE COMPONENTS
-     */
-
-    onSelect(value) {
-        console.log("onSelect", value);
-        this.setState({
-            selectedAccount: value
-        });
+    componentWillReceiveProps(np) {
+        if (np.account && np.account !== this.props.account) {
+            if (this.props.onAccountChanged) {
+                this.props.onAccountChanged(np.account);
+            }
+        }
     }
-
-    // --- END OF STYLE GUIDE COMPONENTS
 
     // can be used in parent component: this.refs.account_selector.getAccount()
     getAccount() {
@@ -121,50 +105,6 @@ class AccountSelector extends React.Component {
         return null;
     }
 
-    // onSelected(e) {
-    //     this.setState({inputChanged: false});
-    //     this._notifyOnChange(e);
-    // }
-
-    _notifyOnChange(e) {
-        let {onChange, onAccountChanged, accountName} = this.props;
-
-        let _accountName = this.getVerifiedAccountName(e);
-
-        if (_accountName === accountName) {
-            // nothing has changed, don't notify
-            return;
-        }
-
-        // Synchronous onChange for input change
-        if (!!onChange && (!!_accountName || _accountName === "")) {
-            console.log("onChange", _accountName);
-            onChange(_accountName);
-        }
-
-        // asynchronous onAccountChanged for checking on chain
-        if (!!onAccountChanged) {
-            FetchChain("getAccount", _accountName, undefined, {
-                [_accountName]: false
-            })
-                .then(_account => {
-                    if (!!_account) {
-                        console.log("onAccountChanged", _account);
-                        onAccountChanged(_account);
-                    }
-                })
-                .catch(err => {
-                    // error fetching
-                    console.log(err);
-                });
-        }
-    }
-
-    onInputChanged(e) {
-        this.setState({inputChanged: true});
-        this._notifyOnChange(e);
-    }
-
     getVerifiedAccountName(e) {
         let {allowUppercase} = this.props;
 
@@ -186,8 +126,49 @@ class AccountSelector extends React.Component {
         return value;
     }
 
+    _notifyOnChange(selectedAccountName) {
+        let {props} = this;
+
+        let accountName = this.getVerifiedAccountName(selectedAccountName);
+
+        // Synchronous onChange for input change
+        if (!!props.onChange && (!!accountName || accountName === "")) {
+            props.onChange(accountName);
+        }
+
+        // asynchronous onAccountChanged for checking on chain
+        if (!!props.onAccountChanged) {
+            FetchChain("getAccount", accountName, undefined, {
+                [accountName]: false
+            }).then(account => {
+                if (!!account) {
+                    props.onAccountChanged(account);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    }
+
+    onSelect(selectedAccountName) {
+        this._notifyOnChange(selectedAccountName);
+    }
+
+    onInputChanged(e) {
+        this.setState({
+            inputChanged: true
+        });
+
+        this._notifyOnChange(e);
+    }
+
     onKeyDown(e) {
-        if (e.keyCode === 13) this.onAction(e);
+        if (
+            e.keyCode === 13 ||
+            e.keyCode === 9
+        ) {
+            this.onAction(e);
+        }
     }
 
     _onAddContact() {
@@ -201,7 +182,6 @@ class AccountSelector extends React.Component {
     onAction(e) {
         let {onAction, disableActionButton, account, accountName} = this.props;
         e.preventDefault();
-        console.log("onAction");
         if (!this.getError() && onAction && !disableActionButton) {
             if (account) onAction(account);
             else if (this.getInputType(accountName) === "pubkey")
@@ -223,8 +203,6 @@ class AccountSelector extends React.Component {
             labelClass,
             reserveErrorSpace
         } = this.props;
-
-        console.log(this.state.selectedAccount);
 
         const inputType = this.getInputType(accountName);
 
@@ -294,6 +272,8 @@ class AccountSelector extends React.Component {
                         id: accountName,
                         label: accountName,
                         status: counterpart.translate(account_status_text),
+                        isFavorite: myActiveAccounts.has(accountName) || contacts.has(accountName),
+                        isKnownScammer: accountUtils.isKnownScammer(accountName),
                         className: accountUtils.isKnownScammer(accountName)
                             ? "negative"
                             : "positive"
@@ -323,6 +303,8 @@ class AccountSelector extends React.Component {
                 id: this.props.accountName,
                 label: this.props.accountName,
                 status: _account_status_text,
+                isFavorite: myActiveAccounts.has(accountName) || contacts.has(accountName),
+                isKnownScammer: accountUtils.isKnownScammer(accountName),
                 className:
                     accountUtils.isKnownScammer(accountName) || !_account
                         ? "negative"
@@ -332,7 +314,10 @@ class AccountSelector extends React.Component {
         }
 
         typeAheadAccounts.sort((a, b) => {
-            if (a.label > b.label) return 1;
+            if (a.disabled && !b.disabled) {
+                if (a.label > b.label) return 1;
+                else return -1;
+            } 
             else return -1;
         });
 
@@ -440,13 +425,21 @@ class AccountSelector extends React.Component {
                             {typeof this.props.typeahead !== "undefined" ? (
                                 <Select 
                                     showSearch
+                                    optionLabelProp={"value"}
+                                    onSelect={this.onSelect.bind(this)}
+                                    onChange={this.onInputChanged.bind(this)}
+                                    onSearch={this.onInputChanged.bind(this)}
+                                    placeholder={counterpart.translate("account.search")}
                                 >
                                     {typeAheadAccounts.map(account => (
                                         <Select.Option
                                             key={account.id}
                                             value={account.label}
-                                            title={account.label}
+                                            disabled={account.disabled}
                                         >
+                                            {account.isFavorite ? <AntIcon type="star" /> : null}
+                                            {account.isKnownScammer ? <AntIcon type="warning" /> : null}
+                                            &nbsp;
                                             {account.label}
                                             <span style={{float: "right"}}>
                                                 {account.status}
@@ -454,34 +447,6 @@ class AccountSelector extends React.Component {
                                         </Select.Option>
                                     ))}
                                 </Select>
-                                
-                                // <TypeAhead
-                                //     items={typeAheadAccounts}
-                                //     style={{
-                                //         textTransform:
-                                //             this.getInputType(accountName) ===
-                                //             "pubkey"
-                                //                 ? null
-                                //                 : "lowercase",
-                                //         fontVariant: "initial"
-                                //     }}
-                                //     name="username"
-                                //     id="username"
-                                //     defaultValue={this.props.accountName || ""}
-                                //     placeholder={
-                                //         this.props.placeholder ||
-                                //         counterpart.translate("account.name")
-                                //     }
-                                //     ref="user_input"
-                                //     onSelect={this.onSelected.bind(this)}
-                                //     onChange={this.onInputChanged.bind(this)}
-                                //     onKeyDown={this.onKeyDown.bind(this)}
-                                //     tabIndex={this.props.tabIndex}
-                                //     inputProps={{
-                                //         placeholder: "Search for an account"
-                                //     }}
-                                //     {...this.props.typeaheadOptions || {}}
-                                // />
                             ) : (
                                 <Form.Item validateStatus={error ? "error" : null} help={error ? error : null} style={{width: "100%"}}>
                                     <Input 
@@ -528,19 +493,6 @@ class AccountSelector extends React.Component {
                             ) : null}
                         </div>
                     </div>
-
-                    {error || reserveErrorSpace ? (
-                        <div
-                            className={
-                                this.props.hideImage
-                                    ? "has-error"
-                                    : "error-area"
-                            }
-                            style={{marginTop: "1rem"}}
-                        >
-                            <span>{error}</span>
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );
