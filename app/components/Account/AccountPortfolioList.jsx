@@ -383,6 +383,7 @@ class AccountPortfolioList extends React.Component {
             let linkElement = (
                 <span>
                     <Icon
+                        style={{cursor: "pointer"}}
                         name="dollar"
                         title="icons.dollar.buy"
                         className="icon-14px"
