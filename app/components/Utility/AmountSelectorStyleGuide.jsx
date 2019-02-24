@@ -59,14 +59,14 @@ class AmountSelector extends DecimalChecker {
             ? counterpart.translate(this.props.error)
             : this.formatAmount(this.props.amount);
 
-        const label = (
+        const label = this.props.label ? (
             <div className="amount-selector-field--label">
                 {counterpart.translate(this.props.label).toUpperCase()}:
                 <div className="amount-selector-field--balance">
                     {this.props.display_balance}
                 </div>
             </div>
-        );
+        ) : null;
 
         let addonAfter = null;
 

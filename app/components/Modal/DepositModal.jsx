@@ -64,21 +64,21 @@ class DepositModalContent extends DecimalChecker {
     }
 
     shouldComponentUpdate(np, ns) {
-        return !utils.are_equal_shallow(ns, this.state);
+        return !utils.are_equal_shallow(ns, this.state) ||
+            np.asset !== this.props.asset;
     }
 
-    onGatewayChanged(e) {
-        if (!e.target.value) return;
-        this._getDepositAddress(this.state.selectedAsset, e.target.value);
+    onGatewayChanged(selectedGateway) {
+        this._getDepositAddress(this.state.selectedAsset, selectedGateway);
     }
 
-    onAssetSelected(asset, assetDetails) {
-        if (assetDetails.gateway == "")
-            return this.setState({selectedAsset: asset, selectedGateway: null});
+    onAssetSelected(asset) {
+        if (asset.gateway == "")
+            return this.setState({selectedAsset: asset.id, selectedGateway: null});
 
         let {selectedAsset, selectedGateway} = _onAssetSelected.call(
             this,
-            asset,
+            asset.id,
             "depositAllowed",
             (availableGateways, balancesByGateway) => {
                 if (availableGateways && availableGateways.length == 1)
@@ -281,7 +281,7 @@ class DepositModalContent extends DecimalChecker {
                         <div className="no-margin no-padding">
                             <div className="inline-label input-wrapper">
                                 <DepositWithdrawAssetSelector
-                                    defaultValue={selectedAsset}
+                                    defaultValue={this.state.selectedAsset}
                                     onSelect={this.onAssetSelected.bind(this)}
                                     selectOnBlur
                                 />
