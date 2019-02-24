@@ -975,6 +975,10 @@ class AccountOverview extends React.Component {
         const showTrade = false;
         const showBorrow = false;
         const showSettle = false;
+        const showAdvancedFeatures = settings.get(
+            "showAdvancedFeatures",
+            false
+        );
 
         return (
             <div className="grid-content app-tables no-padding" ref="appTables">
@@ -1244,7 +1248,8 @@ class AccountOverview extends React.Component {
                                 />
                             </Tab>
 
-                            {account.get("proposals") &&
+                            {showAdvancedFeatures &&
+                            account.get("proposals") &&
                             account.get("proposals").size ? (
                                 <Tab
                                     title="explorer.proposals.title"

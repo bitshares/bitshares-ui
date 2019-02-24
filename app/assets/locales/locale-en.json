@@ -2096,7 +2096,11 @@
             "bco_not_available": "No BCO available "
         },
         "dashboard": {
-            "all_markets": "All Markets"
+            "all_markets": "All Markets",
+            "proposal_warning":
+                "DO NOT APPROVE any proposals from unknown accounts. Your account may be stolen if you approve a malicious proposal.",
+            "proposal_info":
+                "When in doubt, do nothing and ask questions in our Discord server %(discordLink)s"
         }
     }
 }
