@@ -22,10 +22,12 @@ import SettingsActions from "actions/SettingsActions";
 import counterpart from "counterpart";
 import {withRouter} from "react-router-dom";
 import ReCAPTCHA from "../Utility/ReCAPTCHA";
+import CryptoBridgeStore from "../../stores/CryptoBridgeStore";
+import sha256 from "js-sha256";
 
 class CreateAccount extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             validAccountName: false,
             accountName: "",
@@ -35,6 +37,14 @@ class CreateAccount extends React.Component {
             hide_refcode: true,
             show_identicon: false,
             step: 1,
+            us_citizen: null,
+            understand_tos: null,
+            understand_tos_link: props.terms ? props.terms.link : null,
+            understand_tos_version: props.terms ? props.terms.version : null,
+            understand_tos_hash: props.terms
+                ? sha256(props.terms.payload)
+                : null,
+            understand_tos_disclaimer: null,
             recaptchaToken: null
         };
         this.onFinishConfirm = this.onFinishConfirm.bind(this);
@@ -53,6 +63,19 @@ class CreateAccount extends React.Component {
         ReactTooltip.rebuild();
     }
 
+    componentWillReceiveProps(np) {
+        if (
+            np.terms &&
+            JSON.stringify(np.terms) !== JSON.stringify(this.props.terms)
+        ) {
+            this.setState({
+                understand_tos_link: np.terms.link,
+                understand_tos_version: np.terms.version,
+                understand_tos_hash: sha256(np.terms.payload)
+            });
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return !utils.are_equal_shallow(nextState, this.state);
     }
@@ -66,7 +89,16 @@ class CreateAccount extends React.Component {
         if (!firstAccount) {
             valid = valid && this.state.registrar_account;
         }
-        return valid && this.state.recaptchaToken;
+
+        return (
+            valid &&
+            this.state.understand_tos &&
+            this.state.understand_tos_disclaimer &&
+            this.state.understand_tos_hash &&
+            this.state.understand_tos_version &&
+            this.state.us_citizen !== null &&
+            this.state.recaptchaToken
+        );
     }
 
     onAccountNameChange(e) {
@@ -113,7 +145,11 @@ class CreateAccount extends React.Component {
                     referralAccount || this.state.registrar_account,
                     0,
                     refcode,
-                    reCaptchaToken
+                    reCaptchaToken,
+                    this.state.us_citizen,
+                    this.state.understand_tos_version,
+                    this.state.understand_tos_hash,
+                    this.state.understand_tos_disclaimer
                 )
                     .then(() => {
                         // User registering his own account
@@ -202,6 +238,16 @@ class CreateAccount extends React.Component {
         }
     }
 
+    onCitizenshipChange = e => {
+        this.setState({
+            us_citizen: e.currentTarget.value === "true"
+        });
+    };
+
+    onTermsAndConditionsClick = e => {
+        e.stopPropagation();
+    };
+
     onRegistrarAccountChange(registrar_account) {
         this.setState({registrar_account});
     }
@@ -275,6 +321,40 @@ class CreateAccount extends React.Component {
                     />
                 )}
 
+                <section style={{paddingBottom: "1.5rem", textAlign: "left"}}>
+                    <label className="left-label">
+                        <Translate content="cryptobridge.account.are_you_us_citizen" />
+                    </label>
+                    <label
+                        htmlFor="us_citizen_yes"
+                        style={{display: "inline-block", marginRight: "1rem"}}
+                    >
+                        <input
+                            name="us_citizen"
+                            id="us_citizen_yes"
+                            type="radio"
+                            value="true"
+                            onChange={this.onCitizenshipChange}
+                            checked={this.state.us_citizen === true}
+                        />
+                        <Translate content="settings.yes" />
+                    </label>
+                    <label
+                        htmlFor="us_citizen_no"
+                        style={{display: "inline-block"}}
+                    >
+                        <input
+                            name="us_citizen"
+                            id="us_citizen_no"
+                            type="radio"
+                            value="false"
+                            onChange={this.onCitizenshipChange}
+                            checked={this.state.us_citizen === false}
+                        />
+                        <Translate content="settings.no" />
+                    </label>
+                </section>
+
                 {/* If this is not the first account, show dropdown for fee payment account */}
                 {firstAccount ? null : (
                     <div className="full-width-content form-group no-overflow">
@@ -296,12 +376,105 @@ class CreateAccount extends React.Component {
                     </div>
                 )}
 
+                <div
+                    className="confirm-checks"
+                    style={{paddingBottom: "1.5rem"}}
+                    onClick={e => {
+                        e.preventDefault();
+                        this.setState({
+                            understand_tos: !this.state.understand_tos
+                        });
+                    }}
+                >
+                    <label
+                        htmlFor="checkbox-tos"
+                        style={{position: "relative"}}
+                        onClick={e => {
+                            e.preventDefault();
+                            this.setState({
+                                understand_tos: !this.state.understand_tos
+                            });
+                        }}
+                    >
+                        <input
+                            type="checkbox"
+                            id="checkbox-tos"
+                            onChange={() => {}}
+                            checked={this.state.understand_tos}
+                            style={{
+                                pointerEvents: "none",
+                                position: "absolute"
+                            }}
+                        />
+                        <div style={{paddingLeft: "30px"}}>
+                            <Translate
+                                content="cryptobridge.account.terms_and_conditions_accept"
+                                with={{
+                                    cryptobridge_terms_and_conditions: (
+                                        <a
+                                            href={
+                                                this.props.terms
+                                                    ? this.props.terms.link
+                                                    : "https://crypto-bridge.org/terms-and-conditions"
+                                            }
+                                            target={"_blank"}
+                                            onClick={
+                                                this.onTermsAndConditionsClick
+                                            }
+                                        >
+                                            <Translate content="cryptobridge.account.terms_and_conditions" />
+                                        </a>
+                                    )
+                                }}
+                            />
+                        </div>
+                    </label>
+                </div>
+
+                <div
+                    className="confirm-checks"
+                    style={{paddingBottom: "1.5rem"}}
+                    onClick={e => {
+                        e.preventDefault();
+                        this.setState({
+                            understand_tos_disclaimer: !this.state
+                                .understand_tos_disclaimer
+                        });
+                    }}
+                >
+                    <label
+                        htmlFor="checkbox-tos"
+                        style={{position: "relative"}}
+                        onClick={e => {
+                            e.preventDefault();
+                            this.setState({
+                                understand_tos_disclaimer: !this.state
+                                    .understand_tos_disclaimer
+                            });
+                        }}
+                    >
+                        <input
+                            type="checkbox"
+                            id="checkbox-tos"
+                            onChange={() => {}}
+                            checked={this.state.understand_tos_disclaimer}
+                            style={{
+                                pointerEvents: "none",
+                                position: "absolute"
+                            }}
+                        />
+                        <div style={{paddingLeft: "30px"}}>
+                            <Translate content="cryptobridge.account.terms_and_conditions_accept_disclaimer" />
+                        </div>
+                    </label>
+                </div>
+
+                <div className="divider" />
+
                 <ReCAPTCHA
                     onChange={this.onRecaptchaChange}
                     payload={{user: this.state.accountName}}
                 />
-
-                <div className="divider" />
 
                 {/* Submit button */}
                 {this.state.loading ? (
@@ -587,9 +760,11 @@ CreateAccount = withRouter(CreateAccount);
 
 export default connect(CreateAccount, {
     listenTo() {
-        return [AccountStore];
+        return [AccountStore, CryptoBridgeStore];
     },
     getProps() {
-        return {};
+        return {
+            terms: CryptoBridgeStore.getLatestTerms()
+        };
     }
 });

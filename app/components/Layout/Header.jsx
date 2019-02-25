@@ -9,6 +9,7 @@ import SettingsActions from "actions/SettingsActions";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import SendModal from "../Modal/SendModal";
 import DepositModal from "../Modal/DepositModal";
+import TosModal from "../Modal/TosModal";
 import GatewayStore from "stores/GatewayStore";
 import Icon from "../Icon/Icon";
 import Translate from "react-translate-component";
@@ -130,6 +131,12 @@ class Header extends React.Component {
         e.preventDefault();
         this._closeDropdown();
         this.refs.withdraw_modal_new.show();
+    }
+
+    _showImprint(e) {
+        e.preventDefault();
+        this._closeDropdown();
+        window.open("https://crypto-bridge.org/imprint", "_blank");
     }
 
     _triggerMenu(e) {
@@ -1610,15 +1617,12 @@ class Header extends React.Component {
                                 </li>
 
                                 <li
-                                    className={cnames(
-                                        {
-                                            active:
-                                                active.indexOf(
-                                                    "/help/introduction/cryptobridge"
-                                                ) !== -1
-                                        },
-                                        "divider"
-                                    )}
+                                    className={cnames({
+                                        active:
+                                            active.indexOf(
+                                                "/help/introduction/cryptobridge"
+                                            ) !== -1
+                                    })}
                                     onClick={this._onNavigate.bind(
                                         this,
                                         "/help/introduction/cryptobridge"
@@ -1633,6 +1637,21 @@ class Header extends React.Component {
                                     </div>
                                     <div className="table-cell">
                                         <Translate content="header.help" />
+                                    </div>
+                                </li>
+                                <li
+                                    className={"divider"}
+                                    onClick={this._showImprint.bind(this)}
+                                >
+                                    <div className="table-cell">
+                                        <Icon
+                                            size="2x"
+                                            name="info-circle-o"
+                                            title="icons.info_circle_o"
+                                        />
+                                    </div>
+                                    <div className="table-cell">
+                                        <Translate content="cryptobridge.header.imprint" />
                                     </div>
                                 </li>
 
@@ -1864,6 +1883,7 @@ class Header extends React.Component {
                     modalId="withdraw_modal_new"
                     backedCoins={this.props.backedCoins}
                 />
+                <TosModal />
             </div>
         );
     }

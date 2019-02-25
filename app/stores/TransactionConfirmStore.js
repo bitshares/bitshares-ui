@@ -35,7 +35,7 @@ class TransactionConfirmStore {
             resolve,
             reject
         };
-        //console.log("-- TransactionConfirmStore.onConfirm -->", state);
+        //console.LOG("-- TransactionConfirmStore.onConfirm -->", state);
         this.setState(state);
     }
 

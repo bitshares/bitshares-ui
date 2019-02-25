@@ -60,6 +60,8 @@ class CryptoBridgeWithdrawModal extends React.Component {
             feeStatus: {}
         };
 
+        this.unMounted = true;
+
         this._validateAddress(this.state.withdraw_address, props);
         this._validatePaymentId(this.state.payment_id);
 
@@ -68,6 +70,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
     }
 
     componentWillMount() {
+        this.unMounted = false;
         this._updateFee();
         this._checkFeeStatus();
         TransactionConfirmStore.listen(this.onTrxIncluded);
@@ -189,9 +192,11 @@ class CryptoBridgeWithdrawModal extends React.Component {
                     feeStatus[a] = status[idx];
                 });
                 if (!utils.are_equal_shallow(state.feeStatus, feeStatus)) {
-                    this.setState({
-                        feeStatus
-                    });
+                    if (!this.unMounted) {
+                        this.setState({
+                            feeStatus
+                        });
+                    }
                 }
                 this._checkBalance();
             })
@@ -261,16 +266,18 @@ class CryptoBridgeWithdrawModal extends React.Component {
     }
 
     _validatePaymentId(new_payment_id) {
-        this.setState({
-            payment_id_is_valid:
-                !new_payment_id ||
-                (this.getPaymentIdType() === "hash" &&
-                    /^([0-9a-fA-F]{16}|[0-9a-fA-F]{64})$/.test(
-                        new_payment_id
-                    )) ||
-                (this.getPaymentIdType() === "tag" &&
-                    /^([0-9]+)$/.test(new_payment_id))
-        });
+        if (!this.unMounted) {
+            this.setState({
+                payment_id_is_valid:
+                    !new_payment_id ||
+                    (this.getPaymentIdType() === "hash" &&
+                        /^([0-9a-fA-F]{16}|[0-9a-fA-F]{64})$/.test(
+                            new_payment_id
+                        )) ||
+                    (this.getPaymentIdType() === "tag" &&
+                        /^([0-9]+)$/.test(new_payment_id))
+            });
+        }
     }
 
     _validateAddress(new_withdraw_address, props = this.props) {
@@ -281,10 +288,12 @@ class CryptoBridgeWithdrawModal extends React.Component {
             newAddress: new_withdraw_address
         }).then(isValid => {
             if (this.state.withdraw_address === new_withdraw_address) {
-                this.setState({
-                    withdraw_address_check_in_progress: false,
-                    withdraw_address_is_valid: isValid
-                });
+                if (!this.unMounted) {
+                    this.setState({
+                        withdraw_address_check_in_progress: false,
+                        withdraw_address_is_valid: isValid
+                    });
+                }
             }
         });
     }
@@ -717,7 +726,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
                                 )}
                             />
                             <Trigger close={withdrawModalConfirmationId}>
-                                <a href className="secondary button">
+                                <a href="#" className="secondary button">
                                     <Translate content="modal.confirmation.cancel" />
                                 </a>
                             </Trigger>

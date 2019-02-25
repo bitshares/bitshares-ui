@@ -64,7 +64,11 @@ class WalletActions {
         referrer,
         referrer_percent,
         refcode,
-        reCaptchaToken
+        reCaptchaToken,
+        us_citizen,
+        terms_version,
+        terms_hash,
+        waiver
     ) {
         let {privKey: owner_private} = WalletDb.generateKeyFromPassword(
             account_name,
@@ -129,50 +133,38 @@ class WalletActions {
                     );
                 }
 
+                const body = {
+                    name: account_name,
+                    owner_key: owner_private.toPublicKey().toPublicKeyString(),
+                    active_key: active_private
+                        .toPublicKey()
+                        .toPublicKeyString(),
+                    memo_key: memo_private.toPublicKey().toPublicKeyString(),
+                    us_citizen,
+                    terms_version,
+                    terms_hash,
+                    waiver
+                };
+
                 let create_account_promise = fetch(
                     faucetAddress +
-                        cryptoBridgeAPIs.API_VERSION +
+                        cryptoBridgeAPIs.API_VERSION_V2 +
                         cryptoBridgeAPIs.ACCOUNTS,
                     {
                         method: "post",
                         mode: "cors",
                         headers: this._getRecaptchaHeaders(reCaptchaToken),
-                        body: JSON.stringify({
-                            account: {
-                                name: account_name,
-                                owner_key: owner_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                active_key: active_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                memo_key: memo_private
-                                    .toPublicKey()
-                                    .toPublicKeyString(),
-                                refcode: refcode,
-                                referrer: referrer
-                            }
-                        })
+                        body: JSON.stringify(body)
                     }
                 )
-                    .then(r =>
-                        r.json().then(res => {
-                            if (!res || (res && res.error)) {
-                                reject(res.error);
-                            } else {
-                                resolve(res);
-                            }
-                        })
-                    )
+                    .then(result => {
+                        resolve(body);
+                    })
                     .catch(reject);
 
                 return create_account_promise
                     .then(result => {
-                        if (result && result.error) {
-                            reject(result.error);
-                        } else {
-                            resolve(result);
-                        }
+                        resolve(body);
                     })
                     .catch(error => {
                         reject(error);
@@ -187,7 +179,11 @@ class WalletActions {
         referrer,
         referrer_percent,
         refcode,
-        reCaptchaToken
+        reCaptchaToken,
+        us_citizen,
+        terms_version,
+        terms_hash,
+        waiver
     ) {
         if (WalletDb.isLocked()) {
             let error = "wallet locked";
@@ -235,37 +231,38 @@ class WalletActions {
                 faucetAddress = faucetAddress.replace(/http:\/\//, "https://");
             }
 
+            const body = {
+                name: account_name,
+                owner_key: owner_private.private_key
+                    .toPublicKey()
+                    .toPublicKeyString(),
+                active_key: active_private.private_key
+                    .toPublicKey()
+                    .toPublicKeyString(),
+                memo_key: active_private.private_key
+                    .toPublicKey()
+                    .toPublicKeyString(),
+                us_citizen,
+                terms_version,
+                terms_hash,
+                waiver
+            };
+
             let create_account_promise = fetch(
                 faucetAddress +
-                    cryptoBridgeAPIs.API_VERSION +
+                    cryptoBridgeAPIs.API_VERSION_V2 +
                     cryptoBridgeAPIs.ACCOUNTS,
                 {
                     method: "post",
                     mode: "cors",
                     headers: this._getRecaptchaHeaders(reCaptchaToken),
-                    body: JSON.stringify({
-                        account: {
-                            name: account_name,
-                            owner_key: owner_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            active_key: active_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            memo_key: active_private.private_key
-                                .toPublicKey()
-                                .toPublicKeyString(),
-                            //"memo_key": memo_private.private_key.toPublicKey().toPublicKeyString(),
-                            refcode: refcode,
-                            referrer: referrer
-                        }
-                    })
+                    body: JSON.stringify(body)
                 }
-            ).then(r => r.json());
+            );
 
             return create_account_promise
                 .then(result => {
-                    if (result.error) {
+                    if (result && result.error) {
                         throw result.error;
                     }
                     return updateWallet();
