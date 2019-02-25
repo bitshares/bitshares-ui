@@ -989,16 +989,15 @@ class BuySell extends React.Component {
                                     ]}
                                 />
                             </span>
-                            <span
-                                className="grid-block"
-                                style={{float: "right"}}
-                            >
+                            <span style={{float: "right"}}>
                                 <a
                                     href="javascript:void(0);"
                                     onClick={this.props.showScaledOrderModal}
                                     style={{textTransform: "none"}}
                                 >
-                                    Scaled Order
+                                    {counterpart.translate(
+                                        "scaled_orders.title"
+                                    )}
                                 </a>
                             </span>
                             {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
