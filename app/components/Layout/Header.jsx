@@ -139,6 +139,12 @@ class Header extends React.Component {
         window.open("https://crypto-bridge.org/imprint", "_blank");
     }
 
+    _showTermsAndConditions(e) {
+        e.preventDefault();
+        this._closeDropdown();
+        window.open("https://crypto-bridge.org/terms-and-conditions", "_blank");
+    }
+
     _triggerMenu(e) {
         e.preventDefault();
         ZfApi.publish("mobile-menu", "toggle");
@@ -1618,6 +1624,7 @@ class Header extends React.Component {
 
                                 <li
                                     className={cnames({
+                                        divider: true,
                                         active:
                                             active.indexOf(
                                                 "/help/introduction/cryptobridge"
@@ -1639,10 +1646,7 @@ class Header extends React.Component {
                                         <Translate content="header.help" />
                                     </div>
                                 </li>
-                                <li
-                                    className={"divider"}
-                                    onClick={this._showImprint.bind(this)}
-                                >
+                                <li onClick={this._showImprint.bind(this)}>
                                     <div className="table-cell">
                                         <Icon
                                             size="2x"
@@ -1652,6 +1656,25 @@ class Header extends React.Component {
                                     </div>
                                     <div className="table-cell">
                                         <Translate content="cryptobridge.header.imprint" />
+                                    </div>
+                                </li>
+                                <li
+                                    className={
+                                        showAdvancedFeatures ? "divider" : null
+                                    }
+                                    onClick={this._showTermsAndConditions.bind(
+                                        this
+                                    )}
+                                >
+                                    <div className="table-cell">
+                                        <Icon
+                                            size="2x"
+                                            name="info-circle-o"
+                                            title="icons.info_circle_o"
+                                        />
+                                    </div>
+                                    <div className="table-cell">
+                                        <Translate content="cryptobridge.header.terms" />
                                     </div>
                                 </li>
 

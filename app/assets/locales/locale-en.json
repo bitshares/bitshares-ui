@@ -2066,7 +2066,8 @@
                 "You need to complete user verification to use CryptoBridge"
         },
         "header": {
-            "imprint": "Imprint"
+            "imprint": "Imprint",
+            "terms": "Terms and Conditions"
         },
         "footer": {
             "title": "CryptoBridge decentralized exchange"
