@@ -285,6 +285,35 @@ class Proposals extends Component {
             >
                 <thead>
                     <tr>
+                        <th colSpan={4} style={{textAlign: "center"}}>
+                            <Translate
+                                component="label"
+                                style={{whiteSpace: "normal", lineHeight: 1.4}}
+                                className="label warning"
+                                content={
+                                    "cryptobridge.dashboard.proposal_warning"
+                                }
+                            />
+                            <Translate
+                                component="p"
+                                style={{textTransform: "none"}}
+                                content={"cryptobridge.dashboard.proposal_info"}
+                                with={{
+                                    discordLink: (
+                                        <a
+                                            target="_blank"
+                                            href={
+                                                "https://discordapp.com/invite/H6Qt2dQ"
+                                            }
+                                        >
+                                            https://discordapp.com/invite/H6Qt2dQ
+                                        </a>
+                                    )
+                                }}
+                            />
+                        </th>
+                    </tr>
+                    <tr>
                         <th>
                             <Translate content="proposal.proposals" />
                         </th>
