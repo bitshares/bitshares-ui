@@ -26,6 +26,7 @@ import {
 import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
+import {map} from "lodash-es";
 
 function moveDecimal(num, decimals) {
     if (!num) return;
@@ -666,95 +667,73 @@ export default class Barter extends Component {
         let peer2AmountsFormated = [];
 
         // for peer1
-        from_barter.forEach(function(d) {
-            if (d.from_amount) {
-                if (peer1Amounts.hasOwnProperty(d.from_asset_id)) {
-                    peer1Amounts[d.from_asset_id] = {
+        from_barter.forEach(function(item) {
+            if (item.from_amount) {
+                if (peer1Amounts.hasOwnProperty(item.from_asset_id)) {
+                    peer1Amounts[item.from_asset_id] = {
                         amount:
-                            Number(peer1Amounts[d.from_asset_id].amount) +
-                            Number(d.from_amount),
-                        precision: d.from_asset.get("precision"),
-                        symbol: d.from_asset.get("symbol")
+                            Number(peer1Amounts[item.from_asset_id].amount) +
+                            Number(item.from_amount),
+                        precision: item.from_asset.get("precision"),
+                        symbol: item.from_asset.get("symbol")
                     };
                 } else {
-                    peer1Amounts[d.from_asset_id] = {
-                        amount: Number(d.from_amount),
-                        precision: d.from_asset.get("precision"),
-                        symbol: d.from_asset.get("symbol")
+                    peer1Amounts[item.from_asset_id] = {
+                        amount: Number(item.from_amount),
+                        precision: item.from_asset.get("precision"),
+                        symbol: item.from_asset.get("symbol")
                     };
                 }
             }
         });
 
-        for (let prop in peer1Amounts) {
-            peer1AmountsFormated.push({
-                assetId: prop,
-                amount: peer1Amounts[prop].amount,
-                precision: peer1Amounts[prop].precision,
-                symbol: peer1Amounts[prop].symbol
-            });
-        }
-
-        peer1AmountsFormated.forEach(item => {
-            let balanceOfCurrentAsset = this.getBalance(
-                from_account,
-                item.assetId
-            );
+        peer1AmountsFormated = map(peer1Amounts, (item, key) => {
+            let balanceOfCurrentAsset = this.getBalance(from_account, key);
             let decimals = Math.max(0, item.precision);
             let formatedBalance = balanceOfCurrentAsset
                 ? moveDecimal(balanceOfCurrentAsset, decimals)
                 : 0;
-
+            item.assetId = key;
             if (item.amount > formatedBalance) {
                 item.warning = true;
                 item.balance = formatedBalance;
             }
+            return item;
         });
 
         // for peer2
-        to_barter.forEach(function(d) {
-            if (d.to_amount) {
-                if (peer2Amounts.hasOwnProperty(d.to_asset_id)) {
-                    peer2Amounts[d.to_asset_id] = {
+        to_barter.forEach(function(item) {
+            if (item.to_amount) {
+                if (peer2Amounts.hasOwnProperty(item.to_asset_id)) {
+                    peer2Amounts[item.to_asset_id] = {
                         amount:
-                            Number(peer2Amounts[d.to_asset_id].amount) +
-                            Number(d.to_amount),
-                        precision: d.to_asset.get("precision"),
-                        symbol: d.to_asset.get("symbol")
+                            Number(peer2Amounts[item.to_asset_id].amount) +
+                            Number(item.to_amount),
+                        precision: item.to_asset.get("precision"),
+                        symbol: item.to_asset.get("symbol")
                     };
                 } else {
-                    peer2Amounts[d.to_asset_id] = {
-                        amount: Number(d.to_amount),
-                        precision: d.to_asset.get("precision"),
-                        symbol: d.to_asset.get("symbol")
+                    peer2Amounts[item.to_asset_id] = {
+                        amount: Number(item.to_amount),
+                        precision: item.to_asset.get("precision"),
+                        symbol: item.to_asset.get("symbol")
                     };
                 }
             }
         });
 
-        for (let prop in peer2Amounts) {
-            peer2AmountsFormated.push({
-                assetId: prop,
-                amount: peer2Amounts[prop].amount,
-                precision: peer2Amounts[prop].precision,
-                symbol: peer2Amounts[prop].symbol
-            });
-        }
-
-        peer2AmountsFormated.forEach(item => {
-            let balanceOfCurrentAsset = this.getBalance(
-                to_account,
-                item.assetId
-            );
+        peer2AmountsFormated = map(peer2Amounts, (item, key) => {
+            let balanceOfCurrentAsset = this.getBalance(to_account, key);
             let decimals = Math.max(0, item.precision);
             let formatedBalance = balanceOfCurrentAsset
                 ? moveDecimal(balanceOfCurrentAsset, decimals)
                 : 0;
-
+            item.assetId = key;
             if (item.amount > formatedBalance) {
                 item.warning = true;
                 item.balance = formatedBalance;
             }
+            return item;
         });
 
         this.setState({

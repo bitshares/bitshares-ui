@@ -361,11 +361,9 @@ function BindToChainState(Component, options = {}) {
                     props[key] ||
                     this.dynamic_props[key] ||
                     this.default_props[key];
-                console.log("!", prop);
 
                 if (prop) {
                     let new_obj = ChainStore.getBalanceObjects(prop);
-                    console.log("!", new_obj);
 
                     if (
                         new_obj === undefined &&
