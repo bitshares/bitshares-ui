@@ -2115,7 +2115,11 @@
                 "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored."
         },
         "dashboard": {
-            "all_markets": "All Markets"
+            "all_markets": "All Markets",
+            "proposal_warning":
+                "DO NOT APPROVE any proposals from unknown accounts. Your account may be stolen if you approve a malicious proposal.",
+            "proposal_info":
+                "When in doubt, do nothing and ask questions in our Discord server %(discordLink)s"
         }
     }
 }
