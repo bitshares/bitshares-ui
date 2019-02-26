@@ -125,7 +125,7 @@
                 "deb",
                 "AppImage"
             ],
-            "synopsis": "CryptoBridge: Cryptocurrency and Decentralized Exchange"
+            "synopsis": "CryptoBridge: Gateway to Decentralized Trading"
         },
         "directories": {
             "buildResources": "resources",

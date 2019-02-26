@@ -46,6 +46,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         min_deposit: PropTypes.number,
         is_available: PropTypes.bool.isRequired,
         required_confirmations: PropTypes.number,
+        deposit_fee: PropTypes.number,
         deposit_fee_enabled: PropTypes.bool.isRequired,
         deposit_fee_time_frame: PropTypes.number,
         deposit_fee_percentage: PropTypes.number,
@@ -58,6 +59,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     static defaultProps = {
         autosubscribe: false,
         required_confirmations: 0,
+        deposit_fee: 0,
         deposit_fee_enabled: false,
         deposit_fee_time_frame: 0,
         deposit_fee_percentage: 0,
@@ -214,7 +216,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         let account_balances_object = this.props.account.get("balances");
 
-        const {gate_fee, min_deposit} = this.props;
+        const {gate_fee, min_deposit, deposit_fee} = this.props;
 
         let balance = "0 " + this.props.receive_asset.get("symbol");
         if (this.props.deprecated_in_favor_of) {
@@ -482,7 +484,8 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             <Translate content="cryptobridge.gateway.deposit_minimum" />:
                                         </td>
                                         <td style={depositRightCellStyle}>
-                                            {(min_deposit || gate_fee * 2) +
+                                            {(min_deposit ||
+                                                deposit_fee + gate_fee * 2) +
                                                 " "}
                                             <AssetName
                                                 name={this.props.receive_asset.get(
@@ -491,6 +494,21 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                             />
                                         </td>
                                     </tr>
+                                    {this.props.deposit_fee > 0 && (
+                                        <tr>
+                                            <td>
+                                                <Translate content="cryptobridge.gateway.deposit_fee" />:
+                                            </td>
+                                            <td style={depositRightCellStyle}>
+                                                {this.props.deposit_fee + " "}
+                                                <AssetName
+                                                    name={this.props.receive_asset.get(
+                                                        "symbol"
+                                                    )}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
                                     {this.props.required_confirmations > 0 && (
                                         <tr>
                                             <td>
@@ -562,7 +580,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                         className="label warning"
                                         component="label"
                                         content="gateway.min_deposit_warning_asset"
-                                        minDeposit={min_deposit || gate_fee * 2}
+                                        minDeposit={
+                                            min_deposit ||
+                                            deposit_fee + gate_fee * 2
+                                        }
                                         coin={assetUtils.replaceAssetSymbol(
                                             this.props.deposit_asset
                                         )}

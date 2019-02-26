@@ -239,6 +239,7 @@ class CryptoBridgeGateway extends React.Component {
                                     required_confirmations={
                                         coin.requiredConfirmations
                                     }
+                                    deposit_fee={coin.depositFee}
                                     deposit_fee_enabled={
                                         coin.depositFeeEnabled === true
                                     }
