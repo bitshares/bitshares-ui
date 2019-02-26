@@ -3,7 +3,7 @@
     "version": "2.0.190226",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/bitshares/bitshares-ui",
-    "author": "BitShares UI Worker",
+    "author": "BitShares UI Worker <ui-dev@bitshares.org>",
     "contributors": [
         "Sigve Kvalsvik",
         "James Calfee",
