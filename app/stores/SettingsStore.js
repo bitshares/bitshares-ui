@@ -263,6 +263,7 @@ class SettingsStore {
                 markets_4018d784: [
                     // BTS MAIN NET
                     "BRIDGE.BTC",
+                    "BRIDGE.USDT",
                     "BRIDGE.ETH",
                     "BRIDGE.LTC",
                     "BRIDGE.RVN",

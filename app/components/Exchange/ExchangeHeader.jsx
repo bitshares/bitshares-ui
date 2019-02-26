@@ -36,7 +36,7 @@ export default class ExchangeHeader extends React.Component {
     }
 
     componentWillUnmount() {
-        document.title = "CryptoBridge decentralized exchange";
+        document.title = "CryptoBridge";
     }
 
     _updateTitle() {

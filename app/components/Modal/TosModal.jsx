@@ -46,15 +46,11 @@ class TosModal extends React.Component {
             !this.isFetchingAccount &&
             !nextProps.locked &&
             nextProps.currentAccount &&
+            nextProps.account &&
             !nextProps.accounts.get(nextProps.currentAccount)
         ) {
-            const account = ChainStore.getAccount(nextProps.currentAccount);
-
-            if (account) {
-                // getting account
-                this.isFetchingAccount = true;
-                CryptoBridgeActions.getAccount(account);
-            }
+            this.isFetchingAccount = true;
+            CryptoBridgeActions.getAccount(nextProps.account);
         } else if (
             nextProps.locked &&
             nextProps.accounts.get(nextProps.currentAccount)
@@ -390,10 +386,14 @@ export default connect(TosModal, {
         return [AccountStore, WalletUnlockStore, CryptoBridgeStore];
     },
     getProps() {
+        const currentAccount =
+            AccountStore.getState().currentAccount ||
+            AccountStore.getState().passwordAccount;
+        const account = ChainStore.getAccount(currentAccount);
+
         return {
-            currentAccount:
-                AccountStore.getState().currentAccount ||
-                AccountStore.getState().passwordAccount,
+            currentAccount,
+            account,
             locked: WalletUnlockStore.getState().locked,
             accounts: CryptoBridgeStore.getState().accounts,
             terms: CryptoBridgeStore.getLatestTerms()

@@ -1,6 +1,6 @@
 {
     "name": "CryptoBridge",
-    "version": "0.15.6",
+    "version": "0.16.2",
     "description": "Advanced wallet interface for the BitShares financial blockchain.",
     "homepage": "https://github.com/CryptoBridge/cryptobridge-ui",
     "author": "Sigve Kvalsvik <kvalsvik.crypto@gmail.com>",
@@ -125,7 +125,7 @@
                 "deb",
                 "AppImage"
             ],
-            "synopsis": "CryptoBridge: Cryptocurrency and Decentralized Exchange"
+            "synopsis": "CryptoBridge: Gateway to Decentralized Trading"
         },
         "directories": {
             "buildResources": "resources",
