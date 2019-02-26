@@ -33,14 +33,24 @@ export const getRequestAccessOptions = access => {
 
 export const getRequestLoginOptions = account => {
     const username = account.get("name");
+
     const memoPublicKeyStr = account.getIn(["options", "memo_key"]);
     const memoPrivateKey = WalletDb.getPrivateKey(memoPublicKeyStr);
+
+    const activePublicKeyStr = account
+        .get("active")
+        .get("key_auths")
+        .get(0)
+        .get(0);
+    const activePrivateKey = WalletDb.getPrivateKey(activePublicKeyStr);
+
     const recipientPublicKey = PublicKey.fromPublicKeyString(
         __CRYPTOBRIDGE_PUB_KEY__
     );
+
     const nonce = 1;
     const password = signMemoWithKeys(
-        memoPrivateKey,
+        memoPrivateKey || activePrivateKey,
         recipientPublicKey,
         nonce,
         JSON.stringify({user: username, ts: Date.now()})
