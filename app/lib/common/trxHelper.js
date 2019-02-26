@@ -48,7 +48,8 @@ function checkFeeStatusAsync({
     feeID = "1.3.0",
     type = "transfer",
     options = null,
-    data
+    data,
+    operationsCount = 1
 } = {}) {
     let key =
         accountID +
@@ -59,7 +60,9 @@ function checkFeeStatusAsync({
         "_" +
         JSON.stringify(options) +
         "_" +
-        JSON.stringify(data);
+        JSON.stringify(data) +
+        "_" +
+        operationsCount;
 
     if (asyncCache[key]) {
         if (asyncCache[key].result) {
@@ -95,14 +98,14 @@ function checkFeeStatusAsync({
                 if (feeID === "1.3.0" && !coreBalanceID) {
                     asyncCache[key].queue.forEach(promise => {
                         promise.res({
-                            fee: new Asset({amount: coreFee}),
+                            fee: new Asset({amount: coreFee * operationsCount}),
                             hasBalance,
                             hasPoolBalance
                         });
                     });
                     asyncCache[key] = {
                         result: {
-                            fee: new Asset({amount: coreFee}),
+                            fee: new Asset({amount: coreFee * operationsCount}),
                             hasBalance,
                             hasPoolBalance
                         }
@@ -120,7 +123,7 @@ function checkFeeStatusAsync({
                     feeBalanceID ? FetchChain("getObject", feeBalanceID) : null
                 ]).then(balances => {
                     let [coreBalance, feeBalance] = balances;
-                    let fee = new Asset({amount: coreFee});
+                    let fee = new Asset({amount: coreFee * operationsCount});
                     let hasValidCER = true;
 
                     /*
@@ -160,6 +163,12 @@ function checkFeeStatusAsync({
                             hasPoolBalance = false;
                         }
                     }
+
+                    console.log(
+                        "fee.getAmount",
+                        fee.getAmount(),
+                        operationsCount
+                    );
 
                     if (
                         feeBalance &&
