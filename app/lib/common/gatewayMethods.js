@@ -406,6 +406,7 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
                     outputCoin.withdrawalPaymentIdEnabled,
 
                 depositAccount: outputCoin.depositAccount,
+                depositFee: outputCoin.depositFee,
                 depositFeeEnabled: outputCoin.depositFeeEnabled,
                 depositFeeTimeframe: outputCoin.depositFeeTimeframe,
                 depositFeePercentage: outputCoin.depositFeePercentage,

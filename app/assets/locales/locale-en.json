@@ -2033,6 +2033,7 @@
             "news": "News"
         },
         "gateway": {
+            "deposit_fee": "Deposit fee",
             "deposit_payment_id_tag_required":
                 "You MUST use this destination tag",
             "deposit_payment_id_tag": "Destination Tag (optional)",
@@ -2070,7 +2071,7 @@
             "terms": "Terms and Conditions"
         },
         "footer": {
-            "title": "CryptoBridge decentralized exchange"
+            "title": "CryptoBridge"
         },
         "account": {
             "id": "BCO Staking ID",
