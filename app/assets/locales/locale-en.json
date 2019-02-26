@@ -1454,6 +1454,7 @@
         "subject": "Subject"
     },
     "scaled_orders": {
+        "please_log_in": "You need to login before use Scaled Orders",
         "title": "Scaled Order",
         "price_lower": "Price Lower",
         "price_upper": "Price Upper",

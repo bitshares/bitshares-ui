@@ -18,8 +18,9 @@ import DatePicker from "react-datepicker2/src/";
 import moment from "moment";
 import Icon from "../Icon/Icon";
 import SettleModal from "../Modal/SettleModal";
-import {Button, Select, Popover} from "bitshares-ui-style-guide";
+import {Button, Select, Popover, Tooltip} from "bitshares-ui-style-guide";
 import ReactTooltip from "react-tooltip";
+import AccountStore from "../../stores/AccountStore";
 
 class BuySell extends React.Component {
     static propTypes = {
@@ -954,6 +955,8 @@ class BuySell extends React.Component {
         const isGloballySettled =
             isBitAsset && otherAsset.get("bitasset").get("settlement_fund") > 0;
 
+        const currentAccount = AccountStore.getState().currentAccount;
+
         return (
             <div
                 className={cnames(this.props.className)}
@@ -990,15 +993,34 @@ class BuySell extends React.Component {
                                 />
                             </span>
                             <span style={{float: "right"}}>
-                                <a
-                                    href="javascript:void(0);"
-                                    onClick={this.props.showScaledOrderModal}
-                                    style={{textTransform: "none"}}
-                                >
-                                    {counterpart.translate(
-                                        "scaled_orders.title"
-                                    )}
-                                </a>
+                                {currentAccount ? (
+                                    <a
+                                        href="javascript:void(0);"
+                                        onClick={
+                                            this.props.showScaledOrderModal
+                                        }
+                                        style={{textTransform: "none"}}
+                                    >
+                                        {counterpart.translate(
+                                            "scaled_orders.title"
+                                        )}
+                                    </a>
+                                ) : (
+                                    <Tooltip
+                                        title={counterpart.translate(
+                                            "scaled_orders.please_log_in"
+                                        )}
+                                    >
+                                        <a
+                                            href="javascript:void(0);"
+                                            style={{textTransform: "none"}}
+                                        >
+                                            {counterpart.translate(
+                                                "scaled_orders.title"
+                                            )}
+                                        </a>
+                                    </Tooltip>
+                                )}
                             </span>
                             {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
                             {this.props.onFlip &&
