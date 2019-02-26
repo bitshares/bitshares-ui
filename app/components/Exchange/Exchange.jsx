@@ -1,6 +1,12 @@
 import {Apis} from "bitsharesjs-ws";
 import {ChainStore, FetchChain} from "bitsharesjs";
-import {Tabs, Collapse, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {
+    Tabs,
+    Collapse,
+    Icon as AntIcon,
+    Button,
+    Tooltip
+} from "bitshares-ui-style-guide";
 import cnames from "classnames";
 import translator from "counterpart";
 import guide from "intro.js";
@@ -36,7 +42,6 @@ import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktrade
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
 import counterpart from "counterpart";
-import {updateGatewayBackers} from "common/gatewayUtils";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -347,10 +352,10 @@ class Exchange extends React.Component {
                 my_orders: 2,
                 open_settlement: 2
             }),
-            panelTabsActive: {
-                1: "",
-                2: ""
-            }
+            panelTabsActive: ws.get("panelTabsActive", {
+                1: "my_history",
+                2: "my_orders"
+            })
         };
     }
 
@@ -594,7 +599,7 @@ class Exchange extends React.Component {
                 }
             })
             .catch(err => {
-                console.log("checkFeeStatusAsync error", err);
+                console.error("checkFeeStatusAsync error", err);
                 this.setState({feeStatus: {}});
             });
     }
@@ -972,7 +977,8 @@ class Exchange extends React.Component {
             setting[marketName] = !inverted;
             SettingsActions.changeMarketDirection(setting);
         }
-        console.log("order:", JSON.stringify(order.toObject()));
+        if (__DEV__) "order:", JSON.stringify(order.toObject());
+
         return MarketsActions.createLimitOrder2(order)
             .then(result => {
                 if (result.error) {
@@ -989,11 +995,9 @@ class Exchange extends React.Component {
                             )
                         });
                 }
-                console.log("order success");
-                //this._clearForms();
             })
             .catch(e => {
-                console.log("order failed:", e);
+                console.error("order failed:", e);
             });
     }
 
@@ -1547,6 +1551,10 @@ class Exchange extends React.Component {
         this.setState({
             panelTabsActive: panelTabsActive,
             forceReRender: true // Requires to forcefully re-render for tab to stick
+        });
+
+        SettingsActions.changeViewSetting({
+            panelTabsActive: panelTabsActive
         });
     }
 
@@ -2507,6 +2515,102 @@ class Exchange extends React.Component {
                 />
             );
 
+        let tradingChartHeader = (
+            <div
+                className={"exchange--chart-control"}
+                style={{
+                    height: 33,
+                    right: "13rem",
+                    top: "1px",
+                    position: "absolute",
+                    zIndex: 1,
+                    padding: "0.2rem"
+                }}
+            >
+                {chartType == "price_chart" && (
+                    <Tooltip
+                        title={counterpart.translate(
+                            "exchange.settings.tooltip.chart_tools"
+                        )}
+                    >
+                        <AntIcon
+                            style={{
+                                cursor: "pointer",
+                                fontSize: "1.4rem",
+                                marginRight: "0.6rem"
+                            }}
+                            onClick={this._chartTools.bind(this)}
+                            type="tool"
+                        />
+                    </Tooltip>
+                )}
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.increase_chart_height"
+                    )}
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: true});
+                        }}
+                        type={"up"}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.decrease_chart_height"
+                    )}
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: false});
+                        }}
+                        type={"down"}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={
+                        chartType == "market_depth"
+                            ? counterpart.translate(
+                                  "exchange.settings.tooltip.show_price_chart"
+                              )
+                            : counterpart.translate(
+                                  "exchange.settings.tooltip.show_market_depth"
+                              )
+                    }
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem"
+                        }}
+                        onClick={() => {
+                            if (chartType == "market_depth") {
+                                this._toggleChart("price_chart");
+                            } else {
+                                this._toggleChart("market_depth");
+                            }
+                        }}
+                        type={
+                            chartType == "market_depth"
+                                ? "bar-chart"
+                                : "area-chart"
+                        }
+                    />
+                </Tooltip>
+            </div>
+        );
+
         /***
          * Generate tabs based on Layout
          *
@@ -2743,6 +2847,7 @@ class Exchange extends React.Component {
                             : "",
                         "small-12 grid-block orderbook no-padding align-spaced no-overflow wrap"
                     )}
+                    key={`actionCard_${actionCardIndex++}`}
                 >
                     &nbsp;
                 </div>
@@ -2777,7 +2882,10 @@ class Exchange extends React.Component {
             actionCards.push(groupTabbed1);
             actionCards.push(groupTabbed2);
             actionCards.push(
-                <div className="order-10 small-12">
+                <div
+                    className="order-10 small-12"
+                    key={`actionCard_${actionCardIndex++}`}
+                >
                     <Tabs
                         defaultActiveKey="my-market"
                         activeKey={tabVerticalPanel}
@@ -3150,6 +3258,7 @@ class Exchange extends React.Component {
                         >
                             {!tinyScreen ? (
                                 <div>
+                                    {tradingChartHeader}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div

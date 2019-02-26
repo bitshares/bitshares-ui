@@ -6,6 +6,7 @@ import AssetName from "../Utility/AssetName";
 import counterpart from "counterpart";
 import getLocale from "browser-locale";
 import TransitionWrapper from "../Utility/TransitionWrapper";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 class TableHeader extends React.Component {
     render() {
@@ -86,20 +87,23 @@ class SettleOrderRow extends React.Component {
                         base.get("precision")
                     )}
                 </td>
-                <td
-                    style={{textAlign: "right", whiteSpace: "nowrap"}}
-                    className="tooltip"
-                    data-tip={new Date(order.settlement_date)}
-                >
-                    {counterpart.localize(new Date(order.settlement_date), {
-                        type: "date",
-                        format:
-                            getLocale()
-                                .toLowerCase()
-                                .indexOf("en-us") !== -1
-                                ? "market_history_us"
-                                : "market_history"
-                    })}
+                <td>
+                    <Tooltip title={new Date(order.settlement_date).toString()}>
+                        <div style={{textAlign: "right", whiteSpace: "nowrap"}}>
+                            {counterpart.localize(
+                                new Date(order.settlement_date),
+                                {
+                                    type: "date",
+                                    format:
+                                        getLocale()
+                                            .toLowerCase()
+                                            .indexOf("en-us") !== -1
+                                            ? "market_history_us"
+                                            : "market_history"
+                                }
+                            )}
+                        </div>
+                    </Tooltip>
                 </td>
             </tr>
         );

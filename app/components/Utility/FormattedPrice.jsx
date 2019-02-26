@@ -13,6 +13,7 @@ import marketUtils from "common/market_utils";
 import {Asset, Price} from "common/MarketClasses";
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
+import {Tooltip} from "bitshares-ui-style-guide";
 
 /**
  *  Given an amount and an asset, render it with proper precision
@@ -199,15 +200,18 @@ class FormattedPrice extends React.Component {
         let symbols = hide_symbols ? (
             ""
         ) : (
-            <span
-                data-place="bottom"
-                data-tip={noPopOver ? "Click to invert the price" : null}
-                className={noPopOver ? "clickable inline-block" : ""}
-                onClick={noPopOver ? this.onFlip.bind(this) : null}
+            <Tooltip
+                placement="bottom"
+                title={noPopOver ? "Click to invert the price" : null}
             >
-                <AssetName name={quote.get("symbol")} />/
-                <AssetName name={base.get("symbol")} />
-            </span>
+                <span
+                    className={noPopOver ? "clickable inline-block" : ""}
+                    onClick={noPopOver ? this.onFlip.bind(this) : null}
+                >
+                    <AssetName name={quote.get("symbol")} />/
+                    <AssetName name={base.get("symbol")} />
+                </span>
+            </Tooltip>
         );
 
         const currency_popover_body =

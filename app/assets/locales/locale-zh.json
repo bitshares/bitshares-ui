@@ -51,7 +51,7 @@
         "ignore": "忽略",
         "in_open": "这是你在所有委单中的 %(asset)s 资产的数量。",
         "in_open_value": "这是你在所有委单中的 %(asset)s 资产的大致价值。",
-        "intro_text_1": "<b>比特股2.0</b>是一个基于区块链构建的去中心化交易所（通称DEX）。 DEX有着工业级的业务处理能力，能够永不停歇地提供公正和透明的服务，这里有比特股首创的bitCNY,bitUSD等智能货币，用户可以在这里根据自己的需要发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
+        "intro_text_1": "Your Decentralized Platform",
         "intro_text_2": "发行用户定义资产（UIA），也可以买卖通用的数字资产如BTC、ETH等。",
         "intro_text_3": "尽情享受交易的乐趣吧！",
         "intro_text_4": "<br/>网站：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitshares.org'>https://bitshares.org</a><br/>论坛：&nbsp;&nbsp;&nbsp;&nbsp;<a target='_blank' rel='noopener noreferrer' href='https://bitsharestalk.org'>https://bitsharestalk.org</a><br/>GitHub：<a target='_blank' rel='noopener noreferrer' href='https://github.com/bitshares/bitshares-core'>https://github.com/bitshares/bitshares-core</a>",
@@ -414,6 +414,9 @@
         "understand": "我理解",
         "ws_status": "API 节点连接状态"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -648,6 +653,8 @@
                 "reload": "Changing this option will only affect after manually reloading",
                 "reverse_order_book": "Reverse order book to have buy orders on top",
                 "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
                 "single_colum_order_form": "Enforce that Price, Quantity, Total, etc. are in one column (not floating)"
             }
         },
@@ -946,13 +953,13 @@
         "asset_to_withdraw": "提现资产：",
         "asset_unavailable": "%(asset)s 资产网关暂停服务",
         "assets": {
-            "bit": "<br/>bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
-            "bitcny": "<br/><br/>bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
-            "rudex": "",
-            "trade": "<br/><br/>资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
+            "bit": "bit%(asset)s 是锚定 %(backed)s 价值的金融衍生品。它 100% 去中心化，无需信任第三方中心机构，并由锁定在区块链上智能合约中的抵押品进行价值背书。",
+            "bitcny": "bitCNY 可以通过 Magic Wallet 提供的网关服务进行充值提现。更多信息请访问 https://www.magicw.net/",
+            "bridge": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 CryptoBridge 提供的网关服务进行充值提现。",
+            "gdex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 GDEX 提供的网关服务进行充值提现。",
+            "open": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Openledger 提供的网关服务进行充值提现。",
+            "rudex": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Rudex 提供的网关服务进行充值提现。",
+            "trade": "资产 %(asset)s 由真实资产 %(backed)s 1:1 储备背书。可以通过 Blocktrades 提供的网关服务进行充值提现。",
             "win": "",
             "xbts": ""
         },
@@ -1690,6 +1697,7 @@
         "view_keys": "查看密钥",
         "wallet": "本地钱包",
         "walletLockTimeout": "钱包自动锁定时间（秒，0 为禁用）",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "需要使用钱包模式",
         "wallet_required_text": "你需要切换到钱包模式才能恢复旧的备份钱包文件，点击下方按钮继续。",
         "wallet_text": "管理本地钱包。",
@@ -1697,13 +1705,88 @@
         "yes": "是"
     },
     "showcases": {
-        "barter_transaction": {
+        "barter": {
+            "account": "Account",
+            "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
+            "add_escrow": "Add escrow",
+            "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "bartering_asset": "Bartering asset",
             "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
-            "title": "Barter"
+            "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
+            "error_fill_in_peer_left_name": "Please fill in the account name of Peer 1",
+            "error_fill_in_peer_right_name": "Please fill in the account name of Peer 2",
+            "error_fill_in_valid_asset_amount": "Please fill in valid amounts for the bartering assets",
+            "error_same_name": "Peer 1 and Peer 2 must be different accounts",
+            "error_same_name_escrow": "The escrow can not be Peer 1 or Peer 2",
+            "escrow_account": "Escrowing account",
+            "escrow_as_custodian": "An escrow (%(escrow)s) is used as custodian which holds the funds of Peer 1 and which has to approve the barter before it can execute.",
+            "escrow_as_witness": "An escrow (%(escrow)s) is used as a witness which has to approve the barter before it can execute.",
+            "escrow_payment": "Payment for escrow services",
+            "escrow_payment_tooltip": "Being an escrow requires trust from both peers and should be considered a paid service. The escrow will be paid from Peer 1's account via an additional transfer in the proposal, which increases the overall fee for Peer 1. Set this value to zero to remove it, default value is equal to the transactions fee induced for the escrow.",
+            "fee_due_now": "Fee due now",
+            "fee_due_now_tooltip": "The indicated transaction fee will be paid when creating this barter proposal to move funds to the escrow",
+            "fee_when_proposal_executes": "Fee when proposal executes",
+            "fee_when_proposal_executes_tooltip": "When the proposal of this barter executes, the mentioned account will have to pay the indicated transaction fee for the underlying transfer operations",
+            "new_barter": "Propose a new barter",
+            "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
+            "not_complete": "Please fill out all fields to see a description of the action here",
+            "peer_left": "Peer 1",
+            "peer_right": "Peer 2",
+            "proposal_fee": "Proposal fee",
+            "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
+            "propose_tooltip": "This creates a proposal that needs to be approved by you and all other involved parties. After broadcasting the proposal, go to find the Proposal tab in your Dashboard, approve the proposal and notify the other involved parties.",
+            "remove_escrow": "Remove escrow",
+            "send_to_escrow": "Use escrow as custodian for Peer 1's funds",
+            "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
+            "title": "Barter",
+            "total_fees": "Total fees: %(fee)s %(asset)s",
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
         },
         "borrow": {
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
+            "choose": "Choose the SmartCoin you want to create a position for",
             "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "title": "Collaterized Debt Position"
+            "do_it": "Let's do it",
+            "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
+            "next": "Next",
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
+            "previous": "Previous",
+            "steps_benefits": {
+                "text": "Creating a Collateralized Debt Position allows you to provide liquidity for your desired SmartCoin (MPA), without giving up ownership of your collateral provided that you lock up enough collateral to guarantee the value of the SmartCoin. On the one hand, selling the newly generated SmartCoin on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). On the other hand, holders of the SmartCoin benefit from the significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Forced settlement: Holders of a SmartCoin can request a forced settlement. The SmartCoin is used to forcefully pay back the debt of the least collateralized positions while the former SmartCoin holder receives collateral as if he sold it for the forced settlement price. Any leftover collateral is returned to the position holder. This mechanism enforces a mandated delay after being triggered to avoid abuse (24 hours). \nForced Settlement Price: The price at which a forced settlement price will occur. It is calculated from the feed price by adding a forced settlement offset to disincentivize forced settlements. All settlements are converted to underlying backing asset (e.g. BTS in the case of bitUSD).",
+                "title": "Benefits",
+                "title_within": "What are the benefits?"
+            },
+            "steps_concept": {
+                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
+                "title": "Concept",
+                "title_within": "What is a Collateralized Debt Position?"
+            },
+            "steps_costs": {
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text ",
+                "title": "Settlement",
+                "title_within": ""
+            },
+            "steps_introduction": {
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
+            },
+            "steps_risks": {
+                "text": "As long as you monitor your position and make sure that the Collateral Ratio (CR) stays above the Maintenance Collateral Ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in a forced liquidation of your position (Margin Call). This means that your collateral is automatically sold on the respective market to reduce your debt, with a 10% penalty to ensure the order is filled (penalty is given by the Maximum Short Squeeze Ratio (MSSR)). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the Target Collateral Ratio (TCR). If your position can not be forced to liquidate due to extreme market conditions and the CR drops below the MSSR, the SmartCoin (MPA) automatically enters a state of Global Settlement (GS) and you lose your entire position instantly.",
+                "text_legend": "Target Collateral Ratio (TCR): If your position is liquidated, the system automatically puts an order on the market buying back the full debt. If Target Collateral Ratio (TCR) is set, the order will only sell as much debt as needed such that the Collateral Ratio (CR) of your position is the Target Collateral Ratio (TCR). \n Maximum Short Squeeze Ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collateralized Debt Position CDP). Instead, SmartCoin holders can settle it instantly for a fixed Global Settlement Price.",
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?"
+            },
+            "steps_setup": {
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be. The Maintenance (Minimum) Collateral Ratio (MCR) reflects the lowermost possible value on the scale. You spend the SmartCoin (MPA) as you wish, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position.",
+                "title": "Setup",
+                "title_within": "How does it work?"
+            },
+            "title": "Collaterized Debt Position",
+            "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
             "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
@@ -1728,6 +1811,7 @@
         "title": "无法与API服务器同步"
     },
     "tooltip": {
+        "add_memo_field": "Add memo text field",
         "borrow": "从系统借出 %(asset)s 。系统将创建一个智能合约并冻结你的抵押物。你可以随时调整仓位或进行平仓。",
         "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
         "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
@@ -1794,6 +1878,7 @@
         "over_limit": "此桥接服务没有足够的资产来完成此订单。",
         "propose_scam": "该提案发起人是已知的诈骗嫌疑人，请不要批准该提案！",
         "propose_tip": "提议另一个用户发起交易",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "You have a proxy set, to remove it simply clear this input field",
         "proxy_search": "Search for an account to be used as your proxy for voting",
         "registration": {
@@ -1819,7 +1904,7 @@
     },
     "transaction": {
         "amount_sell": "出售数量",
-        "asset_claim_fees": "从 %(asset)s 手续费池中领取 %(balance_amount)s",
+        "asset_claim_fees": "从 {asset} 手续费池中领取 {balance_amount}",
         "asset_reserve": "销毁资产数量",
         "at": "@",
         "balance_id": "余额 ID",
@@ -1995,6 +2080,7 @@
             "req": "必填信息",
             "valid": "请输入大于 0 的半角数字"
         },
+        "explict_price": "Explict price:",
         "fee": "手续费",
         "final": "转账后余额",
         "from": "来自",
@@ -2041,6 +2127,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "背部",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "使用价格图查看资产的价格动作。",
         "restore_account": "使用备份文件还原钱包。",
         "sell_form": "使用此表单发出卖单。",
@@ -2225,23 +2312,5 @@
         "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
         "wallet_password": "从任意地点使用密码登录"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "请先获取充值地址",
-            "deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
-            "fee": "网关手续费",
-            "get_deposit_address": "获取充值地址",
-            "support_block": "获得客户支持，请联络 Winex:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "最低提币数量：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "预计到账：%(final_number)s",
-            "winAmount": "最低提现数量:%(min_amount)s %(asset)s"
-        }
     }
 }

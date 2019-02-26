@@ -20,7 +20,7 @@
         "contacts": "Контакты",
         "create_account": "Создать аккаунт",
         "create_new": "Создать новый аккаунт",
-        "deactivate_suspicious_proposals": "Deactivate suspicious proposals",
+        "deactivate_suspicious_proposals": "Деактивировать подозрительные предложения",
         "deposit": "Внести депозит в BTS",
         "deposit_address": "Ваш адрес депозита – это имя Вашего аккаунта",
         "deposit_withdraw": "Ввод/Вывод",
@@ -51,7 +51,7 @@
         "ignore": "Скрыть",
         "in_open": "Это количество %(asset)s, которые у Вас в открытых ордерах.",
         "in_open_value": "Это эквивалентная ценность %(asset)s, которая у Вас в открытых ордерах.",
-        "intro_text_1": "<b>BitShares 2.0</b> децентрализованная биржа, также известная как DEX - это криптовалютная торговая платформа следующего поколения.",
+        "intro_text_1": "Your Decentralized Platform",
         "intro_text_2": "<b>DEX</b> децентрализована по самой своей сути, что позволяет Вам торговать основным токеном BitShares (BTS) и разнообразными не требующими доверия активами со стабильной, привязанной к рынку ценой, такими как bitUSD, bitCNY, bitGold и многими другими. Все эти активы могут торговаться <b>без риска</b>, связанного с участием контрагентов, оставляя контроль над Вашими средствами полностью в Ваших руках.",
         "intro_text_3": "Также <b>DEX</b> дает возможность создавать выпускаемые пользователем активы (user-issued assets - UIA), которые могут торговаться с помощью регистра ордеров против любого другого актива на платформе, как не требующего доверия, так и выпущенного пользователем. Самым известным эмитентом на платформе является <b>OpenLedger</b>, поддерживающий такие активы, как BTC, ETH, DASH, STEEM и многие другие",
         "intro_text_4": "Это уникальный микс традиционной и децентрализованной торговли, и всё это в таком знакомом для криптовалютных трейдеров интерфейсе биржи. Удачной торговли!",
@@ -133,8 +133,8 @@
             "brain": "Расположение brainkey",
             "cancel": "Отменить",
             "confirm_add": "Добавить",
-            "create_paperwallet": "Create Paper Wallet",
-            "create_paperwallet_private_hint": "Unlock/Login before creating the paper wallet to include private keys",
+            "create_paperwallet": "Создать бумажный кошелёк",
+            "create_paperwallet_private_hint": "Разблокируйте/войдите в систему перед созданием бумажного кошелька, чтобы включить в него приватные ключи",
             "from": "Импортирован из аккаунта",
             "key": "Ключ/Имя",
             "key_viewer": "Просмотр приватного ключа",
@@ -206,14 +206,14 @@
             "verifymessage": "Проверить сообщение",
             "verifyonchange": "Проверить во время ввода"
         },
-        "start_typing_to_search": "Start typing to search for accounts",
+        "start_typing_to_search": "Начните вводить текст, чтобы найти аккаунт",
         "submit_orders": "Подтвердить",
         "total": "Всего ({asset})",
         "total_estimate": "Это оценочная стоимость всех Ваших активов, включая скрытые активы, открытые ордера, долг и залоговое обеспечение. Оценка произведена на основе данных блокчейна в текущий момент и может иметь некоторую погрешность.",
         "total_value": "Общая стоимость",
         "trade": "Торговать",
         "transactions": {
-            "fee": "Fee",
+            "fee": "Комиссия",
             "id": "ID",
             "info": "Информация",
             "time": "Время",
@@ -322,7 +322,7 @@
             "expired": "Истекшие",
             "funding": "Финансирование",
             "go_proxy": "Перейти к",
-            "hide_legacy_proposals": "Hide Legacy Proposals",
+            "hide_legacy_proposals": "Скрыть устаревшие предложения",
             "inactive": "Резервные",
             "info": "Информация",
             "line": "Линия",
@@ -385,12 +385,12 @@
         }
     },
     "account_browsing_mode": {
-        "go_back": "Go back to my account",
-        "modal_description": "You're switching an account which you don't have active authority over. You can browse this account, but in view only mode",
-        "modal_title": "View Only Mode",
-        "never_show_again": "Never show again",
-        "view_mode": "View Mode",
-        "you_are_in_browsing_mode": "You're in view only mode of the current account. Click here to get back to your account."
+        "go_back": "Вернуться в мой аккаунт",
+        "modal_description": "Вы переключаетесь на аккаунт, на который у вас нет активных прав. Вы можете ознакомиться с этим аккаунтом исключительно в режиме просмотра.",
+        "modal_title": "Ограниченный режим просмотра",
+        "never_show_again": "Никогда не показывать снова",
+        "view_mode": "Режим просмотра",
+        "you_are_in_browsing_mode": "Вы просматриваете данный аккаунт в ограниченном режиме просмотра. Нажмите здесь, чтобы вернуться к своему аккаунту."
     },
     "alert": {
         "warning": "Предупреждение"
@@ -400,11 +400,11 @@
         "browser_text": "Браузер, который Вы используете, не тестировался на поддержку кошелька %(wallet_name)s. Мы настоятельно рекомендуем Вам сделать резервную копию вашего локального кошелька и импортировать его, используя браузер Chrome, пока мы не найдем время, чтобы провести полное тестирование выбранного Вами браузера. Мы не несем ответственности за использование Вами данного браузера.",
         "check_latency": "Производим проверку задержек...",
         "check_latency_feedback": "Выполняется проверка задержки (%(pinged)s/%(totalToPing)s узлов) ...",
-        "check_latency_feedback_country": "Latency check in best country (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_last": "Latency check for last connected node (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_region": "Latency check in best region (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_rest": "Latency check for remaining nodes (%(pinged)s/%(totalToPing)s nodes)",
-        "check_latency_feedback_world": "Latency check in each region (%(pinged)s/%(totalToPing)s nodes)",
+        "check_latency_feedback_country": "Проверка задержки в наилучшей стране (%(pinged)s/%(totalToPing)s нод)",
+        "check_latency_feedback_last": "Проверка задержки последней подключенной ноды (%(pinged)s/%(totalToPing)s нод)",
+        "check_latency_feedback_region": "Проверка задержки по наилучшему региону (%(pinged)s/%(totalToPing)s узлов)",
+        "check_latency_feedback_rest": "Проверка задержки оставшихся нод (%(pinged)s/%(totalToPing)s нод)",
+        "check_latency_feedback_world": "Проверка задержки по каждому региону (%(pinged)s/%(totalToPing)s нод)",
         "connected": "Соединение установлено",
         "connecting": "Подключение к серверу API: %(server)s",
         "database": "Соединение установлено, идет инициализация локальных баз данных",
@@ -413,6 +413,9 @@
         "title": "Проблемы инициализации приложения",
         "understand": "Я понимаю",
         "ws_status": "Состояние подключения полного узла"
+    },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
     },
     "boolean": {
         "false": "Неверно",
@@ -425,7 +428,7 @@
         "close": "Закрыть позицию",
         "coll_ratio": "Коэффициент перекрытия",
         "coll_ratio_target": "Планируемый коэффициент",
-        "considered_on_revival": "Included",
+        "considered_on_revival": "Включено",
         "enable_target_collateral_ratio": "Использовать планируемый коэффициент обеспечения",
         "errors": {
             "below": "Ваш уровень гарантийного обеспечения ниже %(mr)s, что не допускается.",
@@ -506,7 +509,7 @@
         "feed_price": "Котировка",
         "filter": "Фильтр...",
         "flip": "Инвертировать",
-        "global_settle": "Global Settlement",
+        "global_settle": "Глобальный расчёт",
         "group_order_limit": "Групповой",
         "hide": "Скрыть",
         "highest_bid": "Наивысшая ставка",
@@ -520,7 +523,7 @@
         "lowest_ask": "Самый низкий запрос",
         "maintenance": "Цена требования дополнительного обеспечения",
         "market": "Рынок",
-        "market_depth": "Market Depth",
+        "market_depth": "Глубина рынка",
         "market_frozen": "Владелец %(asset)s запретил торговлю на этом рынке.",
         "market_name": "Мои Рынки",
         "market_picker": {
@@ -559,26 +562,26 @@
         "period": "Временной период (дни)",
         "price": "Цена",
         "price_alert": {
-            "add_rule": "add rule",
-            "alert_when": "Alert me when",
-            "higher_than": "Higher Than",
-            "lower_than": "Lower Than",
+            "add_rule": "добавить правило",
+            "alert_when": "Уведомить меня в случае",
+            "higher_than": "Выше, чем",
+            "lower_than": "Ниже, чем",
             "notification": {
-                "higher_than": "The price of %(pair)s rose higher than %(expectedPrice)s and now is %(actualPrice)s",
-                "lower_than": "The price of %(pair)s fell lower than %(expectedPrice)s and now is %(actualPrice)s"
+                "higher_than": "Цена %(pair)s поднялась выше %(expectedPrice)s и теперь составляет %(actualPrice)s",
+                "lower_than": "Цена %(pair)s упала ниже %(expectedPrice)s и теперь составляет %(actualPrice)s "
             },
-            "price": "Price",
-            "title": "Price Alert",
-            "use_button": "Use \"add rule\" button to create price alert for "
+            "price": "Цена",
+            "title": "Ценовое оповещение",
+            "use_button": "Используйте кнопку \"добавить правило\", чтобы создать ценовое оповещение для"
         },
         "price_history": "График цен",
         "price_market": "Рыночная цена",
         "quantity": "Количество",
         "quick_deposit": "Быстрый депозит",
-        "quick_deposit_bridge": "Use a Bridge to deposit external assets using one of the existing gateways and instantly trade it into %(target)s",
-        "quick_deposit_bridge_button": "Use a Bridge",
-        "quick_deposit_gateway": "Deposit real %(asset)s using a gateway to obtain IOUs whose backing is provided by the respective gateway",
-        "quick_deposit_gateway_button": "Use a Gateway",
+        "quick_deposit_bridge": "Используйте мост для создания депозитов во внешних активах с помощью одного из существующих шлюзов и мгновенного достижения %(target)s",
+        "quick_deposit_bridge_button": "Использовать мост",
+        "quick_deposit_gateway": "Разместите депозит в реальных %(asset)s с помощью шлюза, чтобы получить долговые расписки, которые обеспечиваются средствами соответствующего шлюза",
+        "quick_deposit_gateway_button": "Использовать шлюз",
         "quick_deposit_tooltip": "Deposit %(asset)s",
         "quote": "Валюта котировки:",
         "quote_selection": "Изменить тикер базовой валюты",
@@ -638,7 +641,9 @@
                 "chart_tools": "Отображает/скрывает левую и верхнюю панель инструментов, а также контекстное меню. Инструменты всегда скрыты в мини-экране.",
                 "chart_type": "Переключайтесь между глубиной рынка и ценовыми графиками, или отключите графики",
                 "chart_zoom": "Включите приближение графиков. Приближение всегда отключено на маленьких экранах.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Скрыть все кнопки, которыми можно управлять из персонализированной формы",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "На какую сторону прикрепить вертикальный биржевой стакан. Это поменяет его местами с панелью рынка",
                 "market_trades": "",
                 "my_trades": "",
@@ -654,14 +659,16 @@
                 "reload": "Изменение этой опции вступит в силу только после ручной перезагрузки",
                 "reverse_order_book": "Отобразить биржевой стакан в обратном порядке, чтобы ордера на покупку отображались сверху",
                 "settlements": "",
+                "show_market_depth": "Show market depth",
+                "show_price_chart": "Show price chart",
                 "single_colum_order_form": "Закрепить цену, количество, общую сумму и т.п. в одной колонке (неподвижно)"
             }
         },
         "settle": "Погашение",
-        "settle_globally_settled": "Settle instantly",
-        "settle_globally_settled_tooltip": "This asset is globally settled. You can settle it instantly for the global settlement price (see exchange header or asset details)",
+        "settle_globally_settled": "Провести мгновенный расчёт",
+        "settle_globally_settled_tooltip": "Этот актив попал под глобальный расчёт. Вы можете провести мгновенный расчёт по цене глобального расчёта (смотрите информацию на бирже или в подробностях об активе)",
         "settle_orders": "Ордера на погашение",
-        "settlement_hint": "You are attempting to settle {long}. Here is a price break down of {market_link}:",
+        "settlement_hint": "Вы пытаетесь провести расчёт {long}. Здесь представлена разбивка цен на {market_link}:",
         "short": "Сократить",
         "show_all_orders": "Отобразить все %(rowcount)s ордера",
         "show_all_trades": "Отобразить все %(rowcount)s сделки",
@@ -698,16 +705,16 @@
         "asset": {
             "actions": "Действия с активами",
             "collateral": {
-                "bid": "Bid Collateral",
-                "bid_price": "Bid price",
-                "bid_text": "Unfortunately, %(asset)s is in Global Settlement. During this time it is possible to bid on the collateral in the Settlement Fund and the debt it covers. When the total outstanding debt is covered by bids, and the additional collateral of each bid plus its share from the settlement fund is greater than the MCR, the asset is automatically revived and a margin position is created for each bid.",
-                "remove_bid": "A bid can be removed by placing a zero collateral bid."
+                "bid": "Обеспечение предложения",
+                "bid_price": "Цена предложения",
+                "bid_text": "К сожалению, %(asset)s попал под глобальный расчет. В данный период можно выставлять заявки на залоговое обеспечение в Расчётном фонде и покрываемый им долг. Когда общий непогашенный долг будет покрыт заявками, а дополнительное залоговое обеспечение каждой заявки плюс ее доля из Расчётного фонда окажется выше MCR, актив будет автоматически перезапущен, и для каждой заявки будет создана маржинальная позиция.",
+                "remove_bid": "Заявка может быть удалена путем размещения нулевой залоговой ставки"
             },
             "collateral_bid": {
-                "bid": "Bid Price",
-                "collateral": "Additional Collateral",
-                "debt": "Debt Covered",
-                "title": "Collateral Bids"
+                "bid": "Цена предложения",
+                "collateral": "Дополнительное залоговое обеспечение",
+                "debt": "Покрытый долг",
+                "title": "Залоговые ставки"
             },
             "fee_pool": {
                 "claim_balance": "Востребовать остаток пула комиссий",
@@ -740,13 +747,13 @@
                 "whitelist_markets": "Рынки белого списка"
             },
             "price_feed": {
-                "external_feed_price": "Feed price (median of witness feeds)",
-                "feed_lifetime": "Feed lifetime (hours)",
-                "global_settlement_price": "Global settlement happens at price",
+                "external_feed_price": "Цена в котировках (медиана котировок заверителей)",
+                "feed_lifetime": "Срок действия котировок (в часах)",
+                "global_settlement_price": "Глобальный расчёт запускается при цене",
                 "maintenance_collateral_ratio": "Коэффициент обеспечения поддержки (MCR)",
-                "maximum_short_squeeze_price": "Maximum short squeeze price (MSSP)",
+                "maximum_short_squeeze_price": "Максимальная цена короткого сжатия (MSSP)",
                 "maximum_short_squeeze_ratio": "Максимальный коэффициент краткого сжатия (MSSR)",
-                "min_feeds": "Minimum feeds",
+                "min_feeds": "Минимум котировок",
                 "settlement_price": "Расчетная цена",
                 "title": "Поточная цена"
             },
@@ -760,26 +767,26 @@
                 "title": "Данные котировок"
             },
             "settlement": {
-                "current_settled": "Already settled supply",
-                "delay": "Delay",
-                "force_settlement": "Force Settlement",
-                "gs_auto_revive_price": "Auto Revive Price (without/with bids)",
-                "gs_collateral_valuation": "Collateral Valuation (with bids)",
-                "gs_description": "Unfortunately, this asset is in Global Settlement. During this time there is no delay in asset force settlements, which will be covered by the settlement funds at the fixed settlement price.",
-                "gs_included_on_revival": "Bids will be included on revival sorted by their bid price until the whole debt is covered (last bid might be covered partially). Included bids will be converted into margin positions and receive the residual collateral such that the position reaches MCR from the settlement fund. Not included bids will be reimbursed.",
-                "gs_or": "or",
-                "gs_place_bid": "click here to place a bid",
-                "gs_revert": "Reviving",
-                "gs_revive": "Asset will be revived automatically if auto revive price (bids included) is greater than feed price or all debt is force settled",
-                "gs_see_actions": "see Asset actions",
-                "max_settle_volume": "Max. settlement volume each maintenance period",
-                "offset": "offset included",
-                "price": "Price",
-                "settle_remaining_volume": "Remaining settleable volume",
-                "settlement_funds": "Settlement Funds",
-                "settlement_funds_collateral_ratio": "Settlement Fund Collateral Ratio",
-                "settlement_price": "Settlement Price",
-                "title": "Settlement"
+                "current_settled": "Уже погашенный запас",
+                "delay": "Задержка",
+                "force_settlement": "Форсировать расчёт",
+                "gs_auto_revive_price": "Автоматическое восстановление цены (с/без заявок)",
+                "gs_collateral_valuation": "Оценка залогового обеспечения (с заявками)",
+                "gs_description": "К сожалению, этот актив находится в процессе глобального расчёта. В данный период форсированные расчёты по активу проводятся из расчётного фонда без задержки и по фиксированной цене.  ",
+                "gs_included_on_revival": "Заявки будут сортироваться по цене предложения и включаться в процесс восстановления, пока не будет покрыт весь долг (последняя заявка может быть покрыта частично). Включенные заявки будут конвертированы в маржинальные позиции и получат остаточное залоговое обеспечение, чтобы достичь MCR из расчетного фонда. Невключенные заявки будут возмещены.",
+                "gs_or": "или",
+                "gs_place_bid": "нажмите здесь, чтобы разместить заявку",
+                "gs_revert": "Восстановление",
+                "gs_revive": "Актив будет восстановлен автоматически, когда цена автовосстановления (включая заявки) превысит цену в котировках или же долг будет принудительно погашен. ",
+                "gs_see_actions": "показать действия с активом",
+                "max_settle_volume": "Максимальный объем расчёта на каждый период обслуживания",
+                "offset": "включая смещение",
+                "price": "Цена",
+                "settle_remaining_volume": "Доступный для расчёта объём",
+                "settlement_funds": "Расчётный фонд",
+                "settlement_funds_collateral_ratio": "Залоговый коэффициент расчётного фонда",
+                "settlement_price": "Расчётная цена",
+                "title": "Расчёт"
             },
             "summary": {
                 "asset_type": "Тип актива",
@@ -799,7 +806,7 @@
             }
         },
         "assets": {
-            "backing_asset": "Backing asset",
+            "backing_asset": "Актив обеспечения",
             "id": "Идентификатор",
             "issuer": "Эмитент",
             "market": "Смарткойны",
@@ -952,13 +959,13 @@
         "asset_to_withdraw": "Актив для вывода:",
         "asset_unavailable": "Шлюз для %(asset)s в данный момент не работает",
         "assets": {
-            "bit": "<br/>Bit%(asset)s - это производное, которое отслеживает реальную стоимость %(backed)s. Он на 100%% децентрализован, не требует доверия и обеспечен залогом, удерживаемым блокчейном в виде смарт-контракта.",
-            "bitcny": "<br/><br/>bitCNY может быть депонирован или выведен в соотношении 1:1 к реальному Юаню с помощью сервиса шлюза от Magic Wallet. Подробную информацию можно найти здесь https://www.magicw.net/",
-            "bridge": "<br/><br/> Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый CryptoBridge.",
-            "gdex": " <br/><br/> Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый GDex.",
-            "open": "<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
+            "bit": "Bit%(asset)s - это производное, которое отслеживает реальную стоимость %(backed)s. Он на 100%% децентрализован, не требует доверия и обеспечен залогом, удерживаемым блокчейном в виде смарт-контракта.",
+            "bitcny": "bitCNY может быть депонирован или выведен в соотношении 1:1 к реальному Юаню с помощью сервиса шлюза от Magic Wallet. Подробную информацию можно найти здесь https://www.magicw.net/",
+            "bridge": " Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый CryptoBridge.",
+            "gdex": " Актив %(asset)s обеспечен в соотношении 1:1 реальными %(backed)s и может быть размещен в депозите или выведен через шлюз, предоставляемый GDex.",
+            "open": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от OpenLedger.",
+            "rudex": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Rudex.",
+            "trade": "Актив %(asset)s обеспечивается реальными %(backed)s в соотношении 1:1 и может быть депонирован или выведен с помощью сервиса шлюза от Blocktrades.",
             "win": "",
             "xbts": ""
         },
@@ -1028,7 +1035,7 @@
             "open_website": "Открыть веб-сайт"
         },
         "min_deposit_warning_amount": "Минимальное значение депозита %(minDeposit)s %(coin)s.",
-        "min_deposit_warning_asset": "IMPORTANT: Send only %(coin)s to this deposit address on the blockchain native to %(coin)s. Sending less than %(minDeposit)s %(coin)s or any other currency to this address may result in the loss of your deposit.",
+        "min_deposit_warning_asset": "ВАЖНО: Отправляйте на этот адрес депозита только %(coin)s в нативном блокчейне %(coin)s. Отправка менее %(minDeposit)s %(coin)s или любой другой валюты может привести к потере вашего депозита.",
         "over_limit": "Лимит исчерпан",
         "phase_out_warning": "Мы рекомендуем использовать новые {deposit_modal_link} и {withdraw_modal_link} модальные окна, поскольку эта страница будет упразднена",
         "please_generate_address": "Пожалуйста, получите новый адрес ",
@@ -1122,7 +1129,7 @@
         "payments": "Отправить",
         "payments_legacy": "Отправить (стар.)",
         "settings": "Настройки",
-        "showcases": "Spotlight",
+        "showcases": "Вашему вниманию",
         "title": "Пользовательский интерфейс %(wallet_name)s",
         "unlock": "Вход в локальный кошелек",
         "unlock_password": "Войти используя пароль",
@@ -1162,7 +1169,7 @@
             "remove": "Удалить"
         },
         "dashboard": "Инфопанель",
-        "debug-report": "Report your error log console, or create a screenshot",
+        "debug-report": "Сообщите о своей ошибке в консольном журнале или сделайте скриншот",
         "deposit": {
             "deposit": "Пополнить счет",
             "deposit_withdraw": "Пополнить/Вывести"
@@ -1346,21 +1353,21 @@
             "title": "QR-код закрытого ключа"
         },
         "report": {
-            "button": "Report",
-            "copyLog": "Copy Log",
-            "copyScreenshot": "Right click in Image Preview -> Copy",
-            "copySuccess": "Copy ended",
-            "explanatory_text_1": "This report collects the last entries in the console log and takes a screenshot of the current view before the modal is opened. Click on either entry to see the details.",
-            "explanatory_text_2": "Please report the issue you have found to GitHub:",
-            "explanatory_text_3": "You can copy and paste (CTRL+V) the screenshot as well as the log entries directly into the issue content text area, pasting the screenshot also works in telegram chat.",
-            "explanatory_text_4": "If your issue affects user security you might be eligible for a bounty. In that case do not report it publicly, but rather through:",
-            "hideLog": "Hide Log",
-            "hideScreenshot": "Hide screenshot",
-            "lastLogEntries": "Last 20 log entries",
-            "screenshot": "Screenshot",
-            "showLog": "Show Log",
-            "takeScreenshot": "Show screenshot",
-            "title": "Error report"
+            "button": "Сообщить",
+            "copyLog": "Скопировать журнал",
+            "copyScreenshot": "Щелкните правой кнопкой мыши в превью изображения -> Копировать",
+            "copySuccess": "Конец копирования",
+            "explanatory_text_1": "Этот отчет собирает последние записи в консольном журнале и делает скриншот текущего вида перед открытием модального окна. Нажмите на любую запись, чтобы увидеть детали.",
+            "explanatory_text_2": "Пожалуйста, сообщите о найденной проблеме на GitHub:",
+            "explanatory_text_3": "Вы можете скопировать и вставить (CTRL + V) скриншот и записи журнала непосредственно в текстовую область содержимого проблемы. Вставка скриншота также работает в Telegram-чате.",
+            "explanatory_text_4": "Если обнаруженная вами проблема затрагивает безопасность пользователей, вы можете претендовать на вознаграждение. В таком случае не сообщайте о ней публично, а воспользуйтесь данным способом: ",
+            "hideLog": "Скрыть журнал",
+            "hideScreenshot": "Скрыть скриншот",
+            "lastLogEntries": "Последние 20 записей журнала",
+            "screenshot": "Скриншот",
+            "showLog": "Показать журнал",
+            "takeScreenshot": "Показать скриншот",
+            "title": "Отчёт об ошибке"
         },
         "reserve": {
             "amount": "Сумма к сожжению",
@@ -1368,7 +1375,7 @@
             "submit": "Сжечь",
             "title": "Сжечь (зарезервировать) актив"
         },
-        "save": "save",
+        "save": "сохранить",
         "send": {
             "header": "Отправить с <span class=\"send-name\">%(fromName)s</span>",
             "header_propose": "Предложить отправить с <span class=\"send-name\">%(fromName)s</span>"
@@ -1407,24 +1414,24 @@
         "subject": "Заголовок"
     },
     "notifications": {
-        "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
-        "account_permissions_update_warning": "Setting your owner permissions like this will render your account permanently unusable. Please make sure you know what you're doing before modifying account authorities!",
-        "account_wallet_create_failure": "Failed to create wallet: %(error_msg)s",
-        "asset_issue_failure": "Failed to issue the asset, probably due to an invalid amount being issued",
-        "backup_file_save_unsupported": "File saving is not supported",
-        "balance_claim_error": "Error claiming balance: %(error_msg)s",
-        "exchange_enter_valid_values": "Please enter a valid amount and price",
-        "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
-        "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
-        "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
-        "import_keys_already_imported": "This wallet has already been imported",
-        "import_keys_error": "Account %(account_name)s had a private key import error: %(error_msg)s",
-        "import_keys_error_unknown": "Key import error: %(error_msg)s",
-        "invalid_password": "Invalid Password",
-        "password_change_failure": "Unable to change password: %(error_msg)s",
-        "password_change_success": "Password changed",
-        "wallet_unlock_different_block_chain": "This wallet was intended for a different block-chain; expecting %(expectedWalletId)s, but got %(actualWalletId)s",
-        "worker_create_failure": "Failed to create worker: %(error_msg)s"
+        "account_create_failure": "Не удалось создать аккаунт: %(account_name)s – %(error_msg)s",
+        "account_permissions_update_warning": "Установка подобной схемы разрешений владельца навсегда сделает ваш аккаунт недоступным для использования. Пожалуйста, удостоверьтесь, что вы хотите именно этого, прежде чем окончательно изменить разрешения аккаунта!",
+        "account_wallet_create_failure": "Не удалось создать кошелёк: %(error_msg)s",
+        "asset_issue_failure": "Не удалось выпустить актив, вероятно, по причине недействительного количества для выпуска",
+        "backup_file_save_unsupported": "Сохранение файла не поддерживается",
+        "balance_claim_error": "Ошибка при востребовании баланса: %(error_msg)s",
+        "exchange_enter_valid_values": "Пожалуйста, введите действительное количество и цену",
+        "exchange_insufficient_funds_for_fees": "Недостаточно средств для оплаты комиссий",
+        "exchange_insufficient_funds_to_place_order": "Недостаточно средств для размещения ордера. Вам нужно как минимум %(amount)s $(symbol)s",
+        "exchange_unknown_error_place_order": "Неизвестная ошибка. Не удалось разместить ордер на %(amount)s %(symbol)s",
+        "import_keys_already_imported": "Этот кошелёк уже был импортирован",
+        "import_keys_error": "В аккаунте %(account_name)s произошла ошибка при импорте приватного ключа: %(error_msg)s",
+        "import_keys_error_unknown": "Ошибка при импорте ключа: %(error_msg)s",
+        "invalid_password": "Неверный пароль",
+        "password_change_failure": "Не удалось изменить пароль: %(error_msg)s",
+        "password_change_success": "Пароль изменён",
+        "wallet_unlock_different_block_chain": "Данный кошелёк был предназначен для другого блокчейна; ожидался %(expectedWalletId)s, но был получен %(actualWalletId)s",
+        "worker_create_failure": "Не удалось создать работника: %(error_msg)s"
     },
     "openledger": {
         "deposit_amount": "Сумма депозита",
@@ -1450,12 +1457,12 @@
         "asset_reserve": "{account} сжег (зарезервировал) {amount}",
         "asset_settle": "{account} запросил погашение {amount}",
         "asset_settle_cancel": "{account} отменил погашение {amount}",
-        "asset_settle_instant": "{account} settled {amount} instantly at {price}",
+        "asset_settle_instant": "{account} провёл мгновенный расчёт {amount} по цене {price}",
         "asset_update": "{account} обновил актив {asset}",
         "asset_update_feed_producers": "{account} обновил определяющих котировки актива {asset}",
         "asset_update_issuer": "{from_account} переслал {asset} {to_account}",
         "balance_claim": "{account} запросил баланс в размере {amount}",
-        "bid_collateral": "{bid_account} bid {collateral} for {debt}",
+        "bid_collateral": "{bid_account} разместил заявку {collateral} за {debt}",
         "blacklisted_by": "{lister} добавил аккаунт {listee} в черный список",
         "call_order_update": "{account} изменил {debtSymbol} долг на {debt} и залог на {collateral}",
         "committee_member_update_global_parameters": "{account} обновил общие параметры комитета",
@@ -1696,6 +1703,7 @@
         "view_keys": "Просмотреть ключи",
         "wallet": "Локальный кошелек",
         "walletLockTimeout": "Время автоблокировки кошелька (в секундах, 0 - для отключения)",
+        "walletLockTimeoutTooltip": "Click to adjust the time before the wallet auto-locks",
         "wallet_required": "Требуется модель кошелька",
         "wallet_required_text": "Чтобы восстановить резервную копию, Вам нужно сначала переключиться на модель кошелька; чтобы это сделать, нажмите кнопку ниже",
         "wallet_text": "Управление деталями Вашего локального кошелька.",
@@ -1703,29 +1711,104 @@
         "yes": "Да"
     },
     "showcases": {
-        "barter_transaction": {
-            "description": "Allows you to suggest an asset swap with another account, this happens outside the order book and can include an escrow.",
-            "title": "Barter"
+        "barter": {
+            "account": "Account",
+            "action": "Peer 1 (%(peer_left)s) offers to send %(assets_left)s to Peer 2 (%(peer_right)s) and receives %(assets_right)s in return. ",
+            "add_escrow": "Add escrow",
+            "add_escrow_tooltip": "Adds or removes an escrow to this barter. This escrow will have to approve the resulting proposal as well. The escrow can serve as a witness only, or also be the custodian of Peer 1's funds.",
+            "bartering_asset": "Bartering asset",
+            "description": "с Позволяет вам предложить обмен активами с другим аккаунтом; это происходит за пределами биржевого стакана и может включать в процесусловное депонирование.",
+            "error_fill_in_escrow_name": "Please fill in the account name of the escrow",
+            "error_fill_in_peer_left_name": "Please fill in the account name of Peer 1",
+            "error_fill_in_peer_right_name": "Please fill in the account name of Peer 2",
+            "error_fill_in_valid_asset_amount": "Please fill in valid amounts for the bartering assets",
+            "error_same_name": "Peer 1 and Peer 2 must be different accounts",
+            "error_same_name_escrow": "The escrow can not be Peer 1 or Peer 2",
+            "escrow_account": "Escrowing account",
+            "escrow_as_custodian": "An escrow (%(escrow)s) is used as custodian which holds the funds of Peer 1 and which has to approve the barter before it can execute.",
+            "escrow_as_witness": "An escrow (%(escrow)s) is used as a witness which has to approve the barter before it can execute.",
+            "escrow_payment": "Payment for escrow services",
+            "escrow_payment_tooltip": "Being an escrow requires trust from both peers and should be considered a paid service. The escrow will be paid from Peer 1's account via an additional transfer in the proposal, which increases the overall fee for Peer 1. Set this value to zero to remove it, default value is equal to the transactions fee induced for the escrow.",
+            "fee_due_now": "Fee due now",
+            "fee_due_now_tooltip": "The indicated transaction fee will be paid when creating this barter proposal to move funds to the escrow",
+            "fee_when_proposal_executes": "Fee when proposal executes",
+            "fee_when_proposal_executes_tooltip": "When the proposal of this barter executes, the mentioned account will have to pay the indicated transaction fee for the underlying transfer operations",
+            "new_barter": "Propose a new barter",
+            "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
+            "not_complete": "Please fill out all fields to see a description of the action here",
+            "peer_left": "Peer 1",
+            "peer_right": "Peer 2",
+            "proposal_fee": "Proposal fee",
+            "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
+            "propose_tooltip": "This creates a proposal that needs to be approved by you and all other involved parties. After broadcasting the proposal, go to find the Proposal tab in your Dashboard, approve the proposal and notify the other involved parties.",
+            "remove_escrow": "Remove escrow",
+            "send_to_escrow": "Use escrow as custodian for Peer 1's funds",
+            "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
+            "title": "Бартер",
+            "total_fees": "Total fees: %(fee)s %(asset)s",
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
         },
         "borrow": {
-            "description": "Borrow a BitAsset from the BitShares Blockchain by locking up collateral (e.g. bitUSD, bitCNY, etc.)",
-            "title": "Collaterized Debt Position"
+            "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
+            "choose": "Choose the SmartCoin you want to create a position for",
+            "description": "Займите BitAsset у блокчейна BitShares путем блокировки в нем залогового обеспечения (например, bitUSD, bitCNY и т.д.)",
+            "do_it": "Let's do it",
+            "get_started": "Get started",
+            "navigate_with_keys": "The mechanism of the SmartCoin generation will be explained in the following steps. You can also use arrow keys to navigate",
+            "next": "Next",
+            "now_ready": "Finalize the creation of your own Collateralized Debt Position",
+            "previous": "Previous",
+            "steps_benefits": {
+                "text": "Creating a Collateralized Debt Position allows you to provide liquidity for your desired SmartCoin (MPA), without giving up ownership of your collateral provided that you lock up enough collateral to guarantee the value of the SmartCoin. On the one hand, selling the newly generated SmartCoin on the open market will create leverage on your position (i.e. you sell it short, and will need to buy it back to close the position). On the other hand, holders of the SmartCoin benefit from the significantly less volatile SmartCoin, and they can additionally request a force settlement to obtain the corresponding value in its collateral without the need of markets.",
+                "text_legend": "Forced settlement: Holders of a SmartCoin can request a forced settlement. The SmartCoin is used to forcefully pay back the debt of the least collateralized positions while the former SmartCoin holder receives collateral as if he sold it for the forced settlement price. Any leftover collateral is returned to the position holder. This mechanism enforces a mandated delay after being triggered to avoid abuse (24 hours). \nForced Settlement Price: The price at which a forced settlement price will occur. It is calculated from the feed price by adding a forced settlement offset to disincentivize forced settlements. All settlements are converted to underlying backing asset (e.g. BTS in the case of bitUSD).",
+                "title": "Benefits",
+                "title_within": "What are the benefits?"
+            },
+            "steps_concept": {
+                "text": "A Collateralized Debt Position enables every user of the BitShares Blockchain to generate SmartCoins (MPA) by providing collateral. The collateral is locked up until you pay back the SmartCoins you have generated. You are effectively borrowing the SmartCoin from the BitShares Blockchain.",
+                "text_legend": "Example bitUSD: Provide BTS as collateral to borrow bitUSD",
+                "title": "Concept",
+                "title_within": "What is a Collateralized Debt Position?"
+            },
+            "steps_costs": {
+                "text": "Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text Some longer text ",
+                "title": "Settlement",
+                "title_within": ""
+            },
+            "steps_introduction": {
+                "text": "Use this native dApp from the BitShares Blockchain to manage depositing collateral and the generation of SmartCoins.",
+                "title_within": "This is the place to generate SmartCoins (Market Pegged Assets, MPAs)"
+            },
+            "steps_risks": {
+                "text": "As long as you monitor your position and make sure that the Collateral Ratio (CR) stays above the Maintenance Collateral Ratio (MCR), your position will not be liquidated. If the value of the collateral drops and your position gets close to MCR, you can lock up more collateral or pay back some of the debt to increase the CR. Failure to remain above MCR results in a forced liquidation of your position (Margin Call). This means that your collateral is automatically sold on the respective market to reduce your debt, with a 10% penalty to ensure the order is filled (penalty is given by the Maximum Short Squeeze Ratio (MSSR)). Any leftover collateral is returned to you after the full debt is paid. You can choose to only allow partial selling of your position by setting the Target Collateral Ratio (TCR). If your position can not be forced to liquidate due to extreme market conditions and the CR drops below the MSSR, the SmartCoin (MPA) automatically enters a state of Global Settlement (GS) and you lose your entire position instantly.",
+                "text_legend": "Target Collateral Ratio (TCR): If your position is liquidated, the system automatically puts an order on the market buying back the full debt. If Target Collateral Ratio (TCR) is set, the order will only sell as much debt as needed such that the Collateral Ratio (CR) of your position is the Target Collateral Ratio (TCR). \n Maximum Short Squeeze Ratio (MSSR): When your position is force liquidated, it is being sold below the current feed price to ensure the order is filled. The MSSR defines how much below feed price. \n Global Settlement: A globally settled SmartCoin can no longer be generated by opening a Collateralized Debt Position CDP). Instead, SmartCoin holders can settle it instantly for a fixed Global Settlement Price.",
+                "title": "Risks",
+                "title_within": "What are the risks involved in borrowing?"
+            },
+            "steps_setup": {
+                "text": "You decide how much collateral you want to provide and what the collateral ratio (CR) should be. The Maintenance (Minimum) Collateral Ratio (MCR) reflects the lowermost possible value on the scale. You spend the SmartCoin (MPA) as you wish, and when you no longer need the liquidity you buy it back and close the position by paying your debt.",
+                "text_legend": "Collateral Ratio (CR): The CR defines how much percent of the generated SmartCoin value is covered by collateral.\nMaintenance Collateral ratio (MCR): To guarantee that the SmartCoin has enough backing collateral and to account for volatility, the MCR is enforced when creating the position.",
+                "title": "Setup",
+                "title_within": "How does it work?"
+            },
+            "title": "Обеспеченная долговая позиция",
+            "title_long": "Create a Collateralized Debt Position"
         },
         "direct_debit": {
-            "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
-            "title": "Direct debit"
+            "description": "Задайте прямой дебетовый мандат для повторяющихся платежей. Мандат позволяет другому аккаунту переводить средства с вашего аккаунта с ограничением суммы в определенные промежутки времени.",
+            "title": "Прямой дебет"
         },
         "paper_wallet": {
-            "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",
-            "title": "Paper Wallet"
+            "description": "Создайте PDF-файл с напечатанными ключами вашего аккаунта (простой текст и штрих-код). Если кошелек разблокирован, в файл также добавляются приватные ключи.",
+            "title": "Бумажный кошелёк"
         },
         "timed_transfer": {
-            "description": "Initiate a transfer that will execute at a specified time.",
-            "title": "Timed transfer"
+            "description": "Инициируйте перевод, который будет выполнен в указанное время.",
+            "title": "Перевод в назначенное время"
         },
         "voting": {
-            "description": "Vote on block producers, committee members and worker proposals to influence strategic decisions and advancement of the BitShares Blockchain.",
-            "title": "Voting"
+            "description": "Голосуйте за производителей блоков, членов комитета и рабочие предложения, чтобы лично повлиять на принимаемые стратегические решения и развитие блокчейна BitShares.",
+            "title": "Голосование"
         }
     },
     "sync_fail": {
@@ -1734,9 +1817,10 @@
         "title": "Невозможно синхронизоваться с API сервером"
     },
     "tooltip": {
+        "add_memo_field": "Добавить поле для ввода мемо",
         "borrow": "Одолжить %(asset)s у сети. Это создаст смарт-контракт, который заблокирует Ваш залог до того момента, когда Вы измените позицию или потребуется марджин колл.",
-        "borrow_disabled": "%(asset)s is in global settlement. Margin positions can't be created until it is revived. See asset details page for more information",
-        "bridge": "Bridges allow deposit of any external assets and instant trade into the desired gateway asset",
+        "borrow_disabled": "%(asset)s находится в процессе глобального расчёта. Создание маржинальных позиций невозможно до момента его восстановления. Посетите страницу информации об активе, чтобы узнать подробности.",
+        "bridge": "Мосты позволяют вносить депозиты в любых внешних активах и мгновенно переводить средства в желаемый актив шлюза.",
         "bridge_TRADE": "BlockTrades – это сервис моста, поддерживающий мгновенную торговлю активами. Все детали и условия можно найти на https://blocktrades.us",
         "buy_min": "Вы получите, как минимум, это количество. Если обнаружатся подходящие сделки по цене меньшей, чем Вы указали, то Вы получите больше этого количества.",
         "call_limit": "Это цена досрочного погашения наименее обеспеченной залогом позиции с гарантийным взносом на рынке.",
@@ -1747,7 +1831,7 @@
         "copy_tip": "Нажмите, чтобы скопировать текст",
         "cr_danger": "В данный момент на эту позицию затребовано дополнительное обеспечение. Вы можете добавить обеспечение, чтобы поднять его уровень выше %(mr)s, или закрыть позицию.",
         "cr_warning": "У данной позиции низкий уровень обеспечения, на нее будет произведён марджин-колл (она будет принудительно закрыта), если уровень залога упадет ниже %(mr)s. Вы можете увеличить обеспечение или закрыть позицию.",
-        "debug_report": "Report an error or unexpected behavior you have found. Click to see the browser console log, create a screenshot and instructions how to best report your issue.",
+        "debug_report": "Сообщите нам об обнаруженной ошибке или неожиданном поведении программы. Нажмите, чтобы просмотреть консольный журнал браузера, создать скриншот и ознакомиться с инструкцией по способам сообщения о своей проблеме.",
         "deposit_tip": "Чтобы разместить депозит, зайдите в Ваш внешний %(asset)s кошелек и переведите средства на адрес, указанный на этой странице. Вы получите депозит, как только перевод будет подтвержден. Если указано примечание, то его обязательно необходимо использовать при Вашем переводе.",
         "disconnected": "Вы не подключены к узлу API, попробуйте перезагрузиться или задать новую точку доступа в Настройках",
         "feed_price": "Это текущая цена из внешних источников",
@@ -1756,25 +1840,25 @@
         "follow_user_add": "Нажмите, чтобы подписаться на этого пользователя",
         "gateway": "Шлюзы подкрепляют депозиты реальными активами на 100% ",
         "generate": "Сгенерированный пароль был создан локально в Вашем браузере. <br /><br /><strong>Никто, кроме Вас не имеет к нему доступа</strong>.<br /><br /> Вставьте его ниже и сохраните копию в надежном месте",
-        "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
-        "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
+        "global_settle": "Этот актив попал под глобальный расчёт. Вы можете провести мгновенную конвертацию своих средств из %(asset)s в %(backingAsset)s по цене глобального расчёта (смотрите информацию на бирже или в подробностях об активе).",
+        "global_settle_price": "Это цена, по которой будут выполняться расчеты ордеров. Этот актив находится в процессе глобального расчёта, поэтому ордера будут выполняться мгновенно",
         "hide_asset": "Нажмите здесь, чтобы скрыть актив из этого списка.",
-        "lack_funds": "There is not enough funds to perform the operation",
+        "lack_funds": "Недостаточно средств для проведения операции",
         "latest_price": "Это самая актуальная цена для этого рынка.",
-        "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
+        "legacy_explanation": "Скрывает предложения, которые дублируются, являются спамом или не были активны более 2 месяцев с момента запуска.",
         "login": "Кошелек %(wallet_name)s не предоставляет возможности использования традиционного логина, но вместо этого просто открывает и закрывает кошелек, который хранится локально <b>только</b> в Вашем браузере.<br/><br/>Каждый раз, как Вы выходите из кошелька, он закрывается, и Вы выходите из аккаунта.",
         "login-tooltip": {
             "incorrectPassword": {
-                "begin": "Enter another password or try ",
-                "end": " to login.",
-                "model": "Local wallet"
+                "begin": "Введите другой пароль или попробуйте ",
+                "end": "войти в систему.",
+                "model": "Локальный кошелёк"
             },
             "withoutBinFileBlock": {
-                "begin": "If you haven’t .bin-file try ",
+                "begin": "Если у вас нет .bin-файла, попробуйте использовать ",
                 "brainkey": "Brainkey",
-                "end": " to login.",
-                "middle": " or use ",
-                "model": "Cloud wallet"
+                "end": "чтобы войти в систему.",
+                "middle": "или используйте ",
+                "model": "Облачный кошелёк"
             }
         },
         "login-tooltips": {
@@ -1796,10 +1880,11 @@
         "memo_tip": "В поле примечания Вы можете включить любое сообщение. Примечание необязательно, но обычно необходимо для перевода на биржи.",
         "no_groups_available": "На используемом API сервере нет доступных групп",
         "no_price": "Для этого актива нет доступной недавней цены, которая может быть использована для оценки его стоимости.",
-        "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
+        "nodes_popup": "Нажмите здесь, чтобы открыть всплывающее окно настроек доступа, позволяющее вам при необходимости переключаться между нодами",
         "over_limit": "Мост не обладает достаточным количеством желаемого актива для данного ордера на покупку",
         "propose_scam": "Это предложение было создано известным мошенником, не подтверждайте его!",
         "propose_tip": "Предложить другому пользователю инициировать транзакцию",
+        "propose_unknown": "This proposal was created by or targets an unknown account (not in contacts or whitelist). Beware of scam attempts and carefully check the contained operations.",
         "proxy_remove": "Вам предоставлен набор прокси, чтобы его удалить, просто очистите данное поле ввода",
         "proxy_search": "Найдите аккаунт, который будет использоваться в качестве вашего прокси для голосования",
         "registration": {
@@ -1809,7 +1894,7 @@
             "walletModel": "Локальный кошелек обеспечивает высшую степень безопасности, но ограничивает вас использованием вашего текущего браузера и компьютера. Чтобы перенести кошелек на другой браузер или компьютер, вам нужно будет воспользоваться резервной копией или brainkey.",
             "whyBinFile": ".bin файл – это файл резервной копии. Этот файл зашифрован вашим паролем и содержит все приватные ключи вашего аккаунта. Данный файл требуется загрузить в процессе входа в аккаунт."
         },
-        "self_help": "Depending on the currently visible panel, this opens a help guide with explanations on what you currently see or the general help section of the wallet",
+        "self_help": "В зависимости от используемой в данный момент панели это откроет справочное руководство с пояснениями о том, что вы видите в данный момент, или общий справочный раздел кошелька.",
         "settle": "Погашение позволит вам обменять ваши %(asset)s на %(backingAsset)s с задержкой в %(settleDelay)s часа по цене, равной цене котировки на момент погашения.",
         "settle_price": "Это цена, при которой будут исполнятся ордера на погашение.",
         "show_asset": "Нажмите здесь, чтобы отобразить этот актив в основном списке.",
@@ -1830,7 +1915,7 @@
         "at": "в",
         "balance_id": "Идентификатор баланса",
         "balance_owner": "Ключ владельца баланса",
-        "bidder": "Bidder",
+        "bidder": "Покупатель",
         "blinding_factor": "Втёмную",
         "bond_accept_offer": "Принял предложение по облигациям от",
         "bond_cancel_offer": "Отменил предложение по облигациям",
@@ -1913,7 +1998,7 @@
             "account_whitelist": "Добавление в белый список",
             "all": "Показать все",
             "assert": "Операция подтверждения",
-            "asset_bid_collateral": "Bid collateral",
+            "asset_bid_collateral": "Обеспечение предложения",
             "asset_claim_fee_pool": "Востребовать остаток пула комиссий",
             "asset_claim_fees": "Взыскание комиссий с активов",
             "asset_claim_pool": "Востребовать пул комиссий актива",
@@ -2001,6 +2086,7 @@
             "req": "Обязательно для заполнения",
             "valid": "Пожалуйста, введите правильное, положительное число"
         },
+        "explict_price": "Explict price:",
         "fee": "Комиссия",
         "final": "Итоговый баланс",
         "from": "От",
@@ -2021,8 +2107,8 @@
         "expire": "Срок ожидания Вашей транзакции истек без подтверждения, пожалуйста, повторите попытку позже."
     },
     "utility": {
-        "asset_input_placeholder": "Enter asset symbol",
-        "asset_select_placeholder": "Select asset",
+        "asset_input_placeholder": "Введите символ актива",
+        "asset_select_placeholder": "Выберите актив",
         "total_x_assets": "Всего %(count)s активов",
         "total_x_items": "Всего из %(count)s позиций",
         "total_x_markets": "Всего %(count)s рынков",
@@ -2047,6 +2133,7 @@
         "panel_hide": "Вы можете скрыть панель, чтобы освободить больше места",
         "personalize": "Измените схему размещения по умолчанию в настройках персонализации",
         "prev_label": "Назад",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Просмотр ценового действия актива с использованием ценового графика.",
         "restore_account": "Восстановите кошелек, используя резервный файл.",
         "sell_form": "Разместить заявки на продажу, используя эту форму.",
@@ -2178,8 +2265,8 @@
         "pwd4brainkey": "Введите Ваш пароль, чтобы увидеть Ваш Brainkey",
         "ready_to_restore": "Готов к восстановлению",
         "reenter_brainkey": "Введите Brainkey повторно",
-        "remember_me": "Remember me",
-        "remember_me_explanation": "Turn 'Remember Me' off to disable remembering your account name and other personal settings.",
+        "remember_me": "Запомнить меня",
+        "remember_me_explanation": "Отключите опцию \"Запомнить меня\", чтобы остановить запоминание вашего имени аккаунта и других персональных настроек.",
         "reset": "Сбросить",
         "restore": "Восстановить локальный кошелек из резервной копии",
         "restore_backup": "Восстановить из резервной копии",
@@ -2231,23 +2318,5 @@
         "wallet_model_3": "<li>Несколько аккаунтов</li><li>Требуется резервное копирование файлов кошелька</li><li>Высокая безопасность</li>",
         "wallet_move": "Резервная копия также может использоваться для перемещения Вашего локального кошелька на другие компьютеры или браузеры. Для восстановления локального кошелька из резервной копии <strong>Вам также понадобится Ваш пароль!</strong>",
         "wallet_password": "Войдите, используя пароль"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Пожалуйста, получите адрес депозита",
-            "deposit_warning": "Не пополняйте не-%(asset)s активами %(asset)s адрес, иначе они не будут восстановлены",
-            "fee": "Комиссия Шлюза",
-            "get_deposit_address": "получить адрес депозита",
-            "support_block": "Для получения поддержки, пожалуйста, свяжитесь с Winex по адресу:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Минимальная сумма: %(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Фактическая сумма:%(final_number)s",
-            "winAmount": "Минимальная сумма: %(min_amount)s %(asset)s"
-        }
     }
 }

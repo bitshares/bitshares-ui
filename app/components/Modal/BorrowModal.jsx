@@ -22,7 +22,7 @@ import Immutable from "immutable";
 import {ChainStore} from "bitsharesjs";
 import {List} from "immutable";
 import Icon from "../Icon/Icon";
-import {Checkbox, Modal, Button} from "bitshares-ui-style-guide";
+import {Checkbox, Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 
 /**
  *  Given an account and an asset id, render a modal allowing modification of a margin position for that asset
@@ -675,15 +675,16 @@ class BorrowModalContent extends React.Component {
                         <Translate content="borrow.use_max" />
                     </a>
                 ) : (
-                    <span
-                        className="disabled-link"
-                        data-place="left"
-                        data-tip={counterpart.translate(
+                    <Tooltip
+                        placement="left"
+                        title={counterpart.translate(
                             "borrow.maximize_debt_set_ratio_slider"
                         )}
                     >
-                        <Translate content="borrow.use_max" />
-                    </span>
+                        <span className="disabled-link">
+                            <Translate content="borrow.use_max" />
+                        </span>
+                    </Tooltip>
                 )}
             </span>
         );
@@ -1052,18 +1053,19 @@ class BorrowModalContent extends React.Component {
                                                 <label>
                                                     <Translate content="borrow.target_collateral_ratio" />
                                                     &nbsp;&nbsp;
-                                                    <span
-                                                        data-place="top"
-                                                        data-html={true}
-                                                        data-tip={counterpart.translate(
+                                                    <Tooltip
+                                                        placement="top"
+                                                        title={counterpart.translate(
                                                             "tooltip.target_collateral_ratio"
                                                         )}
                                                     >
-                                                        <Icon
-                                                            name="question-circle"
-                                                            title="icons.question_circle"
-                                                        />
-                                                    </span>
+                                                        <span>
+                                                            <Icon
+                                                                name="question-circle"
+                                                                title="icons.question_circle"
+                                                            />
+                                                        </span>
+                                                    </Tooltip>
                                                 </label>
                                                 {useTargetCollateral ? (
                                                     <span>
