@@ -1,0 +1,22 @@
+#important {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #fff;
+    line-height: 1.5;
+    font-size: 0.875rem;
+    padding: 0.5rem 2.5rem 0.5rem 1.25rem;
+
+    a {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .dismiss {
+        position: absolute;
+        right: 1em;
+        top: 0.185rem;
+        cursor: pointer;
+        font-size: 1.5em;
+    }
+}

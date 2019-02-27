@@ -46,12 +46,16 @@
     $main-content-margin-block-bg-color,
     $modal-bg-color,
     $mobile-input-bg,
-    $incognito-bg
+    $incognito-bg,
+    $important-bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
     #incognito {
         background: $incognito-bg;
+    }
+    #important {
+        background: $important-bg;
     }
     .settings-select {
         height: 36px;
