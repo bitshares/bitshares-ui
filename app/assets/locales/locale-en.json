@@ -2027,6 +2027,11 @@
         }
     },
     "cryptobridge": {
+        "important": {
+            "title": "Important",
+            "user_verification":
+                "CryptoBridge requires verification of the identity of United States citizens for use of the gateway beginning March 7, 2019. <a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">Read more here.</a>"
+        },
         "general": {
             "check_url": "Please check that you are visiting %(url)s",
             "important": "Important",
