@@ -2028,7 +2028,14 @@
         }
     },
     "cryptobridge": {
+        "important": {
+            "title": "Important",
+            "user_verification":
+                "CryptoBridgeでは、2019年3月7日以降にゲートウェイを使用するために米国市民の本人確認を求めています。<a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">詳細はこちらをご覧ください。</a>"
+        },
         "general": {
+            "check_url": "Please check that you are visiting %(url)s",
+            "important": "Important",
             "news": "News"
         },
         "gateway": {
@@ -2058,6 +2065,10 @@
             "receive_funds": "Receiving funds",
             "receive_funds_intro":
                 "BTSを他の人や取引所から受け取るには、あなたのアカウント名を相手に教えてください: "
+        },
+        "header": {
+            "imprint": "Imprint",
+            "terms": "Terms and Conditions"
         },
         "footer": {
             "title": "CryptoBridge"
@@ -2094,10 +2105,24 @@
                 "私は%(amount)s BCOのステーキングに同意し、それらは%(month)sヶ月間ロックされ、ステーキング期間が終了するまで取り戻すことができないことを完全に理解しました。また、私はステーキングした資金によって、CryptoBridgeプラットフォームの収益の一部を受け取ります。",
             "no_balances": "ステーキング中のBridgeCoinはありません。",
             "bco_available": "利用可能: ",
-            "bco_not_available": "利用可能なBCOがありません "
+            "bco_not_available": "利用可能なBCOがありません ",
+            "terms_and_conditions": "CryptoBridge Terms and Conditions",
+            "terms_and_conditions_accept":
+                "I have read and agree to the %(cryptobridge_terms_and_conditions)s",
+            "terms_and_conditions_accept_disclaimer":
+                "I hereby renounce to my consumer right of revocation and acknowledge I can terminate the use of the service at anytime as described in §5.9 of CryptoBridge's Terms of Service",
+            "are_you_us_citizen": "Are you a U.S. citizen?",
+            "kyc_info":
+                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored.",
+            "kyc_info_grace":
+                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored."
         },
         "dashboard": {
-            "all_markets": "すべてのマーケット"
+            "all_markets": "すべてのマーケット",
+            "proposal_warning":
+                "DO NOT APPROVE any proposals from unknown accounts. Your account may be stolen if you approve a malicious proposal.",
+            "proposal_info":
+                "When in doubt, do nothing and ask questions in our Discord server %(discordLink)s"
         }
     }
 }
