@@ -2031,7 +2031,7 @@
         "important": {
             "title": "重要",
             "user_verification":
-                "CryptoBridgeでは、2019年3月7日以降にゲートウェイを使用するために米国市民の本人確認を求めています。<a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">詳細はこちらをご覧ください。</a>"
+                "すべてのユーザー向けの利用規約と、米国ユーザー向けの本人確認についてよく理解してください。猶予期間は2019年3月7日0:00 UTCまでです。<a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">詳細はこちらをご覧ください。</a>"
         },
         "general": {
             "check_url": "現在のURLが %(url)s であることを確認してください",
