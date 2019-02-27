@@ -2029,7 +2029,7 @@
     },
     "cryptobridge": {
         "important": {
-            "title": "Important",
+            "title": "重要",
             "user_verification":
                 "CryptoBridgeでは、2019年3月7日以降にゲートウェイを使用するために米国市民の本人確認を求めています。<a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">詳細はこちらをご覧ください。</a>"
         },
