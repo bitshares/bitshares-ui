@@ -53,6 +53,10 @@ class SettingsActions {
         return {id, status};
     }
 
+    hideImportantMessage(id) {
+        return id;
+    }
+
     clearSettings() {
         return dispatch => {
             return new Promise(resolve => {
