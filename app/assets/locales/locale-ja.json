@@ -1379,12 +1379,12 @@
         "always_confirm": "常に確認する",
         "apiServer": "フルノードAPIサーバー",
         "api_closest": "最近のものを自動的に選択する",
-        "automatic": "Automatically select node (%(totalNodes)s available)",
-        "automatic_short": "Automatic Switching",
+        "automatic": "自動選択ノード (%(totalNodes)s が有効です)",
+        "automatic_short": "自動切り替え",
         "available_nodes": "利用可能なノード",
         "backup": "バックアップ",
         "backup_backup": "バックアップファイル (.bin) からリストアする",
-        "backup_backup_short": "Restore from a backup",
+        "backup_backup_short": "バックアップからリストア",
         "backup_brainkey": "ウォレットブレインキーでリストアする",
         "backup_favorites": "jsonファイルを使ってお気に入りをリストアする",
         "backup_favorites_error": "JSONを解析できませんでした。",
@@ -1437,7 +1437,7 @@
         "my_nodes": "Personal",
         "no": "いいえ",
         "no_accounts": "このウォレットにはアカウントがありません。",
-        "node_already_exists": "Node with such URL already exists",
+        "node_already_exists": "そのURLのノードは既に存在します",
         "node_down": "DOWN",
         "node_up": "UP",
         "olDarkTheme": "Openledgerダーク",
@@ -1459,7 +1459,7 @@
         "restore_key_count": "キー数",
         "restore_text": "バックアップまたはインポートキーからリストアする。",
         "show": "表示",
-        "showAdvancedFeatures": "Show advanced features",
+        "showAdvancedFeatures": "高度な機能を表示",
         "showAssetPercent": "アカウントページにアセットパーセンテージを表示",
         "showSettles": "決済注文をデプスチャートで表示する",
         "switch": "Switch Node",
@@ -1508,7 +1508,7 @@
             "入金を完了するには、%(asset)sウォレットに行き、このページに記載されているアドレスに転送してください。確認後、すぐに入金されます。メモが表示されている場合は、転送にこのメモを含めなければなりません。",
         "disconnected":
             "APIノードに接続していません。リロードするか、設定ページで新しいアクセスポイントを設定してください。",
-        "feed_price": "This is the current external feed price",
+        "feed_price": "これが現在の外部フィード価格です",
         "filter_ops":
             "このドロップダウンリストで履歴を操作の種類別にフィルタリングできます。",
         "follow_user": "このユーザーをフォローしています",
@@ -1556,7 +1556,7 @@
         "withdraw_full": "全額を出金するにはここをクリックしてください。"
     },
     "transaction": {
-        "amount_sell": "Amount to sell",
+        "amount_sell": "売却量",
         "asset_claim_fees":
             "%(balance_amount)sのアセット手数料を%(asset)sの手数料プールから請求しました",
         "asset_reserve": "消却済みアセット数量",
@@ -1645,7 +1645,7 @@
             "all": "すべて表示",
             "assert": "アサート操作",
             "asset_claim_fees": "アセット手数料を請求",
-            "asset_claim_pool": "Claim asset fee pool",
+            "asset_claim_pool": "アセット手数料プールから請求",
             "asset_create": "アセットを作成",
             "asset_fund_fee_pool": "アセットの手数料プールを充填",
             "asset_global_settle": "グローバルアセット決済",
@@ -1653,11 +1653,11 @@
             "asset_publish_feed": "フィードを公開",
             "asset_reserve": "アセットを消却",
             "asset_settle": "アセット決済",
-            "asset_settle_cancel": "Cancel asset settlement",
+            "asset_settle_cancel": "アセットの決済をキャンセル",
             "asset_update": "アセットを更新",
             "asset_update_bitasset": "スマートコインを更新",
             "asset_update_feed_producers": "アセットのフィード作成者を更新",
-            "asset_update_issuer": "Update asset issuer",
+            "asset_update_issuer": "アセット発行者を変更",
             "balance_claim": "残高請求",
             "blind_transfer": "匿名転送",
             "call_order_update": "マージンを更新",
@@ -1789,12 +1789,12 @@
         "account_public": "アカウント名 (公開)",
         "active_wallet": "アクティブウォレット",
         "all_set": "準備ができました！",
-        "ask_to_select_wallet": "Please select a key file",
+        "ask_to_select_wallet": "キーファイルを選択してください",
         "back": "戻る",
         "backup_brainkey": "ブレインキーのバックアップ",
         "backup_explain":
             "下のボタンをクリックすると、拡張子 .bin のバックアップファイルが生成されます。このファイルはウォレットのパスワードで暗号化されており、アカウントのすべての秘密キーを含んでいます。ウォレットのリストアや他のコンピュータ / ブラウザへの移動に使用することができます。",
-        "backup_login": "Backup & login",
+        "backup_login": "バックアップとログイン",
         "backup_new_account":
             "おめでとうございます。新しいアカウントを作成しました。今すぐウォレットのバックアップを作成することを強く推奨します。バックアップがない場合、コンピュータに何か問題が発生した場合にリストアすることはできません。",
         "backup_warning":
@@ -1862,9 +1862,9 @@
         "delete_confirm_line4": "はい、%(name)sのウォレットを削除します",
         "delete_wallet": "ウォレットを削除する",
         "delete_wallet_name": "ウォレット (%(name)s) を削除する",
-        "different_file_type": "Have a different file type?",
+        "different_file_type": "ファイルタイプが違いますか？",
         "done": "完了",
-        "dont_ask_for_backup": "Don't ask me to back up again",
+        "dont_ask_for_backup": "今後バックアップを確認しない",
         "download": "ダウンロード",
         "enter_password": "パスワードを入力してください",
         "existing_password": "既存のパスワード",
@@ -1891,8 +1891,8 @@
         "import_password": "インポートファイルのパスワードを入力してください",
         "import_private_key": "秘密キーをインポートする",
         "invalid_format": "無効なフォーマット",
-        "key_file": "Key file",
-        "key_file_bin": "Key file (.bin)",
+        "key_file": "キーファイル",
+        "key_file_bin": "キーファイル (.bin)",
         "last_backup": "最新のバックアップ",
         "link_account": "アカウント",
         "link_deposit": "入金",
@@ -1943,11 +1943,11 @@
         "reset": "リセット",
         "restore": "バックアップからウォレットをリストアする",
         "restore_backup": "バックアップのリストア",
-        "restore_it_here": "Restore it here",
-        "restore_key_file": "Restore key file..",
+        "restore_it_here": "ここにリストアする",
+        "restore_key_file": "キーファイルをリストアする..",
         "restore_success": "(%(name)s)のウォレットを正常にリストアしました。",
         "restore_wallet_of": "リストア(%(name)sのウォレット)",
-        "select_wallet": "Select key file",
+        "select_wallet": "キーファイルを選択する",
         "setup_wallet": "ウォレットをセットアップする",
         "show_brainkey": "ブレインキーを表示",
         "step_1": "ウォレットを作成",
@@ -1979,7 +1979,7 @@
             "パスワードを書き留めました、または他の方法で保存しました",
         "understand_3":
             "パスワードを紛失した場合、資金にアクセスできなくなることを理解しました",
-        "use_different": "Use different file",
+        "use_different": "別のファイルを使用する",
         "use_password": "アカウントモデルを使用する",
         "use_wallet": "ウォレットモデルを使用する",
         "using": "Using:",
@@ -2010,21 +2010,21 @@
     },
     "winex": {
         "gateway": {
-            "click_getaddress": "Please get deposit address",
+            "click_getaddress": "入金アドレスを取得してください",
             "deposit_warning":
-                "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
+                "%(asset)s以外のアセットを%(asset)sのアドレスに入金しないでください。入金した場合は元に戻せなくなります",
             "fee": "ゲートウェイ手数料",
             "get_deposit_address": "get deposit address",
             "support_block": "サポートについては、Winexまでご連絡ください。:"
         },
         "transfer": {
             "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
+                "minWithdraw": "最小数量：%(min_amount)s"
             }
         },
         "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
+            "finalNumber": "実数量 ：%(final_number)s",
+            "winAmount": "最小数量: %(min_amount)s %(asset)s"
         }
     },
     "cryptobridge": {
@@ -2034,8 +2034,8 @@
                 "CryptoBridgeでは、2019年3月7日以降にゲートウェイを使用するために米国市民の本人確認を求めています。<a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">詳細はこちらをご覧ください。</a>"
         },
         "general": {
-            "check_url": "Please check that you are visiting %(url)s",
-            "important": "Important",
+            "check_url": "現在のURLが %(url)s であることを確認してください",
+            "important": "重要",
             "news": "News"
         },
         "gateway": {
@@ -2050,7 +2050,7 @@
             "deposit_tag_acknowledgement_info":
                 "<p>%(asset)s を入金するには、以下の両方を使用する必要があります:</p><ul><li>アドレス</li><li>タグ</li></ul><p>タグの付け方がわからない場合はCryptoBridgeへXRP (Ripple) を\"送金しないでください\"。入金時にタグをつけ忘れた場合、資金は永久に失われます</p>",
             "deposit_tag_acknowledgement_confirm": "理解しました",
-            "copy_address_tag": "Copy Tag",
+            "copy_address_tag": "タグをコピー",
             "required_confirmations": "入金残高反映に必要な確認回数",
             "support_block":
                 "サポートが必要な場合は、CryptoBridgeにご連絡ください (英語のみ対応可能です):",
@@ -2059,16 +2059,16 @@
                 "他のブロックチェーンの資金を入金または出金する場合は、以下のフォームを使用してください。",
             "deposit_to_fee_warning":
                 "注意: %(asset)sを%(fee_time_frame)s>分に1回以上の頻度で入金する場合、%(fee_percentage)s%の入金手数料が発生します (最小%(minimum)s %(asset)s)。%(fee_percentage_low_amounts)s%の入金手数料は1 %(asset)s未満の入金をした場合に課されます。",
-            "deposit_minimum": "Minimum deposit",
+            "deposit_minimum": "最小入金額",
             "deposit_login":
                 "入金するにはウォレットのロックを解除する必要があります",
-            "receive_funds": "Receiving funds",
+            "receive_funds": "資金を受け取る",
             "receive_funds_intro":
                 "BTSを他の人や取引所から受け取るには、あなたのアカウント名を相手に教えてください: "
         },
         "header": {
-            "imprint": "Imprint",
-            "terms": "Terms and Conditions"
+            "imprint": "インプリント",
+            "terms": "利用規約"
         },
         "footer": {
             "title": "CryptoBridge"
@@ -2106,23 +2106,23 @@
             "no_balances": "ステーキング中のBridgeCoinはありません。",
             "bco_available": "利用可能: ",
             "bco_not_available": "利用可能なBCOがありません ",
-            "terms_and_conditions": "CryptoBridge Terms and Conditions",
+            "terms_and_conditions": "CryptoBridge利用規約",
             "terms_and_conditions_accept":
-                "I have read and agree to the %(cryptobridge_terms_and_conditions)s",
+                "%(cryptobridge_terms_and_conditions)sを読み、同意しました。",
             "terms_and_conditions_accept_disclaimer":
-                "I hereby renounce to my consumer right of revocation and acknowledge I can terminate the use of the service at anytime as described in §5.9 of CryptoBridge's Terms of Service",
-            "are_you_us_citizen": "Are you a U.S. citizen?",
+                "私はここに、消費者取消権を放棄し、CryptoBridge利用規約§5.9にあるようにいつでもサービスの使用を中止できることを理解します",
+            "are_you_us_citizen": "Aあなたは米国市民ですか？",
             "kyc_info":
-                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored.",
+                "利用規約に同意していただきありがとうございます。CryptoBridgeゲートウェイの利用を継続するには、ユーザー認証プロセスの完了が必要です。この要件を受け入れる場合、私たちのパートナーであるFractalへ転送され、完了後に再びゲートウェイの全機能にアクセスできるようになります。",
             "kyc_info_grace":
-                "Thank you for accepting our Terms of Service. To continue using the CryptoBridge gateway, you must complete a user verification process. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored."
+                "利用規約に同意していただきありがとうございます。CryptoBridgeゲートウェイの利用を継続するには、ユーザー認証プロセスの完了が必要です。認証プロセスに同意しない方には、%(deadlineDate)sまでの出金猶予期間があります。この要件を受け入れる場合、私たちのパートナーであるFractalへ転送され、完了後に再びゲートウェイの全機能にアクセスできるようになります。"
         },
         "dashboard": {
             "all_markets": "すべてのマーケット",
             "proposal_warning":
-                "DO NOT APPROVE any proposals from unknown accounts. Your account may be stolen if you approve a malicious proposal.",
+                "不明なアカウントからの提案を絶対に承認しないでください。悪意ある提案を承認した場合はアカウントが盗まれる可能性があります。",
             "proposal_info":
-                "When in doubt, do nothing and ask questions in our Discord server %(discordLink)s"
+                "わからない場合は、何もせず私たちのDiscordサーバー%(discordLink)sで尋ねてください。"
         }
     }
 }
