@@ -25,6 +25,8 @@ import FormattedAsset from "../Utility/FormattedAsset";
 import BalanceComponent from "../Utility/BalanceComponent";
 import AssetTradingPairInfo from "../Utility/AssetTraidingPairInfo";
 import QRScanner from "../QRAddressScanner";
+import AssetInfo from "components/Utility/AssetInfo";
+
 import counterpart from "counterpart";
 import {
     gatewaySelector,
@@ -972,6 +974,8 @@ class WithdrawModalNew extends React.Component {
                             usageContext="withdraw"
                         />
                     </div>
+
+                    <AssetInfo asset={backingAsset} type={"withdrawal"} />
 
                     {!isBTS && selectedAsset && !selectedGateway ? (
                         <Translate content="modal.withdraw.no_gateways" />
