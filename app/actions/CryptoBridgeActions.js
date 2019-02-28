@@ -15,8 +15,6 @@ import {
     getRequestAccessOptions
 } from "lib/common/AccountUtils";
 
-const BCO_ASSET_ID = "1.3.1564";
-
 let news = null;
 let newsTTL = 60 * 60 * 1000; // 60 minutes
 
@@ -175,12 +173,12 @@ class CryptoBridgeActions {
         let tr = new TransactionBuilder();
 
         tr.add_type_operation("vesting_balance_create", {
-            fee: {amount: "0", asset_id: BCO_ASSET_ID},
+            fee: {amount: "0", asset_id: __BCO_ASSET_ID__},
             creator: account,
             owner: account,
             amount: {
                 amount: amount * Math.pow(10, 7),
-                asset_id: BCO_ASSET_ID
+                asset_id: __BCO_ASSET_ID__
             },
             policy: [
                 1,
@@ -204,7 +202,7 @@ class CryptoBridgeActions {
         const balance = cvb.balance.amount;
 
         tr.add_type_operation("vesting_balance_withdraw", {
-            fee: {amount: "0", asset_id: BCO_ASSET_ID},
+            fee: {amount: "0", asset_id: __BCO_ASSET_ID__},
             owner: account,
             vesting_balance: cvb.id,
             amount: {
