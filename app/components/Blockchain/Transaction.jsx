@@ -1463,7 +1463,11 @@ class Transaction extends React.Component {
                             <td>
                                 <Translate content="cryptobridge.account.length" />
                             </td>
-                            <td>{stakingPeriod.name}</td>
+                            <td>
+                                <Translate
+                                    content={stakingPeriod.name_plural}
+                                />
+                            </td>
                         </tr>
                     );
 

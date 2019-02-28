@@ -17,47 +17,27 @@ import {checkFeeStatusAsync, checkBalance} from "common/trxHelper";
 export class AccountStakingInfo {
     static stakingPeriods = [
         {
-            name1: "cryptobridge.account.month_1",
+            name: "cryptobridge.account.month_1",
+            name_plural: "cryptobridge.account.month_1_plural",
             bonus: "0%",
-            name: counterpart.translate("cryptobridge.account.month_1", {
-                bonus: "0%"
-            }),
-            monthName: counterpart.translate(
-                "cryptobridge.account.month_1_plural"
-            ),
             value: 2678400
         },
         {
-            name1: "cryptobridge.account.month_3",
+            name: "cryptobridge.account.month_3",
+            name_plural: "cryptobridge.account.month_3_plural",
             bonus: "20%",
-            name: counterpart.translate("cryptobridge.account.month_3", {
-                bonus: "20%"
-            }),
-            monthName: counterpart.translate(
-                "cryptobridge.account.month_3_plural"
-            ),
             value: 7776000
         },
         {
-            name1: "cryptobridge.account.month_6",
+            name: "cryptobridge.account.month_6",
+            name_plural: "cryptobridge.account.month_6_plural",
             bonus: "50%",
-            name: counterpart.translate("cryptobridge.account.month_6", {
-                bonus: "50%"
-            }),
-            monthName: counterpart.translate(
-                "cryptobridge.account.month_6_plural"
-            ),
             value: 15552000
         },
         {
-            name1: "cryptobridge.account.month_12",
+            name: "cryptobridge.account.month_12",
+            name_plural: "cryptobridge.account.month_12_plural",
             bonus: "100%",
-            name: counterpart.translate("cryptobridge.account.month_12", {
-                bonus: "100%"
-            }),
-            monthName: counterpart.translate(
-                "cryptobridge.account.month_12_plural"
-            ),
             value: 31536000
         }
     ];
@@ -379,7 +359,7 @@ class AccountStakeCreateNew extends React.Component {
                                     key={"stakingPeriod" + i}
                                     value={p.value}
                                 >
-                                    {counterpart.translate(p.name1, {
+                                    {counterpart.translate(p.name, {
                                         bonus: p.bonus
                                     })}
                                 </option>
@@ -389,6 +369,7 @@ class AccountStakeCreateNew extends React.Component {
 
                     {amount > 0 ? (
                         <label
+                            style={{marginTop: "20px"}}
                             className={
                                 showValidationErrors &&
                                 !confirmationCheckboxChecked
@@ -405,12 +386,18 @@ class AccountStakeCreateNew extends React.Component {
                             />
                             {counterpart("cryptobridge.account.understand", {
                                 amount,
-                                month: stakingPeriod.monthName
+                                month: counterpart(stakingPeriod.name_plural)
                             })}
                         </label>
                     ) : null}
 
-                    <div style={{width: "100%", textAlign: "right"}}>
+                    <div
+                        style={{
+                            width: "100%",
+                            textAlign: "right",
+                            marginTop: "20px"
+                        }}
+                    >
                         <button
                             onClick={this._stakeBalance.bind(this)}
                             className="button"

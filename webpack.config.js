@@ -114,6 +114,8 @@ module.exports = function(env) {
             __DEPRECATED__: !!env.deprecated,
             __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
             __CRYPTOBRIDGE_PUB_KEY__: JSON.stringify(cryptoBridgePubKey),
+            __BCO_ASSET_ID__: JSON.stringify(isDevNet ? "1.3.2" : "1.3.1564"),
+            __BCO_ASSET_PRECISION__: 7,
             DEFAULT_SYMBOL: "BTS"
         }),
         new webpack.ContextReplacementPlugin(
