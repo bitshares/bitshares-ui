@@ -22,8 +22,8 @@ import {
 } from "lib/common/assetGatewayMixin";
 import {availableGateways} from "common/gateways";
 import {getGatewayStatusByAsset} from "common/gatewayUtils";
-import AssetDepositInfo from "../Utility/AssetDepositFeeWarning";
-import AssetDepositFeeWarning from "../Utility/AssetDepositInfo";
+import AssetDepositFeeWarning from "../Utility/AssetDepositFeeWarning";
+import AssetInfo from "../Utility/AssetInfo";
 import AssetTradingPairInfo from "../Utility/AssetTraidingPairInfo";
 
 class DepositModalContent extends DecimalChecker {
@@ -332,7 +332,7 @@ class DepositModalContent extends DecimalChecker {
                             asset={selectedAsset}
                             name={backingAsset.name}
                         >
-                            <AssetDepositInfo asset={backingAsset} />
+                            <AssetInfo asset={backingAsset} type={"deposit"} />
                             <AssetDepositFeeWarning asset={backingAsset} />
 
                             {usingGateway && selectedAsset

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class AssetDepositFeeWarning extends React.Component {
+export default class AssetInfo extends React.Component {
     _getLabelClass(type) {
         if (type === "warn" || type === "warning") {
             return "warning";
@@ -12,9 +12,14 @@ export default class AssetDepositFeeWarning extends React.Component {
     }
 
     render() {
-        const {asset, style} = this.props;
+        const {asset, style, type} = this.props;
 
-        if (!asset || !asset.info || !asset.info.length > 0) {
+        if (
+            !asset ||
+            !asset.info ||
+            !asset.info.length > 0 ||
+            (type !== "deposit" && type !== "withdrawal")
+        ) {
             return <span />;
         }
 
@@ -26,10 +31,10 @@ export default class AssetDepositFeeWarning extends React.Component {
         return (
             <div style={style || {}}>
                 {asset.info.map((info, i) => {
-                    if (!info.section || info.section === "deposit") {
+                    if (!info.section || info.section === type) {
                         return (
                             <label
-                                key={"depositInfo" + i}
+                                key={"assetInfo" + i}
                                 className={
                                     "label " + this._getLabelClass(info.type)
                                 }
