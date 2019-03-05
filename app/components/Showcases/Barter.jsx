@@ -24,7 +24,6 @@ import {
     estimateFeeAsync
 } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
-import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
 import {map} from "lodash-es";
 
@@ -1262,7 +1261,7 @@ export default class Barter extends Component {
                             content="transfer.explict_price"
                         />
                         <div className="inline-label input-wrapper">
-                            <input
+                            <Input
                                 disabled={false}
                                 type="text"
                                 value={explictPrice()}

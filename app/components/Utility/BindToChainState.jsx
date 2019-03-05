@@ -5,7 +5,6 @@ import ChainTypes from "./ChainTypes";
 import utils from "common/utils";
 import {getDisplayName} from "common/reactUtils";
 import LoadingIndicator from "../LoadingIndicator";
-import {Logger} from "builder-util/out/log";
 
 /**
  * @brief provides automatic fetching and updating of chain data
