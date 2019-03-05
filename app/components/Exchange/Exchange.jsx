@@ -41,6 +41,7 @@ import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
+import ScaledOrder from "./ScaledOrder";
 import counterpart from "counterpart";
 
 class Exchange extends React.Component {
@@ -114,7 +115,11 @@ class Exchange extends React.Component {
         this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
         this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
 
+        this.showScaledOrderModal = this.showScaledOrderModal.bind(this);
+        this.hideScaledOrderModal = this.hideScaledOrderModal.bind(this);
+
         this.handlePriceAlertSave = this.handlePriceAlertSave.bind(this);
+        this._createScaledOrder = this._createScaledOrder.bind(this);
 
         this.psInit = true;
     }
@@ -311,6 +316,7 @@ class Exchange extends React.Component {
             isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
             isPriceAlertModalVisible: false,
+            isScaledOrderModalVisible: false,
             isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -394,6 +400,18 @@ class Exchange extends React.Component {
     hidePriceAlertModal() {
         this.setState({
             isPriceAlertModalVisible: false
+        });
+    }
+
+    showScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: true
+        });
+    }
+
+    hideScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: false
         });
     }
 
@@ -936,6 +954,38 @@ class Exchange extends React.Component {
         }
 
         this._createLimitOrder(type, feeID);
+    }
+
+    _createScaledOrder(orders, feeID) {
+        const limitOrders = orders.map(
+            order =>
+                new LimitOrderCreate({
+                    for_sale: order.for_sale,
+                    expiration: new Date(order.expirationTime || false),
+                    to_receive: order.to_receive,
+                    seller: this.props.currentAccount.get("id"),
+                    fee: {
+                        asset_id: feeID,
+                        amount: 0
+                    }
+                })
+        );
+
+        return MarketsActions.createLimitOrder2(limitOrders)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_scaled_order"
+                            )
+                        });
+                }
+                console.log("order success");
+            })
+            .catch(e => {
+                console.log("order failed:", e);
+            });
     }
 
     _createLimitOrder(type, feeID) {
@@ -1981,6 +2031,7 @@ class Exchange extends React.Component {
         let buyForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "bid")}
@@ -2088,6 +2139,7 @@ class Exchange extends React.Component {
         let sellForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "ask")}
@@ -2546,7 +2598,7 @@ class Exchange extends React.Component {
                 )}
                 <Tooltip
                     title={counterpart.translate(
-                        "exchange.settings.tooltip.chart_height"
+                        "exchange.settings.tooltip.increase_chart_height"
                     )}
                 >
                     <AntIcon
@@ -2558,12 +2610,12 @@ class Exchange extends React.Component {
                         onClick={() => {
                             this.onChangeChartHeight({increase: true});
                         }}
-                        type={"plus"}
+                        type={"up"}
                     />
                 </Tooltip>
                 <Tooltip
                     title={counterpart.translate(
-                        "exchange.settings.tooltip.chart_height"
+                        "exchange.settings.tooltip.decrease_chart_height"
                     )}
                 >
                     <AntIcon
@@ -2575,7 +2627,7 @@ class Exchange extends React.Component {
                         onClick={() => {
                             this.onChangeChartHeight({increase: false});
                         }}
-                        type={"minus"}
+                        type={"down"}
                     />
                 </Tooltip>
                 <Tooltip
@@ -3435,6 +3487,14 @@ class Exchange extends React.Component {
                     visible={this.state.isPriceAlertModalVisible}
                     showModal={this.showPriceAlertModal}
                     hideModal={this.hidePriceAlertModal}
+                />
+
+                <ScaledOrder
+                    createScaledOrder={this._createScaledOrder}
+                    visible={this.state.isScaledOrderModalVisible}
+                    hideModal={this.hideScaledOrderModal}
+                    quoteAsset={this.props.quoteAsset.get("id")}
+                    baseAsset={this.props.baseAsset.get("id")}
                 />
             </div>
         );

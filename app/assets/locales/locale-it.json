@@ -414,6 +414,9 @@
         "understand": "Ho capito",
         "ws_status": "Stato della connessione del full node"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -948,13 +953,13 @@
         "asset_to_withdraw": "Asset da prelevare:",
         "asset_unavailable": "The gateway for %(asset)s is not in service",
         "assets": {
-            "bit": "<br/>bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
-            "bitcny": "<br/><br/>bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
+            "bit": "bit%(asset)s è un derivato che segue il valore reale di %(backed)s. È decentralizzato al 100%%, trustless e supportato da una garanzia trattenuta dalla blockchain in uno smart contract.",
+            "bitcny": "bitCNY v 1:1 verso veri Yuan usando un servizio di gateway come Magic Wallet. For more info, vedi https://www.magicw.net/",
+            "bridge": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da GDex.",
+            "open": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da OpenLedger.",
+            "rudex": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Rudex.",
+            "trade": "L'asset %(asset)s è garantito 1:1 da %(backed)s reali e può essere depositato o ritirato usando il servizio di gateway fornito da Blocktrades.",
             "win": "",
             "xbts": ""
         },
@@ -1827,7 +1832,7 @@
         "filter_ops": "Usa questa lista per filtrare il tuo storico secondo il tipo di operazione.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -2122,6 +2127,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "Indietro",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Visualizza l'azione del prezzo di una risorsa utilizzando la tabella dei prezzi.",
         "restore_account": "Ripristina un portafoglio utilizzando il tuo file di backup.",
         "sell_form": "Inserisci ordini di vendita utilizzando questo modulo.",
@@ -2306,23 +2312,5 @@
         "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
         "wallet_password": "Fai il login dovunque usando la tua password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

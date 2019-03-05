@@ -414,6 +414,9 @@
         "understand": "entiendo",
         "ws_status": "Estado de conexión de nodo completo"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "Falso",
         "true": "Cierto"
@@ -638,7 +641,9 @@
                 "chart_tools": "Muestra / oculta la barra de herramientas superior e izquierda, así como el menú contextual. Las herramientas siempre están ocultas en minúscula pantalla.",
                 "chart_type": "Cambie entre la profundidad del mercado y los gráficos de precios, o desactive los gráficos",
                 "chart_zoom": "Permitir aumentar el grafico. El zoom siempre está deshabilitado en pantalla pequeña.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Ocultar todos los botones que se pueden gestionar en el formulario de personalización.",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "En qué lado colocar el libro de órdenes vertical. Esto cambiará de lugar con el panel de mercado.",
                 "market_trades": "",
                 "my_trades": "",
@@ -954,13 +959,13 @@
         "asset_to_withdraw": "activos para retirar:",
         "asset_unavailable": "El porton para %(asset)s no esta en servicio",
         "assets": {
-            "bit": "<br/>bit%(asset)s es un derivado que rastrea el valor real de %(backed)s. esto es 100%% descentralizado, sin confianza y respaldado por garantías en poder de blockchain en un contrato inteligente.",
-            "bitcny": "<br/><br/>bitCNY se puede depositar o retirar 1:1 a Yuan real mediante un servicio de puerta de enlace como Magic Wallet. Para más información, consulte https://www.magicw.net/",
-            "bridge": "<br/><br/>El activo %(asset)s es respaldado 1:1 por real %(backed)s y puede ser depositado or retiado usando el servico de porton proporcionado por CryptoBridge.",
-            "gdex": "<br/><br/>El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
-            "open": "<br/><br/>The %(asset)s el activo está respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
+            "bit": "bit%(asset)s es un derivado que rastrea el valor real de %(backed)s. esto es 100%% descentralizado, sin confianza y respaldado por garantías en poder de blockchain en un contrato inteligente.",
+            "bitcny": "bitCNY se puede depositar o retirar 1:1 a Yuan real mediante un servicio de puerta de enlace como Magic Wallet. Para más información, consulte https://www.magicw.net/",
+            "bridge": "El activo %(asset)s es respaldado 1:1 por real %(backed)s y puede ser depositado or retiado usando el servico de porton proporcionado por CryptoBridge.",
+            "gdex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por GDex.",
+            "open": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por OpenLedger.",
+            "rudex": "El %(asset)s activo es respaldado 1:1 por real %(backed)s y puede ser depositado or retirado usando el servico de porton proporcionado por Rudex.",
+            "trade": "El activo %(asset) està respaldado 1:1 da real %(backed)s y puede ser depositado o retirado utilizando el servicio de puerta de enlace proporcionado por Blocktrades.",
             "win": "",
             "xbts": ""
         },
@@ -1833,7 +1838,7 @@
         "filter_ops": "Use esta lista para filtrar su historial por tipo de operación.",
         "follow_user": "Usted está siguiendo a este usuario",
         "follow_user_add": "Haga clic para seguir a este usuario",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "La contraseña generada fue creada por su navegador, localmente. <br /><br /><strong>Nadie más que tú tiene acceso a ella</strong>.<br /><br /> Pégalo a continuación y guarda una copia en un lugar seguro ",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -2128,6 +2133,7 @@
         "panel_hide": "Puedes ocultar el panel para tener más espacio.",
         "personalize": "Cambia el diseño por defecto en la configuración de personalización",
         "prev_label": "Volver",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Ver la acción del precio de un activo usando el gráfico de precios.",
         "restore_account": "Restaure una billetera usando su archivo de respaldo.",
         "sell_form": "Coloque las órdenes de venta usando este formulario.",
@@ -2312,23 +2318,5 @@
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
         "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Por favor, obtenga la dirección de depósito",
-            "deposit_warning": "No deposites no-%(asset)s activos dentro %(asset)s dirección, de lo contrario no serán recuperados.",
-            "fee": "Gateway Cuota",
-            "get_deposit_address": "obtener dirección de depósito",
-            "support_block": "Para soporte, contacte a Winex en"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Monto minimo：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Monto actual：%(final_number)s",
-            "winAmount": "Monto minimo: %(min_amount)s %(asset)s"
-        }
     }
 }

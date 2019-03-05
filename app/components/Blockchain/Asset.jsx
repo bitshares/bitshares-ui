@@ -651,7 +651,7 @@ class Asset extends React.Component {
 
             // Invalid feedPrice returned for asset
             if (!feedPrice) return;
-            
+
             // Convert supply to calculable values
             let current_supply_value = currentSupply;
             let current_collateral_value = bitAsset.settlement_fund;

@@ -64,7 +64,7 @@
             "available": "Zur Beanspruchung verfügbar",
             "basic": "Grundmitglied",
             "cashback": "Skonto",
-            "claim": "Guthaben beanspruchen",
+            "claim": "Guthaben einfordern",
             "coindays": "Münztage",
             "earned": "Erworbene Münztage",
             "expires": "endet",
@@ -414,6 +414,9 @@
         "understand": "Verstanden",
         "ws_status": "Websocket Verbindungsstatus"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "falsch",
         "true": "richtig"
@@ -638,7 +641,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -712,8 +717,8 @@
                 "title": "Collateral Bids"
             },
             "fee_pool": {
-                "claim_balance": "Gebührenguthaben beanspruchen",
-                "claim_fees": "Gebühren beanspruchen",
+                "claim_balance": "Gebührenguthaben einfordern",
+                "claim_fees": "Gebühren einfordern",
                 "claim_pool_text": "Der Eigentümer der Anlage kann mit diesem Formular Kapital vom Gebührenspeicher abheben:",
                 "claim_text": "Der Anlagen-Herausgeber kann die zusammengetragenen Anteile hier beanspruchen",
                 "core_exchange_rate": "Kernhandelsrate",
@@ -954,13 +959,13 @@
         "asset_to_withdraw": "Anlage zur Auszahlung:",
         "asset_unavailable": "Das Gateway für %(asset)s ist nicht in Betrieb",
         "assets": {
-            "bit": "<br/>bit%(asset)s ist ein Derivat, das den echten Wert von %(backed)s verfolgt. Es ist 100% dezentralisiert, benötigt kein Vertrauen und wird durch eine Sicherheit auf der Blockchain in einem Smart Contrakt hinterlegt.",
-            "bitcny": "<br/><br/>bitCNY kann 1:1 zum echten Yuan ein- oder ausbezahlt werden, indem die Gateway des Magic Wallet Dienstes benutzt wird.  Mehr Informationen auf https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch OpenLedger bereitgestellt",
-            "rudex": "",
-            "trade": "br/><br/>Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt",
+            "bit": "bit%(asset)s ist ein Derivat, das den echten Wert von %(backed)s verfolgt. Es ist 100% dezentralisiert, benötigt kein Vertrauen und wird durch eine Sicherheit auf der Blockchain in einem Smart Contrakt hinterlegt.",
+            "bitcny": "bitCNY kann 1:1 zum echten Yuan ein- oder ausbezahlt werden, indem die Gateway des Magic Wallet Dienstes benutzt wird.  Mehr Informationen auf https://www.magicw.net/",
+            "bridge": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch CryptoBridge bereitgestellt",
+            "gdex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Gdex bereitgestellt",
+            "open": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch OpenLedger bereitgestellt",
+            "rudex": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Rudex bereitgestellt",
+            "trade": "Die %(asset)s Anlage ist 1:1 durch echte  %(backed)s hinterlegt und kann ein- oder ausgezahlt werden. Der Gateway-Dienst wird durch Blocktrades bereitgestellt",
             "win": "",
             "xbts": ""
         },
@@ -1189,7 +1194,7 @@
         "folder": "Konten",
         "hamburger": "Menü öffnen",
         "hamburger_x": "Menü schließen",
-        "hourglass": "Guthaben beanspruchen",
+        "hourglass": "Guthaben einfordern",
         "info_circle_o": "Info",
         "key": "Schlüssel",
         "list": "Weißliste",
@@ -2128,6 +2133,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "Zurück",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Anzeigen der Preisaktion eines Vermögenswerts mithilfe des Preistabellenfelds.",
         "restore_account": "Stellen Sie Ihre lokale Wallet mithilfe Ihrer Sicherungsdatei wieder her!",
         "sell_form": "Platzieren Sie Verkaufsaufträge mit diesem Formular!",
@@ -2312,23 +2318,5 @@
         "wallet_model_3": "<li>Verschiedene Konten</li><li>Wallet Sicherung (Backup) benötigt</li><li>Hohe Sicherheit</li>",
         "wallet_move": "Diese Sicherungsdatei kann auch benutzt werden, um Ihre lokale Wallet, auf einen anderen Browser oder Computer zu benutzen. Damit Sie Ihre lokale Wallet wiederherstellen können, <strong>benötigen Sie auch Ihr Passwort!</strong>",
         "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort."
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Bitte Einzahlungsadresse angeben!",
-            "deposit_warning": "Zahlen Sie keine nicht-%(asset)s Anlagen auf %(asset)s Adresse ein, diese können nicht wiederhergestellt werden!",
-            "fee": "Gateway Gebühr",
-            "get_deposit_address": "Einzahlungsadresse anfordern",
-            "support_block": "Für Unterstützung kontaktieren Sie Winex unter:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimaler Betrag：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Aktueller Betrag ：%(final_number)s",
-            "winAmount": "Minimaler Betrag: %(min_amount)s %(asset)s"
-        }
     }
 }
