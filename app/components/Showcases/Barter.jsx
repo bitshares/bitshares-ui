@@ -8,7 +8,8 @@ import {
     Button,
     Switch,
     Tooltip,
-    Icon
+    Icon,
+    Popover
 } from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
@@ -661,9 +662,7 @@ export default class Barter extends Component {
     checkAmountsTotal() {
         const {from_barter, to_barter, from_account, to_account} = this.state;
         let peer1Amounts = {};
-        let peer1AmountsFormated = [];
         let peer2Amounts = {};
-        let peer2AmountsFormated = [];
 
         // for peer1
         from_barter.forEach(function(item) {
@@ -686,7 +685,7 @@ export default class Barter extends Component {
             }
         });
 
-        peer1AmountsFormated = map(peer1Amounts, (item, key) => {
+        let peer1AmountsFormated = map(peer1Amounts, (item, key) => {
             let balanceOfCurrentAsset = this.getBalance(from_account, key);
             let decimals = Math.max(0, item.precision);
             let formatedBalance = balanceOfCurrentAsset
@@ -721,7 +720,7 @@ export default class Barter extends Component {
             }
         });
 
-        peer2AmountsFormated = map(peer2Amounts, (item, key) => {
+        let peer2AmountsFormated = map(peer2Amounts, (item, key) => {
             let balanceOfCurrentAsset = this.getBalance(to_account, key);
             let decimals = Math.max(0, item.precision);
             let formatedBalance = balanceOfCurrentAsset
@@ -750,69 +749,107 @@ export default class Barter extends Component {
         let isPeer1Warning = peer1.some(item => !!item.warning);
         let isPeer2Warning = peer2.some(item => !!item.warning);
 
-        let peer1Warning = (
+        let peer1Text = counterpart.translate("showcases.barter.peer_left");
+        let peer2Text = counterpart.translate("showcases.barter.peer_right");
+        let peer1Component = isPeer1Warning ? (
+            <div style={{maxWidth: "25rem"}}>
+                {counterpart.translate(
+                    "showcases.barter.balance_warning_tooltip",
+                    {
+                        peer: peer1Text
+                    }
+                )}
+                {peer1.map(item => {
+                    if (item.warning) {
+                        return (
+                            <span
+                                style={{marginRight: "10px"}}
+                                key={item.assetId}
+                            >
+                                <br />
+                                <br />
+                                {counterpart.translate(
+                                    "showcases.barter.balance_warning_line",
+                                    {
+                                        asset_symbol: item.symbol,
+                                        asset_balance: item.balance,
+                                        asset_amount: item.amount
+                                    }
+                                )}
+                                ;
+                            </span>
+                        );
+                    }
+                })}
+            </div>
+        ) : null;
+        let peer2Component = isPeer2Warning ? (
+            <div style={{maxWidth: "25rem"}}>
+                {counterpart.translate(
+                    "showcases.barter.balance_warning_tooltip",
+                    {
+                        peer: peer2Text
+                    }
+                )}
+                {peer2.map(item => {
+                    if (item.warning) {
+                        return (
+                            <span
+                                style={{marginRight: "10px"}}
+                                key={item.assetId}
+                            >
+                                <br />
+                                <br />
+                                {counterpart.translate(
+                                    "showcases.barter.balance_warning_line",
+                                    {
+                                        asset_symbol: item.symbol,
+                                        asset_balance: item.balance,
+                                        asset_amount: item.amount
+                                    }
+                                )}
+                                ;
+                            </span>
+                        );
+                    }
+                })}
+            </div>
+        ) : null;
+
+        return (
             <div className="barter-balance-warning">
                 {isPeer1Warning && (
-                    <div>
-                        <span style={{paddingRight: "5px"}}>
+                    <Popover
+                        content={peer1Component}
+                        title={counterpart.translate(
+                            "showcases.barter.balance_warning"
+                        )}
+                    >
+                        <span style={{paddingRight: "20px", cursor: "help"}}>
+                            {peer1Text + " "}
                             {counterpart.translate(
-                                "showcases.barter.peer_left"
+                                "showcases.barter.balance_warning"
                             )}
-                            :
                         </span>
-                        {peer1.map(item => {
-                            if (item.warning) {
-                                return (
-                                    <span
-                                        style={{marginRight: "10px"}}
-                                        key={item.assetId}
-                                    >
-                                        {counterpart.translate(
-                                            "showcases.barter.balance_warning",
-                                            {
-                                                asset_symbol: item.symbol,
-                                                asset_balance: item.balance,
-                                                asset_amount: item.amount
-                                            }
-                                        )}
-                                    </span>
-                                );
-                            }
-                        })}
-                    </div>
+                    </Popover>
                 )}
                 {isPeer2Warning && (
-                    <div>
-                        <span style={{paddingRight: "5px"}}>
+                    <Popover
+                        content={peer2Component}
+                        title={counterpart.translate(
+                            "showcases.barter.balance_warning"
+                        )}
+                    >
+                        <span style={{paddingRight: "5px", cursor: "help"}}>
+                            {peer2Text + " "}
                             {counterpart.translate(
-                                "showcases.barter.peer_right"
+                                "showcases.barter.balance_warning"
                             )}
-                            :
                         </span>
-                        {peer2.map(item => {
-                            if (item.warning) {
-                                return (
-                                    <span
-                                        style={{marginRight: "10px"}}
-                                        key={item.assetId}
-                                    >
-                                        {counterpart.translate(
-                                            "showcases.barter.balance_warning",
-                                            {
-                                                asset_symbol: item.symbol,
-                                                asset_balance: item.balance,
-                                                asset_amount: item.amount
-                                            }
-                                        )}
-                                    </span>
-                                );
-                            }
-                        })}
-                    </div>
+                    </Popover>
                 )}
             </div>
         );
-        return peer1Warning;
     }
 
     render() {
