@@ -200,6 +200,10 @@ function BindToChainState(Component, options = {}) {
             );
         }
 
+        componentDidCatch(error, errorInfo) {
+            this._errored(error, errorInfo);
+        }
+
         _errored(error, errorInfo) {
             console.error(
                 `BindToChainState(${getDisplayName(Component)})`,
