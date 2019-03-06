@@ -4,6 +4,8 @@ import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
 import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
+import PeriodSelector from "../Utility/PeriodSelector";
+
 import AccountStore from "stores/AccountStore";
 import AccountSelector from "../Account/AccountSelector";
 import TransactionConfirmStore from "stores/TransactionConfirmStore";
@@ -21,7 +23,7 @@ import counterpart from "counterpart";
 import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
-import {Modal, Button, Tooltip, Input} from "bitshares-ui-style-guide";
+import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 
 class DirectDebitModal extends React.Component {
     constructor(props) {
@@ -31,6 +33,7 @@ class DirectDebitModal extends React.Component {
         this._updateFee = debounce(this._updateFee.bind(this), 250);
         this._checkFeeStatus = this._checkFeeStatus.bind(this);
         this._checkBalance = this._checkBalance.bind(this);
+        this._isMounted = false;
     }
 
     getInitialState() {
@@ -53,47 +56,19 @@ class DirectDebitModal extends React.Component {
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
             maxAmount: false,
-            hidden: false
+            hidden: false,
+            num_of_periods: "",
+            period: {amount: "", type: {seconds: 0, name: "Week"}}
         };
     }
 
-    onSubmit(e) {
+    onSubmit = e => {
         e.preventDefault();
-        /* this.setState({error: null});
+        console.log("submitting", e);
+    };
 
-        const {asset} = this.state;
-        let {amount} = this.state;
-        const sendAmount = new Asset({
-            real: amount,
-            asset_id: asset.get("id"),
-            precision: asset.get("precision")
-        });
-
-        this.setState({hidden: true});
-
-        AccountActions.transfer(
-            this.state.from_account.get("id"),
-            this.state.to_account.get("id"),
-            sendAmount.getAmount(),
-            asset.get("id"),
-            this.state.memo
-                ? new Buffer(this.state.memo, "utf-8")
-                : this.state.memo,
-            this.state.propose ? this.state.propose_account : null,
-            this.state.feeAsset ? this.state.feeAsset.get("id") : "1.3.0"
-        )
-            .then(() => {
-                this.onClose();
-                TransactionConfirmStore.unlisten(this.onTrxIncluded);
-                TransactionConfirmStore.listen(this.onTrxIncluded);
-            })
-            .catch(e => {
-                let msg = e.message
-                    ? e.message.split("\n")[1] || e.message
-                    : null;
-                console.log("error: ", e, msg);
-                this.setState({error: msg});
-            }); */
+    componentDidMount() {
+        this._isMounted = true;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -107,30 +82,9 @@ class DirectDebitModal extends React.Component {
         }
     }
 
-    /* shouldComponentUpdate(np, ns) {
-        let {asset_types: current_types} = this._getAvailableAssets();
-        let {asset_types: next_asset_types} = this._getAvailableAssets(ns);
-
-        if (next_asset_types.length === 1) {
-            let asset = ChainStore.getAsset(next_asset_types[0]);
-            if (current_types.length !== 1) {
-                this.onAmountChanged({amount: ns.amount, asset});
-            }
-
-            if (next_asset_types[0] !== this.state.fee_asset_id) {
-                if (asset && this.state.fee_asset_id !== next_asset_types[0]) {
-                    this.setState({
-                        feeAsset: asset,
-                        fee_asset_id: next_asset_types[0]
-                    });
-                }
-            }
-        }
-
-        if (ns.open && !this.state.open) this._checkFeeStatus(ns);
-        if (!ns.open && !this.state.open) return false;
-        return true;
-    } */
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     _checkBalance() {
         const {feeAmount, amount, from_account, asset} = this.state;
@@ -354,6 +308,18 @@ class DirectDebitModal extends React.Component {
         }
     }
 
+    onNumOfPeriodsChanged = e => {
+        let newValue = parseInt(e.target.value, 10);
+        if (!isNaN(newValue) && typeof newValue === "number") {
+            this.setState({num_of_periods: newValue});
+        }
+    };
+
+    onPeriodChanged = ({amount, type}) => {
+        console.log("onPeriodChanged", amount, type);
+        this.setState({period: {amount, type}});
+    };
+
     render() {
         let {
             from_account,
@@ -370,21 +336,23 @@ class DirectDebitModal extends React.Component {
             feeAsset,
             fee_asset_id,
             balanceError,
-            hidden
+            hidden,
+            num_of_periods,
+            period
         } = this.state;
         let from_my_account =
             AccountStore.isMyAccount(from_account) ||
             from_name === this.props.passwordAccount;
-        let from_error = from_account && !from_my_account ? true : false;
+        let from_error = from_account && from_my_account;
 
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
-        console.log("asset_types", asset_types);
 
         let balance = null;
         let balance_fee = null;
 
         // Estimate fee
-        /* let fee = this.state.feeAmount.getAmount({real: true});
+        let fee = this.state.feeAmount.getAmount({real: true});
+
         if (from_account && from_account.get("balances") && !from_error) {
             let account_balances = from_account.get("balances").toJS();
             let _error = this.state.balanceError ? "has-error" : "";
@@ -447,13 +415,13 @@ class DirectDebitModal extends React.Component {
                     </span>
                 );
             }
-        } */
+        }
 
         const amountValue = parseFloat(
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isSubmitNotValid = true;
+        const isSubmitNotValid = false;
 
         return (
             <Modal
@@ -497,7 +465,7 @@ class DirectDebitModal extends React.Component {
                             </div>
                         </div>
                         <div className="content-block transfer-input">
-                            {/*  A M O U N T  */}
+                            {/*  LIMIT */}
                             <AmountSelector
                                 label="showcases.direct_debit.limit_per_period"
                                 amount={amount}
@@ -515,7 +483,33 @@ class DirectDebitModal extends React.Component {
                             />
                         </div>
                         <div className="content-block transfer-input">
-                            <Input />
+                            {/*  PERIOD  */}
+                            <PeriodSelector
+                                label="showcases.direct_debit.period"
+                                inputValue={period.amount}
+                                entries={["Minute", "Hour", "Day", "Week"]}
+                                values={{
+                                    Minute: {seconds: 60, name: "Minute"},
+                                    Hour: {seconds: 3600, name: "Hour"},
+                                    Day: {seconds: 86400, name: "Day"},
+                                    Week: {seconds: 604800, name: "Week"}
+                                }}
+                                periodType={period.type}
+                                onChange={this.onPeriodChanged}
+                            />
+                        </div>
+                        <div className="content-block transfer-input">
+                            {/*  NUMBEER OF PERIODS  */}
+                            <label className="left-label">
+                                {counterpart.translate(
+                                    "showcases.direct_debit.num_of_periods"
+                                )}
+                            </label>
+                            <input
+                                type="number"
+                                value={num_of_periods}
+                                onChange={this.onNumOfPeriodsChanged}
+                            />
                         </div>
                     </form>
                 </div>
