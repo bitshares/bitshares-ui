@@ -7,8 +7,8 @@ import CryptoBridgeWithdrawModal from "./CryptoBridgeWithdrawModal";
 import BaseModal from "../../Modal/BaseModal";
 import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import AccountBalance from "../../Account/AccountBalance";
-import AssetDepositInfo from "components/Utility/AssetDepositInfo";
-import AssetDepositFeeWarning from "../../Utility/AssetDepositFeeWarning";
+import AssetDepositFeeWarning from "components/Utility/AssetDepositFeeWarning";
+import AssetInfo from "components/Utility/AssetInfo";
 import AssetName from "components/Utility/AssetName";
 import assetUtils from "common/asset_utils";
 import LinkToAccountById from "components/Utility/LinkToAccountById";
@@ -569,8 +569,9 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                                 .deposit_fee_minimum
                                         }}
                                     />
-                                    <AssetDepositInfo
+                                    <AssetInfo
                                         asset={{info: this.props.coin_info}}
+                                        type={"deposit"}
                                     />
 
                                     {authenticationInfo}
@@ -797,6 +798,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 asset={this.props.deposit_asset}
                             />:
                         </label>
+                        <AssetInfo
+                            asset={{info: this.props.coin_info}}
+                            type={"withdrawal"}
+                        />
 
                         {authenticationInfo}
                         {authentication}

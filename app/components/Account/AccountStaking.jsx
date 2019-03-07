@@ -8,9 +8,6 @@ import utils from "common/utils";
 import {Apis} from "bitsharesjs-ws";
 import CryptoBridgeActions from "../../actions/CryptoBridgeActions";
 
-const BCO_ASSET_ID = "1.3.1564";
-const BCO_ASSET_PRECISION = 7;
-
 class VestingBalance extends React.Component {
     _onClaim(claimAll, e) {
         e.preventDefault();
@@ -181,7 +178,10 @@ class AccountStaking extends React.Component {
 
         let balances = vbs
             .map(vb => {
-                if (vb.balance.amount && vb.balance.asset_id === BCO_ASSET_ID) {
+                if (
+                    vb.balance.amount &&
+                    vb.balance.asset_id === __BCO_ASSET_ID__
+                ) {
                     return (
                         <VestingBalance
                             key={vb.id}
@@ -199,8 +199,8 @@ class AccountStaking extends React.Component {
             });
 
         const stakeAsset = new Asset({
-            asset_id: BCO_ASSET_ID,
-            precision: BCO_ASSET_PRECISION,
+            asset_id: __BCO_ASSET_ID__,
+            precision: __BCO_ASSET_PRECISION__,
             amount: 0
         });
 
