@@ -431,3 +431,15 @@ body {
     display: flex !important;
     align-items: center;
 }
+
+.date-picker-width100 input.ant-input {
+    height: 2.4rem;
+    background-color: #2d2d2d;
+    border: 0;
+    color: #e0e0e0;
+    border-radius: 6px;
+    &:focus {
+        border: none !important;
+        box-shadow: none;
+    }
+}

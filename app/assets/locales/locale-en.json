@@ -1873,7 +1873,7 @@
             "limit_per_period": "Withdrawal limit per period",
             "period": "Specify period",
             "num_of_periods": "Number of periods",
-            "end_date": "Specify end date"
+            "start_date": "Specify start date"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",

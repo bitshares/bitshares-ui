@@ -24,6 +24,7 @@ import {connect} from "alt-react";
 import classnames from "classnames";
 import {getWalletName} from "branding";
 import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {DatePicker} from "antd";
 
 class DirectDebitModal extends React.Component {
     constructor(props) {
@@ -58,13 +59,40 @@ class DirectDebitModal extends React.Component {
             maxAmount: false,
             hidden: false,
             num_of_periods: "",
-            period: {amount: "", type: {seconds: 0, name: "Week"}}
+            period: {amount: "", type: {seconds: 604800, name: "Week"}},
+            period_start_time: ""
         };
     }
-
+    // TODO: create trx
     onSubmit = e => {
         e.preventDefault();
-        console.log("submitting", e);
+        const {
+            feeAsset,
+            feeAmount,
+            from_account,
+            to_account,
+            amount,
+            asset_id,
+            period,
+            num_of_periods,
+            period_start_time
+        } = this.state;
+        let trxParams = [25];
+        let trxObj = {
+            fee: {
+                amount: feeAmount ? feeAmount.getAmount({real: true}) : 0,
+                asset_id: feeAsset ? feeAsset.get("id") : "1.3.0"
+            },
+            withdraw_from_account: from_account.get("id"),
+            authorized_account: to_account.get("id"),
+            withdrawal_limit: {amount, asset_id},
+            withdrawal_period_sec: period.type.seconds,
+            periods_until_expiration: num_of_periods,
+            period_start_time: period_start_time // in sec or ms?
+        };
+
+        trxParams.push(trxObj);
+        console.log("submitting", trxParams);
     };
 
     componentDidMount() {
@@ -132,8 +160,8 @@ class DirectDebitModal extends React.Component {
                     feeID: a,
                     options: ["price_per_kbyte"],
                     data: {
-                        type: "memo",
-                        content: this.state.memo
+                        type: "memo", // TODO: pick correct type
+                        content: null
                     }
                 })
             );
@@ -188,9 +216,6 @@ class DirectDebitModal extends React.Component {
             if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasBalance;
         }
-        /* if (this.props.isModalVisible) {
-            debugger;
-        } */
         const {from_account, from_error} = state;
         let asset_types = [],
             fee_asset_types = [];
@@ -218,7 +243,8 @@ class DirectDebitModal extends React.Component {
     }
 
     _updateFee(state = this.state) {
-        if (!state.open) return;
+        if (!this.props.isModalVisible) return;
+
         let {fee_asset_id, from_account, asset_id} = state;
         const {fee_asset_types} = this._getAvailableAssets(state);
         if (
@@ -233,10 +259,10 @@ class DirectDebitModal extends React.Component {
             feeID: fee_asset_id,
             options: ["price_per_kbyte"],
             data: {
-                type: "memo",
-                content: state.memo
+                type: "memo", // TODO: pick correct type
+                content: null
             }
-        }).then(({fee, hasBalance, hasPoolBalance}) =>
+        }).then(({fee, hasBalance, hasPoolBalance}) => {
             shouldPayFeeWithAssetAsync(from_account, fee).then(
                 should =>
                     should
@@ -251,17 +277,11 @@ class DirectDebitModal extends React.Component {
                               hasPoolBalance,
                               error: !hasBalance || !hasPoolBalance
                           })
-            )
-        );
+            );
+        });
     }
 
-    /* onFromAccountChanged(from_account) {
-        this.setState({from_account});
-    } */
-
     onToAccountChanged = to_account => {
-        console.log(to_account.toJS());
-
         this.setState({to_account, error: null});
     };
 
@@ -269,7 +289,7 @@ class DirectDebitModal extends React.Component {
         if (!asset) {
             return;
         }
-        console.log("amount changed", amount, asset);
+        //console.log("amount changed", amount, asset);
 
         this.setState(
             {
@@ -316,8 +336,22 @@ class DirectDebitModal extends React.Component {
     };
 
     onPeriodChanged = ({amount, type}) => {
-        console.log("onPeriodChanged", amount, type);
         this.setState({period: {amount, type}});
+    };
+
+    onDatepickerRef(el) {
+        if (el && el.picker.input) {
+            el.picker.input.readOnly = false;
+        }
+    }
+
+    onStartDateChanged = utcValue => {
+        // TODO: format of date?
+        if (utcValue) {
+            this.setState({period_start_time: utcValue.valueOf()}); // time in ms
+        } else {
+            this.setState({period_start_time: ""});
+        }
     };
 
     render() {
@@ -326,19 +360,20 @@ class DirectDebitModal extends React.Component {
             to_account,
             asset,
             asset_id,
-            propose_account,
+
             feeAmount,
             amount,
             error,
             to_name,
             from_name,
-            memo,
+
             feeAsset,
             fee_asset_id,
             balanceError,
             hidden,
             num_of_periods,
-            period
+            period,
+            period_start_time
         } = this.state;
         let from_my_account =
             AccountStore.isMyAccount(from_account) ||
@@ -421,7 +456,17 @@ class DirectDebitModal extends React.Component {
             String.prototype.replace.call(amount, /,/g, "")
         );
         const isAmountValid = amountValue && !isNaN(amountValue);
-        const isSubmitNotValid = false;
+        const isSubmitNotValid =
+            !from_account ||
+            !to_account ||
+            !isAmountValid ||
+            !asset ||
+            from_error ||
+            balanceError ||
+            from_account.get("id") == to_account.get("id") ||
+            !period.amount ||
+            !num_of_periods ||
+            !period_start_time;
 
         return (
             <Modal
@@ -510,6 +555,53 @@ class DirectDebitModal extends React.Component {
                                 value={num_of_periods}
                                 onChange={this.onNumOfPeriodsChanged}
                             />
+                        </div>
+                        <div className="content-block transfer-input">
+                            {/*  START DATE  */}
+                            <label className="left-label">
+                                {counterpart.translate(
+                                    "showcases.direct_debit.start_date"
+                                )}
+                            </label>
+                            <DatePicker
+                                showTime
+                                placeholder=""
+                                onChange={this.onStartDateChanged}
+                                className="date-picker-width100"
+                                style={{width: "100%"}}
+                                ref={el => this.onDatepickerRef(el)}
+                            />
+                        </div>
+                        <div className="content-block transfer-input">
+                            <div className="no-margin no-padding">
+                                {/*  F E E  */}
+                                <div id="txFeeSelector" className="small-12">
+                                    <AmountSelector
+                                        label="transfer.fee"
+                                        disabled={true}
+                                        amount={fee}
+                                        onChange={this.onFeeChanged.bind(this)}
+                                        asset={
+                                            fee_asset_types.length && feeAmount
+                                                ? feeAmount.asset_id
+                                                : fee_asset_types.length === 1
+                                                    ? fee_asset_types[0]
+                                                    : fee_asset_id
+                                                        ? fee_asset_id
+                                                        : fee_asset_types[0]
+                                        }
+                                        assets={fee_asset_types}
+                                        display_balance={balance_fee}
+                                        // tabIndex={tabIndex++}
+                                        error={
+                                            this.state.hasPoolBalance === false
+                                                ? "transfer.errors.insufficient"
+                                                : null
+                                        }
+                                        scroll_length={2}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
