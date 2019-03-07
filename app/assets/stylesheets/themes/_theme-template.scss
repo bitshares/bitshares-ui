@@ -47,15 +47,19 @@
     $modal-bg-color,
     $mobile-input-bg,
     $incognito-bg,
-    $important-bg
+    $message-important-bg,
+    $message-notice-bg
 ) {
     $hamburger-submenu-display-endpoint: 990px;
 
     #incognito {
         background: $incognito-bg;
     }
-    #important {
-        background: $important-bg;
+    .messages > .important {
+        background: $message-important-bg;
+    }
+    .messages > .notice {
+        background: $message-notice-bg;
     }
     .settings-select {
         height: 36px;

@@ -29,7 +29,8 @@ class TosModal extends React.Component {
             us_citizen: null,
             us_citizenRequired: false,
             kyc: null,
-            kycRequired: false
+            kycRequired: false,
+            kycPending: false
         };
 
         CryptoBridgeActions.getLatestTerms();
@@ -67,7 +68,8 @@ class TosModal extends React.Component {
             if (
                 account &&
                 (account.terms.status !== "complete" ||
-                    account.kyc.required === true)
+                    (account.kyc.required === true &&
+                        account.kyc.status !== "complete"))
             ) {
                 this.setState({
                     termsAccount: account.terms,
@@ -81,12 +83,23 @@ class TosModal extends React.Component {
                     kycRequired:
                         account.kyc.required === true &&
                         account.kyc.status !== "complete",
+                    kycPending:
+                        account.kyc.required === true &&
+                        account.kyc.status === "pending",
                     kycEnforced:
                         account.kyc.required === true &&
                         account.kyc.status !== "complete" &&
                         account.kyc.expired
                 });
-                ZfApi.publish(this.props.modalId, "open");
+
+                if (
+                    account.terms.status !== "complete" ||
+                    (account.kyc.required === true &&
+                        account.kyc.status !== "complete" &&
+                        account.kyc.status !== "pending")
+                ) {
+                    ZfApi.publish(this.props.modalId, "open");
+                }
             } else {
                 ZfApi.publish(this.props.modalId, "close");
             }
@@ -180,6 +193,7 @@ class TosModal extends React.Component {
             us_citizenRequired,
             kyc,
             kycRequired,
+            kycPending,
             kycEnforced
         } = this.state;
 
@@ -325,7 +339,9 @@ class TosModal extends React.Component {
                             </div>
                         ) : kycRequired ? (
                             <div>
-                                {kycEnforced ? (
+                                {kycPending ? (
+                                    <Translate content="cryptobridge.account.kyc_info_pending" />
+                                ) : kycEnforced ? (
                                     <Translate content="cryptobridge.account.kyc_info" />
                                 ) : (
                                     <Translate
@@ -356,9 +372,18 @@ class TosModal extends React.Component {
                         ) : kycRequired ? (
                             <a
                                 className="button primary"
-                                onClick={this.onKycStart.bind(this, kyc.link)}
+                                onClick={this.onKycStart.bind(
+                                    this,
+                                    kycPending ? "https://fractal.id" : kyc.link
+                                )}
                             >
-                                <Translate content="cryptobridge.gateway.account_kyc_action_required" />
+                                <Translate
+                                    content={
+                                        kycPending
+                                            ? "cryptobridge.gateway.account_kyc_action_pending"
+                                            : "cryptobridge.gateway.account_kyc_action_required"
+                                    }
+                                />
                             </a>
                         ) : null}
                         <Trigger close={this.props.modalId}>
