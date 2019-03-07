@@ -1,15 +1,26 @@
-#important {
+ul.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0 !important;
+
     width: 100%;
     height: 100%;
+
     text-align: center;
     color: #fff;
     line-height: 1.5;
     font-size: 0.875rem;
-    padding: 0.5rem 2.5rem 0.5rem 1.25rem;
 
-    a {
-        color: #fff;
-        text-decoration: underline;
+    > li {
+        position: relative;
+
+        padding: 0.5rem 2.5rem 0.5rem 1.25rem;
+        margin: 0;
+
+        a {
+            color: #fff;
+            text-decoration: underline;
+        }
     }
 
     .dismiss {

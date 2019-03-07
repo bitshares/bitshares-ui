@@ -28,6 +28,7 @@ class CryptoBridgeStore extends BaseStore {
             "getAccountRequiresKycForcedAction",
             "getAccountRequiresTosAction",
             "getAccountRequiresTosForcedAction",
+            "getAccountKycIsPending",
             "getLatestTerms"
         );
     }
@@ -94,6 +95,15 @@ class CryptoBridgeStore extends BaseStore {
         );
     }
 
+    getAccountRequiresKycAction(accountName) {
+        const {account} = this.accounts.get(accountName, {});
+
+        return (
+            !account ||
+            (account.kyc.required === true && account.kyc.status !== "complete")
+        );
+    }
+
     getAccountRequiresKycForcedAction(accountName) {
         const {account} = this.accounts.get(accountName, {});
 
@@ -101,7 +111,7 @@ class CryptoBridgeStore extends BaseStore {
             !account ||
             (this.getAccountRequiresKycAction(accountName) &&
                 account.kyc.deadline &&
-                new Date(account.kyc.deadline).getTime() < Date.now())
+                account.kyc.expired)
         );
     }
 
@@ -111,7 +121,8 @@ class CryptoBridgeStore extends BaseStore {
         return (
             !account ||
             (this.getAccountRequiresTosAction(accountName) &&
-                new Date(account.terms.latest.deadline).getTime() < Date.now())
+                account.terms.latest.deadline &&
+                account.terms.latest.expired)
         );
     }
 
@@ -124,6 +135,12 @@ class CryptoBridgeStore extends BaseStore {
         }
 
         return true;
+    }
+
+    getAccountKycIsPending(accountName) {
+        const {account} = this.accounts.get(accountName, {});
+
+        return account && account.kyc.status === "pending";
     }
 }
 
