@@ -7,7 +7,7 @@ import SyncError from "./components/SyncError";
 import LoadingIndicator from "./components/LoadingIndicator";
 import BrowserNotifications from "./components/BrowserNotifications/BrowserNotificationsContainer";
 import Header from "components/Layout/Header";
-import Important from "components/Layout/Important";
+import Messages from "components/Layout/Messages";
 import ReactTooltip from "react-tooltip";
 import NotificationSystem from "react-notification-system";
 import TransactionConfirm from "./components/Blockchain/TransactionConfirm";
@@ -433,7 +433,7 @@ class App extends React.Component {
                             )}
                         />
                     ) : null}
-                    <Important />
+                    <Messages />
                     <div id="content-wrapper">
                         {content}
                         <NotificationSystem

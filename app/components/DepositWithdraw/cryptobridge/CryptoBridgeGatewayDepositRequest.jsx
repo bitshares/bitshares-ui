@@ -394,6 +394,10 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
             </div>
         ) : null;
 
+        const kycIsPending = CryptoBridgeStore.getAccountKycIsPending(
+            this.props.account.get("name")
+        );
+
         const authentication = !accountIsAuthenticated ? (
             login
         ) : !accountIsCleared ? (
@@ -419,7 +423,11 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                                 ZfApi.publish("tos_modal", "open");
                             }}
                         >
-                            <Translate content="cryptobridge.gateway.account_kyc_action_required" />
+                            <Translate
+                                content={`cryptobridge.gateway.account_kyc_action_${
+                                    kycIsPending ? "pending" : "required"
+                                }`}
+                            />
                         </button>
                     ) : null}
                 </div>
