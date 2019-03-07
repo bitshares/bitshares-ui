@@ -2066,10 +2066,10 @@
                 "In order to receive funds from another person on CryptoBridge, simply give them your account name: ",
             "account_tos_action_required": "Open Terms of Service",
             "account_tos_action_required_label":
-                "You need to read and accept the Terms of Service",
+                "Accepting the CryptoBridge Terms of Service is required",
             "account_kyc_action_required": "Start user verification",
             "account_kyc_action_required_label":
-                "You need to complete user verification to use CryptoBridge",
+                "US citizens are required to submit user verification to use CryptoBridge",
             "account_kyc_action_pending": "Check your verification status",
             "account_kyc_action_pending_label":
                 "Awaiting user verification by Fractal"
@@ -2120,11 +2120,11 @@
                 "I hereby renounce to my consumer right of revocation and acknowledge I can terminate the use of the service at anytime as described in §5.9 of CryptoBridge's Terms of Service",
             "are_you_us_citizen": "Are you a U.S. citizen?",
             "kyc_info":
-                "To continue using the CryptoBridge gateway, you must complete a user verification process. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored.",
+                "To continue using the CryptoBridge gateway, US citizens must first submit verification of their identity. Proceeding with this requirement will redirect you to our partner, Fractal. Upon completion, full functionality of your account be restored.",
             "kyc_info_grace":
-                "To continue using the CryptoBridge gateway, you must complete a user verification process. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Accepting this requirement will redirect you to our partner, Fractal, and upon completion your access to the full features of the gateway will be restored.",
+                "To continue using the CryptoBridge gateway, US citizens must first submit verification of their identity. There will be a grace period allowing those who do not consent to the verification process to withdraw their funds which ends on %(deadlineDate)s. Proceeding with this requirement will redirect you to our partner, Fractal. Upon completion, full functionality of your account be restored.",
             "kyc_info_pending":
-                "Our systems indicate you have begun the verification process. Trading, deposit and withdraw functionalities will remain disabled until your submission is approved by Fractal (around 24 hours of submitting it). Please contact Fractal for issues related to completion of your verification."
+                "Our systems indicate you have begun the verification process. Trading, deposit and withdraw functionalities will be disabled until complete. Your submission should be approved by Fractal within 24 hours of submitting it. Please contact Fractal for issues related to the status of your verification."
         },
         "dashboard": {
             "all_markets": "All Markets",
