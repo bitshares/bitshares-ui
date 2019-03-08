@@ -2063,7 +2063,16 @@
                 "入金するにはウォレットのロックを解除する必要があります",
             "receive_funds": "資金を受け取る",
             "receive_funds_intro":
-                "BTSを他の人や取引所から受け取るには、あなたのアカウント名を相手に教えてください: "
+                "BTSを他の人や取引所から受け取るには、あなたのアカウント名を相手に教えてください: ",
+            "account_tos_action_required": "利用規約を開く",
+            "account_tos_action_required_label":
+                "CryptoBridge利用規約への同意が必要です",
+            "account_kyc_action_required": "ユーザー認証を開始する",
+            "account_kyc_action_required_label":
+                "米国市民はCryptoBridgeを使用するためにユーザー認証を送信する必要があります",
+            "account_kyc_action_pending": "認証ステータスを確認する",
+            "account_kyc_action_pending_label":
+                "Fractalによる認証を待っています"
         },
         "header": {
             "imprint": "インプリント",
@@ -2109,12 +2118,14 @@
             "terms_and_conditions_accept":
                 "%(cryptobridge_terms_and_conditions)sを読み、同意しました。",
             "terms_and_conditions_accept_disclaimer":
-                "私はここに、消費者取消権を放棄し、CryptoBridge利用規約§5.9にあるようにいつでもサービスの使用を中止できることを理解します",
-            "are_you_us_citizen": "Aあなたは米国市民ですか？",
+                "私はここに、消費者取消権を放棄し、CryptoBridge利用規約§5.9にあるように私はいつでもサービスの使用を中止できることを理解しました",
+            "are_you_us_citizen": "あなたは%(flagImg)s米国市民ですか？",
             "kyc_info":
-                "利用規約に同意していただきありがとうございます。CryptoBridgeゲートウェイの利用を継続するには、ユーザー認証プロセスの完了が必要です。この要件を受け入れる場合、私たちのパートナーであるFractalへ転送され、完了後に再びゲートウェイの全機能にアクセスできるようになります。",
+                "CryptoBridgeゲートウェイの利用を継続するには、米国市民はまず個人情報の認証を行う必要があります。この要件は私たちのパートナーであるFractalへ転送されて進められます。完了後にアカウントの全機能がリストアされます。",
             "kyc_info_grace":
-                "利用規約に同意していただきありがとうございます。CryptoBridgeゲートウェイの利用を継続するには、ユーザー認証プロセスの完了が必要です。認証プロセスに同意しない方には、%(deadlineDate)sまでの出金猶予期間があります。この要件を受け入れる場合、私たちのパートナーであるFractalへ転送され、完了後に再びゲートウェイの全機能にアクセスできるようになります。"
+                "CryptoBridgeゲートウェイの利用を継続するには、米国市民はまず個人情報の認証を行う必要があります。認証プロセスに同意しない方には、%(deadlineDate)sまでの出金猶予期間があります。この要件は私たちのパートナーであるFractalへ転送されて進められます。完了後にアカウントの全機能がリストアされます。",
+            "kyc_info_pending":
+                "システムはあなたのユーザー認証プロセスの開始を検出しました。トレード及び入出金機能は、完了するまで利用できません。あなたの申請はFractalによって24時間以内に承認されます。認証ステータスに関して問題がある場合はFractalへお問い合わせください。"
         },
         "dashboard": {
             "all_markets": "すべてのマーケット",
