@@ -1405,6 +1405,53 @@
             "withdraw": "Withdraw"
         }
     },
+    "validation": {
+        "messages": {
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s"
+            },
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "balance": "Insufficient balance. Available only: %(balance)s",
+
+            "test": ""
+        }
+    },
     "news": {
         "author": "Author",
         "errors": {
@@ -1412,6 +1459,29 @@
         },
         "news": "News",
         "subject": "Subject"
+    },
+    "scaled_orders": {
+        "please_log_in": "You need to login before use Scaled Orders",
+        "title": "Scaled Order",
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "distribution": {
+            "title": "Distribution",
+            "flat": "Flat"
+        },
+        "order_count": "Order Count",
+        "action": {
+            "title": "Action",
+            "buy": "Buy",
+            "sell": "Sell"
+        },
+        "total": "Total",
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "preview_table": {
+            "price": "Price"
+        }
     },
     "notifications": {
         "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
@@ -1422,6 +1492,7 @@
         "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
         "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
@@ -2318,23 +2389,5 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

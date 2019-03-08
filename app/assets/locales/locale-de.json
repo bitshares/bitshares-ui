@@ -64,7 +64,7 @@
             "available": "Zur Beanspruchung verfügbar",
             "basic": "Grundmitglied",
             "cashback": "Skonto",
-            "claim": "Guthaben beanspruchen",
+            "claim": "Guthaben einfordern",
             "coindays": "Münztage",
             "earned": "Erworbene Münztage",
             "expires": "endet",
@@ -717,8 +717,8 @@
                 "title": "Collateral Bids"
             },
             "fee_pool": {
-                "claim_balance": "Gebührenguthaben beanspruchen",
-                "claim_fees": "Gebühren beanspruchen",
+                "claim_balance": "Gebührenguthaben einfordern",
+                "claim_fees": "Gebühren einfordern",
                 "claim_pool_text": "Der Eigentümer der Anlage kann mit diesem Formular Kapital vom Gebührenspeicher abheben:",
                 "claim_text": "Der Anlagen-Herausgeber kann die zusammengetragenen Anteile hier beanspruchen",
                 "core_exchange_rate": "Kernhandelsrate",
@@ -1194,7 +1194,7 @@
         "folder": "Konten",
         "hamburger": "Menü öffnen",
         "hamburger_x": "Menü schließen",
-        "hourglass": "Guthaben beanspruchen",
+        "hourglass": "Guthaben einfordern",
         "info_circle_o": "Info",
         "key": "Schlüssel",
         "list": "Weißliste",
@@ -2318,23 +2318,5 @@
         "wallet_model_3": "<li>Verschiedene Konten</li><li>Wallet Sicherung (Backup) benötigt</li><li>Hohe Sicherheit</li>",
         "wallet_move": "Diese Sicherungsdatei kann auch benutzt werden, um Ihre lokale Wallet, auf einen anderen Browser oder Computer zu benutzen. Damit Sie Ihre lokale Wallet wiederherstellen können, <strong>benötigen Sie auch Ihr Passwort!</strong>",
         "wallet_password": "Anmeldung von überall möglich, durch Ihr Passwort."
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Bitte Einzahlungsadresse angeben!",
-            "deposit_warning": "Zahlen Sie keine nicht-%(asset)s Anlagen auf %(asset)s Adresse ein, diese können nicht wiederhergestellt werden!",
-            "fee": "Gateway Gebühr",
-            "get_deposit_address": "Einzahlungsadresse anfordern",
-            "support_block": "Für Unterstützung kontaktieren Sie Winex unter:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimaler Betrag：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Aktueller Betrag ：%(final_number)s",
-            "winAmount": "Minimaler Betrag: %(min_amount)s %(asset)s"
-        }
     }
 }
