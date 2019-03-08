@@ -721,7 +721,7 @@ class AccountPortfolioList extends React.Component {
                     <td>
                         {this._renderGatewayAction(
                             "withdraw",
-                            canDeposit,
+                            canWithdraw,
                             assetName,
                             emptyCell
                         )}
