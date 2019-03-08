@@ -369,7 +369,19 @@ class CreateAccountPassword extends React.Component {
 
                     <section style={{padding: "1rem 0"}}>
                         <label className="left-label">
-                            <Translate content="cryptobridge.account.are_you_us_citizen" />
+                            <Translate
+                                content="cryptobridge.account.are_you_us_citizen"
+                                with={{
+                                    flagImg: (
+                                        <img
+                                            height={20}
+                                            width={20}
+                                            style={{marginLeft: 5}}
+                                            src={`${__BASE_URL__}language-dropdown/US.png`}
+                                        />
+                                    )
+                                }}
+                            />
                         </label>
                         <label
                             htmlFor="us_citizen_yes"
