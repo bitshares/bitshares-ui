@@ -2118,7 +2118,7 @@
                 "I have read and agree to the %(cryptobridge_terms_and_conditions)s",
             "terms_and_conditions_accept_disclaimer":
                 "I hereby renounce to my consumer right of revocation and acknowledge I can terminate the use of the service at anytime as described in §5.9 of CryptoBridge's Terms of Service",
-            "are_you_us_citizen": "Are you a U.S. citizen?",
+            "are_you_us_citizen": "Are you a %(flagImg)s U.S. citizen?",
             "kyc_info":
                 "To continue using the CryptoBridge gateway, US citizens must first submit verification of their identity. Proceeding with this requirement will redirect you to our partner, Fractal. Upon completion, full functionality of your account be restored.",
             "kyc_info_grace":
