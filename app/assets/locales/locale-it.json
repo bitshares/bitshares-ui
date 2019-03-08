@@ -1832,7 +1832,7 @@
         "filter_ops": "Usa questa lista per filtrare il tuo storico secondo il tipo di operazione.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "La password generata è stata creata localmente nel tuo browser. <br /><br /><strong>Nessuno oltre a te ha accesso ad essa</strong>.<br /><br /> Incollala sotto e salvane una copia in un posto sicuro",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -2313,23 +2313,5 @@
         "wallet_model_3": "<li>Account multipli</li><li>Necessario file di backup del portafoglio</li><li>Alta sicurezza</li>",
         "wallet_move": "Questo file di backup può anche essere usato per spostare il tuo portafoglio su un altro computer o un altro browser. Per recuperare il tuo portafoglio usando questo backup <strong>avrai anche bisogno della password!</strong>",
         "wallet_password": "Fai il login dovunque usando la tua password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

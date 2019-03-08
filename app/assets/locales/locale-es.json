@@ -1838,7 +1838,7 @@
         "filter_ops": "Use esta lista para filtrar su historial por tipo de operación.",
         "follow_user": "Usted está siguiendo a este usuario",
         "follow_user_add": "Haga clic para seguir a este usuario",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "La contraseña generada fue creada por su navegador, localmente. <br /><br /><strong>Nadie más que tú tiene acceso a ella</strong>.<br /><br /> Pégalo a continuación y guarda una copia en un lugar seguro ",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -2319,23 +2319,5 @@
         "wallet_model_3": "<li>Multiples cuentas</li><li>Se requiere una copia de seguridad del archivo Wallet</li><li>Alta seguridad</li>",
         "wallet_move": "Este archivo de respaldo también se puede usar para mover su billetera local a diferentes computadoras o navegadores diferentes. ¡Para restaurar su billetera local usando esta copia de seguridad <strong>, también necesitará su contraseña </strong>",
         "wallet_password": "Inicie sesión en cualquier lugar con su contraseña"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Por favor, obtenga la dirección de depósito",
-            "deposit_warning": "No deposites no-%(asset)s activos dentro %(asset)s dirección, de lo contrario no serán recuperados.",
-            "fee": "Gateway Cuota",
-            "get_deposit_address": "obtener dirección de depósito",
-            "support_block": "Para soporte, contacte a Winex en"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Monto minimo：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Monto actual：%(final_number)s",
-            "winAmount": "Monto minimo: %(min_amount)s %(asset)s"
-        }
     }
 }
