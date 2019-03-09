@@ -20,7 +20,7 @@ class ShowcaseGrid extends Component {
     componentWillReceiveProps(np) {
         if (np.currentAccount !== this.props.currentAccount) {
             this.setState({
-                currentAccount: ChainStore.getAccount(np.props.currentAccount)
+                currentAccount: ChainStore.getAccount(np.currentAccount)
             });
         }
     }
@@ -61,21 +61,28 @@ class ShowcaseGrid extends Component {
                     : "Please login to use this functionality"
             },
             {
-                title: "showcases.barter_transaction.title",
-                target: () => {},
-                description: "showcases.barter_transaction.description",
+                title: "showcases.barter.title",
+                target: event => {
+                    thiz.props.history.push("/barter");
+                },
+                description: "showcases.barter.description",
                 icon: "barter",
-                disabled: true,
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.borrow.title",
-                target: () => {},
+                target: () => {
+                    if (hasAccount) {
+                        thiz.props.history.push("/borrow");
+                    }
+                },
                 description: "showcases.borrow.description",
                 icon: "borrow",
-                disabled:
-                    "Easy wizard coming soon. Already available in Dashboard > Margin Positions",
-                comingSoon: true
+                disabled: hasAccount
+                    ? false
+                    : "Please login to use this functionality"
             },
             {
                 title: "showcases.direct_debit.title",

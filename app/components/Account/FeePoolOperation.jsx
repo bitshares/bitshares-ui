@@ -117,7 +117,8 @@ class FeePoolOperation extends React.Component {
         }
         const balanceText = (
             <span>
-                <Translate component="span" content="transfer.available" />:&nbsp;
+                <Translate component="span" content="transfer.available" />
+                :&nbsp;
                 <FormattedAsset amount={balance} asset={coreID} />
             </span>
         );
@@ -199,7 +200,8 @@ class FeePoolOperation extends React.Component {
                     });
                 }}
             >
-                <Translate component="span" content="transfer.available" />:&nbsp;
+                <Translate component="span" content="transfer.available" />
+                :&nbsp;
                 <FormattedAsset
                     amount={dynamicObject.get("fee_pool")}
                     asset={coreID}
@@ -259,7 +261,8 @@ class FeePoolOperation extends React.Component {
 
         let unclaimedBalanceText = (
             <span>
-                <Translate component="span" content="transfer.available" />:&nbsp;
+                <Translate component="span" content="transfer.available" />
+                :&nbsp;
                 <FormattedAsset
                     amount={unclaimedBalance}
                     asset={asset.get("id")}
@@ -275,7 +278,8 @@ class FeePoolOperation extends React.Component {
                     asset={asset.get("symbol")}
                 />
                 <div style={{paddingBottom: "1rem"}}>
-                    <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />:&nbsp;
+                    <Translate content="explorer.asset.fee_pool.unclaimed_issuer_income" />
+                    :&nbsp;
                     {dynamicObject ? (
                         <FormattedAsset
                             amount={dynamicObject.get("accumulated_fees")}

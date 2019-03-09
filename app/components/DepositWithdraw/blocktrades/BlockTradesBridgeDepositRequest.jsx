@@ -636,9 +636,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     if (
                         input_coin_info.backingCoinType !=
                             pair.outputCoinType &&
-                        output_coin_info && output_coin_info.backingCoinType !=
+                        output_coin_info &&
+                        output_coin_info.backingCoinType !=
                             pair.inputCoinType &&
-                        input_coin_info && input_coin_info.restricted == false &&
+                        input_coin_info &&
+                        input_coin_info.restricted == false &&
                         output_coin_info.restricted == false
                     ) {
                         // filter out mappings where one of the wallets is offline
@@ -1035,8 +1037,11 @@ class BlockTradesBridgeDepositRequest extends React.Component {
                     let input_coin_info = coins_by_type[pair.inputCoinType];
                     let output_coin_info = coins_by_type[pair.outputCoinType];
                     if (
-                        output_coin_info && output_coin_info.backingCoinType != pair.inputCoinType &&
-                        input_coin_info && input_coin_info.backingCoinType != pair.outputCoinType
+                        output_coin_info &&
+                        output_coin_info.backingCoinType !=
+                            pair.inputCoinType &&
+                        input_coin_info &&
+                        input_coin_info.backingCoinType != pair.outputCoinType
                     ) {
                         if (
                             active_wallets.indexOf(

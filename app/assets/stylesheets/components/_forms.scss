@@ -409,3 +409,14 @@ input[type="text"].input-button {
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
+
+body {
+    .add-memo-btn.add-memo-btn {
+        padding: 0 !important;
+        border: none;
+        position: absolute;
+        z-index: 1;
+        bottom: 8px;
+        left: -25px;
+    }
+}

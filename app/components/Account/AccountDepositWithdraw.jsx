@@ -6,7 +6,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import CitadelGateway from "../DepositWithdraw/citadel/CitadelGateway";
 import OpenledgerGateway from "../DepositWithdraw/OpenledgerGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
@@ -23,7 +22,6 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
-import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
 import DepositModal from "../Modal/DepositModal";
@@ -458,53 +456,49 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        /***
-         * Citadel Disabled due to CORS Errors
-         */
-        // serList.push({
-        //     name: "Citadel",
-        //     template: (
-        //         <div>
-        //             <div className="content-block">
-        //                 {/* <div className="float-right"><a href="https://blocktrades.us" target="__blank" rel="noopener noreferrer"><Translate content="gateway.website" /></a></div> */}
-        //                 <div
-        //                     className="service-selector"
-        //                     style={{marginBottom: "2rem"}}
-        //                 >
-        //                     <ul className="button-group segmented no-margin">
-        //                         <li
-        //                             onClick={this.toggleCitadelService.bind(
-        //                                 this,
-        //                                 "bridge"
-        //                             )}
-        //                             className={
-        //                                 citadelService === "bridge"
-        //                                     ? "is-active"
-        //                                     : ""
-        //                             }
-        //                         >
-        //                             <a>
-        //                                 <Translate content="gateway.bridge" />
-        //                             </a>
-        //                         </li>
-        //                     </ul>
-        //                 </div>
-        //                 <CitadelBridgeDepositRequest
-        //                     gateway="citadel"
-        //                     issuer_account="citadel-wallet"
-        //                     account={account}
-        //                     initial_deposit_input_coin_type="xmr"
-        //                     initial_deposit_output_coin_type="citadel.monero"
-        //                     initial_deposit_estimated_input_amount="1.0"
-        //                     initial_withdraw_input_coin_type="citadel.monero"
-        //                     initial_withdraw_output_coin_type="xmr"
-        //                     initial_withdraw_estimated_input_amount="1.0"
-        //                 />
-        //             </div>
-        //             <div className="content-block" />
-        //         </div>
-        //     )
-        // });
+        serList.push({
+            name: "Citadel",
+            template: (
+                <div>
+                    <div className="content-block">
+                        <div
+                            className="service-selector"
+                            style={{marginBottom: "2rem"}}
+                        >
+                            <ul className="button-group segmented no-margin">
+                                <li
+                                    onClick={this.toggleCitadelService.bind(
+                                        this,
+                                        "bridge"
+                                    )}
+                                    className={
+                                        citadelService === "bridge"
+                                            ? "is-active"
+                                            : ""
+                                    }
+                                >
+                                    <a>
+                                        <Translate content="gateway.bridge" />
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <CitadelBridgeDepositRequest
+                            gateway="citadel"
+                            issuer_account="citadel-wallet"
+                            account={account}
+                            initial_deposit_input_coin_type="xmr"
+                            initial_deposit_output_coin_type="citadel.monero"
+                            initial_deposit_estimated_input_amount="1.0"
+                            initial_withdraw_input_coin_type="citadel.monero"
+                            initial_withdraw_output_coin_type="xmr"
+                            initial_withdraw_estimated_input_amount="1.0"
+                        />
+                    </div>
+                    <div className="content-block" />
+                </div>
+            )
+        });
 
         serList.push({
             name: "BitKapital",
@@ -524,18 +518,6 @@ class AccountDepositWithdraw extends React.Component {
                 </div>
             )
         });
-
-        /***
-         * Winex Dsiabled due to WebFetch issues on failure
-         */
-        // serList.push({
-        //     name: "Winex",
-        //     template: (
-        //         <div>
-        //             <WinexGateway account={account} provider="Winex" />
-        //         </div>
-        //     )
-        // });
 
         return serList;
     }
@@ -600,7 +582,6 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         const serviceNames = [
-            "Winex",
             "GDEX",
             "OPEN",
             "RUDEX",
@@ -801,10 +782,6 @@ export default connect(
                 ),
                 citadelBackedCoins: GatewayStore.getState().backedCoins.get(
                     "CITADEL",
-                    []
-                ),
-                winexBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "WIN",
                     []
                 ),
                 xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(
