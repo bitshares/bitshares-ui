@@ -272,7 +272,8 @@ class AccountSelector extends React.Component {
                         id: accountName,
                         label: accountName,
                         status: counterpart.translate(account_status_text),
-                        isFavorite: myActiveAccounts.has(accountName) || contacts.has(accountName),
+                        isOwn: myActiveAccounts.has(accountName),
+                        isFavorite: contacts.has(accountName),
                         isKnownScammer: accountUtils.isKnownScammer(accountName),
                         className: accountUtils.isKnownScammer(accountName)
                             ? "negative"
@@ -303,7 +304,8 @@ class AccountSelector extends React.Component {
                 id: this.props.accountName,
                 label: this.props.accountName,
                 status: _account_status_text,
-                isFavorite: myActiveAccounts.has(accountName) || contacts.has(accountName),
+                isOwn: myActiveAccounts.has(accountName),
+                isFavorite: contacts.has(accountName),
                 isKnownScammer: accountUtils.isKnownScammer(accountName),
                 className:
                     accountUtils.isKnownScammer(accountName) || !_account
@@ -321,53 +323,74 @@ class AccountSelector extends React.Component {
             else return -1;
         });
 
-        let linked_status = !this.props.account ? null : myActiveAccounts.has(
-            account.get("name")
-        ) || contacts.has(account.get("name")) ? (
-            <Tooltip
-                placement="top"
-                title={counterpart.translate("tooltip.follow_user")}
-                onClick={this._onRemoveContact.bind(this)}
-            >
-                <span className="tooltip green">
-                    <Icon
-                        style={{
-                            position: "absolute",
-                            top: "-0.15em",
-                            right: ".2em"
-                        }}
-                        name="user"
-                        title="icons.user.following"
-                    />
-                </span>
-            </Tooltip>
-        ) : (
-            <Tooltip
-                placement="top"
-                title={counterpart.translate("tooltip.follow_user_add")}
-                onClick={this._onAddContact.bind(this)}
-            >
-                <span className="tooltip">
-                    <Icon
-                        style={{
-                            position: "absolute",
-                            top: "-0.05em",
-                            right: ".2em"
-                        }}
-                        name="plus-circle"
-                        title="icons.plus_circle.add_contact"
-                    />
-                </span>
-            </Tooltip>
-        );
+
+        let linked_status;
+
+        if(!this.props.account) {
+            linked_status = null;
+        } else if(myActiveAccounts.has(account.get("name"))) {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.own_account")}
+                >
+                    <span className="tooltip green">
+                        <AntIcon type="user" />
+                    </span>
+                </Tooltip>
+            );
+        } else if(accountUtils.isKnownScammer(account.get("name"))) {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.scam_account")}
+                >
+                    <span className="tooltip red">
+                        <AntIcon
+                            type="warning"
+                            theme="filled"
+                        />
+                    </span>
+                </Tooltip>
+            );
+        } else if(contacts.has(account.get("name"))) {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.follow_user")}
+                    onClick={this._onRemoveContact.bind(this)}
+                >
+                    <span className="tooltip green">
+                        <AntIcon
+                            type="star"
+                            theme="filled"
+                        />
+                    </span>
+                </Tooltip>
+            );
+        } else {
+            linked_status = (
+                <Tooltip
+                    placement="top"
+                    title={counterpart.translate("tooltip.follow_user_add")}
+                    onClick={this._onAddContact.bind(this)}
+                >
+                    <span className="tooltip">
+                        <AntIcon type="star" />
+                    </span>
+                </Tooltip>
+            );
+        }
 
         let disabledAction = !(account || inputType === "pubkey") || error || disableActionButton;
 
-
-
         return (
-            <div className="account-selector" style={this.props.style}>
-                <div className="content-area">
+            <Form className="full-width" layout="vertical" style={this.props.style}>
+                <Form.Item 
+                    label={this.props.label ? counterpart.translate(this.props.label) : ""}
+                    validateStatus={error ? "error" : null} 
+                    help={error ? error : null}
+                >
                     {this.props.label ? (
                         <div
                             className={
@@ -378,13 +401,14 @@ class AccountSelector extends React.Component {
                             <label
                                 className={cnames(
                                     "right-label",
-                                    account && account.isFavorite
+                                    account && (account.isFavorite || account.isOwn)
                                         ? "positive"
                                         : null,
                                     account && account.isKnownScammer
                                         ? "negative"
                                         : null
                                 )}
+                                style={{marginTop: -30}}
                             >
                                 <span style={{paddingRight: "1.5rem"}}>
                                     {account && account.statusText}
@@ -393,15 +417,9 @@ class AccountSelector extends React.Component {
                                 </span>
                                 {linked_status}
                             </label>
-
-                            <Translate
-                                className={"left-label " + (labelClass || "")}
-                                component="label"
-                                content={this.props.label}
-                            />
-                            {useHR && <hr />}
                         </div>
                     ) : null}
+                    {useHR && <hr />}
                     <Tooltip className="input-area" title={this.props.tooltip}>
                         <div className="inline-label input-wrapper">
                             {account && account.accountType === "pubkey" ? (
@@ -432,6 +450,7 @@ class AccountSelector extends React.Component {
                                     onChange={this.onInputChanged.bind(this)}
                                     onSearch={this.onInputChanged.bind(this)}
                                     placeholder={counterpart.translate("account.search")}
+                                    value={account ? accountName : null}
                                 >
                                     {typeAheadAccounts.map(account => (
                                         <Select.Option
@@ -439,6 +458,7 @@ class AccountSelector extends React.Component {
                                             value={account.label}
                                             disabled={account.disabled}
                                         >
+                                            {account.isOwn ? <AntIcon type="user" /> : null}
                                             {account.isFavorite ? <AntIcon type="star" /> : null}
                                             {account.isKnownScammer ? <AntIcon type="warning" /> : null}
                                             &nbsp;
@@ -450,31 +470,29 @@ class AccountSelector extends React.Component {
                                     ))}
                                 </Select>
                             ) : (
-                                <Form.Item validateStatus={error ? "error" : null} help={error ? error : null} style={{width: "100%"}}>
-                                    <Input 
-                                        style={{
-                                            textTransform:
-                                                this.getInputType(accountName) ===
-                                                "pubkey"
-                                                    ? null
-                                                    : "lowercase",
-                                            fontVariant: "initial"
-                                        }}
-                                        name="username"
-                                        id="username"
-                                        autoComplete="username"
-                                        type="text"
-                                        value={this.props.accountName || ""}
-                                        placeholder={
-                                            this.props.placeholder ||
-                                            counterpart.translate("account.name")
-                                        }
-                                        ref="user_input"
-                                        onChange={this.onInputChanged.bind(this)}
-                                        onKeyDown={this.onKeyDown.bind(this)}
-                                        tabIndex={this.props.tabIndex}
-                                    />
-                                </Form.Item>
+                                <Input 
+                                    style={{
+                                        textTransform:
+                                            this.getInputType(accountName) ===
+                                            "pubkey"
+                                                ? null
+                                                : "lowercase",
+                                        fontVariant: "initial"
+                                    }}
+                                    name="username"
+                                    id="username"
+                                    autoComplete="username"
+                                    type="text"
+                                    value={this.props.accountName || ""}
+                                    placeholder={
+                                        this.props.placeholder ||
+                                        counterpart.translate("account.name")
+                                    }
+                                    ref="user_input"
+                                    onChange={this.onInputChanged.bind(this)}
+                                    onKeyDown={this.onKeyDown.bind(this)}
+                                    tabIndex={this.props.tabIndex}
+                                />
                             )}
                             {this.props.children}
                             {this.props.onAction ? (
@@ -494,9 +512,9 @@ class AccountSelector extends React.Component {
                                 
                             ) : null}
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </Tooltip>
+                </Form.Item>
+            </Form>
         );
     }
 }
