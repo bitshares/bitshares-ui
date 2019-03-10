@@ -1028,17 +1028,19 @@ class WithdrawModalNew extends React.Component {
                         <div style={{marginBottom: "1em"}}>
                             {selectedGateway
                                 ? gatewaySelector.call(this, {
-                                      selectedGateway,
-                                      gatewayStatus,
-                                      nAvailableGateways,
-                                      availableGateways:
-                                          coinToGatewayMapping[selectedAsset],
-                                      error: false,
-                                      onGatewayChanged: this.onGatewayChanged.bind(
-                                          this
-                                      )
-                                  })
-                                : null}
+                                    selectedGateway,
+                                    gatewayStatus,
+                                    nAvailableGateways,
+                                    availableGateways:
+                                        coinToGatewayMapping[selectedAsset],
+                                    error: false,
+                                    onGatewayChanged: this.onGatewayChanged.bind(
+                                        this
+                                    ),
+                                    selectedAsset,
+                                    balances,
+                                    assets
+                                }) : null}
                         </div>
 
                         {/*QUANTITY*/}
