@@ -79,6 +79,7 @@ class Accounts extends React.Component {
 
         let dataSource = [];
         let columns = [];
+        let balanceCache = [];
 
         columns = [
             {
@@ -155,11 +156,26 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalance",
                 sorter: (a, b) => {
-                    a.accountBalance = parseFloat(a.accountBalance);
-                    b.accountBalance = parseFloat(b.accountBalance);
-                    return a.accountBalance > b.accountBalance
+                    let a_balance = 0;
+                    let b_balance = 0;
+
+                    if(a.accountBalance && typeof(a.accountBalance) === "string") {
+                        if(!balanceCache[a.accountBalance]) {
+                            balanceCache[a.accountBalance] = parseFloat(ChainStore.getObject(a.accountBalance).get("balance"));
+                        }
+                        a_balance = balanceCache[a.accountBalance];
+                    }
+
+                    if(b.accountBalance && typeof(b.accountBalance) === "string") {
+                        if(!balanceCache[b.accountBalance]) {
+                            balanceCache[b.accountBalance] = parseFloat(ChainStore.getObject(b.accountBalance).get("balance"));
+                        }
+                        b_balance = balanceCache[b.accountBalance];
+                    }
+
+                    return a_balance > b_balance
                         ? 1
-                        : a.accountBalance < b.accountBalance
+                        : a_balance < b_balance
                             ? -1
                             : 0;
                 },
@@ -177,14 +193,29 @@ class Accounts extends React.Component {
             },
             {
                 title: <Translate component="span" content="account.percent" />,
-                dataIndex: "accountPercentages",
-                key: "accountPercentages",
+                dataIndex: "accountBalance",
+                key: "accountBalancePercentage",
                 sorter: (a, b) => {
-                    a.accountPercentages = parseFloat(a.accountPercentages);
-                    b.accountPercentages = parseFloat(b.accountPercentages);
-                    return a.accountPercentages > b.accountPercentages
+                    let a_balance = 0;
+                    let b_balance = 0;
+
+                    if(a.accountBalance && typeof(a.accountBalance) === "string") {
+                        if(!balanceCache[a.accountBalance]) {
+                            balanceCache[a.accountBalance] = parseFloat(ChainStore.getObject(a.accountBalance).get("balance"));
+                        }
+                        a_balance = balanceCache[a.accountBalance];
+                    }
+
+                    if(b.accountBalance && typeof(b.accountBalance) === "string") {
+                        if(!balanceCache[b.accountBalance]) {
+                            balanceCache[b.accountBalance] = parseFloat(ChainStore.getObject(b.accountBalance).get("balance"));
+                        }
+                        b_balance = balanceCache[b.accountBalance];
+                    }
+
+                    return a_balance > b_balance
                         ? 1
-                        : a.accountPercentages < b.accountPercentages
+                        : a_balance < b_balance
                             ? -1
                             : 0;
                 },
@@ -242,7 +273,6 @@ class Accounts extends React.Component {
                             .accountContacts,
                         accountName: name,
                         accountBalance: balance,
-                        accountPercentages: balance
                     });
                 });
         }
