@@ -9,7 +9,8 @@ import {
     Switch,
     Tooltip,
     Icon,
-    Popover
+    Popover,
+    Alert
 } from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
@@ -819,7 +820,7 @@ export default class Barter extends Component {
         ) : null;
 
         return (
-            <div className="barter-balance-warning">
+            <span className="barter-balance-warning">
                 {isPeer1Warning && (
                     <Popover
                         content={peer1Component}
@@ -827,11 +828,22 @@ export default class Barter extends Component {
                             "showcases.barter.balance_warning"
                         )}
                     >
-                        <span style={{paddingRight: "20px", cursor: "help"}}>
-                            {peer1Text + " "}
-                            {counterpart.translate(
-                                "showcases.barter.balance_warning"
-                            )}
+                        <span style={{cursor: "help"}}>
+                            <Alert
+                                style={{
+                                    display: "inline",
+                                    marginRight: "1rem"
+                                }}
+                                message={
+                                    peer1Text +
+                                    " " +
+                                    counterpart.translate(
+                                        "showcases.barter.balance_warning"
+                                    )
+                                }
+                                type="warning"
+                                showIcon
+                            />
                         </span>
                     </Popover>
                 )}
@@ -842,15 +854,23 @@ export default class Barter extends Component {
                             "showcases.barter.balance_warning"
                         )}
                     >
-                        <span style={{paddingRight: "5px", cursor: "help"}}>
-                            {peer2Text + " "}
-                            {counterpart.translate(
-                                "showcases.barter.balance_warning"
-                            )}
+                        <span style={{cursor: "help"}}>
+                            <Alert
+                                style={{display: "inline"}}
+                                message={
+                                    peer2Text +
+                                    " " +
+                                    counterpart.translate(
+                                        "showcases.barter.balance_warning"
+                                    )
+                                }
+                                type="warning"
+                                showIcon
+                            />
                         </span>
                     </Popover>
                 )}
-            </div>
+            </span>
         );
     }
 
@@ -1691,7 +1711,7 @@ export default class Barter extends Component {
                                 {counterpart.translate("propose")}
                             </Button>
                         </Tooltip>
-                        {this.renderBalanceWarnings()}
+                        {!isSubmitNotValid && this.renderBalanceWarnings()}
                     </div>
                 </Card>
             </div>
