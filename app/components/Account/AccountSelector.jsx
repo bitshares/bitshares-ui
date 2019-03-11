@@ -410,7 +410,7 @@ class AccountSelector extends React.Component {
                                 )}
                                 style={{marginTop: -30}}
                             >
-                                <span style={{paddingRight: "1.5rem"}}>
+                                <span style={{paddingRight: "0.5rem"}}>
                                     {account && account.statusText}
                                     &nbsp;
                                     {!!displayText && displayText}
