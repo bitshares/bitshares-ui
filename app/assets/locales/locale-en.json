@@ -1820,7 +1820,7 @@
             "title": "Barter",
             "total_fees": "Total fees: %(fee)s %(asset)s",
             "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter",
-            "balance_warning_line": "Asset %(asset_symbol)s: required %(asset_amount)s, available balance %(asset_balance)s"
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s"
         },
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",

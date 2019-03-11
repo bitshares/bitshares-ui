@@ -759,25 +759,27 @@ export default class Barter extends Component {
                         peer: peer1Text
                     }
                 )}
+                <br />
                 {peer1.map(item => {
                     if (item.warning) {
                         return (
-                            <span
-                                style={{marginRight: "10px"}}
-                                key={item.assetId}
-                            >
+                            <React.Fragment>
                                 <br />
-                                <br />
-                                {counterpart.translate(
-                                    "showcases.barter.balance_warning_line",
-                                    {
-                                        asset_symbol: item.symbol,
-                                        asset_balance: item.balance,
-                                        asset_amount: item.amount
-                                    }
-                                )}
-                                ;
-                            </span>
+                                <span
+                                    style={{marginRight: "10px"}}
+                                    key={item.assetId}
+                                >
+                                    {" - " +
+                                        counterpart.translate(
+                                            "showcases.barter.balance_warning_line",
+                                            {
+                                                asset_symbol: item.symbol,
+                                                asset_balance: item.balance,
+                                                asset_amount: item.amount
+                                            }
+                                        )}
+                                </span>
+                            </React.Fragment>
                         );
                     }
                 })}
