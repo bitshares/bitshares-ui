@@ -1,6 +1,12 @@
 import {Apis} from "bitsharesjs-ws";
 import {ChainStore, FetchChain} from "bitsharesjs";
-import {Tabs, Collapse, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {
+    Tabs,
+    Collapse,
+    Icon as AntIcon,
+    Button,
+    Tooltip
+} from "bitshares-ui-style-guide";
 import cnames from "classnames";
 import translator from "counterpart";
 import guide from "intro.js";
@@ -35,8 +41,8 @@ import SimpleDepositWithdraw from "../Dashboard/SimpleDepositWithdraw";
 import SimpleDepositBlocktradesBridge from "../Dashboard/SimpleDepositBlocktradesBridge";
 import {Notification} from "bitshares-ui-style-guide";
 import PriceAlert from "./PriceAlert";
+import ScaledOrder from "./ScaledOrder";
 import counterpart from "counterpart";
-import {updateGatewayBackers} from "common/gatewayUtils";
 
 class Exchange extends React.Component {
     static propTypes = {
@@ -109,7 +115,11 @@ class Exchange extends React.Component {
         this.showPriceAlertModal = this.showPriceAlertModal.bind(this);
         this.hidePriceAlertModal = this.hidePriceAlertModal.bind(this);
 
+        this.showScaledOrderModal = this.showScaledOrderModal.bind(this);
+        this.hideScaledOrderModal = this.hideScaledOrderModal.bind(this);
+
         this.handlePriceAlertSave = this.handlePriceAlertSave.bind(this);
+        this._createScaledOrder = this._createScaledOrder.bind(this);
 
         this.psInit = true;
     }
@@ -306,6 +316,7 @@ class Exchange extends React.Component {
             isConfirmBuyOrderModalLoaded: false,
             isConfirmSellOrderModalVisible: false,
             isPriceAlertModalVisible: false,
+            isScaledOrderModalVisible: false,
             isConfirmSellOrderModalLoaded: false,
             tabVerticalPanel: ws.get("tabVerticalPanel", "my-market"),
             tabBuySell: ws.get("tabBuySell", "buy"),
@@ -347,10 +358,10 @@ class Exchange extends React.Component {
                 my_orders: 2,
                 open_settlement: 2
             }),
-            panelTabsActive: {
-                1: "",
-                2: ""
-            }
+            panelTabsActive: ws.get("panelTabsActive", {
+                1: "my_history",
+                2: "my_orders"
+            })
         };
     }
 
@@ -389,6 +400,18 @@ class Exchange extends React.Component {
     hidePriceAlertModal() {
         this.setState({
             isPriceAlertModalVisible: false
+        });
+    }
+
+    showScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: true
+        });
+    }
+
+    hideScaledOrderModal() {
+        this.setState({
+            isScaledOrderModalVisible: false
         });
     }
 
@@ -594,7 +617,7 @@ class Exchange extends React.Component {
                 }
             })
             .catch(err => {
-                console.log("checkFeeStatusAsync error", err);
+                console.error("checkFeeStatusAsync error", err);
                 this.setState({feeStatus: {}});
             });
     }
@@ -933,6 +956,38 @@ class Exchange extends React.Component {
         this._createLimitOrder(type, feeID);
     }
 
+    _createScaledOrder(orders, feeID) {
+        const limitOrders = orders.map(
+            order =>
+                new LimitOrderCreate({
+                    for_sale: order.for_sale,
+                    expiration: new Date(order.expirationTime || false),
+                    to_receive: order.to_receive,
+                    seller: this.props.currentAccount.get("id"),
+                    fee: {
+                        asset_id: feeID,
+                        amount: 0
+                    }
+                })
+        );
+
+        return MarketsActions.createLimitOrder2(limitOrders)
+            .then(result => {
+                if (result.error) {
+                    if (result.error.message !== "wallet locked")
+                        Notification.error({
+                            message: counterpart.translate(
+                                "notifications.exchange_unknown_error_place_scaled_order"
+                            )
+                        });
+                }
+                console.log("order success");
+            })
+            .catch(e => {
+                console.log("order failed:", e);
+            });
+    }
+
     _createLimitOrder(type, feeID) {
         let actionType = type === "sell" ? "ask" : "bid";
 
@@ -972,7 +1027,8 @@ class Exchange extends React.Component {
             setting[marketName] = !inverted;
             SettingsActions.changeMarketDirection(setting);
         }
-        console.log("order:", JSON.stringify(order.toObject()));
+        if (__DEV__) "order:", JSON.stringify(order.toObject());
+
         return MarketsActions.createLimitOrder2(order)
             .then(result => {
                 if (result.error) {
@@ -989,11 +1045,9 @@ class Exchange extends React.Component {
                             )
                         });
                 }
-                console.log("order success");
-                //this._clearForms();
             })
             .catch(e => {
-                console.log("order failed:", e);
+                console.error("order failed:", e);
             });
     }
 
@@ -1548,6 +1602,10 @@ class Exchange extends React.Component {
             panelTabsActive: panelTabsActive,
             forceReRender: true // Requires to forcefully re-render for tab to stick
         });
+
+        SettingsActions.changeViewSetting({
+            panelTabsActive: panelTabsActive
+        });
     }
 
     _setPanelTabs(panelName, newTabsId) {
@@ -1973,6 +2031,7 @@ class Exchange extends React.Component {
         let buyForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={baseIsBitAsset ? this._borrowBase.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "bid")}
@@ -2080,6 +2139,7 @@ class Exchange extends React.Component {
         let sellForm = isFrozen ? null : tinyScreen &&
         !this.state.mobileKey.includes("buySellTab") ? null : (
             <BuySell
+                showScaledOrderModal={this.showScaledOrderModal}
                 key={`actionCard_${actionCardIndex++}`}
                 onBorrow={quoteIsBitAsset ? this._borrowQuote.bind(this) : null}
                 onBuy={this._onBuy.bind(this, "ask")}
@@ -2506,6 +2566,102 @@ class Exchange extends React.Component {
                     activePanels={activePanels}
                 />
             );
+
+        let tradingChartHeader = (
+            <div
+                className={"exchange--chart-control"}
+                style={{
+                    height: 33,
+                    right: "13rem",
+                    top: "1px",
+                    position: "absolute",
+                    zIndex: 1,
+                    padding: "0.2rem"
+                }}
+            >
+                {chartType == "price_chart" && (
+                    <Tooltip
+                        title={counterpart.translate(
+                            "exchange.settings.tooltip.chart_tools"
+                        )}
+                    >
+                        <AntIcon
+                            style={{
+                                cursor: "pointer",
+                                fontSize: "1.4rem",
+                                marginRight: "0.6rem"
+                            }}
+                            onClick={this._chartTools.bind(this)}
+                            type="tool"
+                        />
+                    </Tooltip>
+                )}
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.increase_chart_height"
+                    )}
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: true});
+                        }}
+                        type={"up"}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={counterpart.translate(
+                        "exchange.settings.tooltip.decrease_chart_height"
+                    )}
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem",
+                            marginRight: "0.6rem"
+                        }}
+                        onClick={() => {
+                            this.onChangeChartHeight({increase: false});
+                        }}
+                        type={"down"}
+                    />
+                </Tooltip>
+                <Tooltip
+                    title={
+                        chartType == "market_depth"
+                            ? counterpart.translate(
+                                  "exchange.settings.tooltip.show_price_chart"
+                              )
+                            : counterpart.translate(
+                                  "exchange.settings.tooltip.show_market_depth"
+                              )
+                    }
+                >
+                    <AntIcon
+                        style={{
+                            cursor: "pointer",
+                            fontSize: "1.4rem"
+                        }}
+                        onClick={() => {
+                            if (chartType == "market_depth") {
+                                this._toggleChart("price_chart");
+                            } else {
+                                this._toggleChart("market_depth");
+                            }
+                        }}
+                        type={
+                            chartType == "market_depth"
+                                ? "bar-chart"
+                                : "area-chart"
+                        }
+                    />
+                </Tooltip>
+            </div>
+        );
 
         /***
          * Generate tabs based on Layout
@@ -3154,6 +3310,7 @@ class Exchange extends React.Component {
                         >
                             {!tinyScreen ? (
                                 <div>
+                                    {tradingChartHeader}
                                     {/* Price history chart */}
                                     {chartType && chartType == "price_chart" ? (
                                         <div
@@ -3330,6 +3487,14 @@ class Exchange extends React.Component {
                     visible={this.state.isPriceAlertModalVisible}
                     showModal={this.showPriceAlertModal}
                     hideModal={this.hidePriceAlertModal}
+                />
+
+                <ScaledOrder
+                    createScaledOrder={this._createScaledOrder}
+                    visible={this.state.isScaledOrderModalVisible}
+                    hideModal={this.hideScaledOrderModal}
+                    quoteAsset={this.props.quoteAsset.get("id")}
+                    baseAsset={this.props.baseAsset.get("id")}
                 />
             </div>
         );

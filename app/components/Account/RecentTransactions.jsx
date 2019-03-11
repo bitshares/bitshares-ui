@@ -213,7 +213,6 @@ class RecentTransactions extends React.Component {
                 .then(res => res.json())
                 .then(result => {
                     var ops = result.map(r => {
-                        console.log(r);
                         return {
                             id: r.account_history.operation_id,
                             op: {
@@ -247,6 +246,14 @@ class RecentTransactions extends React.Component {
         let accountName = (await FetchChain("getAccount", account)).get("name");
         let recordData = {};
 
+        function pad(number, length) {
+            let str = "" + number;
+            while (str.length < length) {
+                str = "0" + str;
+            }
+            return str;
+        }
+
         while (true) {
             let res = await this._getAccountHistoryES(account, limit, start);
             if (!res.length) break;
@@ -271,7 +278,6 @@ class RecentTransactions extends React.Component {
                         data.amount = data.amount_;
                         break;
                 }
-
                 switch (type) {
                     default:
                         recordData[trx_id] = {
@@ -292,8 +298,37 @@ class RecentTransactions extends React.Component {
         }
         recordData = report.groupEntries(recordData);
         let parsedData = report.parseData(recordData, account, accountName);
+
+        let formatDate = function(d) {
+            return (
+                ("0" + d.getDate()).slice(-2) +
+                "." +
+                ("0" + (d.getMonth() + 1)).slice(-2) +
+                "." +
+                d.getFullYear() +
+                " " +
+                ("0" + d.getHours()).slice(-2) +
+                ":" +
+                ("0" + d.getMinutes()).slice(-2) +
+                ":" +
+                ("0" + d.getSeconds()).slice(-2) +
+                " GMT" +
+                ((d.getTimezoneOffset() < 0 ? "+" : "-") + // Note the reversed sign!
+                    pad(
+                        parseInt(
+                            Math.floor(Math.abs(d.getTimezoneOffset() / 60))
+                        ),
+                        2
+                    ) +
+                    pad(Math.abs(d.getTimezoneOffset() % 60), 2))
+            );
+        };
+
         let csvString = "";
         for (let line of parsedData) {
+            if (line.length >= 11 && line[10] instanceof Date) {
+                line[10] = formatDate(line[10]);
+            }
             csvString += line.join(",") + "\n";
         }
         let blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
@@ -470,7 +505,7 @@ class RecentTransactions extends React.Component {
                             <div className={cnames("inline-block")}>
                                 {this.props.showFilters ? (
                                     <Tooltip
-                                        placement="left"
+                                        placement="bottom"
                                         title={counterpart.translate(
                                             "tooltip.filter_ops"
                                         )}
@@ -492,17 +527,20 @@ class RecentTransactions extends React.Component {
                                 ) : null}
                             </div>
                             {historyCount > 0 ? (
-                                <a
-                                    className="inline-block"
-                                    onClick={this._generateCSV.bind(this)}
-                                    data-tip={counterpart.translate(
+                                <Tooltip
+                                    placement="bottom"
+                                    title={counterpart.translate(
                                         "transaction.csv_tip"
                                     )}
-                                    data-place="bottom"
-                                    style={{marginLeft: "1rem"}}
                                 >
-                                    <Icon name="excel" size="1.5x" />
-                                </a>
+                                    <a
+                                        className="inline-block"
+                                        onClick={this._generateCSV.bind(this)}
+                                        style={{marginLeft: "1rem"}}
+                                    >
+                                        <Icon name="excel" size="1_5x" />
+                                    </a>
+                                </Tooltip>
                             ) : null}
                         </div>
                         {this.state.accountHistoryError && (

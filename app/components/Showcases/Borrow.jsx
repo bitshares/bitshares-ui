@@ -191,6 +191,7 @@ class Borrow extends Component {
                 style={{
                     align: "center",
                     display: "flex",
+                    paddingTop: "1rem",
                     justifyContent: "center"
                 }}
                 onKeyDown={this.onKeyDown.bind(this)}
@@ -200,8 +201,8 @@ class Borrow extends Component {
                         borderRadius: "50px",
                         width: "70%",
                         maxWidth: "70rem",
-                        paddingTop: "2rem",
-                        paddingBottom: "2rem"
+                        paddingTop: "1rem",
+                        paddingBottom: "1rem"
                     }}
                 >
                     <div
@@ -388,9 +389,13 @@ class Borrow extends Component {
 
     onKeyDown(e) {
         // arrow up/down button should select next/previous list element
-        if (e.keyCode === 38 || e.keyCode === 39 || e.key == "ArrowRight") {
+        if (e.keyCode === 39 || e.key == "ArrowRight") {
+            e.preventDefault();
+            e.stopPropagation();
             this.next();
-        } else if (e.keyCode === 40 || e.key == "ArrowLeft") {
+        } else if (e.keyCode === 37 || e.key == "ArrowLeft") {
+            e.preventDefault();
+            e.stopPropagation();
             this.prev();
         }
     }
@@ -398,7 +403,7 @@ class Borrow extends Component {
 
 Borrow = debounceRender(Borrow, 50, {leading: false});
 
-Borrow = connect(
+export default connect(
     Borrow,
     {
         listenTo() {
@@ -413,21 +418,3 @@ Borrow = connect(
         }
     }
 );
-
-export default (Borrow = AssetWrapper(Borrow, {
-    propNames: ["bitAssets"],
-    defaultProps: {
-        bitAssets: [
-            "1.3.103",
-            "1.3.113",
-            "1.3.120",
-            "1.3.121",
-            "1.3.958",
-            "1.3.1325",
-            "1.3.1362",
-            "1.3.105",
-            "1.3.106"
-        ]
-    },
-    asList: true
-}));
