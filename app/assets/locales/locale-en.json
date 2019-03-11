@@ -1808,6 +1808,8 @@
             "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
             "not_complete": "Please fill out all fields to see a description of the action here",
             "peer_left": "Peer 1",
+            "balance_warning": "Balance Warning",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "peer_right": "Peer 2",
             "proposal_fee": "Proposal fee",
             "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
@@ -1817,7 +1819,8 @@
             "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
             "title": "Barter",
             "total_fees": "Total fees: %(fee)s %(asset)s",
-            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s"
         },
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",

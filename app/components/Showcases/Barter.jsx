@@ -8,7 +8,9 @@ import {
     Button,
     Switch,
     Tooltip,
-    Icon
+    Icon,
+    Popover,
+    Alert
 } from "bitshares-ui-style-guide";
 import AccountSelector from "../Account/AccountSelector";
 import counterpart from "counterpart";
@@ -24,9 +26,13 @@ import {
     estimateFeeAsync
 } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
-import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
+import {map} from "lodash-es";
 
+function moveDecimal(num, decimals) {
+    if (!num) return;
+    return num / Math.pow(10, decimals);
+}
 export default class Barter extends Component {
     constructor() {
         super();
@@ -78,7 +84,8 @@ export default class Barter extends Component {
             escrow_account: null,
             send_to_escrow: false,
             escrow_payment: 0,
-            escrow_payment_changed: false
+            escrow_payment_changed: false,
+            balanceWarning: {peer1: [], peer2: []}
         };
         this._checkBalance = this._checkBalance.bind(this);
         this.onTrxIncluded = this.onTrxIncluded.bind(this);
@@ -178,16 +185,19 @@ export default class Barter extends Component {
                 from_barter: from_barter,
                 from_error: null
             },
-            this._checkBalance(
-                from_barter[index].from_feeAmount,
-                amount,
-                this.state.from_account,
-                asset,
-                index,
-                true,
-                from_barter[index].from_fee_asset_id,
-                from_barter
-            )
+            () => {
+                this._checkBalance(
+                    from_barter[index].from_feeAmount,
+                    amount,
+                    this.state.from_account,
+                    asset,
+                    index,
+                    true,
+                    from_barter[index].from_fee_asset_id,
+                    from_barter
+                );
+                this.checkAmountsTotal();
+            }
         );
     }
 
@@ -215,16 +225,19 @@ export default class Barter extends Component {
                 to_barter: to_barter,
                 to_error: null
             },
-            this._checkBalance(
-                to_barter[index].to_feeAmount,
-                amount,
-                this.state.to_account,
-                asset,
-                index,
-                false,
-                to_barter[index].to_fee_asset_id,
-                to_barter
-            )
+            () => {
+                this._checkBalance(
+                    to_barter[index].to_feeAmount,
+                    amount,
+                    this.state.to_account,
+                    asset,
+                    index,
+                    false,
+                    to_barter[index].to_fee_asset_id,
+                    to_barter
+                );
+                this.checkAmountsTotal();
+            }
         );
     }
 
@@ -306,6 +319,7 @@ export default class Barter extends Component {
             feeAmount,
             balanceObject
         );
+
         if (hasBalance === null) return;
         if (from) {
             barter[index].from_balanceError = !hasBalance;
@@ -560,7 +574,6 @@ export default class Barter extends Component {
             });
         });
 
-        console.log("transfer_list", transfer_list);
         ApplicationApi.transfer_list(transfer_list);
     }
 
@@ -642,6 +655,224 @@ export default class Barter extends Component {
         memos[type][index] = {shown: true};
         this.setState({memo: memos});
     };
+
+    getBalance(account, assetType) {
+        return ChainStore.getAccountBalance(account, assetType);
+    }
+
+    checkAmountsTotal() {
+        const {from_barter, to_barter, from_account, to_account} = this.state;
+        let peer1Amounts = {};
+        let peer2Amounts = {};
+
+        // for peer1
+        from_barter.forEach(function(item) {
+            if (item.from_amount) {
+                if (peer1Amounts.hasOwnProperty(item.from_asset_id)) {
+                    peer1Amounts[item.from_asset_id] = {
+                        amount:
+                            Number(peer1Amounts[item.from_asset_id].amount) +
+                            Number(item.from_amount),
+                        precision: item.from_asset.get("precision"),
+                        symbol: item.from_asset.get("symbol")
+                    };
+                } else {
+                    peer1Amounts[item.from_asset_id] = {
+                        amount: Number(item.from_amount),
+                        precision: item.from_asset.get("precision"),
+                        symbol: item.from_asset.get("symbol")
+                    };
+                }
+            }
+        });
+
+        let peer1AmountsFormated = map(peer1Amounts, (item, key) => {
+            let balanceOfCurrentAsset = this.getBalance(from_account, key);
+            let decimals = Math.max(0, item.precision);
+            let formatedBalance = balanceOfCurrentAsset
+                ? moveDecimal(balanceOfCurrentAsset, decimals)
+                : 0;
+            item.assetId = key;
+            if (item.amount > formatedBalance) {
+                item.warning = true;
+                item.balance = formatedBalance;
+            }
+            return item;
+        });
+
+        // for peer2
+        to_barter.forEach(function(item) {
+            if (item.to_amount) {
+                if (peer2Amounts.hasOwnProperty(item.to_asset_id)) {
+                    peer2Amounts[item.to_asset_id] = {
+                        amount:
+                            Number(peer2Amounts[item.to_asset_id].amount) +
+                            Number(item.to_amount),
+                        precision: item.to_asset.get("precision"),
+                        symbol: item.to_asset.get("symbol")
+                    };
+                } else {
+                    peer2Amounts[item.to_asset_id] = {
+                        amount: Number(item.to_amount),
+                        precision: item.to_asset.get("precision"),
+                        symbol: item.to_asset.get("symbol")
+                    };
+                }
+            }
+        });
+
+        let peer2AmountsFormated = map(peer2Amounts, (item, key) => {
+            let balanceOfCurrentAsset = this.getBalance(to_account, key);
+            let decimals = Math.max(0, item.precision);
+            let formatedBalance = balanceOfCurrentAsset
+                ? moveDecimal(balanceOfCurrentAsset, decimals)
+                : 0;
+            item.assetId = key;
+            if (item.amount > formatedBalance) {
+                item.warning = true;
+                item.balance = formatedBalance;
+            }
+            return item;
+        });
+
+        this.setState({
+            balanceWarning: {
+                peer1: peer1AmountsFormated,
+                peer2: peer2AmountsFormated
+            }
+        });
+    }
+
+    renderBalanceWarnings() {
+        const {
+            balanceWarning: {peer1, peer2}
+        } = this.state;
+        let isPeer1Warning = peer1.some(item => !!item.warning);
+        let isPeer2Warning = peer2.some(item => !!item.warning);
+
+        let peer1Text = counterpart.translate("showcases.barter.peer_left");
+        let peer2Text = counterpart.translate("showcases.barter.peer_right");
+        let peer1Component = isPeer1Warning ? (
+            <div style={{maxWidth: "25rem"}}>
+                {counterpart.translate(
+                    "showcases.barter.balance_warning_tooltip",
+                    {
+                        peer: peer1Text
+                    }
+                )}
+                <br />
+                {peer1.map(item => {
+                    if (item.warning) {
+                        return (
+                            <React.Fragment>
+                                <br />
+                                <span
+                                    style={{marginRight: "10px"}}
+                                    key={item.assetId}
+                                >
+                                    {" - " +
+                                        counterpart.translate(
+                                            "showcases.barter.balance_warning_line",
+                                            {
+                                                asset_symbol: item.symbol,
+                                                asset_balance: item.balance,
+                                                asset_amount: item.amount
+                                            }
+                                        )}
+                                </span>
+                            </React.Fragment>
+                        );
+                    }
+                })}
+            </div>
+        ) : null;
+        let peer2Component = isPeer2Warning ? (
+            <div style={{maxWidth: "25rem"}}>
+                {counterpart.translate(
+                    "showcases.barter.balance_warning_tooltip",
+                    {
+                        peer: peer2Text
+                    }
+                )}
+                {peer2.map(item => {
+                    if (item.warning) {
+                        return (
+                            <span
+                                style={{marginRight: "10px"}}
+                                key={item.assetId}
+                            >
+                                <br />
+                                <br />
+                                {counterpart.translate(
+                                    "showcases.barter.balance_warning_line",
+                                    {
+                                        asset_symbol: item.symbol,
+                                        asset_balance: item.balance,
+                                        asset_amount: item.amount
+                                    }
+                                )}
+                                ;
+                            </span>
+                        );
+                    }
+                })}
+            </div>
+        ) : null;
+
+        return (
+            <span className="barter-balance-warning">
+                {isPeer1Warning && (
+                    <Popover
+                        content={peer1Component}
+                        title={counterpart.translate(
+                            "showcases.barter.balance_warning"
+                        )}
+                    >
+                        <span style={{cursor: "help"}}>
+                            <Alert
+                                style={{
+                                    display: "inline",
+                                    marginRight: "1rem"
+                                }}
+                                message={
+                                    peer1Text +
+                                    " " +
+                                    counterpart.translate(
+                                        "showcases.barter.balance_warning"
+                                    )
+                                }
+                                type="warning"
+                                showIcon
+                            />
+                        </span>
+                    </Popover>
+                )}
+                {isPeer2Warning && (
+                    <Popover
+                        content={peer2Component}
+                        title={counterpart.translate(
+                            "showcases.barter.balance_warning"
+                        )}
+                    >
+                        <span style={{cursor: "help"}}>
+                            <Alert
+                                style={{display: "inline"}}
+                                message={
+                                    peer2Text +
+                                    " " +
+                                    counterpart.translate(
+                                        "showcases.barter.balance_warning"
+                                    )
+                                }
+                                type="warning"
+                                showIcon
+                            />
+                        </span>
+                    </Popover>
+                )}
+            </span>
+        );
+    }
 
     render() {
         let {
@@ -734,6 +965,7 @@ export default class Barter extends Component {
         const balance = (account, balanceError, asset_types, asset) => {
             if (account && account.get("balances")) {
                 let account_balances = account.get("balances").toJS();
+
                 let _error = balanceError ? "has-error" : "";
                 if (asset_types.length === 1)
                     asset = ChainStore.getAsset(asset_types[0]);
@@ -741,6 +973,7 @@ export default class Barter extends Component {
                     let current_asset_id = asset
                         ? asset.get("id")
                         : asset_types[0];
+
                     return (
                         <span>
                             <Translate
@@ -1087,7 +1320,7 @@ export default class Barter extends Component {
                             content="transfer.explict_price"
                         />
                         <div className="inline-label input-wrapper">
-                            <input
+                            <Input
                                 disabled={false}
                                 type="text"
                                 value={explictPrice()}
@@ -1459,24 +1692,27 @@ export default class Barter extends Component {
                             </Row>
                         </div>
                     )}
-                    <Tooltip
-                        title={counterpart.translate(
-                            "showcases.barter.propose_tooltip"
-                        )}
-                        placement="topLeft"
-                    >
-                        <Button
-                            key={"propose"}
-                            disabled={isSubmitNotValid}
-                            onClick={
-                                !isSubmitNotValid
-                                    ? this.onSubmit.bind(this)
-                                    : null
-                            }
+                    <div className="barter-footer">
+                        <Tooltip
+                            title={counterpart.translate(
+                                "showcases.barter.propose_tooltip"
+                            )}
+                            placement="topLeft"
                         >
-                            {counterpart.translate("propose")}
-                        </Button>
-                    </Tooltip>
+                            <Button
+                                key={"propose"}
+                                disabled={isSubmitNotValid}
+                                onClick={
+                                    !isSubmitNotValid
+                                        ? this.onSubmit.bind(this)
+                                        : null
+                                }
+                            >
+                                {counterpart.translate("propose")}
+                            </Button>
+                        </Tooltip>
+                        {!isSubmitNotValid && this.renderBalanceWarnings()}
+                    </div>
                 </Card>
             </div>
         );
