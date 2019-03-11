@@ -93,33 +93,77 @@ export default class DirectDebit extends Component {
         const dataSource = [
             {
                 key: "1",
-                name: "Mike",
-                age: 32,
-                address: "10 Downing Street"
+                id: 1,
+                type: "receiver",
+                authorized: "twat124",
+                limit: "1000TEST",
+                until: JSON.stringify(new Date()),
+                available: "10000TEST"
             },
             {
                 key: "2",
-                name: "John",
-                age: 42,
-                address: "10 Downing Street"
+                id: 2,
+                type: "giver",
+                authorized: "twat123",
+                limit: "0TEST",
+                until: JSON.stringify(new Date()),
+                available: "10000TEST"
             }
         ];
 
         const columns = [
             {
-                title: "Name",
-                dataIndex: "name",
-                key: "name"
+                title: "#",
+                dataIndex: "id",
+                key: "id"
             },
             {
-                title: "Age",
-                dataIndex: "age",
-                key: "age"
+                title: "Type",
+                dataIndex: "type",
+                key: "type"
             },
             {
-                title: "Address",
-                dataIndex: "address",
-                key: "address"
+                title: "Authorized",
+                dataIndex: "authorized",
+                key: "authorized"
+            },
+            {
+                title: "Limit",
+                dataIndex: "limit",
+                key: "limit"
+            },
+            {
+                title: "Until",
+                dataIndex: "until",
+                key: "until"
+            },
+            {
+                title: "Available",
+                dataIndex: "available",
+                key: "available"
+            },
+            {
+                title: "Actions",
+                dataIndex: "action",
+                key: "action",
+                render: (text, record) => {
+                    if (record.type) {
+                        return record.type === "giver" ? (
+                            <span>
+                                <Button style={{marginRight: "10px"}}>
+                                    Cancel
+                                </Button>
+                                <Button>Update</Button>
+                            </span>
+                        ) : (
+                            <span>
+                                <Button>Collect</Button>
+                            </span>
+                        );
+                    } else {
+                        return null;
+                    }
+                }
             }
         ];
 
