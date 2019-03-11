@@ -23,7 +23,8 @@ class Accounts extends React.Component {
         this.state = {
             searchTerm: props.searchTerm,
             isLoading: false,
-            rowsOnPage: "25"
+            rowsOnPage: "25",
+            balanceObjects: []
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
@@ -73,13 +74,26 @@ class Accounts extends React.Component {
         this.forceUpdate();
     }
 
+    _getBalanceObject(object_id) {
+        let {balanceObjects} = this.state;
+
+        if(object_id && typeof(object_id) === "string") {
+            if(!balanceObjects[object_id]) {
+                balanceObjects[object_id] = parseFloat(ChainStore.getObject(object_id).get("balance"));
+            }
+        }
+
+        this.setState({balanceObjects});
+
+        return balanceObjects[object_id] ? balanceObjects[object_id] : 0;
+    }
+
     render() {
         let {searchAccounts} = this.props;
         let {searchTerm} = this.state;
 
         let dataSource = [];
         let columns = [];
-        let balanceCache = [];
 
         columns = [
             {
@@ -156,22 +170,8 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalance",
                 sorter: (a, b) => {
-                    let a_balance = 0;
-                    let b_balance = 0;
-
-                    if(a.accountBalance && typeof(a.accountBalance) === "string") {
-                        if(!balanceCache[a.accountBalance]) {
-                            balanceCache[a.accountBalance] = parseFloat(ChainStore.getObject(a.accountBalance).get("balance"));
-                        }
-                        a_balance = balanceCache[a.accountBalance];
-                    }
-
-                    if(b.accountBalance && typeof(b.accountBalance) === "string") {
-                        if(!balanceCache[b.accountBalance]) {
-                            balanceCache[b.accountBalance] = parseFloat(ChainStore.getObject(b.accountBalance).get("balance"));
-                        }
-                        b_balance = balanceCache[b.accountBalance];
-                    }
+                    let a_balance = this._getBalanceObject(a.accountBalance);
+                    let b_balance = this._getBalanceObject(b.accountBalance);
 
                     return a_balance > b_balance
                         ? 1
@@ -196,22 +196,8 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalancePercentage",
                 sorter: (a, b) => {
-                    let a_balance = 0;
-                    let b_balance = 0;
-
-                    if(a.accountBalance && typeof(a.accountBalance) === "string") {
-                        if(!balanceCache[a.accountBalance]) {
-                            balanceCache[a.accountBalance] = parseFloat(ChainStore.getObject(a.accountBalance).get("balance"));
-                        }
-                        a_balance = balanceCache[a.accountBalance];
-                    }
-
-                    if(b.accountBalance && typeof(b.accountBalance) === "string") {
-                        if(!balanceCache[b.accountBalance]) {
-                            balanceCache[b.accountBalance] = parseFloat(ChainStore.getObject(b.accountBalance).get("balance"));
-                        }
-                        b_balance = balanceCache[b.accountBalance];
-                    }
+                    let a_balance = this._getBalanceObject(a.accountBalance);
+                    let b_balance = this._getBalanceObject(b.accountBalance);
 
                     return a_balance > b_balance
                         ? 1
@@ -326,7 +312,7 @@ class Accounts extends React.Component {
                                         marginLeft: "24px"
                                     }}
                                 >
-                                    {this.state.searchTerm.length == 0 ? (
+                                    {this.state.searchTerm && this.state.searchTerm.length == 0 ? (
                                         <Translate content="account.start_typing_to_search" />
                                     ) : null}
                                 </div>
