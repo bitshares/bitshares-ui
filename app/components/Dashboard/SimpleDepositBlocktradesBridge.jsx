@@ -427,7 +427,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                 <Form className="full-width" layout="vertical">
                                     <Form.Item label={counterpart.translate("exchange.price")}>
                                         <Input
-                                            value={aboveLimit ? 0 : price}
+                                            value={aboveLimit || isNaN(price) ? 0 : price}
                                             addonAfter={
                                                 <Select 
                                                     defaultValue={priceSuffix} 
