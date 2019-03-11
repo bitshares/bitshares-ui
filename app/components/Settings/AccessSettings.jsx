@@ -393,12 +393,18 @@ class AccessSettings extends React.Component {
     }
 
     _getConnectedNode() {
+        let connectedURL = null;
         if (!this.props.connectedNode) {
-            return null;
+            connectedURL = autoSelectionUrl;
+        } else {
+            connectedURL = this.props.nodes.find(
+                node => node.url == this.props.connectedNode
+            );
         }
-        return this.getNode(
-            this.props.nodes.find(node => node.url == this.props.connectedNode)
-        );
+        if (!connectedURL) {
+            connectedURL = autoSelectionUrl;
+        }
+        return this.getNode(connectedURL);
     }
 
     _connectedNodeIsPersonal() {
