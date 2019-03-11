@@ -378,6 +378,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     <Form.Item label={counterpart.translate("gateway.deposit_limit")}>
                                         <Input
                                             value={this.state.depositLimit}
+                                            disabled={true}
                                             addonAfter={
                                                 <Select 
                                                     defaultValue={this.state.inputCoinType.toUpperCase()} 
@@ -428,6 +429,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                                     <Form.Item label={counterpart.translate("exchange.price")}>
                                         <Input
                                             value={aboveLimit || isNaN(price) ? 0 : price}
+                                            disabled={true}
                                             addonAfter={
                                                 <Select 
                                                     defaultValue={priceSuffix} 
