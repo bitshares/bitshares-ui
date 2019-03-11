@@ -25,7 +25,6 @@ import {getPossibleGatewayPrefixes, gatewayPrefixes} from "common/gateways";
 import QuoteSelectionModal from "./QuoteSelectionModal";
 import {Input, Icon} from "bitshares-ui-style-guide";
 
-
 class MarketGroup extends React.Component {
     static defaultProps = {
         maxRows: 20,
@@ -971,7 +970,6 @@ class MyMarkets extends React.Component {
                         <div className="search-wrapper">
                             <form>
                                 <div className="filter inline-block">
-
                                     <Input
                                         autoComplete="off"
                                         style={{
@@ -989,7 +987,8 @@ class MyMarkets extends React.Component {
                                         required="required"
                                         value={this.state.myMarketFilter}
                                         onChange={this.handleSearchUpdate}
-                                        addonAfter={<Icon type="search" />}/>
+                                        addonAfter={<Icon type="search" />}
+                                    />
                                 </div>
                             </form>
                         </div>

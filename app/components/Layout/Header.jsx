@@ -50,7 +50,9 @@ class Header extends React.Component {
             dropdownActive: false,
             dropdownSubmenuActive: false,
             isDepositModalVisible: false,
-            isWithdrawModalVisible: false
+            hasDepositModalBeenShown: false,
+            isWithdrawModalVisible: false,
+            hasWithdrawalModalBeenShown: false
         };
 
         this.unlisten = null;
@@ -77,7 +79,8 @@ class Header extends React.Component {
 
     showDepositModal() {
         this.setState({
-            isDepositModalVisible: true
+            isDepositModalVisible: true,
+            hasDepositModalBeenShown: true
         });
     }
 
@@ -89,7 +92,8 @@ class Header extends React.Component {
 
     showWithdrawModal() {
         this.setState({
-            isWithdrawModalVisible: true
+            isWithdrawModalVisible: true,
+            hasWithdrawalModalBeenShown: true
         });
     }
 
@@ -188,6 +192,7 @@ class Header extends React.Component {
                 if (!isPersistantType()) {
                     setLocalStorageType("persistant");
                 }
+                AccountActions.setPasswordAccount(null);
                 AccountStore.tryToSetCurrentAccount();
             }
         }
@@ -761,6 +766,52 @@ class Header extends React.Component {
             );
         }
 
+        if (active.indexOf("/borrow") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/borrow") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="borrow"
+                        title="icons.borrow"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.borrow.title"
+                    />
+                </a>
+            );
+        }
+
+        if (active.indexOf("/barter") !== -1) {
+            dynamicMenuItem = (
+                <a
+                    style={{flexFlow: "row"}}
+                    className={cnames({
+                        active: active.indexOf("/barter") !== -1
+                    })}
+                >
+                    <Icon
+                        size="1_5x"
+                        style={{position: "relative", top: 0, left: -8}}
+                        name="barter"
+                        title="icons.barter"
+                    />
+                    <Translate
+                        className="column-hide-small"
+                        component="span"
+                        content="showcases.barter.title"
+                    />
+                </a>
+            );
+        }
+
         const submenus = {
             [SUBMENUS.SETTINGS]: (
                 <ul
@@ -1238,24 +1289,27 @@ class Header extends React.Component {
                     }}
                     from_name={currentAccount}
                 />
-
-                <DepositModal
-                    visible={this.state.isDepositModalVisible}
-                    hideModal={this.hideDepositModal}
-                    showModal={this.showDepositModal}
-                    ref="deposit_modal_new"
-                    modalId="deposit_modal_new"
-                    account={currentAccount}
-                    backedCoins={this.props.backedCoins}
-                />
-                <WithdrawModal
-                    visible={this.state.isWithdrawModalVisible}
-                    hideModal={this.hideWithdrawModal}
-                    showModal={this.showWithdrawModal}
-                    ref="withdraw_modal_new"
-                    modalId="withdraw_modal_new"
-                    backedCoins={this.props.backedCoins}
-                />
+                {this.state.hasDepositModalBeenShown && (
+                    <DepositModal
+                        visible={this.state.isDepositModalVisible}
+                        hideModal={this.hideDepositModal}
+                        showModal={this.showDepositModal}
+                        ref="deposit_modal_new"
+                        modalId="deposit_modal_new"
+                        account={currentAccount}
+                        backedCoins={this.props.backedCoins}
+                    />
+                )}
+                {this.state.hasWithdrawalModalBeenShown && (
+                    <WithdrawModal
+                        visible={this.state.isWithdrawModalVisible}
+                        hideModal={this.hideWithdrawModal}
+                        showModal={this.showWithdrawModal}
+                        ref="withdraw_modal_new"
+                        modalId="withdraw_modal_new"
+                        backedCoins={this.props.backedCoins}
+                    />
+                )}
             </div>
         );
     }

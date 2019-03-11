@@ -11,7 +11,7 @@ import PriceText from "../Utility/PriceText";
 import TransitionWrapper from "../Utility/TransitionWrapper";
 import AssetName from "../Utility/AssetName";
 import Icon from "../Icon/Icon";
-import {Select, Icon as AntIcon} from "bitshares-ui-style-guide";
+import {Select, Icon as AntIcon, Tooltip} from "bitshares-ui-style-guide";
 
 /**
  * @array: orderRows
@@ -358,26 +358,32 @@ class GroupOrderLimitSelector extends React.Component {
             );
         } else {
             return (
-                <select
-                    value={this.state.groupLimit}
-                    onChange={this.props.handleGroupOrderLimitChange}
-                    data-tip={
+                <Tooltip
+                    placement="bottom"
+                    title={
                         noGroupsAvailable
                             ? translator.translate(
                                   "tooltip.no_groups_available"
                               )
                             : null
                     }
-                    className="settings-select"
-                    style={noGroupsAvailable ? {cursor: "not-allowed"} : null}
                 >
-                    <Translate
-                        content="exchange.group_order_limit"
-                        component="option"
-                        value="0"
-                    />
-                    {trackedGroupsOptionsList}
-                </select>
+                    <select
+                        value={this.state.groupLimit}
+                        onChange={this.props.handleGroupOrderLimitChange}
+                        className="settings-select"
+                        style={
+                            noGroupsAvailable ? {cursor: "not-allowed"} : null
+                        }
+                    >
+                        <Translate
+                            content="exchange.group_order_limit"
+                            component="option"
+                            value="0"
+                        />
+                        {trackedGroupsOptionsList}
+                    </select>
+                </Tooltip>
             );
         }
     }
@@ -907,9 +913,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header ask"
-                                data-intro={translator.translate(
-                                    "walkthrough.sell_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.sell_orders"
+                                //)}
                             >
                                 <Translate content="exchange.asks" />
                                 {flipOrderBook &&
@@ -1054,9 +1060,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header bid"
-                                data-intro={translator.translate(
-                                    "walkthrough.buy_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.buy_orders"
+                                //)}
                             >
                                 <Translate content="exchange.bids" />
                                 {!flipOrderBook &&
@@ -1247,135 +1253,116 @@ class OrderBook extends React.Component {
                                 isBid={false}
                             />
                         )}
-                        <div className="sticky-table-row" ref={this.centerText}>
-                            {noOrders ? (
-                                <td colSpan={3} className="no-orders padtop">
+
+                        {noOrders ? (
+                            <div
+                                className="sticky-table-row"
+                                ref={this.centerText}
+                            >
+                                <div className="cell" />
+                                <div className="cell no-orders padtop">
                                     <Translate content="exchange.no_orders" />
-                                </td>
-                            ) : (
-                                <td
-                                    className="cell center-cell"
-                                    colSpan="3"
-                                    style={{padding: 0}}
-                                    data-intro={translator.translate(
-                                        "walkthrough.vertical_order"
-                                    )}
-                                >
-                                    <div className="orderbook-latest-price">
-                                        <div>
-                                            <div className="text-center spread">
-                                                <span
-                                                    className="clickable left"
-                                                    onClick={
-                                                        this.toggleSpreadValue
-                                                    }
-                                                >
-                                                    <Translate
-                                                        className="orderbook-center-title"
-                                                        content="exchange.spread"
-                                                    />{" "}
-                                                    <span className="spread-value">
-                                                        {!!spread
-                                                            ? spread
-                                                            : "0"}
-                                                    </span>
-                                                </span>
-                                                <span style={{width: 75}}>
-                                                    {!this.props
-                                                        .hideFunctionButtons ? (
-                                                        <Icon
-                                                            data-intro={translator.translate(
-                                                                "walkthrough.vertical_lock"
-                                                            )}
-                                                            className="lock-unlock clickable icon-fill"
-                                                            onClick={
-                                                                this
-                                                                    .toggleAutoScroll
-                                                            }
-                                                            name={
-                                                                this.state
-                                                                    .autoScroll
-                                                                    ? "locked"
-                                                                    : "unlocked"
-                                                            }
-                                                            title={
-                                                                this.state
-                                                                    .autoScroll
-                                                                    ? "icons.unlocked.disable_auto_scroll"
-                                                                    : "icons.locked.enable_auto_scroll"
-                                                            }
-                                                        />
-                                                    ) : null}
-                                                    &nbsp;
-                                                    {!this.props
-                                                        .hideFunctionButtons ? (
-                                                        <Icon
-                                                            onClick={
-                                                                this.props
-                                                                    .moveOrderBook
-                                                            }
-                                                            name="thumb-tack"
-                                                            className="icon-14px icon-fill order-book-button-v clickable"
-                                                            title={
-                                                                this.props
-                                                                    .horizontal
-                                                                    ? "icons.thumb_tack"
-                                                                    : "icons.thumb_untack"
-                                                            }
-                                                            style={{
-                                                                marginLeft: 0
-                                                            }}
-                                                        />
-                                                    ) : null}
-                                                    &nbsp;
-                                                    {currentGroupOrderLimit ==
-                                                    0 ? null : (
-                                                        <Icon
-                                                            name="grouping"
-                                                            className="icon-14px"
-                                                            title={translator.translate(
-                                                                "icons.order_grouping"
-                                                            )}
-                                                            style={{
-                                                                marginLeft: 0
-                                                            }}
-                                                        />
-                                                    )}
-                                                </span>
-                                                {!!this.props.latest && (
-                                                    <span className="right">
-                                                        <span
-                                                            className={
-                                                                !this.props
-                                                                    .changeClass
-                                                                    ? "spread-value"
-                                                                    : this.props
-                                                                          .changeClass
-                                                            }
-                                                        >
-                                                            <PriceText
-                                                                price={
-                                                                    this.props
-                                                                        .latest
-                                                                }
-                                                                base={
-                                                                    this.props
-                                                                        .base
-                                                                }
-                                                                quote={
-                                                                    this.props
-                                                                        .quote
-                                                                }
-                                                            />
-                                                        </span>
-                                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className="sticky-table-row orderbook-latest-price"
+                                ref={this.centerText}
+                                style={{padding: 0}}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.vertical_order"
+                                //)}
+                            >
+                                <div className="cell right">
+                                    <span
+                                        className="clickable left"
+                                        onClick={this.toggleSpreadValue}
+                                    >
+                                        <Translate
+                                            className="orderbook-center-title"
+                                            content="exchange.spread"
+                                        />{" "}
+                                        <span className="spread-value">
+                                            {!!spread ? spread : "0"}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div className="cell cell-center">
+                                    <span style={{width: 75}}>
+                                        {!this.props.hideFunctionButtons ? (
+                                            <Icon
+                                                //data-intro={translator.translate(
+                                                //    "walkthrough.vertical_lock"
+                                                //)}
+                                                className="lock-unlock clickable icon-fill"
+                                                onClick={this.toggleAutoScroll}
+                                                name={
+                                                    this.state.autoScroll
+                                                        ? "locked"
+                                                        : "unlocked"
+                                                }
+                                                title={
+                                                    this.state.autoScroll
+                                                        ? "icons.unlocked.disable_auto_scroll"
+                                                        : "icons.locked.enable_auto_scroll"
+                                                }
+                                            />
+                                        ) : null}
+                                        &nbsp;
+                                        {!this.props.hideFunctionButtons ? (
+                                            <Icon
+                                                onClick={
+                                                    this.props.moveOrderBook
+                                                }
+                                                name="thumb-tack"
+                                                className="icon-14px icon-fill order-book-button-v clickable"
+                                                title={
+                                                    this.props.horizontal
+                                                        ? "icons.thumb_tack"
+                                                        : "icons.thumb_untack"
+                                                }
+                                                style={{
+                                                    marginLeft: 0
+                                                }}
+                                            />
+                                        ) : null}
+                                        &nbsp;
+                                        {currentGroupOrderLimit == 0 ? null : (
+                                            <Icon
+                                                name="grouping"
+                                                className="icon-14px"
+                                                title={translator.translate(
+                                                    "icons.order_grouping"
                                                 )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            )}
-                        </div>
+                                                style={{
+                                                    marginLeft: 0
+                                                }}
+                                            />
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="cell">
+                                    {!!this.props.latest && (
+                                        <span className="right">
+                                            <span
+                                                className={
+                                                    !this.props.changeClass
+                                                        ? "spread-value"
+                                                        : this.props.changeClass
+                                                }
+                                            >
+                                                <PriceText
+                                                    price={this.props.latest}
+                                                    base={this.props.base}
+                                                    quote={this.props.quote}
+                                                />
+                                            </span>
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
                         {orderBookReversed ? (
                             <OrderRows
                                 noOrders={noOrders}

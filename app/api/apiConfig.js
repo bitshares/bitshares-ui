@@ -45,16 +45,6 @@ export const cryptoBridgeAPIs = {
     TRADING_PAIRS: "/trading-pairs"
 };
 
-export const widechainAPIs = {
-    BASE: "https://gateway.winex.pro/api/v0/ol/support",
-    COINS_LIST: "/coins",
-    ACTIVE_WALLETS: "/active-wallets",
-    NEW_DEPOSIT_ADDRESS: "/new-deposit-address",
-    WITHDRAW_HISTORY: "/latelyWithdraw",
-    TRADING_PAIRS: "/trading-pairs",
-    DEPOSIT_HISTORY: "/latelyRecharge"
-};
-
 export const citadelAPIs = {
     BASE: "https://citadel.li/trade",
     COINS_LIST: "/coins",
@@ -135,6 +125,14 @@ export const settingsAPIs = {
             location: "Locally hosted"
         },
         {
+            url: "wss://dex.iobanker.com:9090",
+            region: "Western Europe",
+            country: "Germany",
+            location: "Frankfurt",
+            operator: "Witness: iobanker-core",
+            contact: "email:admin@iobanker.com"
+        },
+        {
             url: "wss://bitshares.openledger.info/ws",
             location: "Nuremberg",
             region: "Western Europe",
@@ -169,6 +167,14 @@ export const settingsAPIs = {
             url: "wss://japan.bitshares.apasia.tech/ws",
             location: "Tokyo",
             country: "Japan",
+            region: "Southeastern Asia",
+            operator: "Flash Infrastructure Worker",
+            contact: "telegram:murda_ra"
+        },
+        {
+            url: "wss://singapore.bitshares.apasia.tech/ws",
+            location: "Singapore",
+            country: "Singapore",
             region: "Southeastern Asia",
             operator: "Flash Infrastructure Worker",
             contact: "telegram:murda_ra"
@@ -239,7 +245,7 @@ export const settingsAPIs = {
         },
         {
             url: "wss://valley.bitshares.apasia.tech/ws",
-            location: "Silicone Valley",
+            location: "Silicon Valley",
             country: "U.S.A.",
             region: "Northern America",
             operator: "Flash Infrastructure Worker",
@@ -368,15 +374,6 @@ export const settingsAPIs = {
                 "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
         },
         {
-            url: "wss://node.market.rudex.org",
-            region: "Western Europe",
-            country: "Germany",
-            location: "Falkenstein",
-            operator: "Witness: blckchnd",
-            contact:
-                "email:admin@blckchnd.com;telegram:ruslansalikhov;github:blckchnd"
-        },
-        {
             url: "wss://api.bitsharesdex.com",
             region: "Northern America",
             country: "U.S.A.",
@@ -420,13 +417,6 @@ export const settingsAPIs = {
             country: "Singapore",
             operator: "Infrastructure Worker",
             contact: "email:info@blockchainprojectsbv.com"
-        },
-        {
-            url: "wss://ws.winex.pro",
-            region: "Southeastern Asia",
-            location: "Singapore",
-            operator: "Witness: winex.witness",
-            contact: "telegram:zmaxin"
         },
         {
             url: "wss://api.bts.mobi/ws",
@@ -611,15 +601,7 @@ export const settingsAPIs = {
             contact: "email:citadel.li;support"
         },
         {
-            url: "wss://us-east-1.bts.crypto-bridge.org",
-            region: "Northern America",
-            country: "U.S.A.",
-            location: "North Virginia",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://us-west-1.bts.crypto-bridge.org",
+            url: "wss://us-west-2.bts.crypto-bridge.org",
             region: "Northern America",
             country: "U.S.A.",
             location: "North California",
@@ -629,24 +611,8 @@ export const settingsAPIs = {
         {
             url: "wss://eu-central-1.bts.crypto-bridge.org",
             region: "Western Europe",
-            country: "Germany",
-            location: "Frankfurt",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://eu-west-1.bts.crypto-bridge.org",
-            region: "Northern Europe",
-            country: "Ireland",
-            location: "Dublin",
-            operator: "CryptoBridge",
-            contact: "email:support@crypto-bridge.org"
-        },
-        {
-            url: "wss://eu-west-2.bts.crypto-bridge.org",
-            region: "Northern Europe",
-            country: "United Kingdom",
-            location: "London",
+            country: "Netherlands",
+            location: "Amsterdam",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },
@@ -671,6 +637,14 @@ export const settingsAPIs = {
             region: "Australia",
             country: "Australia",
             location: "Sydney",
+            operator: "CryptoBridge",
+            contact: "email:support@crypto-bridge.org"
+        },
+        {
+            url: "wss://ap-southeast-3.bts.crypto-bridge.org",
+            region: "Southeastern Asia",
+            country: "Singapore",
+            location: "Singapore",
             operator: "CryptoBridge",
             contact: "email:support@crypto-bridge.org"
         },

@@ -9,8 +9,10 @@ import WalletUnlockActions from "actions/WalletUnlockActions";
 import AccountActions from "actions/AccountActions";
 import SettingsActions from "actions/SettingsActions";
 import utils from "common/utils";
-import AccountSelector from "../Account/AccountSelector";
-import Icon from "../Icon/Icon";
+import ChainStore from "bitsharesjs/es/chain/src/ChainStore";
+import AccountInputStyleGuide from "../Account/AccountInputStyleGuide";
+import {Button, Input, Form} from "bitshares-ui-style-guide";
+import counterpart from "counterpart";
 
 class AccountLogin extends React.Component {
     static propTypes = {
@@ -22,6 +24,7 @@ class AccountLogin extends React.Component {
     constructor(props) {
         super();
         this.state = this.getInitialState(props);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.onPasswordEnter = this.onPasswordEnter.bind(this);
         this.accountChanged = this.accountChanged.bind(this);
         this.onAccountChanged = this.onAccountChanged.bind(this);
@@ -29,6 +32,7 @@ class AccountLogin extends React.Component {
 
     getInitialState(props = this.props) {
         return {
+            password: "",
             passwordError: null,
             accountName: props.passwordAccount,
             account: null,
@@ -37,6 +41,8 @@ class AccountLogin extends React.Component {
     }
 
     componentDidUpdate(previousProps) {
+        ReactTooltip.rebuild();
+
         if (
             !previousProps.active &&
             this.props.active &&
@@ -61,10 +67,16 @@ class AccountLogin extends React.Component {
         );
     }
 
+    handlePasswordChange(e) {
+        this.setState({
+            password: e.target.value
+        });
+    }
+
     onPasswordEnter(e) {
         e && e.preventDefault();
-        const password = this.refs.password.value;
-        const account = this.state.account && this.state.account.get("name");
+        const password = this.state.password;
+        const account = this.state.accountName;
         this.setState({passwordError: null});
 
         WalletDb.validatePassword(
@@ -84,7 +96,10 @@ class AccountLogin extends React.Component {
                 this.setState({passwordError: true});
                 return false;
             }
-            this.refs.password.value = "";
+            this.setState({
+                password: ""
+            });
+
             AccountActions.setPasswordAccount(account);
             SettingsActions.changeSetting({
                 setting: "passwordLogin",
@@ -102,8 +117,17 @@ class AccountLogin extends React.Component {
     }
 
     accountChanged(accountName) {
-        if (!accountName) this.setState({account: null});
-        this.setState({accountName, error: null});
+        if (!accountName) {
+            this.setState({account: null, accountName: null});
+        } else {
+            let account = ChainStore.getAccount(accountName);
+
+            this.setState({
+                accountName,
+                error: null,
+                account: account
+            });
+        }
     }
 
     reset() {
@@ -119,21 +143,17 @@ class AccountLogin extends React.Component {
 
     renderButtons() {
         return (
-            <div className="button-group">
+            <Form.Item style={{textAlign: "center"}}>
                 {this.props.active ? (
-                    <Translate
-                        component="button"
-                        className="button-primary"
-                        onClick={this.onPasswordEnter}
-                        content="login.loginButton"
-                    />
+                    <Button onClick={this.onPasswordEnter} type="primary">
+                        {counterpart.translate("login.loginButton")}
+                    </Button>
                 ) : (
-                    <Translate
-                        className="button-secondary"
-                        content="registration.select"
-                    />
+                    <Button>
+                        {counterpart.translate("registration.select")}
+                    </Button>
                 )}
-            </div>
+            </Form.Item>
         );
     }
 
@@ -167,118 +187,78 @@ class AccountLogin extends React.Component {
         const {active} = this.props;
 
         return (
-            <div className={`${!active ? "display-none" : ""} content-block`}>
-                <AccountSelector
-                    label="account.name"
-                    ref="accountName"
-                    accountName={accountName}
-                    onChange={this.accountChanged}
-                    onAccountChanged={this.onAccountChanged}
-                    account={accountName}
-                    size={60}
-                    placeholder=" "
-                    hideImage
-                    focus={active && !this.state.accountName}
-                />
-            </div>
+            <AccountInputStyleGuide
+                label="account.name"
+                value={accountName}
+                onChange={this.accountChanged}
+                placeholder={"account.name"}
+                size={60}
+                hideImage
+                focus={active && !this.state.accountName}
+            />
         );
     }
 
     renderPasswordInput() {
         const {passwordError, passwordVisible} = this.state;
 
+        const getValidateStatus = () => {
+            return passwordError !== null ? "error" : "";
+        };
+
+        const getHelp = () => {
+            return passwordError !== null ? (
+                <Translate
+                    data-for="password-error"
+                    data-tip
+                    data-place="bottom"
+                    data-effect="solid"
+                    data-delay-hide={500}
+                    content="wallet.pass_incorrect"
+                />
+            ) : null;
+        };
+
         return (
-            <div className="inline-label input-wrapper">
-                <input
-                    ref="password"
+            <Form.Item
+                label={"Password"}
+                help={getHelp()}
+                validateStatus={getValidateStatus()}
+            >
+                <Input
+                    ref={"password"}
+                    placeholder={counterpart.translate("wallet.enter_password")}
+                    style={{width: "100%"}}
+                    value={this.state.password}
+                    onChange={this.handlePasswordChange}
                     type={!passwordVisible ? "password" : "text"}
                     className={`${
                         passwordError ? "input-warning" : ""
                     } input create-account-input`}
                 />
-
-                {!passwordVisible ? (
-                    <span
-                        className="no-width eye-block"
-                        onClick={() => this.setState({passwordVisible: true})}
-                    >
-                        <Icon
-                            name="eye-visible"
-                            className="eye-icon icon-opacity"
-                        />
-                    </span>
-                ) : (
-                    <span
-                        className="no-width eye-block"
-                        onClick={() => this.setState({passwordVisible: false})}
-                    >
-                        <Icon
-                            name="eye-invisible"
-                            className="eye-icon icon-opacity"
-                        />
-                    </span>
-                )}
-
-                {this.refs.password &&
-                this.refs.password.value &&
-                passwordError !== null ? (
-                    passwordError ? (
-                        <span className="dismiss-icon">&times;</span>
-                    ) : (
-                        <Icon name="checkmark" className="approve-icon" />
-                    )
-                ) : null}
-            </div>
+            </Form.Item>
         );
     }
 
     render() {
-        const {passwordError} = this.state;
-
         return (
             <div onClick={this.props.onChangeActive} className="account-block">
                 <div className="overflow-bg-block show-for-small-only">
                     <span className="content" />
                 </div>
 
-                {this.renderNameInput()}
-
-                <form
+                <Form
+                    layout="vertical"
                     className={!this.props.active ? "display-none" : ""}
-                    onSubmit={this.onPasswordEnter}
-                    noValidate
+                    style={{textAlign: "left"}}
                 >
-                    <div className="content-block">
-                        <div className="account-selector">
-                            <div className="content-area">
-                                <div className="header-area">
-                                    <Translate
-                                        className="left-label"
-                                        component="label"
-                                        content="settings.password"
-                                    />
-                                </div>
-                                <div className="input-area">
-                                    {this.renderPasswordInput()}
-                                </div>
-                                {passwordError ? (
-                                    <div className="facolor-error error-area text-left">
-                                        <Translate
-                                            data-for="password-error"
-                                            data-tip
-                                            data-place="bottom"
-                                            data-effect="solid"
-                                            data-delay-hide={500}
-                                            content="wallet.pass_incorrect"
-                                        />
-                                        {this.renderTooltip()}
-                                    </div>
-                                ) : null}
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {this.renderButtons()}
+                    {this.renderNameInput()}
+
+                    {this.renderPasswordInput()}
+
+                    {this.renderButtons()}
+                </Form>
+                {this.renderTooltip()}
             </div>
         );
     }
