@@ -258,7 +258,7 @@ class DepositModalContent extends DecimalChecker {
         const QR = isAddressValid ? (
             <CryptoLinkFormatter
                 size={140}
-                address={depositAddress.address}
+                address={usingGateway ? depositAddress.address : account}
                 asset={selectedAsset}
             />
         ) : (
@@ -300,9 +300,9 @@ class DepositModalContent extends DecimalChecker {
                         : null}
 
                     {!fetchingAddress ? (
-                        (!usingGateway ||
-                            (usingGateway &&
-                                selectedGateway &&
+                        (!usingGateway || 
+                            (usingGateway && 
+                                selectedGateway && 
                                 gatewayStatus[selectedGateway].options
                                     .enabled)) &&
                         isAddressValid &&
@@ -317,7 +317,7 @@ class DepositModalContent extends DecimalChecker {
                     ) : (
                         <div
                             className="container-row"
-                            style={{textAlign: "center"}}
+                            style={{textAlign: "center", paddingTop: 15}}
                         >
                             <LoadingIndicator type="three-bounce" />
                         </div>

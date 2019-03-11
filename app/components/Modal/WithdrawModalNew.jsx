@@ -60,7 +60,6 @@ class WithdrawModalNew extends React.Component {
             hasPoolBalance: null,
             feeError: null,
             fee_asset_id: "1.3.0",
-            fee_asset: ChainStore.getObject("1.3.0"),
             gateFee: 0,
             quantity: 0,
             address: "",
@@ -527,17 +526,14 @@ class WithdrawModalNew extends React.Component {
     }
 
     onFeeChanged({asset}) {
-        if(!isObject(asset)) {
-            asset = ChainStore.getObject(asset);
+        // If asset is an object, just extract asset ID
+        if(isObject(asset)) {
+            asset = asset.get("id");
         }
 
-        this.setState(
-            {
-                fee_asset_id: asset.get("id"),
-                fee_asset: asset
-            },
-            this._updateFee
-        );
+        this.setState({
+            fee_asset_id: asset,
+        },this._updateFee);
     }
 
     onAssetSelected(asset) {
