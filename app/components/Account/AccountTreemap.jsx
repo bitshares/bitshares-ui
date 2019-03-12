@@ -10,6 +10,7 @@ import AltContainer from "alt-container";
 import MarketUtils from "common/market_utils";
 import MarketsStore from "stores/MarketsStore";
 import SettingsStore from "stores/SettingsStore";
+import {Link, withRouter} from "react-router-dom";
 
 Treemap(ReactHighcharts.Highcharts);
 Heatmap(ReactHighcharts.Highcharts);
@@ -37,7 +38,8 @@ class AccountTreemap extends React.Component {
             balanceObjects,
             core_asset,
             marketStats,
-            preferredAsset
+            preferredAsset,
+            history
         } = this.props;
 
         let accountBalances = null;
@@ -107,6 +109,7 @@ class AccountTreemap extends React.Component {
 
                     return finalValue >= 1
                         ? {
+                              symbol: asset.get("symbol"),
                               name: `${asset.get("symbol")} (${
                                   totalValue === 0 ? 0 : percent.toFixed(2)
                               }%)`,
@@ -159,6 +162,17 @@ class AccountTreemap extends React.Component {
                             )} ${preferredAsset.get("symbol")}`;
                         }
                     }
+                },
+                series: {
+                    cursor: "pointer",
+                    point: {
+                        events: {
+                            click: function() {
+                                const link = `/asset/${this.symbol}`;
+                                history.push(link);
+                            }
+                        }
+                    }
                 }
             },
             series: [
@@ -186,15 +200,17 @@ class AccountTreemap extends React.Component {
         return (
             <div className="account-treemap">
                 <div className="account-treemap--legend">
-                    {accountBalances.map(({name, color}, key) => {
+                    {accountBalances.map(({name, symbol, color}, key) => {
                         return (
-                            <div className="legend-item" key={key}>
-                                <div
-                                    className="legend-square"
-                                    style={{backgroundColor: color}}
-                                />{" "}
-                                {name}
-                            </div>
+                            <Link to={`/asset/${symbol}`}>
+                                <div className="legend-item" key={key}>
+                                    <div
+                                        className="legend-square"
+                                        style={{backgroundColor: color}}
+                                    />
+                                    {name}
+                                </div>
+                            </Link>
                         );
                     })}
                 </div>
@@ -233,7 +249,7 @@ class AccountTreemapBalanceWrapper extends React.Component {
 
 AccountTreemapBalanceWrapper = BindToChainState(AccountTreemapBalanceWrapper);
 
-export default class AccountTreemapWrapper extends React.Component {
+class AccountTreemapWrapper extends React.Component {
     render() {
         return (
             <AltContainer
@@ -255,3 +271,5 @@ export default class AccountTreemapWrapper extends React.Component {
         );
     }
 }
+
+export default withRouter(AccountTreemapWrapper);
