@@ -51,13 +51,19 @@ export const getRequestLoginOptions = account => {
         .get(0);
     const ownerPrivateKey = WalletDb.getPrivateKey(ownerPublicKeyStr);
 
+    const key = memoPrivateKey || activePrivateKey || ownerPrivateKey;
+
+    if (!key) {
+        return null;
+    }
+
     const recipientPublicKey = PublicKey.fromPublicKeyString(
         __CRYPTOBRIDGE_PUB_KEY__
     );
 
     const nonce = 1;
     const password = signMemoWithKeys(
-        memoPrivateKey || activePrivateKey || ownerPrivateKey,
+        key,
         recipientPublicKey,
         nonce,
         JSON.stringify({user: username, ts: Date.now()})

@@ -107,7 +107,7 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
                 .addCryptoBridgeNameSpace(this.props.deposit_coin_type)
                 .toLowerCase(), // TODO why does the backup coin need bridge namespace?
             outputCoinType: this.props.receive_coin_type,
-            outputAddress: this.props.account.get("name"),
+            account: this.props.account,
             url: cryptoBridgeAPIs.BASE,
             stateCallback: this.addDepositAddress
         };
@@ -118,13 +118,13 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
 
         if (WalletDb.isLocked()) {
             this._unlockWallet();
+        } else {
+            getDepositAddress({
+                coin: this.props.receive_coin_type,
+                account: this.props.account,
+                stateCallback: this.addDepositAddress
+            });
         }
-
-        getDepositAddress({
-            coin: this.props.receive_coin_type,
-            account: this.props.account.get("name"),
-            stateCallback: this.addDepositAddress
-        });
     }
 
     componentWillUnmount() {
@@ -132,10 +132,15 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
     }
 
     componentWillReceiveProps(np) {
-        if (np.account !== this.props.account) {
+        if (
+            np.account &&
+            !np.isLocked &&
+            (np.account !== this.props.account ||
+                np.isLocked !== this.props.isLocked)
+        ) {
             getDepositAddress({
                 coin: np.receive_coin_type,
-                account: np.account.get("name"),
+                account: np.account,
                 stateCallback: this.addDepositAddress
             });
         }
@@ -244,17 +249,17 @@ class CryptoBridgeGatewayDepositRequest extends React.Component {
         //     }
         // }
 
-        let receive_address = this.state.receive_address;
+        let receive_address = this.state.receive_address || {};
         let {emptyAddressDeposit} = this.state;
         let indicatorButtonAddr = this.state.loading;
 
-        if (!receive_address) {
-            return (
-                <div style={{margin: "3rem"}}>
-                    <LoadingIndicator type="three-bounce" />
-                </div>
-            );
-        }
+        // if (!receive_address || this.props.isLocked) {
+        //     return (
+        //         <div style={{margin: "3rem"}}>
+        //             <LoadingIndicator type="three-bounce" />
+        //         </div>
+        //     );
+        // }
 
         let withdraw_modal_id = this.getWithdrawModalId();
         let deposit_address_fragment = null;
