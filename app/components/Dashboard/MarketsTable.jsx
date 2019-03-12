@@ -7,7 +7,7 @@ import MarketsStore from "stores/MarketsStore";
 import SettingsActions from "actions/SettingsActions";
 import SettingsStore from "stores/SettingsStore";
 import utils from "common/utils";
-import PaginatedList from "../Utility/PaginatedList";
+import PaginatedList from "../Utility/PaginatedListOld";
 import MarketsRow from "./MarketsRow";
 import {Input, Icon} from "bitshares-ui-style-guide";
 
@@ -315,7 +315,10 @@ class MarketsTable extends React.Component {
                                 onClick={this._onToggleSort.bind(this, "price")}
                                 className={cnames(
                                     "column-hide-small is-sortable",
-                                    {"is-active": this.state.sortBy === "price"}
+                                    {
+                                        "is-active":
+                                            this.state.sortBy === "price"
+                                    }
                                 )}
                                 style={{textAlign: "right"}}
                             >
