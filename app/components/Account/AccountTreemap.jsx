@@ -185,6 +185,19 @@ class AccountTreemap extends React.Component {
 
         return (
             <div className="account-treemap">
+                <div className="account-treemap--legend">
+                    {accountBalances.map(({name, color}, key) => {
+                        return (
+                            <div className="legend-item" key={key}>
+                                <div
+                                    className="legend-square"
+                                    style={{backgroundColor: color}}
+                                />{" "}
+                                {name}
+                            </div>
+                        );
+                    })}
+                </div>
                 <ReactHighcharts config={config} />
             </div>
         );
