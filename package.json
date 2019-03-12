@@ -86,7 +86,7 @@
     "browsersList": "electron 1.7",
     "build": {
         "productName": "CryptoBridge",
-        "appId": "org.bitshares.graphene",
+        "appId": "crypto-bridge.org",
         "files": [
             "build/electron",
             "!node_modules"

@@ -282,6 +282,7 @@ class CryptoBridgeWithdrawModal extends React.Component {
 
     _validateAddress(new_withdraw_address, props = this.props) {
         validateAddress({
+            account: this.props.account,
             url: props.url,
             walletType: props.output_wallet_type,
             output_coin_type: props.output_coin_type,

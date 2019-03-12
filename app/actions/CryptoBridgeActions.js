@@ -29,13 +29,30 @@ const defaultMarkets = [
 let markets = {
     data: null
 };
+let accessData = {};
 let marketsTTL = 60 * 60 * 1000; // 60 minutes
 
 class CryptoBridgeActions {
     login(account) {
-        return fetch(API_LOGIN_URL, getRequestLoginOptions(account)).then(
-            response => response.json()
-        );
+        if (account && accessData[account.get("name")]) {
+            return Promise.resolve(accessData[account.get("name")]);
+        }
+
+        const options = getRequestLoginOptions(account);
+
+        if (!options) {
+            return Promise.reject("No user key available");
+        }
+
+        return fetch(API_LOGIN_URL, options).then(response => {
+            const access = response.json();
+
+            if (access) {
+                accessData[account.get("name")] = access;
+            }
+
+            return access;
+        });
     }
 
     updateAccount(account, data) {
@@ -96,6 +113,7 @@ class CryptoBridgeActions {
 
     removeAccount(accountName) {
         return dispatch => {
+            delete accessData[accountName];
             dispatch(accountName);
         };
     }

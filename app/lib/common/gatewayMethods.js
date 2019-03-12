@@ -1,6 +1,9 @@
 import ls from "./localStorage";
 import {cryptoBridgeAPIs} from "api/apiConfig";
 import {availableGateways} from "common/gateways";
+import {getRequestAccessOptions} from "./AccountUtils";
+import CryptoBridgeActions from "actions/CryptoBridgeActions";
+import assetUtils from "common/asset_utils";
 const blockTradesStorage = new ls("");
 
 let fetchInProgess = {};
@@ -223,51 +226,54 @@ export function getActiveWallets(
 }
 
 export function getDepositAddress({coin, account, stateCallback}) {
-    let body = {
-        coin,
-        account
-    };
-
-    let body_string = JSON.stringify(body);
-
-    fetch(cryptoBridgeAPIs.BASE + "/simple-api/get-last-address", {
-        method: "POST",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
-        .then(
-            data => {
-                data.json().then(
-                    json => {
-                        let address = {
-                            address: json.address,
-                            memo: json.memo || null,
-                            error: json.error || null,
-                            loading: false
-                        };
-                        if (stateCallback) stateCallback(address);
-                    },
-                    error => {
-                        console.log("error: ", error);
-                        if (stateCallback)
+    CryptoBridgeActions.login(account)
+        .then(access => {
+            fetch(
+                cryptoBridgeAPIs.BASE_V2 +
+                    `/accounts/${account.get(
+                        "name"
+                    )}/assets/${assetUtils.getCleanAssetSymbol(
+                        coin
+                    )}/addresses/latest`,
+                Object.assign(getRequestAccessOptions(access), {
+                    method: "GET"
+                })
+            )
+                .then(reply => {
+                    if (reply.status === 404) {
+                        if (stateCallback) {
                             stateCallback({
-                                address: error.message,
-                                memo: null
+                                error: {message: "no_address"}
                             });
+                        }
+                    } else {
+                        reply.json().then(
+                            json => {
+                                let address = {
+                                    address: json.address,
+                                    memo: json.memo || null,
+                                    error: json.error || null,
+                                    loading: false
+                                };
+                                if (stateCallback) stateCallback(address);
+                            },
+                            error => {
+                                console.log("error: ", error);
+                                if (stateCallback)
+                                    stateCallback({
+                                        address: error.message,
+                                        memo: null
+                                    });
+                            }
+                        );
                     }
-                );
-            },
-            error => {
-                console.log("error: ", error);
-                if (stateCallback)
-                    stateCallback({address: error.message, memo: null});
-            }
-        )
+                })
+                .catch(err => {
+                    console.log("auth error", err);
+                });
+        })
         .catch(err => {
-            console.log("fetch error:", err);
+            console.log("auth error:", err);
         });
 }
 
@@ -275,55 +281,60 @@ let depositRequests = {};
 export function requestDepositAddress({
     inputCoinType,
     outputCoinType,
-    outputAddress,
-    url = cryptoBridgeAPIs.BASE,
+    account,
     stateCallback
 }) {
     let body = {
         inputCoinType,
         outputCoinType,
-        outputAddress
+        outputAddress: account.get("name")
     };
 
     let body_string = JSON.stringify(body);
     if (depositRequests[body_string]) return;
     depositRequests[body_string] = true;
-    fetch(url + "/simple-api/initiate-trade", {
-        method: "post",
-        headers: new Headers({
-            Accept: "application/json",
-            "Content-Type": "application/json"
-        }),
-        body: body_string
-    })
-        .then(
-            reply => {
-                reply.json().then(
-                    json => {
-                        delete depositRequests[body_string];
-                        // console.log( "reply: ", json );
-                        let address = {
-                            address: json.inputAddress || "unknown",
-                            memo: json.inputMemo,
-                            error: json.error || null
-                        };
-                        if (stateCallback) stateCallback(address);
-                    },
-                    error => {
-                        console.log("error: ", error);
-                        delete depositRequests[body_string];
-                        if (stateCallback) stateCallback(null);
-                    }
-                );
-            },
-            error => {
-                console.log("error: ", error);
-                delete depositRequests[body_string];
-                if (stateCallback) stateCallback(null);
-            }
-        )
+
+    CryptoBridgeActions.login(account)
+        .then(access => {
+            fetch(
+                cryptoBridgeAPIs.BASE_V2 +
+                    `/accounts/${account.get(
+                        "name"
+                    )}/assets/${assetUtils.getCleanAssetSymbol(
+                        inputCoinType
+                    )}/addresses`,
+                Object.assign(getRequestAccessOptions(access), {
+                    method: "POST"
+                })
+            ).then(
+                reply => {
+                    reply.json().then(
+                        json => {
+                            delete depositRequests[body_string];
+                            // console.log( "reply: ", json );
+                            let address = {
+                                address: json.address || "unknown",
+                                memo: null,
+                                error: json.error || null
+                            };
+                            if (stateCallback) stateCallback(address);
+                        },
+                        error => {
+                            console.log("error: ", error);
+                            delete depositRequests[body_string];
+                            if (stateCallback) stateCallback(null);
+                        }
+                    );
+                },
+                error => {
+                    console.log("error: ", error);
+                    delete depositRequests[body_string];
+                    if (stateCallback) stateCallback(null);
+                }
+            );
+        })
         .catch(err => {
-            console.log("fetch error:", err);
+            console.log("auth error:", err);
             delete depositRequests[body_string];
         });
 }
@@ -423,48 +434,27 @@ export function getBackedCoins({allCoins, tradingPairs, backer}) {
 }
 
 export function validateAddress({
-    url = cryptoBridgeAPIs.BASE,
-    walletType,
+    account,
     newAddress,
-    output_coin_type = null,
-    method = null
+    output_coin_type = null
 }) {
     if (!newAddress) return new Promise(res => res());
 
-    if (!method || method == "GET") {
-        url +=
-            "/wallets/" +
-            walletType +
-            "/address-validator?address=" +
-            encodeURIComponent(newAddress);
-        if (output_coin_type) {
-            url += "&outputCoinType=" + output_coin_type;
-        }
-        return fetch(url, {
-            method: "get",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            })
+    return CryptoBridgeActions.login(account)
+        .then(access => {
+            return fetch(
+                cryptoBridgeAPIs.BASE_V2 +
+                    `/accounts/${account.get(
+                        "name"
+                    )}/assets/${assetUtils.getCleanAssetSymbol(
+                        output_coin_type
+                    )}/addresses/validate?address=${newAddress}`,
+                getRequestAccessOptions(access)
+            ).then(reply => true);
         })
-            .then(reply => reply.json().then(json => json.isValid))
-            .catch(err => {
-                console.log("validate error:", err);
-            });
-    } else if (method == "POST") {
-        return fetch(url + "/wallets/" + walletType + "/check-address", {
-            method: "post",
-            headers: new Headers({
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            }),
-            body: JSON.stringify({address: newAddress})
-        })
-            .then(reply => reply.json().then(json => json.isValid))
-            .catch(err => {
-                console.log("validate error:", err);
-            });
-    }
+        .catch(err => {
+            console.log("auth error", err);
+        });
 }
 
 let _conversionCache = {};
