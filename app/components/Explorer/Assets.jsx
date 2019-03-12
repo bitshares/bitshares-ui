@@ -13,7 +13,7 @@ import AssetName from "../Utility/AssetName";
 import {ChainStore} from "bitsharesjs";
 import utils from "common/utils";
 import ls from "common/localStorage";
-import PaginatedList from "../Utility/PaginatedList";
+import PaginatedList from "../Utility/PaginatedListOld";
 import {Apis} from "bitsharesjs-ws";
 import {Radio, Table, Select, Input, Icon} from "bitshares-ui-style-guide";
 
