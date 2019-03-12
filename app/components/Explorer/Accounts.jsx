@@ -23,8 +23,7 @@ class Accounts extends React.Component {
         this.state = {
             searchTerm: props.searchTerm,
             isLoading: false,
-            rowsOnPage: "25",
-            balanceObjects: []
+            rowsOnPage: "25"
         };
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
@@ -74,16 +73,13 @@ class Accounts extends React.Component {
         this.forceUpdate();
     }
 
-    _getBalanceObject(object_id) {
-        let {balanceObjects} = this.state;
+    _getBalanceObject(object_id, balanceObjects) {
 
         if(object_id && typeof(object_id) === "string") {
             if(!balanceObjects[object_id]) {
                 balanceObjects[object_id] = parseFloat(ChainStore.getObject(object_id).get("balance"));
             }
         }
-
-        this.setState({balanceObjects});
 
         return balanceObjects[object_id] ? balanceObjects[object_id] : 0;
     }
@@ -94,6 +90,7 @@ class Accounts extends React.Component {
 
         let dataSource = [];
         let columns = [];
+        let balanceObjects = [];
 
         columns = [
             {
@@ -170,12 +167,12 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalance",
                 sorter: (a, b) => {
-                    let a_balance = this._getBalanceObject(a.accountBalance);
-                    let b_balance = this._getBalanceObject(b.accountBalance);
+                    balanceObjects[a.accountBalance] = this._getBalanceObject(a.accountBalance, balanceObjects);
+                    balanceObjects[b.accountBalance] = this._getBalanceObject(b.accountBalance, balanceObjects);
 
-                    return a_balance > b_balance
+                    return balanceObjects[a.accountBalance] > balanceObjects[b.accountBalance]
                         ? 1
-                        : a_balance < b_balance
+                        : balanceObjects[a.accountBalance] < balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -196,12 +193,12 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalancePercentage",
                 sorter: (a, b) => {
-                    let a_balance = this._getBalanceObject(a.accountBalance);
-                    let b_balance = this._getBalanceObject(b.accountBalance);
+                    balanceObjects[a.accountBalance] = this._getBalanceObject(a.accountBalance, balanceObjects);
+                    balanceObjects[b.accountBalance] = this._getBalanceObject(b.accountBalance, balanceObjects);
 
-                    return a_balance > b_balance
+                    return balanceObjects[a.accountBalance] > balanceObjects[b.accountBalance]
                         ? 1
-                        : a_balance < b_balance
+                        : balanceObjects[a.accountBalance] < balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -262,6 +259,7 @@ class Accounts extends React.Component {
                     });
                 });
         }
+
 
         return (
             <div className="grid-block vertical">
