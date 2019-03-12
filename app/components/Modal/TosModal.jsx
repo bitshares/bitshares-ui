@@ -386,10 +386,7 @@ class TosModal extends React.Component {
                         ) : kycRequired ? (
                             <a
                                 className="button primary"
-                                onClick={this.onKycStart.bind(
-                                    this,
-                                    kycPending ? "https://fractal.id" : kyc.link
-                                )}
+                                onClick={this.onKycStart.bind(this, kyc.link)}
                             >
                                 <Translate
                                     content={
