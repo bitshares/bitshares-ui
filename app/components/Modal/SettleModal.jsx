@@ -28,38 +28,35 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
         switch (worthLessSettlement) {
             case true:
                 return (
-                    <Alert 
-                        message={counterpart.translate("exchange.settle_better_marketprice")}
-                        description={
-                            <span>
-                                <TranslateWithLinks
-                                    string="exchange.worth_less_settlement_warning"
-                                    keys={[
-                                        {
-                                            value: (
-                                                <MarketLink
-                                                    base={asset.get("id")}
-                                                    quote={shortBackingAsset.get("id")}
-                                                />
-                                            ),
-                                            arg: "market_link"
-                                        }
-                                    ]}
-                                />
-                                <br />
-                                &nbsp;&nbsp;
-                                <Translate content="exchange.price_market" />
-                                :&nbsp;&nbsp;
-                                {marketPrice}
-                                <br />
-                                &nbsp;&nbsp;
-                                <Translate content="exchange.settle" />
-                                :&nbsp;&nbsp;
-                                {settlementPrice}
-                            </span>
-                        }
-                        type="info"
-                    />
+                    <div> 
+                        <Translate component="h2" content="exchange.settle_better_marketprice" />
+                        <span>
+                            <TranslateWithLinks
+                                string="exchange.worth_less_settlement_warning"
+                                keys={[
+                                    {
+                                        value: (
+                                            <MarketLink
+                                                base={asset.get("id")}
+                                                quote={shortBackingAsset.get("id")}
+                                            />
+                                        ),
+                                        arg: "market_link"
+                                    }
+                                ]}
+                            />
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.price_market" />
+                            :&nbsp;&nbsp;
+                            {marketPrice}
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.settle" />
+                            :&nbsp;&nbsp;
+                            {settlementPrice}
+                        </span>
+                    </div>
                 );
             case undefined:
                 return (
@@ -67,44 +64,41 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
                 );
             default:
                 return (
-                    <Alert
-                        message={counterpart.translate("exchange.settle_better_settleprice")}
-                        description={
-                            <span>
-                                <TranslateWithLinks
-                                    string="exchange.settlement_hint"
-                                    keys={[
-                                        {
-                                            value: (
-                                                <MarketLink
-                                                    base={asset.get("id")}
-                                                    quote={shortBackingAsset.get("id")}
-                                                />
-                                            ),
-                                            arg: "market_link"
-                                        },
-                                        {
-                                            value: (
-                                                <AssetName name={asset.get("symbol")} />
-                                            ),
-                                            arg: "long"
-                                        }
-                                    ]}
-                                />
-                                <br />
-                                &nbsp;&nbsp;
-                                <Translate content="exchange.price_market" />
-                                :&nbsp;&nbsp;
-                                {marketPrice}
-                                <br />
-                                &nbsp;&nbsp;
-                                <Translate content="exchange.settle" />
-                                :&nbsp;&nbsp;
-                                {settlementPrice}
-                            </span>
-                        }
-                        type="info"
-                    />
+                    <div>
+                        <Translate component="h2" content="exchange.settle_better_settleprice" />
+                        <span>
+                            <TranslateWithLinks
+                                string="exchange.settlement_hint"
+                                keys={[
+                                    {
+                                        value: (
+                                            <MarketLink
+                                                base={asset.get("id")}
+                                                quote={shortBackingAsset.get("id")}
+                                            />
+                                        ),
+                                        arg: "market_link"
+                                    },
+                                    {
+                                        value: (
+                                            <AssetName name={asset.get("symbol")} />
+                                        ),
+                                        arg: "long"
+                                    }
+                                ]}
+                            />
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.price_market" />
+                            :&nbsp;&nbsp;
+                            {marketPrice}
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.settle" />
+                            :&nbsp;&nbsp;
+                            {settlementPrice}
+                        </span>
+                    </div>
                 );
         }
     }
