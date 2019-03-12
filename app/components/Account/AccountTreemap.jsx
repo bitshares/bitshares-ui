@@ -106,18 +106,18 @@ class AccountTreemap extends React.Component {
                 * the total value of the account
                 */
                     if (percent < 0.5) return null;
-
-                    return finalValue >= 1
-                        ? {
-                              symbol: asset.get("symbol"),
-                              name: `${asset.get("symbol")} (${
-                                  totalValue === 0 ? 0 : percent.toFixed(2)
-                              }%)`,
-                              value: finalValue,
-                              color: ReactHighcharts.Highcharts.getOptions()
-                                  .colors[index]
-                          }
-                        : null;
+                    if (finalValue < 1) return null;
+                    const symbol = asset.get("symbol");
+                    return {
+                        symbol: symbol,
+                        name: `${symbol} (${
+                            totalValue === 0 ? 0 : percent.toFixed(2)
+                        }%)`,
+                        value: finalValue,
+                        color: ReactHighcharts.Highcharts.getOptions().colors[
+                            index
+                        ]
+                    };
                 })
                 .filter(n => !!n);
         }
