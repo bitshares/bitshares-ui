@@ -437,7 +437,7 @@ class SendModal extends React.Component {
     }
 
     fromChanged(from_name) {
-        if (this.state.propose) this.setState({from_name});
+        this.setState({from_name});
     }
 
     onFromAccountChanged(from_account) {
@@ -742,6 +742,7 @@ class SendModal extends React.Component {
                                             size={60}
                                             tabIndex={tabIndex++}
                                             hideImage
+                                            disabled={true}
                                         />
                                         <div className="modal-separator" />
                                     </React.Fragment>
@@ -758,7 +759,7 @@ class SendModal extends React.Component {
                                         this
                                     )}
                                     size={60}
-                                    typeahead={propose || undefined}
+                                    typeahead={true}
                                     tabIndex={tabIndex++}
                                     hideImage
                                 />
@@ -795,7 +796,6 @@ class SendModal extends React.Component {
                                     tabIndex={tabIndex++}
                                     allowNaN={true}
                                 />
-                                    
                                 {memo && memo.length ? (
                                     <label className="right-label">
                                         {memo.length}
