@@ -350,7 +350,7 @@ class AccountPortfolioList extends React.Component {
     }
 
     _renderBuy = (symbol, canBuy, assetName, emptyCell, balance) => {
-        if (symbol === "BTS" && balance <= 100000) {
+        if (symbol === "BTS" && balance <= 1000000) {
             // Precision of 5, 1 = 10^5
             return (
                 <span>
@@ -383,7 +383,9 @@ class AccountPortfolioList extends React.Component {
             let linkElement = (
                 <span>
                     <Icon
-                        style={{cursor: "pointer"}}
+                        style={{
+                            cursor: this.props.isMyAccount ? "pointer" : "help"
+                        }}
                         name="dollar"
                         title="icons.dollar.buy"
                         className="icon-14px"
@@ -394,7 +396,7 @@ class AccountPortfolioList extends React.Component {
 
             if (canBuy && this.props.isMyAccount) {
                 return linkElement;
-            } else if(canBuy && !this.props.isMyAccount) {
+            } else if (canBuy && !this.props.isMyAccount) {
                 return (
                     <Tooltip
                         title={counterpart.translate("tooltip.login_required")}
@@ -409,23 +411,25 @@ class AccountPortfolioList extends React.Component {
     };
 
     _renderGatewayAction = (type, allowed, assetName, emptyCell) => {
-        let modalAction = type == "deposit" ? 
-            this._showDepositModal.bind(
-                this,
-                assetName
-            ) : this._showDepositWithdraw.bind(
-                this,
-                "withdraw_modal_new",
-                assetName,
-                false
-            );
+        let modalAction =
+            type == "deposit"
+                ? this._showDepositModal.bind(this, assetName)
+                : this._showDepositWithdraw.bind(
+                      this,
+                      "withdraw_modal_new",
+                      assetName,
+                      false
+                  );
 
-        let actionTitle = type == "deposit" ? `icons.${type}.${type}` : `icons.${type}`;
+        let actionTitle =
+            type == "deposit" ? `icons.${type}.${type}` : `icons.${type}`;
 
         let linkElement = (
             <span>
                 <Icon
-                    style={{cursor: "pointer"}}
+                    style={{
+                        cursor: this.props.isMyAccount ? "pointer" : "help"
+                    }}
                     name={type}
                     title={actionTitle}
                     className="icon-14x"
@@ -447,7 +451,7 @@ class AccountPortfolioList extends React.Component {
         } else {
             return emptyCell;
         }
-    }
+    };
 
     _renderBalances(balanceList, optionalAssets, visible) {
         const {
@@ -725,7 +729,6 @@ class AccountPortfolioList extends React.Component {
                             assetName,
                             emptyCell
                         )}
-                        
                     </td>
                     <td>{directMarketLink}</td>
                     <td>
