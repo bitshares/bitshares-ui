@@ -202,8 +202,8 @@ class AccountTreemap extends React.Component {
                 <div className="account-treemap--legend">
                     {accountBalances.map(({name, symbol, color}, key) => {
                         return (
-                            <Link to={`/asset/${symbol}`}>
-                                <div className="legend-item" key={key}>
+                            <Link key={key} to={`/asset/${symbol}`}>
+                                <div className="legend-item">
                                     <div
                                         className="legend-square"
                                         style={{backgroundColor: color}}
