@@ -1,6 +1,4 @@
-const CB_API_BASE =
-    __DEVNET_API__ ||
-    "https://api." + (__TESTNET__ ? "testnet." : "") + "crypto-bridge.org";
+const CB_API_BASE = __API_URL__;
 const CB_API_VERSION = "/v1";
 const CB_API_VERSION_V2 = "/v2";
 const CB_FAUCET = CB_API_BASE;

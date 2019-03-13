@@ -69,6 +69,7 @@ module.exports = function(env) {
     });
     const localeRegex = new RegExp(regexString);
 
+    const isStageNet = !!process.env.__STAGENET__ || !!env.stagenet;
     const isTestNet = !!process.env.__TESTNET__ || !!env.testnet;
     const isDevNet = !!process.env.__DEVNET__;
 
@@ -82,11 +83,9 @@ module.exports = function(env) {
         env.CRYPTOBRIDGE_PUB_KEY ||
         "BTS74ePvhPVtYw79orHZkHgfpGr5vRJ1ZPyDDZcCBEg275DGpCy8k";
 
-    const walletUrl = isDevNet
-        ? "http://localhost:8080"
-        : isTestNet
-            ? "https://wallet.testnet.crypto-bridge.org"
-            : "https://wallet.crypto-bridge.org";
+    const walletUrl =
+        process.env.__WALLET_URL__ || "https://wallet.crypto-bridge.org";
+    const apiUrl = process.env.__API_URL__ || "https://api.crypto-bridge.org";
 
     var plugins = [
         new HtmlWebpackPlugin({
@@ -108,9 +107,11 @@ module.exports = function(env) {
             __UI_API__: JSON.stringify(
                 env.apiUrl || "https://ui.bitshares.eu/api"
             ),
-            __DEVNET_API__: JSON.stringify(process.env.__DEVNET_API__ || false),
+            __API_URL__: JSON.stringify(apiUrl),
+            __WALLET_URL__: JSON.stringify(walletUrl),
             __DEVNET__: isDevNet,
             __TESTNET__: isTestNet,
+            __STAGENET__: isStageNet,
             __DEPRECATED__: !!env.deprecated,
             __RECAPTCHA_SITE_KEY__: JSON.stringify(recaptchaSiteKey),
             __CRYPTOBRIDGE_PUB_KEY__: JSON.stringify(cryptoBridgePubKey),
