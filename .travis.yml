@@ -51,7 +51,7 @@ jobs:
         - export RECAPTCHA_SITE_KEY=$STAGE_RECAPTCHA_SITE_KEY
         - export CRYPTOBRIDGE_PUB_KEY=$STAGE_CRYPTOBRIDGE_PUB_KEY
         - npm install
-        - npm run build
+        - npm run build-stage
     - stage: deploy-stage
       script:
         - ls -la ./build/dist/

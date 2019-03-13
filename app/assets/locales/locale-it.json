@@ -2065,5 +2065,115 @@
             "finalNumber": "Actual amount ：%(final_number)s",
             "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
         }
+    },
+    "cryptobridge": {
+        "important": {
+            "title": "Importante",
+            "user_verification":
+                "Perfavore familiarizza con i nostri termini di servizio (per tutti gli utenti) e verifica l’identità (per gli utenti Americani). Il servizio finirà a marzo 07, 2019 0:00 UTC. <a target=\"_blank\" href=\"https://crypto-bridge.org/2019/02/26/urgent-announcement-terms-of-service-identity-verification-requirements/\">Più informazioni qui.</a>"
+        },
+        "general": {
+            "check_url": "Per favore controlla che stai visitando %(url)s",
+            "important": "Importante",
+            "news": "Novità"
+        },
+        "gateway": {
+            "deposit_fee": "Tassa di deposito",
+            "deposit_payment_id_tag_required":
+                "DEVI usare questo tag per il deposito",
+            "deposit_payment_id_tag": "Tag destinazione (facoltativo)",
+            "deposit_payment_id_tag_invalid": "Il tag non è valido ",
+            "deposit_payment_id_hash": "ID pagamento (facoltativo)",
+            "deposit_payment_id_hash_invalid": "L’ID di pagamento non è valido",
+            "deposit_tag_acknowledgement_alert":
+                "ATTENZIONE: La mancata osservazione della corretta procedura di deposito di %(asset)s comporterà la perdita dei depositi.",
+            "deposit_tag_acknowledgement_info":
+                "Il deposito di %(asset)s su Cryptobridge richiede indirizzo di deposito e tag .Per fare un deposito è </strong>obbligatorio</strong> utilizzare entrambi:</p><ul><li>indirizzo</li><li>Tag</li></ul><p>Non inviare %(asset)s a cryptobridge a meno che tu non sappia come indicare un tag. Se non si riesce a includere il tag con il deposito, i fondi saranno persi per sempre.</p>",
+            "deposit_tag_acknowledgement_confirm": "Ho capito. continua",
+            "copy_address_tag": "Copia Tag",
+            "required_confirmations": "Conferme necessarie",
+            "support_block": "Per supporto: Contattare cryptobridge su:",
+            "deposit_or_withdrawal": "Deposito o prelievo",
+            "deposit_intro":
+                "se vuoi depositare o prelevare fondi da altri blockchains, si prega di utilizzare il modulo sottostante.",
+            "deposit_to_fee_warning":
+                "ATTENZIONE: il deposito di %(asset)s più di una volta ogni %(fee_time_frame)s, sarà soggetto a una tassa di  %(fee_percentage)s% (minimum %(fee_minimum)s %(asset)s). Una tassa di deposito di %(fee_percentage_low_amounts)s% è applicata quando il deposito è inferiore a 1 %(asset)s.",
+            "deposit_minimum": "Deposito minimo",
+            "deposit_login":
+                "Il tuo portafoglio dev’essere sbloccato prima di effettuare un deposito",
+            "receive_funds": "Ricevere fondi",
+            "receive_funds_intro":
+                "Per ricevere fondi da un’altra persona su cryptobridge basta semplicemente dare loro il nome dell’account: ",
+            "account_tos_action_required": "Apri i termini di servizio",
+            "account_tos_action_required_label":
+                "Accetta i termini di servizio di CryptoBridge",
+            "account_kyc_action_required": "Avvia verifica utente",
+            "account_kyc_action_required_label":
+                "I cittadini USA sono tenuti a inviare la verifica (KYC) per utilizzare cryptobridge",
+            "account_kyc_action_pending": "Controlla lo stato della verifica",
+            "account_kyc_action_pending_label":
+                "In attesa di verifica da Fractal"
+        },
+        "header": {
+            "imprint": "Imprint",
+            "terms": "Termini e condizioni"
+        },
+        "footer": {
+            "title": "CryptoBridge"
+        },
+        "account": {
+            "id": "BCO staking ID",
+            "title":
+                " Metti in staking i BCO per guadagnare profitti dal gateway CryptoBridge",
+            "intro_text_title": "BENVENUTO su CryptoBridge",
+            "staking_amount": "Importo staking",
+            "remaining": "Tempo restante",
+            "staking_text1":
+                "Chiunque metta in staking BCO sul proprio conto ha diritto al %(percent)s di profitto sulle commissioni di trading che avvengono attraverso il gateway CryptoBridge. Lo staking bloccherà le tue coin per la durata specifica che sceglierai. Durante lo staking farai automatiacamente parte dei payout. I payout avvengono ogni due settimane.",
+            "staking_text2":
+                "Uno staking più lungo risulta in un fattore di pagamento più grande. Dopo che il periodo di staking è stato completato, puoi recuperare il tuo saldo in BCO con il pulsante <b>\"Reclama ora\"</b>. La commissione per aprire un nuovo staking è attualmente <b>%(fee)s BCO</b>. La commissione blockchain per reclamare i tuoi bco è attualmente <b>%(reclaimFee)s BCO.</b>",
+            "staking_text3":
+                "Puoi mettere in staking solo i BCO che hai depositato su <b>CryptoBridge</b>. Puoi trovare maggiori informazioni sui vantaggi di CryptoBridge e sul suo programma di sharing dei profitti su  <a target=\"_new\" href=\"https://crypto-bridge.org\">crypto-bridge.org</a>. Maggiori dettagli sui payout  e su come sono applicati i bonus sono disponibili su <a target=\"_new\" href=\"https://crypto-bridge.org#faq\">FAQ page</a>.",
+            "status": "Stato",
+            "staking": "BridgeCoin in staking",
+            "days": "%(days)s giorni",
+            "available": "disponibile per il reclamo",
+            "month_1": "1 Mese (%(bonus)s bonus)",
+            "month_3": "3 Mesi (%(bonus)s bonus)",
+            "month_6": "6 Mesi (%(bonus)s bonus)",
+            "month_12": "12 Mesi (%(bonus)s bonus)",
+            "month_1_plural": "1 Mese",
+            "month_3_plural": "3 Mesi",
+            "month_6_plural": "6 Mesi",
+            "month_12_plural": "12 Mesi",
+            "amount_bco": "quantità di bco in staking",
+            "stake_bco": "creare una nuova posizione di staking BCO",
+            "length": "durata staking",
+            "understand":
+                "Con la presente accetto di mettere in staking %(amount)s BCO, capisco perfettamente che saranno bloccati per %(month)s e che non vi è alcun modo di reclamare i fondi prima della fine del periodo di staking. Accetto anche la quota dei profitti generati dal mio staking sulla piattaforma.",
+            "no_balances": "Non hai posizioni di staking aperte.",
+            "bco_available": "Disponibili: ",
+            "bco_not_available": "Nessun BCO disponibili ",
+            "terms_and_conditions": "CryptoBridge - termini e condizioni",
+            "terms_and_conditions_accept":
+                "Ho letto e accetto i termini e le condizioni di CryptoBridge ",
+            "terms_and_conditions_accept_disclaimer":
+                "Con la presente rinuncio al mio diritto di revoca del consumatore e riconosco che posso interrompere l'uso del servizio in qualsiasi momento come descritto in §5.9 dei Termini di servizio di CryptoBridge ",
+            "are_you_us_citizen":
+                "Sei un cittadino degli Stati Uniti? %(flagImg)s",
+            "kyc_info":
+                "Per continuare a utilizzare il gateway CryptoBridge, i cittadini statunitensi devono prima inviare la verifica della loro identità. Procedere ti reindirizzerà al nostro partner, Fractal. Al termine, verrà ripristinata la piena funzionalità del tuo account.",
+            "kyc_info_grace":
+                "Per continuare a utilizzare il gateway CryptoBridge, i cittadini statunitensi devono prima inviare la verifica della propria identità. Ci sarà un periodo di tolleranza che consentirà a coloro che non acconsentono alla procedura di verifica di ritirare i propri fondi, che scade il %(deadlineDate)s. Procedendo ti reindirizzeremo al nostro partner, Fractal. Al termine, verrà ripristinata la piena funzionalità del tuo account. ",
+            "kyc_info_pending":
+                "I nostri sistemi indicano che hai iniziato la procedura di verifica. Le funzionalità di trading, deposito e prelievo saranno disabilitate fino al completamento. La verifica sarà approvata da Fractal in circa 24 ore dalla sua presentazione. Contatta Fractal per problemi relativi allo stato della verifica. "
+        },
+        "dashboard": {
+            "all_markets": " Tutti i mercati ",
+            "Proposal_warning":
+                "NON APPROVARE alcuna proposta da account sconosciuti. Il tuo account potrebbe essere rubato se approvi una proposta malevola.",
+            "Proposal_info":
+                "In caso di dubbi, non fare nulla e porre domande nel nostro server Discord %(discordLink)s"
+        }
     }
 }
