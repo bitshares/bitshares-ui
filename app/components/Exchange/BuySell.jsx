@@ -974,7 +974,12 @@ class BuySell extends React.Component {
                     //data-intro={dataIntro}
                 >
                     {!hideHeader ? (
-                        <div className={"exchange-content-header " + type}>
+                        <div
+                            className={
+                                "exchange-content-header exchange-content-header--buy-sell-form " +
+                                type
+                            }
+                        >
                             <span>
                                 <TranslateWithLinks
                                     string="exchange.buysell_formatter"
@@ -997,36 +1002,6 @@ class BuySell extends React.Component {
                                         }
                                     ]}
                                 />
-                            </span>
-                            <span style={{float: "right"}}>
-                                {currentAccount ? (
-                                    <a
-                                        href="javascript:void(0);"
-                                        onClick={
-                                            this.props.showScaledOrderModal
-                                        }
-                                        style={{textTransform: "none"}}
-                                    >
-                                        {counterpart.translate(
-                                            "scaled_orders.title"
-                                        )}
-                                    </a>
-                                ) : (
-                                    <Tooltip
-                                        title={counterpart.translate(
-                                            "scaled_orders.please_log_in"
-                                        )}
-                                    >
-                                        <a
-                                            href="javascript:void(0);"
-                                            style={{textTransform: "none"}}
-                                        >
-                                            {counterpart.translate(
-                                                "scaled_orders.title"
-                                            )}
-                                        </a>
-                                    </Tooltip>
-                                )}
                             </span>
                             {/* <span>{buttonText} <AssetName dataPlace="top" name={quote.get("symbol")} /></span> */}
                             {this.props.onFlip &&

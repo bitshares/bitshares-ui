@@ -1430,6 +1430,11 @@
             border-bottom: 1px solid $ask-color;
         }
     }
+
+    .exchange-content-header--buy-sell-form {
+        border-bottom: 0 !important;
+    }
+
     // .block-content-header {
     // //text-transform: uppercase;
     // @include RobotoLight;

@@ -476,6 +476,8 @@
         "top_markets": "Top Markets"
     },
     "exchange": {
+        "limit": "Limit",
+        "scaled": "Scaled",
         "add_quote": "Add",
         "asks": "Sell orders",
         "atr": "Average True Range",
