@@ -16,7 +16,38 @@ import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
-import TransferOperation from "./operations/Transfer";
+import {
+    Transfer,
+    LimitOrderCreate,
+    LimitOrderCancel,
+    ShortOrderCancel,
+    CallOrderUpdate,
+    KeyCreate,
+    AccountCreate,
+    AccountUpdate,
+    AccountWhitelist,
+    AccountUpgrade,
+    AccountTransfer,
+    AssetCreate,
+    AssetUpdate,
+    AssetUpdateFeedProducers,
+    AssetIssue,
+    AssetReserve,
+    AssetFundFeePool,
+    AssetSettle,
+    AssetGlobalSettle,
+    AssetPublishFeed,
+    WitnessCreate,
+    WitnessUpdate,
+    WitnessWithdrawPay,
+    ProposalCreate,
+    ProposalUpdate,
+    ProposalDelete,
+    WithdrawPermissionCreate,
+    WithdrawPermissionUpdate,
+    WithdrawPermissionClaim,
+    WithdrawPermissionDelete
+} from "./operations";
 
 require("./operations.scss");
 
@@ -111,10 +142,6 @@ class ProposedOperation extends React.Component {
         csvExportMode: PropTypes.bool
     };
 
-    // shouldComponentUpdate(nextProps) {
-    //     return utils.are_equal_shallow(nextProps.op, this.props.op);
-    // }
-
     linkToAccount(name_or_id) {
         if (!name_or_id) return <span>-</span>;
         return utils.is_object_id(name_or_id) ? (
@@ -136,7 +163,6 @@ class ProposedOperation extends React.Component {
     changeColor = newColor => {
         const {label_color} = this.state;
         if (label_color !== newColor) {
-            console.log("!!!! change color", newColor);
             this.setState({label_color: newColor});
         }
     };
@@ -152,633 +178,229 @@ class ProposedOperation extends React.Component {
         ) {
             case "transfer":
                 column = (
-                    <TransferOperation
-                        {...this.props}
-                        changeColor={this.changeColor}
-                    />
+                    <Transfer {...this.props} changeColor={this.changeColor} />
                 );
 
                 break;
 
             case "limit_order_create":
-                color = "warning";
-
-                let isAsk = market_utils.isAskOp(op[1]);
-
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string={
-                                isAsk
-                                    ? "proposal.limit_order_sell"
-                                    : "proposal.limit_order_buy"
-                            }
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].seller,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "amount",
-                                    value: isAsk
-                                        ? op[1].amount_to_sell
-                                        : op[1].min_to_receive,
-                                    arg: "amount"
-                                },
-                                {
-                                    type: "price",
-                                    value: {
-                                        base: isAsk
-                                            ? op[1].min_to_receive
-                                            : op[1].amount_to_sell,
-                                        quote: isAsk
-                                            ? op[1].amount_to_sell
-                                            : op[1].min_to_receive
-                                    },
-                                    arg: "price"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <LimitOrderCreate
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "limit_order_cancel":
-                color = "cancel";
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].fee_paying_account)}
-                        &nbsp;
-                        <Translate
-                            component="span"
-                            content="proposal.limit_order_cancel"
-                        />
-                        &nbsp;#
-                        {op[1].order.substring(4)}
-                    </span>
+                    <LimitOrderCancel
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "short_order_cancel":
-                color = "cancel";
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.short_order_cancel"
-                        />
-                        &nbsp;
-                        {op[1].order}
-                    </span>
+                    <ShortOrderCancel
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "call_order_update":
-                color = "warning";
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.call_order_update"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].funding_account,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "asset",
-                                    value: op[1].delta_debt.asset_id,
-                                    arg: "debtSymbol"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].delta_debt,
-                                    arg: "debt"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].delta_collateral,
-                                    arg: "collateral"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <CallOrderUpdate
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "key_create":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.create_key"
-                        />
-                    </span>
-                );
+                column = <KeyCreate />;
                 break;
 
             case "account_create":
-                if (current === op[1].registrar) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.reg_account"
-                            />
-                            &nbsp;
-                            {this.linkToAccount(op[1].name)}
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].name)}
-                            &nbsp;
-                            <Translate
-                                component="span"
-                                content="proposal.was_reg_account"
-                            />
-                            &nbsp;
-                            {this.linkToAccount(op[1].registrar)}
-                        </span>
-                    );
-                }
+                column = (
+                    <AccountCreate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
+                );
                 break;
 
             case "account_update":
-                column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.update_account"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].account,
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
-
+                column = <AccountUpdate {...this.props} />;
                 break;
 
             case "account_whitelist":
-                let label =
-                    op[1].new_listing === listings.no_listing
-                        ? "unlisted_by"
-                        : op[1].new_listing === listings.white_listed
-                            ? "whitelisted_by"
-                            : "blacklisted_by";
-                column = (
-                    <span>
-                        <BindToChainState.Wrapper
-                            lister={op[1].authorizing_account}
-                            listee={op[1].account_to_list}
-                        >
-                            {({lister, listee}) => (
-                                <Translate
-                                    component="span"
-                                    content={"transaction." + label}
-                                    lister={lister.get("name")}
-                                    listee={listee.get("name")}
-                                />
-                            )}
-                        </BindToChainState.Wrapper>
-                    </span>
-                );
+                column = <AccountWhitelist {...this.props} />;
                 break;
 
             case "account_upgrade":
-                if (op[1].upgrade_to_lifetime_member) {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].account_to_upgrade)}{" "}
-                            &nbsp;
-                            <Translate
-                                component="span"
-                                content="proposal.lifetime_upgrade_account"
-                            />
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            {this.linkToAccount(op[1].account_to_upgrade)}{" "}
-                            &nbsp;
-                            <Translate
-                                component="span"
-                                content="proposal.annual_upgrade_account"
-                            />
-                        </span>
-                    );
-                }
+                column = (
+                    <AccountUpgrade
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
+                );
                 break;
 
             case "account_transfer":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.transfer_account"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].account_id)}
-                        <Translate component="span" content="proposal.to" />
-                        &nbsp;
-                        {this.linkToAccount(op[1].new_owner)}
-                    </span>
+                    <AccountTransfer
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "asset_create":
-                color = "warning";
                 column = (
-                    <TranslateWithLinks
-                        string="proposal.asset_create"
-                        keys={[
-                            {
-                                type: "account",
-                                value: op[1].issuer,
-                                arg: "account"
-                            }
-                        ]}
-                        params={{
-                            asset: op[1].symbol
-                        }}
+                    <AssetCreate
+                        {...this.props}
+                        changeColor={this.changeColor}
                     />
                 );
                 break;
 
             case "asset_update":
             case "asset_update_bitasset":
-                color = "warning";
                 column = (
-                    <TranslateWithLinks
-                        string="proposal.asset_update"
-                        keys={[
-                            {
-                                type: "account",
-                                value: op[1].issuer,
-                                arg: "account"
-                            },
-                            {
-                                type: "asset",
-                                value: op[1].asset_to_update,
-                                arg: "asset"
-                            }
-                        ]}
+                    <AssetUpdate
+                        {...this.props}
+                        changeColor={this.changeColor}
                     />
                 );
                 break;
 
             case "asset_update_feed_producers":
-                color = "warning";
                 column = (
-                    <TranslateWithLinks
-                        string="proposal.feed_producer"
-                        keys={[
-                            {
-                                type: "account",
-                                value: op[1].issuer,
-                                arg: "account"
-                            },
-                            {
-                                type: "asset",
-                                value: op[1].asset_to_update,
-                                arg: "asset"
-                            }
-                        ]}
+                    <AssetUpdateFeedProducers
+                        {...this.props}
+                        changeColor={this.changeColor}
                     />
                 );
                 break;
 
             case "asset_issue":
-                color = "warning";
-
-                if (op[1].memo) {
-                    memoComponent = <MemoText memo={op[1].memo} />;
-                }
-
-                op[1].asset_to_issue.amount = parseInt(
-                    op[1].asset_to_issue.amount,
-                    10
-                );
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.asset_issue"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].issuer,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].asset_to_issue,
-                                    arg: "amount"
-                                },
-                                {
-                                    type: "account",
-                                    value: op[1].issue_to_account,
-                                    arg: "to"
-                                }
-                            ]}
-                        />
-                        {memoComponent}
-                    </span>
+                    <AssetIssue
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "asset_reserve":
-                column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.asset_reserve"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].payer,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount_to_reserve,
-                                    arg: "amount"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
+                column = <AssetReserve {...this.props} />;
                 break;
 
             case "asset_fund_fee_pool":
-                color = "warning";
-                let asset = ChainStore.getAsset(op[1].asset_id);
-                if (asset) asset = asset.get("symbol");
-                else asset = op[1].asset_id;
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].from_account)} &nbsp;
-                        <Translate
-                            component="span"
-                            content="proposal.fund_pool"
-                            asset={asset}
-                        />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount}
-                            asset="1.3.0"
-                        />
-                    </span>
+                    <AssetFundFeePool
+                        {...this.props}
+                        changeColor={this.changeColor}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "asset_settle":
-                color = "warning";
                 column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.asset_settle"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: op[1].account,
-                                    arg: "account"
-                                },
-                                {
-                                    type: "amount",
-                                    value: op[1].amount,
-                                    arg: "amount"
-                                }
-                            ]}
-                        />
-                    </span>
+                    <AssetSettle
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "asset_global_settle":
-                color = "warning";
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.asset_global_settle"
-                        />
-                        &nbsp;
-                        {this.linkToAsset(op[1].asset_to_settle)}
-                        &nbsp;
-                        <Translate component="span" content="proposal.at" />
-                        &nbsp;
-                        <FormattedPrice
-                            style={{fontWeight: "bold"}}
-                            quote_amount={op[1].settle_price.quote.amount}
-                            quote_asset={op[1].settle_price.quote.asset_id}
-                            base_asset={op[1].settle_price.base.asset_id}
-                            base_amount={op[1].settle_price.base.amount}
-                        />
-                    </span>
+                    <AssetGlobalSettle
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "asset_publish_feed":
-                color = "warning";
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].publisher)}
-                        &nbsp;
-                        <Translate
-                            component="span"
-                            content="proposal.publish_feed"
-                        />
-                        &nbsp;
-                        <FormattedPrice
-                            base_asset={
-                                op[1].feed.settlement_price.base.asset_id
-                            }
-                            quote_asset={
-                                op[1].feed.settlement_price.quote.asset_id
-                            }
-                            base_amount={
-                                op[1].feed.settlement_price.base.amount
-                            }
-                            quote_amount={
-                                op[1].feed.settlement_price.quote.amount
-                            }
-                        />
-                    </span>
+                    <AssetPublishFeed
+                        {...this.props}
+                        changeColor={this.changeColor}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "witness_create":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.witness_create"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].witness_account)}
-                    </span>
+                    <WitnessCreate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
 
                 break;
 
             case "witness_update":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.witness_update"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].witness_account)}
-                    </span>
-                );
-
+                column = <WitnessUpdate {...this.props} />;
                 break;
 
             case "witness_withdraw_pay":
-                if (current === op[1].witness_account) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.witness_pay"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].amount}
-                                asset={"1.3.0"}
-                            />
-                            <Translate component="span" content="proposal.to" />
-                            &nbsp;
-                            {this.linkToAccount(op[1].witness_account)}
-                        </span>
-                    );
-                } else {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.received"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].amount}
-                                asset={"1.3.0"}
-                            />
-                            <Translate
-                                component="span"
-                                content="proposal.from"
-                            />
-                            &nbsp;
-                            {this.linkToAccount(op[1].witness_account)}
-                        </span>
-                    );
-                }
+                column = (
+                    <WitnessWithdrawPay
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
+                );
                 break;
 
             case "proposal_create":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.proposal_create"
-                        />
-                    </span>
-                );
+                column = <ProposalCreate />;
                 break;
 
             case "proposal_update":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.proposal_update"
-                        />
-                    </span>
-                );
+                column = <ProposalUpdate />;
                 break;
 
             case "proposal_delete":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.proposal_delete"
-                        />
-                    </span>
-                );
+                column = <ProposalDelete />;
                 break;
 
             case "withdraw_permission_create":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.withdraw_permission_create"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="proposal.to" />
-                        &nbsp;
-                        {this.linkToAccount(op[1].authorized_account)}
-                    </span>
+                    <WithdrawPermissionCreate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "withdraw_permission_update":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.withdraw_permission_update"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="proposal.to" />
-                        &nbsp;
-                        {this.linkToAccount(op[1].authorized_account)}
-                    </span>
+                    <WithdrawPermissionUpdate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "withdraw_permission_claim":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.withdraw_permission_claim"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="proposal.to" />
-                        &nbsp;
-                        {this.linkToAccount(op[1].withdraw_to_account)}
-                    </span>
+                    <WithdrawPermissionClaim
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "withdraw_permission_delete":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.withdraw_permission_delete"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].withdraw_from_account)}
-                        <Translate component="span" content="proposal.to" />
-                        &nbsp;
-                        {this.linkToAccount(op[1].authorized_account)}
-                    </span>
-                );
+                column = <WithdrawPermissionDelete />;
                 break;
 
             case "fill_order":

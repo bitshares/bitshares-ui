@@ -2,7 +2,7 @@ import React from "react";
 import TranslateWithLinks from "../../Utility/TranslateWithLinks";
 import MemoText from "../MemoText";
 
-const TransferOperation = ({op, proposer, index, changeColor}) => {
+export const Transfer = ({op, proposer, index, changeColor}) => {
     changeColor("success");
     let memoComponent = null;
 
@@ -56,5 +56,3 @@ const TransferOperation = ({op, proposer, index, changeColor}) => {
         </span>
     );
 };
-
-export default TransferOperation;
