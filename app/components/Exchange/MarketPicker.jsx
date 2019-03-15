@@ -187,7 +187,6 @@ class MarketPickerWrapper extends Component {
             const weight = {};
             const quote = market.quote;
             if (quote.indexOf(".") !== -1) {
-                console.log("quote", quote);
                 const [gateway, asset] = quote.split(".");
                 weight.gateway = gateway;
                 weight.asset = asset;
