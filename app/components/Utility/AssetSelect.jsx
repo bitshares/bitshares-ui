@@ -1,4 +1,4 @@
-import React, {PureComponent} from "react";
+import React from "react";
 import Translate from "react-translate-component";
 import PropTypes from "prop-types";
 import {Form, Select} from "bitshares-ui-style-guide";
@@ -66,6 +66,15 @@ AssetSelectView.propTypes = {
     selectStyle: PropTypes.object // Select style
 
     // all other props are passed to the Select component
+};
+
+AssetSelectView.defaultPropTypes = {
+    assets: [],
+    placeholder: null,
+    label: null,
+    style: "",
+    formItemStyle: "",
+    selectStyle: ""
 };
 
 const AssetSelect = BindToChainState(AssetSelectView);

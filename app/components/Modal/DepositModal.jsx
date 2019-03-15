@@ -43,27 +43,13 @@ class DepositModalContent extends DecimalChecker {
 
     componentWillMount() {
         let {asset} = this.props;
-
-        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
-        this.setState({coinToGatewayMapping});
-
-        if (!asset) return;
-
-        let backedAsset = asset.split(".");
-        let usingGateway = this.state.gatewayStatus[backedAsset[0]]
-            ? true
-            : false;
-
-        if (usingGateway) {
-            let assetName = backedAsset[1];
-            let assetGateway = backedAsset[0];
-            this._getDepositAddress(assetName, assetGateway);
-        } else {
-            this.setState({selectedAsset: "BTS"});
-        }
+        this._setDepositAsset(asset);
     }
 
     shouldComponentUpdate(np, ns) {
+        if (np.asset !== this.props.asset) {
+            this._setDepositAsset(np.asset);
+        }
         return !utils.are_equal_shallow(ns, this.state);
     }
 
@@ -89,6 +75,26 @@ class DepositModalContent extends DecimalChecker {
 
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
+        }
+    }
+
+    _setDepositAsset(asset) {
+        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
+        this.setState({coinToGatewayMapping});
+
+        if (!asset) return;
+
+        let backedAsset = asset.split(".");
+        let usingGateway = this.state.gatewayStatus[backedAsset[0]]
+            ? true
+            : false;
+
+        if (usingGateway) {
+            let assetName = backedAsset[1];
+            let assetGateway = backedAsset[0];
+            this._getDepositAddress(assetName, assetGateway);
+        } else {
+            this.setState({selectedAsset: "BTS"});
         }
     }
 

@@ -94,8 +94,8 @@ export default class ExchangeHeader extends React.Component {
             parseFloat(dayChange) === 0
                 ? ""
                 : parseFloat(dayChange) < 0
-                ? "negative"
-                : "positive";
+                    ? "negative"
+                    : "positive";
         const volumeBase = marketStats.get("volumeBase");
         const volumeQuote = marketStats.get("volumeQuote");
         const dayChangeWithSign = dayChange > 0 ? "+" + dayChange : dayChange;
@@ -150,8 +150,8 @@ export default class ExchangeHeader extends React.Component {
                 baseId == "1.3.0"
                     ? quoteAsset
                     : quoteId == "1.3.0"
-                    ? baseAsset
-                    : quoteAsset;
+                        ? baseAsset
+                        : quoteAsset;
 
             // globally settled
             if (possibleBitAsset.get("bitasset").get("settlement_fund") > 0) {
@@ -225,6 +225,9 @@ export default class ExchangeHeader extends React.Component {
                                         onClick={this.props.showPriceAlertModal}
                                         type={"bell"}
                                         className={`exchange--price-alert--show-modal ${PriceAlertBellClassName}`}
+                                        data-intro={translator.translate(
+                                            "walkthrough.price_alerts"
+                                        )}
                                     />
                                     <span
                                         onClick={this.marketPicker.bind(
@@ -268,7 +271,8 @@ export default class ExchangeHeader extends React.Component {
                                 </div>
                             ) : (
                                 <a className="market-symbol">
-                                    <span>{`${quoteSymbol} : ${baseSymbol}`}</span>
+                                    <span
+                                    >{`${quoteSymbol} : ${baseSymbol}`}</span>
                                 </a>
                             )}
                             <div className="label-actions">

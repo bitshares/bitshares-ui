@@ -414,6 +414,9 @@
         "understand": "I understand",
         "ws_status": "Full node connection status"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -638,7 +641,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -954,13 +959,13 @@
         "asset_to_withdraw": "Asset to withdraw:",
         "asset_unavailable": "The gateway for %(asset)s is not in service",
         "assets": {
-            "bit": "<br/>bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
-            "bitcny": "<br/><br/>bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Openledger.",
-            "rudex": "",
-            "trade": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
+            "bit": "bit%(asset)s is a derivative that tracks the real value of %(backed)s. It is 100%% decentralized, trustless and backed by collateral held by the blockchain in a smart contract.",
+            "bitcny": "bitCNY can be deposited or withdrawn 1:1 to real Yuan using a gateway service such as Magic Wallet. For more info, see https://www.magicw.net/",
+            "bridge": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
+            "gdex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDEX.",
+            "open": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by OpenLedger.",
+            "rudex": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Rudex.",
+            "trade": "The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by Blocktrades.",
             "win": "",
             "xbts": ""
         },
@@ -1417,6 +1422,53 @@
             "withdraw": "Withdraw"
         }
     },
+    "validation": {
+        "messages": {
+            "required": "The field is required",
+            "requiredNamed": "%(name)s is required",
+            "types": {
+                "array": "The field should be array",
+                "arrayNamed": "%(name)s should be array",
+                "regexp": "The field should be regexp",
+                "regexpNamed": "%(name)s should be regexp",
+                "date": "The field should be date",
+                "dateNamed": "%(name)s should be date",
+                "object": "The field should be object",
+                "objectNamed": "%(name)s should be object",
+                "method": "The field should be method",
+                "methodNamed": "%(name)s should be method",
+                "hex": "The field should be hex",
+                "hexNamed": "%(name)s should be hex",
+                "string": "The field should be string",
+                "stringNamed": "%(name)s should be string",
+                "boolean": "The field should be boolean",
+                "booleanNamed": "%(name)s should be boolean",
+                "enum": "The field should be one of %(list)s",
+                "enumNamed": "%(name)s should be one of %(list)s"
+            },
+            "range": "The field should be in range from %(min)s to %(max)s",
+            "rangeNamed": "%(name)s should in range from %(min)s to %(max)s",
+            "max": "The field should be less than %(max)s",
+            "maxNamed": "%(name)s should be less than %(max)s",
+            "min": "The field should higher than %(min)s",
+            "minNamed": "%(name)s should be higher than %(min)s",
+            "number": "The field should be number",
+            "numberNamed": "%(name)s should be number",
+            "integer": "The field should be integer",
+            "integerNamed": "%(name)s should be integer",
+            "float": "The field should be float",
+            "floatNamed": "%(name)s should be float",
+            "email": "The field should be email",
+            "emailNamed": "%(name)s should be email",
+            "url": "The field should be url",
+            "urlNamed": "%(name)s should be url",
+            "oneOf": "The field should be one of: %(list)s",
+            "oneOfNamed": "%(name)s should be one of: %(list)s",
+            "balance": "Insufficient balance. Available only: %(balance)s",
+
+            "test": ""
+        }
+    },
     "news": {
         "author": "Author",
         "errors": {
@@ -1424,6 +1476,29 @@
         },
         "news": "News",
         "subject": "Subject"
+    },
+    "scaled_orders": {
+        "please_log_in": "You need to login before use Scaled Orders",
+        "title": "Scaled Order",
+        "price_lower": "Price Lower",
+        "price_upper": "Price Upper",
+        "quantity": "Quantity",
+        "distribution": {
+            "title": "Distribution",
+            "flat": "Flat"
+        },
+        "order_count": "Order Count",
+        "action": {
+            "title": "Action",
+            "buy": "Buy",
+            "sell": "Sell"
+        },
+        "total": "Total",
+        "fee": "Fee",
+        "market_fee": "Market Fee",
+        "preview_table": {
+            "price": "Price"
+        }
     },
     "notifications": {
         "account_create_failure": "Failed to create account: %(account_name)s - %(error_msg)s",
@@ -1434,6 +1509,7 @@
         "balance_claim_error": "Error claiming balance: %(error_msg)s",
         "exchange_enter_valid_values": "Please enter a valid amount and price",
         "exchange_insufficient_funds_for_fees": "Insufficient funds to pay fees",
+        "exchange_unknown_error_place_scaled_order": "Unknown error. Failed to place Scaled Order",
         "exchange_insufficient_funds_to_place_order": "Insufficient funds to place order, you need at least %(amount)s $(symbol)s",
         "exchange_unknown_error_place_order": "Unknown error. Failed to place order for %(amount)s %(symbol)s",
         "import_keys_already_imported": "This wallet has already been imported",
@@ -1749,6 +1825,8 @@
             "new_barter_tooltip": "This panel allows you to create a new barter. It utilizes the atomicity of a transaction to securely swap assets between two accounts (via transfer operations). The transaction is wrapped in a proposal and needs approval from both parties (called Peer 1 and Peer 2 below) to execute, and optionally from an escrow",
             "not_complete": "Please fill out all fields to see a description of the action here",
             "peer_left": "Peer 1",
+            "balance_warning": "Balance Warning",
+            "balance_warning_tooltip": "%(peer)s does not have enough funds to execute the transfers when the proposal gets approved and executes. This is not an issue when creating the proposal, but the balances must match when executed",
             "peer_right": "Peer 2",
             "proposal_fee": "Proposal fee",
             "proposal_fee_tooltip": "The indicated transaction fee will be paid to create the proposal to realize this barter",
@@ -1758,7 +1836,8 @@
             "send_to_escrow_tooltip": "Enabling this will send the selected funds to the escrow, and then a barter proposal is created between escrow and Peer 2",
             "title": "Barter",
             "total_fees": "Total fees: %(fee)s %(asset)s",
-            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter"
+            "total_fees_tooltip": "The account that is indicated as Peer 1 will have to pay the indicated transaction fee in total for the whole barter",
+            "balance_warning_line": "wants to send a total of %(asset_amount)s %(asset_symbol)s, but only has %(asset_balance)s %(asset_symbol)s"
         },
         "borrow": {
             "borrow_tooltip": "You can also find this feature in your Dashboard under the tab Margin Positions, or by clicking  Borrow in the Exchange",
@@ -1859,6 +1938,7 @@
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "This %(wallet_name)s wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -2145,6 +2225,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "Back",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "View price action of an asset using the price chart.",
         "restore_account": "Restore a wallet using your backup file.",
         "sell_form": "Place sell orders using this form.",
@@ -2329,23 +2410,5 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

@@ -6,7 +6,6 @@ import utils from "common/utils";
 import Translate from "react-translate-component";
 import ChainTypes from "../Utility/ChainTypes";
 import BindToChainState from "../Utility/BindToChainState";
-import CitadelGateway from "../DepositWithdraw/citadel/CitadelGateway";
 import OpenledgerGateway from "../DepositWithdraw/OpenledgerGateway";
 import OpenLedgerFiatDepositWithdrawal from "../DepositWithdraw/openledger/OpenLedgerFiatDepositWithdrawal";
 import OpenLedgerFiatTransactionHistory from "../DepositWithdraw/openledger/OpenLedgerFiatTransactionHistory";
@@ -24,7 +23,6 @@ import GatewayStore from "stores/GatewayStore";
 import AccountImage from "../Account/AccountImage";
 import BitsparkGateway from "../DepositWithdraw/bitspark/BitsparkGateway";
 import GdexGateway from "../DepositWithdraw/gdex/GdexGateway";
-import WinexGateway from "../DepositWithdraw/winex/WinexGateway";
 import XbtsxGateway from "../DepositWithdraw/xbtsx/XbtsxGateway";
 import PropTypes from "prop-types";
 import DepositModal from "../Modal/DepositModal";
@@ -534,18 +532,6 @@ class AccountDepositWithdraw extends React.Component {
             )
         });
 
-        /***
-         * Winex Dsiabled due to WebFetch issues on failure
-         */
-        // serList.push({
-        //     name: "Winex",
-        //     template: (
-        //         <div>
-        //             <WinexGateway account={account} provider="Winex" />
-        //         </div>
-        //     )
-        // });
-
         return serList;
     }
 
@@ -609,7 +595,6 @@ class AccountDepositWithdraw extends React.Component {
         });
 
         const serviceNames = [
-            "Winex",
             "GDEX",
             "OPEN",
             "RUDEX",
@@ -759,8 +744,8 @@ class AccountDepositWithdraw extends React.Component {
                         {currentServiceDown
                             ? null
                             : activeService && services[activeService]
-                            ? services[activeService].template
-                            : services[0].template}
+                                ? services[activeService].template
+                                : services[0].template}
                     </div>
                 </div>
             </div>
@@ -811,10 +796,6 @@ export default connect(
                 ),
                 citadelBackedCoins: GatewayStore.getState().backedCoins.get(
                     "CITADEL",
-                    []
-                ),
-                winexBackedCoins: GatewayStore.getState().backedCoins.get(
-                    "WIN",
                     []
                 ),
                 xbtsxBackedCoins: GatewayStore.getState().backedCoins.get(

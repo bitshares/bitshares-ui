@@ -414,6 +414,9 @@
         "understand": "理解しました。",
         "ws_status": "フルノード接続状態"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -948,13 +953,13 @@
         "asset_to_withdraw": "出金するアセット:",
         "asset_unavailable": "%(asset)sのゲートウェイはサービス外です。",
         "assets": {
-            "bit": "<br/><br/>%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
-            "bitcny": "<br/><br/>bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Openledgerによって提供されるゲートウェイサービスによって入出金が可能です。",
-            "rudex": "",
-            "trade": "<br/><br/>%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "bit": "%(asset)s は実際の%(backed)sの価値に追随するデリバティブです。これは100%分散化されており、トラストレスであり、スマートコントラクトによってブロックチェーンに保持される担保に裏付けされています。",
+            "bitcny": "bitCNY はMagic Walletが提供するゲートウェイサービスによって実際の元と1：1で入出金できます。詳細はこちらを見てください https://www.magicw.net/",
+            "bridge": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、CryptoBridgeによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "gdex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Gdexによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "open": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、OpenLedgerによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "rudex": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Rudexによって提供されるゲートウェイサービスによって入出金が可能です。",
+            "trade": "%(asset)sアセットは実際の%(backed)sと1：1に対応し、Blocktradesによって提供されるゲートウェイサービスによって入出金が可能です。",
             "win": "",
             "xbts": ""
         },
@@ -1836,6 +1841,7 @@
         "latest_price": "これはこの市場における最新の価格です。",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "BitSharesウォレットには従来のログインはありませんが、その代わりに、ブラウザ内に<b>のみ</b>保持されているウォレットをロック、アンロックするだけです。<br/><br/>あなたがウォレットを閉じる度にロックされ、事実上ログアウトされます。",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -2122,6 +2128,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "戻る",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "価格チャートを使用してアセットの価格アクションを表示する。",
         "restore_account": "バックアップファイルからウォレットをリストアする。",
         "sell_form": "このフォームを使用して売り注文を出します。",
@@ -2306,23 +2313,5 @@
         "wallet_model_3": "<li>複数アカウント</li><li>ウォレットファイルのバックアップが必要</li><li>高度なセキュリティ</li>",
         "wallet_move": "このバックアップファイルによって、他のコンピュータやブラウザにウォレットを移動することができます。このバックアップを使用してウォレットをリストアするには、<strong>あなたのパスワードが必要です！</strong>",
         "wallet_password": "パスワードを使用してどこでもログイン"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "ゲートウェイ手数料",
-            "get_deposit_address": "get deposit address",
-            "support_block": "サポートについては、Winexまでご連絡ください。:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

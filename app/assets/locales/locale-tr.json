@@ -414,6 +414,9 @@
         "understand": "Anladım ve onaylıyorum.",
         "ws_status": "Websocket Bağlantı Durumu"
     },
+    "assets": {
+        "BTS": "BTS is the core token of the BitShares Blockchain"
+    },
     "boolean": {
         "false": "False",
         "true": "True"
@@ -632,7 +635,9 @@
                 "chart_tools": "Shows/Hides the left and top toolbar, as well as the context menu. Tools are always hidden in tiny screen.",
                 "chart_type": "Switch between market depth and price charts, or disable charts",
                 "chart_zoom": "Allow chart zooming. Zooming is always disabled in tiny screen.",
+                "decrease_chart_height": "Decrease the height of the chart",
                 "hide_function_buttons": "Hide all buttons that can be managed within the personalize form",
+                "increase_chart_height": "Increase the height of the chart",
                 "market_location": "Which side to pin the vertical order book on. This will switch place with market panel",
                 "market_trades": "",
                 "my_trades": "",
@@ -948,13 +953,13 @@
         "asset_to_withdraw": "Çekilecek dijital varlık:",
         "asset_unavailable": "The gateway for %(asset)s is not in service",
         "assets": {
-            "bit": "<br/>bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
-            "bitcny": "<br/><br/>bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/",
-            "bridge": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by CryptoBridge.",
-            "gdex": "<br/><br/>The %(asset)s asset is backed 1:1 by real %(backed)s and can be deposited or withdrawn using the gateway service provided by GDex.",
-            "open": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
-            "rudex": "",
-            "trade": "<br/><br/>Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "bit": "bit%(asset)s, fiyat olarak %(backed)s marketini takip eden bir türev araçtır. Bu hizmet hiçbir merkezi otorite tarafından değil, merkezsiz Bitshares blokzinciri tarafından sağlanır.",
+            "bitcny": "bitCNY, Çin Yuanı'nın Bitshares borsasındaki temsilidir. 1:1 Çin Yuanı ile değiştirilebilen bu dijital varlık Magic Wallet tarafından yürütülmektedir. Daha fazla bilgi için: https://www.magicw.net/",
+            "bridge": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için CryptoBridge tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "gdex": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için Gdex tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "open": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için OpenLedger tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "rudex": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için Rudex tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
+            "trade": "Bu dijital varlık Bitshares üzerinde %(backed)s işlemleri yapmanız için BlockTrades tarafından %%100 %(backed)s rezervi ile desteklenmektedir. İstediğiniz zaman 1:1 oranında %(asset)s-%(backed)s dönüşümü yapabilirsiniz.",
             "win": "",
             "xbts": ""
         },
@@ -1827,7 +1832,7 @@
         "filter_ops": "İşlem türüne göre listeyi filtrelemek için burayı kullanabilirsiniz.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -1836,6 +1841,7 @@
         "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -2122,6 +2128,7 @@
         "panel_hide": "You can hide the panel to have more room",
         "personalize": "Change the default layout in the personalize settings",
         "prev_label": "geri",
+        "price_alerts": "Set alerts to get notifications if the price fluctuates",
         "price_chart": "Fiyat grafiğini kullanarak bir varlığın fiyat hareketini görüntüleyin.",
         "restore_account": "Yedekleme dosyanızı kullanarak bir cüzdan geri yükleyin.",
         "sell_form": "Bu formu kullanarak satış siparişleri verin.",
@@ -2306,23 +2313,5 @@
         "wallet_model_3": "<li>Birden fazla sayıda hesap</li><li>Yedekleme dosyası zorunlu</li><li>Yüksek güvenlik</li>",
         "wallet_move": "Cüzdan yedekleme dosyalarınızla ya da hesabınıza ait bilgilerinizle dijital varlıklarınıza başka bir bilgisayardan da erişim sağlayabilirsiniz.",
         "wallet_password": "Şifrenizi kullanarak hesabınıza başka yerlerden erişim sağlayabilirsiniz."
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

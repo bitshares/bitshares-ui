@@ -913,9 +913,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header ask"
-                                data-intro={translator.translate(
-                                    "walkthrough.sell_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.sell_orders"
+                                //)}
                             >
                                 <Translate content="exchange.asks" />
                                 {flipOrderBook &&
@@ -1060,9 +1060,9 @@ class OrderBook extends React.Component {
                         <div>
                             <div
                                 className="exchange-content-header bid"
-                                data-intro={translator.translate(
-                                    "walkthrough.buy_orders"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.buy_orders"
+                                //)}
                             >
                                 <Translate content="exchange.bids" />
                                 {!flipOrderBook &&
@@ -1269,9 +1269,9 @@ class OrderBook extends React.Component {
                                 className="sticky-table-row orderbook-latest-price"
                                 ref={this.centerText}
                                 style={{padding: 0}}
-                                data-intro={translator.translate(
-                                    "walkthrough.vertical_order"
-                                )}
+                                //data-intro={translator.translate(
+                                //    "walkthrough.vertical_order"
+                                //)}
                             >
                                 <div className="cell right">
                                     <span
@@ -1291,9 +1291,9 @@ class OrderBook extends React.Component {
                                     <span style={{width: 75}}>
                                         {!this.props.hideFunctionButtons ? (
                                             <Icon
-                                                data-intro={translator.translate(
-                                                    "walkthrough.vertical_lock"
-                                                )}
+                                                //data-intro={translator.translate(
+                                                //    "walkthrough.vertical_lock"
+                                                //)}
                                                 className="lock-unlock clickable icon-fill"
                                                 onClick={this.toggleAutoScroll}
                                                 name={
