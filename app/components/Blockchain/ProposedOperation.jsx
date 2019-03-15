@@ -16,6 +16,7 @@ import MemoText from "./MemoText";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
+import TransferOperation from "./operations/Transfer";
 
 require("./operations.scss");
 
@@ -87,6 +88,10 @@ class Row extends React.Component {
 }
 
 class ProposedOperation extends React.Component {
+    state = {
+        label_color: "info"
+    };
+
     static defaultProps = {
         op: [],
         current: "",
@@ -128,6 +133,14 @@ class ProposedOperation extends React.Component {
         );
     }
 
+    changeColor = newColor => {
+        const {label_color} = this.state;
+        if (label_color !== newColor) {
+            console.log("!!!! change color", newColor);
+            this.setState({label_color: newColor});
+        }
+    };
+
     render() {
         let {op, proposer, current, block, hideExpiration, index} = this.props;
         let line = null,
@@ -138,58 +151,11 @@ class ProposedOperation extends React.Component {
             ops[op[0]] // For a list of trx types, see chain_types.coffee
         ) {
             case "transfer":
-                let memoComponent = null;
-
-                if (op[1].memo) {
-                    memoComponent = <MemoText memo={op[1].memo} />;
-                }
-
-                color = "success";
-                op[1].amount.amount = parseFloat(op[1].amount.amount);
-
                 column = (
-                    <span className="right-td">
-                        <div className="inline-block">
-                            {!!proposer && index == 0 ? (
-                                <div style={{paddingBottom: "0.5rem"}}>
-                                    <TranslateWithLinks
-                                        string="operation.proposal_create"
-                                        keys={[
-                                            {
-                                                type: "account",
-                                                value: proposer,
-                                                arg: "account"
-                                            }
-                                        ]}
-                                    />
-                                    :
-                                </div>
-                            ) : null}
-                            <div>
-                                <TranslateWithLinks
-                                    string="proposal.transfer"
-                                    keys={[
-                                        {
-                                            type: "account",
-                                            value: op[1].from,
-                                            arg: "from"
-                                        },
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount,
-                                            arg: "amount"
-                                        },
-                                        {
-                                            type: "account",
-                                            value: op[1].to,
-                                            arg: "to"
-                                        }
-                                    ]}
-                                />
-                                {memoComponent}
-                            </div>
-                        </div>
-                    </span>
+                    <TransferOperation
+                        {...this.props}
+                        changeColor={this.changeColor}
+                    />
                 );
 
                 break;
@@ -382,21 +348,6 @@ class ProposedOperation extends React.Component {
                         </BindToChainState.Wrapper>
                     </span>
                 );
-                // if (current === op[1].authorizing_account) {
-                //     column = (
-                //         <span>
-                //             <Translate component="span" content="proposal.whitelist_account" />
-                //             &nbsp;{this.linkToAccount(op[1].account_to_list)}
-                //         </span>
-                //     );
-                // } else {
-                //     column = (
-                //         <span>
-                //             <Translate component="span" content="proposal.whitelisted_by" />
-                //             &nbsp;{this.linkToAccount(op[1].authorizing_account)}
-                //         </span>
-                //     );
-                // }
                 break;
 
             case "account_upgrade":
