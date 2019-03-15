@@ -456,6 +456,96 @@ const ApplicationApi = {
         let tr = new TransactionBuilder();
         tr.add_type_operation("account_update", updateObject);
         return WalletDb.process_transaction(tr, null, true);
+    },
+
+    /**
+     * Fetches the account, no subscription
+     *
+     * @param account
+     * @returns {Promise<{id}|Object>}
+     * @private
+     */
+    async _ensureAccount(account) {
+        if (typeof account == "object" && !!account.id) {
+            return account;
+        }
+        return await FetchChain("getAccount", account, false);
+    },
+
+    async _ensureAsset(asset) {
+        if (typeof asset == "object" && !!asset.id) {
+            return asset;
+        }
+        return await FetchChain("getAsset", asset);
+    },
+
+    /**
+     * Create a withdrawal permission
+     *
+     * @async
+     *
+     * @param from - account granting the permission, can be id, name or account object
+     * @param to - account claiming from the permission, can be id, name or account object
+     * @param limitAsset - id of asset to claim, id or symbol
+     * @param limitAssetAmount - int in satoshis, max amount to claim per period
+     * @param periodInSeconds - how many seconds does one period last?
+     * @param periodsUntilExpiration - how many periods will be done before expiration?
+     * @param periodStartTime - when does the first period start? defaults to now
+     * @param feeAsset - what asset to use for paying the fee, id or symbol
+     * @returns {Promise<any>}
+     */
+    async createWithdrawPermission(
+        from,
+        to,
+        limitAsset,
+        limitAssetAmount,
+        periodInSeconds,
+        periodsUntilExpiration,
+        periodStartTime = null,
+        feeAsset = "1.3.0",
+        broadcast = true
+    ) {
+        // default is now
+        if (periodStartTime == null) {
+            periodStartTime = new Date();
+        }
+
+        // account must be unlocked
+        await WalletUnlockActions.unlock();
+
+        // ensure all arguments are chain objects
+        let objects = {
+            from: await this._ensureAccount(from),
+            to: await this._ensureAccount(to),
+            limitAsset: await this._ensureAccount(limitAsset),
+            feeAsset: await this._ensureAccount(feeAsset)
+        };
+
+        let transactionBuilder = new TransactionBuilder();
+        let op = transactionBuilder.get_type_operation(
+            "withdraw_permission_create",
+            {
+                fee: {
+                    amount: 0,
+                    asset_id: objects.feeAsset.id
+                },
+                withdraw_from_account: objects.from.id,
+                authorized_account: objects.to.id,
+                withdrawal_limit: {
+                    amount: limitAssetAmount,
+                    asset_id: objects.limitAsset.id
+                },
+                withdrawal_period_sec: periodInSeconds,
+                periods_until_expiration: periodsUntilExpiration,
+                period_start_time: periodStartTime
+            }
+        );
+        transactionBuilder.add_operation(op);
+        await WalletDb.process_transaction(
+            transactionBuilder,
+            null, //signer_private_keys,
+            broadcast
+        );
     }
 };
 
