@@ -1832,7 +1832,7 @@
         "filter_ops": "İşlem türüne göre listeyi filtrelemek için burayı kullanabilirsiniz.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -1841,6 +1841,7 @@
         "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",

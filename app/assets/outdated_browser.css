@@ -1,0 +1,106 @@
+.outdated-browser {
+    margin-top: 150px;
+    position: relative;
+    background-color: #fff;
+    border: 0;
+    border-radius: 0;
+    background-clip: padding-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 520px;
+    margin: 100px auto 0;
+    font-family: Roboto Medium, Monospaced Number, Chinese Quote, -apple-system,
+        BlinkMacSystemFont, Segoe UI, Roboto, PingFang SC, Hiragino Sans GB,
+        Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    color: #2a2a2a;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.outdated-browser.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.outdated-browser__header {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 16px 24px;
+    font-weight: 700;
+    position: relative;
+}
+
+.outdated-browser__close {
+    display: block;
+    font-size: 36px;
+    line-height: 36px;
+    position: relative;
+    text-decoration: none;
+    color: #00a9e0;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    cursor: pointer;
+    position: absolute;
+    right: 24px;
+    top: 10px;
+    font-weight: 500;
+}
+
+.outdated-browser__close:hover {
+    color: #26c2ed;
+}
+
+.outdated-browser__body {
+    padding: 24px;
+}
+
+.outdated-browser__footer {
+    border-top: 1px solid #eee;
+    padding: 16px 24px;
+    text-align: right;
+}
+
+.outdated-browser__link-wrapper {
+    padding: 24px 0;
+}
+
+.outdated-browser__body a {
+    display: inline-block;
+    color: #00a9e0;
+    text-decoration: none;
+}
+
+.outdated-browser__body a:hover {
+    color: #00a9e0;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.outdated-browser__btn {
+    outline: none;
+    line-height: 1.5;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 0 28px;
+    font-size: 14px;
+    border-radius: 0;
+    height: 32px;
+    user-select: none;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+    color: #00a9e0;
+    background-color: transparent;
+    border-color: #00a9e0;
+}
+
+.outdated-browser__btn:hover {
+    color: #26c2ed;
+    border-color: #26c2ed;
+}

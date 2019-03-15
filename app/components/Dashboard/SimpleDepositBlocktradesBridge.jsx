@@ -1,6 +1,5 @@
 import React from "react";
 import Translate from "react-translate-component";
-import {Asset} from "common/MarketClasses";
 import utils from "common/utils";
 import BindToChainState from "../Utility/BindToChainState";
 import ChainTypes from "../Utility/ChainTypes";
@@ -16,18 +15,20 @@ import {
 } from "common/gatewayMethods";
 import BlockTradesDepositAddressCache from "common/BlockTradesDepositAddressCache";
 import CopyButton from "../Utility/CopyButton";
-import Icon from "../Icon/Icon";
 import LoadingIndicator from "../LoadingIndicator";
 import {blockTradesAPIs} from "api/apiConfig";
-import FloatingDropdown from "../Utility/FloatingDropdown";
 import {connect} from "alt-react";
 import SettingsStore from "stores/SettingsStore";
 import SettingsActions from "actions/SettingsActions";
 import QRCode from "qrcode.react";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
-
-// import DepositFiatOpenLedger from "components/DepositWithdraw/openledger/DepositFiatOpenLedger";
-// import WithdrawFiatOpenLedger from "components/DepositWithdraw/openledger/WithdrawFiatOpenLedger";
+import {
+    Form,
+    Modal,
+    Button,
+    Tooltip,
+    Input,
+    Select
+} from "bitshares-ui-style-guide";
 
 class SimpleDepositBlocktradesBridge extends React.Component {
     static propTypes = {
@@ -38,6 +39,8 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     constructor(props) {
         super();
         this.state = {
+            inputCoinType: props.inputCoinType || this.props.preferredBridge,
+            outputCoinType: props.outputCoinType,
             receiveAmount: 0,
             depositLimit: 0,
             sendAmount: 0,
@@ -60,12 +63,12 @@ class SimpleDepositBlocktradesBridge extends React.Component {
     }
 
     componentWillMount() {
-        this._getDepositAddress();
+        this._getDepositAddress(this.props);
     }
 
     componentDidMount() {
-        this._getDepositLimit();
-        this._estimateOutput();
+        this._getDepositLimit(this.props);
+        this._estimateOutput(this.props);
     }
 
     componentWillReceiveProps(np) {
@@ -73,13 +76,30 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             np.inputCoinType !== this.props.inputCoinType ||
             np.outputCoinType !== this.props.outputCoinType
         ) {
+            this.setState({
+                inputCoinType: np.inputCoinType,
+                outputCoinType: np.outputCoinType
+            });
             this._getDepositLimit(np);
             this._estimateOutput(np);
             this._getDepositAddress(np);
         }
     }
 
+    componentDidUpdate() {
+        ReactTooltip.rebuild();
+    }
+
     shouldComponentUpdate(np, ns) {
+        if (
+            this.state.inputCoinType !== ns.inputCoinType ||
+            this.state.outputCoinType !== ns.outputCoinType
+        ) {
+            this._getDepositLimit(ns);
+            this._estimateOutput(ns);
+            this._getDepositAddress(ns);
+        }
+
         return (
             np.inputCoinType !== this.props.inputCoinType ||
             np.outputCoinType !== this.props.outputCoinType ||
@@ -91,9 +111,53 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         );
     }
 
-    _getDepositLimit(props = this.props) {
+    _getDepositAddress(data) {
+        let receive_address;
+
+        /* Always generate new address/memo for increased security */
+        /*let account_name = props.sender.get("name");
+        let receive_address = this.deposit_address_cache.getCachedInputAddress(
+            "blocktrades",
+            account_name,
+            props.inputCoinType.toLowerCase(),
+            props.outputCoinType.toLowerCase()
+        );*/
+        if (!receive_address) {
+            this.setState({receive_address: null});
+            requestDepositAddress(this._getDepositObject(data));
+        } else {
+            this.setState({
+                receive_address
+            });
+        }
+    }
+
+    _getDepositObject(data) {
+        let {inputCoinType, outputCoinType} = data;
+        return {
+            inputCoinType: inputCoinType.toLowerCase(),
+            outputCoinType: outputCoinType.toLowerCase(),
+            outputAddress: this.props.sender.get("name"),
+            url: blockTradesAPIs.BASE,
+            stateCallback: receive_address => {
+                this.addDepositAddress(
+                    inputCoinType.toLowerCase(),
+                    outputCoinType.toLowerCase(),
+                    this.props.sender.get("name"),
+                    receive_address
+                );
+            }
+        };
+    }
+
+    _getDepositLimit(data) {
+        let {inputCoinType, outputCoinType} = data;
+
         this.setState({limitLoading: true});
-        getDepositLimit(props.inputCoinType, props.outputCoinType)
+        getDepositLimit(
+            inputCoinType.toLowerCase(),
+            outputCoinType.toLowerCase()
+        )
             .then(res => {
                 this.setState({
                     depositLimit: res.depositLimit,
@@ -109,57 +173,56 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             });
     }
 
-    _onAmountChange(value, e) {
+    _onAmountChange(type, e) {
+        let value = e.target.value;
+
         const regexp_numeral = new RegExp(/[[:digit:]]/);
-        const target = e.target;
 
         // Ensure input is valid
-        if (!regexp_numeral.test(target.value)) {
-            target.value = target.value.replace(/[^0-9.]/g, "");
+        if (!regexp_numeral.test(value)) {
+            value = value.replace(/[^0-9.]/g, "");
         }
 
         // Catch initial decimal input
-        if (target.value.charAt(0) == ".") {
-            target.value = "0.";
+        if (value.charAt(0) == ".") {
+            value = "0.";
         }
 
         // Catch double decimal and remove if invalid
-        if (
-            target.value.charAt(target.value.length) != target.value.search(".")
-        ) {
-            target.value.substr(1);
+        if (value.charAt(value.length) != value.search(".")) {
+            value.substr(1);
         }
 
-        target.value = utils.limitByPrecision(target.value, 8);
+        value = utils.limitByPrecision(value, 8);
 
-        switch (value) {
+        switch (type) {
             case "input":
                 this.setState(
-                    {inputAmount: target.value},
+                    {inputAmount: value},
                     this._estimateOutput.bind(this)
                 );
                 break;
 
             case "output":
                 this.setState(
-                    {outputAmount: target.value},
+                    {outputAmount: value},
                     this._estimateInput.bind(this)
                 );
                 break;
         }
     }
 
-    _estimateOutput(props = this.props) {
-        this.setState({receiveAmount: 0, sendAmount: this.state.inputAmount});
-        if (!this.state.inputAmount) {
-            return;
-        }
+    _estimateOutput() {
+        let {inputAmount, inputCoinType, outputCoinType} = this.state;
+
+        this.setState({receiveAmount: 0, sendAmount: inputAmount});
+        if (!inputAmount) return;
 
         this.setState({receiveLoading: true});
         estimateOutput(
-            this.state.inputAmount,
-            props.inputCoinType,
-            props.outputCoinType
+            inputAmount,
+            inputCoinType.toLowerCase(),
+            outputCoinType.toLowerCase()
         )
             .then(res => {
                 this.setState({
@@ -174,19 +237,20 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             });
     }
 
-    _estimateInput(props = this.props) {
-        this.setState({receiveAmount: this.state.outputAmount, sendAmount: 0});
-        if (!this.state.outputAmount) {
-            return;
-        }
+    _estimateInput() {
+        let {outputAmount, inputCoinType, outputCoinType} = this.state;
+
+        this.setState({receiveAmount: outputAmount, sendAmount: 0});
+        if (!outputAmount) return;
 
         this.setState({receiveLoading: true});
         estimateInput(
-            this.state.outputAmount,
-            props.inputCoinType,
-            props.outputCoinType
+            outputAmount,
+            inputCoinType.toLowerCase(),
+            outputCoinType.toLowerCase()
         )
             .then(res => {
+                console.log(res);
                 this.setState({
                     inputAmount: res.inputAmount,
                     sendAmount: utils.limitByPrecision(res.inputAmount, 8),
@@ -197,45 +261,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
                 console.log("send amount err:", err);
                 this.setState({receiveLoading: false, apiError: true});
             });
-    }
-
-    _getDepositAddress(props = this.props) {
-        if (!props.inputCoinType) return;
-        let receive_address;
-
-        /* Always generate new address/memo for increased security */
-        /*let account_name = props.sender.get("name");
-        let receive_address = this.deposit_address_cache.getCachedInputAddress(
-            "blocktrades",
-            account_name,
-            props.inputCoinType.toLowerCase(),
-            props.outputCoinType.toLowerCase()
-        );*/
-        if (!receive_address) {
-            this.setState({receive_address: null});
-            requestDepositAddress(this._getDepositObject(props));
-        } else {
-            this.setState({
-                receive_address
-            });
-        }
-    }
-
-    _getDepositObject(props = this.props) {
-        return {
-            inputCoinType: props.inputCoinType.toLowerCase(),
-            outputCoinType: props.outputCoinType.toLowerCase(),
-            outputAddress: props.sender.get("name"),
-            url: blockTradesAPIs.BASE,
-            stateCallback: receive_address => {
-                this.addDepositAddress(
-                    props.inputCoinType.toLowerCase(),
-                    props.outputCoinType.toLowerCase(),
-                    props.sender.get("name"),
-                    receive_address
-                );
-            }
-        };
     }
 
     addDepositAddress(
@@ -257,10 +282,6 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         });
     }
 
-    componentDidUpdate() {
-        ReactTooltip.rebuild();
-    }
-
     _validateAddress(address, props = this.props) {
         validateAddress({walletType: props.walletType, newAddress: address})
             .then(isValid => {
@@ -276,20 +297,12 @@ class SimpleDepositBlocktradesBridge extends React.Component {
             });
     }
 
-    _openRegistrarSite(e) {
-        e.preventDefault();
-        let newWnd = window.open(SettingsStore.site_registr, "_blank");
-        newWnd.opener = null;
-    }
+    _setDepositAsset(value) {
+        this.setState({
+            inputCoinType: value
+        });
 
-    _onDropDownSelect(e) {
-        SettingsActions.changeViewSetting({preferredBridge: e});
-    }
-
-    onBlockTradesContact() {
-        console.log("Open New Tab");
-        let win = window.open("https://www.blocktrades.us/contact", "_blank");
-        win.focus();
+        SettingsActions.changeViewSetting({preferredBridge: value});
     }
 
     _renderDeposit() {
@@ -308,7 +321,7 @@ class SimpleDepositBlocktradesBridge extends React.Component {
 
         let bridgeAssets = Object.keys(this.props.bridges.toJS());
 
-        const inputName = this.props.inputCoinType.toUpperCase();
+        const inputName = this.state.inputCoinType.toUpperCase();
         const receiveName = (prefix ? prefix : "") + assetName;
 
         let price = (this.state.receiveAmount / this.state.inputAmount).toFixed(
@@ -319,312 +332,256 @@ class SimpleDepositBlocktradesBridge extends React.Component {
         const aboveLimit =
             this.state.inputAmount > parseFloat(this.state.depositLimit) ||
             this.state.sendAmount > parseFloat(this.state.depositLimit);
-        const aboveLimitStyle = aboveLimit
-            ? {border: "1px solid #a94442"}
-            : null;
 
         return (
             <div className="modal__body" style={{paddingTop: 0}}>
-                <div className="container-row">
-                    <label className="left-label">
-                        <Translate content="modal.buy.asset" />
-                    </label>
-                    <div className="inline-label input-wrapper">
-                        <input disabled type="text" value={receiveName} />
-                    </div>
-                </div>
-                <div className="container-row">
-                    <div className="grid-block">
-                        <label className="left-label">
-                            <Translate content="modal.buy.bridge" />
-                        </label>
+                <Form className="full-width" layout="vertical">
+                    <Form.Item label={counterpart.translate("modal.buy.asset")}>
+                        <Input disabled value={receiveName} />
+                    </Form.Item>
+                    <Form.Item
+                        label={counterpart.translate("modal.buy.bridge")}
+                    >
                         <Tooltip
                             title={counterpart.translate(
                                 "tooltip.bridge_TRADE"
                             )}
                         >
-                            <span
-                                className="inline-block tooltip"
-                                onClick={this.onBlockTradesContact.bind(this)}
-                            >
-                                &nbsp;
-                                <Icon
-                                    style={{position: "relative", top: 0}}
-                                    name="question-circle"
-                                    title="icons.question_circle"
-                                />
-                            </span>
+                            <Input
+                                disabled
+                                type="text"
+                                defaultValue={"BLOCKTRADES"}
+                            />
                         </Tooltip>
-                    </div>
-                    <div className="inline-label input-wrapper">
-                        <input
-                            disabled
-                            type="text"
-                            defaultValue={"BLOCKTRADES"}
-                        />{" "}
-                        {/* Change this when we gain more brdiges */}
-                    </div>
-                </div>
-                <span style={!apiError ? {display: ""} : {display: "none"}}>
-                    <div className="container-row double-row">
-                        <div className="no-margin no-padding">
-                            <div className="small-6" style={{paddingRight: 10}}>
-                                <div className="grid-block">
-                                    <label className="left-label">
-                                        <Translate content="transfer.send" />
-                                    </label>
-                                    {aboveLimit ? (
-                                        <Tooltip
-                                            title={counterpart.translate(
-                                                "tooltip.over_limit"
-                                            )}
-                                        >
-                                            <div className="error-msg inline-block tooltip">
-                                                <Translate content="gateway.over_limit" />
-                                                &nbsp;
-                                                <Icon
-                                                    name="question-circle"
-                                                    title="icons.question_circle"
-                                                />
-                                            </div>
-                                        </Tooltip>
-                                    ) : null}
-                                </div>
-                                <div className="inline-label input-wrapper">
-                                    <input
-                                        style={aboveLimitStyle}
-                                        type="text"
-                                        value={this.state.sendAmount}
-                                        onInput={this._onAmountChange.bind(
-                                            this,
-                                            "input"
+                    </Form.Item>
+                </Form>
+                {!apiError ? (
+                    <span>
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
+                                <Form className="full-width" layout="vertical">
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "transfer.send"
                                         )}
-                                    />
-                                    <div className="form-label select floating-dropdown">
-                                        <FloatingDropdown
-                                            entries={bridgeAssets}
-                                            values={bridgeAssets.reduce(
-                                                (map, a) => {
-                                                    if (a) map[a] = a;
-                                                    return map;
-                                                },
-                                                {}
-                                            )}
-                                            singleEntry={bridgeAssets[0]}
-                                            value={
-                                                this.props.preferredBridge ||
-                                                bridgeAssets[0]
-                                            }
-                                            onChange={this._onDropDownSelect}
-                                            upperCase
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="small-6" style={{paddingLeft: 10}}>
-                                <label className="left-label">
-                                    <Translate content="gateway.deposit_limit" />
-                                </label>
-                                <div className="inline-label input-wrapper">
-                                    <input
-                                        disabled
-                                        type="number"
-                                        value={
-                                            (this.state.depositLimit &&
-                                                parseFloat(
-                                                    this.state.depositLimit
-                                                ).toFixed(4)) ||
-                                            0
+                                        validateStatus={
+                                            aboveLimit ? "error" : ""
                                         }
-                                    />
-                                    <div className="input-right-symbol">
-                                        {inputName}
-                                    </div>
-                                </div>
+                                        help={
+                                            aboveLimit
+                                                ? counterpart.translate(
+                                                      "gateway.over_limit"
+                                                  )
+                                                : ""
+                                        }
+                                    >
+                                        <Input
+                                            value={this.state.sendAmount}
+                                            onChange={this._onAmountChange.bind(
+                                                this,
+                                                "input"
+                                            )}
+                                            addonAfter={
+                                                <Select
+                                                    defaultValue={this.state.inputCoinType.toUpperCase()}
+                                                    value={this.state.inputCoinType.toUpperCase()}
+                                                    style={{width: 100}}
+                                                    onChange={this._setDepositAsset.bind(
+                                                        this
+                                                    )}
+                                                >
+                                                    {bridgeAssets.map(asset => (
+                                                        <Select.Option
+                                                            key={asset.toUpperCase()}
+                                                        >
+                                                            {asset.toUpperCase()}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
                             </div>
-                        </div>
-                    </div>
-                    <div className="container-row double-row">
-                        <div className="no-margin no-padding">
-                            <div className="small-6" style={{paddingRight: 10}}>
-                                <label className="left-label">
-                                    <Translate content="exchange.receive" />
-                                </label>
-                                <div className="inline-label input-wrapper">
-                                    <input
-                                        style={aboveLimitStyle}
-                                        type="text"
-                                        value={this.state.receiveAmount}
-                                        onInput={this._onAmountChange.bind(
-                                            this,
-                                            "output"
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
+                                <Form className="full-width" layout="vertical">
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "gateway.deposit_limit"
                                         )}
-                                    />
-                                    <div className="input-right-symbol">
-                                        {receiveName}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="small-6" style={{paddingLeft: 10}}>
-                                <div className="grid-block">
-                                    <label className="left-label">
-                                        <Translate content="exchange.price" />
-                                        &nbsp;&nbsp;
-                                        {this.state.receiveLoading ? (
-                                            <Translate content="footer.loading" />
-                                        ) : (
-                                            ""
-                                        )}
-                                    </label>
-                                </div>
-                                <div className="inline-label input-wrapper">
-                                    <input
-                                        disabled
-                                        type="number"
-                                        value={aboveLimit ? 0 : price}
-                                    />
-                                    <div className="input-right-symbol">
-                                        {priceSuffix}
-                                    </div>
-                                </div>
+                                    >
+                                        <Input
+                                            value={this.state.depositLimit}
+                                            disabled={true}
+                                            addonAfter={
+                                                <Select
+                                                    defaultValue={this.state.inputCoinType.toUpperCase()}
+                                                    value={this.state.inputCoinType.toUpperCase()}
+                                                    style={{width: 100}}
+                                                    disabled
+                                                    showArrow={false}
+                                                >
+                                                    {bridgeAssets.map(asset => (
+                                                        <Select.Option
+                                                            key={asset.toUpperCase()}
+                                                        >
+                                                            {asset.toUpperCase()}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
                             </div>
                         </div>
-                    </div>
-                    {!addressValue ? (
-                        <div style={{textAlign: "center"}}>
-                            <LoadingIndicator type="three-bounce" />
-                        </div>
-                    ) : (
-                        <div className="container-row">
-                            {hasMemo ? null : QR}
-                            <div className="grid-block">
-                                <div className="copyIcon">
-                                    <CopyButton
-                                        text={addressValue}
-                                        className="copyIcon"
-                                    />
-                                </div>
-                                <div>
-                                    <Translate
-                                        component="div"
-                                        style={{
-                                            fontSize: "0.8rem",
-                                            fontWeight: "bold",
-                                            paddingBottom: "0.3rem"
-                                        }}
-                                        content="gateway.purchase_notice"
-                                        inputAsset={inputName}
-                                        outputAsset={receiveName}
-                                    />
 
-                                    <div className="modal__highlight">
-                                        {addressValue}
-                                    </div>
-                                </div>
+                        <div className="grid-block no-overflow wrap shrink">
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
+                                <Form className="full-width" layout="vertical">
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "exchange.receive"
+                                        )}
+                                    >
+                                        <Input
+                                            value={this.state.receiveAmount}
+                                            onChange={this._onAmountChange.bind(
+                                                this,
+                                                "output"
+                                            )}
+                                            addonAfter={
+                                                <Select
+                                                    defaultValue={receiveName}
+                                                    value={receiveName}
+                                                    style={{width: 100}}
+                                                    disabled
+                                                    showArrow={false}
+                                                >
+                                                    <Select.Option
+                                                        key={receiveName}
+                                                    >
+                                                        {receiveName}
+                                                    </Select.Option>
+                                                </Select>
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
                             </div>
-                            {hasMemo ? (
-                                <div
-                                    className="grid-block"
-                                    style={{marginTop: "10px"}}
-                                >
+                            <div
+                                className="small-12 medium-6"
+                                style={{paddingRight: 5}}
+                            >
+                                <Form className="full-width" layout="vertical">
+                                    <Form.Item
+                                        label={counterpart.translate(
+                                            "exchange.price"
+                                        )}
+                                    >
+                                        <Input
+                                            value={
+                                                aboveLimit || isNaN(price)
+                                                    ? 0
+                                                    : price
+                                            }
+                                            disabled={true}
+                                            addonAfter={
+                                                <Select
+                                                    defaultValue={priceSuffix}
+                                                    value={priceSuffix}
+                                                    style={{width: 125}}
+                                                    disabled
+                                                    showArrow={false}
+                                                >
+                                                    <Select.Option
+                                                        key={priceSuffix}
+                                                    >
+                                                        {priceSuffix}
+                                                    </Select.Option>
+                                                </Select>
+                                            }
+                                        />
+                                    </Form.Item>
+                                </Form>
+                            </div>
+                        </div>
+
+                        {!addressValue ? (
+                            <div style={{textAlign: "center"}}>
+                                <LoadingIndicator type="three-bounce" />
+                            </div>
+                        ) : (
+                            <div className="container-row">
+                                {hasMemo ? null : QR}
+                                <div className="grid-block">
                                     <div className="copyIcon">
                                         <CopyButton
-                                            text={receive_address.memo}
+                                            text={addressValue}
                                             className="copyIcon"
                                         />
                                     </div>
                                     <div>
                                         <Translate
-                                            unsafe
-                                            content="gateway.purchase_notice_memo"
                                             component="div"
                                             style={{
                                                 fontSize: "0.8rem",
                                                 fontWeight: "bold",
                                                 paddingBottom: "0.3rem"
                                             }}
+                                            content="gateway.purchase_notice"
+                                            inputAsset={inputName}
+                                            outputAsset={receiveName}
                                         />
+
                                         <div className="modal__highlight">
-                                            {receive_address.memo}
+                                            {addressValue}
                                         </div>
                                     </div>
                                 </div>
-                            ) : null}
-                        </div>
-                    )}
-                </span>
-            </div>
-        );
-    }
-
-    _renderCurrentBalance() {
-        const {name: assetName} = utils.replaceName(this.props.asset);
-        const isDeposit = this.props.action === "deposit";
-
-        let currentBalance = this.props.balances.find(b => {
-            return b && b.get("asset_type") === this.props.asset.get("id");
-        });
-
-        let asset = currentBalance
-            ? new Asset({
-                  asset_id: currentBalance.get("asset_type"),
-                  precision: this.props.asset.get("precision"),
-                  amount: currentBalance.get("balance")
-              })
-            : null;
-
-        const applyBalanceButton = isDeposit ? (
-            <span
-                style={{border: "2px solid black", borderLeft: "none"}}
-                className="form-label"
-            >
-                {assetName}
-            </span>
-        ) : (
-            <Tooltip
-                placement="right"
-                title={counterpart.translate("tooltip.withdraw_full")}
-            >
-                <button
-                    className="button"
-                    style={{border: "2px solid black", borderLeft: "none"}}
-                    onClick={this._updateAmount.bind(
-                        this,
-                        !currentBalance
-                            ? 0
-                            : parseInt(currentBalance.get("balance"), 10)
-                    )}
-                >
-                    <Icon name="clippy" title="icons.clippy.withdraw_full" />
-                </button>
-            </Tooltip>
-        );
-
-        return (
-            <div
-                className="SimpleTrade__withdraw-row"
-                style={{fontSize: "1rem"}}
-            >
-                <label style={{fontSize: "1rem"}}>
-                    {counterpart.translate("gateway.balance_asset", {
-                        asset: assetName
-                    })}
-                    :
-                    <span className="inline-label">
-                        <input
-                            disabled
-                            style={{
-                                color: "black",
-                                border: "2px solid black",
-                                padding: 10,
-                                width: "100%"
-                            }}
-                            value={!asset ? 0 : asset.getAmount({real: true})}
-                        />
-                        {applyBalanceButton}
+                                {hasMemo ? (
+                                    <div
+                                        className="grid-block"
+                                        style={{marginTop: "10px"}}
+                                    >
+                                        <div className="copyIcon">
+                                            <CopyButton
+                                                text={receive_address.memo}
+                                                className="copyIcon"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Translate
+                                                unsafe
+                                                content="gateway.purchase_notice_memo"
+                                                component="div"
+                                                style={{
+                                                    fontSize: "0.8rem",
+                                                    fontWeight: "bold",
+                                                    paddingBottom: "0.3rem"
+                                                }}
+                                            />
+                                            <div className="modal__highlight">
+                                                {receive_address.memo}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+                        )}
                     </span>
-                </label>
+                ) : (
+                    <Translate content="modal.deposit.address_generation_error" />
+                )}
             </div>
         );
     }
