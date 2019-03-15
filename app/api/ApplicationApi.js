@@ -1,4 +1,5 @@
 import WalletUnlockActions from "actions/WalletUnlockActions";
+
 import WalletDb from "stores/WalletDb";
 import {
     Aes,
@@ -466,14 +467,14 @@ const ApplicationApi = {
      * @private
      */
     async _ensureAccount(account) {
-        if (typeof account == "object" && !!account.id) {
+        if (typeof account == "object" && !!account.get("id")) {
             return account;
         }
         return await FetchChain("getAccount", account, false);
     },
 
     async _ensureAsset(asset) {
-        if (typeof asset == "object" && !!asset.id) {
+        if (typeof asset == "object" && !!asset.get("id")) {
             return asset;
         }
         return await FetchChain("getAsset", asset);
@@ -490,7 +491,7 @@ const ApplicationApi = {
      * @param limitAssetAmount - int in satoshis, max amount to claim per period
      * @param periodInSeconds - how many seconds does one period last?
      * @param periodsUntilExpiration - how many periods will be done before expiration?
-     * @param periodStartTime - when does the first period start? defaults to now
+     * @param periodStartTime - dateobject or timestamp, when does the first period start? defaults to now
      * @param feeAsset - what asset to use for paying the fee, id or symbol
      * @returns {Promise<any>}
      */
@@ -509,6 +510,9 @@ const ApplicationApi = {
         if (periodStartTime == null) {
             periodStartTime = new Date();
         }
+        if (typeof periodStartTime == "number") {
+            periodStartTime = new Date(periodStartTime);
+        }
 
         // account must be unlocked
         await WalletUnlockActions.unlock();
@@ -517,8 +521,8 @@ const ApplicationApi = {
         let objects = {
             from: await this._ensureAccount(from),
             to: await this._ensureAccount(to),
-            limitAsset: await this._ensureAccount(limitAsset),
-            feeAsset: await this._ensureAccount(feeAsset)
+            limitAsset: await this._ensureAsset(limitAsset),
+            feeAsset: await this._ensureAsset(feeAsset)
         };
 
         let transactionBuilder = new TransactionBuilder();
@@ -527,25 +531,29 @@ const ApplicationApi = {
             {
                 fee: {
                     amount: 0,
-                    asset_id: objects.feeAsset.id
+                    asset_id: objects.feeAsset.get("id")
                 },
-                withdraw_from_account: objects.from.id,
-                authorized_account: objects.to.id,
+                withdraw_from_account: objects.from.get("id"),
+                authorized_account: objects.to.get("id"),
                 withdrawal_limit: {
                     amount: limitAssetAmount,
-                    asset_id: objects.limitAsset.id
+                    asset_id: objects.limitAsset.get("id")
                 },
                 withdrawal_period_sec: periodInSeconds,
                 periods_until_expiration: periodsUntilExpiration,
                 period_start_time: periodStartTime
             }
         );
+
         transactionBuilder.add_operation(op);
         await WalletDb.process_transaction(
             transactionBuilder,
             null, //signer_private_keys,
             broadcast
         );
+        if (!transactionBuilder.tr_buffer) {
+            throw "Something went finalization the transaction, this should not happen";
+        }
     }
 };
 

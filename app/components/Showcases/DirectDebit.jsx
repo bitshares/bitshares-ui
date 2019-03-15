@@ -1,4 +1,6 @@
 import React, {Component} from "react";
+import {Apis} from "bitsharesjs-ws";
+import {FetchChain} from "bitsharesjs";
 import Translate from "react-translate-component";
 import {
     Input,
@@ -28,13 +30,17 @@ import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
 import DirectDebitModal from "../Modal/DirectDebitModal";
+import debounceRender from "react-debounce-render";
+import {connect} from "alt-react";
+import ChainTypes from "../Utility/ChainTypes";
+import PropTypes from "prop-types";
 
 /* 
     table like view with "+" button
     lower component will be with some descriptive text and explanations.
 */
 
-export default class DirectDebit extends Component {
+class DirectDebit extends Component {
     constructor() {
         super();
         this.state = {
@@ -47,12 +53,71 @@ export default class DirectDebit extends Component {
             amount_index: 0,
 
             proposal_fee: 0,
-            isModalVisible: false
+            isModalVisible: false,
+
+            withdraw_permission_list: []
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.currentAccount != nextProps.currentAccount) {
+            this._update(nextProps.currentAccount);
+        }
+    }
+
+    _update(account = null) {
+        let currentAccount = ChainStore.getAccount(
+            account == null ? this.props.currentAccount : account
+        );
+        // fetch full accounts, contains withdraw, whcih is a list of permission objects. requires bitsharesjs in current develop branch
+
+        // for now, fetch manually
+        Promise.all([
+            Apis.instance()
+                .db_api()
+                .exec("get_withdraw_permissions_by_giver", [
+                    currentAccount.get("id"),
+                    "1.12.0",
+                    100
+                ]),
+            Apis.instance()
+                .db_api()
+                .exec("get_withdraw_permissions_by_recipient", [
+                    currentAccount.get("id"),
+                    "1.12.0",
+                    100
+                ])
+        ]).then(results => {
+            // [{
+            //     authorized_account: "1.2.894879",
+            //     claimed_this_period: 0,
+            //     expiration: "2019-03-30T10:57:53",
+            //     id: "1.12.63",
+            //     period_start_time: "2019-03-16T10:57:53",
+            //     withdraw_from_account: "1.2.886902",
+            //     withdrawal_limit: {
+            //         amount: 1,
+            //         asset_id: "1.3.0"
+            //     },
+            //     withdrawal_period_sec: 604800
+            // }];
+            let withdraw_permission_list = [];
+            withdraw_permission_list = withdraw_permission_list.concat(
+                results[0]
+            );
+            withdraw_permission_list = withdraw_permission_list.concat(
+                results[1]
+            );
+            this.setState({
+                withdraw_permission_list: withdraw_permission_list
+            });
+        });
+    }
+
     componentWillMount() {
-        let currentAccount = AccountStore.getState().currentAccount;
+        this._update();
+        let currentAccount = ChainStore.getAccount(this.props.currentAccount);
+
         if (!this.state.from_name) this.setState({from_name: currentAccount});
         estimateFeeAsync("proposal_create").then(fee => {
             this.setState({
@@ -88,28 +153,40 @@ export default class DirectDebit extends Component {
         const {isModalVisible} = this.state;
         console.log("isModalVisible", isModalVisible);
 
+        let currentAccount = ChainStore.getAccount(this.props.currentAccount);
+
         let smallScreen = window.innerWidth < 850 ? true : false;
 
-        const dataSource = [
-            {
-                key: "1",
-                id: 1,
-                type: "receiver",
-                authorized: "twat124",
-                limit: "1000TEST",
-                until: JSON.stringify(new Date()),
-                available: "10000TEST"
-            },
-            {
-                key: "2",
-                id: 2,
-                type: "giver",
-                authorized: "twat123",
-                limit: "0TEST",
-                until: JSON.stringify(new Date()),
-                available: "10000TEST"
-            }
-        ];
+        let dataSource = this.state.withdraw_permission_list.map(item => {
+            return {
+                key: item.id,
+                id: item.id,
+                type:
+                    item.authorized_account == currentAccount.get("id")
+                        ? "payee"
+                        : "payer",
+                authorized: item.authorized_account,
+                limit:
+                    item.withdrawal_limit.amount +
+                    " " +
+                    item.withdrawal_limit.asset_id,
+                until: new Date(item.expiration + "Z").toISOString(),
+                available:
+                    item.withdrawal_limit.amount -
+                    item.claimed_this_period +
+                    " " +
+                    item.withdrawal_limit.asset_id
+            };
+        });
+        dataSource.push({
+            key: "1",
+            id: 1,
+            type: "receiver",
+            authorized: "twat124",
+            limit: "1000TEST",
+            until: JSON.stringify(new Date()),
+            available: "10000TEST"
+        });
 
         const columns = [
             {
@@ -148,7 +225,7 @@ export default class DirectDebit extends Component {
                 key: "action",
                 render: (text, record) => {
                     if (record.type) {
-                        return record.type === "giver" ? (
+                        return record.type === "payer" ? (
                             <span>
                                 <Button style={{marginRight: "10px"}}>
                                     Cancel
@@ -211,3 +288,21 @@ export default class DirectDebit extends Component {
         );
     }
 }
+
+DirectDebit = debounceRender(DirectDebit, 50, {leading: false});
+
+export default connect(
+    DirectDebit,
+    {
+        listenTo() {
+            return [AccountStore];
+        },
+        getProps() {
+            return {
+                currentAccount:
+                    AccountStore.getState().currentAccount ||
+                    AccountStore.getState().passwordAccount
+            };
+        }
+    }
+);

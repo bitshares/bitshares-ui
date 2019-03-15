@@ -25,6 +25,7 @@ import classnames from "classnames";
 import {getWalletName} from "branding";
 import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 import {DatePicker} from "antd";
+import ApplicationApi from "../../api/ApplicationApi";
 
 class DirectDebitModal extends React.Component {
     constructor(props) {
@@ -66,7 +67,7 @@ class DirectDebitModal extends React.Component {
     // TODO: create trx
     onSubmit = e => {
         e.preventDefault();
-        const {
+        let {
             feeAsset,
             feeAmount,
             from_account,
@@ -77,22 +78,26 @@ class DirectDebitModal extends React.Component {
             num_of_periods,
             period_start_time
         } = this.state;
-        let trxParams = [25];
-        let trxObj = {
-            fee: {
-                amount: feeAmount ? feeAmount.getAmount({real: true}) : 0,
-                asset_id: feeAsset ? feeAsset.get("id") : "1.3.0"
-            },
-            withdraw_from_account: from_account.get("id"),
-            authorized_account: to_account.get("id"),
-            withdrawal_limit: {amount, asset_id},
-            withdrawal_period_sec: period.type.seconds,
-            periods_until_expiration: num_of_periods,
-            period_start_time: period_start_time // in sec or ms?
-        };
 
-        trxParams.push(trxObj);
-        console.log("submitting", trxParams);
+        ApplicationApi.createWithdrawPermission(
+            from_account,
+            to_account,
+            asset_id,
+            amount,
+            period.type.seconds,
+            num_of_periods,
+            period_start_time,
+            feeAsset ? feeAsset.get("id") : "1.3.0"
+        )
+            .then(result => {
+                console.log(
+                    "finish up handling successfull broadcasting",
+                    result
+                );
+            })
+            .catch(err => {
+                console.log("visualize error somehow");
+            });
     };
 
     componentDidMount() {
@@ -378,7 +383,7 @@ class DirectDebitModal extends React.Component {
         let from_my_account =
             AccountStore.isMyAccount(from_account) ||
             from_name === this.props.passwordAccount;
-        let from_error = from_account && from_my_account;
+        let from_error = !from_account || !from_my_account;
 
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
 
@@ -470,7 +475,7 @@ class DirectDebitModal extends React.Component {
 
         return (
             <Modal
-                title="Create operation"
+                title="Create Direct Debit Mandate"
                 visible={this.props.isModalVisible}
                 overlay={true}
                 onCancel={this.props.hideModal}
