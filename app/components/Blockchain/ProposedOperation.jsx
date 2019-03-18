@@ -1,19 +1,13 @@
 import React from "react";
 import FormattedAsset from "../Utility/FormattedAsset";
 import {Link} from "react-router-dom";
-import classNames from "classnames";
 import Translate from "react-translate-component";
 import counterpart from "counterpart";
-import market_utils from "common/market_utils";
 import utils from "common/utils";
 import LinkToAccountById from "../Utility/LinkToAccountById";
 import LinkToAssetById from "../Utility/LinkToAssetById";
-import BindToChainState from "../Utility/BindToChainState";
-import FormattedPrice from "../Utility/FormattedPrice";
 import {ChainStore, ChainTypes as grapheneChainTypes} from "bitsharesjs";
-import account_constants from "chain/account_constants";
-import MemoText from "./MemoText";
-import TranslateWithLinks from "../Utility/TranslateWithLinks";
+// import account_constants from "chain/account_constants";
 const {operations} = grapheneChainTypes;
 import PropTypes from "prop-types";
 import {
@@ -46,13 +40,32 @@ import {
     WithdrawPermissionCreate,
     WithdrawPermissionUpdate,
     WithdrawPermissionClaim,
-    WithdrawPermissionDelete
+    WithdrawPermissionDelete,
+    FillOrder,
+    GlobalParametersUpdate,
+    FileWrite,
+    VestingBalanceCreate,
+    VestingBalanceWithdraw,
+    BondCreateOffer,
+    BondCancelOffer,
+    BondAcceptOffer,
+    BondClaimCollaterial,
+    WorkerCreate,
+    BalanceClaim,
+    CommittyMemberCreate,
+    TransferToBlind,
+    TransferFromBlind,
+    AssetClaimFees,
+    CommitteeMemberUpdateGlobalParams,
+    Custom,
+    OverrideTransfer,
+    DefaultOperation
 } from "./operations";
 
 require("./operations.scss");
 
 let ops = Object.keys(operations);
-let listings = account_constants.account_listing;
+// let listings = account_constants.account_listing;
 
 export const TransactionIDAndExpiry = ({id, expiration, style}) => {
     const endDate = counterpart.localize(new Date(expiration), {
@@ -168,10 +181,10 @@ class ProposedOperation extends React.Component {
     };
 
     render() {
-        let {op, proposer, current, block, hideExpiration, index} = this.props;
+        let {op, block, hideExpiration, index, csvExportMode} = this.props;
+        const {label_color} = this.state;
         let line = null,
-            column = null,
-            color = "info";
+            column = null;
 
         switch (
             ops[op[0]] // For a list of trx types, see chain_types.coffee
@@ -180,7 +193,6 @@ class ProposedOperation extends React.Component {
                 column = (
                     <Transfer {...this.props} changeColor={this.changeColor} />
                 );
-
                 break;
 
             case "limit_order_create":
@@ -404,399 +416,130 @@ class ProposedOperation extends React.Component {
                 break;
 
             case "fill_order":
-                color = "success";
-                o = op[1];
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].account_id)}
-                        &nbsp;
-                        <Translate component="span" content="proposal.paid" />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].pays.amount}
-                            asset={op[1].pays.asset_id}
-                        />
-                        &nbsp;
-                        <Translate component="span" content="proposal.obtain" />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].receives.amount}
-                            asset={op[1].receives.asset_id}
-                        />
-                        &nbsp;
-                        <Translate component="span" content="proposal.at" />
-                        &nbsp;
-                        <FormattedPrice
-                            base_asset={o.pays.asset_id}
-                            base_amount={o.pays.amount}
-                            quote_asset={o.receives.asset_id}
-                            quote_amount={o.receives.amount}
-                        />
-                    </span>
-                );
-                break;
-
-            case "global_parameters_update":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.global_parameters_update"
-                        />
-                    </span>
-                );
-                break;
-
-            case "file_write":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.file_write"
-                        />
-                    </span>
-                );
-                break;
-
-            case "vesting_balance_create":
-                column = (
-                    <span>
-                        &nbsp;
-                        {this.linkToAccount(op[1].creator)}
-                        <Translate
-                            component="span"
-                            content="proposal.vesting_balance_create"
-                        />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].owner)}
-                    </span>
-                );
-                break;
-
-            case "vesting_balance_withdraw":
-                column = (
-                    <TranslateWithLinks
-                        string={"proposal.vesting_balance_withdraw"}
-                        keys={[
-                            {
-                                type: "account",
-                                value: op[1].owner,
-                                arg: "account"
-                            },
-                            {type: "amount", value: op[1].amount, arg: "amount"}
-                        ]}
+                    <FillOrder
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                        changeColor={this.changeColor}
                     />
                 );
                 break;
 
-            case "bond_create_offer":
+            case "global_parameters_update":
+                column = <GlobalParametersUpdate />;
+                break;
+
+            case "file_write":
+                column = <FileWrite />;
+                break;
+
+            case "vesting_balance_create":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.bond_create_offer"
-                        />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
-                        />
-                    </span>
+                    <VestingBalanceCreate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
+                break;
+
+            case "vesting_balance_withdraw":
+                column = <VestingBalanceWithdraw {...this.props} />;
+                break;
+
+            case "bond_create_offer":
+                column = <BondCreateOffer {...this.props} />;
                 break;
 
             case "bond_cancel_offer":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.bond_cancel_offer"
-                        />
-                        &nbsp;
-                        {op[1].offer_id}
-                    </span>
-                );
+                column = <BondCancelOffer {...this.props} />;
                 break;
 
             case "bond_accept_offer":
-                if (current === op[1].lender) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.bond_accept_offer"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].amount_borrowed.amount}
-                                asset={op[1].amount_borrowed.asset_id}
-                            />
-                            <Translate component="span" content="proposal.to" />
-                            &nbsp;
-                            {this.linkToAccount(op[1].borrower)}
-                        </span>
-                    );
-                } else if (current === op[1].borrower) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.bond_accept_offer"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].amount_borrowed.amount}
-                                asset={op[1].amount_borrowed.asset_id}
-                            />
-                            <Translate
-                                component="span"
-                                content="proposal.from"
-                            />
-                            &nbsp;
-                            {this.linkToAccount(op[1].lender)}
-                        </span>
-                    );
-                }
+                column = (
+                    <BondAcceptOffer
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
+                );
                 break;
 
             case "bond_claim_collateral":
-                if (current === op[1].lender) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.bond_pay_collateral"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].collateral_claimed.amount}
-                                asset={op[1].collateral_claimed.asset_id}
-                            />
-                            <Translate component="span" content="proposal.to" />
-                            &nbsp;
-                            {this.linkToAccount(op[1].claimer)}
-                        </span>
-                    );
-                } else if (current === op[1].claimer) {
-                    column = (
-                        <span>
-                            <Translate
-                                component="span"
-                                content="proposal.bond_claim_collateral"
-                            />
-                            &nbsp;
-                            <FormattedAsset
-                                style={{fontWeight: "bold"}}
-                                amount={op[1].collateral_claimed.amount}
-                                asset={op[1].collateral_claimed.asset_id}
-                            />
-                            <Translate
-                                component="span"
-                                content="proposal.from"
-                            />
-                            &nbsp;
-                            {this.linkToAccount(op[1].lender)}
-                        </span>
-                    );
-                }
+                column = (
+                    <BondClaimCollaterial
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
+                );
                 break;
 
             case "worker_create":
-                column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.create_worker"
-                        />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].daily_pay}
-                            asset={"1.3.0"}
-                        />
-                    </span>
-                );
+                column = <WorkerCreate {...this.props} />;
                 break;
 
             case "balance_claim":
-                color = "success";
-                op[1].total_claimed.amount = parseInt(
-                    op[1].total_claimed.amount,
-                    10
-                );
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].deposit_to_account)}
-                        &nbsp;
-                        <BindToChainState.Wrapper
-                            asset={op[1].total_claimed.asset_id}
-                        >
-                            {({asset}) => (
-                                <Translate
-                                    component="span"
-                                    content="proposal.balance_claim"
-                                    balance_amount={utils.format_asset(
-                                        op[1].total_claimed.amount,
-                                        asset
-                                    )}
-                                    balance_id={op[1].balance_to_claim.substring(
-                                        5
-                                    )}
-                                />
-                            )}
-                        </BindToChainState.Wrapper>
-                    </span>
+                    <BalanceClaim
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                        changeColor={this.changeColor}
+                    />
                 );
                 break;
 
             case "committee_member_create":
                 column = (
-                    <span>
-                        <Translate
-                            component="span"
-                            content="proposal.committee_member_create"
-                        />
-                        &nbsp;
-                        {this.linkToAccount(op[1].committee_member_account)}
-                    </span>
+                    <CommittyMemberCreate
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "transfer_to_blind":
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].from)}
-                        &nbsp;
-                        <Translate component="span" content="proposal.sent" />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
-                        />
-                    </span>
+                    <TransferToBlind
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                    />
                 );
                 break;
 
             case "transfer_from_blind":
                 column = (
-                    <span>
-                        {this.linkToAccount(op[1].to)}
-                        &nbsp;
-                        <Translate
-                            component="span"
-                            content="proposal.received"
-                        />
-                        &nbsp;
-                        <FormattedAsset
-                            style={{fontWeight: "bold"}}
-                            amount={op[1].amount.amount}
-                            asset={op[1].amount.asset_id}
-                        />
-                    </span>
-                );
-                break;
-
-            case "asset_claim_fees":
-                color = "success";
-                op[1].amount_to_claim.amount = parseInt(
-                    op[1].amount_to_claim.amount,
-                    10
-                );
-                column = (
-                    <span>
-                        {this.linkToAccount(op[1].issuer)}
-                        &nbsp;
-                        <BindToChainState.Wrapper
-                            asset={op[1].amount_to_claim.asset_id}
-                        >
-                            {({asset}) => (
-                                <TranslateWithLinks
-                                    string="transaction.asset_claim_fees"
-                                    keys={[
-                                        {
-                                            type: "amount",
-                                            value: op[1].amount_to_claim,
-                                            arg: "balance_amount"
-                                        },
-                                        {
-                                            type: "asset",
-                                            value: asset.get("id"),
-                                            arg: "asset"
-                                        }
-                                    ]}
-                                />
-                            )}
-                        </BindToChainState.Wrapper>
-                    </span>
-                );
-                break;
-
-            case "committee_member_update_global_parameters":
-                column = (
-                    <span>
-                        <TranslateWithLinks
-                            string="proposal.committee_member_update_global_parameters"
-                            keys={[
-                                {
-                                    type: "account",
-                                    value: "1.2.0",
-                                    arg: "account"
-                                }
-                            ]}
-                        />
-                    </span>
-                );
-                break;
-
-            case "custom":
-                column = (
-                    <span>
-                        <Translate component="span" content="proposal.custom" />
-                    </span>
-                );
-                break;
-
-            case "override_transfer":
-                column = (
-                    <TranslateWithLinks
-                        string="proposal.override_transfer"
-                        keys={[
-                            {
-                                type: "account",
-                                value: op[1].issuer,
-                                arg: "issuer"
-                            },
-                            {type: "account", value: op[1].from, arg: "from"},
-                            {type: "account", value: op[1].to, arg: "to"},
-                            {type: "amount", value: op[1].amount, arg: "amount"}
-                        ]}
+                    <TransferFromBlind
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
                     />
                 );
                 break;
 
-            default:
-                console.log("unimplemented op:", op);
+            case "asset_claim_fees":
                 column = (
-                    <span>
-                        <Link to={`/block/${block}`}>#{block}</Link>
-                    </span>
+                    <AssetClaimFees
+                        {...this.props}
+                        linkToAccount={this.linkToAccount}
+                        changeColor={this.changeColor}
+                    />
                 );
+                break;
+
+            case "committee_member_update_global_parameters":
+                column = <CommitteeMemberUpdateGlobalParams />;
+                break;
+
+            case "custom":
+                column = <Custom />;
+                break;
+
+            case "override_transfer":
+                column = <OverrideTransfer {...this.props} />;
+                break;
+
+            default:
+                <DefaultOperation {...this.props} />;
         }
 
-        if (this.props.csvExportMode) {
+        if (csvExportMode) {
             const globalObject = ChainStore.getObject("2.0.0");
             const dynGlobalObject = ChainStore.getObject("2.1.0");
             const block_time = utils.calc_block_time(
@@ -821,11 +564,11 @@ class ProposedOperation extends React.Component {
 
         line = column ? (
             <Row
-                index={this.props.index}
+                index={index}
                 id={this.props.id}
                 block={block}
                 type={op[0]}
-                color={color}
+                color={label_color}
                 fee={op[1].fee}
                 hideDate={this.props.hideDate}
                 hideFee={this.props.hideFee}

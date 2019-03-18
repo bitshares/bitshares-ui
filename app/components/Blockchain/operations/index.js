@@ -28,3 +28,24 @@ export {WithdrawPermissionCreate} from "./WithdrawPermissionCreate";
 export {WithdrawPermissionUpdate} from "./WithdrawPermissionUpdate";
 export {WithdrawPermissionClaim} from "./WithdrawPermissionClaim";
 export {WithdrawPermissionDelete} from "./WithdrawPermissionDelete";
+export {FillOrder} from "./FillOrder";
+export {GlobalParametersUpdate} from "./GlobalParametersUpdate";
+export {FileWrite} from "./FileWrite";
+export {VestingBalanceCreate} from "./VestingBalanceCreate";
+export {VestingBalanceWithdraw} from "./VestingBalanceWithdraw";
+export {BondCreateOffer} from "./BondCreateOffer";
+export {BondCancelOffer} from "./BondCancelOffer";
+export {BondAcceptOffer} from "./BondAcceptOffer";
+export {BondClaimCollaterial} from "./BondClaimCollaterial";
+export {WorkerCreate} from "./WorkerCreate";
+export {BalanceClaim} from "./BalanceClaim";
+export {CommittyMemberCreate} from "./CommittyMemberCreate";
+export {TransferToBlind} from "./TransferToBlind";
+export {TransferFromBlind} from "./TransferFromBlind";
+export {AssetClaimFees} from "./AssetClaimFees";
+export {
+    CommitteeMemberUpdateGlobalParams
+} from "./CommitteeMemberUpdateGlobalParams";
+export {Custom} from "./Custom";
+export {OverrideTransfer} from "./OverrideTransfer";
+export {DefaultOperation} from "./DefaultOperation";
