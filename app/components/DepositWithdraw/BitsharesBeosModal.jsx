@@ -39,7 +39,7 @@ class BitsharesBeosModal extends React.Component {
 
         this.state = {
             account: "",
-            btsAmount: "0.001",
+            btsAmount: "500",
             is_account_validation: false,
             is_account_creation_checkbox: false,
             isConfirmationModalVisible: false,

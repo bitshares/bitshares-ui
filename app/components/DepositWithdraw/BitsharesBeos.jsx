@@ -47,9 +47,9 @@ class BitsharesBeos extends React.Component {
     getParams() {
         const {params} = this.props;
         return {
-            beosFee: "0.001",
+            beosFee: "500",
             beosApiUrl: "https://gateway.beos.world/api/v2",
-            beosIssuer: "delegate-dev1.btsnow",
+            beosIssuer: "beos.gateway",
             ...QueryString.parse(params.search)
         };
     }
@@ -93,8 +93,8 @@ class BitsharesBeos extends React.Component {
                 </p>
                 <p>
                     During the 89 days of the BEOS reward distribution period,
-                    starting on December 13th 2018 (one week after the launch
-                    date for the BEOS network), a fixed amount of BEOS will be
+                    starting on March 25th 2019 (one week after the launch date
+                    for the BEOS network), a fixed amount of BEOS will be
                     awarded hourly to BEOS accounts holding BTS IOU tokens,
                     based on their proportionate holding. For example, if there
                     are only 2 BEOS accounts at the end of an hourly reward
