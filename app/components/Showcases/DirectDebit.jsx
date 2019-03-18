@@ -26,7 +26,6 @@ import {
     shouldPayFeeWithAssetAsync,
     estimateFeeAsync
 } from "common/trxHelper";
-import BalanceComponent from "../Utility/BalanceComponent";
 import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
 import DirectDebitModal from "../Modal/DirectDebitModal";
@@ -34,11 +33,6 @@ import debounceRender from "react-debounce-render";
 import {connect} from "alt-react";
 import ChainTypes from "../Utility/ChainTypes";
 import PropTypes from "prop-types";
-
-/* 
-    table like view with "+" button
-    lower component will be with some descriptive text and explanations.
-*/
 
 class DirectDebit extends Component {
     constructor() {
@@ -54,7 +48,7 @@ class DirectDebit extends Component {
 
             proposal_fee: 0,
             isModalVisible: false,
-
+            filterString: "",
             withdraw_permission_list: []
         };
     }
@@ -108,6 +102,8 @@ class DirectDebit extends Component {
             withdraw_permission_list = withdraw_permission_list.concat(
                 results[1]
             );
+            console.log("withdraw_permission_list", withdraw_permission_list);
+
             this.setState({
                 withdraw_permission_list: withdraw_permission_list
             });
@@ -147,38 +143,53 @@ class DirectDebit extends Component {
     _onFilter = e => {
         // TODO:
         e.preventDefault();
+        this.setState({filterString: e.target.value.toLowerCase()});
     };
 
     render() {
-        const {isModalVisible} = this.state;
-        console.log("isModalVisible", isModalVisible);
-
+        const {isModalVisible, withdraw_permission_list} = this.state;
         let currentAccount = ChainStore.getAccount(this.props.currentAccount);
+        // console.log("currentAccount", currentAccount.toJS());
 
-        let smallScreen = window.innerWidth < 850 ? true : false;
+        // let smallScreen = window.innerWidth < 850 ? true : false;
 
-        let dataSource = this.state.withdraw_permission_list.map(item => {
-            return {
-                key: item.id,
-                id: item.id,
-                type:
-                    item.authorized_account == currentAccount.get("id")
-                        ? "payee"
-                        : "payer",
-                authorized: item.authorized_account,
-                limit:
-                    item.withdrawal_limit.amount +
-                    " " +
-                    item.withdrawal_limit.asset_id,
-                until: new Date(item.expiration + "Z").toISOString(),
-                available:
-                    item.withdrawal_limit.amount -
-                    item.claimed_this_period +
-                    " " +
-                    item.withdrawal_limit.asset_id
-            };
-        });
-        dataSource.push({
+        let dataSource = withdraw_permission_list.length
+            ? withdraw_permission_list
+                  .map(item => {
+                      const assetSymbol = ChainStore.getAsset(
+                          item.withdrawal_limit.asset_id
+                      ).get("symbol");
+
+                      return {
+                          key: item.id,
+                          id: item.id,
+                          type:
+                              item.authorized_account ==
+                              currentAccount.get("id")
+                                  ? "payee"
+                                  : "payer",
+                          authorized: ChainStore.getAccountName(
+                              item.authorized_account
+                          ), // is it ok?
+                          limit:
+                              item.withdrawal_limit.amount + " " + assetSymbol,
+                          until: new Date(item.expiration + "Z").toISOString(),
+                          available:
+                              item.withdrawal_limit.amount -
+                              item.claimed_this_period +
+                              " " +
+                              assetSymbol
+                      };
+                  })
+                  .filter(item => {
+                      return (
+                          item.authorized &&
+                          item.authorized.indexOf(this.state.filterString) !==
+                              -1
+                      );
+                  })
+            : null;
+        /* dataSource.push({
             key: "1",
             id: 1,
             type: "receiver",
@@ -186,38 +197,64 @@ class DirectDebit extends Component {
             limit: "1000TEST",
             until: JSON.stringify(new Date()),
             available: "10000TEST"
-        });
+        }); */
 
         const columns = [
             {
                 title: "#",
                 dataIndex: "id",
-                key: "id"
+                key: "id",
+                sorter: (a, b) => {
+                    return a.id > b.id ? 1 : a.id < b.id ? -1 : 0;
+                }
             },
             {
                 title: "Type",
                 dataIndex: "type",
-                key: "type"
+                key: "type",
+                sorter: (a, b) => {
+                    return a.type > b.type ? 1 : a.type < b.type ? -1 : 0;
+                }
             },
             {
                 title: "Authorized",
                 dataIndex: "authorized",
-                key: "authorized"
+                key: "authorized",
+                sorter: (a, b) => {
+                    return a.authorized > b.authorized
+                        ? 1
+                        : a.authorized < b.authorized
+                            ? -1
+                            : 0;
+                }
             },
             {
                 title: "Limit",
                 dataIndex: "limit",
-                key: "limit"
+                key: "limit",
+                sorter: (a, b) => {
+                    return a.limit > b.limit ? 1 : a.limit < b.limit ? -1 : 0;
+                }
             },
             {
                 title: "Until",
                 dataIndex: "until",
-                key: "until"
+                key: "until",
+                sorter: (a, b) => {
+                    return a.until > b.until ? 1 : a.until < b.until ? -1 : 0;
+                }
             },
             {
                 title: "Available",
                 dataIndex: "available",
-                key: "available"
+                key: "available",
+                sorter: (a, b) => {
+                    return a.available > b.available
+                        ? 1
+                        : a.available < b.available
+                            ? -1
+                            : 0;
+                }
             },
             {
                 title: "Actions",
