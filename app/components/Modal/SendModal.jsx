@@ -451,31 +451,37 @@ class SendModal extends React.Component {
     onAmountChanged({amount, asset}) {
         if (!asset) return;
 
-        if(typeof(asset) !== "object") {
+        if (typeof asset !== "object") {
             asset = ChainStore.getAsset(asset);
-        };
+        }
 
-        this.setState({
-            amount,
-            asset,
-            asset_id: asset.get("id"),
-            error: null,
-            maxAmount: false
-        }, this._checkBalance);
+        this.setState(
+            {
+                amount,
+                asset,
+                asset_id: asset.get("id"),
+                error: null,
+                maxAmount: false
+            },
+            this._checkBalance
+        );
     }
 
     onFeeChanged({asset}) {
         if (!asset) return;
 
-        if(typeof(asset) !== "object") {
+        if (typeof asset !== "object") {
             asset = ChainStore.getAsset(asset);
-        };
+        }
 
-        this.setState({
-            feeAsset: asset, 
-            fee_asset_id: asset.get("id"), 
-            error: null
-        }, this._updateFee);
+        this.setState(
+            {
+                feeAsset: asset,
+                fee_asset_id: asset.get("id"),
+                error: null
+            },
+            this._updateFee
+        );
     }
 
     onMemoChanged(e) {
@@ -732,17 +738,14 @@ class SendModal extends React.Component {
                                         <AccountSelector
                                             label="transfer.by"
                                             accountName={
-                                                this.props
-                                                    .currentAccount
+                                                this.props.currentAccount
                                             }
-                                            account={
-                                                this.props
-                                                    .currentAccount
-                                            }
+                                            account={this.props.currentAccount}
                                             size={60}
+                                            typeahead={true}
                                             tabIndex={tabIndex++}
                                             hideImage
-                                            disabled={true}
+                                            locked={true}
                                         />
                                         <div className="modal-separator" />
                                     </React.Fragment>
@@ -752,9 +755,7 @@ class SendModal extends React.Component {
                                     label="transfer.from"
                                     accountName={from_name}
                                     account={from_account}
-                                    onChange={this.fromChanged.bind(
-                                        this
-                                    )}
+                                    onChange={this.fromChanged.bind(this)}
                                     onAccountChanged={this.onFromAccountChanged.bind(
                                         this
                                     )}
@@ -762,8 +763,9 @@ class SendModal extends React.Component {
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                     hideImage
+                                    locked={!!propose ? undefined : true}
                                 />
-                                    
+
                                 <AccountSelector
                                     label="transfer.to"
                                     accountName={to_name}
@@ -776,14 +778,12 @@ class SendModal extends React.Component {
                                     typeahead={true}
                                     tabIndex={tabIndex++}
                                     hideImage
-                                />          
-                                
+                                />
+
                                 <AmountSelector
                                     label="transfer.amount"
                                     amount={amount}
-                                    onChange={this.onAmountChanged.bind(
-                                        this
-                                    )}
+                                    onChange={this.onAmountChanged.bind(this)}
                                     asset={
                                         asset_types.length > 0 && asset
                                             ? asset.get("id")
@@ -801,10 +801,20 @@ class SendModal extends React.Component {
                                         {memo.length}
                                     </label>
                                 ) : null}
-                                <Form.Item 
-                                    label={counterpart.translate("transfer.memo")}
-                                    validateStatus={memo && propose ? "warning" : ""}
-                                    help={memo && propose ? counterpart.translate("transfer.warn_name_unable_read_memo") : ""}
+                                <Form.Item
+                                    label={counterpart.translate(
+                                        "transfer.memo"
+                                    )}
+                                    validateStatus={
+                                        memo && propose ? "warning" : ""
+                                    }
+                                    help={
+                                        memo && propose
+                                            ? counterpart.translate(
+                                                  "transfer.warn_name_unable_read_memo"
+                                              )
+                                            : ""
+                                    }
                                 >
                                     <Tooltip
                                         placement="top"
@@ -823,34 +833,26 @@ class SendModal extends React.Component {
                                         />
                                     </Tooltip>
                                 </Form.Item>
-                                
+
                                 <AmountSelector
                                     label="transfer.fee"
                                     disabled={true}
                                     amount={fee}
-                                    onChange={this.onFeeChanged.bind(
-                                        this
-                                    )}
+                                    onChange={this.onFeeChanged.bind(this)}
                                     asset={
-                                        fee_asset_types.length &&
-                                        feeAmount
+                                        fee_asset_types.length && feeAmount
                                             ? feeAmount.asset_id
-                                            : fee_asset_types.length ===
-                                                1
+                                            : fee_asset_types.length === 1
                                                 ? fee_asset_types[0]
                                                 : fee_asset_id
                                                     ? fee_asset_id
                                                     : fee_asset_types[0]
                                     }
                                     assets={fee_asset_types}
-                                    display_balance={
-                                        balance_fee
-                                    }
+                                    display_balance={balance_fee}
                                     tabIndex={tabIndex++}
                                     error={
-                                        this.state
-                                            .hasPoolBalance ===
-                                        false
+                                        this.state.hasPoolBalance === false
                                             ? "transfer.errors.insufficient"
                                             : null
                                     }

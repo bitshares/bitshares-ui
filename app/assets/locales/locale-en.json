@@ -1982,6 +1982,7 @@
         "target_collateral_ratio": "Setting a Target Collateral Ratio (TCR) will allow the blockchain to automatically sell the required amount of your collateral in order to keep your collateral ratio at or above your defined TCR when the value of your collateral decreases.<br /><br />To frequently sell small amounts, set a low target (eg. < 2)<br /><br />To sell larger amounts infrequently, set a high target (eg. > 3)",
         "transfer_actions": "Click here to make a transfer, or to deposit/withdraw those assets that support it.",
         "update_position": "Click here to update your position. You may at any time change the debt and/or collateral levels of your position.",
+        "unlock_account_name": "Click to edit the account name, e.g. when your account is set as permission of another account.",
         "withdraw_address": "If you don't already have a %(asset)s address, please find a wallet provider and create one in order to complete the withdrawal.",
         "withdraw_full": "Click to withdraw the full balance"
     },

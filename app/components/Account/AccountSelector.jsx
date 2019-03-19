@@ -13,7 +13,14 @@ import Icon from "../Icon/Icon";
 import accountUtils from "common/account_utils";
 import cnames from "classnames";
 import PropTypes from "prop-types";
-import {Tooltip, Button, Input, Icon as AntIcon, Select, Form} from "bitshares-ui-style-guide";
+import {
+    Tooltip,
+    Button,
+    Input,
+    Icon as AntIcon,
+    Select,
+    Form
+} from "bitshares-ui-style-guide";
 
 /**
  * @brief Allows the user to enter an account by name or #ID
@@ -38,18 +45,25 @@ class AccountSelector extends React.Component {
         allowUppercase: PropTypes.bool, // use it if you need to allow uppercase letters
         typeahead: PropTypes.bool,
         excludeAccounts: PropTypes.array, // array of accounts to exclude from the typeahead
-        focus: PropTypes.bool
+        focus: PropTypes.bool,
+        disabled: PropTypes.bool,
+        editable: PropTypes.bool,
+        locked: PropTypes.bool
     };
 
     static defaultProps = {
         autosubscribe: false,
-        excludeAccounts: []
+        excludeAccounts: [],
+        disabled: null,
+        editable: null,
+        locked: null
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            inputChanged: false
+            inputChanged: false,
+            locked: this.props.locked
         };
     }
 
@@ -67,7 +81,7 @@ class AccountSelector extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.focus) {
+        if (this.props.focus && !!this.props.editable && !this.props.disabled) {
             this.refs.user_input.focus();
         }
     }
@@ -140,13 +154,15 @@ class AccountSelector extends React.Component {
         if (!!props.onAccountChanged) {
             FetchChain("getAccount", accountName, undefined, {
                 [accountName]: false
-            }).then(account => {
-                if (!!account) {
-                    props.onAccountChanged(account);
-                }
-            }).catch(err => {
-                console.log(err);
-            });
+            })
+                .then(account => {
+                    if (!!account) {
+                        props.onAccountChanged(account);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     }
 
@@ -163,10 +179,7 @@ class AccountSelector extends React.Component {
     }
 
     onKeyDown(e) {
-        if (
-            e.keyCode === 13 ||
-            e.keyCode === 9
-        ) {
+        if (e.keyCode === 13 || e.keyCode === 9) {
             this.onAction(e);
         }
     }
@@ -274,7 +287,9 @@ class AccountSelector extends React.Component {
                         status: counterpart.translate(account_status_text),
                         isOwn: myActiveAccounts.has(accountName),
                         isFavorite: contacts.has(accountName),
-                        isKnownScammer: accountUtils.isKnownScammer(accountName),
+                        isKnownScammer: accountUtils.isKnownScammer(
+                            accountName
+                        ),
                         className: accountUtils.isKnownScammer(accountName)
                             ? "negative"
                             : "positive"
@@ -319,16 +334,14 @@ class AccountSelector extends React.Component {
             if (a.disabled && !b.disabled) {
                 if (a.label > b.label) return 1;
                 else return -1;
-            } 
-            else return -1;
+            } else return -1;
         });
-
 
         let linked_status;
 
-        if(!this.props.account) {
+        if (!this.props.account) {
             linked_status = null;
-        } else if(myActiveAccounts.has(account.get("name"))) {
+        } else if (myActiveAccounts.has(account.get("name"))) {
             linked_status = (
                 <Tooltip
                     placement="top"
@@ -339,21 +352,18 @@ class AccountSelector extends React.Component {
                     </span>
                 </Tooltip>
             );
-        } else if(accountUtils.isKnownScammer(account.get("name"))) {
+        } else if (accountUtils.isKnownScammer(account.get("name"))) {
             linked_status = (
                 <Tooltip
                     placement="top"
                     title={counterpart.translate("tooltip.scam_account")}
                 >
                     <span className="tooltip red">
-                        <AntIcon
-                            type="warning"
-                            theme="filled"
-                        />
+                        <AntIcon type="warning" theme="filled" />
                     </span>
                 </Tooltip>
             );
-        } else if(contacts.has(account.get("name"))) {
+        } else if (contacts.has(account.get("name"))) {
             linked_status = (
                 <Tooltip
                     placement="top"
@@ -361,10 +371,7 @@ class AccountSelector extends React.Component {
                     onClick={this._onRemoveContact.bind(this)}
                 >
                     <span className="tooltip green">
-                        <AntIcon
-                            type="star"
-                            theme="filled"
-                        />
+                        <AntIcon type="star" theme="filled" />
                     </span>
                 </Tooltip>
             );
@@ -382,13 +389,35 @@ class AccountSelector extends React.Component {
             );
         }
 
-        let disabledAction = !(account || inputType === "pubkey") || error || disableActionButton;
+        let disabledAction =
+            !(account || inputType === "pubkey") ||
+            error ||
+            disableActionButton;
+
+        let editableInput = !!this.state.locked
+            ? false
+            : this.props.editable != null
+                ? this.props.editable
+                : undefined;
+        let disabledInput = !!this.state.locked
+            ? true
+            : this.props.disabled != null
+                ? this.props.disabled
+                : undefined;
 
         return (
-            <Form className="full-width" layout="vertical" style={this.props.style}>
-                <Form.Item 
-                    label={this.props.label ? counterpart.translate(this.props.label) : ""}
-                    validateStatus={error ? "error" : null} 
+            <Form
+                className="full-width"
+                layout="vertical"
+                style={this.props.style}
+            >
+                <Form.Item
+                    label={
+                        this.props.label
+                            ? counterpart.translate(this.props.label)
+                            : ""
+                    }
+                    validateStatus={error ? "error" : null}
                     help={error ? error : null}
                 >
                     {this.props.label ? (
@@ -401,7 +430,8 @@ class AccountSelector extends React.Component {
                             <label
                                 className={cnames(
                                     "right-label",
-                                    account && (account.isFavorite || account.isOwn)
+                                    account &&
+                                    (account.isFavorite || account.isOwn)
                                         ? "positive"
                                         : null,
                                     account && account.isKnownScammer
@@ -443,14 +473,21 @@ class AccountSelector extends React.Component {
                                 />
                             )}
                             {typeof this.props.typeahead !== "undefined" ? (
-                                <Select 
+                                <Select
                                     showSearch
                                     optionLabelProp={"value"}
                                     onSelect={this.onSelect.bind(this)}
                                     onChange={this.onInputChanged.bind(this)}
                                     onSearch={this.onInputChanged.bind(this)}
-                                    placeholder={counterpart.translate("account.search")}
+                                    placeholder={counterpart.translate(
+                                        "account.search"
+                                    )}
                                     value={account ? accountName : null}
+                                    disabled={
+                                        !!disabledInput
+                                            ? disabledInput.toString()
+                                            : undefined
+                                    }
                                 >
                                     {typeAheadAccounts.map(account => (
                                         <Select.Option
@@ -458,9 +495,15 @@ class AccountSelector extends React.Component {
                                             value={account.label}
                                             disabled={account.disabled}
                                         >
-                                            {account.isOwn ? <AntIcon type="user" /> : null}
-                                            {account.isFavorite ? <AntIcon type="star" /> : null}
-                                            {account.isKnownScammer ? <AntIcon type="warning" /> : null}
+                                            {account.isOwn ? (
+                                                <AntIcon type="user" />
+                                            ) : null}
+                                            {account.isFavorite ? (
+                                                <AntIcon type="star" />
+                                            ) : null}
+                                            {account.isKnownScammer ? (
+                                                <AntIcon type="warning" />
+                                            ) : null}
                                             &nbsp;
                                             {account.label}
                                             <span style={{float: "right"}}>
@@ -470,7 +513,7 @@ class AccountSelector extends React.Component {
                                     ))}
                                 </Select>
                             ) : (
-                                <Input 
+                                <Input
                                     style={{
                                         textTransform:
                                             this.getInputType(accountName) ===
@@ -481,7 +524,11 @@ class AccountSelector extends React.Component {
                                     }}
                                     name="username"
                                     id="username"
-                                    autoComplete="username"
+                                    autoComplete={
+                                        !!this.props.editable
+                                            ? "username"
+                                            : undefined
+                                    }
                                     type="text"
                                     value={this.props.accountName || ""}
                                     placeholder={
@@ -491,15 +538,64 @@ class AccountSelector extends React.Component {
                                     ref="user_input"
                                     onChange={this.onInputChanged.bind(this)}
                                     onKeyDown={this.onKeyDown.bind(this)}
-                                    tabIndex={this.props.tabIndex}
-                                    disabled={this.props.disabled || false}
+                                    tabIndex={
+                                        !this.props.editable ||
+                                        !!this.props.disabled
+                                            ? -1
+                                            : this.props.tabIndex
+                                    }
+                                    editable={
+                                        !!editableInput
+                                            ? editableInput.toString()
+                                            : undefined
+                                    }
+                                    readOnly={
+                                        !!editableInput
+                                            ? (!editableInput).toString()
+                                            : undefined
+                                    }
+                                    disabled={
+                                        !!disabledInput
+                                            ? disabledInput.toString()
+                                            : undefined
+                                    }
                                 />
+                            )}
+                            {!!this.state.locked && (
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "tooltip.unlock_account_name"
+                                    )}
+                                >
+                                    <div
+                                        style={{
+                                            lineHeight: "2rem",
+                                            marginLeft: "10px",
+                                            cursor: "pointer"
+                                        }}
+                                        onClick={() =>
+                                            this.setState({locked: false})
+                                        }
+                                    >
+                                        <AntIcon
+                                            style={{fontSize: "1rem"}}
+                                            type={"edit"}
+                                        />
+                                    </div>
+                                </Tooltip>
                             )}
                             {this.props.children}
                             {this.props.onAction ? (
-                                <Tooltip title={counterpart.translate(
-                                    "tooltip.required_input", { type: counterpart.translate("global.field_type.account") }
-                                )}>
+                                <Tooltip
+                                    title={counterpart.translate(
+                                        "tooltip.required_input",
+                                        {
+                                            type: counterpart.translate(
+                                                "global.field_type.account"
+                                            )
+                                        }
+                                    )}
+                                >
                                     <Button
                                         type="primary"
                                         disabled={disabledAction}
@@ -510,7 +606,6 @@ class AccountSelector extends React.Component {
                                         />
                                     </Button>
                                 </Tooltip>
-                                
                             ) : null}
                         </div>
                     </Tooltip>
