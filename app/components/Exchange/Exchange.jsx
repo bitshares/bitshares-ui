@@ -1634,7 +1634,7 @@ class Exchange extends React.Component {
         });
 
         SettingsActions.changeViewSetting({
-            newState
+            ...newState
         });
     }
 
