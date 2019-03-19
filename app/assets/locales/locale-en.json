@@ -1872,12 +1872,14 @@
             "description": "Setup a direct debit mandate for recurring payments. The mandate allows another account to transfer funds out of your account, with a limit on the amount for defined time intervals.",
             "title": "Direct debit",
             "create": "Create",
+            "update": "Update",
             "authorized_account": "Payee",
             "limit_per_period": "Maximum amount per period",
             "period": "Specify period",
             "num_of_periods": "Number of periods",
             "start_date": "First period starts on",
-            "create_new_mandate": "Create new mandate"
+            "create_new_mandate": "Create new mandate",
+            "update_mandate": "Update existing mandate"
         },
         "paper_wallet": {
             "description": "Create a PDF with your account's keys printed (plain text and barcode). If the wallet is unlocked, the private keys are added as well.",

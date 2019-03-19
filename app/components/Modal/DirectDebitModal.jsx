@@ -1,8 +1,6 @@
 import React from "react";
-import ZfApi from "react-foundation-apps/src/utils/foundation-api";
 import Translate from "react-translate-component";
 import {ChainStore} from "bitsharesjs";
-import AccountSelect from "../Forms/AccountSelect";
 import AmountSelector from "../Utility/AmountSelector";
 import PeriodSelector from "../Utility/PeriodSelector";
 
@@ -17,15 +15,13 @@ import {
     shouldPayFeeWithAssetAsync
 } from "common/trxHelper";
 import BalanceComponent from "../Utility/BalanceComponent";
-import AccountActions from "actions/AccountActions";
 import utils from "common/utils";
 import counterpart from "counterpart";
 import {connect} from "alt-react";
-import classnames from "classnames";
-import {getWalletName} from "branding";
 import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
 import {DatePicker} from "antd";
 import ApplicationApi from "../../api/ApplicationApi";
+import moment from "moment";
 
 class DirectDebitModal extends React.Component {
     constructor(props) {
@@ -40,7 +36,6 @@ class DirectDebitModal extends React.Component {
 
     getInitialState() {
         return {
-            from_name: "",
             to_name: "",
             from_account: null,
             to_account: null,
@@ -58,13 +53,14 @@ class DirectDebitModal extends React.Component {
             feeAmount: new Asset({amount: 0}),
             feeStatus: {},
             maxAmount: false,
-            hidden: false,
             num_of_periods: "",
             period: {amount: "", type: {seconds: 604800, name: "Week"}},
-            period_start_time: ""
+            period_start_time: null,
+            permissionId: "",
+            balanceError: false
         };
     }
-    // TODO: create trx
+
     onSubmit = e => {
         e.preventDefault();
         let {
@@ -76,28 +72,36 @@ class DirectDebitModal extends React.Component {
             asset_id,
             period,
             num_of_periods,
-            period_start_time
-        } = this.state;
-
-        ApplicationApi.createWithdrawPermission(
-            from_account,
-            to_account,
-            asset_id,
-            amount,
-            period.type.seconds,
-            num_of_periods,
             period_start_time,
-            feeAsset ? feeAsset.get("id") : "1.3.0"
-        )
-            .then(result => {
-                console.log(
-                    "finish up handling successfull broadcasting",
-                    result
-                );
-            })
-            .catch(err => {
-                console.log("visualize error somehow");
-            });
+            permissionId
+        } = this.state;
+        const {
+            operation: {type: operationType}
+        } = this.props;
+
+        if (operationType === "create") {
+            ApplicationApi.createWithdrawPermission(
+                from_account,
+                to_account,
+                asset_id,
+                amount,
+                period.type.seconds * Number(period.amount),
+                num_of_periods,
+                period_start_time.valueOf(),
+                feeAsset ? feeAsset.get("id") : "1.3.0"
+            )
+                .then(result => {
+                    console.log(
+                        "finish up handling successfull broadcasting",
+                        result
+                    );
+                })
+                .catch(err => {
+                    console.log("visualize error somehow");
+                });
+        } else if (operationType === "update") {
+            console.log("update trx");
+        }
     };
 
     componentDidMount() {
@@ -105,13 +109,74 @@ class DirectDebitModal extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const {operation} = this.props;
         if (
             this.props.isModalVisible &&
             prevProps.isModalVisible !== this.props.isModalVisible
         ) {
-            this.setState({
-                from_account: ChainStore.getAccount(this.props.currentAccount)
-            });
+            this.setState(
+                {
+                    from_account: ChainStore.getAccount(
+                        this.props.currentAccount
+                    )
+                },
+                () => {
+                    this._updateFee();
+                    this._checkFeeStatus(this.state);
+                }
+            );
+        } else if (
+            !this.props.isModalVisible &&
+            prevProps.isModalVisible !== this.props.isModalVisible
+        ) {
+            this.setState(this.getInitialState()); // reset state
+        }
+
+        // Update operation
+        if (
+            operation &&
+            operation.type === "update" &&
+            operation.payload.id !== prevState.permissionId
+        ) {
+            const toAccount = ChainStore.getAccount(
+                operation.payload.authorized_account
+            );
+
+            if (toAccount && toAccount.get) {
+                const timeStart = moment
+                    .utc(operation.payload.period_start_time)
+                    .valueOf();
+                const timeEnd = moment
+                    .utc(operation.payload.expiration)
+                    .valueOf();
+                const numberOfPeriods =
+                    (timeEnd - timeStart) /
+                    (operation.payload.withdrawal_period_sec * 1000);
+
+                this.setState({
+                    to_account: toAccount,
+                    to_name: toAccount.get("name"),
+                    asset: ChainStore.getAsset(
+                        operation.payload.withdrawal_limit.asset_id
+                    ),
+                    permissionId: operation.payload.id,
+                    amount: operation.payload.withdrawal_limit.amount,
+                    asset_id: operation.payload.withdrawal_limit.asset_id,
+                    num_of_periods: numberOfPeriods,
+                    period: {
+                        amount: Math.round(
+                            operation.payload.withdrawal_period_sec / 60
+                        ),
+                        type: {
+                            seconds: 60,
+                            name: "Minute"
+                        }
+                    },
+                    period_start_time: moment.utc(
+                        operation.payload.period_start_time
+                    )
+                });
+            }
         }
     }
 
@@ -221,10 +286,10 @@ class DirectDebitModal extends React.Component {
             if (feeStatus[id] === undefined) return true;
             return feeStatus[id] && feeStatus[id].hasBalance;
         }
-        const {from_account, from_error} = state;
+        const {from_account} = state;
         let asset_types = [],
             fee_asset_types = [];
-        if (!(from_account && from_account.get("balances") && !from_error)) {
+        if (!(from_account && from_account.get("balances"))) {
             return {asset_types, fee_asset_types};
         }
         let account_balances = state.from_account.get("balances").toJS();
@@ -351,11 +416,10 @@ class DirectDebitModal extends React.Component {
     }
 
     onStartDateChanged = utcValue => {
-        // TODO: format of date?
         if (utcValue) {
-            this.setState({period_start_time: utcValue.valueOf()}); // time in ms
+            this.setState({period_start_time: utcValue});
         } else {
-            this.setState({period_start_time: ""});
+            this.setState({period_start_time: null});
         }
     };
 
@@ -365,25 +429,19 @@ class DirectDebitModal extends React.Component {
             to_account,
             asset,
             asset_id,
-
             feeAmount,
             amount,
             error,
             to_name,
-            from_name,
-
             feeAsset,
             fee_asset_id,
             balanceError,
-            hidden,
             num_of_periods,
             period,
             period_start_time
         } = this.state;
-        let from_my_account =
-            AccountStore.isMyAccount(from_account) ||
-            from_name === this.props.passwordAccount;
-        let from_error = !from_account || !from_my_account;
+
+        const {operation} = this.props;
 
         let {asset_types, fee_asset_types} = this._getAvailableAssets();
 
@@ -393,7 +451,7 @@ class DirectDebitModal extends React.Component {
         // Estimate fee
         let fee = this.state.feeAmount.getAmount({real: true});
 
-        if (from_account && from_account.get("balances") && !from_error) {
+        if (from_account && from_account.get("balances")) {
             let account_balances = from_account.get("balances").toJS();
             let _error = this.state.balanceError ? "has-error" : "";
             if (asset_types.length === 1)
@@ -466,16 +524,22 @@ class DirectDebitModal extends React.Component {
             !to_account ||
             !isAmountValid ||
             !asset ||
-            from_error ||
             balanceError ||
             from_account.get("id") == to_account.get("id") ||
             !period.amount ||
             !num_of_periods ||
             !period_start_time;
-
         return (
             <Modal
-                title="Create Direct Debit Mandate"
+                title={
+                    operation && operation.type === "create"
+                        ? counterpart.translate(
+                              "showcases.direct_debit.create_new_mandate"
+                          )
+                        : counterpart.translate(
+                              "showcases.direct_debit.update_mandate"
+                          )
+                }
                 visible={this.props.isModalVisible}
                 overlay={true}
                 onCancel={this.props.hideModal}
@@ -487,10 +551,13 @@ class DirectDebitModal extends React.Component {
                             !isSubmitNotValid ? this.onSubmit.bind(this) : null
                         }
                     >
-                        <Translate
-                            component="span"
-                            content="showcases.direct_debit.create"
-                        />
+                        {operation && operation.type === "create"
+                            ? counterpart.translate(
+                                  "showcases.direct_debit.create"
+                              )
+                            : counterpart.translate(
+                                  "showcases.direct_debit.update"
+                              )}
                     </Button>,
                     <Button key="Cancel" onClick={this.props.hideModal}>
                         <Translate component="span" content="transfer.cancel" />
@@ -569,6 +636,7 @@ class DirectDebitModal extends React.Component {
                                 )}
                             </label>
                             <DatePicker
+                                value={period_start_time}
                                 showTime
                                 placeholder=""
                                 onChange={this.onStartDateChanged}

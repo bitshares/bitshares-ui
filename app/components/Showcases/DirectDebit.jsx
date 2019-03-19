@@ -49,6 +49,7 @@ class DirectDebit extends Component {
             proposal_fee: 0,
             isModalVisible: false,
             filterString: "",
+            operationType: "",
             withdraw_permission_list: []
         };
     }
@@ -128,15 +129,18 @@ class DirectDebit extends Component {
         });
     }
 
-    showModal = () => {
+    showModal = operation => () => {
         this.setState({
-            isModalVisible: true
+            isModalVisible: true,
+            operation
         });
     };
 
     hideModal = () => {
         this.setState({
-            isModalVisible: false
+            isModalVisible: false,
+            operation: null
+            // permissionId: ""
         });
     };
 
@@ -147,9 +151,12 @@ class DirectDebit extends Component {
     };
 
     render() {
-        const {isModalVisible, withdraw_permission_list} = this.state;
+        const {
+            isModalVisible,
+            withdraw_permission_list,
+            operation
+        } = this.state;
         let currentAccount = ChainStore.getAccount(this.props.currentAccount);
-        // console.log("currentAccount", currentAccount.toJS());
 
         // let smallScreen = window.innerWidth < 850 ? true : false;
 
@@ -178,7 +185,8 @@ class DirectDebit extends Component {
                               item.withdrawal_limit.amount -
                               item.claimed_this_period +
                               " " +
-                              assetSymbol
+                              assetSymbol,
+                          rawData: item
                       };
                   })
                   .filter(item => {
@@ -233,7 +241,10 @@ class DirectDebit extends Component {
                 dataIndex: "limit",
                 key: "limit",
                 sorter: (a, b) => {
-                    return a.limit > b.limit ? 1 : a.limit < b.limit ? -1 : 0;
+                    const limit1 = a.rawData.withdrawal_limit.amount;
+                    const limit2 = b.rawData.withdrawal_limit.amount;
+
+                    return limit1 - limit2;
                 }
             },
             {
@@ -249,11 +260,13 @@ class DirectDebit extends Component {
                 dataIndex: "available",
                 key: "available",
                 sorter: (a, b) => {
-                    return a.available > b.available
-                        ? 1
-                        : a.available < b.available
-                            ? -1
-                            : 0;
+                    const available1 =
+                        a.rawData.withdrawal_limit.amount -
+                        a.rawData.claimed_this_period;
+                    const available2 =
+                        b.rawData.withdrawal_limit.amount -
+                        a.rawData.claimed_this_period;
+                    return available2 - available1;
                 }
             },
             {
@@ -264,10 +277,20 @@ class DirectDebit extends Component {
                     if (record.type) {
                         return record.type === "payer" ? (
                             <span>
-                                <Button style={{marginRight: "10px"}}>
+                                <Button
+                                    style={{marginRight: "10px"}}
+                                    onClick={() => alert("cancel mandate")}
+                                >
                                     Cancel
                                 </Button>
-                                <Button>Update</Button>
+                                <Button
+                                    onClick={this.showModal({
+                                        type: "update",
+                                        payload: record.rawData
+                                    })}
+                                >
+                                    Update
+                                </Button>
                             </span>
                         ) : (
                             <span>
@@ -282,46 +305,56 @@ class DirectDebit extends Component {
         ];
 
         return (
-            <Card>
-                <Row>
-                    <Col span={24} style={{padding: "10px"}}>
-                        {/* TABLE HEADER */}
-                        <div
-                            style={{
-                                marginBottom: "30px"
-                            }}
-                        >
-                            <Input
-                                placeholder={counterpart.translate(
-                                    "explorer.witnesses.filter_by_name"
-                                )}
-                                onChange={this._onFilter}
+            <div className="direct-debit-view">
+                <Card className="direct-debit-table-card">
+                    <Row>
+                        <Col span={24} style={{padding: "10px"}}>
+                            {/* TABLE HEADER */}
+                            <div
                                 style={{
-                                    width: "200px",
-                                    marginRight: "30px"
+                                    marginBottom: "30px"
                                 }}
-                                addonAfter={<Icon type="search" />}
+                            >
+                                <Input
+                                    className="direct-debit-table__filter-input"
+                                    placeholder={counterpart.translate(
+                                        "explorer.witnesses.filter_by_name"
+                                    )}
+                                    onChange={this._onFilter}
+                                    style={{
+                                        width: "200px",
+                                        marginRight: "30px"
+                                    }}
+                                    addonAfter={<Icon type="search" />}
+                                />
+                                <Button
+                                    onClick={this.showModal({
+                                        type: "create",
+                                        payload: null
+                                    })}
+                                >
+                                    {counterpart.translate(
+                                        "showcases.direct_debit.create_new_mandate"
+                                    )}
+                                </Button>
+                            </div>
+
+                            <Table
+                                columns={columns}
+                                dataSource={dataSource}
+                                pagination={false}
+                                className="direct-debit-table"
                             />
-                            <Button onClick={this.showModal}>
-                                {counterpart.translate(
-                                    "showcases.direct_debit.create_new_mandate"
-                                )}
-                            </Button>
-                        </div>
+                        </Col>
+                    </Row>
 
-                        <Table
-                            columns={columns}
-                            dataSource={dataSource}
-                            pagination={false}
-                        />
-                    </Col>
-                </Row>
-
-                <DirectDebitModal
-                    isModalVisible={isModalVisible}
-                    hideModal={this.hideModal}
-                />
-            </Card>
+                    <DirectDebitModal
+                        isModalVisible={isModalVisible}
+                        hideModal={this.hideModal}
+                        operation={operation}
+                    />
+                </Card>
+            </div>
         );
     }
 }
