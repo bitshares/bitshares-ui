@@ -1832,7 +1832,7 @@
         "filter_ops": "Use this list to filter your history by operation type.",
         "follow_user": "You are following this user",
         "follow_user_add": "Click to Follow this user",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "The generated password was created by your browser, locally. <br /><br /><strong>No one but you has access to it</strong>.<br /><br /> Paste it below and save a copy in a safe place",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -1841,6 +1841,7 @@
         "latest_price": "This is the latest price seen in this market.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "This BitShares wallet does not offer a traditional login but instead simply locks or unlocks a wallet that is <b>only</b> stored locally in your browser.<br/><br/>Whenever you close the wallet it will be locked and you will effectively be logged out.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -1871,7 +1872,7 @@
         },
         "margin_price": "This is the maximum price that a margin called position can be made to pay. It also called the Squeeze Price.",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
-        "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "memo_tip": "You may include an optional message in the memo field. This allows you to write personal notes and is also often used by exchanges to identify deposits.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "There's no recent price available for this asset that can be used to estimate its value.",
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
@@ -2312,23 +2313,5 @@
         "wallet_model_3": "<li>Multiple accounts</li><li>Wallet file backup required</li><li>High security</li>",
         "wallet_move": "This backup file can also be used to move your local wallet to different computers or different browsers. In order to restore your local wallet using this backup <strong>you will also need your password!</strong>",
         "wallet_password": "Login anywhere using your password"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "Please get deposit address",
-            "deposit_warning": "Do not deposit non-%(asset)s assets into %(asset)s address, otherwise they will not be recovered",
-            "fee": "Gateway Fee",
-            "get_deposit_address": "get deposit address",
-            "support_block": "For support, please contact Winex at:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "Minimum amount：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "Actual amount ：%(final_number)s",
-            "winAmount": "Minimum amount: %(min_amount)s %(asset)s"
-        }
     }
 }

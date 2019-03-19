@@ -60,6 +60,8 @@ function BindToChainState(Component, options = {}) {
     class Wrapper extends React.Component {
         constructor(props) {
             super(props);
+            this.hasErrored = false;
+
             let prop_types_array = toPairs(Component.propTypes);
             if (options && options.all_props) {
                 this.chain_objects = reject(
@@ -198,6 +200,21 @@ function BindToChainState(Component, options = {}) {
             );
         }
 
+        componentDidCatch(error, errorInfo) {
+            this._errored(error, errorInfo);
+        }
+
+        _errored(error, errorInfo) {
+            console.error(
+                `BindToChainState(${getDisplayName(Component)})`,
+                error,
+                errorInfo
+            );
+            this.setState({
+                hasErrored: true
+            });
+        }
+
         componentWillMount() {
             ChainStore.subscribe(this.update);
             this.update();
@@ -234,8 +251,14 @@ function BindToChainState(Component, options = {}) {
         }
 
         update(next_props = null) {
-            // let updateStart = new Date().getTime();
+            try {
+                this._update(next_props);
+            } catch (err) {
+                this._errored(err);
+            }
+        }
 
+        _update(next_props = null) {
             let props = next_props || this.props;
             let new_state = {};
             let all_objects_counter = 0;
@@ -360,8 +383,10 @@ function BindToChainState(Component, options = {}) {
                     props[key] ||
                     this.dynamic_props[key] ||
                     this.default_props[key];
+
                 if (prop) {
                     let new_obj = ChainStore.getBalanceObjects(prop);
+
                     if (
                         new_obj === undefined &&
                         this.required_props.indexOf(key) === -1 &&
@@ -426,7 +451,6 @@ function BindToChainState(Component, options = {}) {
                     let index = 0;
                     prop.forEach(obj_id => {
                         ++index;
-                        //console.log("-- Wrapper.chain_objects_list item -->", obj_id, index);
                         if (obj_id) {
                             let new_obj = ChainStore.getObject(
                                 obj_id,
@@ -589,6 +613,12 @@ function BindToChainState(Component, options = {}) {
                 if (this.state[prop] === undefined) {
                     if (typeof options !== "undefined" && options.show_loader) {
                         return <LoadingIndicator />;
+                    } else if (this.hasErrored) {
+                        return (
+                            <span>
+                                Error rendering component, please report
+                            </span>
+                        );
                     } else {
                         // returning a temp component of the desired type prevents invariant violation errors, notably when rendering tr components
                         // to use, specicy a defaultProps field of tempComponent: "tr" (or "div", "td", etc as desired)

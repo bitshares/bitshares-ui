@@ -53,17 +53,6 @@ export const availableGateways = {
             selected: false
         }
     },
-    WIN: {
-        id: "WIN",
-        name: "Winex",
-        baseAPI: widechainAPIs,
-        isEnabled: false, // deprecate Winex, no reaction from devs
-        selected: false,
-        options: {
-            enabled: false,
-            selected: false
-        }
-    },
     BRIDGE: {
         id: "BRIDGE",
         name: "CRYPTO-BRIDGE",

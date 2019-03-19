@@ -29,20 +29,15 @@ export const KeyFileLabel = ({showUseOtherWalletLink, onUseOtherWallet}) => (
 );
 
 export class StyledUpload extends React.Component {
-    handleLabelClick = () => this.refs.input.click();
     render() {
         return (
-            <label
-                onClick={this.handleLabelClick}
-                className="upload-button themed-input"
-            >
+            <label className="upload-button themed-input">
                 <Translate content="wallet.restore_key_file" />
                 <UploadButtonLogo />
                 <input
                     type="file"
                     onClick={stopPropagation}
                     onChange={this.props.onFileChosen}
-                    ref="input"
                     accept=".bin"
                 />
             </label>

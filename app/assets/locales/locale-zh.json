@@ -1832,7 +1832,7 @@
         "filter_ops": "根据操作类型过滤交易历史",
         "follow_user": "您正在关注该账户",
         "follow_user_add": "点击关注该账户",
-        "gateway": "Gateways back desposits by 100% real assets",
+        "gateway": "Gateways provide IOUs on the BitShares Blockchain that are backed by the real asset",
         "generate": "密码由您的浏览器在本地生成。<br /><br /><strong>只有您能看到此密码。</strong><br /><br />请将它粘贴到下方并保存在一个您认为安全的地方。",
         "global_settle": "This asset is globally settled. Settling it will let you convert your holdings of %(asset)s to %(backingAsset)s instantly, at the global settlement price (visible in exchange header or asset details page).",
         "global_settle_price": "This is the price at which settle orders will execute. This asset is globally settled, thus settlement orders will execute instantly",
@@ -1841,6 +1841,7 @@
         "latest_price": "市场最新成交价",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -2312,23 +2313,5 @@
         "wallet_model_3": "<li>多账户</li><li>要求钱包文件备份</li><li>安全性：高</li>",
         "wallet_move": "这个备份文件也可以用来实现跨浏览器或跨计算机的钱包迁移。<strong>你将需要提供密码以进行恢复！</strong>",
         "wallet_password": "从任意地点使用密码登录"
-    },
-    "winex": {
-        "gateway": {
-            "click_getaddress": "请先获取充值地址",
-            "deposit_warning": "禁止充值 %(asset)s 之外的其他资产，任何非 %(asset)s 资产充值将不可找回",
-            "fee": "网关手续费",
-            "get_deposit_address": "获取充值地址",
-            "support_block": "获得客户支持，请联络 Winex:"
-        },
-        "transfer": {
-            "errors": {
-                "minWithdraw": "最低提币数量：%(min_amount)s"
-            }
-        },
-        "withdraw": {
-            "finalNumber": "预计到账：%(final_number)s",
-            "winAmount": "最低提现数量:%(min_amount)s %(asset)s"
-        }
     }
 }
