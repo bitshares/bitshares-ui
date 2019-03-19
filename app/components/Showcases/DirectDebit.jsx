@@ -29,6 +29,7 @@ import {
 import AccountActions from "actions/AccountActions";
 import ApplicationApi from "../../api/ApplicationApi";
 import DirectDebitModal from "../Modal/DirectDebitModal";
+import DirectDebitClaimModal from "../Modal/DirectDebitClaimModal";
 import debounceRender from "react-debounce-render";
 import {connect} from "alt-react";
 import ChainTypes from "../Utility/ChainTypes";
@@ -48,8 +49,10 @@ class DirectDebit extends Component {
 
             proposal_fee: 0,
             isModalVisible: false,
+            isClaimModalVisible: false,
             filterString: "",
-            operationType: "",
+            operationData: "",
+            operationClaimData: "",
             withdraw_permission_list: []
         };
     }
@@ -132,7 +135,14 @@ class DirectDebit extends Component {
     showModal = operation => () => {
         this.setState({
             isModalVisible: true,
-            operation
+            operationData: operation
+        });
+    };
+
+    showClaimModal = operation => () => {
+        this.setState({
+            isClaimModalVisible: true,
+            operationClaimData: operation
         });
     };
 
@@ -140,7 +150,12 @@ class DirectDebit extends Component {
         this.setState({
             isModalVisible: false,
             operation: null
-            // permissionId: ""
+        });
+    };
+
+    hideClaimModal = () => {
+        this.setState({
+            isClaimModalVisible: false
         });
     };
 
@@ -153,8 +168,10 @@ class DirectDebit extends Component {
     render() {
         const {
             isModalVisible,
+            isClaimModalVisible,
             withdraw_permission_list,
-            operation
+            operationData,
+            operationClaimData
         } = this.state;
         let currentAccount = ChainStore.getAccount(this.props.currentAccount);
 
@@ -293,7 +310,12 @@ class DirectDebit extends Component {
                                 </Button>
                             </span>
                         ) : (
-                            <span>
+                            <span
+                                onClick={this.showClaimModal({
+                                    type: "claim",
+                                    payload: record.rawData
+                                })}
+                            >
                                 <Button>Collect</Button>
                             </span>
                         );
@@ -351,7 +373,12 @@ class DirectDebit extends Component {
                     <DirectDebitModal
                         isModalVisible={isModalVisible}
                         hideModal={this.hideModal}
-                        operation={operation}
+                        operation={operationData}
+                    />
+                    <DirectDebitClaimModal
+                        isModalVisible={isClaimModalVisible}
+                        hideModal={this.hideClaimModal}
+                        operation={operationClaimData}
                     />
                 </Card>
             </div>
