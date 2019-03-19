@@ -28,6 +28,8 @@ class Accounts extends React.Component {
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
         this.handleRowsChange = this.handleRowsChange.bind(this);
+
+        this.balanceObjects = [];
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -73,15 +75,17 @@ class Accounts extends React.Component {
         this.forceUpdate();
     }
 
-    _getBalanceObject(object_id, balanceObjects) {
-
-        if(object_id && typeof(object_id) === "string") {
-            if(!balanceObjects[object_id]) {
-                balanceObjects[object_id] = parseFloat(ChainStore.getObject(object_id).get("balance"));
+    _ensureBalanceObject(object_id) {
+        if (object_id && typeof object_id === "string") {
+            if (!this.balanceObjects[object_id]) {
+                this.balanceObjects[object_id] = parseFloat(
+                    ChainStore.getObject(object_id).get("balance")
+                );
             }
         }
-
-        return balanceObjects[object_id] ? balanceObjects[object_id] : 0;
+        if (!this.balanceObjects[object_id]) {
+            this.balanceObjects[object_id] = 0;
+        }
     }
 
     render() {
@@ -90,7 +94,6 @@ class Accounts extends React.Component {
 
         let dataSource = [];
         let columns = [];
-        let balanceObjects = [];
 
         columns = [
             {
@@ -167,12 +170,14 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalance",
                 sorter: (a, b) => {
-                    balanceObjects[a.accountBalance] = this._getBalanceObject(a.accountBalance, balanceObjects);
-                    balanceObjects[b.accountBalance] = this._getBalanceObject(b.accountBalance, balanceObjects);
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
 
-                    return balanceObjects[a.accountBalance] > balanceObjects[b.accountBalance]
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
                         ? 1
-                        : balanceObjects[a.accountBalance] < balanceObjects[b.accountBalance]
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -193,12 +198,14 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalancePercentage",
                 sorter: (a, b) => {
-                    balanceObjects[a.accountBalance] = this._getBalanceObject(a.accountBalance, balanceObjects);
-                    balanceObjects[b.accountBalance] = this._getBalanceObject(b.accountBalance, balanceObjects);
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
 
-                    return balanceObjects[a.accountBalance] > balanceObjects[b.accountBalance]
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
                         ? 1
-                        : balanceObjects[a.accountBalance] < balanceObjects[b.accountBalance]
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -255,11 +262,10 @@ class Accounts extends React.Component {
                         accountContacts: AccountStore.getState()
                             .accountContacts,
                         accountName: name,
-                        accountBalance: balance,
+                        accountBalance: balance
                     });
                 });
         }
-
 
         return (
             <div className="grid-block vertical">
@@ -310,7 +316,8 @@ class Accounts extends React.Component {
                                         marginLeft: "24px"
                                     }}
                                 >
-                                    {this.state.searchTerm && this.state.searchTerm.length == 0 ? (
+                                    {this.state.searchTerm &&
+                                    this.state.searchTerm.length == 0 ? (
                                         <Translate content="account.start_typing_to_search" />
                                     ) : null}
                                 </div>

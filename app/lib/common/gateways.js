@@ -57,7 +57,7 @@ export const availableGateways = {
         id: "WIN",
         name: "Winex",
         baseAPI: widechainAPIs,
-        isEnabled: allowedGateway("WIN"),
+        isEnabled: false, // deprecate Winex, no reaction from devs
         selected: false,
         options: {
             enabled: false,
