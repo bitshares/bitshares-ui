@@ -61,7 +61,7 @@ class AmountSelector extends DecimalChecker {
 
         const label = this.props.label ? (
             <div className="amount-selector-field--label">
-                {counterpart.translate(this.props.label).toUpperCase()}:
+                {counterpart.translate(this.props.label)}
                 <div className="amount-selector-field--balance">
                     {this.props.display_balance}
                 </div>

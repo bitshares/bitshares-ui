@@ -28,6 +28,8 @@ class Accounts extends React.Component {
 
         this._searchAccounts = debounce(this._searchAccounts, 200);
         this.handleRowsChange = this.handleRowsChange.bind(this);
+
+        this.balanceObjects = [];
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -71,6 +73,19 @@ class Accounts extends React.Component {
             rowsOnPage: rows
         });
         this.forceUpdate();
+    }
+
+    _ensureBalanceObject(object_id) {
+        if (object_id && typeof object_id === "string") {
+            if (!this.balanceObjects[object_id]) {
+                this.balanceObjects[object_id] = parseFloat(
+                    ChainStore.getObject(object_id).get("balance")
+                );
+            }
+        }
+        if (!this.balanceObjects[object_id]) {
+            this.balanceObjects[object_id] = 0;
+        }
     }
 
     render() {
@@ -155,11 +170,14 @@ class Accounts extends React.Component {
                 dataIndex: "accountBalance",
                 key: "accountBalance",
                 sorter: (a, b) => {
-                    a.accountBalance = parseFloat(a.accountBalance);
-                    b.accountBalance = parseFloat(b.accountBalance);
-                    return a.accountBalance > b.accountBalance
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
+
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
                         ? 1
-                        : a.accountBalance < b.accountBalance
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -177,14 +195,17 @@ class Accounts extends React.Component {
             },
             {
                 title: <Translate component="span" content="account.percent" />,
-                dataIndex: "accountPercentages",
-                key: "accountPercentages",
+                dataIndex: "accountBalance",
+                key: "accountBalancePercentage",
                 sorter: (a, b) => {
-                    a.accountPercentages = parseFloat(a.accountPercentages);
-                    b.accountPercentages = parseFloat(b.accountPercentages);
-                    return a.accountPercentages > b.accountPercentages
+                    this._ensureBalanceObject(a.accountBalance);
+                    this._ensureBalanceObject(b.accountBalance);
+
+                    return this.balanceObjects[a.accountBalance] >
+                        this.balanceObjects[b.accountBalance]
                         ? 1
-                        : a.accountPercentages < b.accountPercentages
+                        : this.balanceObjects[a.accountBalance] <
+                          this.balanceObjects[b.accountBalance]
                             ? -1
                             : 0;
                 },
@@ -241,8 +262,7 @@ class Accounts extends React.Component {
                         accountContacts: AccountStore.getState()
                             .accountContacts,
                         accountName: name,
-                        accountBalance: balance,
-                        accountPercentages: balance
+                        accountBalance: balance
                     });
                 });
         }
@@ -296,7 +316,8 @@ class Accounts extends React.Component {
                                         marginLeft: "24px"
                                     }}
                                 >
-                                    {this.state.searchTerm.length == 0 ? (
+                                    {this.state.searchTerm &&
+                                    this.state.searchTerm.length == 0 ? (
                                         <Translate content="account.start_typing_to_search" />
                                     ) : null}
                                 </div>

@@ -12,4 +12,16 @@ $border-color: rgba(128, 128, 128, 0.45);
       }
 }
 
+.red {
+    color: #E6001F!important;
+    
+    .icon { 
+        > svg {
+            > path {
+                fill: #E6001F!important;
+            }
+        }
+    }
+}
+
 $bs-blue: #049cce;
