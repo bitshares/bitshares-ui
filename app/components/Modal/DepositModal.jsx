@@ -24,14 +24,7 @@ class DepositModalContent extends DecimalChecker {
     constructor() {
         super();
 
-        this.state = {
-            depositAddress: "",
-            selectedAsset: "",
-            selectedGateway: null,
-            fetchingAddress: false,
-            backingAsset: null,
-            gatewayStatus: availableGateways
-        };
+        this.state = this._intitalState();
 
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -48,6 +41,7 @@ class DepositModalContent extends DecimalChecker {
 
     shouldComponentUpdate(np, ns) {
         if(np.asset !== this.props.asset) {
+            this.setState(this._intitalState());
             this._setDepositAsset(np.asset);
         }
         return !utils.are_equal_shallow(ns, this.state);
@@ -77,10 +71,21 @@ class DepositModalContent extends DecimalChecker {
         }
     }
 
+    _intitalState() {
+        return {
+            depositAddress: "",
+            selectedAsset: "",
+            selectedGateway: null,
+            fetchingAddress: false,
+            backingAsset: null,
+            gatewayStatus: availableGateways
+        };
+    }
+
     _setDepositAsset(asset) {
         let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
         this.setState({coinToGatewayMapping});
-
+        
         if (!asset) return;
 
         let backedAsset = asset.split(".");
