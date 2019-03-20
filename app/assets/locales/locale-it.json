@@ -1841,6 +1841,7 @@
         "latest_price": "Questo è l'ultimo prezzo visto in questo mercato.",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Questo portafoglio BitShares non offre un login tradizionale, invece semplicemente blocca o sblocca un portafoglio che è <b>solo</b> memorizzato localmente nel tuo browser.<br/><br/>Ogni volta che chiudi il portafoglio, esso sarà bloccato e avrai di fatto effettuato il logout.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",

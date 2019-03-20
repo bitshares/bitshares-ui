@@ -24,14 +24,7 @@ class DepositModalContent extends DecimalChecker {
     constructor() {
         super();
 
-        this.state = {
-            depositAddress: "",
-            selectedAsset: "",
-            selectedGateway: null,
-            fetchingAddress: false,
-            backingAsset: null,
-            gatewayStatus: availableGateways
-        };
+        this.state = this._intitalState();
 
         this.deposit_address_cache = new BlockTradesDepositAddressCache();
         this.addDepositAddress = this.addDepositAddress.bind(this);
@@ -43,29 +36,15 @@ class DepositModalContent extends DecimalChecker {
 
     componentWillMount() {
         let {asset} = this.props;
-
-        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
-        this.setState({coinToGatewayMapping});
-
-        if (!asset) return;
-
-        let backedAsset = asset.split(".");
-        let usingGateway = this.state.gatewayStatus[backedAsset[0]]
-            ? true
-            : false;
-
-        if (usingGateway) {
-            let assetName = backedAsset[1];
-            let assetGateway = backedAsset[0];
-            this._getDepositAddress(assetName, assetGateway);
-        } else {
-            this.setState({selectedAsset: "BTS"});
-        }
+        this._setDepositAsset(asset);
     }
 
     shouldComponentUpdate(np, ns) {
-        return !utils.are_equal_shallow(ns, this.state) ||
-            np.asset !== this.props.asset;
+        if(np.asset !== this.props.asset) {
+            this.setState(this._intitalState());
+            this._setDepositAsset(np.asset);
+        }
+        return !utils.are_equal_shallow(ns, this.state);
     }
 
     onGatewayChanged(selectedGateway) {
@@ -89,6 +68,37 @@ class DepositModalContent extends DecimalChecker {
 
         if (selectedGateway) {
             this._getDepositAddress(selectedAsset, selectedGateway);
+        }
+    }
+
+    _intitalState() {
+        return {
+            depositAddress: "",
+            selectedAsset: "",
+            selectedGateway: null,
+            fetchingAddress: false,
+            backingAsset: null,
+            gatewayStatus: availableGateways
+        };
+    }
+
+    _setDepositAsset(asset) {
+        let coinToGatewayMapping = _getCoinToGatewayMapping.call(this);
+        this.setState({coinToGatewayMapping});
+        
+        if (!asset) return;
+
+        let backedAsset = asset.split(".");
+        let usingGateway = this.state.gatewayStatus[backedAsset[0]]
+            ? true
+            : false;
+
+        if (usingGateway) {
+            let assetName = backedAsset[1];
+            let assetGateway = backedAsset[0];
+            this._getDepositAddress(assetName, assetGateway);
+        } else {
+            this.setState({selectedAsset: "BTS"});
         }
     }
 

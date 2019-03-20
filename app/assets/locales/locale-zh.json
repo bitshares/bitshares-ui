@@ -1841,6 +1841,7 @@
         "latest_price": "市场最新成交价",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "比特股钱包并不提供传统的登录方式，而是通过锁定和解锁<b>只存储于用户浏览器中</b>的钱包。<br/><br/>当你关闭钱包时，钱包即被锁定，也就相当于登出了系统。",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",

@@ -14,6 +14,7 @@ const AssetSelectView = ({
     formItemStyle,
     style,
     placeholder,
+    value,
     ...props
 }) => {
     const select = (
@@ -25,6 +26,7 @@ const AssetSelectView = ({
                     content={placeholder || "utility.asset_select_placeholder"}
                 />
             }
+            value={<AssetName noTip name={value}/>}
             {...props}
         >
             {assets.filter(Map.isMap).map(asset => (

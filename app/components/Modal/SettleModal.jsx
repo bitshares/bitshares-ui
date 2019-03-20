@@ -9,10 +9,11 @@ import WalletApi from "api/WalletApi";
 import WalletDb from "stores/WalletDb";
 import counterpart from "counterpart";
 import {ChainStore} from "bitsharesjs";
-import AmountSelector from "../Utility/AmountSelector";
+import AmountSelector from "../Utility/AmountSelectorStyleGuide";
 import withWorthLessSettlementFlag from "../Utility/withWorthLessSettlementFlag";
 import TranslateWithLinks from "../Utility/TranslateWithLinks";
-import {Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import {Alert, Form, Modal, Button, Tooltip} from "bitshares-ui-style-guide";
+import utils from "common/utils";
 
 const WorthLessSettlementWarning = withWorthLessSettlementFlag(
     ({
@@ -22,36 +23,39 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
         marketPrice,
         settlementPrice
     }) => {
+        marketPrice = utils.format_number(marketPrice, asset.get("precision"));
+        settlementPrice = utils.format_number(settlementPrice, asset.get("precision"));
         switch (worthLessSettlement) {
             case true:
                 return (
-                    <div>
-                        <TranslateWithLinks
-                            string="exchange.worth_less_settlement_warning"
-                            keys={[
-                                {
-                                    value: (
-                                        <MarketLink
-                                            base={asset.get("id")}
-                                            quote={shortBackingAsset.get("id")}
-                                        />
-                                    ),
-                                    arg: "market_link"
-                                }
-                            ]}
-                        />
-                        <br />
-                        &nbsp;&nbsp;
-                        <Translate content="exchange.price_market" />
-                        :&nbsp;&nbsp;
-                        {marketPrice}
-                        <br />
-                        &nbsp;&nbsp;
-                        <Translate content="exchange.settle" />
-                        :&nbsp;&nbsp;
-                        {settlementPrice}
-                        <br />
-                        <br />
+                    <div> 
+                        <Translate component="h2" content="exchange.settle_better_marketprice" />
+                        <span>
+                            <TranslateWithLinks
+                                string="exchange.worth_less_settlement_warning"
+                                keys={[
+                                    {
+                                        value: (
+                                            <MarketLink
+                                                base={asset.get("id")}
+                                                quote={shortBackingAsset.get("id")}
+                                            />
+                                        ),
+                                        arg: "market_link"
+                                    }
+                                ]}
+                            />
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.price_market" />
+                            :&nbsp;&nbsp;
+                            {marketPrice}
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.settle" />
+                            :&nbsp;&nbsp;
+                            {settlementPrice}
+                        </span>
                     </div>
                 );
             case undefined:
@@ -61,38 +65,39 @@ const WorthLessSettlementWarning = withWorthLessSettlementFlag(
             default:
                 return (
                     <div>
-                        <TranslateWithLinks
-                            string="exchange.settlement_hint"
-                            keys={[
-                                {
-                                    value: (
-                                        <MarketLink
-                                            base={asset.get("id")}
-                                            quote={shortBackingAsset.get("id")}
-                                        />
-                                    ),
-                                    arg: "market_link"
-                                },
-                                {
-                                    value: (
-                                        <AssetName name={asset.get("symbol")} />
-                                    ),
-                                    arg: "long"
-                                }
-                            ]}
-                        />
-                        <br />
-                        &nbsp;&nbsp;
-                        <Translate content="exchange.price_market" />
-                        :&nbsp;&nbsp;
-                        {marketPrice}
-                        <br />
-                        &nbsp;&nbsp;
-                        <Translate content="exchange.settle" />
-                        :&nbsp;&nbsp;
-                        {settlementPrice}
-                        <br />
-                        <br />
+                        <Translate component="h2" content="exchange.settle_better_settleprice" />
+                        <span>
+                            <TranslateWithLinks
+                                string="exchange.settlement_hint"
+                                keys={[
+                                    {
+                                        value: (
+                                            <MarketLink
+                                                base={asset.get("id")}
+                                                quote={shortBackingAsset.get("id")}
+                                            />
+                                        ),
+                                        arg: "market_link"
+                                    },
+                                    {
+                                        value: (
+                                            <AssetName name={asset.get("symbol")} />
+                                        ),
+                                        arg: "long"
+                                    }
+                                ]}
+                            />
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.price_market" />
+                            :&nbsp;&nbsp;
+                            {marketPrice}
+                            <br />
+                            &nbsp;&nbsp;
+                            <Translate content="exchange.settle" />
+                            :&nbsp;&nbsp;
+                            {settlementPrice}
+                        </span>
                     </div>
                 );
         }
@@ -178,9 +183,19 @@ class ModalContent extends React.Component {
             return null;
         }
 
+        let options =
+        asset && asset.getIn(["bitasset", "options"])
+            ? asset.getIn(["bitasset", "options"]).toJS()
+            : null;
+
+        let isGlobalSettled = asset.get("bitasset").get("settlement_fund") > 0 ? true : false;
+
         let assetID = asset.get("id");
 
         let account_balances = account.get("balances");
+
+        const {name: assetName, prefix} = utils.replaceName(asset);
+        const assetFullName = (prefix ? prefix : "") + assetName;
 
         let currentBalance = null,
             balanceAmount = 0;
@@ -247,7 +262,7 @@ class ModalContent extends React.Component {
         return (
             <Modal
                 title={counterpart.translate("modal.settle.title", {
-                    asset: asset.get("symbol")
+                    asset: assetFullName
                 })}
                 visible={this.props.visible}
                 id={this.props.modalId}
@@ -256,24 +271,37 @@ class ModalContent extends React.Component {
                 overlay={true}
                 ref="settlement_modal"
             >
-                <div className="grid-block vertical">
-                    <form className="grid-block vertical full-width-content">
-                        <WorthLessSettlementWarning asset={assetID} />
-                        <div className="grid-container ">
-                            <div className="content-block">
-                                <AmountSelector
-                                    label="modal.settle.amount"
-                                    amount={amount}
-                                    onChange={this.onAmountChanged.bind(this)}
-                                    display_balance={balanceText}
-                                    asset={assetID}
-                                    assets={[assetID]}
-                                    tabIndex={1}
-                                />
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                {isGlobalSettled ? (
+                    <Alert 
+                        message={counterpart.translate(
+                            "exchange.settle_delay_globally_settled"
+                        )} 
+                        type="warning" 
+                        showIcon 
+                    />
+                ) : (
+                    <Alert 
+                        message={counterpart.translate(
+                            "exchange.settle_delay", {
+                                hours: options.force_settlement_delay_sec /3600
+                            })} 
+                        type="info" 
+                        showIcon 
+                    />
+                )}
+                <WorthLessSettlementWarning asset={assetID} />
+                <br />
+                <Form className="full-width" layout="vertical">
+                    <AmountSelector
+                        label="modal.settle.amount"
+                        amount={amount}
+                        onChange={this.onAmountChanged.bind(this)}
+                        display_balance={balanceText}
+                        asset={assetID}
+                        assets={[assetID]}
+                        tabIndex={1}
+                    />
+                </Form>
             </Modal>
         );
     }

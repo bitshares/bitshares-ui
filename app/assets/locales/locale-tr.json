@@ -1841,6 +1841,7 @@
         "latest_price": "Piyasadaki gerçekleşen son işlemin fiyat değeri",
         "legacy_explanation": "Hides proposals that are duplicates, spam or have been started but not active for longer than 2 months.",
         "login": "Bitshares cüzdanında geleneksel oturum açma-kapatma yoktur, bunun yerine cüzdanınız <b>kilitli</b> ve <b>açık</b> konumlarından birinde tutulur. Cüzdanınız kilitli olduğunda herhangi bir işlem yapılamaz, yalnızca gözlemci olunabilir.",
+        "login_required": "Please login to the selected account to perform this action",
         "login-tooltip": {
             "incorrectPassword": {
                 "begin": "Enter another password or try ",
@@ -1871,7 +1872,7 @@
         },
         "margin_price": "Teminat tamamlama çağrısı yapılmış pozisyonun ödemesi istenebilecek en yüksek değer",
         "market_fee": "The owner of %(asset)s charges a market fee of %(percent)s%% for buy orders. This fee will be subtracted from the amount you receive when your order fills, it is not paid when placing an order.",
-        "memo_tip": "You may include any message in the memo field. Memos are optional but generally required for transfers to exchanges.",
+        "memo_tip": "You may include an optional message in the memo field. This allows you to write personal notes and is also often used by exchanges to identify deposits.",
         "no_groups_available": "No groupings available using this API server",
         "no_price": "Bu dijital varlığın değerini tespit etmek için piyasada yeterli veri bulunmamaktadır.",
         "nodes_popup": "Click here to open the access settings popup that allows you to switch nodes if necessary",
